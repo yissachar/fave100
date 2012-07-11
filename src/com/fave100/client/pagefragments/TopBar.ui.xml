@@ -1,0 +1,36 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.topNav{
+			background-color: #EEE;
+			height: 40px;
+		}
+		.topNav ul{
+			list-style-type: none;	
+			float: right;		
+		}
+		.topNav li{
+			display: inline;
+			float: right;
+			margin: 7px;
+		}
+		.faveLogo{
+		}
+		h1{
+			margin: 15px;
+			text-align: center;
+		}		
+	</ui:style>
+
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
+	<g:HTMLPanel>
+		<div class="{style.topNav}">
+			<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}" ui:field="faveLogo">Fave100</g:InlineHyperlink>
+			<ul>
+				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getAbout}">About</g:InlineHyperlink></li>
+				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">Sign In</g:InlineHyperlink></li>
+			</ul>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

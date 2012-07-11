@@ -1,0 +1,21 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:pf='urn:import:com.fave100.client.pagefragments'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+	
+	<ui:style>
+		h1{
+			margin: 15px;
+			text-align: center;
+		}		
+	</ui:style>
+
+	<g:HTMLPanel>
+		<pf:TopBar/>
+		<h1>Welcome to Fave100</h1>
+	</g:HTMLPanel>
+</ui:UiBinder>

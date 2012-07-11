@@ -1,0 +1,18 @@
+/* Add css rules here for your application. */
+html, *{
+	margin: 0px;
+	padding 0px;
+}
+body{
+	background-color: #FFF;
+	font-family: Helvetica,sans-serif;
+	color: #888;
+}
+
+a{
+	color: #363;
+	text-decoration: none;
+}
+a:hover{
+	text-decoration: underline;
+}
