@@ -1,0 +1,16 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:pf='urn:import:com.fave100.client.pagefragments'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<g:HTMLPanel>
+		<pf:TopBar/>
+		<h1>Add songs</h1>
+		<g:SuggestBox ui:field="itemInputBox"/>
+		<g:HTMLPanel ui:field="selectedSuggestion"></g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder>
