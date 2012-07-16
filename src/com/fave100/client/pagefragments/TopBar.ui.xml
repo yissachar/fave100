@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
 		.topNav{
-			background-color: #EEE;
+			background-color: #FFF;
 			height: 40px;
 		}
 		.topNav ul{

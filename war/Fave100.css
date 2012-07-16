@@ -4,13 +4,13 @@ html, *{
 	padding 0px;
 }
 body{
-	background-color: #FFF;
+	background-color: #7C7;
 	font-family: Helvetica,sans-serif;
-	color: #888;
+	color: #464;
 }
 
 a{
-	color: #363;
+	color: #484;
 	text-decoration: none;
 }
 a:hover{
