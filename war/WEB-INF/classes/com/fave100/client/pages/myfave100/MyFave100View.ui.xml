@@ -7,10 +7,17 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
+	<ui:style>
+		.faveList{
+			margin: 30px auto;
+			background-color: #FFF;
+			border: 2px solid #595;
+		}
+	</ui:style>
 	<g:HTMLPanel>
 		<pf:TopBar/>
 		<h1>Add songs</h1>
 		<g:SuggestBox ui:field="itemInputBox"/>
-		<g:HTMLPanel ui:field="selectedSuggestion"></g:HTMLPanel>
+		<g:Grid ui:field="faveList" styleName="{style.faveList}"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -15,6 +15,8 @@
 	<!-- Other module inherits                                      -->
 	<inherits name='com.gwtplatform.mvp.Mvp'/>
 	<inherits name='com.gwtplatform.dispatch.Dispatch'/>
+	<inherits name='com.google.web.bindery.requestfactory.RequestFactory'/>
+	<inherits name='com.googlecode.objectify.Objectify'/>
 
 	<!-- Specify the app entry point class.                         -->
 	<entry-point class='com.fave100.client.Fave100'/>
