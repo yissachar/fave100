@@ -13,6 +13,7 @@ public interface FaveItemRequest extends RequestContext{
 	
 	Request<FaveItemProxy> findFaveItem(Long id);
 	Request<List<FaveItemProxy>> getAllFaveItemsForUser();
+	Request<Void> removeFaveItem(Long long1);
 	InstanceRequest<FaveItemProxy, FaveItemProxy> persist();
 	InstanceRequest<FaveItemProxy, Void> remove();
 

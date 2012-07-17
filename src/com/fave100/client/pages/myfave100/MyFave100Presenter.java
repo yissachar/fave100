@@ -15,6 +15,8 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.gwt.cell.client.ActionCell;
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -26,10 +28,13 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
@@ -37,14 +42,14 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 public class MyFave100Presenter extends
 		Presenter<MyFave100Presenter.MyView, MyFave100Presenter.MyProxy> {
 	
-	private HashMap<String, String> songArtistMap;
+	private HashMap<String, FaveItemProxy> itemSuggestionMap;
 	private Timer suggestionsTimer;
 	private ApplicationRequestFactory requestFactory;
 
 	public interface MyView extends View {
 		SuggestBox getItemInputBox();
 		MusicSuggestionOracle getSuggestions();
-		Grid getFaveList();
+		DataGrid<FaveItemProxy> getFaveList();
 	}
 
 	@ProxyCodeSplit
@@ -71,13 +76,72 @@ public class MyFave100Presenter extends
 		super.onBind();
 			
 		this.getView().getItemInputBox().setLimit(4);
-		songArtistMap = new HashMap<String, String>();		
+		itemSuggestionMap = new HashMap<String, FaveItemProxy>();		
 		
 		suggestionsTimer = new Timer() {
 			public void run() {
 				getAutocompleteList();
 			}
 		};
+		
+		DataGrid<FaveItemProxy> faveList = getView().getFaveList();		
+		
+		SafeHtmlCell linkCell = new SafeHtmlCell();
+		Column<FaveItemProxy, SafeHtml> titleColumn = new Column<FaveItemProxy, SafeHtml>(linkCell) {
+			@Override
+			public SafeHtml getValue(FaveItemProxy faveItem) {
+				SafeHtmlBuilder sb = new SafeHtmlBuilder();
+				if(faveItem.getItemURL() != null && faveItem.getItemURL() != "") {
+					sb.appendHtmlConstant("<a href='"+faveItem.getItemURL()+"'>"+faveItem.getTitle()+"</a>");
+				} else {
+					sb.appendHtmlConstant(faveItem.getTitle());
+				}
+				return sb.toSafeHtml();
+			}
+		};
+		titleColumn.setCellStyleNames("titleColumn");
+		faveList.addColumn(titleColumn, "Title");
+		
+		TextColumn<FaveItemProxy> artistColumn = new TextColumn<FaveItemProxy>() {
+			@Override
+			public String getValue(FaveItemProxy object) {
+				return object.getArtist();
+			}
+		};
+		artistColumn.setCellStyleNames("artistColumn");
+		faveList.addColumn(artistColumn, "Artist");
+		
+		TextColumn<FaveItemProxy> yearColumn = new TextColumn<FaveItemProxy>() {
+			@Override
+			public String getValue(FaveItemProxy object) {
+				return object.getReleaseYear().toString();
+			}
+		};
+		yearColumn.setCellStyleNames("yearColumn");
+		faveList.addColumn(yearColumn, "Year");
+		
+		ActionCell<FaveItemProxy> deleteButton = new ActionCell<FaveItemProxy>("Delete", new ActionCell.Delegate<FaveItemProxy>() {
+		      @Override
+		      public void execute(FaveItemProxy contact) {
+		    	  //find the item in the data store
+		    	  FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
+		    	  Request<Void> deleteReq = faveItemRequest.removeFaveItem(contact.getId());
+		    	  deleteReq.fire(new Receiver<Void>() {
+		    		  @Override
+		    		  public void onSuccess(Void response) {
+		    			  refreshFaveList();									
+		    		  }								
+		    	  });
+		      }
+	    });
+		Column<FaveItemProxy, FaveItemProxy> deleteColumn = new Column<FaveItemProxy, FaveItemProxy>(deleteButton) {
+			@Override
+			public FaveItemProxy getValue(FaveItemProxy object) {
+				return object;
+			}
+		};
+		deleteColumn.setCellStyleNames("deleteColumn");
+		faveList.addColumn(deleteColumn);
 		
 		refreshFaveList();
 		
@@ -86,10 +150,8 @@ public class MyFave100Presenter extends
 				//To restrict amount of queries, don't bother searching unless more than 200ms have passed
 				//since the last keystroke.		
 				suggestionsTimer.cancel();
-				// To restrict the amount of queries, don't search unless more than 1 character
-				// And don't search if it was just an arrow key being pressed
-				if(getView().getItemInputBox().getValue().length() > 1 && !KeyCodeEvent.isArrow(event.getNativeKeyCode())
-						&& event.getNativeKeyCode() != KeyCodes.KEY_ENTER)
+				// don't search if it was just an arrow key being pressed
+				if(!KeyCodeEvent.isArrow(event.getNativeKeyCode()) && event.getNativeKeyCode() != KeyCodes.KEY_ENTER)
 				{
 					suggestionsTimer.schedule(200);
 				}
@@ -99,18 +161,25 @@ public class MyFave100Presenter extends
 		this.getView().getItemInputBox().addSelectionHandler(new SelectionHandler<Suggestion>() {
 			public void onSelection(SelectionEvent<Suggestion> event) {				
 				Suggestion selectedItem = event.getSelectedItem();
-				//selectedSuggestion.add(new Label("You selected: "+selectedItem.getReplacementString()));
-				//selectedSuggestion.add(new Label("Artist: "+songArtistMap.get(selectedItem.getDisplayString())));
 				
 				FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
 				
-				//create a new FaveItem
+				// Must copy over properties individually, as cannot edit proxy created by different request context
+				FaveItemProxy faveItemMap = itemSuggestionMap.get(selectedItem.getDisplayString());
 				FaveItemProxy newFaveItem = faveItemRequest.create(FaveItemProxy.class);
-				newFaveItem.setTitle(selectedItem.getReplacementString());
+				newFaveItem.setTitle(faveItemMap.getTitle());
+				newFaveItem.setArtist(faveItemMap.getArtist());
+				newFaveItem.setReleaseYear(faveItemMap.getReleaseYear());
+				newFaveItem.setItemURL(faveItemMap.getItemURL());
 				
-				//and persist
+				// persist
 				Request<FaveItemProxy> createReq = faveItemRequest.persist().using(newFaveItem);
-				createReq.fire();
+				createReq.fire(new Receiver<FaveItemProxy>() {
+					@Override
+					public void onSuccess(FaveItemProxy response) {
+						refreshFaveList();
+					}					
+				});
 				
 				//clear the itemInputBox
 				getView().getItemInputBox().setValue("");
@@ -134,7 +203,7 @@ public class MyFave100Presenter extends
 	       	public void onSuccess(Result result) {
 	       		//clear the current suggestions)
 	       		getView().getSuggestions().clear();
-	       		songArtistMap.clear();
+	       		itemSuggestionMap.clear();
 	       		
 	    	    JsArray<Entry> entries = result.getResults();
 	         
@@ -142,7 +211,17 @@ public class MyFave100Presenter extends
 	    	    	Entry entry = entries.get(i);
 	    	    	String suggestionEntry = entry.trackName()+"<span class='artistName'>"+entry.artistName()+"</span>";
 	    	    	getView().getSuggestions().add(suggestionEntry);
-	    		   	songArtistMap.put(suggestionEntry, entry.artistName());
+	    		   	//itemSuggestionMap.put(suggestionEntry, new ItemSuggestionObject(entry.trackName(), 
+	    		   	//		entry.artistName(), Integer.parseInt(entry.releaseYear()), entry.itemURL()));
+	    	    	FaveItemRequest faveRequest = requestFactory.faveItemRequest();
+	    	    	
+	    	    	FaveItemProxy faveItem = faveRequest.create(FaveItemProxy.class);
+	    	    	faveItem.setTitle(entry.trackName());
+	    	    	faveItem.setArtist(entry.artistName());
+	    	    	faveItem.setReleaseYear(Integer.parseInt(entry.releaseYear()));
+	    	    	faveItem.setItemURL(entry.itemURL());
+	    	    	itemSuggestionMap.put(suggestionEntry, faveItem);
+	    	    	
 	    		   	getView().getItemInputBox().showSuggestionList();		    		   	
 	    	    }
 	       	}
@@ -162,8 +241,7 @@ public class MyFave100Presenter extends
 		allFaveItemsReq.fire(new Receiver<List<FaveItemProxy>>() {	
 			@Override
 			public void onSuccess(List<FaveItemProxy> response) {
-				getView().getFaveList().resize(5, 5);
-				getView().getFaveList().setText(0, 0, "Hi from Fave100!");
+				getView().getFaveList().setRowData(response);
 			}
 		});		
 	}
@@ -175,16 +253,23 @@ public class MyFave100Presenter extends
  * Classes to convert JSON return into Java parseable object.
  */
 class Entry extends JavaScriptObject {
-   protected Entry() {}
-
-   public final native String trackName() /*-{
-     return this.trackName;
-   }-*/;
+	protected Entry() {}
+	
+	public final native String itemURL() /*-{
+		return this.trackViewUrl;
+	}-*/;
+	
+	public final native String trackName() /*-{
+     	return this.trackName;
+   	}-*/;
    
-   public final native String artistName() /*-{
-   return this.artistName;
- }-*/;
-   
+	public final native String artistName() /*-{
+	   return this.artistName;
+	}-*/;
+	
+	public final native String releaseYear() /*-{
+		return this.releaseDate.substring(0, 4);
+	}-*/;
  }
 
 class Result extends JavaScriptObject {

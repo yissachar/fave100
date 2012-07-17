@@ -4,7 +4,7 @@ html, *{
 	padding 0px;
 }
 body{
-	background-color: #7C7;
+	background-color: #9E9;
 	font-family: Helvetica,sans-serif;
 	color: #464;
 }
@@ -22,7 +22,6 @@ h1{
 	text-align: center;
 }	
 
-
 /* Suggest Box */
 .gwt-SuggestBox {
 	display: block;
@@ -30,17 +29,18 @@ h1{
 	width: 500px;
 	height: 50px;	
 	font-size: 2em;
-	border: 4px solid #595;
+	border: 4px solid #5B5;
 	padding: 7px;
+	color: #363;
 }
-gwt-SuggestBoxPopup table{
+.gwt-SuggestBoxPopup table{
 	border: 1px solid #595;
 	border-collapse: collapse;
 	box-shadow: 1px 2px 2px #555;
 }
 .item{
 	margin: 0px auto;
-	background-color: #DDFFDD;
+	background-color: #FFF;
 	font-size: 1.3em;
 	max-width: 503px;
 	min-width: 503px;
@@ -55,4 +55,20 @@ gwt-SuggestBoxPopup table{
 	font-size: 0.6em;
 	font-style: italic;
 	float: left;
+}
+
+/* Fave List Data Grid */
+.faveList td, .faveList th{
+}
+.titleColumn, .faveList th:nth-child(1){
+	width: 290px;
+}
+.artistColumn, .faveList th:nth-child(2){
+	width: 200px
+}
+.yearColumn, .faveList th:nth-child(3){
+	width: 40px;
+}
+.deleteColumn{
+	width: 70px;
 }

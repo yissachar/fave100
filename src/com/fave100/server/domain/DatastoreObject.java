@@ -3,10 +3,14 @@ package com.fave100.server.domain;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 
+import com.googlecode.objectify.annotation.Unindexed;
+
 public class DatastoreObject
-{	
+{
+	@Unindexed
     @Id
     private Long id;
+	@Unindexed
     private Integer version = 0;
     
     /**
