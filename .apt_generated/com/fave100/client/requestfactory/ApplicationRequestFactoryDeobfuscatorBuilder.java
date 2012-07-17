@@ -20,6 +20,13 @@ withOperation(new OperationKey("6utjAQR3HGGVtfCaNTL$dvhbxQ8="),
   .withMethodName("persist")
   .withRequestContext("com.fave100.client.requestfactory.FaveItemRequest")
   .build());
+withOperation(new OperationKey("Fpm1058HQvb767D1qxlMOHtfzR4="),
+  new OperationData.Builder()
+  .withClientMethodDescriptor("(Ljava/lang/Long;)Lcom/google/web/bindery/requestfactory/shared/Request;")
+  .withDomainMethodDescriptor("(Ljava/lang/Long;)V")
+  .withMethodName("removeFaveItem")
+  .withRequestContext("com.fave100.client.requestfactory.FaveItemRequest")
+  .build());
 withOperation(new OperationKey("df0DKwCbgaZ5Y84jFFa42wbClVY="),
   new OperationData.Builder()
   .withClientMethodDescriptor("()Lcom/google/web/bindery/requestfactory/shared/Request;")

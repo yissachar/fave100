@@ -12,4 +12,13 @@ public interface FaveItemProxy extends EntityProxy {
 	
 	String getTitle();
 	void setTitle(String title);
+	
+	String getArtist();
+	void setArtist(String artist);
+	
+	Integer getReleaseYear();
+	void setReleaseYear(Integer date);
+	
+	String getItemURL();
+	void setItemURL(String itemURL);
 }

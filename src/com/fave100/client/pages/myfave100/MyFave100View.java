@@ -3,6 +3,8 @@ package com.fave100.client.pages.myfave100;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
@@ -20,6 +22,7 @@ public class MyFave100View extends ViewImpl implements
 	private final MusicSuggestionOracle suggestions = new MusicSuggestionOracle();
 	
 	@UiField(provided = true) SuggestBox itemInputBox;
+	@UiField DataGrid faveList;
 
 	@Inject
 	public MyFave100View(final Binder binder) {
@@ -31,8 +34,6 @@ public class MyFave100View extends ViewImpl implements
 	public Widget asWidget() {
 		return widget;
 	}
-	
-	@UiField Grid faveList;
 
 	@Override
 	public SuggestBox getItemInputBox() {
@@ -45,7 +46,7 @@ public class MyFave100View extends ViewImpl implements
 	}
 
 	@Override
-	public Grid getFaveList() {
+	public DataGrid getFaveList() {
 		return faveList;
 	}
 }
