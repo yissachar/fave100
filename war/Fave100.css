@@ -44,9 +44,12 @@ h1{
 	font-size: 1.3em;
 	max-width: 503px;
 	min-width: 503px;
-	height: 50px;
+	white-space: normal !important;
 	overflow: hidden;
 	padding: 7px;
+}
+.item span{
+	float:left;
 }
 .item-selected{
 	background-color: #9D8;
@@ -54,7 +57,6 @@ h1{
 .artistName{
 	font-size: 0.6em;
 	font-style: italic;
-	float: left;
 }
 
 /* Fave List Data Grid */
