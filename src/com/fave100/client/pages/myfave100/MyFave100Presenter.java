@@ -167,6 +167,7 @@ public class MyFave100Presenter extends
 				// Must copy over properties individually, as cannot edit proxy created by different request context
 				FaveItemProxy faveItemMap = itemSuggestionMap.get(selectedItem.getDisplayString());
 				FaveItemProxy newFaveItem = faveItemRequest.create(FaveItemProxy.class);
+				newFaveItem.setId(faveItemMap.getId());
 				newFaveItem.setTitle(faveItemMap.getTitle());
 				newFaveItem.setArtist(faveItemMap.getArtist());
 				newFaveItem.setReleaseYear(faveItemMap.getReleaseYear());
@@ -216,6 +217,7 @@ public class MyFave100Presenter extends
 	    	    	FaveItemRequest faveRequest = requestFactory.faveItemRequest();
 	    	    	
 	    	    	FaveItemProxy faveItem = faveRequest.create(FaveItemProxy.class);
+	    	    	faveItem.setId(Long.parseLong(entry.id()));
 	    	    	faveItem.setTitle(entry.trackName());
 	    	    	faveItem.setArtist(entry.artistName());
 	    	    	faveItem.setReleaseYear(Integer.parseInt(entry.releaseYear()));
@@ -254,6 +256,10 @@ public class MyFave100Presenter extends
  */
 class Entry extends JavaScriptObject {
 	protected Entry() {}
+	
+	public final native String id() /*-{
+		return String(this.trackId);
+	}-*/;
 	
 	public final native String itemURL() /*-{
 		return this.trackViewUrl;

@@ -8,6 +8,7 @@ import com.google.web.bindery.requestfactory.shared.EntityProxy;
 public interface FaveItemProxy extends EntityProxy {
 
 	Long getId();
+	void setId(Long id);
 	Integer getVersion();
 	
 	String getTitle();
