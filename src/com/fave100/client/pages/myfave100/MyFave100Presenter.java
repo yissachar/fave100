@@ -145,7 +145,7 @@ public class MyFave100Presenter extends
 		
 		refreshFaveList();
 		
-		this.getView().getItemInputBox().addKeyUpHandler(new KeyUpHandler() {
+		registerHandler(getView().getItemInputBox().addKeyUpHandler(new KeyUpHandler() {
 			public void onKeyUp(KeyUpEvent event) {	
 				//To restrict amount of queries, don't bother searching unless more than 200ms have passed
 				//since the last keystroke.		
@@ -156,9 +156,9 @@ public class MyFave100Presenter extends
 					suggestionsTimer.schedule(200);
 				}
 			}
-		});
+		}));
 		
-		this.getView().getItemInputBox().addSelectionHandler(new SelectionHandler<Suggestion>() {
+		registerHandler(getView().getItemInputBox().addSelectionHandler(new SelectionHandler<Suggestion>() {
 			public void onSelection(SelectionEvent<Suggestion> event) {				
 				Suggestion selectedItem = event.getSelectedItem();
 				
@@ -185,7 +185,7 @@ public class MyFave100Presenter extends
 				//clear the itemInputBox
 				getView().getItemInputBox().setValue("");
 			}
-		});
+		}));
 	}
 	
 	private void getAutocompleteList() {
