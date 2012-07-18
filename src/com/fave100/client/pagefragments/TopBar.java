@@ -11,9 +11,8 @@ public class TopBar extends Composite {
 
 	interface TopBarUiBinder extends UiBinder<Widget, TopBar> {
 	}
-
+	
 	public TopBar() {
-		initWidget(uiBinder.createAndBindUi(this));
+		initWidget(uiBinder.createAndBindUi(this));		
 	}
-
 }
