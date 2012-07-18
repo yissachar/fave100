@@ -210,7 +210,7 @@ public class MyFave100Presenter extends
 	         
 	    	    for (int i = 0; i < entries.length(); i++) {
 	    	    	Entry entry = entries.get(i);
-	    	    	String suggestionEntry = entry.trackName()+"<span class='artistName'>"+entry.artistName()+"</span>";
+	    	    	String suggestionEntry = entry.trackName()+"<br/><span class='artistName'>"+entry.artistName()+"</span>";
 	    	    	getView().getSuggestions().add(suggestionEntry);
 	    		   	//itemSuggestionMap.put(suggestionEntry, new ItemSuggestionObject(entry.trackName(), 
 	    		   	//		entry.artistName(), Integer.parseInt(entry.releaseYear()), entry.itemURL()));

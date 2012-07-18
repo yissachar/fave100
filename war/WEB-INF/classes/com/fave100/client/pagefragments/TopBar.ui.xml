@@ -26,7 +26,7 @@
 			<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}" ui:field="faveLogo">Fave100</g:InlineHyperlink>
 			<ul>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getAbout}">About</g:InlineHyperlink></li>
-				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">Log in</g:InlineHyperlink></li>
+				<li><span ui:field="logInLink">Log in</span></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getMyfave100}">My Fave100</g:InlineHyperlink></li>
 			</ul>
 		</div>

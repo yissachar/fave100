@@ -11,7 +11,7 @@ public class MusicSuggestionOracle extends MultiWordSuggestOracle{
 	
 	@Override
 	protected MultiWordSuggestion createSuggestion(String replacementString,String displayString) {		
-		int tokenSplitPos = replacementString.indexOf("<span class='artistName'>");
+		int tokenSplitPos = replacementString.indexOf("<br/><span class='artistName'>");
 		String newReplacementString = replacementString.substring(0, tokenSplitPos);
 		String newDisplayString = newReplacementString+replacementString.substring(tokenSplitPos, replacementString.length());
 		return new MultiWordSuggestion(newReplacementString, newDisplayString);
