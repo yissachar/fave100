@@ -49,4 +49,18 @@ public class MyFave100View extends ViewImpl implements
 	public DataGrid getFaveList() {
 		return faveList;
 	}
+	
+	@UiField HTMLPanel topBar;
+	
+	@Override
+	public void setInSlot(Object slot, Widget content) {
+		if(slot == MyFave100Presenter.TOP_BAR_SLOT) {
+			topBar.clear();
+			
+			if(content != null) {
+				topBar.add(content);
+			}
+		}
+		super.setInSlot(slot, content);
+	}
 }

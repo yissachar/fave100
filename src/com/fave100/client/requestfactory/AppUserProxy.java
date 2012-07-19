@@ -8,4 +8,6 @@ import com.google.web.bindery.requestfactory.shared.ProxyFor;
 public interface AppUserProxy extends EntityProxy{
 	Long getId();
 	Integer getVersion();
+	
+	String getName();
 }

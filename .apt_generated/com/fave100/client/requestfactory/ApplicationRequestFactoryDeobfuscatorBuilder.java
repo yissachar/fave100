@@ -41,6 +41,20 @@ withOperation(new OperationKey("7p63a6sAZB$VlRSF$vbfhBf6eLk="),
   .withMethodName("findFaveItem")
   .withRequestContext("com.fave100.client.requestfactory.FaveItemRequest")
   .build());
+withOperation(new OperationKey("7fWTXndLKL3kxJKodxlpw7xPDjM="),
+  new OperationData.Builder()
+  .withClientMethodDescriptor("(Ljava/lang/String;)Lcom/google/web/bindery/requestfactory/shared/Request;")
+  .withDomainMethodDescriptor("(Ljava/lang/String;)Ljava/lang/String;")
+  .withMethodName("getLoginLogoutURL")
+  .withRequestContext("com.fave100.client.requestfactory.AppUserRequest")
+  .build());
+withOperation(new OperationKey("ygOtjJemSv4w0yubjG9wT19fdGc="),
+  new OperationData.Builder()
+  .withClientMethodDescriptor("()Lcom/google/web/bindery/requestfactory/shared/Request;")
+  .withDomainMethodDescriptor("()Lcom/fave100/server/domain/AppUser;")
+  .withMethodName("findLoggedInAppUser")
+  .withRequestContext("com.fave100.client.requestfactory.AppUserRequest")
+  .build());
 withOperation(new OperationKey("nD21tQVIDyzncjOoVyeX9oZ6PV0="),
   new OperationData.Builder()
   .withClientMethodDescriptor("()Lcom/google/web/bindery/requestfactory/shared/InstanceRequest;")
@@ -53,13 +67,6 @@ withOperation(new OperationKey("Jw6NYPjfNLifEbdY3OF3rv$oKXk="),
   .withClientMethodDescriptor("(Ljava/lang/Long;)Lcom/google/web/bindery/requestfactory/shared/Request;")
   .withDomainMethodDescriptor("(Ljava/lang/Long;)Lcom/fave100/server/domain/AppUser;")
   .withMethodName("findAppUser")
-  .withRequestContext("com.fave100.client.requestfactory.AppUserRequest")
-  .build());
-withOperation(new OperationKey("SSwto846vBCAR0IgmBSLdhatBJ0="),
-  new OperationData.Builder()
-  .withClientMethodDescriptor("()Lcom/google/web/bindery/requestfactory/shared/Request;")
-  .withDomainMethodDescriptor("()Ljava/lang/String;")
-  .withMethodName("getLoginURL")
   .withRequestContext("com.fave100.client.requestfactory.AppUserRequest")
   .build());
 withRawTypeToken("fgtdGHxB5OEBQEtPsPS5V7TkHWs=", "com.fave100.client.requestfactory.AppUserProxy");
