@@ -11,6 +11,8 @@ import com.fave100.client.pages.about.AboutPresenter;
 import com.fave100.client.pages.about.AboutView;
 import com.fave100.client.pages.myfave100.MyFave100Presenter;
 import com.fave100.client.pages.myfave100.MyFave100View;
+import com.fave100.client.pagefragments.TopBarPresenter;
+import com.fave100.client.pagefragments.TopBarView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -29,5 +31,8 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(MyFave100Presenter.class,
 				MyFave100Presenter.MyView.class, MyFave100View.class,
 				MyFave100Presenter.MyProxy.class);
+
+		bindPresenterWidget(TopBarPresenter.class,
+				TopBarPresenter.MyView.class, TopBarView.class);
 	}
 }

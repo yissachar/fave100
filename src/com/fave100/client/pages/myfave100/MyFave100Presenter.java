@@ -5,13 +5,16 @@ import java.util.List;
 
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveItemRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -27,6 +30,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -45,6 +49,11 @@ public class MyFave100Presenter extends
 	private HashMap<String, FaveItemProxy> itemSuggestionMap;
 	private Timer suggestionsTimer;
 	private ApplicationRequestFactory requestFactory;
+	
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
+	
+	@Inject TopBarPresenter topBar;
 
 	public interface MyView extends View {
 		SuggestBox getItemInputBox();
@@ -246,6 +255,12 @@ public class MyFave100Presenter extends
 				getView().getFaveList().setRowData(response);
 			}
 		});		
+	}
+	
+	@Override
+	protected void onReveal() {
+	    super.onReveal();
+	    setInSlot(TOP_BAR_SLOT, topBar);
 	}
 }
 

@@ -13,6 +13,7 @@ import com.googlecode.objectify.annotation.Unindexed;
 @Entity
 public class FaveItem extends DatastoreObject{
 		
+	private Long appuser;
 	@Unindexed
 	private String title;
 	@Unindexed
@@ -28,8 +29,7 @@ public class FaveItem extends DatastoreObject{
 	}
 	
 	public static FaveItem findFaveItem(Long id) {
-		//return ofy().get(FaveItem.class, id);
-		return ofy().get(new Key<FaveItem>(FaveItem.class, id));
+		return ofy().get(FaveItem.class, id);
 	}
 	
 	public static void removeFaveItem(Long id) {
@@ -39,11 +39,12 @@ public class FaveItem extends DatastoreObject{
 	public static List<FaveItem> getAllFaveItemsForUser() {
 		//TODO: restrict items by user
 		List<FaveItem> allFaveItemsForUser = new ArrayList<FaveItem>();
-		Query<FaveItem> q = ofy().query(FaveItem.class);
+		return ofy().query(FaveItem.class).filter("user", 1).list();
+		/*Query<FaveItem> q = ofy().query(FaveItem.class);
 		for(FaveItem faveItem : q) {
 			allFaveItemsForUser.add(faveItem);
 		}
-		return allFaveItemsForUser;
+		return allFaveItemsForUser;*/
 	}
 	
 	public FaveItem persist() {
@@ -87,6 +88,14 @@ public class FaveItem extends DatastoreObject{
 
 	public void setItemURL(String itemURL) {
 		this.itemURL = itemURL;
+	}
+
+	public Long getAppuser() {
+		return appuser;
+	}
+
+	public void setAppuser(Long appuser) {
+		this.appuser = appuser;
 	}
 
 }
