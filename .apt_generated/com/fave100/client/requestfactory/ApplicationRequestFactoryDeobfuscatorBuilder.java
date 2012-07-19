@@ -27,10 +27,10 @@ withOperation(new OperationKey("Fpm1058HQvb767D1qxlMOHtfzR4="),
   .withMethodName("removeFaveItem")
   .withRequestContext("com.fave100.client.requestfactory.FaveItemRequest")
   .build());
-withOperation(new OperationKey("df0DKwCbgaZ5Y84jFFa42wbClVY="),
+withOperation(new OperationKey("wwaxoVholihY4p9_IzA_W2_3szA="),
   new OperationData.Builder()
-  .withClientMethodDescriptor("()Lcom/google/web/bindery/requestfactory/shared/Request;")
-  .withDomainMethodDescriptor("()Ljava/util/List;")
+  .withClientMethodDescriptor("(Ljava/lang/Long;)Lcom/google/web/bindery/requestfactory/shared/Request;")
+  .withDomainMethodDescriptor("(Ljava/lang/Long;)Ljava/util/List;")
   .withMethodName("getAllFaveItemsForUser")
   .withRequestContext("com.fave100.client.requestfactory.FaveItemRequest")
   .build());

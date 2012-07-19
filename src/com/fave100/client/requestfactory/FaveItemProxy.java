@@ -11,6 +11,9 @@ public interface FaveItemProxy extends EntityProxy {
 	void setId(Long id);
 	Integer getVersion();
 	
+	Long getAppUser();
+	void setAppUser(Long appUser);
+	
 	String getTitle();
 	void setTitle(String title);
 	

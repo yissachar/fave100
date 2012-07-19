@@ -10,6 +10,8 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.requestfactory.AppUserProxy;
+import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveItemRequest;
@@ -38,6 +40,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
@@ -49,6 +52,7 @@ public class MyFave100Presenter extends
 	private HashMap<String, FaveItemProxy> itemSuggestionMap;
 	private Timer suggestionsTimer;
 	private ApplicationRequestFactory requestFactory;
+	private AppUserProxy appUser;
 	
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
@@ -152,7 +156,7 @@ public class MyFave100Presenter extends
 		deleteColumn.setCellStyleNames("deleteColumn");
 		faveList.addColumn(deleteColumn);
 		
-		refreshFaveList();
+		
 		
 		registerHandler(getView().getItemInputBox().addKeyUpHandler(new KeyUpHandler() {
 			public void onKeyUp(KeyUpEvent event) {	
@@ -177,6 +181,7 @@ public class MyFave100Presenter extends
 				FaveItemProxy faveItemMap = itemSuggestionMap.get(selectedItem.getDisplayString());
 				FaveItemProxy newFaveItem = faveItemRequest.create(FaveItemProxy.class);
 				newFaveItem.setId(faveItemMap.getId());
+				newFaveItem.setAppUser(appUser.getId());
 				newFaveItem.setTitle(faveItemMap.getTitle());
 				newFaveItem.setArtist(faveItemMap.getArtist());
 				newFaveItem.setReleaseYear(faveItemMap.getReleaseYear());
@@ -248,7 +253,7 @@ public class MyFave100Presenter extends
 		//get the data from the datastore
 		FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
 		
-		Request<List<FaveItemProxy>> allFaveItemsReq = faveItemRequest.getAllFaveItemsForUser();
+		Request<List<FaveItemProxy>> allFaveItemsReq = faveItemRequest.getAllFaveItemsForUser(appUser.getId());
 		allFaveItemsReq.fire(new Receiver<List<FaveItemProxy>>() {	
 			@Override
 			public void onSuccess(List<FaveItemProxy> response) {
@@ -261,6 +266,15 @@ public class MyFave100Presenter extends
 	protected void onReveal() {
 	    super.onReveal();
 	    setInSlot(TOP_BAR_SLOT, topBar);
+	    AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		Request<AppUserProxy> getLoggedInAppUserReq = appUserRequest.findLoggedInAppUser();
+		getLoggedInAppUserReq.fire(new Receiver<AppUserProxy>() {
+			@Override
+			public void onSuccess(AppUserProxy response) {
+				appUser = response;
+				refreshFaveList();
+			}
+		});
 	}
 }
 
