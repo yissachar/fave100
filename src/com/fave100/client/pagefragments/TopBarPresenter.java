@@ -22,8 +22,8 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 		InlineHyperlink getMyFave100Link();
 	}
 	
+	private AppUserProxy appUser;
 	private ApplicationRequestFactory requestFactory;
-	private Boolean appUserLoggedIn = false; 
 	
 	@Inject
 	public TopBarPresenter(final EventBus eventBus, final MyView view) {
@@ -47,11 +47,11 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 			@Override
 			public void onSuccess(AppUserProxy appUser) {
 				if(appUser != null) {
-					appUserLoggedIn = true;
+					setAppUser(appUser);
 					getView().getGreeting().setInnerHTML("Welcome "+appUser.getName());
 					getView().getMyFave100Link().setVisible(true);
 				} else {
-					appUserLoggedIn = false;
+					setAppUser(null);
 					getView().getMyFave100Link().setVisible(false);					
 				}
 				// Create the login/logout URL as appropriate
@@ -60,28 +60,19 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 				loginURLReq.fire(new Receiver<String>() {
 					@Override
 					public void onSuccess(String response) {
-						String loginLogoutString = (appUserLoggedIn) ? "Log out" : "Log in";
+						String loginLogoutString = (getAppUser() != null) ? "Log out" : "Log in";
 						getView().getLogInLogOutLink().setInnerHTML("<a href="+response+">"+loginLogoutString+"</a>");
 					}			
 				});
 			}
 		});
-		/*
-		Request<String> loginURLReq = appUserRequest.getLoginURL();
-		loginURLReq.fire(new Receiver<String>() {
-			@Override
-			public void onSuccess(String response) {
-				getView().getLogInLink().setInnerHTML("<a href="+response+">Log in</a>");
-			}			
-		});
-		
-		AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		Request<String> idReq = appUserRequest.getGoogleIdForCurrentUser();
-		idReq.fire(new Receiver<String>() {
-			@Override
-			public void onSuccess(String response) {				
-				getView().getGreeting().setInnerHTML("Hi "+response);
-			}			
-		});*/
+	}
+	
+	public AppUserProxy getAppUser() {
+		return appUser;
+	}
+
+	public void setAppUser(AppUserProxy appUser) {
+		this.appUser = appUser;
 	}
 }

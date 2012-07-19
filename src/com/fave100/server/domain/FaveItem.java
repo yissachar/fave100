@@ -13,7 +13,7 @@ import com.googlecode.objectify.annotation.Unindexed;
 @Entity
 public class FaveItem extends DatastoreObject{
 		
-	private Long appuser;
+	private Long appUser;
 	@Unindexed
 	private String title;
 	@Unindexed
@@ -36,10 +36,10 @@ public class FaveItem extends DatastoreObject{
 		ofy().delete(FaveItem.class, id);
 	}
 	
-	public static List<FaveItem> getAllFaveItemsForUser() {
+	public static List<FaveItem> getAllFaveItemsForUser(Long appUser) {
 		//TODO: restrict items by user
 		List<FaveItem> allFaveItemsForUser = new ArrayList<FaveItem>();
-		return ofy().query(FaveItem.class).filter("user", 1).list();
+		return ofy().query(FaveItem.class).filter("appUser", appUser).list();
 		/*Query<FaveItem> q = ofy().query(FaveItem.class);
 		for(FaveItem faveItem : q) {
 			allFaveItemsForUser.add(faveItem);
@@ -90,12 +90,12 @@ public class FaveItem extends DatastoreObject{
 		this.itemURL = itemURL;
 	}
 
-	public Long getAppuser() {
-		return appuser;
+	public Long getAppUser() {
+		return appUser;
 	}
 
-	public void setAppuser(Long appuser) {
-		this.appuser = appuser;
+	public void setAppUser(Long appUser) {
+		this.appUser = appUser;
 	}
 
 }
