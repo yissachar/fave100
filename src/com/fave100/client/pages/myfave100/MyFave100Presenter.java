@@ -63,6 +63,7 @@ import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.view.client.CellPreviewEvent;
@@ -86,6 +87,7 @@ public class MyFave100Presenter extends
 		SuggestBox getItemInputBox();
 		MusicSuggestionOracle getSuggestions();
 		DataGrid<FaveItemProxy> getFaveList();
+		Button getRankButton();
 	}
 
 	@ProxyCodeSplit
@@ -178,11 +180,6 @@ public class MyFave100Presenter extends
 		};
 		deleteColumn.setCellStyleNames("deleteColumn");
 		faveList.addColumn(deleteColumn);
-		/*$("table").click(new Function() {
-			public void f() {
-				Window.alert("Hey from gQuery");
-			}
-		});*/
 		
 		// Start autocomplete suggestions on key up
 		registerHandler(getView().getItemInputBox().addKeyUpHandler(new KeyUpHandler() {
@@ -225,6 +222,14 @@ public class MyFave100Presenter extends
 				
 				//clear the itemInputBox
 				getView().getItemInputBox().setValue("");
+			}
+		}));
+		
+		// On rank button click, allow items to be reranked
+		registerHandler(getView().getRankButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				startRanking();
 			}
 		}));
 	}
@@ -281,28 +286,10 @@ public class MyFave100Presenter extends
 		FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
 		Request<List<FaveItemProxy>> allFaveItemsReq = faveItemRequest.getAllFaveItemsForUser(appUser.getId());
 		
-		
 		allFaveItemsReq.fire(new Receiver<List<FaveItemProxy>>() {	
 			@Override
 			public void onSuccess(List<FaveItemProxy> response) {
 				getView().getFaveList().setRowData(response);
-				
-				getView().getFaveList().addDomHandler(new MouseDownHandler() {
-					@Override
-					public void onMouseDown(MouseDownEvent event) {
-						//Window.alert("hey "+event.getNativeEvent().getEventTarget());
-					}
-				}, MouseDownEvent.getType());
-				/*getView().getFaveList().getRowElement(1).setDraggable(Element.DRAGGABLE_TRUE);
-				getView().getFaveList().addDomHandler(new DragStartHandler() {
-					@Override
-					public void onDragStart(DragStartEvent event) {
-						//Window.alert("Drag!");	
-						event.setData("text","drag-data");
-						event.getDataTransfer().setDragImage(getView().getFaveList().getRowElement(1), 0, 0);
-					}
-					
-				}, DragStartEvent.getType());*/
 			}
 		});
 	}
@@ -319,10 +306,17 @@ public class MyFave100Presenter extends
 				appUser = response;
 				refreshFaveList();
 			}
-		});
-		$(".faveList tr").live("mousedown", new Function() {
+		});		
+	}	
+	
+	private void startRanking() {
+		
+		$(".faveList tbody tr").mousedown(new Function() {
 			public boolean f(Event event) {
-				GQuery $row = $(event.getCurrentEventTarget()); 
+				// Remove mouse down listener immediately to prevent multiple mouse downs
+				$(".faveList tbody tr").unbind("mousedown");
+				GQuery $row = $(event.getCurrentEventTarget()).first();
+				$(".faveList").addClass("unselectable");
 				
 				// Add a hidden row to act as a placeholder while the real row is moved
 				$row.clone().css("visibility", "hidden").addClass("clonedHiddenRow").insertBefore($row);
@@ -358,23 +352,26 @@ public class MyFave100Presenter extends
 				});
 				$(".faveList").live("mouseup", new Function() {
 					public boolean f(Event event) {
-						$(".draggedFaveListItem").insertAfter($(".clonedHiddenRow"));
+						// Only allow one item to be added or we could end up with duplicate entries
+						$(".draggedFaveListItem").first().insertAfter($(".clonedHiddenRow"));
 						$(".draggedFaveListItem").removeClass("draggedFaveListItem");
+						$(".faveList").removeClass("unselectable");
 						$(".clonedHiddenRow").remove();
 						//remove all listeners now that we are done with the drag
 						if(nativePreviewHandler != null) {
 							nativePreviewHandler.removeHandler();
 							nativePreviewHandler = null;
 						}						
-						$(".faveList").unbind("mouseup");
-						$(".faveList tr").unbind("mouseover");
+						$(".faveList").unbind("mouseup mouseover");
+						// Allow the user to rank more items 						
+						startRanking();
 						return true;
 					}
 				});
 				return true;
 			}
 		});
-	}	
+	}
 }
 
 /**
