@@ -37,14 +37,8 @@ public class FaveItem extends DatastoreObject{
 	}
 	
 	public static List<FaveItem> getAllFaveItemsForUser(Long appUser) {
-		//TODO: restrict items by user
 		List<FaveItem> allFaveItemsForUser = new ArrayList<FaveItem>();
 		return ofy().query(FaveItem.class).filter("appUser", appUser).list();
-		/*Query<FaveItem> q = ofy().query(FaveItem.class);
-		for(FaveItem faveItem : q) {
-			allFaveItemsForUser.add(faveItem);
-		}
-		return allFaveItemsForUser;*/
 	}
 	
 	public FaveItem persist() {

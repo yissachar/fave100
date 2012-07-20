@@ -60,8 +60,6 @@ h1{
 }
 
 /* Fave List Data Grid */
-.faveList td, .faveList th{
-}
 .titleColumn, .faveList th:nth-child(1){
 	width: 290px;
 }
@@ -73,4 +71,7 @@ h1{
 }
 .deleteColumn{
 	width: 70px;
+}
+.draggedFaveListItem{
+	position: absolute;
 }

@@ -3,11 +3,20 @@ package com.fave100.client.pages.myfave100;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.gwt.query.client.GQuery;
+import com.google.gwt.query.client.Function;
+import com.google.gwt.query.client.Selector;
+import com.google.gwt.query.client.Selectors;
+import static com.google.gwt.query.client.GQuery.*;
+import static com.google.gwt.query.client.css.CSS.*;
+
+
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
@@ -15,6 +24,7 @@ import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveItemRequest;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.google.inject.Inject;
@@ -25,25 +35,37 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DragStartEvent;
+import com.google.gwt.event.dom.client.DragStartHandler;
 import com.google.gwt.event.dom.client.KeyCodeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
+import com.google.gwt.view.client.CellPreviewEvent;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class MyFave100Presenter extends
@@ -51,8 +73,9 @@ public class MyFave100Presenter extends
 	
 	private HashMap<String, FaveItemProxy> itemSuggestionMap;
 	private Timer suggestionsTimer;
+	private HandlerRegistration nativePreviewHandler;
 	private ApplicationRequestFactory requestFactory;
-	private AppUserProxy appUser;
+	private AppUserProxy appUser;	
 	
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
@@ -155,22 +178,26 @@ public class MyFave100Presenter extends
 		};
 		deleteColumn.setCellStyleNames("deleteColumn");
 		faveList.addColumn(deleteColumn);
+		/*$("table").click(new Function() {
+			public void f() {
+				Window.alert("Hey from gQuery");
+			}
+		});*/
 		
-		
-		
+		// Start autocomplete suggestions on key up
 		registerHandler(getView().getItemInputBox().addKeyUpHandler(new KeyUpHandler() {
 			public void onKeyUp(KeyUpEvent event) {	
 				//To restrict amount of queries, don't bother searching unless more than 200ms have passed
 				//since the last keystroke.		
 				suggestionsTimer.cancel();
 				// don't search if it was just an arrow key being pressed
-				if(!KeyCodeEvent.isArrow(event.getNativeKeyCode()) && event.getNativeKeyCode() != KeyCodes.KEY_ENTER)
-				{
+				if(!KeyCodeEvent.isArrow(event.getNativeKeyCode()) && event.getNativeKeyCode() != KeyCodes.KEY_ENTER) {
 					suggestionsTimer.schedule(200);
 				}
 			}
 		}));
 		
+		// Add Fave Item on selection event
 		registerHandler(getView().getItemInputBox().addSelectionHandler(new SelectionHandler<Suggestion>() {
 			public void onSelection(SelectionEvent<Suggestion> event) {				
 				Suggestion selectedItem = event.getSelectedItem();
@@ -252,14 +279,32 @@ public class MyFave100Presenter extends
 	private void refreshFaveList() {
 		//get the data from the datastore
 		FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
-		
 		Request<List<FaveItemProxy>> allFaveItemsReq = faveItemRequest.getAllFaveItemsForUser(appUser.getId());
+		
+		
 		allFaveItemsReq.fire(new Receiver<List<FaveItemProxy>>() {	
 			@Override
 			public void onSuccess(List<FaveItemProxy> response) {
 				getView().getFaveList().setRowData(response);
+				
+				getView().getFaveList().addDomHandler(new MouseDownHandler() {
+					@Override
+					public void onMouseDown(MouseDownEvent event) {
+						//Window.alert("hey "+event.getNativeEvent().getEventTarget());
+					}
+				}, MouseDownEvent.getType());
+				/*getView().getFaveList().getRowElement(1).setDraggable(Element.DRAGGABLE_TRUE);
+				getView().getFaveList().addDomHandler(new DragStartHandler() {
+					@Override
+					public void onDragStart(DragStartEvent event) {
+						//Window.alert("Drag!");	
+						event.setData("text","drag-data");
+						event.getDataTransfer().setDragImage(getView().getFaveList().getRowElement(1), 0, 0);
+					}
+					
+				}, DragStartEvent.getType());*/
 			}
-		});		
+		});
 	}
 	
 	@Override
@@ -275,7 +320,61 @@ public class MyFave100Presenter extends
 				refreshFaveList();
 			}
 		});
-	}
+		$(".faveList tr").live("mousedown", new Function() {
+			public boolean f(Event event) {
+				GQuery $row = $(event.getCurrentEventTarget()); 
+				
+				// Add a hidden row to act as a placeholder while the real row is moved
+				$row.clone().css("visibility", "hidden").addClass("clonedHiddenRow").insertBefore($row);
+				$row.addClass("draggedFaveListItem");
+				
+				nativePreviewHandler = Event.addNativePreviewHandler(new NativePreviewHandler() {
+					@Override
+					public void onPreviewNativeEvent(NativePreviewEvent event) {
+						// Set the dragged row position to be equal to mouseY						
+						GQuery $draggedFaveListItem = $(".draggedFaveListItem");
+						int offsetMouseY = event.getNativeEvent().getClientY()-$(".faveList tbody").offset().top;
+						int newPos = offsetMouseY-$draggedFaveListItem.height()/2;
+						$draggedFaveListItem.css("top", newPos+"px");
+						
+						// Check if dragged row collides with row above or row below
+						int draggedTop = $draggedFaveListItem.offset().top;
+						int draggedBottom = draggedTop + $draggedFaveListItem.height();
+						GQuery $clonedHiddenRow = $(".clonedHiddenRow");
+						GQuery $previous = $clonedHiddenRow.prev();
+						GQuery $next = $clonedHiddenRow.next();
+						// Make sure we are not checking against the dragged row itself
+						if($previous.hasClass("draggedFaveListItem")) $previous = $previous.prev();
+						if($next.hasClass("draggedFaveListItem")) $next = $next.next();
+						int previousBottom = $previous.offset().top+$previous.height();
+						// Move the hidden row to the appropriate position
+						if(draggedTop < previousBottom) {
+							$(".clonedHiddenRow").insertBefore($previous);
+						}
+						else if(draggedBottom > $next.offset().top+$next.height()) {
+							$(".clonedHiddenRow").insertAfter($next);
+						}
+					}			
+				});
+				$(".faveList").live("mouseup", new Function() {
+					public boolean f(Event event) {
+						$(".draggedFaveListItem").insertAfter($(".clonedHiddenRow"));
+						$(".draggedFaveListItem").removeClass("draggedFaveListItem");
+						$(".clonedHiddenRow").remove();
+						//remove all listeners now that we are done with the drag
+						if(nativePreviewHandler != null) {
+							nativePreviewHandler.removeHandler();
+							nativePreviewHandler = null;
+						}						
+						$(".faveList").unbind("mouseup");
+						$(".faveList tr").unbind("mouseover");
+						return true;
+					}
+				});
+				return true;
+			}
+		});
+	}	
 }
 
 /**

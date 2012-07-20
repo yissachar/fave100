@@ -13,11 +13,14 @@
 			margin: 50px auto;
 			background-color: #FFF;
 			border: 2px solid #5B5;
-			width: 740px;
+			width: 740px;			
 			height: 600px;			
 		}		
+		.faveList tr{
+			min-width: 740px;
+		}
 		.faveList table{
-			/*table-layout: auto !important;*/
+			table-layout: auto !important;
 		}	
 		.faveList th{
 			/*text-align: center;*/

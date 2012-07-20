@@ -1,5 +1,11 @@
 package com.fave100.server.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Embedded;
+
+import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.server.DAO;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
