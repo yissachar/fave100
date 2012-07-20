@@ -56,7 +56,8 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 				}
 				// Create the login/logout URL as appropriate
 				AppUserRequest appUserRequest = requestFactory.appUserRequest();				
-				Request<String> loginURLReq = appUserRequest.getLoginLogoutURL(Window.Location.getPath()+Window.Location.getQueryString());
+				Request<String> loginURLReq = appUserRequest.getLoginLogoutURL(Window.Location.getPath()+
+						Window.Location.getQueryString()+Window.Location.getHash());
 				loginURLReq.fire(new Receiver<String>() {
 					@Override
 					public void onSuccess(String response) {
