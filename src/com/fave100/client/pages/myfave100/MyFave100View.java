@@ -5,6 +5,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
@@ -28,6 +29,7 @@ public class MyFave100View extends ViewImpl implements
 	public MyFave100View(final Binder binder) {
 		itemInputBox = new SuggestBox(suggestions);
 		widget = binder.createAndBindUi(this);
+		itemInputBox.getElement().setAttribute("placeholder", "Search songs...");
 	}
 
 	@Override
@@ -62,5 +64,12 @@ public class MyFave100View extends ViewImpl implements
 			}
 		}
 		super.setInSlot(slot, content);
+	}
+
+	@UiField Button rankButton;
+	
+	@Override
+	public Button getRankButton() {
+		return rankButton;
 	}
 }
