@@ -10,6 +10,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.fave100.client.pages.about.AboutPresenter;
 import com.fave100.client.pages.myfave100.MyFave100Presenter;
+import com.fave100.client.requestfactory.ApplicationRequestFactory;
 
 @GinModules({ DispatchAsyncModule.class, ClientModule.class })
 public interface ClientGinjector extends Ginjector {
@@ -17,6 +18,8 @@ public interface ClientGinjector extends Ginjector {
 	EventBus getEventBus();
 
 	PlaceManager getPlaceManager();
+	
+	ApplicationRequestFactory getApplicationRequestFactory();
 
 	AsyncProvider<HomePresenter> getHomePresenter();
 

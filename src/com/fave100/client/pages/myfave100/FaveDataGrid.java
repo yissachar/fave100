@@ -38,11 +38,12 @@ public class FaveDataGrid extends DataGrid{
 	private AppUserProxy appUser;
 	private ApplicationRequestFactory requestFactory;	
 		
-	public FaveDataGrid(EventBus eventBus) {		
+	public FaveDataGrid(final ApplicationRequestFactory requestFactory) {		
 		super(0, (DataGridResource) GWT.create(DataGridResource.class));
 		//TODO: inject request factory
-		requestFactory = GWT.create(ApplicationRequestFactory.class);
-		requestFactory.initialize(eventBus);
+		//requestFactory = GWT.create(ApplicationRequestFactory.class);
+		//requestFactory.initialize(eventBus);
+		this.requestFactory = requestFactory;
 		
 		// Title Column
 		SafeHtmlCell linkCell = new SafeHtmlCell();
