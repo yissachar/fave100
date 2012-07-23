@@ -1,5 +1,6 @@
 package com.fave100.client.pages.myfave100;
 
+import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.core.client.GWT;
@@ -26,20 +27,15 @@ public class MyFave100View extends ViewImpl implements
 	public interface Binder extends UiBinder<Widget, MyFave100View> {
 	}
 	
-	/*public interface DataGridResource extends DataGrid.Resources {
-		@Source({ DataGrid.Style.DEFAULT_CSS, "DataGridOverride.css" })
-		DataGrid.Style dataGridStyle();
-	};*/
-	
 	@UiField(provided = true) SuggestBox itemInputBox;
 	@UiField(provided = true) FaveDataGrid faveList;
 
 	@Inject
-	public MyFave100View(final Binder binder, final EventBus eventBus) {
+	public MyFave100View(final Binder binder, final ApplicationRequestFactory requestFactory) {
 		//DataGridResource resource = GWT.create(DataGridResource.class);	
 		MusicSuggestionOracle suggestions = new MusicSuggestionOracle();
 		itemInputBox = new SongSuggestBox(suggestions);
-		faveList = new FaveDataGrid(eventBus);
+		faveList = new FaveDataGrid(requestFactory);
 		widget = binder.createAndBindUi(this);
 		//faveList = new FaveDataGrid(0, resource);
 		itemInputBox.getElement().setAttribute("placeholder", "Search songs...");

@@ -1,10 +1,9 @@
 package com.fave100.client.gin;
 
 import com.google.gwt.core.client.GWT;
-import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
+import com.google.gwt.event.shared.EventBus;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.fave100.client.pages.home.HomePresenter;
@@ -16,7 +15,6 @@ import com.fave100.client.pages.about.AboutPresenter;
 import com.fave100.client.pages.about.AboutView;
 import com.fave100.client.pages.myfave100.MyFave100Presenter;
 import com.fave100.client.pages.myfave100.MyFave100View;
-import com.fave100.client.pages.myfave100.SongSuggestBox;
 import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.pagefragments.TopBarView;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
@@ -40,14 +38,14 @@ public class ClientModule extends AbstractPresenterModule {
 				MyFave100Presenter.MyProxy.class);
 
 		bindPresenterWidget(TopBarPresenter.class,
-				TopBarPresenter.MyView.class, TopBarView.class);		
+				TopBarPresenter.MyView.class, TopBarView.class);	
 	}
 	
-	/*@Provides
+	@Provides
 	@Singleton
 	public ApplicationRequestFactory createApplicationRequestFactory(EventBus eventBus) {
 		ApplicationRequestFactory requestFactory = GWT.create(ApplicationRequestFactory.class);
 		requestFactory.initialize(eventBus);
 		return requestFactory;
-	}*/
+	}
 }

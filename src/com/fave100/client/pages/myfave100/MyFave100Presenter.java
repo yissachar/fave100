@@ -94,12 +94,14 @@ public class MyFave100Presenter extends
 
 	@Inject
 	public MyFave100Presenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy) {
+			final MyProxy proxy, final ApplicationRequestFactory requestFactory) {
 		super(eventBus, view, proxy);
 		
 		this.eventBus = eventBus;
-		requestFactory = GWT.create(ApplicationRequestFactory.class);
-		requestFactory.initialize(eventBus);
+		this.requestFactory = requestFactory;
+		//requestFactory.initialize(eventBus);
+		//requestFactory = GWT.create(ApplicationRequestFactory.class);
+		//requestFactory.initialize(eventBus);
 	}
 
 	@Override
