@@ -1,6 +1,9 @@
 package com.fave100.client.pages.myfave100;
 
+import com.fave100.client.requestfactory.FaveItemProxy;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle.Source;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
@@ -20,14 +23,20 @@ public class MyFave100View extends ViewImpl implements
 	public interface Binder extends UiBinder<Widget, MyFave100View> {
 	}
 	
-	private final MusicSuggestionOracle suggestions = new MusicSuggestionOracle();
+	public interface DataGridResource extends DataGrid.Resources {
+		@Source({ DataGrid.Style.DEFAULT_CSS, "DataGridOverride.css" })
+		DataGrid.Style dataGridStyle();
+	};
 	
 	@UiField(provided = true) SuggestBox itemInputBox;
 	@UiField DataGrid faveList;
 
 	@Inject
 	public MyFave100View(final Binder binder) {
-		itemInputBox = new SuggestBox(suggestions);
+		DataGridResource resource = GWT.create(DataGridResource.class);
+		faveList = new DataGrid<FaveItemProxy>(0, resource);
+		MusicSuggestionOracle suggestions = new MusicSuggestionOracle();
+		itemInputBox = new SongSuggestBox(suggestions);
 		widget = binder.createAndBindUi(this);
 		itemInputBox.getElement().setAttribute("placeholder", "Search songs...");
 	}
@@ -38,14 +47,14 @@ public class MyFave100View extends ViewImpl implements
 	}
 
 	@Override
-	public SuggestBox getItemInputBox() {
-		return itemInputBox;
+	public SongSuggestBox getItemInputBox() {
+		return (SongSuggestBox) itemInputBox;
 	}
 
-	@Override
+	/*@Override
 	public MusicSuggestionOracle getSuggestions() {
 		return suggestions;
-	}
+	}*/
 
 	@Override
 	public DataGrid getFaveList() {
@@ -72,4 +81,5 @@ public class MyFave100View extends ViewImpl implements
 	public Button getRankButton() {
 		return rankButton;
 	}
+	
 }

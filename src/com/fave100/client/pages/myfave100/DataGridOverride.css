@@ -1,0 +1,10 @@
+.dataGridEvenRow, .dataGridOddRow, .dataGridCell{
+	background: none !important;
+	border: none !important;
+}
+@external tr:nth-child(even){
+	background-color: #F00 !important;
+}
+tr:odd{
+	background-color: #F00 !important;
+}

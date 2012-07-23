@@ -25,4 +25,7 @@ public interface FaveItemProxy extends EntityProxy {
 	
 	String getItemURL();
 	void setItemURL(String itemURL);
+	
+	String getWhyline();
+	void setWhyline(String whyline);
 }
