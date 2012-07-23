@@ -8,12 +8,15 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+//import com.google.web.bindery.event.shared.EventBus;
+import com.google.gwt.event.shared.EventBus;
 
 public class MyFave100View extends ViewImpl implements
 		MyFave100Presenter.MyView {
@@ -23,21 +26,22 @@ public class MyFave100View extends ViewImpl implements
 	public interface Binder extends UiBinder<Widget, MyFave100View> {
 	}
 	
-	public interface DataGridResource extends DataGrid.Resources {
+	/*public interface DataGridResource extends DataGrid.Resources {
 		@Source({ DataGrid.Style.DEFAULT_CSS, "DataGridOverride.css" })
 		DataGrid.Style dataGridStyle();
-	};
+	};*/
 	
 	@UiField(provided = true) SuggestBox itemInputBox;
-	@UiField DataGrid faveList;
+	@UiField(provided = true) FaveDataGrid faveList;
 
 	@Inject
-	public MyFave100View(final Binder binder) {
-		DataGridResource resource = GWT.create(DataGridResource.class);
-		faveList = new DataGrid<FaveItemProxy>(0, resource);
+	public MyFave100View(final Binder binder, final EventBus eventBus) {
+		//DataGridResource resource = GWT.create(DataGridResource.class);	
 		MusicSuggestionOracle suggestions = new MusicSuggestionOracle();
 		itemInputBox = new SongSuggestBox(suggestions);
+		faveList = new FaveDataGrid(eventBus);
 		widget = binder.createAndBindUi(this);
+		//faveList = new FaveDataGrid(0, resource);
 		itemInputBox.getElement().setAttribute("placeholder", "Search songs...");
 	}
 
@@ -51,13 +55,8 @@ public class MyFave100View extends ViewImpl implements
 		return (SongSuggestBox) itemInputBox;
 	}
 
-	/*@Override
-	public MusicSuggestionOracle getSuggestions() {
-		return suggestions;
-	}*/
-
 	@Override
-	public DataGrid getFaveList() {
+	public FaveDataGrid getFaveList() {
 		return faveList;
 	}
 	

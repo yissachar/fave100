@@ -71,10 +71,10 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class MyFave100Presenter extends
 		Presenter<MyFave100Presenter.MyView, MyFave100Presenter.MyProxy> {	
-	
-	private HandlerRegistration nativePreviewHandler;
+		
 	private ApplicationRequestFactory requestFactory;
 	private AppUserProxy appUser;	
+	private EventBus eventBus;
 	
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
@@ -83,7 +83,7 @@ public class MyFave100Presenter extends
 
 	public interface MyView extends View {
 		SongSuggestBox getItemInputBox();
-		DataGrid<FaveItemProxy> getFaveList();
+		FaveDataGrid getFaveList();
 		Button getRankButton();
 	}
 
@@ -97,6 +97,7 @@ public class MyFave100Presenter extends
 			final MyProxy proxy) {
 		super(eventBus, view, proxy);
 		
+		this.eventBus = eventBus;
 		requestFactory = GWT.create(ApplicationRequestFactory.class);
 		requestFactory.initialize(eventBus);
 	}
@@ -108,66 +109,7 @@ public class MyFave100Presenter extends
 
 	@Override
 	protected void onBind() {
-		super.onBind();
-		
-		DataGrid<FaveItemProxy> faveList = getView().getFaveList();
-		
-		SafeHtmlCell linkCell = new SafeHtmlCell();
-		Column<FaveItemProxy, SafeHtml> titleColumn = new Column<FaveItemProxy, SafeHtml>(linkCell) {
-			@Override
-			public SafeHtml getValue(FaveItemProxy faveItem) {
-				SafeHtmlBuilder sb = new SafeHtmlBuilder();
-				if(faveItem.getItemURL() != null && faveItem.getItemURL() != "") {
-					sb.appendHtmlConstant("<a href='"+faveItem.getItemURL()+"'>"+faveItem.getTitle()+"</a>");
-				} else {
-					sb.appendHtmlConstant(faveItem.getTitle());
-				}
-				return sb.toSafeHtml();
-			}
-		};
-		titleColumn.setCellStyleNames("titleColumn");
-		faveList.addColumn(titleColumn, "Title");
-		
-		TextColumn<FaveItemProxy> artistColumn = new TextColumn<FaveItemProxy>() {
-			@Override
-			public String getValue(FaveItemProxy object) {
-				return object.getArtist();
-			}
-		};
-		artistColumn.setCellStyleNames("artistColumn");
-		faveList.addColumn(artistColumn, "Artist");
-		
-		TextColumn<FaveItemProxy> yearColumn = new TextColumn<FaveItemProxy>() {
-			@Override
-			public String getValue(FaveItemProxy object) {
-				return object.getReleaseYear().toString();
-			}
-		};
-		yearColumn.setCellStyleNames("yearColumn");
-		faveList.addColumn(yearColumn, "Year");		
-		
-		ActionCell<FaveItemProxy> deleteButton = new ActionCell<FaveItemProxy>("Delete", new ActionCell.Delegate<FaveItemProxy>() {
-		      @Override
-		      public void execute(FaveItemProxy contact) {
-		    	  //find the item in the data store
-		    	  FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
-		    	  Request<Void> deleteReq = faveItemRequest.removeFaveItem(contact.getId());
-		    	  deleteReq.fire(new Receiver<Void>() {
-		    		  @Override
-		    		  public void onSuccess(Void response) {
-		    			  refreshFaveList();									
-		    		  }								
-		    	  });
-		      }
-	    });
-		Column<FaveItemProxy, FaveItemProxy> deleteColumn = new Column<FaveItemProxy, FaveItemProxy>(deleteButton) {
-			@Override
-			public FaveItemProxy getValue(FaveItemProxy object) {
-				return object;
-			}
-		};
-		deleteColumn.setCellStyleNames("deleteColumn");
-		faveList.addColumn(deleteColumn);
+		super.onBind();		
 		
 		// Add Fave Item on selection event
 		registerHandler(getView().getItemInputBox().addSelectionHandler(new SelectionHandler<Suggestion>() {
@@ -191,7 +133,7 @@ public class MyFave100Presenter extends
 				createReq.fire(new Receiver<FaveItemProxy>() {
 					@Override
 					public void onSuccess(FaveItemProxy response) {
-						refreshFaveList();
+						getView().getFaveList().refreshFaveList();
 					}					
 				});
 				
@@ -204,22 +146,9 @@ public class MyFave100Presenter extends
 		registerHandler(getView().getRankButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				startRanking();
+				getView().getFaveList().startRanking();
 			}
 		}));
-	}
-	
-	private void refreshFaveList() {
-		//get the data from the datastore
-		FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
-		Request<List<FaveItemProxy>> allFaveItemsReq = faveItemRequest.getAllFaveItemsForUser(appUser.getId());
-		
-		allFaveItemsReq.fire(new Receiver<List<FaveItemProxy>>() {	
-			@Override
-			public void onSuccess(List<FaveItemProxy> response) {
-				getView().getFaveList().setRowData(response);
-			}
-		});
 	}
 	
 	@Override
@@ -232,72 +161,10 @@ public class MyFave100Presenter extends
 			@Override
 			public void onSuccess(AppUserProxy response) {
 				appUser = response;
-				refreshFaveList();
+				getView().getFaveList().setAppUser(appUser);
+				//getView().getFaveList().setRequestFactory(requestFactory);
+				getView().getFaveList().refreshFaveList();
 			}
 		});		
-	}	
-	
-	private void startRanking() {
-		
-		$(".faveList tbody tr").mousedown(new Function() {
-			public boolean f(Event event) {
-				// Remove mouse down listener immediately to prevent multiple mouse downs
-				$(".faveList tbody tr").unbind("mousedown");
-				GQuery $row = $(event.getCurrentEventTarget()).first();
-				$(".faveList").addClass("unselectable");
-				
-				// Add a hidden row to act as a placeholder while the real row is moved
-				$row.clone().css("visibility", "hidden").addClass("clonedHiddenRow").insertBefore($row);
-				$row.addClass("draggedFaveListItem");
-				
-				nativePreviewHandler = Event.addNativePreviewHandler(new NativePreviewHandler() {
-					@Override
-					public void onPreviewNativeEvent(NativePreviewEvent event) {
-						// Set the dragged row position to be equal to mouseY						
-						GQuery $draggedFaveListItem = $(".draggedFaveListItem");
-						int offsetMouseY = event.getNativeEvent().getClientY()-$(".faveList tbody").offset().top+Window.getScrollTop();
-						int newPos = offsetMouseY-$draggedFaveListItem.height()/2;
-						$draggedFaveListItem.css("top", newPos+"px");
-						
-						// Check if dragged row collides with row above or row below
-						int draggedTop = $draggedFaveListItem.offset().top;
-						int draggedBottom = draggedTop + $draggedFaveListItem.height();
-						GQuery $clonedHiddenRow = $(".clonedHiddenRow");
-						GQuery $previous = $clonedHiddenRow.prev();
-						GQuery $next = $clonedHiddenRow.next();
-						// Make sure we are not checking against the dragged row itself
-						if($previous.hasClass("draggedFaveListItem")) $previous = $previous.prev();
-						if($next.hasClass("draggedFaveListItem")) $next = $next.next();
-						int previousBottom = $previous.offset().top+$previous.height();
-						// Move the hidden row to the appropriate position
-						if(draggedTop < previousBottom) {
-							$(".clonedHiddenRow").insertBefore($previous);
-						}
-						else if(draggedBottom > $next.offset().top+$next.height()) {
-							$(".clonedHiddenRow").insertAfter($next);
-						}
-					}			
-				});
-				$(".faveList").live("mouseup", new Function() {
-					public boolean f(Event event) {
-						// Only allow one item to be added or we could end up with duplicate entries
-						$(".draggedFaveListItem").first().insertAfter($(".clonedHiddenRow"));
-						$(".draggedFaveListItem").removeClass("draggedFaveListItem");
-						$(".faveList").removeClass("unselectable");
-						$(".clonedHiddenRow").remove();
-						//remove all listeners now that we are done with the drag
-						if(nativePreviewHandler != null) {
-							nativePreviewHandler.removeHandler();
-							nativePreviewHandler = null;
-						}						
-						$(".faveList").unbind("mouseup mouseover");
-						// Allow the user to rank more items 						
-						startRanking();
-						return true;
-					}
-				});
-				return true;
-			}
-		});
 	}
 }
