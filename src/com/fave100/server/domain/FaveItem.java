@@ -22,6 +22,7 @@ public class FaveItem extends DatastoreObject{
 	private Integer releaseYear;
 	@Unindexed
 	private String itemURL;
+	private String whyline;
 	
 	public static final Objectify ofy() {
 		DAO dao = new DAO();
@@ -90,6 +91,14 @@ public class FaveItem extends DatastoreObject{
 
 	public void setAppUser(Long appUser) {
 		this.appUser = appUser;
+	}
+
+	public String getWhyline() {
+		return whyline;
+	}
+
+	public void setWhyline(String whyline) {
+		this.whyline = whyline;
 	}
 
 }
