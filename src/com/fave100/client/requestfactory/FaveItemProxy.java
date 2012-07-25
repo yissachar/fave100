@@ -10,9 +10,6 @@ public interface FaveItemProxy extends EntityProxy {
 	Long getId();
 	Integer getVersion();
 	
-	//Long getAppUser();
-	//void setAppUser(Long appUser);
-	
 	String getWhyline();
 	void setWhyline(String whyline);
 		

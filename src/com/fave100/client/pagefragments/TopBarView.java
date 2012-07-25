@@ -16,7 +16,7 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 	}
 
 	@Inject
-	public TopBarView(final Binder binder) {// TODO: switch to UiHandler version
+	public TopBarView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 	}
 

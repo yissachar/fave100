@@ -1,20 +1,12 @@
- .dataGridHeader{
+/* Stylesheet to override default DataGrid styles */
+
+.dataGridHeader{
  	border-bottom: 1px solid #000;
  	background-color: #9E9;
  }
  .dataGridCell{
-	/*background: none !important;
-	box-shadow: 0px 1px 1px #DDD inset;
-	background-color: #FFF !important;*/	
 	border: none !important;
 }
 .dataGridEvenRow, .dataGridOddRow {
 	border: 1px solid #000 !important;
-}
-@external .faveList table tr:nth-child(even) {
-	background-color: #F00 !important;
-}
-/* Not working... */
-@external tr:nth-child(even){
-	background-color: #F00 !important;
 }

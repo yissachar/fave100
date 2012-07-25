@@ -8,7 +8,6 @@ import com.gwtplatform.mvp.client.View;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
@@ -27,7 +26,6 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 		InlineHyperlink getMyFave100Link();
 	}
 	
-	private AppUserProxy appUser;
 	private ApplicationRequestFactory requestFactory;
 	
 	@Inject
@@ -45,6 +43,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 	@Override
 	protected void onReveal() {
 		super.onReveal();
+		// TODO: Use manual reveal to avoid delay from AppUseRequest
 		
 		// Whenever the page is refreshed, check to see if the user is logged in or not
 		// and change the top bar links and elements appropriately.
@@ -53,34 +52,19 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 		getLoggedInAppUserReq.fire(new Receiver<AppUserProxy>() {
 			@Override
 			public void onSuccess(AppUserProxy appUser) {
-				if(appUser != null) {
-					setAppUser(appUser);
-					getView().getGreeting().setInnerHTML("Welcome "+appUser.getName());
-					getView().getMyFave100Link().setVisible(true);
+				// We need the currentURL to redirect users back to this page
+				// after a successful login
+				String currentURL = Window.Location.getPath()+
+						Window.Location.getQueryString()+Window.Location.getHash();
+				if(appUser != null) {					
+					getView().getGreeting().setInnerHTML("Welcome "+appUser.getUsername());
+					getView().getMyFave100Link().setVisible(true);	
+					getView().getLogInLogOutLink().setInnerHTML("<a href='/_ah/logout?continue="+currentURL+"'>Log out</a>");
 				} else {
-					setAppUser(null);
 					getView().getMyFave100Link().setVisible(false);					
-				}
-				// Create the login/logout URL as appropriate
-				AppUserRequest appUserRequest = requestFactory.appUserRequest();				
-				Request<String> loginURLReq = appUserRequest.getLoginLogoutURL(Window.Location.getPath()+
-						Window.Location.getQueryString()+Window.Location.getHash());
-				loginURLReq.fire(new Receiver<String>() {
-					@Override
-					public void onSuccess(String response) {
-						String loginLogoutString = (getAppUser() != null) ? "Log out" : "Log in";
-						getView().getLogInLogOutLink().setInnerHTML("<a href="+response+">"+loginLogoutString+"</a>");
-					}			
-				});
+					getView().getLogInLogOutLink().setInnerHTML("<a href='/_ah/login?continue="+currentURL+"'>Log in</a>");
+				}				
 			}
 		});
-	}
-	
-	public AppUserProxy getAppUser() {
-		return appUser;
-	}
-
-	public void setAppUser(AppUserProxy appUser) {
-		this.appUser = appUser;
 	}
 }

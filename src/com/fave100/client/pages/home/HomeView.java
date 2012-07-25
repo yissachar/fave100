@@ -29,8 +29,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	@Override
 	public void setInSlot(Object slot, Widget content) {
 		if(slot == HomePresenter.TOP_BAR_SLOT) {
-			topBar.clear();
-			
+			topBar.clear();			
 			if(content != null) {
 				topBar.add(content);
 			}

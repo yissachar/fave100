@@ -1,24 +1,21 @@
 package com.fave100.server.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
 
-import javax.persistence.Embedded;
-
-import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.server.DAO;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.Query;
 import com.googlecode.objectify.annotation.Entity;
 
 @Entity
-public class AppUser extends DatastoreObject{
+public class AppUser{
 	
-	private String name;
+	@Id private String username;
+	private Integer version = 0;
 	private String googleId;
 	private String email;
 	
@@ -27,8 +24,8 @@ public class AppUser extends DatastoreObject{
 		return dao.ofy();
 	}
 	
-	public static AppUser findAppUser(Long id) {
-		return ofy().get(new Key<AppUser>(AppUser.class, id));
+	public static AppUser findAppUser(String username) {
+		return ofy().get(new Key<AppUser>(AppUser.class, username));
 	}
 	
 	public static AppUser findAppUserByGoogleId(String googleId) {
@@ -48,33 +45,54 @@ public class AppUser extends DatastoreObject{
 		} else {
 			return null;
 		}
-	}
-	
-	public static String getLoginLogoutURL(String redirect) {
-		UserService userService = UserServiceFactory.getUserService();
-		if(userService.getCurrentUser() != null) {			
-			return userService.createLogoutURL(redirect);
-		} else {
-			return userService.createLoginURL(redirect);
-		}
-	}
+	}	
 	
 	public static AppUser createCurrentUser() {
 		//TODO: should return the current user if it already exists
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
-		
 		AppUser appUser = new AppUser();
-		appUser.setName(user.getNickname());
+		appUser.setUsername(user.getNickname());
 		appUser.setEmail(user.getEmail());
 		appUser.setGoogleId(user.getUserId());
 		return(appUser.persist());
+		// TODO: Use transactions to prevent duplicate user entries
+		/*Transaction txn = ofy().getTxn();
+		try {
+			// Verify that username is unique
+			//if(ofy().find(AppUser.class, user.getNickname()) != null) {
+			//	return null; 
+			//} 
+			AppUser appUser = new AppUser();
+			appUser.setUsername(user.getNickname());
+			appUser.setEmail(user.getEmail());
+			appUser.setGoogleId(user.getUserId());
+			AppUser foo = appUser.persist();
+			txn.commit();
+			return(foo);
+		} finally {
+			if(txn.isActive()) {
+				txn.rollback();
+				return null;
+			}
+		}*/
 	}
 	
 	public AppUser persist() {
 		ofy().put(this);
 		return this;
 	}
+	
+	/**
+     * Auto-increment version # whenever persisted
+     */
+    @PrePersist
+    void onPersist()
+    {
+        this.version++;
+    }
+    
+    // Getters and setters
 
 	public String getGoogleId() {
 		return googleId;
@@ -92,11 +110,23 @@ public class AppUser extends DatastoreObject{
 		this.email = email;
 	}
 
-	public String getName() {
-		return name;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	public String getId() {
+		return username;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 }

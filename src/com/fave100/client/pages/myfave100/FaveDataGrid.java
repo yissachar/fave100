@@ -4,11 +4,9 @@ import static com.google.gwt.query.client.GQuery.$;
 
 import java.util.List;
 
-import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveItemRequest;
-import com.fave100.client.requestfactory.SongProxy;
 import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -23,32 +21,37 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 
-public class FaveDataGrid extends DataGrid{
+/**
+ * DataGrid for user to view and edit their personal Fave100 list.
+ * @author yissachar.radcliffe
+ *
+ */
+public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 	
+	// DataGrid StyleSheet override
 	public interface DataGridResource extends DataGrid.Resources {
 		@Source({ DataGrid.Style.DEFAULT_CSS, "DataGridOverride.css" })
 		DataGrid.Style dataGridStyle();
 	};
 	
 	private HandlerRegistration nativePreviewHandler;
-	private AppUserProxy appUser;
 	private ApplicationRequestFactory requestFactory;	
 		
 	public FaveDataGrid(final ApplicationRequestFactory requestFactory) {		
 		super(0, (DataGridResource) GWT.create(DataGridResource.class));
-		//TODO: inject app user
+		
 		this.requestFactory = requestFactory;
 		
-		// Title Column
+		// Track name Column
 		SafeHtmlCell linkCell = new SafeHtmlCell();
-		Column<FaveItemProxy, SafeHtml> titleColumn = new Column<FaveItemProxy, SafeHtml>(linkCell) {
+		Column<FaveItemProxy, SafeHtml> trackNameColumn = new Column<FaveItemProxy, SafeHtml>(linkCell) {
 			@Override
 			public SafeHtml getValue(FaveItemProxy faveItem) {
+				// Create a link to the item in iTunes
 				SafeHtmlBuilder sb = new SafeHtmlBuilder();
 				if(faveItem.getTrackViewUrl() != null && faveItem.getTrackViewUrl() != "") {
 					sb.appendHtmlConstant("<a href='"+faveItem.getTrackViewUrl()+"'>"+faveItem.getTrackName()+"</a>");
@@ -58,8 +61,8 @@ public class FaveDataGrid extends DataGrid{
 				return sb.toSafeHtml();
 			}
 		};
-		titleColumn.setCellStyleNames("titleColumn");
-		this.addColumn(titleColumn, "Title");
+		trackNameColumn.setCellStyleNames("trackNameColumn");
+		this.addColumn(trackNameColumn, "Name");
 		
 		// Artist Column
 		TextColumn<FaveItemProxy> artistColumn = new TextColumn<FaveItemProxy>() {
@@ -85,13 +88,13 @@ public class FaveDataGrid extends DataGrid{
 		yearColumn.setCellStyleNames("yearColumn");
 		this.addColumn(yearColumn, "Year");		
 		
-		// Delete Columns
+		// Delete Column
 		ActionCell<FaveItemProxy> deleteButton = new ActionCell<FaveItemProxy>("Delete", new ActionCell.Delegate<FaveItemProxy>() {
 		      @Override
 		      public void execute(FaveItemProxy faveItem) {
 		    	  // Delete the Fave Item
 		    	  FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
-		    	  Request<Void> deleteReq = faveItemRequest.removeFaveItem(faveItem.getId());
+		    	  Request<Void> deleteReq = faveItemRequest.removeFaveItemForCurrentUser(faveItem.getId());
 		    	  deleteReq.fire(new Receiver<Void>() {
 		    		  @Override
 		    		  public void onSuccess(Void response) {
@@ -111,10 +114,6 @@ public class FaveDataGrid extends DataGrid{
 	}
 	
 	public void refreshFaveList() {
-		if(appUser == null) {
-			setRowData(null);
-			return;
-		}
 		//get the data from the datastore
 		FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
 		Request<List<FaveItemProxy>> allFaveItemsReq = faveItemRequest.getAllFaveItemsForCurrentUser();
@@ -127,7 +126,7 @@ public class FaveDataGrid extends DataGrid{
 	}
 	
 	public void startRanking() {
-		
+		//TODO: Switch over to plain GWT
 		$(".faveList tbody tr").mousedown(new Function() {
 			public boolean f(Event event) {
 				// Remove mouse down listener immediately to prevent multiple mouse downs
@@ -188,9 +187,5 @@ public class FaveDataGrid extends DataGrid{
 				return true;
 			}
 		});
-	}
-	
-	public void setAppUser(AppUserProxy appUser) {
-		this.appUser = appUser;
 	}
 }
