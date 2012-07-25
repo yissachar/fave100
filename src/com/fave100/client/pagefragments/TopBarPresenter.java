@@ -14,6 +14,11 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 
+/**
+ * Top navigation bar that will be included on every page.
+ * @author yissachar.radcliffe
+ *
+ */
 public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 
 	public interface MyView extends View {
@@ -26,10 +31,10 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 	private ApplicationRequestFactory requestFactory;
 	
 	@Inject
-	public TopBarPresenter(final EventBus eventBus, final MyView view) {
+	public TopBarPresenter(final EventBus eventBus, final MyView view,
+							final ApplicationRequestFactory requestFactory) {
 		super(eventBus, view);
-		requestFactory = GWT.create(ApplicationRequestFactory.class);
-		requestFactory.initialize(eventBus);		
+		this.requestFactory = requestFactory;
 	}
 
 	@Override
@@ -41,6 +46,8 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 	protected void onReveal() {
 		super.onReveal();
 		
+		// Whenever the page is refreshed, check to see if the user is logged in or not
+		// and change the top bar links and elements appropriately.
 		AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		Request<AppUserProxy> getLoggedInAppUserReq = appUserRequest.getLoggedInAppUser();
 		getLoggedInAppUserReq.fire(new Receiver<AppUserProxy>() {

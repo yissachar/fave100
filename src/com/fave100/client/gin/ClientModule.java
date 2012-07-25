@@ -11,8 +11,6 @@ import com.fave100.client.pages.home.HomeView;
 import com.fave100.client.place.ClientPlaceManager;
 import com.fave100.client.place.DefaultPlace;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.pages.about.AboutPresenter;
-import com.fave100.client.pages.about.AboutView;
 import com.fave100.client.pages.myfave100.MyFave100Presenter;
 import com.fave100.client.pages.myfave100.MyFave100View;
 import com.fave100.client.pagefragments.TopBarPresenter;
@@ -29,9 +27,6 @@ public class ClientModule extends AbstractPresenterModule {
 		
 		bindPresenter(HomePresenter.class, HomePresenter.MyView.class,
 				HomeView.class, HomePresenter.MyProxy.class);
-
-		bindPresenter(AboutPresenter.class, AboutPresenter.MyView.class,
-				AboutView.class, AboutPresenter.MyProxy.class);
 
 		bindPresenter(MyFave100Presenter.class,
 				MyFave100Presenter.MyView.class, MyFave100View.class,
