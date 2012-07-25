@@ -14,6 +14,11 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
+/**
+ * Default page that the user will see.
+ * @author yissachar.radcliffe
+ *
+ */
 public class HomePresenter extends
 		Presenter<HomePresenter.MyView, HomePresenter.MyProxy> {
 

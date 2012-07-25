@@ -31,20 +31,26 @@ public class FaveItem extends DatastoreObject{
 		DAO dao = new DAO();
 		return dao.ofy();
 	}
-	
+	// TODO: id not safe? can have same id's if different parents? use keys instead or confirm that id's are safe
 	public static FaveItem findFaveItem(Long id) {
 		return ofy().get(FaveItem.class, id);
 	}
 	
-	public static void removeFaveItem(Long id) {
-		ofy().delete(FaveItem.class, id);
+	public static void removeFaveItemForCurrentUser(Long id) {
+		AppUser currentUser = AppUser.getLoggedInAppUser();
+		if(currentUser == null) return;
+		FaveItem faveItemToDelete = ofy().get(FaveItem.class, id);
+		// Verify that user deleting this FaveItem is the user that the FaveItem belongs to		
+		if(faveItemToDelete.getAppUser().equals(new Key<AppUser>(AppUser.class, currentUser.getUsername()))) {
+			ofy().delete(FaveItem.class, id);
+		}
 	}
 	
 	public static List<FaveItem> getAllFaveItemsForCurrentUser() {
 		// TODO: Check if this is most efficient way to do this
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return null;
-		Key<AppUser> currentUserKey = new Key<AppUser>(AppUser.class, currentUser.getId());
+		Key<AppUser> currentUserKey = new Key<AppUser>(AppUser.class, currentUser.getUsername());
 		List<FaveItem> allFaveItemsForUser = ofy().query(FaveItem.class).filter("appUser", currentUserKey).list();
 		for(FaveItem faveItem : allFaveItemsForUser) {
 			Song song = ofy().get(faveItem.song);
@@ -75,7 +81,7 @@ public class FaveItem extends DatastoreObject{
 		}		
 		// Create the new FaveItem 
 		FaveItem newFaveItem = new FaveItem();
-		newFaveItem.setAppUser(new Key<AppUser>(AppUser.class, currentUser.getId()));
+		newFaveItem.setAppUser(new Key<AppUser>(AppUser.class, currentUser.getUsername()));
 		newFaveItem.setSong(new Key<Song>(Song.class, songID));
 		newFaveItem.persist();
 	}
