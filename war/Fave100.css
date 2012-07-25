@@ -64,6 +64,12 @@ h1{
 }
 
 /* Fave List Data Grid */
+.faveList tr:nth-child(even) {
+	background-color: #FFF !important;
+}
+.faveList tr:nth-child(odd) {
+	background-color: #EEE !important;
+}
 .titleColumn, .faveList th:nth-child(1){
 	width: 290px;
 }
