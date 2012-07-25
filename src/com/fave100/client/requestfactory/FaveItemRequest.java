@@ -12,8 +12,9 @@ import com.google.web.bindery.requestfactory.shared.Service;
 public interface FaveItemRequest extends RequestContext{
 	
 	Request<FaveItemProxy> findFaveItem(Long id);
-	Request<List<FaveItemProxy>> getAllFaveItemsForUser(Long appUser);
-	Request<Void> removeFaveItem(Long long1);
+	Request<List<FaveItemProxy>> getAllFaveItemsForCurrentUser();
+	Request<Void> addFaveItemForCurrentUser(Long songID, SongProxy songProxy);
+	Request<Void> removeFaveItem(Long id);
 	InstanceRequest<FaveItemProxy, FaveItemProxy> persist();
 	InstanceRequest<FaveItemProxy, Void> remove();
 

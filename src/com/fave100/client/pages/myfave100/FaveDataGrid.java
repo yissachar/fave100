@@ -8,6 +8,7 @@ import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveItemRequest;
+import com.fave100.client.requestfactory.SongProxy;
 import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -40,9 +41,7 @@ public class FaveDataGrid extends DataGrid{
 		
 	public FaveDataGrid(final ApplicationRequestFactory requestFactory) {		
 		super(0, (DataGridResource) GWT.create(DataGridResource.class));
-		//TODO: inject request factory
-		//requestFactory = GWT.create(ApplicationRequestFactory.class);
-		//requestFactory.initialize(eventBus);
+		//TODO: inject app user
 		this.requestFactory = requestFactory;
 		
 		// Title Column
@@ -51,10 +50,10 @@ public class FaveDataGrid extends DataGrid{
 			@Override
 			public SafeHtml getValue(FaveItemProxy faveItem) {
 				SafeHtmlBuilder sb = new SafeHtmlBuilder();
-				if(faveItem.getItemURL() != null && faveItem.getItemURL() != "") {
-					sb.appendHtmlConstant("<a href='"+faveItem.getItemURL()+"'>"+faveItem.getTitle()+"</a>");
-				} else {
-					sb.appendHtmlConstant(faveItem.getTitle());
+				if(faveItem.getTrackViewUrl() != null && faveItem.getTrackViewUrl() != "") {
+					sb.appendHtmlConstant("<a href='"+faveItem.getTrackViewUrl()+"'>"+faveItem.getTrackName()+"</a>");
+				} else if(faveItem.getTrackName() != null){
+					sb.appendHtmlConstant(faveItem.getTrackName());
 				}
 				return sb.toSafeHtml();
 			}
@@ -66,7 +65,7 @@ public class FaveDataGrid extends DataGrid{
 		TextColumn<FaveItemProxy> artistColumn = new TextColumn<FaveItemProxy>() {
 			@Override
 			public String getValue(FaveItemProxy object) {
-				return object.getArtist();
+				return object.getArtistName();
 			}
 		};
 		artistColumn.setCellStyleNames("artistColumn");
@@ -76,7 +75,11 @@ public class FaveDataGrid extends DataGrid{
 		TextColumn<FaveItemProxy> yearColumn = new TextColumn<FaveItemProxy>() {
 			@Override
 			public String getValue(FaveItemProxy object) {
-				return object.getReleaseYear().toString();
+				if(object.getReleaseYear() != null) {
+					return object.getReleaseYear();
+				} else {
+					return null;
+				}
 			}
 		};
 		yearColumn.setCellStyleNames("yearColumn");
@@ -85,10 +88,10 @@ public class FaveDataGrid extends DataGrid{
 		// Delete Columns
 		ActionCell<FaveItemProxy> deleteButton = new ActionCell<FaveItemProxy>("Delete", new ActionCell.Delegate<FaveItemProxy>() {
 		      @Override
-		      public void execute(FaveItemProxy contact) {
-		    	  //find the item in the data store
+		      public void execute(FaveItemProxy faveItem) {
+		    	  // Delete the Fave Item
 		    	  FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
-		    	  Request<Void> deleteReq = faveItemRequest.removeFaveItem(contact.getId());
+		    	  Request<Void> deleteReq = faveItemRequest.removeFaveItem(faveItem.getId());
 		    	  deleteReq.fire(new Receiver<Void>() {
 		    		  @Override
 		    		  public void onSuccess(Void response) {
@@ -114,7 +117,7 @@ public class FaveDataGrid extends DataGrid{
 		}
 		//get the data from the datastore
 		FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
-		Request<List<FaveItemProxy>> allFaveItemsReq = faveItemRequest.getAllFaveItemsForUser(appUser.getId());
+		Request<List<FaveItemProxy>> allFaveItemsReq = faveItemRequest.getAllFaveItemsForCurrentUser();
 		allFaveItemsReq.fire(new Receiver<List<FaveItemProxy>>() {	
 			@Override
 			public void onSuccess(List<FaveItemProxy> response) {

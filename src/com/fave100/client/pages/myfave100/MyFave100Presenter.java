@@ -18,16 +18,23 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.fave100.client.pagefragments.TopBarPresenter;
+import com.fave100.client.pages.myfave100.SongSuggestBox.ListResultFactory;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveItemRequest;
+import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.client.requestfactory.SongRequest;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.gwt.cell.client.ActionCell;
@@ -99,14 +106,15 @@ public class MyFave100Presenter extends
 		
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
-		//requestFactory.initialize(eventBus);
-		//requestFactory = GWT.create(ApplicationRequestFactory.class);
-		//requestFactory.initialize(eventBus);
 	}
 
 	@Override
 	protected void revealInParent() {
 		RevealRootContentEvent.fire(this, this);
+	}
+	
+	public interface SuggestionResultFactory extends AutoBeanFactory {		
+		AutoBean<SuggestionResult> result();		
 	}
 
 	@Override
@@ -119,6 +127,46 @@ public class MyFave100Presenter extends
 				Suggestion selectedItem = event.getSelectedItem();
 				
 				FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
+				SongRequest songRequest = faveItemRequest.append(requestFactory.songRequest());
+				
+				SuggestionResult faveItemMap = getView().getItemInputBox().getFromSuggestionMap(selectedItem.getDisplayString());
+				SongProxy newFaveItem = songRequest.create(SongProxy.class);
+				SuggestionResultFactory factory = GWT.create(SuggestionResultFactory.class);
+	       		AutoBean<SuggestionResult> autoBean = AutoBeanUtils.getAutoBean(faveItemMap);
+				AutoBean<SongProxy> newBean = AutoBeanUtils.getAutoBean(newFaveItem);
+				AutoBeanCodex.decodeInto(AutoBeanCodex.encode(autoBean), newBean);
+				newFaveItem = newBean.as();
+				Request<Void> createReq = faveItemRequest.addFaveItemForCurrentUser(Long.valueOf(faveItemMap.getTrackId()), newFaveItem);
+				createReq.fire(new Receiver<Void>() {
+					@Override
+					public void onSuccess(Void response) {
+						getView().getFaveList().refreshFaveList();
+					}
+				});
+//				
+//				SongProxy faveItemMap = getView().getItemInputBox().getFromSuggestionMap(selectedItem.getDisplayString());
+//				SongProxy newFaveItem = songRequest.create(SongProxy.class);
+//				// Clone the proxy
+//				AutoBean<SongProxy> oldBean = AutoBeanUtils.getAutoBean(faveItemMap);
+//				AutoBean<SongProxy> newBean = AutoBeanUtils.getAutoBean(newFaveItem);
+//				AutoBeanCodex.decodeInto(AutoBeanCodex.encode(oldBean), newBean);
+//				newFaveItem = newBean.as();
+//				// Must copy over properties individually, as cannot edit proxy created by different request context
+//				/*SongProxy newFaveItem = songRequest.create(SongProxy.class);
+//				newFaveItem.setTitle(faveItemMap.getTitle());
+//				newFaveItem.setArtist(faveItemMap.getArtist());
+//				newFaveItem.setReleaseYear(faveItemMap.getReleaseYear());
+//				newFaveItem.setItemURL(faveItemMap.getItemURL());*/
+//			
+//				Request<Void> createReq = faveItemRequest.addFaveItemForCurrentUser(faveItemMap.getId(), newFaveItem);
+//				createReq.fire(new Receiver<Void>() {
+//					@Override
+//					public void onSuccess(Void response) {
+//						getView().getFaveList().refreshFaveList();
+//					}
+//				});
+				
+				/*
 				
 				// Must copy over properties individually, as cannot edit proxy created by different request context
 				FaveItemProxy faveItemMap = getView().getItemInputBox().getFromSuggestionMap(selectedItem.getDisplayString());
@@ -137,7 +185,7 @@ public class MyFave100Presenter extends
 					public void onSuccess(FaveItemProxy response) {
 						getView().getFaveList().refreshFaveList();
 					}					
-				});
+				});*/
 				
 				//clear the itemInputBox
 				getView().getItemInputBox().setValue("");
@@ -158,13 +206,12 @@ public class MyFave100Presenter extends
 	    super.onReveal();
 	    setInSlot(TOP_BAR_SLOT, topBar);
 	    AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		Request<AppUserProxy> getLoggedInAppUserReq = appUserRequest.findLoggedInAppUser();
+		Request<AppUserProxy> getLoggedInAppUserReq = appUserRequest.getLoggedInAppUser();
 		getLoggedInAppUserReq.fire(new Receiver<AppUserProxy>() {
 			@Override
 			public void onSuccess(AppUserProxy response) {
 				appUser = response;
 				getView().getFaveList().setAppUser(appUser);
-				//getView().getFaveList().setRequestFactory(requestFactory);
 				getView().getFaveList().refreshFaveList();
 			}
 		});		

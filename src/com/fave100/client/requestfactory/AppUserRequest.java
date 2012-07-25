@@ -9,7 +9,7 @@ import com.google.web.bindery.requestfactory.shared.Service;
 @Service(AppUser.class)
 public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> findAppUser(Long id);
-	Request<AppUserProxy> findLoggedInAppUser();
+	Request<AppUserProxy> getLoggedInAppUser();
 	Request<String> getLoginLogoutURL(String redirect);
 	InstanceRequest<AppUserProxy, AppUserProxy> persist();
 }

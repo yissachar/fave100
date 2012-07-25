@@ -42,7 +42,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 		super.onReveal();
 		
 		AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		Request<AppUserProxy> getLoggedInAppUserReq = appUserRequest.findLoggedInAppUser();
+		Request<AppUserProxy> getLoggedInAppUserReq = appUserRequest.getLoggedInAppUser();
 		getLoggedInAppUserReq.fire(new Receiver<AppUserProxy>() {
 			@Override
 			public void onSuccess(AppUserProxy appUser) {

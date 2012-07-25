@@ -6,5 +6,6 @@ public interface ApplicationRequestFactory extends RequestFactory {
   
 	FaveItemRequest faveItemRequest();
 	AppUserRequest appUserRequest();
+	SongRequest songRequest();
 	// TODO other application entity type requests go here ...  
 }

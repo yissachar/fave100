@@ -35,7 +35,7 @@ public class AppUser extends DatastoreObject{
 		return ofy().query(AppUser.class).filter("googleId", googleId).get();		
 	}
 	
-	public static AppUser findLoggedInAppUser() {
+	public static AppUser getLoggedInAppUser() {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 		if(user != null) {
@@ -60,6 +60,7 @@ public class AppUser extends DatastoreObject{
 	}
 	
 	public static AppUser createCurrentUser() {
+		//TODO: should return the current user if it already exists
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 		

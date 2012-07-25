@@ -8,24 +8,16 @@ import com.google.web.bindery.requestfactory.shared.EntityProxy;
 public interface FaveItemProxy extends EntityProxy {
 
 	Long getId();
-	void setId(Long id);
 	Integer getVersion();
 	
-	Long getAppUser();
-	void setAppUser(Long appUser);
-	
-	String getTitle();
-	void setTitle(String title);
-	
-	String getArtist();
-	void setArtist(String artist);
-	
-	Integer getReleaseYear();
-	void setReleaseYear(Integer date);
-	
-	String getItemURL();
-	void setItemURL(String itemURL);
+	//Long getAppUser();
+	//void setAppUser(Long appUser);
 	
 	String getWhyline();
 	void setWhyline(String whyline);
+		
+	String getTrackName();
+	String getArtistName();
+	String getTrackViewUrl();
+	String getReleaseYear();
 }
