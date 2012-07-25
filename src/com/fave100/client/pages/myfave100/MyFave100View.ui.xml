@@ -12,8 +12,8 @@
 		@external .faveList;
 		.faveList{
 			margin: 50px auto;
-			background-color: #FFF;
-			border: 2px solid #5B5;
+			/*background-color: #FFF;
+			border: 2px solid #5B5;*/
 			width: 740px;			
 			height: 600px;			
 		}		
@@ -22,6 +22,7 @@
 		}
 		.faveList table{
 			table-layout: auto !important;
+			border-collapse: collapse;
 		}	
 		.faveList th{
 			/*text-align: center;*/
@@ -30,6 +31,7 @@
 			display: block;
 			margin: 0px auto;
 		}
+		
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
