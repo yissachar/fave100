@@ -1,0 +1,31 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+	
+	<ui:style>
+		.registerContainer{
+			display: block;
+			margin: 0px auto;
+		}
+		.usernameInput{
+			
+		}
+		.registerButton{
+			display: block;
+		}
+	</ui:style>
+
+	<g:HTMLPanel>
+		<g:HTMLPanel ui:field="topBar"/>
+		<g:HTMLPanel ui:field="signInWithGoogleSpan"/>
+		<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
+			<span>Username:</span>
+			<g:TextBox styleName="{style.usernameInput}"  ui:field="usernameInput"/>
+			<g:Button styleName="{style.registerButton}">Register with your Google account</g:Button>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder>

@@ -4,7 +4,6 @@ import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -47,13 +46,6 @@ public class MyFave100View extends ViewImpl implements
 			}
 		}
 		super.setInSlot(slot, content);
-	}
-
-	@UiField Button rankButton;
-	
-	@Override
-	public Button getRankButton() {
-		return rankButton;
 	}
 	
 	@Override

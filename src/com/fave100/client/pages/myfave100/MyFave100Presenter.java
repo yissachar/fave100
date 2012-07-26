@@ -19,13 +19,10 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
@@ -47,7 +44,6 @@ public class MyFave100Presenter extends
 	public interface MyView extends View {
 		SongSuggestBox getSongSuggestBox();
 		FaveDataGrid getFaveList();
-		Button getRankButton();
 	}
 
 	@ProxyCodeSplit
@@ -99,16 +95,7 @@ public class MyFave100Presenter extends
 				//clear the SuggestBox for the next entry
 				getView().getSongSuggestBox().setValue("");
 			}
-		}));
-		
-		// On rank button click, allow items to be reranked 
-		// TODO: implement on server-side (currently only reranks on client, not persistent)
-		registerHandler(getView().getRankButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				getView().getFaveList().startRanking();
-			}
-		}));
+		}));		
 	}
 	
 	@Override

@@ -41,6 +41,13 @@ withOperation(new OperationKey("DXmsaOWLsvKP_TYnC6XoIzo8CdU="),
   .withMethodName("getLoggedInAppUser")
   .withRequestContext("com.fave100.client.requestfactory.AppUserRequest")
   .build());
+withOperation(new OperationKey("2FX0wJxxb8Ig88825qTzZ78tNgs="),
+  new OperationData.Builder()
+  .withClientMethodDescriptor("()Lcom/google/web/bindery/requestfactory/shared/Request;")
+  .withDomainMethodDescriptor("()Z")
+  .withMethodName("isGoogleUserLoggedIn")
+  .withRequestContext("com.fave100.client.requestfactory.AppUserRequest")
+  .build());
 withRawTypeToken("fgtdGHxB5OEBQEtPsPS5V7TkHWs=", "com.fave100.client.requestfactory.AppUserProxy");
 withRawTypeToken("82QpBIZ2Thda3j4h9ELHeAmdfBE=", "com.fave100.client.requestfactory.FaveItemProxy");
 withRawTypeToken("7ZIsY9ni4G4q5bH4OkFUe1ZsROs=", "com.fave100.client.requestfactory.SongProxy");

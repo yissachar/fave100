@@ -45,4 +45,11 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 	public InlineHyperlink getMyFave100Link() {
 		return myFave100Link;
 	}
+	
+	@UiField InlineHyperlink registerLink;
+	
+	@Override 
+	public InlineHyperlink getRegisterLink() {
+		return registerLink;
+	}
 }

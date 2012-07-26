@@ -38,6 +38,15 @@ public class AppUser{
 		return ofy().query(AppUser.class).filter("googleId", googleId).get();		
 	}
 	
+	public static boolean isGoogleUserLoggedIn() {
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		if(user != null) {
+			return true;
+		}
+		return false;
+	}
+	
 	public static AppUser getLoggedInAppUser() {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();

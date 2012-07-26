@@ -36,7 +36,6 @@
 		<g:HTMLPanel ui:field="topBar"/>
 		<h1>My Fave100 Songs</h1>
 		<g:SuggestBox ui:field="songSuggestBox"/>
-		<g:Button ui:field="rankButton">Rank</g:Button>
 		<d:FaveDataGrid ui:field="faveList" styleName="{style.faveList}"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

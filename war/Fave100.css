@@ -70,7 +70,7 @@ h1{
 .faveList tr:nth-child(odd) {
 	background-color: #EEE !important;
 }
-.titleColumn, .faveList th:nth-child(1){
+/*.titleColumn, .faveList th:nth-child(1){
 	width: 290px;
 }
 .artistColumn, .faveList th:nth-child(2){
@@ -81,7 +81,7 @@ h1{
 }
 .deleteColumn{
 	width: 70px;
-}
+}*/
 .draggedFaveListItem{
 	position: absolute;
 }
