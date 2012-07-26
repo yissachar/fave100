@@ -27,6 +27,13 @@ withOperation(new OperationKey("rtLWIFQpdNzkh7MSEB1LlkrK_eA="),
   .withMethodName("removeFaveItemForCurrentUser")
   .withRequestContext("com.fave100.client.requestfactory.FaveItemRequest")
   .build());
+withOperation(new OperationKey("KL3nZTK9Al0Mi9eCnN98nRw_YOA="),
+  new OperationData.Builder()
+  .withClientMethodDescriptor("(Ljava/lang/Long;)Lcom/google/web/bindery/requestfactory/shared/Request;")
+  .withDomainMethodDescriptor("(Ljava/lang/Long;)Lcom/fave100/server/domain/Song;")
+  .withMethodName("findSong")
+  .withRequestContext("com.fave100.client.requestfactory.SongRequest")
+  .build());
 withOperation(new OperationKey("DXmsaOWLsvKP_TYnC6XoIzo8CdU="),
   new OperationData.Builder()
   .withClientMethodDescriptor("()Lcom/google/web/bindery/requestfactory/shared/Request;")

@@ -11,6 +11,11 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
 
+/**
+ * A Fave100 user.
+ * @author yissachar.radcliffe
+ *
+ */
 @Entity
 public class AppUser{
 	
@@ -20,6 +25,7 @@ public class AppUser{
 	private String email;
 	
 	public static final Objectify ofy() {
+		//TODO: find better way of getting Objectify instance
 		DAO dao = new DAO();
 		return dao.ofy();
 	}
@@ -40,6 +46,7 @@ public class AppUser{
 			if(appUser != null) {
 				return appUser;
 			} else {
+				//TODO: Create sign up page instead of silently creating new user
 				return createCurrentUser();
 			}
 		} else {
