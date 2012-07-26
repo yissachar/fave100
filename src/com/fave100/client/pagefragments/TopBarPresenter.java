@@ -24,6 +24,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 		SpanElement getLogInLogOutLink();
 		SpanElement getGreeting();
 		InlineHyperlink getMyFave100Link();
+		InlineHyperlink getRegisterLink();
 	}
 	
 	private ApplicationRequestFactory requestFactory;
@@ -58,10 +59,12 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 						Window.Location.getQueryString()+Window.Location.getHash();
 				if(appUser != null) {					
 					getView().getGreeting().setInnerHTML("Welcome "+appUser.getUsername());
-					getView().getMyFave100Link().setVisible(true);	
+					getView().getMyFave100Link().setVisible(true);
+					getView().getRegisterLink().setVisible(false);
 					getView().getLogInLogOutLink().setInnerHTML("<a href='/_ah/logout?continue="+currentURL+"'>Log out</a>");
 				} else {
-					getView().getMyFave100Link().setVisible(false);					
+					getView().getMyFave100Link().setVisible(false);
+					getView().getRegisterLink().setVisible(true);				
 					getView().getLogInLogOutLink().setInnerHTML("<a href='/_ah/login?continue="+currentURL+"'>Log in</a>");
 				}				
 			}

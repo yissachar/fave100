@@ -9,6 +9,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.fave100.client.pages.myfave100.MyFave100Presenter;
+import com.fave100.client.pages.register.RegisterPresenter;
 
 @GinModules({ DispatchAsyncModule.class, ClientModule.class })
 public interface ClientGinjector extends Ginjector {
@@ -20,4 +21,6 @@ public interface ClientGinjector extends Ginjector {
 	AsyncProvider<HomePresenter> getHomePresenter();
 
 	AsyncProvider<MyFave100Presenter> getMyFave100Presenter();
+
+	AsyncProvider<RegisterPresenter> getRegisterPresenter();
 }

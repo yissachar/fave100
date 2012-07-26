@@ -16,6 +16,8 @@ import com.fave100.client.pages.myfave100.MyFave100View;
 import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.pagefragments.TopBarView;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.pages.register.RegisterPresenter;
+import com.fave100.client.pages.register.RegisterView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -34,6 +36,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenterWidget(TopBarPresenter.class,
 				TopBarPresenter.MyView.class, TopBarView.class);	
+
+		bindPresenter(RegisterPresenter.class, RegisterPresenter.MyView.class,
+				RegisterView.class, RegisterPresenter.MyProxy.class);
 	}
 	
 	@Provides
