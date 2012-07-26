@@ -21,11 +21,11 @@
 
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
-		<g:HTMLPanel ui:field="signInWithGoogleSpan"/>
+		<span ui:field="statusMessage"/>
 		<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
 			<span>Username:</span>
-			<g:TextBox styleName="{style.usernameInput}"  ui:field="usernameInput"/>
-			<g:Button styleName="{style.registerButton}">Register with your Google account</g:Button>
+			<g:TextBox ui:field="usernameField" styleName="{style.usernameInput}"/>
+			<g:Button ui:field="registerButton" styleName="{style.registerButton}">Register</g:Button>
 		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

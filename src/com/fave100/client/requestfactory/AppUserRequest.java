@@ -9,4 +9,5 @@ import com.google.web.bindery.requestfactory.shared.Service;
 public interface AppUserRequest extends RequestContext{	
 	Request<AppUserProxy> getLoggedInAppUser();
 	Request<Boolean> isGoogleUserLoggedIn();
+	Request<AppUserProxy> createAppUserFromCurrentGoogleUser(String username);
 }

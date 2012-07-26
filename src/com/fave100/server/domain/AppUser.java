@@ -51,27 +51,27 @@ public class AppUser{
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 		if(user != null) {
+			//TODO: This will only work if Google Id is enforced as unique
 			AppUser appUser = findAppUserByGoogleId(user.getUserId());
 			if(appUser != null) {
 				return appUser;
-			} else {
-				//TODO: Create sign up page instead of silently creating new user
-				return createCurrentUser();
 			}
-		} else {
-			return null;
-		}
+		} 
+		return null;
 	}	
 	
-	public static AppUser createCurrentUser() {
-		//TODO: should return the current user if it already exists
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-		AppUser appUser = new AppUser();
-		appUser.setUsername(user.getNickname());
-		appUser.setEmail(user.getEmail());
-		appUser.setGoogleId(user.getUserId());
-		return(appUser.persist());
+	public static AppUser createAppUserFromCurrentGoogleUser(String username) {		
+		if(ofy().find(AppUser.class, username) != null) {
+			return null;
+		} else {
+			UserService userService = UserServiceFactory.getUserService();
+			User user = userService.getCurrentUser();
+			AppUser appUser = new AppUser();
+			appUser.setUsername(username);
+			appUser.setEmail(user.getEmail());
+			appUser.setGoogleId(user.getUserId());
+			return(appUser.persist());
+		}
 		// TODO: Use transactions to prevent duplicate user entries
 		/*Transaction txn = ofy().getTxn();
 		try {

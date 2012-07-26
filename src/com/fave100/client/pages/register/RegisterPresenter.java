@@ -10,24 +10,32 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class RegisterPresenter extends
 		Presenter<RegisterPresenter.MyView, RegisterPresenter.MyProxy> {
 
 	public interface MyView extends View {
-		HTMLPanel getSignInWithGoogleSpan();
+		SpanElement getStatusMessage();		
+		TextBox getUsernameField();
 		HTMLPanel getRegisterContainer();
+		Button getRegisterButton();
 	}
 	
 	@ContentSlot
@@ -41,12 +49,15 @@ public class RegisterPresenter extends
 	}
 	
 	private ApplicationRequestFactory requestFactory;
+	private PlaceManager placeManager;
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory) {
+			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
+			final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
+		this.placeManager = placeManager;
 	}
 
 	@Override
@@ -57,6 +68,26 @@ public class RegisterPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+		
+		registerHandler(getView().getRegisterButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AppUserRequest appUserRequest = requestFactory.appUserRequest();
+				// Try to create a new user with the current Google user and the name entered
+				Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromCurrentGoogleUser(getView().getUsernameField().getValue());
+				createAppUserReq.fire(new Receiver<AppUserProxy>() {
+					@Override
+					public void onSuccess(AppUserProxy createdUser) {
+						if(createdUser == null) {
+							getView().getStatusMessage().addClassName("error");
+							getView().getStatusMessage().setInnerHTML("Error: A user with that name already exists.");
+						} else {
+							placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
+						}
+					}
+				});
+			}
+		}));
 	}
 	
 	@Override
@@ -76,22 +107,15 @@ public class RegisterPresenter extends
 				String currentURL = Window.Location.getPath()+
 						Window.Location.getQueryString()+Window.Location.getHash();
 				if(loggedIn) {		
-					// User signed in with Google account, allow them to create Fave100 account
-					getView().getSignInWithGoogleSpan().setVisible(false);
+					// User signed in with Google account, allow them to create Fave100 account					
+					getView().getStatusMessage().setInnerHTML("");
 					getView().getRegisterContainer().setVisible(true);
-					//getView().getGreeting().setInnerHTML("Welcome "+appUser.getUsername());
-					//getView().getMyFave100Link().setVisible(true);
-					//getView().getRegisterLink().setVisible(false);
-					//getView().getLogInLogOutLink().setInnerHTML("<a href='/_ah/logout?continue="+currentURL+"'>Log out</a>");
 				} else {
 					// User is not signed in with Google account, ask them to sign in
-					getView().getSignInWithGoogleSpan().setVisible(true);
-					getView().getRegisterContainer().setVisible(false);	
-//					getView().getSignInWithGoogleSpan().set("Please <a href='/_ah/login?continue="+currentURL+"'>sign in</a>"+
-//							"with your Google account in order to create a Fave100 account.");
-					//getView().getMyFave100Link().setVisible(false);
-					//getView().getRegisterLink().setVisible(true);				
-					//getView().getLogInLogOutLink().setInnerHTML("<a href='/_ah/login?continue="+currentURL+"'>Log in</a>");
+					getView().getStatusMessage().removeClassName("error");
+					getView().getStatusMessage().setInnerHTML("Please <a href='/_ah/login?continue="+currentURL+"'>sign in</a>"+
+							" with your Google account in order to create a Fave100 account.");
+					getView().getRegisterContainer().setVisible(false);
 				}				
 			}
 		});
