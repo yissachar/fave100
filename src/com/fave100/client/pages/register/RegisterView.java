@@ -4,7 +4,9 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -39,11 +41,11 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 		super.setInSlot(slot, content);
 	}
 	
-	@UiField HTMLPanel signInWithGoogleSpan;
+	@UiField SpanElement statusMessage;
 
 	@Override
-	public HTMLPanel getSignInWithGoogleSpan() {
-		return signInWithGoogleSpan;
+	public SpanElement getStatusMessage() {
+		return statusMessage;
 	}
 
 	@UiField HTMLPanel registerContainer;
@@ -51,5 +53,19 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 	@Override
 	public HTMLPanel getRegisterContainer() {
 		return registerContainer;
+	}
+
+	@UiField Button registerButton;
+	
+	@Override
+	public Button getRegisterButton() {
+		return registerButton;
+	}
+
+	@UiField TextBox usernameField;
+	
+	@Override
+	public TextBox getUsernameField() {
+		return usernameField;
 	}
 }
