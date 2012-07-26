@@ -1,17 +1,18 @@
 package com.fave100.server.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.server.DAO;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.Query;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.NotSaved;
-import com.googlecode.objectify.annotation.Unindexed;
 
+/**
+ * A song that a Fave100 user has added to their Fave100.
+ * @author yissachar.radcliffe
+ *
+ */
 @Entity
 public class FaveItem extends DatastoreObject{
 		
@@ -68,15 +69,7 @@ public class FaveItem extends DatastoreObject{
 		Song song = ofy().find(Song.class, songID);
 		// If the song does not exist, create it
 		if(song == null) {
-			/*song = new Song();
-			song.setId(songID);
-			song.setTitle(songProxy.getTitle());
-			song.setArtist(songProxy.getArtist());
-			song.setItemURL(songProxy.getItemURL());
-			song.setReleaseYear(songProxy.getReleaseYear());
-			song.persist();*/
 			songProxy.setId(songID);
-			//songProxy.setArtistId(songProxy.getArtistId());
 			songProxy.persist();
 		}		
 		// Create the new FaveItem 

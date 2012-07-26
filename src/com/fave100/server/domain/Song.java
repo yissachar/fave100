@@ -6,10 +6,6 @@ import com.googlecode.objectify.annotation.Entity;
 
 @Entity
 public class Song extends DatastoreObject{
-	/*private String title;
-	private String artist;
-	private Integer releaseYear;
-	private String itemURL;*/
 	private String wrapperType;
 	private String kind;
 	private Integer artistId;
