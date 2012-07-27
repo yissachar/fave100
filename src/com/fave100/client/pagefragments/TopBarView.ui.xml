@@ -8,13 +8,14 @@
 
 	<ui:style>
 		.topNav{
-			background-color: #FFF;
-			height: 60px;
+			background-color: #FFF;			
+			height: 40px;
+			border-bottom: 1px solid #555;
 		}
 		.topNav ul{
 			list-style-type: none;	
 			float: right;			
-			margin-top: 15px; 	
+			margin-top: 10px; 	
 		}
 		.topNav li{
 			display: inline;
