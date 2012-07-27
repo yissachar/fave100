@@ -23,6 +23,7 @@ public class AppUser{
 	private Integer version = 0;
 	private String googleId;
 	private String email;
+	//TODO: Add user types (normal, reviewer, celebrity)
 	
 	public static final Objectify ofy() {
 		//TODO: find better way of getting Objectify instance
@@ -61,6 +62,7 @@ public class AppUser{
 	}	
 	
 	public static AppUser createAppUserFromCurrentGoogleUser(String username) {		
+		//TODO: Disallow white-space, other special characters?
 		if(ofy().find(AppUser.class, username) != null) {
 			return null;
 		} else {

@@ -1,4 +1,5 @@
 gwt-unitCache/
 war/WEB-INF/classes/
 war/WEB-INF/appengine-generated/
+war/WEB-INF/deploy/
 .apt_generated/

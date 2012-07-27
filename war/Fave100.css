@@ -1,10 +1,12 @@
-/* Add css rules here for your application. */
+::selection {
+	background: #AE7;
+}
 html, *{
 	margin: 0px;
 	padding 0px;
 }
 body{
-	background-color: #9E9;
+	background-color: #abe07f;
 	font-family: Helvetica,sans-serif;
 	color: #464;
 }
@@ -20,7 +22,12 @@ a:hover{
 h1{
 	margin: 30px;
 	text-align: center;
-	color: #5A5;
+	color: #FFF;
+	font-size: 2em;
+	text-shadow: -1px -1px 0px #555,
+				-1px 1px 0px #555,
+				1px -1px 0px #555,
+				1px 1px 0px #555;
 }
 
 .error{
@@ -34,7 +41,7 @@ h1{
 	width: 500px;
 	height: 50px;	
 	font-size: 2em;
-	border: 4px solid #5B5;
+	border: 3px solid #797;
 	padding: 7px;
 	color: #CCC;
 }
