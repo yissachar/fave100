@@ -3,35 +3,36 @@ package com.fave100.server.domain;
 import com.fave100.server.DAO;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Unindexed;
 
 @Entity
 public class Song extends DatastoreObject{
-	private String wrapperType;
-	private String kind;
+	@Unindexed private String wrapperType;
+	@Unindexed private String kind;
 	private Integer artistId;
-	private Integer collectionId;
+	@Unindexed private Integer collectionId;
 	private Integer trackId;
 	private String artistName;
-	private String collectionName;
+	@Unindexed private String collectionName;
 	private String trackName;
-	private String collectionCensoredName;
-	private String trackCensoredName;
-	private String artistViewUrl;
-	private String collectionViewUrl;
+	@Unindexed private String collectionCensoredName;
+	@Unindexed private String trackCensoredName;
+	@Unindexed private String artistViewUrl;
+	@Unindexed private String collectionViewUrl;
 	private String trackViewUrl;
-	private String previewUrl;
-	private Double collectionPrice;
-	private Double trackPrice;
+	@Unindexed private String previewUrl;
+	@Unindexed private Double collectionPrice;
+	@Unindexed private Double trackPrice;
 	private String releaseDate;
-	private String collectionExplicitness;	
-	private String trackExplicitness;
-	private Integer discCount;
-	private Integer discNumber;
-	private Integer trackCount;
-	private Integer trackNumber;
-	private Integer trackTimeMillis;
-	private String country;
-	private String currency;
+	@Unindexed private String collectionExplicitness;	
+	@Unindexed private String trackExplicitness;
+	@Unindexed private Integer discCount;
+	@Unindexed private Integer discNumber;
+	@Unindexed private Integer trackCount;
+	@Unindexed private Integer trackNumber;
+	@Unindexed private Integer trackTimeMillis;
+	@Unindexed private String country;
+	@Unindexed private String currency;
 	private String primaryGenreName;
 	
 	public static final Objectify ofy() {

@@ -1,6 +1,3 @@
-::selection {
-	background: #AE7;
-}
 html, *{
 	margin: 0px;
 	padding 0px;
@@ -8,7 +5,7 @@ html, *{
 body{
 	background-color: #abe07f;
 	font-family: Helvetica,sans-serif;
-	color: #464;
+	color: #454;
 }
 
 a{
@@ -24,10 +21,14 @@ h1{
 	text-align: center;
 	color: #FFF;
 	font-size: 2em;
-	text-shadow: -1px -1px 0px #555,
-				-1px 1px 0px #555,
-				1px -1px 0px #555,
-				1px 1px 0px #555;
+	text-shadow: -1px -1px 0 #555,
+				0px -1px 0 #555,
+				1px -1px 0 #555,
+				1px 0 0 #555,
+				1px 1px 0 #555,
+				0 1px 0 #555,
+				-1px 1px 0 #555,
+				-1px 0 0 #555;				
 }
 
 .error{
@@ -41,24 +42,23 @@ h1{
 	width: 500px;
 	height: 50px;	
 	font-size: 2em;
-	border: 3px solid #797;
+	border: 3px solid #777;
 	padding: 7px;
-	color: #CCC;
+	color: #AAA;
 }
 .gwt-SuggestBox:focus {
-	color: #363;
+	color: #555;
 }
 .gwt-SuggestBoxPopup table{
-	border: 1px solid #595;
+	border: 1px solid #777;
 	border-collapse: collapse;
-	box-shadow: 1px 2px 2px #555;
+	box-shadow: 1px 2px 2px #888;
 }
 .item{
 	margin: 0px auto;
 	background-color: #FFF;
 	font-size: 1.3em;
-	max-width: 503px;
-	min-width: 503px;
+	width: 501px;
 	white-space: normal !important;
 	overflow: hidden;
 	padding: 7px;
@@ -67,7 +67,7 @@ h1{
 	float:left;
 }
 .item-selected{
-	background-color: #9D8;
+	background-color: #AE7;
 }
 .artistName{
 	font-size: 0.6em;
