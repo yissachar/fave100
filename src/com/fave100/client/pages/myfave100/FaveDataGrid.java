@@ -209,11 +209,17 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 				// because DataGrid does not resize automatically
 				int tableSize = 0;
 				for(int i = 0; i < getRowCount(); i++) {
-					//1 pixel extra because of border
-					tableSize += getRowElement(i).getOffsetHeight()+1;						
+					//extra pixels because of border+padding
+					tableSize += getRowElement(i).getClientHeight()+5;
 				}
-				// Extra 5px for good measure
-				setHeight(tableSize+5+"px");
+				int minSize = 120;
+				if(tableSize < minSize) {
+					// Force a minimum size
+					setHeight(minSize+"px");
+				} else {
+					// Add a couple of extra pixels for good measure
+					setHeight(tableSize+20+"px");
+				}
 			}
 		});
 	}

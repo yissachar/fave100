@@ -50,6 +50,7 @@ public class FaveItem extends DatastoreObject{
 	}
 	
 	public static List<FaveItem> getAllFaveItemsForCurrentUser() {
+		// TODO: This is not highly consistent but needs to be 
 		// TODO: Check if this is most efficient way to do this
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return null;
