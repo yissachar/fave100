@@ -14,7 +14,7 @@
 			/*background-color: #FFF;
 			border: 2px solid #5B5;*/
 			width: 840px;			
-			height: 600px;			
+			/*height: 600px;*/			
 		}		
 		.faveList tr{
 			min-width: 837px;

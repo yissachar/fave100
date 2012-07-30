@@ -110,7 +110,7 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 				$(".draggedFaveListItem").first().insertAfter($(".clonedHiddenRow"));
 				$(".draggedFaveListItem").removeClass("draggedFaveListItem");
 				removeStyleName("unselectable");
-				$(".clonedHiddenRow").remove();
+				$(".clonedHiddenRow").remove();				
 				//remove all listeners now that we are done with the drag
 				if(nativePreviewHandler != null) {
 					nativePreviewHandler.removeHandler();
@@ -195,15 +195,25 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 		deleteColumn.setCellStyleNames("deleteColumn");
 		this.addColumn(deleteColumn);
 	}
-	
 	public void refreshFaveList() {
-		//get the data from the datastore
+		//TODO: To reduce number of RPC calls, perhaps don't refresh list every change
+		// instead, make changes locally on client by adding elements to DOM
+		// Get the data from the datastore
 		FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
 		Request<List<FaveItemProxy>> allFaveItemsReq = faveItemRequest.getAllFaveItemsForCurrentUser();
 		allFaveItemsReq.fire(new Receiver<List<FaveItemProxy>>() {	
 			@Override
 			public void onSuccess(List<FaveItemProxy> response) {
 				setRowData(response);
+				// Manually go through all row elements and set the height of the table
+				// because DataGrid does not resize automatically
+				int tableSize = 0;
+				for(int i = 0; i < getRowCount(); i++) {
+					//1 pixel extra because of border
+					tableSize += getRowElement(i).getOffsetHeight()+1;						
+				}
+				// Extra 5px for good measure
+				setHeight(tableSize+5+"px");
 			}
 		});
 	}
