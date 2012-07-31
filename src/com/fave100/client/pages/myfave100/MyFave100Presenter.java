@@ -7,8 +7,8 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.FaveItemRequest;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.requestfactory.SongRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
@@ -72,8 +72,8 @@ public class MyFave100Presenter extends
 			public void onSelection(SelectionEvent<Suggestion> event) {				
 				Suggestion selectedItem = event.getSelectedItem();
 				
-				FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
-				SongRequest songRequest = faveItemRequest.append(requestFactory.songRequest());
+				AppUserRequest appUserRequest = requestFactory.appUserRequest();
+				SongRequest songRequest = appUserRequest.append(requestFactory.songRequest());
 				
 				// Lookup the SuggestionResult corresponding to the selected String 
 				SuggestionResult faveItemMap = getView().getSongSuggestBox().getFromSuggestionMap(selectedItem.getDisplayString());				
@@ -84,7 +84,7 @@ public class MyFave100Presenter extends
 				AutoBeanCodex.decodeInto(AutoBeanCodex.encode(autoBean), newBean);				
 				songProxy = newBean.as();
 				// Add the SongProxy as a new FaveItem for the AppUser
-				Request<Void> createReq = faveItemRequest.addFaveItemForCurrentUser(Long.valueOf(faveItemMap.getTrackId()), songProxy);
+				Request<Void> createReq = appUserRequest.addFaveItemForCurrentUser(Long.valueOf(faveItemMap.getTrackId()), songProxy);
 				createReq.fire(new Receiver<Void>() {
 					@Override
 					public void onSuccess(Void response) {
