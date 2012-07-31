@@ -1,5 +1,10 @@
 package com.fave100.server.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.Embedded;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 
@@ -23,7 +28,8 @@ public class AppUser{
 	private Integer version = 0;
 	private String googleId;
 	private String email;
-	//TODO: Add user types (normal, reviewer, celebrity)
+	@Embedded private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
+	//TODO: Add user types (normal, reviewer, celebrity)?
 	
 	public static final Objectify ofy() {
 		//TODO: find better way of getting Objectify instance
@@ -96,6 +102,67 @@ public class AppUser{
 		}*/
 	}
 	
+	public static void addFaveItemForCurrentUser(Long songID, Song songProxy) {
+		// TODO: Verify integrity of songProxy on server-side? 
+		// TODO: Only allow user to store 100 faveItems
+		AppUser currentUser = AppUser.getLoggedInAppUser();
+		if(currentUser == null) return;
+		Song song = ofy().find(Song.class, songID);
+		// If the song does not exist, create it
+		if(song == null) {
+			songProxy.setId(songID);
+			songProxy.persist();
+		}		
+		// Create the new FaveItem 
+		FaveItem newFaveItem = new FaveItem();		
+		newFaveItem.setSong(new Key<Song>(Song.class, songID));
+		currentUser.fave100Songs.add(newFaveItem);
+		currentUser.persist();
+	}
+	
+	public static void removeFaveItemForCurrentUser(int index) {
+		AppUser currentUser = AppUser.getLoggedInAppUser();
+		if(currentUser == null) return;	
+		currentUser.fave100Songs.remove(index);
+		currentUser.persist();		
+	}
+	
+	public static void rerankFaveItemForCurrentUser(int currentIndex, int newIndex) {
+		//TODO: Verify that this is working successfully, eventual consistency makes it hard to know
+		//TODO: Need transaction locking here, to prevent override in middle
+		AppUser currentUser = AppUser.getLoggedInAppUser();
+		if(currentUser == null) return;	
+//		FaveItem faveAtCurrIndex = currentUser.fave100Songs.get(currentIndex);
+//		FaveItem faveAtNewIndex = currentUser.fave100Songs.get(newIndex);
+//		currentUser.fave100Songs.set(currentIndex, faveAtNewIndex);
+//		currentUser.fave100Songs.set(newIndex, faveAtCurrIndex);
+		FaveItem faveAtCurrIndex = currentUser.fave100Songs.remove(currentIndex);
+		currentUser.fave100Songs.add(newIndex, faveAtCurrIndex);
+		currentUser.persist();		
+	}
+	
+	public static List<FaveItem> getAllSongsForCurrentUser() {
+		// TODO: This absolutely needs to be highly consistent
+		AppUser currentUser = AppUser.getLoggedInAppUser();
+		if(currentUser == null) return null;
+		// Get the song keys from the FaveItem list
+		List<Key<Song>> songKeys = new ArrayList<Key<Song>>();
+		for(FaveItem faveItem : currentUser.fave100Songs) {
+			songKeys.add(faveItem.getSong());
+		}
+		// Now that we have song keys, get actual songs in batch get
+		Map<Key<Song>, Song> songsForFaveItems = ofy().get(songKeys);
+		// Add the song data to the FaveItems that we will send back to the client
+		for(FaveItem faveItem : currentUser.fave100Songs) {
+			Song song = songsForFaveItems.get(faveItem.getSong());
+			faveItem.setTrackName(song.getTrackName());
+			faveItem.setArtistName(song.getArtistName());
+			faveItem.setTrackViewUrl(song.getTrackViewUrl());
+			faveItem.setReleaseYear(song.getReleaseYear());
+		}
+		return currentUser.fave100Songs;
+	}
+	
 	public AppUser persist() {
 		ofy().put(this);
 		return this;
@@ -146,5 +213,13 @@ public class AppUser{
 
 	public void setVersion(Integer version) {
 		this.version = version;
+	}
+
+	public List<FaveItem> getFave100Songs() {
+		return fave100Songs;
+	}
+
+	public void setFave100Songs(List<FaveItem> fave100Songs) {
+		this.fave100Songs = fave100Songs;
 	}
 }

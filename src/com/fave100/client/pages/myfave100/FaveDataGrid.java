@@ -4,15 +4,15 @@ import static com.google.gwt.query.client.GQuery.$;
 
 import java.util.List;
 
+import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
-import com.fave100.client.requestfactory.FaveItemRequest;
-import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -43,15 +43,15 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 	};
 	
 	private HandlerRegistration nativePreviewHandler;
-	private ApplicationRequestFactory requestFactory;	
+	private ApplicationRequestFactory requestFactory;
+	private TableRowElement draggedRow;
 		
 	public FaveDataGrid(final ApplicationRequestFactory requestFactory) {		
 		super(0, (DataGridResource) GWT.create(DataGridResource.class));
 		
 		this.requestFactory = requestFactory;
 		
-		// Drag handler column
-		//TextColumn<FaveItemProxy> dragHandlerColumn = new TextColumn<FaveItemProxy>() {
+		// Drag handler column		
 		MouseDownCell dragHandlerCell = new MouseDownCell(){
 			@Override
 			public void onBrowserEvent(Context context, Element parent, String value,
@@ -61,8 +61,8 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 				// TODO: Switch over to plain GWT
 				// TODO: implement on server-side (currently only reranks on client, not persistent)
 				if(event.getType().equals("mousedown")) {					
-					//TableRowElement row = getRowElement(context.getIndex());
-					GQuery $row = $(getRowElement(context.getIndex()));
+					draggedRow = getRowElement(context.getIndex());
+					GQuery $row = $(draggedRow);
 					addStyleName("unselectable");
 					
 					// Add a hidden row to act as a placeholder while the real row is moved					
@@ -93,8 +93,7 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 							// Move the hidden row to the appropriate position
 							if(draggedTop < previousBottom) {
 								$(".clonedHiddenRow").insertBefore($previous);
-							}
-							else if(draggedBottom > $next.offset().top+$next.height()) {
+							} else if(draggedBottom > $next.offset().top+$next.height()) {
 								$(".clonedHiddenRow").insertAfter($next);
 							}
 							//return true;
@@ -107,11 +106,26 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 			@Override
 			public void onMouseUp(MouseUpEvent event) {
 				// TODO: Switch over to plain GWT
-				$(".draggedFaveListItem").first().insertAfter($(".clonedHiddenRow"));
-				$(".draggedFaveListItem").removeClass("draggedFaveListItem");
+				if(draggedRow == null) return;
+				GQuery $draggedItem = $(draggedRow);
+				// Get the index of the row being dragged
+				int currentIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedRow);
+				// Insert the dragged row back into the table at the correct position
+				$draggedItem.first().insertAfter($(".clonedHiddenRow"));
+				// Get the new index
+				int newIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedRow);						
+				// Rank on the server
+				if(currentIndex != newIndex) {
+					// Don't bother doing anything if the indices are the same
+					AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		    	  	Request<Void> rankReq = appUserRequest.rerankFaveItemForCurrentUser(currentIndex, newIndex);
+		    	  	rankReq.fire();
+				}	    	  	
+				//remove all drag associated items now that we are done with the drag
+	    	  	$draggedItem.removeClass("draggedFaveListItem");
 				removeStyleName("unselectable");
-				$(".clonedHiddenRow").remove();				
-				//remove all listeners now that we are done with the drag
+				$(".clonedHiddenRow").remove();
+				draggedRow = null;				
 				if(nativePreviewHandler != null) {
 					nativePreviewHandler.removeHandler();
 					nativePreviewHandler = null;
@@ -119,6 +133,7 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 			}
 			
 		}, MouseUpEvent.getType());
+		
 		Column<FaveItemProxy, String> dragHandlerColumn = new Column<FaveItemProxy, String>(dragHandlerCell) {
 			@Override
 			public String getValue(FaveItemProxy object) {
@@ -169,27 +184,32 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 			}
 		};
 		yearColumn.setCellStyleNames("yearColumn");
-		this.addColumn(yearColumn, "Year");		
+		this.addColumn(yearColumn, "Year");	
 		
 		// Delete Column
-		ActionCell<FaveItemProxy> deleteButton = new ActionCell<FaveItemProxy>("Delete", new ActionCell.Delegate<FaveItemProxy>() {
-		      @Override
-		      public void execute(FaveItemProxy faveItem) {
-		    	  // Delete the Fave Item
-		    	  FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
-		    	  Request<Void> deleteReq = faveItemRequest.removeFaveItemForCurrentUser(faveItem.getId());
-		    	  deleteReq.fire(new Receiver<Void>() {
-		    		  @Override
-		    		  public void onSuccess(Void response) {
-		    			  refreshFaveList();									
-		    		  }								
-		    	  });
-		      }
-	    });
-		Column<FaveItemProxy, FaveItemProxy> deleteColumn = new Column<FaveItemProxy, FaveItemProxy>(deleteButton) {
+		MouseClickCell deleteButton = new MouseClickCell(){
 			@Override
-			public FaveItemProxy getValue(FaveItemProxy object) {
-				return object;
+			public void onBrowserEvent(Context context, Element parent, String value,
+				NativeEvent event, ValueUpdater<String> valueUpdater) {	
+				if(value == null) return;		
+				super.onBrowserEvent(context, parent, value, event, valueUpdater);
+				if(event.getType().equals("click")) {
+					// Delete the Fave Item
+			    	AppUserRequest appUserRequest = requestFactory.appUserRequest();
+			    	Request<Void> deleteReq = appUserRequest.removeFaveItemForCurrentUser(context.getIndex());
+			    	deleteReq.fire(new Receiver<Void>() {
+			    		@Override
+			    		public void onSuccess(Void response) {
+			    			refreshFaveList();									
+			    		}								
+			    	});
+				}
+			}
+		};
+		Column<FaveItemProxy, String> deleteColumn = new Column<FaveItemProxy, String>(deleteButton) {
+			@Override
+			public String getValue(FaveItemProxy object) {
+				return "Delete";
 			}
 		};
 		deleteColumn.setCellStyleNames("deleteColumn");
@@ -199,12 +219,12 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 		//TODO: To reduce number of RPC calls, perhaps don't refresh list every change
 		// instead, make changes locally on client by adding elements to DOM
 		// Get the data from the datastore
-		FaveItemRequest faveItemRequest = requestFactory.faveItemRequest();
-		Request<List<FaveItemProxy>> allFaveItemsReq = faveItemRequest.getAllFaveItemsForCurrentUser();
-		allFaveItemsReq.fire(new Receiver<List<FaveItemProxy>>() {	
+		AppUserRequest appUserRequest = requestFactory.appUserRequest();		
+		Request<List<FaveItemProxy>> currentUserReq = appUserRequest.getAllSongsForCurrentUser();
+		currentUserReq.fire(new Receiver<List<FaveItemProxy>>() {
 			@Override
-			public void onSuccess(List<FaveItemProxy> response) {
-				setRowData(response);
+			public void onSuccess(List<FaveItemProxy> faveItems) {
+				setRowData(faveItems);
 				// Manually go through all row elements and set the height of the table
 				// because DataGrid does not resize automatically
 				int tableSize = 0;
