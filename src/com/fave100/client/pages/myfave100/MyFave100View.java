@@ -18,13 +18,13 @@ public class MyFave100View extends ViewImpl implements
 	}
 	
 	@UiField(provided = true) SuggestBox songSuggestBox;
-	@UiField(provided = true) FaveDataGrid faveList;
+	@UiField(provided = true) UserFaveDataGrid faveList;
 
 	@Inject
 	public MyFave100View(final Binder binder, final ApplicationRequestFactory requestFactory) {			
 		MusicSuggestionOracle suggestions = new MusicSuggestionOracle();
 		songSuggestBox = new SongSuggestBox(suggestions, requestFactory);
-		faveList = new FaveDataGrid(requestFactory);
+		faveList = new UserFaveDataGrid(requestFactory);
 		widget = binder.createAndBindUi(this);
 		songSuggestBox.getElement().setAttribute("placeholder", "Search songs...");
 	}
@@ -54,7 +54,7 @@ public class MyFave100View extends ViewImpl implements
 	}
 
 	@Override
-	public FaveDataGrid getFaveList() {
+	public UserFaveDataGrid getFaveList() {
 		return faveList;
 	}
 	

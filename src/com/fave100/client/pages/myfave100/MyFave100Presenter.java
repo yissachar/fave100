@@ -43,7 +43,7 @@ public class MyFave100Presenter extends
 
 	public interface MyView extends View {
 		SongSuggestBox getSongSuggestBox();
-		FaveDataGrid getFaveList();
+		UserFaveDataGrid getFaveList();
 	}
 
 	@ProxyCodeSplit
