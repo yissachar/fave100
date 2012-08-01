@@ -14,7 +14,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -30,13 +29,7 @@ import com.google.web.bindery.requestfactory.shared.Request;
  * @author yissachar.radcliffe
  *
  */
-public class UserFaveDataGrid extends FaveDataGrid{
-	
-	// DataGrid StyleSheet override
-	public interface DataGridResource extends DataGrid.Resources {
-		@Source({ DataGrid.Style.DEFAULT_CSS, "DataGridOverride.css" })
-		DataGrid.Style dataGridStyle();
-	};
+public class UserFaveDataGrid extends FaveDataGrid{	
 	
 	private HandlerRegistration nativePreviewHandler;
 	private ApplicationRequestFactory requestFactory;

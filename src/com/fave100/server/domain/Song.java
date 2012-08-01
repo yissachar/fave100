@@ -7,6 +7,9 @@ import com.googlecode.objectify.annotation.Unindexed;
 
 @Entity
 public class Song extends DatastoreObject{
+	// TODO: Score counter needeed?
+	private long score = 0;
+	// iTunes results 
 	@Unindexed private String wrapperType;
 	@Unindexed private String kind;
 	private Integer artistId;
@@ -42,6 +45,10 @@ public class Song extends DatastoreObject{
 	
 	public static Song findSong(Long id) {
 		return ofy().get(Song.class, id);
+	}
+	
+	public void addScore(int score) {
+		this.score += score;
 	}
 	
 	public Song persist() {
@@ -305,6 +312,14 @@ public class Song extends DatastoreObject{
 
 	public void setPrimaryGenreName(String primaryGenreName) {
 		this.primaryGenreName = primaryGenreName;
+	}
+
+	public long getScore() {
+		return score;
+	}
+
+	public void setScore(long score) {
+		this.score = score;
 	}
 
 }

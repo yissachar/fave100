@@ -9,4 +9,5 @@
 }
 .dataGridEvenRow, .dataGridOddRow {
 	border: 1px solid #000 !important;
+	min-width: 837px;
 }

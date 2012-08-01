@@ -9,7 +9,7 @@ import com.googlecode.objectify.util.DAOBase;
 
 public class DAO extends DAOBase{
 	
-	static{
+	static{// TODO: Switch to Objectify 4
 		ObjectifyService.register(FaveItem.class);
 		ObjectifyService.register(AppUser.class);
 		ObjectifyService.register(Song.class);
