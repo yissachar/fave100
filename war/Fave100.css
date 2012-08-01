@@ -82,6 +82,14 @@ h1{
 .faveList tr:nth-child(odd) {
 	background-color: #EEE !important;
 }
+.faveList{
+	margin: 50px auto;
+	width: 840px;				
+}
+.faveList table{
+	/*table-layout: auto !important;*/
+	border-collapse: collapse;
+}	
 /*.titleColumn, .faveList th:nth-child(1){
 	width: 290px;
 }

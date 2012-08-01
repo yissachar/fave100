@@ -16,4 +16,5 @@ public interface AppUserRequest extends RequestContext{
 	Request<Void> addFaveItemForCurrentUser(Long valueOf, SongProxy songProxy);
 	Request<List<FaveItemProxy>> getAllSongsForCurrentUser();
 	Request<Void> rerankFaveItemForCurrentUser(int currentIndex, int newIndex);
+	Request<List<FaveItemProxy>> getMasterFaveList();
 }

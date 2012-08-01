@@ -23,7 +23,7 @@ public class FaveItem extends DatastoreObject{//TODO: No need to extend from dat
 	@NotSaved private String trackName;
 	@NotSaved private String trackViewUrl;
 	@NotSaved private String artistName;
-	@NotSaved private String releaseYear;
+	@NotSaved private String releaseYear;	
 	
 	public static final Objectify ofy() {
 		DAO dao = new DAO();

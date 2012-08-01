@@ -15,6 +15,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.NotSaved;
 
 /**
  * A Fave100 user.
@@ -23,13 +24,15 @@ import com.googlecode.objectify.annotation.Entity;
  */
 @Entity
 public class AppUser{
+
+	@NotSaved public static int MAX_FAVES = 100;
 	
 	@Id private String username;
 	private Integer version = 0;
 	private String googleId;
 	private String email;
 	@Embedded private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
-	//TODO: Add user types (normal, reviewer, celebrity)?
+	//TODO: Add user types (normal, reviewer, celebrity)? 
 	
 	public static final Objectify ofy() {
 		//TODO: find better way of getting Objectify instance
@@ -123,19 +126,25 @@ public class AppUser{
 		if(song == null) {
 			songProxy.setId(songID);
 			songProxy.persist();
+			//song = songProxy;
 		}		
 		// Create the new FaveItem 
 		FaveItem newFaveItem = new FaveItem();		
 		newFaveItem.setSong(new Key<Song>(Song.class, songID));
 		currentUser.fave100Songs.add(newFaveItem);
 		currentUser.persist();
+		//song.addScore(AppUser.MAX_FAVES - currentUser.fave100Songs.size()+1);
+		//song.persist();
 	}
 	
 	public static void removeFaveItemForCurrentUser(int index) {
 		AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return;	
-		currentUser.fave100Songs.remove(index);
-		currentUser.persist();		
+		if(currentUser == null) return;
+//		Song removedSong = ofy().get(currentUser.fave100Songs.get(index).getSong());
+//		removedSong.addScore(index - AppUser.MAX_FAVES);
+//		removedSong.persist();
+		currentUser.fave100Songs.remove(index);		
+		currentUser.persist();
 	}
 	
 	public static void rerankFaveItemForCurrentUser(int currentIndex, int newIndex) {
@@ -170,10 +179,32 @@ public class AppUser{
 		return currentUser.fave100Songs;
 	}
 	
-	public static List<FaveItem> getMasterFave100List() {
+	public static List<FaveItem> getMasterFaveList() {
 		// TODO: For now, run on ever page refresh but should really be a background task
-		List<FaveItem> masterFave100List = new ArrayList<FaveItem>();
-		return masterFave100List;
+		// TODO: Performance critical - optimize! This code is horrible performance-wise!		
+		List<Song> allSongs = ofy().query(Song.class).list();
+		for(Song song : allSongs) {
+			song.setScore(0);
+			song.persist();
+		}
+		List<AppUser> allAppUsers = ofy().query(AppUser.class).list();		
+		for(AppUser appUser : allAppUsers) {
+			for(int i = 0; i < appUser.fave100Songs.size(); i++) {
+				Song song = ofy().get(appUser.fave100Songs.get(i).getSong());
+				song.addScore(AppUser.MAX_FAVES - i);
+				song.persist();
+			}
+		}		
+		List<Song> topSongs = ofy().query(Song.class).order("score").limit(100).list();
+		List<FaveItem> masterFaveList = new ArrayList<FaveItem>();
+		for(Song song : topSongs) {
+			FaveItem faveItem = new FaveItem();
+			faveItem.setTrackName(song.getTrackName());
+			faveItem.setArtistName(song.getArtistName());
+			faveItem.setReleaseYear(song.getReleaseYear());			
+			masterFaveList.add(faveItem);
+		}
+		return masterFaveList;
 	}
 	
 	public AppUser persist() {
