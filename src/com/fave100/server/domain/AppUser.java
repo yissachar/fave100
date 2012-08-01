@@ -41,8 +41,13 @@ public class AppUser{
 		return ofy().get(new Key<AppUser>(AppUser.class, username));
 	}
 	
-	public static AppUser findAppUserByGoogleId(String googleId) {
-		return ofy().query(AppUser.class).filter("googleId", googleId).get();		
+	public static AppUser findAppUserByGoogleId(String googleID) {		
+		GoogleID gId = ofy().find(GoogleID.class, googleID);
+		if(gId != null) {			
+			return ofy().find(AppUser.class, gId.getUsername());
+		} else {
+			return null;
+		}			
 	}
 	
 	public static boolean isGoogleUserLoggedIn() {
@@ -55,10 +60,11 @@ public class AppUser{
 	}
 	
 	public static AppUser getLoggedInAppUser() {
+		// TODO: Extremely important! This needs to find a user by key or nothing will be highly consistent
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 		if(user != null) {
-			//TODO: This will only work if Google Id is enforced as unique
+			//TODO: This will only work if Google Id is enforced as unique			
 			AppUser appUser = findAppUserByGoogleId(user.getUserId());
 			if(appUser != null) {
 				return appUser;
@@ -69,15 +75,20 @@ public class AppUser{
 	
 	public static AppUser createAppUserFromCurrentGoogleUser(String username) {		
 		//TODO: Disallow white-space, other special characters?
-		if(ofy().find(AppUser.class, username) != null) {
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		if(ofy().find(AppUser.class, username) != null 
+				|| ofy().find(GoogleID.class, user.getUserId()) != null) {
 			return null;
 		} else {
-			UserService userService = UserServiceFactory.getUserService();
-			User user = userService.getCurrentUser();
+			// Create the user
 			AppUser appUser = new AppUser();
 			appUser.setUsername(username);
 			appUser.setEmail(user.getEmail());
 			appUser.setGoogleId(user.getUserId());
+			// Create the GoogleID lookup
+			GoogleID googleID = new GoogleID(user.getUserId(), username);
+			googleID.persist();
 			return(appUser.persist());
 		}
 		// TODO: Use transactions to prevent duplicate user entries
@@ -132,10 +143,6 @@ public class AppUser{
 		//TODO: Need transaction locking here, to prevent override in middle
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;	
-//		FaveItem faveAtCurrIndex = currentUser.fave100Songs.get(currentIndex);
-//		FaveItem faveAtNewIndex = currentUser.fave100Songs.get(newIndex);
-//		currentUser.fave100Songs.set(currentIndex, faveAtNewIndex);
-//		currentUser.fave100Songs.set(newIndex, faveAtCurrIndex);
 		FaveItem faveAtCurrIndex = currentUser.fave100Songs.remove(currentIndex);
 		currentUser.fave100Songs.add(newIndex, faveAtCurrIndex);
 		currentUser.persist();		
@@ -161,6 +168,12 @@ public class AppUser{
 			faveItem.setReleaseYear(song.getReleaseYear());
 		}
 		return currentUser.fave100Songs;
+	}
+	
+	public static List<FaveItem> getMasterFave100List() {
+		// TODO: For now, run on ever page refresh but should really be a background task
+		List<FaveItem> masterFave100List = new ArrayList<FaveItem>();
+		return masterFave100List;
 	}
 	
 	public AppUser persist() {

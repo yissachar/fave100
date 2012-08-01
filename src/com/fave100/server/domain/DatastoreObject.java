@@ -29,7 +29,7 @@ public class DatastoreObject
     }
 
     public Integer getVersion()
-    {
+    {// TODO: Do we actually need version for every (any?) entity, or is just taking up space?
         return version;
     }
 

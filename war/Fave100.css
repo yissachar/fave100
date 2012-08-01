@@ -48,7 +48,7 @@ h1{
 }
 .gwt-SuggestBox:focus {
 	color: #555;
-	border: 3px solid #BBB;
+	border: 3px solid #444;
 }
 .gwt-SuggestBoxPopup table{
 	border: 1px solid #777;
@@ -90,10 +90,11 @@ h1{
 }
 .yearColumn, .faveList th:nth-child(3){
 	width: 40px;
-}
-.deleteColumn{
-	width: 70px;
 }*/
+.deleteColumn{
+	/*width: 70px;*/
+	cursor: pointer;
+}
 .dragHandlerColumn{
 	cursor: move;
 }

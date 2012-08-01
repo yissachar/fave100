@@ -80,6 +80,7 @@ public class RegisterPresenter extends
 					public void onSuccess(AppUserProxy createdUser) {
 						if(createdUser == null) {
 							getView().getStatusMessage().addClassName("error");
+							// TODO: It will say this even if the reason was because an AppUser was tied to the GoogleID
 							getView().getStatusMessage().setInnerHTML("Error: A user with that name already exists.");
 						} else {
 							placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
