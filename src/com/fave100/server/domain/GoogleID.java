@@ -2,8 +2,8 @@ package com.fave100.server.domain;
 
 import javax.persistence.Id;
 
-import com.fave100.server.DAO;
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Unindexed;
 
@@ -20,9 +20,7 @@ public class GoogleID {
 	}
 	
 	public static final Objectify ofy() {
-		//TODO: find better way of getting Objectify instance
-		DAO dao = new DAO();
-		return dao.ofy();
+		return ObjectifyService.begin();
 	}
 	
 	public static GoogleID findGoogleID(String id) {

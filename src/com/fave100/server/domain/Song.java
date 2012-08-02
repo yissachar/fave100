@@ -1,13 +1,12 @@
 package com.fave100.server.domain;
 
-import com.fave100.server.DAO;
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Unindexed;
 
 @Entity
-public class Song extends DatastoreObject{
-	// TODO: Score counter needeed?
+public class Song extends DatastoreObject{	
 	private long score = 0;
 	// iTunes results 
 	@Unindexed private String wrapperType;
@@ -38,9 +37,8 @@ public class Song extends DatastoreObject{
 	@Unindexed private String currency;
 	private String primaryGenreName;
 	
-	public static final Objectify ofy() {
-		DAO dao = new DAO();
-		return dao.ofy();
+	public static final Objectify ofy() {		
+		return ObjectifyService.begin();
 	}
 	
 	public static Song findSong(Long id) {
