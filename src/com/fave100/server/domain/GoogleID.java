@@ -1,16 +1,14 @@
 package com.fave100.server.domain;
 
-import javax.persistence.Id;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Unindexed;
+import com.googlecode.objectify.annotation.Id;
 
 @Entity
 public class GoogleID {
-	@Id @Unindexed private String googleID;
-	@Unindexed private String username;
+	@Id private String googleID;
+	private String username;
 	
 	public GoogleID() {}
 	
@@ -18,19 +16,16 @@ public class GoogleID {
 		this.googleID = googleID;
 		this.username = username;
 	}
-	
-	public static final Objectify ofy() {
-		return ObjectifyService.begin();
-	}
-	
+		
 	public static GoogleID findGoogleID(String id) {
-		return ofy().get(GoogleID.class, id);
+		return ofy().load().type(GoogleID.class).id(id).get();
+		//return ofy().get(GoogleID.class, id);		
 	}
 	
-	public GoogleID persist() {
+	/*public GoogleID persist() {
 		ofy().put(this);
 		return this;
-	}
+	}*/
 	
 	
 	/* Getters and setters */

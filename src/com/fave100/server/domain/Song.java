@@ -1,96 +1,61 @@
 package com.fave100.server.domain;
 
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyService;
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Unindexed;
+import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class Song extends DatastoreObject{	
-	private long score = 0;
+	@Index private long score = 0;
 	// iTunes results 
-	@Unindexed private String wrapperType;
-	@Unindexed private String kind;
+	private String wrapperType;
+	private String kind;
 	private Integer artistId;
-	@Unindexed private Integer collectionId;
+	private Integer collectionId;
 	private Integer trackId;
 	private String artistName;
-	@Unindexed private String collectionName;
+	private String collectionName;
 	private String trackName;
-	@Unindexed private String collectionCensoredName;
-	@Unindexed private String trackCensoredName;
-	@Unindexed private String artistViewUrl;
-	@Unindexed private String collectionViewUrl;
+	private String collectionCensoredName;
+	private String trackCensoredName;
+	private String artistViewUrl;
+	private String collectionViewUrl;
 	private String trackViewUrl;
-	@Unindexed private String previewUrl;
-	@Unindexed private Double collectionPrice;
-	@Unindexed private Double trackPrice;
+	private String previewUrl;
+	private Double collectionPrice;
+	private Double trackPrice;
 	private String releaseDate;
-	@Unindexed private String collectionExplicitness;	
-	@Unindexed private String trackExplicitness;
-	@Unindexed private Integer discCount;
-	@Unindexed private Integer discNumber;
-	@Unindexed private Integer trackCount;
-	@Unindexed private Integer trackNumber;
-	@Unindexed private Integer trackTimeMillis;
-	@Unindexed private String country;
-	@Unindexed private String currency;
+	private String collectionExplicitness;	
+	private String trackExplicitness;
+	private Integer discCount;
+	private Integer discNumber;
+	private Integer trackCount;
+	private Integer trackNumber;
+	private Integer trackTimeMillis;
+	private String country;
+	private String currency;
 	private String primaryGenreName;
 	
-	public static final Objectify ofy() {		
-		return ObjectifyService.begin();
-	}
-	
 	public static Song findSong(Long id) {
-		return ofy().get(Song.class, id);
+		//return ofy().get(Song.class, id);
+		return ofy().load().type(Song.class).id(id).get();
 	}
 	
 	public void addScore(int score) {
 		this.score += score;
 	}
 	
-	public Song persist() {
+	/*public Song persist() {
 		ofy().put(this);
 		return this;
 	}
 	
 	public void remove() {
 		ofy().delete(this);
-	}
-	
-	/* Getters and setters */
-	
-	/*public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getArtist() {
-		return artist;
-	}
-
-	public void setArtist(String artist) {
-		this.artist = artist;
-	}
-
-	public Integer getReleaseYear() {
-		return releaseYear;
-	}
-
-	public void setReleaseYear(Integer releaseYear) {
-		this.releaseYear = releaseYear;
-	}
-
-	public String getItemURL() {
-		return itemURL;
-	}
-
-	public void setItemURL(String itemURL) {
-		this.itemURL = itemURL;
 	}*/
+	
+	/* Getters and setters */	
 	
 	public String getWrapperType() {
 		return wrapperType;

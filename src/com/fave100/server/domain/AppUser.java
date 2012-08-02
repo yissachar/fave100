@@ -1,21 +1,21 @@
 package com.fave100.server.domain;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import javax.persistence.Embedded;
-import javax.persistence.Id;
 import javax.persistence.PrePersist;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.NotSaved;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.IgnoreSave;
 
 /**
  * A Fave100 user.
@@ -25,27 +25,22 @@ import com.googlecode.objectify.annotation.NotSaved;
 @Entity
 public class AppUser{
 
-	@NotSaved public static int MAX_FAVES = 100;
+	@IgnoreSave public static int MAX_FAVES = 100;
 	
 	@Id private String username;
 	private Integer version = 0;
 	private String googleId;
 	private String email;
-	@Embedded private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
-	//TODO: Add user types (normal, reviewer, celebrity)? 
-	
-	public static final Objectify ofy() {
-		return ObjectifyService.begin();
-	}
+	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
 	
 	public static AppUser findAppUser(String username) {
-		return ofy().get(new Key<AppUser>(AppUser.class, username));
+		return ofy().load().type(AppUser.class).id(username).get();
 	}
 	
-	public static AppUser findAppUserByGoogleId(String googleID) {		
-		GoogleID gId = ofy().find(GoogleID.class, googleID);
+	public static AppUser findAppUserByGoogleId(String googleID) {
+		GoogleID gId = ofy().load().type(GoogleID.class).id(googleID).get();
 		if(gId != null) {			
-			return ofy().find(AppUser.class, gId.getUsername());
+			return ofy().load().type(AppUser.class).id(gId.getUsername()).get();
 		} else {
 			return null;
 		}			
@@ -70,7 +65,6 @@ public class AppUser{
 	}
 	
 	public static AppUser getLoggedInAppUser() {
-		// TODO: Extremely important! This needs to find a user by key or nothing will be highly consistent
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 		if(user != null) {
@@ -87,8 +81,8 @@ public class AppUser{
 		//TODO: Disallow white-space, other special characters?
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
-		if(ofy().find(AppUser.class, username) != null 
-				|| ofy().find(GoogleID.class, user.getUserId()) != null) {
+		if(ofy().load().type(AppUser.class).id(username).get() != null
+			|| ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
 			return null;
 		} else {
 			// Create the user
@@ -97,9 +91,9 @@ public class AppUser{
 			appUser.setEmail(user.getEmail());
 			appUser.setGoogleId(user.getUserId());
 			// Create the GoogleID lookup
-			GoogleID googleID = new GoogleID(user.getUserId(), username);
-			googleID.persist();
-			return(appUser.persist());
+			GoogleID googleID = new GoogleID(user.getUserId(), username);			
+			ofy().save().entities(appUser, googleID).now();
+			return appUser;
 		}
 		// TODO: Use transactions to prevent duplicate user entries
 		/*Transaction txn = ofy().getTxn();
@@ -128,30 +122,24 @@ public class AppUser{
 		// TODO: Only allow user to store 100 faveItems
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;
-		Song song = ofy().find(Song.class, songID);
+		Song song = ofy().load().type(Song.class).id(songID).get();
 		// If the song does not exist, create it
 		if(song == null) {
 			songProxy.setId(songID);
-			songProxy.persist();
-			//song = songProxy;
+			ofy().save().entity(songProxy);
 		}		
 		// Create the new FaveItem 
 		FaveItem newFaveItem = new FaveItem();		
-		newFaveItem.setSong(new Key<Song>(Song.class, songID));
+		newFaveItem.setSong(Ref.create(Key.create(Song.class, songID)));
 		currentUser.fave100Songs.add(newFaveItem);
-		currentUser.persist();
-		//song.addScore(AppUser.MAX_FAVES - currentUser.fave100Songs.size()+1);
-		//song.persist();
+		ofy().save().entity(currentUser);
 	}
 	
 	public static void removeFaveItemForCurrentUser(int index) {
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;
-//		Song removedSong = ofy().get(currentUser.fave100Songs.get(index).getSong());
-//		removedSong.addScore(index - AppUser.MAX_FAVES);
-//		removedSong.persist();
-		currentUser.fave100Songs.remove(index);		
-		currentUser.persist();
+		currentUser.fave100Songs.remove(index);
+		ofy().save().entity(currentUser);
 	}
 	
 	public static void rerankFaveItemForCurrentUser(int currentIndex, int newIndex) {
@@ -161,23 +149,14 @@ public class AppUser{
 		if(currentUser == null) return;	
 		FaveItem faveAtCurrIndex = currentUser.fave100Songs.remove(currentIndex);
 		currentUser.fave100Songs.add(newIndex, faveAtCurrIndex);
-		currentUser.persist();		
+		ofy().save().entity(currentUser);
 	}
 	
 	public static List<FaveItem> getAllSongsForCurrentUser() {
-		// TODO: This absolutely needs to be highly consistent
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return null;
-		// Get the song keys from the FaveItem list
-		List<Key<Song>> songKeys = new ArrayList<Key<Song>>();
 		for(FaveItem faveItem : currentUser.fave100Songs) {
-			songKeys.add(faveItem.getSong());
-		}
-		// Now that we have song keys, get actual songs in batch get
-		Map<Key<Song>, Song> songsForFaveItems = ofy().get(songKeys);
-		// Add the song data to the FaveItems that we will send back to the client
-		for(FaveItem faveItem : currentUser.fave100Songs) {
-			Song song = songsForFaveItems.get(faveItem.getSong());
+			Song song = faveItem.getSong().get();
 			faveItem.setTrackName(song.getTrackName());
 			faveItem.setArtistName(song.getArtistName());
 			faveItem.setTrackViewUrl(song.getTrackViewUrl());
@@ -188,35 +167,32 @@ public class AppUser{
 	
 	public static List<FaveItem> getMasterFaveList() {
 		// TODO: For now, run on ever page refresh but should really be a background task
-		// TODO: Performance critical - optimize! This code is horrible performance-wise!		
-		List<Song> allSongs = ofy().query(Song.class).list();
+		// TODO: Performance critical - optimize! This code is horrible performance-wise!
+		List<Song> allSongs = ofy().load().type(Song.class).list();
 		for(Song song : allSongs) {
 			song.setScore(0);
-			song.persist();
-		}
-		List<AppUser> allAppUsers = ofy().query(AppUser.class).list();		
+			ofy().save().entity(song).now();
+		}		
+		List<AppUser> allAppUsers = ofy().load().type(AppUser.class).list();
 		for(AppUser appUser : allAppUsers) {
 			for(int i = 0; i < appUser.fave100Songs.size(); i++) {
-				Song song = ofy().get(appUser.fave100Songs.get(i).getSong());
+				Song song = appUser.fave100Songs.get(i).getSong().get();
 				song.addScore(AppUser.MAX_FAVES - i);
-				song.persist();
+				ofy().save().entity(song).now();
 			}
 		}		
-		List<Song> topSongs = ofy().query(Song.class).order("score").limit(100).list();
+		// TODO: Order not working. Random order for some reason.
+		List<Song> topSongs = ofy().load().type(Song.class).order("-score").limit(100).list();
 		List<FaveItem> masterFaveList = new ArrayList<FaveItem>();
-		for(Song song : topSongs) {
+		for(Song song : topSongs) {		
 			FaveItem faveItem = new FaveItem();
+			faveItem.setTrackViewUrl(song.getTrackViewUrl());
 			faveItem.setTrackName(song.getTrackName());
 			faveItem.setArtistName(song.getArtistName());
 			faveItem.setReleaseYear(song.getReleaseYear());			
 			masterFaveList.add(faveItem);
 		}
 		return masterFaveList;
-	}
-	
-	public AppUser persist() {
-		ofy().put(this);
-		return this;
 	}
 	
 	/**

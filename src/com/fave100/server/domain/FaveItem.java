@@ -1,10 +1,11 @@
 package com.fave100.server.domain;
 
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyService;
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.NotSaved;
+import com.googlecode.objectify.annotation.IgnoreSave;
+import com.googlecode.objectify.annotation.Load;
 
 /**
  * A song that a Fave100 user has added to their Fave100.
@@ -14,33 +15,22 @@ import com.googlecode.objectify.annotation.NotSaved;
 @Entity
 public class FaveItem extends DatastoreObject{//TODO: No need to extend from datastore?
 		
-	private Key<Song> song;
+	@Load private Ref<Song> song;
 	private String whyline;
 	/* We will only use the following fields as a convenient way to send
 	 * a single object back to the client containing Song data and Fave data,
 	 * but will not actually store the data in the datastore. 
 	 */
-	@NotSaved private String trackName;
-	@NotSaved private String trackViewUrl;
-	@NotSaved private String artistName;
-	@NotSaved private String releaseYear;	
-	
-	public static final Objectify ofy() {
-		return ObjectifyService.begin();
-	}
-	// TODO: id not safe? can have same id's if different parents? use keys instead or confirm that id's are safe
+	@IgnoreSave private String trackName;
+	@IgnoreSave private String trackViewUrl;
+	@IgnoreSave private String artistName;
+	@IgnoreSave private String releaseYear;	
+		
 	public static FaveItem findFaveItem(Long id) {
-		return ofy().get(FaveItem.class, id);
+		return ofy().load().type(FaveItem.class).id(id).get();		
 	}
 	
-	public FaveItem persist() {
-		ofy().put(this);
-		return this;
-	}
-	
-	public void remove() {
-		ofy().delete(this);
-	}
+	// Getters and setters
 
 	public String getWhyline() {
 		return whyline;
@@ -50,11 +40,11 @@ public class FaveItem extends DatastoreObject{//TODO: No need to extend from dat
 		this.whyline = whyline;
 	}
 
-	public Key<Song> getSong() {
+	public Ref<Song> getSong() {
 		return song;
 	}
 
-	public void setSong(Key<Song> song) {
+	public void setSong(Ref<Song> song) {
 		this.song = song;
 	}
 
