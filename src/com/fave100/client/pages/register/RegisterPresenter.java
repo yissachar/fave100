@@ -100,25 +100,33 @@ public class RegisterPresenter extends
 	    
 	    // Check whether the user is signed in to their Google account and set links
 	    AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		Request<Boolean> checkGoogleUserLoggedIn = appUserRequest.isGoogleUserLoggedIn();
-		checkGoogleUserLoggedIn.fire(new Receiver<Boolean>() {
-			@Override
-			public void onSuccess(Boolean loggedIn) {
-				// We need the currentURL to redirect users back to this page after a successful login 
-				String currentURL = Window.Location.getPath()+
-						Window.Location.getQueryString()+Window.Location.getHash();
-				if(loggedIn) {		
-					// User signed in with Google account, allow them to create Fave100 account					
-					getView().getStatusMessage().setInnerHTML("");
-					getView().getRegisterContainer().setVisible(true);
-				} else {
-					// User is not signed in with Google account, ask them to sign in
-					getView().getStatusMessage().removeClassName("error");
-					getView().getStatusMessage().setInnerHTML("Please <a href='/_ah/login?continue="+currentURL+"'>sign in</a>"+
-							" with your Google account in order to create a Fave100 account.");
-					getView().getRegisterContainer().setVisible(false);
-				}				
-			}
-		});
+
+		// We need the currentURL to redirect users back to this page after a successful login 
+		String currentURL = Window.Location.getPath()+
+				Window.Location.getQueryString()+Window.Location.getHash();
+	    Request<String> getLoginLogoutURL = appUserRequest.getLoginLogoutURL(currentURL);
+	    getLoginLogoutURL.fire(new Receiver<String>() {
+	    	@Override
+	    	public void onSuccess(final String url) {
+	    		AppUserRequest appUserRequest = requestFactory.appUserRequest();
+	    		Request<Boolean> checkGoogleUserLoggedIn = appUserRequest.isGoogleUserLoggedIn();
+	    		checkGoogleUserLoggedIn.fire(new Receiver<Boolean>() {
+	    			@Override
+	    			public void onSuccess(Boolean loggedIn) {
+	    				if(loggedIn) {		
+	    					// User signed in with Google account, allow them to create Fave100 account					
+	    					getView().getStatusMessage().setInnerHTML("");
+	    					getView().getRegisterContainer().setVisible(true);
+	    				} else {
+	    					// User is not signed in with Google account, ask them to sign in
+	    					getView().getStatusMessage().removeClassName("error");
+	    					getView().getStatusMessage().setInnerHTML("Please <a href='"+url+"'>sign in</a>"+
+	    							" with your Google account in order to create a Fave100 account.");
+	    					getView().getRegisterContainer().setVisible(false);
+	    				}				
+	    			}
+	    		});
+	    	}
+	    });	    
 	}
 }

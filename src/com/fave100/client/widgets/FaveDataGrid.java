@@ -66,9 +66,13 @@ public class FaveDataGrid extends DataGrid<FaveItemProxy>{
 		};
 		yearColumn.setCellStyleNames("yearColumn");
 		this.addColumn(yearColumn, "Year");	
+		
+		//Set the styles for this tableheader
+		this.getTableHeadElement().setClassName("nonpersonalFaves");
 	}
 	
 	public void resizeFaveList() {
+		// TODO: Need a better resizing solution, this is not foolproof
 		// Manually go through all row elements and set the height of the table
 		// because DataGrid does not resize automatically
 		int tableSize = 0;
