@@ -8,12 +8,12 @@ import javax.persistence.Embedded;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 
-import com.fave100.server.DAO;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.NotSaved;
 
@@ -35,9 +35,7 @@ public class AppUser{
 	//TODO: Add user types (normal, reviewer, celebrity)? 
 	
 	public static final Objectify ofy() {
-		//TODO: find better way of getting Objectify instance
-		DAO dao = new DAO();
-		return dao.ofy();
+		return ObjectifyService.begin();
 	}
 	
 	public static AppUser findAppUser(String username) {

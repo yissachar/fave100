@@ -1,8 +1,8 @@
 package com.fave100.server.domain;
 
-import com.fave100.server.DAO;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.NotSaved;
 
@@ -26,8 +26,7 @@ public class FaveItem extends DatastoreObject{//TODO: No need to extend from dat
 	@NotSaved private String releaseYear;	
 	
 	public static final Objectify ofy() {
-		DAO dao = new DAO();
-		return dao.ofy();
+		return ObjectifyService.begin();
 	}
 	// TODO: id not safe? can have same id's if different parents? use keys instead or confirm that id's are safe
 	public static FaveItem findFaveItem(Long id) {
