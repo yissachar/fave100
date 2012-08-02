@@ -62,6 +62,15 @@ public class AppUser{
 		return false;
 	}
 	
+	public static String getLoginLogoutURL(String destinationURL) {
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		if(user == null) {
+			return userService.createLoginURL(destinationURL);
+		}
+		return userService.createLogoutURL(destinationURL);
+	}
+	
 	public static AppUser getLoggedInAppUser() {
 		// TODO: Extremely important! This needs to find a user by key or nothing will be highly consistent
 		UserService userService = UserServiceFactory.getUserService();

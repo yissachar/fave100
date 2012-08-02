@@ -62,8 +62,7 @@ public class HomePresenter extends
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
-	    setInSlot(TOP_BAR_SLOT, topBar);
-	    
+	    setInSlot(TOP_BAR_SLOT, topBar);	    
 	    AppUserRequest appUserRequest = requestFactory.appUserRequest();
 	    Request<List<FaveItemProxy>> masterFaveListReq = appUserRequest.getMasterFaveList();
 	    masterFaveListReq.fire(new Receiver<List<FaveItemProxy>>() {

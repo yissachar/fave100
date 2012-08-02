@@ -161,6 +161,9 @@ public class UserFaveDataGrid extends FaveDataGrid{
 		};
 		deleteColumn.setCellStyleNames("deleteColumn");
 		this.addColumn(deleteColumn);
+		
+		//Set the styles for this tableheader
+		this.getTableHeadElement().setClassName("personalFaves");
 	}
 	public void refreshFaveList() {
 		//TODO: To reduce number of RPC calls, perhaps don't refresh list every change

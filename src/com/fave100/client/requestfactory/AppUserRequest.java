@@ -11,6 +11,7 @@ import com.google.web.bindery.requestfactory.shared.Service;
 public interface AppUserRequest extends RequestContext{	
 	Request<AppUserProxy> getLoggedInAppUser();
 	Request<Boolean> isGoogleUserLoggedIn();
+	Request<String> getLoginLogoutURL(String destinationURL);
 	Request<AppUserProxy> createAppUserFromCurrentGoogleUser(String username);
 	Request<Void> removeFaveItemForCurrentUser(int index);
 	Request<Void> addFaveItemForCurrentUser(Long valueOf, SongProxy songProxy);
