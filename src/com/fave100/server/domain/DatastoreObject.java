@@ -1,12 +1,15 @@
 package com.fave100.server.domain;
 
-import javax.persistence.Id;
+
 import javax.persistence.PrePersist;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+
+@Entity
 public class DatastoreObject
 {
-    @Id
-    private Long id;
+    @Id private Long id;
     private Integer version = 0;
     
     /**
@@ -29,7 +32,7 @@ public class DatastoreObject
     }
 
     public Integer getVersion()
-    {// TODO: Do we actually need version for every (any?) entity, or is just taking up space?
+    {
         return version;
     }
 
