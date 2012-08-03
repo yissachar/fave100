@@ -13,6 +13,8 @@ public interface AppUserRequest extends RequestContext{
 	Request<Boolean> isGoogleUserLoggedIn();
 	Request<String> getLoginLogoutURL(String destinationURL);
 	Request<AppUserProxy> createAppUserFromCurrentGoogleUser(String username);
+	Request<List<AppUserProxy>> getAppUsers();
+	
 	Request<Void> removeFaveItemForCurrentUser(int index);
 	Request<Void> addFaveItemForCurrentUser(Long valueOf, SongProxy songProxy);
 	Request<List<FaveItemProxy>> getAllSongsForCurrentUser();

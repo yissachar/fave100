@@ -18,6 +18,8 @@ import com.fave100.client.pagefragments.TopBarView;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.register.RegisterView;
+import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.pages.users.UsersView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -39,6 +41,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(RegisterPresenter.class, RegisterPresenter.MyView.class,
 				RegisterView.class, RegisterPresenter.MyProxy.class);
+
+		bindPresenter(UsersPresenter.class, UsersPresenter.MyView.class,
+				UsersView.class, UsersPresenter.MyProxy.class);
 	}
 	
 	@Provides
