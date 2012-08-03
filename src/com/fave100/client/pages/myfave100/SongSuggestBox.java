@@ -91,7 +91,7 @@ public class SongSuggestBox extends SuggestBox{
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub				
+				// TODO Do Something with failure				
 			}
 		});		
 	}
