@@ -9,5 +9,6 @@
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
 		<g:InlineHTML ui:field="usersList"/>
+		<g:InlineHTML ui:field="userProfile"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -45,4 +45,11 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 	public InlineHTML getUserList() {
 		return usersList;
 	}
+	
+	@UiField InlineHTML userProfile;
+
+	@Override
+	public InlineHTML getUserProfile() {
+		return userProfile;
+	}
 }

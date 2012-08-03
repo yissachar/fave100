@@ -26,7 +26,7 @@ public class AppUser extends DatastoreObject{
 
 	@IgnoreSave public static int MAX_FAVES = 100;
 	
-	@Id private String username;
+	@Id private String username;//TODO: username case sensitive??
 	private String googleId;
 	private String email;
 	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
