@@ -119,9 +119,10 @@ public class AppUser{
 	
 	public static void addFaveItemForCurrentUser(Long songID, Song songProxy) {
 		// TODO: Verify integrity of songProxy on server-side? 
-		// TODO: Only allow user to store 100 faveItems
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;
+		// TODO: Show some user friendly message instead of silent fail
+		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) return;
 		Song song = ofy().load().type(Song.class).id(songID).get();
 		// If the song does not exist, create it
 		if(song == null) {
@@ -143,7 +144,6 @@ public class AppUser{
 	}
 	
 	public static void rerankFaveItemForCurrentUser(int currentIndex, int newIndex) {
-		//TODO: Verify that this is working successfully, eventual consistency makes it hard to know
 		//TODO: Need transaction locking here, to prevent override in middle
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;	

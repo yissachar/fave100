@@ -13,7 +13,7 @@ import com.googlecode.objectify.annotation.Load;
  *
  */
 @Entity
-public class FaveItem extends DatastoreObject{//TODO: No need to extend from datastore?
+public class FaveItem extends DatastoreObject{
 		
 	@Load private Ref<Song> song;
 	private String whyline;

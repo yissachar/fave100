@@ -48,7 +48,6 @@ public class UserFaveDataGrid extends FaveDataGrid{
 				if(value == null) return;		
 				super.onBrowserEvent(context, parent, value, event, valueUpdater);
 				// TODO: Switch over to plain GWT
-				// TODO: implement on server-side (currently only reranks on client, not persistent)
 				if(event.getType().equals("mousedown")) {					
 					draggedRow = getRowElement(context.getIndex());
 					GQuery $row = $(draggedRow);
