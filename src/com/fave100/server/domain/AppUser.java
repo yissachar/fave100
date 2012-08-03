@@ -30,6 +30,7 @@ public class AppUser extends DatastoreObject{
 	private String googleId;
 	private String email;
 	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
+	// TODO: user avatar/gravatar
 	
 	public static AppUser findAppUser(String username) {
 		return ofy().load().type(AppUser.class).id(username).get();
@@ -98,6 +99,12 @@ public class AppUser extends DatastoreObject{
 			}			
 		});		
 		return newAppUser;		
+	}
+	
+	public static List<AppUser> getAppUsers() {
+		// TODO: Add parameters to restrict amount of users returned
+		// or otherwise decide how best to show list of users in UI
+		return ofy().load().type(AppUser.class).list();
 	}
 	
 	public static void addFaveItemForCurrentUser(Long songID, Song songProxy) {

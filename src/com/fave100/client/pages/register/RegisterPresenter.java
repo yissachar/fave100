@@ -38,8 +38,7 @@ public class RegisterPresenter extends
 		Button getRegisterButton();
 	}
 	
-	@ContentSlot
-	public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
 	
 	@Inject TopBarPresenter topBar;
 
