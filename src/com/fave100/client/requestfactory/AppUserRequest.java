@@ -9,11 +9,13 @@ import com.google.web.bindery.requestfactory.shared.Service;
 
 @Service(AppUser.class)
 public interface AppUserRequest extends RequestContext{	
-	Request<AppUserProxy> getLoggedInAppUser();
+	Request<AppUserProxy> findAppUser(String username);
+	Request<List<AppUserProxy>> getAppUsers();
+	Request<AppUserProxy> getLoggedInAppUser()
+	;
 	Request<Boolean> isGoogleUserLoggedIn();
 	Request<String> getLoginLogoutURL(String destinationURL);
-	Request<AppUserProxy> createAppUserFromCurrentGoogleUser(String username);
-	Request<List<AppUserProxy>> getAppUsers();
+	Request<AppUserProxy> createAppUserFromCurrentGoogleUser(String username);		
 	
 	Request<Void> removeFaveItemForCurrentUser(int index);
 	Request<Void> addFaveItemForCurrentUser(Long valueOf, SongProxy songProxy);

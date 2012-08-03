@@ -12,6 +12,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.google.inject.Inject;
@@ -27,9 +28,10 @@ public class UsersPresenter extends
 
 	public interface MyView extends View {
 		InlineHTML getUserList();
+		InlineHTML getUserProfile();
 	}
 	
-	
+	private String requestedUser;
 	private ApplicationRequestFactory requestFactory;
 	
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
@@ -51,6 +53,12 @@ public class UsersPresenter extends
 	@Override
 	protected void revealInParent() {
 		RevealRootContentEvent.fire(this, this);
+	}
+	
+	@Override
+	public void prepareFromRequest(PlaceRequest placeRequest) {
+		super.prepareFromRequest(placeRequest);
+		requestedUser = placeRequest.getParameter("u", "");				
 	}
 
 	@Override
@@ -77,6 +85,32 @@ public class UsersPresenter extends
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
-	    setInSlot(TOP_BAR_SLOT, topBar);  
+	    setInSlot(TOP_BAR_SLOT, topBar);
+	    
+	    if(requestedUser != "") {	 
+	    	// See if the request User actually exists
+	    	AppUserRequest appUserRequest = requestFactory.appUserRequest();
+	    	Request<AppUserProxy> findUserReq = appUserRequest.findAppUser(requestedUser);
+	    	findUserReq.fire(new Receiver<AppUserProxy>() {
+	    		@Override
+	    		public void onSuccess(AppUserProxy appUser) {
+	    			if(appUser != null) {	    				
+	    				// Hide userlist, and show user profile
+	    				getView().getUserList().setVisible(false);
+	    				InlineHTML userProfile = getView().getUserProfile();
+	    				userProfile.setVisible(true);
+	    				String output = "";
+	    				output += appUser.getUsername();
+	    				// TODO: nned to get the favelist for the user!!
+	    				userProfile.setHTML(output);
+	    			}
+	    		}
+			});	    	
+	    } else {
+	    	// No valid user requested, just show user list
+	    	// TODO: put links on usernames, make pretty...
+	    	getView().getUserList().setVisible(true);
+	    	getView().getUserProfile().setVisible(false);
+	    }
 	}
 }
