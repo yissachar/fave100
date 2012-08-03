@@ -3,17 +3,19 @@ package com.fave100.server.domain;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
-public class Song extends DatastoreObject{	
+public class Song extends DatastoreObject{
+	@Id private Long id;
 	@Index private long score = 0;
 	// iTunes results 
+	private Integer trackId;
 	private String wrapperType;
 	private String kind;
 	private Integer artistId;
-	private Integer collectionId;
-	private Integer trackId;
+	private Integer collectionId;	
 	private String artistName;
 	private String collectionName;
 	private String trackName;
@@ -283,6 +285,14 @@ public class Song extends DatastoreObject{
 
 	public void setScore(long score) {
 		this.score = score;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }
