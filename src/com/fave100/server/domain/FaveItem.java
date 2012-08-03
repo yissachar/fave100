@@ -4,6 +4,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Load;
 
@@ -15,6 +16,7 @@ import com.googlecode.objectify.annotation.Load;
 @Entity
 public class FaveItem extends DatastoreObject{
 		
+	@Id private Long id;
 	@Load private Ref<Song> song;
 	private String whyline;
 	/* We will only use the following fields as a convenient way to send
@@ -78,6 +80,14 @@ public class FaveItem extends DatastoreObject{
 
 	public void setReleaseYear(String releaseYear) {
 		this.releaseYear = releaseYear;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}	
 	
 }

@@ -5,15 +5,12 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.PrePersist;
-
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.Work;
-import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -25,12 +22,11 @@ import com.googlecode.objectify.annotation.IgnoreSave;
  *
  */
 @Entity
-public class AppUser{
+public class AppUser extends DatastoreObject{
 
 	@IgnoreSave public static int MAX_FAVES = 100;
 	
 	@Id private String username;
-	private Integer version = 0;
 	private String googleId;
 	private String email;
 	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
@@ -109,13 +105,21 @@ public class AppUser{
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;
 		// TODO: Show some user friendly message instead of silent fail
-		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) return;
-		Song song = ofy().load().type(Song.class).id(songID).get();
+		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) return;		
+		Song song = ofy().load().type(Song.class).id(songID).get();		
+		boolean unique = true;
 		// If the song does not exist, create it
 		if(song == null) {
 			songProxy.setId(songID);
 			ofy().save().entity(songProxy);
-		}		
+		} else {
+			// Check if it is a unique song for this user
+			for(FaveItem faveItem : currentUser.fave100Songs) {
+				if(faveItem.getSong().get().getId().equals(song.getId())) unique = false;
+			}
+		}
+		// TODO: Show some user friendly message instead of silent fail
+		if(unique == false) return;
 		// Create the new FaveItem 
 		FaveItem newFaveItem = new FaveItem();		
 		newFaveItem.setSong(Ref.create(Key.create(Song.class, songID)));
@@ -187,15 +191,6 @@ public class AppUser{
 		return masterFaveList;
 	}
 	
-	/**
-     * Auto-increment version # whenever persisted
-     */
-    @PrePersist
-    void onPersist()
-    {
-        this.version++;
-    }
-    
     // Getters and setters
 
 	public String getGoogleId() {
@@ -224,14 +219,6 @@ public class AppUser{
 	
 	public String getId() {
 		return username;
-	}
-
-	public Integer getVersion() {
-		return version;
-	}
-
-	public void setVersion(Integer version) {
-		this.version = version;
 	}
 
 	public List<FaveItem> getFave100Songs() {
