@@ -12,6 +12,8 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.Work;
+import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -67,8 +69,7 @@ public class AppUser{
 	public static AppUser getLoggedInAppUser() {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
-		if(user != null) {
-			//TODO: This will only work if Google Id is enforced as unique			
+		if(user != null) {		
 			AppUser appUser = findAppUserByGoogleId(user.getUserId());
 			if(appUser != null) {
 				return appUser;
@@ -77,44 +78,30 @@ public class AppUser{
 		return null;
 	}	
 	
-	public static AppUser createAppUserFromCurrentGoogleUser(String username) {		
-		//TODO: Disallow white-space, other special characters?
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-		if(ofy().load().type(AppUser.class).id(username).get() != null
-			|| ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
-			return null;
-		} else {
-			// Create the user
-			AppUser appUser = new AppUser();
-			appUser.setUsername(username);
-			appUser.setEmail(user.getEmail());
-			appUser.setGoogleId(user.getUserId());
-			// Create the GoogleID lookup
-			GoogleID googleID = new GoogleID(user.getUserId(), username);			
-			ofy().save().entities(appUser, googleID).now();
-			return appUser;
-		}
-		// TODO: Use transactions to prevent duplicate user entries
-		/*Transaction txn = ofy().getTxn();
-		try {
-			// Verify that username is unique
-			//if(ofy().find(AppUser.class, user.getNickname()) != null) {
-			//	return null; 
-			//} 
-			AppUser appUser = new AppUser();
-			appUser.setUsername(user.getNickname());
-			appUser.setEmail(user.getEmail());
-			appUser.setGoogleId(user.getUserId());
-			AppUser foo = appUser.persist();
-			txn.commit();
-			return(foo);
-		} finally {
-			if(txn.isActive()) {
-				txn.rollback();
-				return null;
-			}
-		}*/
+	public static AppUser createAppUserFromCurrentGoogleUser(final String username) {		
+		// TODO: Disallow white-space, other special characters?		
+		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely 
+		AppUser newAppUser = ofy().transact(new Work<AppUser>() {
+			public AppUser run() {
+				UserService userService = UserServiceFactory.getUserService();
+				User user = userService.getCurrentUser();
+				if(ofy().load().type(AppUser.class).id(username).get() != null
+					|| ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
+					return null;
+				} else {
+					// Create the user
+					AppUser appUser = new AppUser();
+					appUser.setUsername(username);
+					appUser.setEmail(user.getEmail());
+					appUser.setGoogleId(user.getUserId());
+					// Create the GoogleID lookup
+					GoogleID googleID = new GoogleID(user.getUserId(), username);			
+					ofy().save().entities(appUser, googleID).now();
+					return appUser;
+				}
+			}			
+		});		
+		return newAppUser;		
 	}
 	
 	public static void addFaveItemForCurrentUser(Long songID, Song songProxy) {
@@ -143,13 +130,18 @@ public class AppUser{
 		ofy().save().entity(currentUser);
 	}
 	
-	public static void rerankFaveItemForCurrentUser(int currentIndex, int newIndex) {
-		//TODO: Need transaction locking here, to prevent override in middle
-		AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return;	
-		FaveItem faveAtCurrIndex = currentUser.fave100Songs.remove(currentIndex);
-		currentUser.fave100Songs.add(newIndex, faveAtCurrIndex);
-		ofy().save().entity(currentUser);
+	public static void rerankFaveItemForCurrentUser(final int currentIndex, final int newIndex) {		
+		// TODO: Use a transaction to ensure that the indices are correct
+		// For some reason this throws a illegal state exception about deregistering a transaction that is not registered
+//		ofy().transact(new VoidWork() {
+//			public void vrun() {
+				AppUser currentUser = AppUser.getLoggedInAppUser();
+				if(currentUser == null) return;	
+				FaveItem faveAtCurrIndex = currentUser.fave100Songs.remove(currentIndex);
+				currentUser.fave100Songs.add(newIndex, faveAtCurrIndex);
+				ofy().save().entity(currentUser).now();
+//			}
+//		});		
 	}
 	
 	public static List<FaveItem> getAllSongsForCurrentUser() {
