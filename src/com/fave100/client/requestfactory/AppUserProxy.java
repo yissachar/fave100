@@ -1,5 +1,7 @@
 package com.fave100.client.requestfactory;
 
+import java.util.List;
+
 import com.fave100.server.domain.AppUser;
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 import com.google.web.bindery.requestfactory.shared.ProxyFor;
@@ -9,4 +11,5 @@ public interface AppUserProxy extends EntityProxy{
 	Integer getVersion();
 	
 	String getUsername();
+	List<FaveItemProxy> getFave100Songs();
 }

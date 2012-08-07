@@ -1,5 +1,6 @@
 package com.fave100.client.pages.users;
 
+import com.fave100.client.widgets.FaveDataGrid;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -52,4 +53,12 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 	public InlineHTML getUserProfile() {
 		return userProfile;
 	}
+	
+	@UiField FaveDataGrid userFaveDataGrid;
+	
+	@Override
+	public FaveDataGrid getUserFaveDataGrid() {
+		return userFaveDataGrid;
+	}
+	
 }

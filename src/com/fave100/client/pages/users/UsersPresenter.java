@@ -12,6 +12,8 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.requestfactory.FaveItemProxy;
+import com.fave100.client.widgets.FaveDataGrid;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
@@ -22,6 +24,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.InlineHTML;
@@ -33,10 +36,12 @@ public class UsersPresenter extends
 	public interface MyView extends View {
 		InlineHTML getUserList();
 		InlineHTML getUserProfile();
+		FaveDataGrid getUserFaveDataGrid();
 	}
 	
 	private String requestedUser;
 	private ApplicationRequestFactory requestFactory;
+	private HandlerRegistration URLHandlerRegistration;
 	
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
 	
@@ -79,7 +84,7 @@ public class UsersPresenter extends
 				String hash = event.getValue();
 				if(hash.length() == 0) return;
 				String[] historyTokens = hash.split("&",0);				
-				if(historyTokens.length == 0 || historyTokens[0].equals("users")) {
+				if(historyTokens.length == 0 || !historyTokens[0].contains(";")) {
 					refreshUserList();
 				} else {
 					requestedUser = historyTokens[0].split("=")[1];
@@ -88,9 +93,16 @@ public class UsersPresenter extends
 			}
 		};
 		
-		History.addValueChangeHandler(URLHandler);
-		
+		URLHandlerRegistration = History.addValueChangeHandler(URLHandler);
+	
 		refreshUserList();
+	}
+	
+	@Override
+	protected void onUnbind() {
+		super.onUnbind();
+		
+		URLHandlerRegistration.removeHandler();
 	}
 	
 	@Override
@@ -102,8 +114,7 @@ public class UsersPresenter extends
 	    	// See if the request User actually exists
 	    	refreshUserFave();    	
 	    } else {
-	    	// No valid user requested, just show user list
-	    	// TODO: put links on usernames, make pretty...
+	    	// No valid user requested, just show user list	    	
 	    	getView().getUserList().setVisible(true);
 	    	getView().getUserProfile().setVisible(false);
 	    }
@@ -112,6 +123,7 @@ public class UsersPresenter extends
 	private void refreshUserList() {
 		getView().getUserList().setVisible(true);
     	getView().getUserProfile().setVisible(false);
+    	getView().getUserFaveDataGrid().setVisible(false);
 		AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		Request<List<AppUserProxy>> userListReq = appUserRequest.getAppUsers();
 		userListReq.fire(new Receiver<List<AppUserProxy>>() {
@@ -133,7 +145,26 @@ public class UsersPresenter extends
 	
 	private void refreshUserFave() {
     	// See if the request User actually exists
-    	AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		AppUserRequest appUserRequest = requestFactory.appUserRequest();
+	    Request<AppUserProxy> masterFaveListReq = appUserRequest.findAppUser(requestedUser).with("fave100Songs");
+	    masterFaveListReq.fire(new Receiver<AppUserProxy>() {
+	    	@Override
+	    	public void onSuccess(AppUserProxy user) {
+	    		if(user != null) {	    				
+    				// Hide userlist, and show user profile
+    				getView().getUserList().setVisible(false);
+    				InlineHTML userProfile = getView().getUserProfile();
+    				userProfile.setVisible(true);
+    				String output = "";
+    				output += user.getUsername();
+    				userProfile.setHTML(output);
+    				getView().getUserFaveDataGrid().setVisible(true);
+    	    		getView().getUserFaveDataGrid().setRowData(user.getFave100Songs());
+    	    		getView().getUserFaveDataGrid().resizeFaveList();
+    			}
+	    	}
+	    });
+    	/*AppUserRequest appUserRequest = requestFactory.appUserRequest();
     	Request<AppUserProxy> findUserReq = appUserRequest.findAppUser(requestedUser);
     	findUserReq.fire(new Receiver<AppUserProxy>() {
     		@Override
@@ -149,6 +180,6 @@ public class UsersPresenter extends
     				userProfile.setHTML(output);
     			}
     		}
-		});	  
+		});	 */ 
 	}
 }
