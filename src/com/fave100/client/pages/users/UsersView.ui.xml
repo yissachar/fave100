@@ -2,11 +2,15 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:w="urn:import:com.fave100.client.widgets"
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
 	<ui:style>
+		@external .faveList;		
+		.faveList{}	
+		
 		.userList ul{
 			list-style: none;	
 			margin-top: 20px;		
@@ -37,5 +41,6 @@
 		<g:HTMLPanel ui:field="topBar"/>
 		<g:InlineHTML ui:field="usersList" styleName="{style.userList}"/>
 		<g:InlineHTML ui:field="userProfile"/>
+		<w:FaveDataGrid ui:field="userFaveDataGrid" styleName="{style.faveList}"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

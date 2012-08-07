@@ -155,19 +155,6 @@ public class AppUser extends DatastoreObject{
 //		});		
 	}
 	
-	public static List<FaveItem> getAllSongsForCurrentUser() {
-		AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return null;
-		for(FaveItem faveItem : currentUser.fave100Songs) {
-			Song song = faveItem.getSong().get();
-			faveItem.setTrackName(song.getTrackName());
-			faveItem.setArtistName(song.getArtistName());
-			faveItem.setTrackViewUrl(song.getTrackViewUrl());
-			faveItem.setReleaseYear(song.getReleaseYear());
-		}
-		return currentUser.fave100Songs;
-	}
-	
 	public static List<FaveItem> getMasterFaveList() {
 		// TODO: For now, run on ever page refresh but should really be a background task
 		// TODO: Performance critical - optimize! This code is horrible performance-wise!
@@ -229,6 +216,13 @@ public class AppUser extends DatastoreObject{
 	}
 
 	public List<FaveItem> getFave100Songs() {
+		for(FaveItem faveItem : fave100Songs) {
+			Song song = faveItem.getSong().get();
+			faveItem.setTrackName(song.getTrackName());
+			faveItem.setArtistName(song.getArtistName());
+			faveItem.setTrackViewUrl(song.getTrackViewUrl());
+			faveItem.setReleaseYear(song.getReleaseYear());
+		}
 		return fave100Songs;
 	}
 
