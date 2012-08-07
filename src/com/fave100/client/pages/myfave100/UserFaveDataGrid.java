@@ -2,8 +2,6 @@ package com.fave100.client.pages.myfave100;
 
 import static com.google.gwt.query.client.GQuery.$;
 
-import java.util.List;
-
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
@@ -170,7 +168,6 @@ public class UserFaveDataGrid extends FaveDataGrid{
 		// instead, make changes locally on client by adding elements to DOM
 		// Get the data from the datastore
 		AppUserRequest appUserRequest = requestFactory.appUserRequest();		
-		//Request<List<FaveItemProxy>> currentUserReq = appUserRequest.getAllSongsForCurrentUser();
 		Request<AppUserProxy> currentUserReq = appUserRequest.getLoggedInAppUser().with("fave100Songs");
 		currentUserReq.fire(new Receiver<AppUserProxy>() {
 			@Override

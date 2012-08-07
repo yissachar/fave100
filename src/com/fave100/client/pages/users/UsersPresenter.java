@@ -12,7 +12,6 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.widgets.FaveDataGrid;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
@@ -131,7 +130,9 @@ public class UsersPresenter extends
 			public void onSuccess(List<AppUserProxy> userList) {
 				String output = "<ul>";				
 				for(AppUserProxy user : userList) {
-					output += "<li>";					
+					output += "<li>";
+					// TODO: profile image					
+					//output += "<img src='http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' />";
 					output += "<a href='"+Window.Location.getHref()+";u="+user.getUsername()+"'>";
 					output += "<div>"+user.getUsername()+"</div>";					
 					output += "</a>";
@@ -144,7 +145,6 @@ public class UsersPresenter extends
 	}
 	
 	private void refreshUserFave() {
-    	// See if the request User actually exists
 		AppUserRequest appUserRequest = requestFactory.appUserRequest();
 	    Request<AppUserProxy> masterFaveListReq = appUserRequest.findAppUser(requestedUser).with("fave100Songs");
 	    masterFaveListReq.fire(new Receiver<AppUserProxy>() {
@@ -156,6 +156,8 @@ public class UsersPresenter extends
     				InlineHTML userProfile = getView().getUserProfile();
     				userProfile.setVisible(true);
     				String output = "";
+    				// TODO: profile image
+    				//output += "<img src='http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' />";
     				output += user.getUsername();
     				userProfile.setHTML(output);
     				getView().getUserFaveDataGrid().setVisible(true);
@@ -164,22 +166,5 @@ public class UsersPresenter extends
     			}
 	    	}
 	    });
-    	/*AppUserRequest appUserRequest = requestFactory.appUserRequest();
-    	Request<AppUserProxy> findUserReq = appUserRequest.findAppUser(requestedUser);
-    	findUserReq.fire(new Receiver<AppUserProxy>() {
-    		@Override
-    		public void onSuccess(AppUserProxy appUser) {
-    			if(appUser != null) {	    				
-    				// Hide userlist, and show user profile
-    				getView().getUserList().setVisible(false);
-    				InlineHTML userProfile = getView().getUserProfile();
-    				userProfile.setVisible(true);
-    				String output = "";
-    				output += appUser.getUsername();
-    				// TODO: need to get the favelist for the user!!
-    				userProfile.setHTML(output);
-    			}
-    		}
-		});	 */ 
 	}
 }
