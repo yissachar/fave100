@@ -39,6 +39,7 @@ public class RegisterPresenter extends
 		PasswordTextBox getPasswordRepeatField();
 		HTMLPanel getRegisterContainer();
 		Button getRegisterButton();
+		Button getRegisterWithGoogleButton();
 	}
 	
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
@@ -52,6 +53,7 @@ public class RegisterPresenter extends
 	
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
+	private Boolean loggedInWithGoogle;
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view,
@@ -97,6 +99,43 @@ public class RegisterPresenter extends
 				});
 			}
 		}));
+		
+		registerHandler(getView().getRegisterWithGoogleButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if(loggedInWithGoogle) {
+					AppUserRequest appUserRequest = requestFactory.appUserRequest();
+					// Try to create a new user with the current Google user and the name entered
+					Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromCurrentGoogleUser(getView().getUsernameField().getValue());
+					getView().getUsernameField().setValue("");
+					getView().getPasswordField().setValue("");
+					getView().getPasswordRepeatField().setValue("");
+					createAppUserReq.fire(new Receiver<AppUserProxy>() {
+						@Override
+						public void onSuccess(AppUserProxy createdUser) {
+							if(createdUser == null) {
+								getView().getStatusMessage().addClassName("error");
+								// TODO: It will say this even if the reason was because an AppUser was tied to the GoogleID
+								getView().getStatusMessage().setInnerHTML("Error: A user with that name already exists.");
+							} else {
+								placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
+							}
+						}
+					});
+				} else {
+				    AppUserRequest appUserRequest = requestFactory.appUserRequest();
+					// We need the currentURL to redirect users back to this page after a successful login 
+					String currentURL = Window.Location.getHref();
+				    Request<String> getLoginLogoutURL = appUserRequest.getLoginLogoutURL(currentURL);
+				    getLoginLogoutURL.fire(new Receiver<String>() {
+				    	@Override
+				    	public void onSuccess(final String url) {
+				    		Window.Location.assign(url);
+				    	}
+				    });	    
+				}
+			}
+		}));
 	}
 	
 	@Override
@@ -105,36 +144,25 @@ public class RegisterPresenter extends
 	    super.onReveal();
 	    setInSlot(TOP_BAR_SLOT, topBar);  
 		
-	    
-	    // Check whether the user is signed in to their Google account and set links
 	    AppUserRequest appUserRequest = requestFactory.appUserRequest();
-
-		// We need the currentURL to redirect users back to this page after a successful login 
-		String currentURL = Window.Location.getPath()+
-				Window.Location.getQueryString()+Window.Location.getHash();
-	    Request<String> getLoginLogoutURL = appUserRequest.getLoginLogoutURL(currentURL);
-	    getLoginLogoutURL.fire(new Receiver<String>() {
-	    	@Override
-	    	public void onSuccess(final String url) {
-	    		AppUserRequest appUserRequest = requestFactory.appUserRequest();
-	    		Request<Boolean> checkGoogleUserLoggedIn = appUserRequest.isGoogleUserLoggedIn();
-	    		checkGoogleUserLoggedIn.fire(new Receiver<Boolean>() {
-	    			@Override
-	    			public void onSuccess(Boolean loggedIn) {
-	    				if(loggedIn) {		
-	    					// User signed in with Google account, allow them to create Fave100 account					
-	    					getView().getStatusMessage().setInnerHTML("");
-	    					getView().getRegisterContainer().setVisible(true);
-	    				} else {
-	    					// User is not signed in with Google account, ask them to sign in
-	    					getView().getStatusMessage().removeClassName("error");
-	    					getView().getStatusMessage().setInnerHTML("Please <a href='"+url+"'>sign in</a>"+
-	    							" with your Google account in order to create a Fave100 account.");
-	    					getView().getRegisterContainer().setVisible(false);
-	    				}				
-	    			}
-	    		});
-	    	}
-	    });	    
+		Request<Boolean> checkGoogleUserLoggedIn = appUserRequest.isGoogleUserLoggedIn();
+		checkGoogleUserLoggedIn.fire(new Receiver<Boolean>() {
+			@Override
+			public void onSuccess(Boolean loggedIn) {
+				if(loggedIn) {
+					// User signed in with Google account, allow them to create Fave100 account
+					loggedInWithGoogle = true;
+					getView().getStatusMessage().setInnerHTML("");
+					getView().getRegisterContainer().setVisible(true);
+				} else {
+					loggedInWithGoogle = false;
+					// User is not signed in with Google account, ask them to sign in
+					/*getView().getStatusMessage().removeClassName("error");
+					getView().getStatusMessage().setInnerHTML("Please <a href='"+url+"'>sign in</a>"+
+							" with your Google account in order to create a Fave100 account.");
+					getView().getRegisterContainer().setVisible(false);*/
+				}				
+			}
+		});	    
 	}
 }

@@ -38,7 +38,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
 	// TODO: user avatar/gravatar
 	
-	private AppUser() {}
+	public AppUser() {}
 	
 	public AppUser(String username, String password) {
 		this.username = username;
@@ -127,6 +127,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 					// Create the GoogleID lookup
 					GoogleID googleID = new GoogleID(user.getUserId(), username);			
 					ofy().save().entities(appUser, googleID).now();					
+					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 					return appUser;
 				}
 			}			
