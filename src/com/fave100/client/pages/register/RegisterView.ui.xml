@@ -32,6 +32,7 @@
 			<span>Confirm password:</span>
 			<g:PasswordTextBox ui:field="passwordRepeatField" />
 			<g:Button ui:field="registerButton" styleName="{style.registerButton}">Register</g:Button>
+			<g:Button ui:field="registerWithGoogleButton" styleName="{style.registerButton}">Register with Google</g:Button>
 		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

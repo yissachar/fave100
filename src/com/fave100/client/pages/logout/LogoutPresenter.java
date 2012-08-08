@@ -37,7 +37,7 @@ public class LogoutPresenter extends
 		super(eventBus, view, proxy);
 		
 		this.requestFactory = requestFactory;
-		this.placeManager = placeManager;
+		this.placeManager = placeManager;		
 	}
 
 	@Override

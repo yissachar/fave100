@@ -83,4 +83,11 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 	public PasswordTextBox getPasswordRepeatField() {
 		return passwordRepeatField;
 	}
+	
+	@UiField Button registerWithGoogleButton;
+
+	@Override
+	public Button getRegisterWithGoogleButton() {
+		return registerWithGoogleButton;
+	}
 }
