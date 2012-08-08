@@ -11,6 +11,8 @@ import com.google.gwt.inject.client.AsyncProvider;
 import com.fave100.client.pages.myfave100.MyFave100Presenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.pages.login.LoginPresenter;
+import com.fave100.client.pages.logout.LogoutPresenter;
 
 @GinModules({ DispatchAsyncModule.class, ClientModule.class })
 public interface ClientGinjector extends Ginjector {
@@ -26,4 +28,8 @@ public interface ClientGinjector extends Ginjector {
 	AsyncProvider<RegisterPresenter> getRegisterPresenter();
 
 	AsyncProvider<UsersPresenter> getUsersPresenter();
+
+	AsyncProvider<LoginPresenter> getLoginPresenter();
+
+	AsyncProvider<LogoutPresenter> getLogoutPresenter();
 }

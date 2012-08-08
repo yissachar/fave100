@@ -6,6 +6,7 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 
 /**
@@ -14,6 +15,7 @@ import com.googlecode.objectify.annotation.Load;
  *
  */
 @Entity
+@Index
 public class FaveItem extends DatastoreObject{
 		
 	@Id private Long id;

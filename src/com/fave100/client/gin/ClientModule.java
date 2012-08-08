@@ -20,6 +20,10 @@ import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.register.RegisterView;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.pages.users.UsersView;
+import com.fave100.client.pages.login.LoginPresenter;
+import com.fave100.client.pages.login.LoginView;
+import com.fave100.client.pages.logout.LogoutPresenter;
+import com.fave100.client.pages.logout.LogoutView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -44,6 +48,12 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(UsersPresenter.class, UsersPresenter.MyView.class,
 				UsersView.class, UsersPresenter.MyProxy.class);
+
+		bindPresenter(LoginPresenter.class, LoginPresenter.MyView.class,
+				LoginView.class, LoginPresenter.MyProxy.class);
+
+		bindPresenter(LogoutPresenter.class, LogoutPresenter.MyView.class,
+				LogoutView.class, LogoutPresenter.MyProxy.class);
 	}
 	
 	@Provides

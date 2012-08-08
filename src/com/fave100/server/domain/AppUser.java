@@ -5,9 +5,11 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.server.bcrypt.BCrypt;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.Work;
@@ -15,6 +17,7 @@ import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  * A Fave100 user.
@@ -22,15 +25,25 @@ import com.googlecode.objectify.annotation.IgnoreSave;
  *
  */
 @Entity
-public class AppUser extends DatastoreObject{
+@Index
+public class AppUser extends DatastoreObject{//TODO: remove indexes before launch
 
-	@IgnoreSave public static int MAX_FAVES = 100;
+	@IgnoreSave public static final int MAX_FAVES = 100;
+	@IgnoreSave public static final String AUTH_USER = "loggedIn";
 	
 	@Id private String username;//TODO: username case sensitive??
+	private String password;
 	private String googleId;
 	private String email;
 	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
 	// TODO: user avatar/gravatar
+	
+	private AppUser() {}
+	
+	public AppUser(String username, String password) {
+		this.username = username;
+		setPassword(password);
+	}
 	
 	public static AppUser findAppUser(String username) {
 		return ofy().load().type(AppUser.class).id(username).get();
@@ -43,6 +56,20 @@ public class AppUser extends DatastoreObject{
 		} else {
 			return null;
 		}			
+	}
+	
+	public static AppUser login(String username, String password) {
+		// TODO: Check username and password		
+		AppUser loggedInUser = findAppUser(username);		
+		if(loggedInUser != null) {
+			if(!BCrypt.checkpw(password, loggedInUser.getPassword())) return null;
+			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+		}
+		return loggedInUser;
+	}
+	
+	public static void logout() {
+		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, null);
 	}
 	
 	public static boolean isGoogleUserLoggedIn() {
@@ -64,15 +91,21 @@ public class AppUser extends DatastoreObject{
 	}
 	
 	public static AppUser getLoggedInAppUser() {
-		UserService userService = UserServiceFactory.getUserService();
+		/*UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
-		if(user != null) {		
+		if(user != null) {		e
 			AppUser appUser = findAppUserByGoogleId(user.getUserId());
 			if(appUser != null) {
 				return appUser;
 			}
 		} 
-		return null;
+		return null;*/
+		String username = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
+		if(username != null) {
+			return ofy().load().type(AppUser.class).id(username).get();
+		} else {
+			return null;
+		}
 	}	
 	
 	public static AppUser createAppUserFromCurrentGoogleUser(final String username) {		
@@ -93,12 +126,36 @@ public class AppUser extends DatastoreObject{
 					appUser.setGoogleId(user.getUserId());
 					// Create the GoogleID lookup
 					GoogleID googleID = new GoogleID(user.getUserId(), username);			
-					ofy().save().entities(appUser, googleID).now();
+					ofy().save().entities(appUser, googleID).now();					
+					return appUser;
+				}
+			}			
+		});
+		return newAppUser;		
+	}
+	
+	public static AppUser createAppUser(final String username, final String password) {
+		// TODO: Disallow white-space, other special characters?		
+		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely 
+		AppUser newAppUser = ofy().transact(new Work<AppUser>() {
+			public AppUser run() {
+				if(ofy().load().type(AppUser.class).id(username).get() != null) {
+					return null;
+				} else {
+					// Create the user
+					AppUser appUser = new AppUser(username, password);
+					//appUser.setEmail(user.getEmail());
+					//appUser.setGoogleId(user.getUserId());
+					// Create the GoogleID lookup
+					//GoogleID googleID = new GoogleID(user.getUserId(), username);			
+					//ofy().save().entities(appUser, googleID).now();
+					ofy().save().entity(appUser);
+					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 					return appUser;
 				}
 			}			
 		});		
-		return newAppUser;		
+		return newAppUser;
 	}
 	
 	public static List<AppUser> getAppUsers() {
@@ -228,5 +285,13 @@ public class AppUser extends DatastoreObject{
 
 	public void setFave100Songs(List<FaveItem> fave100Songs) {
 		this.fave100Songs = fave100Songs;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
 	}
 }
