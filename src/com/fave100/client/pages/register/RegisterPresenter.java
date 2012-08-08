@@ -25,6 +25,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
@@ -34,6 +35,8 @@ public class RegisterPresenter extends
 	public interface MyView extends View {
 		SpanElement getStatusMessage();		
 		TextBox getUsernameField();
+		PasswordTextBox getPasswordField();
+		PasswordTextBox getPasswordRepeatField();
 		HTMLPanel getRegisterContainer();
 		Button getRegisterButton();
 	}
@@ -73,7 +76,13 @@ public class RegisterPresenter extends
 			public void onClick(ClickEvent event) {
 				AppUserRequest appUserRequest = requestFactory.appUserRequest();
 				// Try to create a new user with the current Google user and the name entered
-				Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromCurrentGoogleUser(getView().getUsernameField().getValue());
+				//Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromCurrentGoogleUser(getView().getUsernameField().getValue());
+				//createAppUserReq.fire(new Receiver<AppUserProxy>() {
+				Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(getView().getUsernameField().getValue(),
+						getView().getPasswordField().getValue());
+				getView().getUsernameField().setValue("");
+				getView().getPasswordField().setValue("");
+				getView().getPasswordRepeatField().setValue("");
 				createAppUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(AppUserProxy createdUser) {

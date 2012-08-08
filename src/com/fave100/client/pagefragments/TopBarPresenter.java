@@ -1,5 +1,6 @@
 package com.fave100.client.pagefragments;
 
+import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
@@ -65,11 +66,15 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 							getView().getGreeting().setInnerHTML("Welcome "+appUser.getUsername());
 							getView().getMyFave100Link().setVisible(true);
 							getView().getRegisterLink().setVisible(false);
-							getView().getLogInLogOutLink().setInnerHTML("<a href='"+url+"'>Log out</a>");
+							//getView().getLogInLogOutLink().setInnerHTML("<a href='"+url+"'>Log out</a>");
+							getView().getLogInLogOutLink().setInnerHTML("<a href='"+Window.Location.getPath()
+									+Window.Location.getQueryString()+"#"+NameTokens.logout+"'>Logout</a>");
 						} else {
 							getView().getMyFave100Link().setVisible(false);
 							getView().getRegisterLink().setVisible(true);				
-							getView().getLogInLogOutLink().setInnerHTML("<a href='"+url+"'>Log in</a>");
+							//getView().getLogInLogOutLink().setInnerHTML("<a href='"+url+"'>Log in</a>");
+							getView().getLogInLogOutLink().setInnerHTML("<a href='"+Window.Location.getPath()
+									+Window.Location.getQueryString()+"#"+NameTokens.login+"'>Login</a>");
 						}				
 					}
 				});

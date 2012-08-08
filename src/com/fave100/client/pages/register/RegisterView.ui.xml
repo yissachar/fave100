@@ -25,6 +25,12 @@
 		<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
 			<span>Username:</span>
 			<g:TextBox ui:field="usernameField" styleName="{style.usernameInput}"/>
+			<br/>
+			<span>Password:</span>
+			<g:PasswordTextBox ui:field="passwordField" />
+			<br/>
+			<span>Confirm password:</span>
+			<g:PasswordTextBox ui:field="passwordRepeatField" />
 			<g:Button ui:field="registerButton" styleName="{style.registerButton}">Register</g:Button>
 		</g:HTMLPanel>
 	</g:HTMLPanel>
