@@ -5,7 +5,7 @@ import com.google.web.bindery.requestfactory.shared.ProxyFor;
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 
 @ProxyFor(FaveItem.class)
-public interface FaveItemProxy extends EntityProxy {
+public interface FaveItemProxy extends EntityProxy, FaveListItem {
 
 	Long getId();
 	Integer getVersion();

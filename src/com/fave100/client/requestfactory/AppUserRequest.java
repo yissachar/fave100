@@ -18,10 +18,11 @@ public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> createAppUserFromCurrentGoogleUser(String username);		
 	
 	Request<Void> removeFaveItemForCurrentUser(int index);
-	Request<Void> addFaveItemForCurrentUser(Long valueOf, SongProxy songProxy);
+	Request<Boolean> addFaveItemForCurrentUser(Long songID, SongProxy songProxy);
 	Request<Void> rerankFaveItemForCurrentUser(int currentIndex, int newIndex);
-	Request<List<FaveItemProxy>> getMasterFaveList();
+	Request<List<SongProxy>> getMasterFaveList();
 	Request<AppUserProxy> login(String username, String password);
 	Request<Void> logout();
 	Request<AppUserProxy> createAppUser(String username, String password);
+	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser();
 }

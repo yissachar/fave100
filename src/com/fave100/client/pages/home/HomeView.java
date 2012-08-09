@@ -1,5 +1,6 @@
 package com.fave100.client.pages.home;
 
+import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.widgets.FaveDataGrid;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -15,8 +16,11 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	public interface Binder extends UiBinder<Widget, HomeView> {
 	}
 	
+	@UiField(provided = true) FaveDataGrid masterFaveDataGrid;
+	
 	@Inject
-	public HomeView(final Binder binder) {
+	public HomeView(final Binder binder, final ApplicationRequestFactory requestFactory) {
+		masterFaveDataGrid = new FaveDataGrid(requestFactory);
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -38,8 +42,6 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 		super.setInSlot(slot, content);
 	}
 
-	@UiField FaveDataGrid masterFaveDataGrid;
-	
 	@Override
 	public FaveDataGrid getMasterFaveDataGrid() {
 		return masterFaveDataGrid;

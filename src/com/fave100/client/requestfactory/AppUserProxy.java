@@ -11,5 +11,5 @@ public interface AppUserProxy extends EntityProxy{
 	Integer getVersion();
 	
 	String getUsername();
-	List<FaveItemProxy> getFave100Songs();
+	List<SongProxy> getFave100Songs();
 }

@@ -2,11 +2,14 @@ package com.fave100.client.pages.myfave100;
 
 import static com.google.gwt.query.client.GQuery.$;
 
-import com.fave100.client.requestfactory.AppUserProxy;
+import java.util.List;
+
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
-import com.fave100.client.widgets.FaveDataGrid;
+import com.fave100.client.requestfactory.FaveListItem;
+import com.fave100.client.widgets.FaveDataGridBase;
+import com.fave100.client.widgets.MouseClickCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -28,7 +31,7 @@ import com.google.web.bindery.requestfactory.shared.Request;
  * @author yissachar.radcliffe
  *
  */
-public class UserFaveDataGrid extends FaveDataGrid{	
+public class UserFaveDataGrid extends FaveDataGridBase{	
 	
 	private HandlerRegistration nativePreviewHandler;
 	private ApplicationRequestFactory requestFactory;
@@ -121,9 +124,9 @@ public class UserFaveDataGrid extends FaveDataGrid{
 			
 		}, MouseUpEvent.getType());
 		
-		Column<FaveItemProxy, String> dragHandlerColumn = new Column<FaveItemProxy, String>(dragHandlerCell) {
+		Column<FaveListItem, String> dragHandlerColumn = new Column<FaveListItem, String>(dragHandlerCell) {
 			@Override
-			public String getValue(FaveItemProxy object) {
+			public String getValue(FaveListItem object) {
 				return "^";
 			}
 			
@@ -151,10 +154,10 @@ public class UserFaveDataGrid extends FaveDataGrid{
 				}
 			}
 		};
-		Column<FaveItemProxy, String> deleteColumn = new Column<FaveItemProxy, String>(deleteButton) {
+		Column<FaveListItem, String> deleteColumn = new Column<FaveListItem, String>(deleteButton) {
 			@Override
-			public String getValue(FaveItemProxy object) {
-				return "Delete";
+			public String getValue(FaveListItem object) {
+				return "X";
 			}
 		};
 		deleteColumn.setCellStyleNames("deleteColumn");
@@ -168,11 +171,11 @@ public class UserFaveDataGrid extends FaveDataGrid{
 		// instead, make changes locally on client by adding elements to DOM
 		// Get the data from the datastore
 		AppUserRequest appUserRequest = requestFactory.appUserRequest();		
-		Request<AppUserProxy> currentUserReq = appUserRequest.getLoggedInAppUser().with("fave100Songs");
-		currentUserReq.fire(new Receiver<AppUserProxy>() {
+		Request<List<FaveItemProxy>> currentUserReq = appUserRequest.getFaveItemsForCurrentUser();
+		currentUserReq.fire(new Receiver<List<FaveItemProxy>>() {
 			@Override
-			public void onSuccess(AppUserProxy appUser) {				
-				if(appUser != null) setRowData(appUser.getFave100Songs());
+			public void onSuccess(List<FaveItemProxy> faveItems) {				
+				if(faveItems != null) setRowData(faveItems);
 				resizeFaveList();				
 			}
 		});

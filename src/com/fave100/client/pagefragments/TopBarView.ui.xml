@@ -8,6 +8,10 @@
 
 	<ui:style>
 		.topNav{
+			/*position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;*/
 			background-color: #FFF;			
 			height: 40px;
 			border-bottom: 1px solid #555;

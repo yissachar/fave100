@@ -2,8 +2,6 @@ package com.fave100.client.pages.home;
 
 import java.util.List;
 
-import com.fave100.client.requestfactory.FaveItemProxy;
-
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -13,6 +11,7 @@ import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.FaveDataGrid;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
@@ -64,10 +63,10 @@ public class HomePresenter extends
 	    super.onReveal();
 	    setInSlot(TOP_BAR_SLOT, topBar);	    
 	    AppUserRequest appUserRequest = requestFactory.appUserRequest();
-	    Request<List<FaveItemProxy>> masterFaveListReq = appUserRequest.getMasterFaveList();
-	    masterFaveListReq.fire(new Receiver<List<FaveItemProxy>>() {
+	    Request<List<SongProxy>> masterFaveListReq = appUserRequest.getMasterFaveList();
+	    masterFaveListReq.fire(new Receiver<List<SongProxy>>() {
 	    	@Override
-	    	public void onSuccess(List<FaveItemProxy> masterFaveList) {
+	    	public void onSuccess(List<SongProxy> masterFaveList) {
 	    		getView().getMasterFaveDataGrid().setRowData(masterFaveList);
 	    		getView().getMasterFaveDataGrid().resizeFaveList();
 	    	}

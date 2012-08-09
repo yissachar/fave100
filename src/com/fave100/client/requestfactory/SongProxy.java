@@ -6,8 +6,7 @@ import com.google.web.bindery.requestfactory.shared.ProxyFor;
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 
 @ProxyFor(Song.class)
-public interface SongProxy extends EntityProxy, SuggestionResult {
+public interface SongProxy extends EntityProxy, SuggestionResult, FaveListItem {
 	Long getId();
 	Integer getVersion();
-
 }

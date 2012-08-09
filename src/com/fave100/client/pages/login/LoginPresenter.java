@@ -25,10 +25,10 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 public class LoginPresenter extends
 		Presenter<LoginPresenter.MyView, LoginPresenter.MyProxy> {
 
-	public interface MyView extends View {
-		Button getLoginButton();
+	public interface MyView extends View {		
 		TextBox getUsernameInput();
-		PasswordTextBox getPasswordInput();		
+		PasswordTextBox getPasswordInput();
+		Button getLoginButton();
 	}
 
 	@ProxyCodeSplit

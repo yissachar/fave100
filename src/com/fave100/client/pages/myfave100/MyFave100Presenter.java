@@ -84,10 +84,10 @@ public class MyFave100Presenter extends
 				AutoBeanCodex.decodeInto(AutoBeanCodex.encode(autoBean), newBean);				
 				songProxy = newBean.as();
 				// Add the SongProxy as a new FaveItem for the AppUser
-				Request<Void> createReq = appUserRequest.addFaveItemForCurrentUser(Long.valueOf(faveItemMap.getTrackId()), songProxy);
-				createReq.fire(new Receiver<Void>() {
+				Request<Boolean> createReq = appUserRequest.addFaveItemForCurrentUser(Long.valueOf(faveItemMap.getTrackId()), songProxy);
+				createReq.fire(new Receiver<Boolean>() {
 					@Override
-					public void onSuccess(Void response) {
+					public void onSuccess(Boolean response) {
 						getView().getFaveList().refreshFaveList();
 					}
 				});

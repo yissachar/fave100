@@ -1,5 +1,6 @@
 package com.fave100.client.pages.users;
 
+import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.widgets.FaveDataGrid;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -15,9 +16,12 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 
 	public interface Binder extends UiBinder<Widget, UsersView> {		
 	}
+	
+	@UiField(provided = true) FaveDataGrid userFaveDataGrid;
 
 	@Inject
-	public UsersView(final Binder binder) {
+	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
+		userFaveDataGrid = new FaveDataGrid(requestFactory);
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -53,8 +57,6 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 	public InlineHTML getUserProfile() {
 		return userProfile;
 	}
-	
-	@UiField FaveDataGrid userFaveDataGrid;
 	
 	@Override
 	public FaveDataGrid getUserFaveDataGrid() {
