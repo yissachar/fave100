@@ -95,30 +95,30 @@ h1{
 	/*table-layout: auto !important;*/
 	border-collapse: collapse;
 }
-/*.titleColumn, .faveList th:nth-child(1){
-	width: 290px;
-}
-.artistColumn, .faveList th:nth-child(2){
-	width: 200px
-}
-.yearColumn, .faveList th:nth-child(3){
-	width: 40px;
-}*/
 .dragHandlerColumn, .personalFaves th:nth-child(1){
 	cursor: move;
 	width: 10px;
 }
-.trackNameColumn, .nonpersonalFaves th:nth-child(1), .personalFaves th:nth-child(2){
+.addColumn, .nonpersonalFaves th:nth-child(1) {
+	cursor: pointer;
+	width: 10px;
+	text-align: center;
+	font-size: 1.5em;
+}
+.addColumn:hover{
+	background-color: #AFA;
+}
+.trackNameColumn, .nonpersonalFaves th:nth-child(2), .personalFaves th:nth-child(2){
 	width: 290px;
 }
-.artistColumn, .nonpersonalFaves th:nth-child(2), .personalFaves th:nth-child(3){
+.artistColumn, .nonpersonalFaves th:nth-child(3), .personalFaves th:nth-child(3){
 	width: 200px
 }
-.yearColumn, .nonpersonalFaves th:nth-child(3), .personalFaves th:nth-child(4){
+.yearColumn, .nonpersonalFaves th:nth-child(4), .personalFaves th:nth-child(4){
 	width: 40px;
 }
 .deleteColumn, .personalFaves th:nth-child(5){
-	width: 40px;
+	width: 10px;
 	cursor: pointer;
 }
 .draggedFaveListItem{

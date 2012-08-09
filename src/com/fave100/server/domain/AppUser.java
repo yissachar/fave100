@@ -59,12 +59,21 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static AppUser login(String username, String password) {
-		// TODO: Check username and password		
-		AppUser loggedInUser = findAppUser(username);		
-		if(loggedInUser != null) {
-			if(!BCrypt.checkpw(password, loggedInUser.getPassword())) return null;
-			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-		}
+		AppUser loggedInUser;
+		// Check if the user is a google login
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		if(user != null) {		
+			loggedInUser = findAppUserByGoogleId(user.getUserId());			
+			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
+		} else {
+			// If the user is not a logged in Google user, check if they are a native user
+			loggedInUser = findAppUser(username);		
+			if(loggedInUser != null) {
+				if(!BCrypt.checkpw(password, loggedInUser.getPassword())) return null;
+				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+			}			
+		}	
 		return loggedInUser;
 	}
 	
@@ -165,12 +174,12 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return ofy().load().type(AppUser.class).list();
 	}
 	
-	public static void addFaveItemForCurrentUser(Long songID, Song songProxy) {
+	public static boolean addFaveItemForCurrentUser(Long songID, Song songProxy) {
 		// TODO: Verify integrity of songProxy on server-side? 
 		AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return;
+		if(currentUser == null) return false;
 		// TODO: Show some user friendly message instead of silent fail
-		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) return;		
+		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) return false;		
 		Song song = ofy().load().type(Song.class).id(songID).get();		
 		boolean unique = true;
 		// If the song does not exist, create it
@@ -184,12 +193,13 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			}
 		}
 		// TODO: Show some user friendly message instead of silent fail
-		if(unique == false) return;
+		if(unique == false) return false;
 		// Create the new FaveItem 
 		FaveItem newFaveItem = new FaveItem();		
 		newFaveItem.setSong(Ref.create(Key.create(Song.class, songID)));
 		currentUser.fave100Songs.add(newFaveItem);
-		ofy().save().entity(currentUser);
+		ofy().save().entity(currentUser).now();
+		return true;
 	}
 	
 	public static void removeFaveItemForCurrentUser(int index) {
@@ -213,7 +223,20 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 //		});		
 	}
 	
-	public static List<FaveItem> getMasterFaveList() {
+	public static List<FaveItem> getFaveItemsForCurrentUser() {
+		AppUser currentUser = getLoggedInAppUser();
+		if(currentUser == null) return null;
+		for(FaveItem faveItem : currentUser.fave100Songs) {
+			Song song = faveItem.getSong().get();
+			faveItem.setTrackName(song.getTrackName());
+			faveItem.setArtistName(song.getArtistName());
+			faveItem.setTrackViewUrl(song.getTrackViewUrl());
+			faveItem.setReleaseYear(song.getReleaseYear());
+		}
+		return currentUser.fave100Songs;
+	}
+	
+	public static List<Song> getMasterFaveList() {
 		// TODO: For now, run on ever page refresh but should really be a background task
 		// TODO: Performance critical - optimize! This code is horrible performance-wise!
 		List<Song> allSongs = ofy().load().type(Song.class).list();
@@ -229,18 +252,8 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				ofy().save().entity(song).now();
 			}
 		}		
-		// TODO: Order not working. Random order for some reason.
-		List<Song> topSongs = ofy().load().type(Song.class).order("-score").limit(100).list();
-		List<FaveItem> masterFaveList = new ArrayList<FaveItem>();
-		for(Song song : topSongs) {		
-			FaveItem faveItem = new FaveItem();
-			faveItem.setTrackViewUrl(song.getTrackViewUrl());
-			faveItem.setTrackName(song.getTrackName());
-			faveItem.setArtistName(song.getArtistName());
-			faveItem.setReleaseYear(song.getReleaseYear());			
-			masterFaveList.add(faveItem);
-		}
-		return masterFaveList;
+		List<Song> topSongs = ofy().load().type(Song.class).order("-score").limit(100).list();		
+		return topSongs;
 	}
 	
     // Getters and setters
@@ -273,15 +286,18 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return username;
 	}
 
-	public List<FaveItem> getFave100Songs() {
+	public List<Song> getFave100Songs() {
+		List<Song> songs = new ArrayList<Song>();
 		for(FaveItem faveItem : fave100Songs) {
-			Song song = faveItem.getSong().get();
+			songs.add(faveItem.getSong().get());
+			/*Song song = faveItem.getSong().get();
 			faveItem.setTrackName(song.getTrackName());
 			faveItem.setArtistName(song.getArtistName());
 			faveItem.setTrackViewUrl(song.getTrackViewUrl());
-			faveItem.setReleaseYear(song.getReleaseYear());
+			faveItem.setReleaseYear(song.getReleaseYear());*/
 		}
-		return fave100Songs;
+		return songs;
+		//return fave100Songs;
 	}
 
 	public void setFave100Songs(List<FaveItem> fave100Songs) {
