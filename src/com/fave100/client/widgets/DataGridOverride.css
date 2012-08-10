@@ -1,8 +1,8 @@
 /* Stylesheet to override default DataGrid styles */
 
-.dataGridHeader{
- 	border-bottom: 1px solid #000;
- 	background-color: #abe07f;
+.dataGridHeader{ 	
+	border-bottom: none;
+ 	background-color: #A8DB88;
  }
  .dataGridCell{
 	border: none !important;

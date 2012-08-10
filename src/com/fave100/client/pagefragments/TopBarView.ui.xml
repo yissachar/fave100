@@ -12,9 +12,10 @@
 			left: 0;
 			top: 0;
 			width: 100%;*/
-			background-color: #FFF;			
+			background-color: #A8DB88;			
 			height: 40px;
 			border-bottom: 1px solid #555;
+			margin-bottom: 10px;
 		}
 		.topNav ul{
 			list-style-type: none;	

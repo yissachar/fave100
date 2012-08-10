@@ -35,7 +35,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	private String password;
 	private String googleId;
 	private String email;
-	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
+	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();// TODO: Plan ahead for hashtags
 	// TODO: user avatar/gravatar
 	
 	public AppUser() {}
@@ -59,6 +59,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static AppUser login(String username, String password) {
+		// TODO: DO NOT LOGIN WITH GOOGLE OVER HERE! They should be separate functions
 		AppUser loggedInUser;
 		// Check if the user is a google login
 		UserService userService = UserServiceFactory.getUserService();
@@ -174,12 +175,14 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return ofy().load().type(AppUser.class).list();
 	}
 	
-	public static boolean addFaveItemForCurrentUser(Long songID, Song songProxy) {
+	public static void addFaveItemForCurrentUser(Long songID, Song songProxy) {
 		// TODO: Verify integrity of songProxy on server-side? 
 		AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return false;
-		// TODO: Show some user friendly message instead of silent fail
-		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) return false;		
+		if(currentUser == null) {
+			throw new RuntimeException("Please log in.");
+			//return false;
+		}
+		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list.");;		
 		Song song = ofy().load().type(Song.class).id(songID).get();		
 		boolean unique = true;
 		// If the song does not exist, create it
@@ -192,14 +195,12 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				if(faveItem.getSong().get().getId().equals(song.getId())) unique = false;
 			}
 		}
-		// TODO: Show some user friendly message instead of silent fail
-		if(unique == false) return false;
+		if(unique == false) throw new RuntimeException("The song is already in your list");;
 		// Create the new FaveItem 
 		FaveItem newFaveItem = new FaveItem();		
 		newFaveItem.setSong(Ref.create(Key.create(Song.class, songID)));
 		currentUser.fave100Songs.add(newFaveItem);
 		ofy().save().entity(currentUser).now();
-		return true;
 	}
 	
 	public static void removeFaveItemForCurrentUser(int index) {

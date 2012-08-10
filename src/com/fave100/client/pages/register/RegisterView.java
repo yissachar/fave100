@@ -41,13 +41,6 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 		}
 		super.setInSlot(slot, content);
 	}
-	
-	@UiField SpanElement statusMessage;
-
-	@Override
-	public SpanElement getStatusMessage() {
-		return statusMessage;
-	}
 
 	@UiField HTMLPanel registerContainer;
 	
@@ -89,5 +82,19 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 	@Override
 	public Button getRegisterWithGoogleButton() {
 		return registerWithGoogleButton;
+	}
+	
+	@UiField SpanElement usernameStatusMessage;
+
+	@Override
+	public SpanElement getUsernameStatusMessage() {
+		return usernameStatusMessage;
+	}
+	
+	@UiField SpanElement thirdPartyUsernameStatusMessage;
+
+	@Override
+	public SpanElement getThirdPartyUsernameStatusMessage() {
+		return thirdPartyUsernameStatusMessage;
 	}
 }

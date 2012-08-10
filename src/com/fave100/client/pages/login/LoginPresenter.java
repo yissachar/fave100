@@ -14,6 +14,7 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
@@ -28,6 +29,7 @@ public class LoginPresenter extends
 	public interface MyView extends View {		
 		TextBox getUsernameInput();
 		PasswordTextBox getPasswordInput();
+		SpanElement getLoginStatusMessage();
 		Button getLoginButton();
 	}
 
@@ -70,10 +72,12 @@ public class LoginPresenter extends
 				loginReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(AppUserProxy appUser) {						
+						//TODO: switch over to onSucces/onFailure
 						if(appUser != null) {
+							getView().getLoginStatusMessage().setInnerText("");
 							placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
 						} else {
-							// TODO: Display error to user
+							getView().getLoginStatusMessage().setInnerText("Username or password incorrect.");
 						}
 					}
 				});

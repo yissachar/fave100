@@ -33,7 +33,8 @@ public class RegisterPresenter extends
 		Presenter<RegisterPresenter.MyView, RegisterPresenter.MyProxy> {
 
 	public interface MyView extends View {
-		SpanElement getStatusMessage();		
+		SpanElement getUsernameStatusMessage();
+		SpanElement getThirdPartyUsernameStatusMessage();
 		TextBox getUsernameField();
 		PasswordTextBox getPasswordField();
 		PasswordTextBox getPasswordRepeatField();
@@ -43,6 +44,8 @@ public class RegisterPresenter extends
 	}
 	
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
+	
+	public static final String PROVIDER_GOOGLE = "google";	
 	
 	@Inject TopBarPresenter topBar;
 
@@ -63,6 +66,30 @@ public class RegisterPresenter extends
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
 	}
+	
+	@Override
+	public void prepareFromRequest(PlaceRequest placeRequest) {
+		super.prepareFromRequest(placeRequest);
+		String username = placeRequest.getParameter("username", "");
+		String provider = placeRequest.getParameter("provider", "");
+		if(username != null && provider != null) {
+			if(provider == RegisterPresenter.PROVIDER_GOOGLE) {
+				/*AppUserRequest appUserRequest = requestFactory.appUserRequest();
+				Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromGoogleAccount(String username);
+				createAppUserReq.fire(new Receiver<AppUserProxy>() {
+					@Override
+					public void onSuccess(AppUserProxy createdUser) {
+						if(createdUser == null) {
+							// TODO: It will say this even if the reason was because an AppUser was tied to the GoogleID
+							getView().getUsernameStatusMessage().setInnerHTML("A user with that name already exists.");
+						} else {
+							placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
+						}
+					}
+				});*/
+			}
+		}
+	}
 
 	@Override
 	protected void revealInParent() {
@@ -77,6 +104,9 @@ public class RegisterPresenter extends
 			@Override
 			public void onClick(ClickEvent event) {
 				AppUserRequest appUserRequest = requestFactory.appUserRequest();
+				// TODO: finesse google login 
+				// TODO: password error message if don't match
+				// TODO: thirdpartyusername error message
 				// Try to create a new user with the current Google user and the name entered
 				//Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromCurrentGoogleUser(getView().getUsernameField().getValue());
 				//createAppUserReq.fire(new Receiver<AppUserProxy>() {
@@ -89,9 +119,8 @@ public class RegisterPresenter extends
 					@Override
 					public void onSuccess(AppUserProxy createdUser) {
 						if(createdUser == null) {
-							getView().getStatusMessage().addClassName("error");
 							// TODO: It will say this even if the reason was because an AppUser was tied to the GoogleID
-							getView().getStatusMessage().setInnerHTML("Error: A user with that name already exists.");
+							getView().getUsernameStatusMessage().setInnerHTML("A user with that name already exists.");
 						} else {
 							placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
 						}
@@ -114,9 +143,8 @@ public class RegisterPresenter extends
 						@Override
 						public void onSuccess(AppUserProxy createdUser) {
 							if(createdUser == null) {
-								getView().getStatusMessage().addClassName("error");
 								// TODO: It will say this even if the reason was because an AppUser was tied to the GoogleID
-								getView().getStatusMessage().setInnerHTML("Error: A user with that name already exists.");
+								getView().getUsernameStatusMessage().setInnerHTML("A user with that name already exists.");
 							} else {
 								placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
 							}
@@ -152,7 +180,7 @@ public class RegisterPresenter extends
 				if(loggedIn) {
 					// User signed in with Google account, allow them to create Fave100 account
 					loggedInWithGoogle = true;
-					getView().getStatusMessage().setInnerHTML("");
+					getView().getUsernameStatusMessage().setInnerHTML("");
 					getView().getRegisterContainer().setVisible(true);
 				} else {
 					loggedInWithGoogle = false;

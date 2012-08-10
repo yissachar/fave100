@@ -1,19 +1,16 @@
 package com.fave100.client.widgets;
 
-import static com.google.gwt.query.client.GQuery.$;
-
+import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListItem;
 import com.fave100.client.requestfactory.SongProxy;
 import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.ActionCell.Delegate;
-import com.google.gwt.query.client.Function;
-import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.client.Window;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 /**
  * DataGrid to display a list of FaveItems.
@@ -31,29 +28,16 @@ public class FaveDataGrid extends FaveDataGridBase {
 			@Override
 			public void execute(SongProxy song) {
 				AppUserRequest appUserRequest = requestFactory.appUserRequest();
-				Request<Boolean> addFaveReq = appUserRequest.addFaveItemForCurrentUser(song.getId(), song);
-				addFaveReq.fire(new Receiver<Boolean>() {
+				Request<Void> addFaveReq = appUserRequest.addFaveItemForCurrentUser(song.getId(), song);
+				addFaveReq.fire(new Receiver<Void>() {
 					@Override
-					public void onSuccess(Boolean added) {
-						GQuery $addedAlert = $(".addedAlert");
-						if($addedAlert.length() == 0) {						
-							$("<div>/div>").insertAfter($("div").first()).addClass("addedAlert");
-							$addedAlert = $(".addedAlert");
-						} 
-						if(added) {
-							$addedAlert.text("Added!");
-						} else {
-							$addedAlert.text("Please login");
-						}
-						$addedAlert.css("top", Window.getScrollTop()+80+"px");
-						final int alertWidth = $addedAlert.outerWidth();
-						$addedAlert.css("left",-alertWidth+"px");
-						$addedAlert.animate("left:" + "0px", 300).delay(500, new Function() {
-							public void f() {
-								$(".addedAlert").animate("left:" + -alertWidth+"px", 300);
-							}
-						});
-						
+					public void onSuccess(Void added) {
+						SideNotification.show("Added!");												
+					}
+					
+					@Override
+					public void onFailure(ServerFailure failure) {
+						SideNotification.show(failure.getMessage().replace("Server Error:", ""), true);
 					}
 				});
 			}

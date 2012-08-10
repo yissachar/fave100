@@ -5,14 +5,27 @@
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
-
+	
+	<ui:style>
+		.loginStatusMessage{
+			display: block;
+			font-size: 0.8em;
+			margin-bottom: 5px;
+		}
+	</ui:style>
 	<g:HTMLPanel>
-		<g:Label>Username:</g:Label>
-		<g:TextBox ui:field="usernameInput"/>
-		<br/>
-		<g:Label>Password:</g:Label>
-		<g:PasswordTextBox ui:field="passwordInput"/>
-		<br/>
-		<g:Button ui:field="loginButton">Login</g:Button>
+		<div class="container">
+			<h1>Fave100 Sign In</h1>
+			<div class="loginContainer">				
+				<g:Label>Username</g:Label>
+				<g:TextBox ui:field="usernameInput"/>
+				<br/>
+				<g:Label>Password</g:Label>
+				<g:PasswordTextBox ui:field="passwordInput"/>
+				<br/>
+				<span class="{style.loginStatusMessage} error" ui:field="loginStatusMessage"/>
+				<g:Button ui:field="loginButton">Sign In</g:Button>
+			</div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>
