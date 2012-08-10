@@ -23,13 +23,21 @@ h1{
 	font-size: 2em;		
 }
 
+input{
+	padding: 4px;
+	margin: 13px 0;			
+	font-size: 1em;
+	border: 1px solid #AAA;
+}
+
+input:focus{
+	border: 1px solid #98CB80;
+}
+	
+
 .container{
 	margin: 0 auto;
 	width: 840px;
-}
-
-.error{
-	color: #D54545;
 }
 
 /* Suggest Box */
@@ -136,8 +144,7 @@ h1{
 	font-size: 1.5em;
 	max-width: 350px;
 	z-index: 99999;
-	box-shadow: 1px 1px 3px #888;
-	
+	color: #548F2F;	
 }
 
 /* Login container */
@@ -152,10 +159,7 @@ h1{
 }
 .loginContainer input{
 	height: 23px;
-	width: 180px;
-	padding: 4px;
-	margin: 13px 0;			
-	font-size: 1em;
+	width: 180px;	
 }
 .loginContainer button{		
 	height: 35px;
@@ -168,4 +172,11 @@ h1{
 }
 .loginContainer button:hover{
 	background-color: #A8EB88;
+}
+
+.error{
+	color: #D54545;
+}
+.errorInput:not(:focus){
+	border: 1px solid #D54545; 
 }

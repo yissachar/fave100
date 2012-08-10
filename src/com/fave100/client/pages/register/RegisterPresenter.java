@@ -5,6 +5,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
@@ -17,6 +18,7 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -36,8 +38,10 @@ public class RegisterPresenter extends
 		SpanElement getUsernameStatusMessage();
 		SpanElement getThirdPartyUsernameStatusMessage();
 		TextBox getUsernameField();
+		TextBox getThirdPartyUsernameField();
 		PasswordTextBox getPasswordField();
 		PasswordTextBox getPasswordRepeatField();
+		SpanElement getPasswordStatusMessage();
 		HTMLPanel getRegisterContainer();
 		Button getRegisterButton();
 		Button getRegisterWithGoogleButton();
@@ -71,22 +75,12 @@ public class RegisterPresenter extends
 	public void prepareFromRequest(PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 		String username = placeRequest.getParameter("username", "");
-		String provider = placeRequest.getParameter("provider", "");
+		String provider = placeRequest.getParameter("provider", "");		
 		if(username != null && provider != null) {
-			if(provider == RegisterPresenter.PROVIDER_GOOGLE) {
-				/*AppUserRequest appUserRequest = requestFactory.appUserRequest();
-				Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromGoogleAccount(String username);
-				createAppUserReq.fire(new Receiver<AppUserProxy>() {
-					@Override
-					public void onSuccess(AppUserProxy createdUser) {
-						if(createdUser == null) {
-							// TODO: It will say this even if the reason was because an AppUser was tied to the GoogleID
-							getView().getUsernameStatusMessage().setInnerHTML("A user with that name already exists.");
-						} else {
-							placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
-						}
-					}
-				});*/
+			// The user is being redirected back to the register page after signing in to 
+			// their 3rd party account - create their Fave100 account			
+			if(provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {				
+				createAppUserFromGoogleAccount(username);
 			}
 		}
 	}
@@ -103,64 +97,51 @@ public class RegisterPresenter extends
 		registerHandler(getView().getRegisterButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AppUserRequest appUserRequest = requestFactory.appUserRequest();
-				// TODO: finesse google login 
-				// TODO: password error message if don't match
-				// TODO: thirdpartyusername error message
-				// Try to create a new user with the current Google user and the name entered
-				//Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromCurrentGoogleUser(getView().getUsernameField().getValue());
-				//createAppUserReq.fire(new Receiver<AppUserProxy>() {
-				Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(getView().getUsernameField().getValue(),
-						getView().getPasswordField().getValue());
-				getView().getUsernameField().setValue("");
-				getView().getPasswordField().setValue("");
-				getView().getPasswordRepeatField().setValue("");
-				createAppUserReq.fire(new Receiver<AppUserProxy>() {
-					@Override
-					public void onSuccess(AppUserProxy createdUser) {
-						if(createdUser == null) {
-							// TODO: It will say this even if the reason was because an AppUser was tied to the GoogleID
-							getView().getUsernameStatusMessage().setInnerHTML("A user with that name already exists.");
-						} else {
-							placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
+				if(validateFields()) {
+					AppUserRequest appUserRequest = requestFactory.appUserRequest();
+					// TODO: password error message if don't match
+					// Create a new user with the username and password entered
+					Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(getView().getUsernameField().getValue(),
+							getView().getPasswordField().getValue());
+					clearFields();				
+					createAppUserReq.fire(new Receiver<AppUserProxy>() {
+						@Override
+						public void onSuccess(AppUserProxy createdUser) {
+							appUserCreated();
 						}
-					}
-				});
+						@Override
+						public void onFailure(ServerFailure failure) {
+							getView().getUsernameStatusMessage().setInnerText(failure.getMessage().replace("Server Error:", ""));
+							getView().getThirdPartyUsernameField().addStyleName("errorInput");
+						}
+					});
+				}
 			}
 		}));
 		
 		registerHandler(getView().getRegisterWithGoogleButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				clearFields();
 				if(loggedInWithGoogle) {
-					AppUserRequest appUserRequest = requestFactory.appUserRequest();
-					// Try to create a new user with the current Google user and the name entered
-					Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromCurrentGoogleUser(getView().getUsernameField().getValue());
-					getView().getUsernameField().setValue("");
-					getView().getPasswordField().setValue("");
-					getView().getPasswordRepeatField().setValue("");
-					createAppUserReq.fire(new Receiver<AppUserProxy>() {
-						@Override
-						public void onSuccess(AppUserProxy createdUser) {
-							if(createdUser == null) {
-								// TODO: It will say this even if the reason was because an AppUser was tied to the GoogleID
-								getView().getUsernameStatusMessage().setInnerHTML("A user with that name already exists.");
-							} else {
-								placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
-							}
-						}
-					});
+					if(validateThirdPartyFields()) {
+						String username = getView().getThirdPartyUsernameField().getValue();					
+						createAppUserFromGoogleAccount(username);
+					}	
 				} else {
-				    AppUserRequest appUserRequest = requestFactory.appUserRequest();
-					// We need the currentURL to redirect users back to this page after a successful login 
-					String currentURL = Window.Location.getHref();
-				    Request<String> getLoginLogoutURL = appUserRequest.getLoginLogoutURL(currentURL);
-				    getLoginLogoutURL.fire(new Receiver<String>() {
-				    	@Override
-				    	public void onSuccess(final String url) {
-				    		Window.Location.assign(url);
-				    	}
-				    });	    
+					if(validateThirdPartyFields()) {
+					    AppUserRequest appUserRequest = requestFactory.appUserRequest();
+						// We need the currentURL to redirect users back to this page after a successful login 
+						String currentURL = Window.Location.getHref();
+						String username = getView().getThirdPartyUsernameField().getValue();					
+					    Request<String> getLoginLogoutURL = appUserRequest.getLoginLogoutURL(currentURL+";username="+username+";provider="+RegisterPresenter.PROVIDER_GOOGLE);
+					    getLoginLogoutURL.fire(new Receiver<String>() {
+					    	@Override
+					    	public void onSuccess(final String url) {
+					    		Window.Location.assign(url);
+					    	}
+					    });	    
+					}
 				}
 			}
 		}));
@@ -178,19 +159,82 @@ public class RegisterPresenter extends
 			@Override
 			public void onSuccess(Boolean loggedIn) {
 				if(loggedIn) {
-					// User signed in with Google account, allow them to create Fave100 account
 					loggedInWithGoogle = true;
 					getView().getUsernameStatusMessage().setInnerHTML("");
-					getView().getRegisterContainer().setVisible(true);
 				} else {
 					loggedInWithGoogle = false;
-					// User is not signed in with Google account, ask them to sign in
-					/*getView().getStatusMessage().removeClassName("error");
-					getView().getStatusMessage().setInnerHTML("Please <a href='"+url+"'>sign in</a>"+
-							" with your Google account in order to create a Fave100 account.");
-					getView().getRegisterContainer().setVisible(false);*/
 				}				
 			}
 		});	    
+	}
+	
+	private boolean validateFields() {
+		// Assume all valid
+		getView().getUsernameField().removeStyleName("errorInput");
+		getView().getPasswordField().removeStyleName("errorInput");
+		getView().getPasswordRepeatField().removeStyleName("errorInput");
+		getView().getUsernameStatusMessage().setInnerText("");
+		getView().getPasswordStatusMessage().setInnerText("");
+		
+		// Check for validity
+		String username = getView().getUsernameField().getValue();
+		String password = getView().getPasswordField().getValue();
+		String passwordConfirm = getView().getPasswordRepeatField().getValue();
+		if(username.equals("")) {
+			getView().getUsernameField().addStyleName("errorInput");
+			getView().getUsernameStatusMessage().setInnerText("You must enter a username");
+			return false;
+		}
+		if(password.equals("")) {
+			getView().getPasswordStatusMessage().setInnerText("You must enter a password");
+			getView().getPasswordField().addStyleName("errorInput");
+			return false;
+		}
+		if(!password.equals(passwordConfirm)) {
+			getView().getPasswordStatusMessage().setInnerText("Passwords must match");
+			getView().getPasswordField().addStyleName("errorInput");
+			getView().getPasswordRepeatField().addStyleName("errorInput");
+			return false;
+		}		
+		return true;
+	}
+	
+	private boolean validateThirdPartyFields() {
+		getView().getThirdPartyUsernameField().removeStyleName("errorInput");				
+		String username = getView().getThirdPartyUsernameField().getValue();
+		if(username.equals("")) {
+			getView().getThirdPartyUsernameStatusMessage().setInnerText("You must enter a username");	
+			getView().getThirdPartyUsernameField().addStyleName("errorInput");
+			return false;
+		}		
+		return true;
+	}
+	
+	private void clearFields() {
+		getView().getUsernameField().setValue("");
+		getView().getPasswordField().setValue("");
+		getView().getPasswordRepeatField().setValue("");
+		getView().getThirdPartyUsernameField().setValue("");
+	}
+	
+	private void createAppUserFromGoogleAccount(String username) {
+		AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromGoogleAccount(username);
+		createAppUserReq.fire(new Receiver<AppUserProxy>() {
+			@Override
+			public void onSuccess(AppUserProxy createdUser) {
+				appUserCreated();
+			}
+			@Override
+			public void onFailure(ServerFailure failure) {
+				getView().getThirdPartyUsernameStatusMessage().setInnerText(failure.getMessage().replace("Server Error:", ""));
+				getView().getThirdPartyUsernameField().addStyleName("errorInput");
+			}
+		});
+	}
+	
+	private void appUserCreated() {
+		placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
+		SideNotification.show("Thanks for registering!", false, 1500);
 	}
 }
