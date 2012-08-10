@@ -32,6 +32,7 @@ public interface SuggestionResult {
 	//void settrackViewUrl(String trackViewUrl);
 	String getPreviewUrl();
 	//void setPreviewUrl(String previewUrl);
+	String getArtworkUrl60();
 	Double getCollectionPrice();
 	//void setCollectionPrice(Double collectionPrice);
 	Double getTrackPrice();
