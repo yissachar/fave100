@@ -37,7 +37,9 @@ public class RegisterPresenter extends
 	public interface MyView extends View {
 		SpanElement getUsernameStatusMessage();
 		SpanElement getThirdPartyUsernameStatusMessage();
+		SpanElement getEmailStatusMessage();
 		TextBox getUsernameField();
+		TextBox getEmailField();
 		TextBox getThirdPartyUsernameField();
 		PasswordTextBox getPasswordField();
 		PasswordTextBox getPasswordRepeatField();
@@ -172,17 +174,26 @@ public class RegisterPresenter extends
 		// Assume all valid
 		getView().getUsernameField().removeStyleName("errorInput");
 		getView().getPasswordField().removeStyleName("errorInput");
+		getView().getEmailField().removeStyleName("errorInput");
 		getView().getPasswordRepeatField().removeStyleName("errorInput");
 		getView().getUsernameStatusMessage().setInnerText("");
 		getView().getPasswordStatusMessage().setInnerText("");
+		getView().getEmailStatusMessage().setInnerText("");
 		
 		// Check for validity
 		String username = getView().getUsernameField().getValue();
+		String email = getView().getEmailField().getValue();
 		String password = getView().getPasswordField().getValue();
 		String passwordConfirm = getView().getPasswordRepeatField().getValue();
 		if(username.equals("")) {
 			getView().getUsernameField().addStyleName("errorInput");
 			getView().getUsernameStatusMessage().setInnerText("You must enter a username");
+			return false;
+		}
+		String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.(?:[a-zA-Z]{2,6})$";
+		if(!email.matches(emailPattern)) {
+			getView().getEmailStatusMessage().setInnerText("Not a valid email address");
+			getView().getEmailField().addStyleName("errorInput");
 			return false;
 		}
 		if(password.equals("")) {
@@ -212,6 +223,7 @@ public class RegisterPresenter extends
 	
 	private void clearFields() {
 		getView().getUsernameField().setValue("");
+		getView().getEmailField().setValue("");
 		getView().getPasswordField().setValue("");
 		getView().getPasswordRepeatField().setValue("");
 		getView().getThirdPartyUsernameField().setValue("");

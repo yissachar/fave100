@@ -26,4 +26,6 @@ public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> createAppUser(String username, String password);
 	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser();
 	
+	Request<Boolean> checkPassword(String password);
+	
 }

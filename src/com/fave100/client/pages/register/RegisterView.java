@@ -111,4 +111,18 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 	public SpanElement getPasswordStatusMessage() {
 		return passwordStatusMessage;
 	}
+
+	@UiField TextBox emailField;
+	
+	@Override
+	public TextBox getEmailField() {	
+		return emailField;
+	}
+	
+	@UiField SpanElement emailStatusMessage;
+
+	@Override
+	public SpanElement getEmailStatusMessage() {
+		return emailStatusMessage;
+	}
 }
