@@ -14,6 +14,7 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -72,13 +73,12 @@ public class LoginPresenter extends
 				loginReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(AppUserProxy appUser) {						
-						//TODO: switch over to onSucces/onFailure
-						if(appUser != null) {
-							getView().getLoginStatusMessage().setInnerText("");
-							placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
-						} else {
-							getView().getLoginStatusMessage().setInnerText("Username or password incorrect.");
-						}
+						getView().getLoginStatusMessage().setInnerText("");
+						placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
+					}
+					@Override
+					public void onFailure(ServerFailure failure) {
+						getView().getLoginStatusMessage().setInnerText("Username or password incorrect.");
 					}
 				});
 			}

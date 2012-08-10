@@ -2,6 +2,7 @@ package com.fave100.server.domain;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import com.fave100.client.pages.myfave100.SuggestionResult;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -26,6 +27,7 @@ public class Song extends DatastoreObject {
 	private String collectionViewUrl;
 	private String trackViewUrl;
 	private String previewUrl;
+	private String artworkUrl60;
 	private Double collectionPrice;
 	private Double trackPrice;
 	private String releaseDate;
@@ -294,6 +296,14 @@ public class Song extends DatastoreObject {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getArtworkUrl60() {
+		return artworkUrl60;
+	}
+
+	public void setArtworkUrl60(String artworkUrl60) {
+		this.artworkUrl60 = artworkUrl60;
 	}
 
 }
