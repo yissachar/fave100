@@ -12,8 +12,7 @@
 		.faveList{}			
 	</ui:style>
 	<g:HTMLPanel>
-		<g:HTMLPanel ui:field="topBar"/>
-		<h1>My Fave100 Songs</h1>
+		<g:HTMLPanel ui:field="topBar"/>		
 		<g:SuggestBox ui:field="songSuggestBox"/>
 		<d:UserFaveDataGrid ui:field="faveList" styleName="{style.faveList}"/>
 	</g:HTMLPanel>

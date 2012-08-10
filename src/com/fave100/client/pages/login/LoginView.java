@@ -1,6 +1,7 @@
 package com.fave100.client.pages.login;
 
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -45,5 +46,12 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
 	@Override
 	public PasswordTextBox getPasswordInput() {
 		return passwordInput;
+	}
+
+	@UiField SpanElement loginStatusMessage;
+	
+	@Override
+	public SpanElement getLoginStatusMessage() {
+		return loginStatusMessage;
 	}
 }

@@ -63,7 +63,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 					@Override
 					public void onSuccess(AppUserProxy appUser) {						
 						if(appUser != null) {					
-							getView().getGreeting().setInnerHTML("Welcome "+appUser.getUsername());
+							getView().getGreeting().setInnerHTML(appUser.getUsername());
 							getView().getMyFave100Link().setVisible(true);
 							getView().getRegisterLink().setVisible(false);
 							//getView().getLogInLogOutLink().setInnerHTML("<a href='"+url+"'>Log out</a>");

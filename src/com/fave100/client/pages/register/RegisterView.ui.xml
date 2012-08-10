@@ -10,29 +10,51 @@
 		.registerContainer{
 			display: block;
 			margin: 0px auto;
+			width: 600px;
 		}
-		.usernameInput{
-			
-		}
-		.registerButton{
+		.registerContainer div{
+			float: left;
+		}		
+		.usernameStatusMessage{
 			display: block;
+			font-size: 0.8em;
+			margin-bottom: 5px;
+		}
+		.orDivider{
+			padding: 50px;			
+		}
+		.thirdPartyUserNameReminder{
+			font-size: 0.7em;
+			margin-bottom: 15px;
 		}
 	</ui:style>
 
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
-		<span ui:field="statusMessage"/>
-		<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
-			<span>Username:</span>
-			<g:TextBox ui:field="usernameField" styleName="{style.usernameInput}"/>
-			<br/>
-			<span>Password:</span>
-			<g:PasswordTextBox ui:field="passwordField" />
-			<br/>
-			<span>Confirm password:</span>
-			<g:PasswordTextBox ui:field="passwordRepeatField" />
-			<g:Button ui:field="registerButton" styleName="{style.registerButton}">Register</g:Button>
-			<g:Button ui:field="registerWithGoogleButton" styleName="{style.registerButton}">Register with Google</g:Button>
-		</g:HTMLPanel>
+		<div class="container">
+			<h1>Fave100 Registration</h1>
+			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
+				<div class="loginContainer fave100RegisterContainer">					
+					<span>Username:</span>					
+					<g:TextBox ui:field="usernameField"/>					
+					<br/>
+					<span class="{style.usernameStatusMessage} error" ui:field="usernameStatusMessage"/>
+					<span>Password:</span>
+					<g:PasswordTextBox ui:field="passwordField" />
+					<br/>
+					<span>Confirm password:</span>
+					<g:PasswordTextBox ui:field="passwordRepeatField" />
+					<g:Button ui:field="registerButton">Register</g:Button>					
+				</div>
+				<div class="{style.orDivider}">or</div>
+				<div class="loginContainer otherRegisterContainer">
+					<span>Username:</span>
+					<g:TextBox ui:field="thirdPartyUsernameField"/>
+					<span class="{style.usernameStatusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>
+					<div class="{style.thirdPartyUserNameReminder}">This will be your Fave100 username.</div>
+					<g:Button ui:field="registerWithGoogleButton">Register with Google</g:Button>
+				</div>
+			</g:HTMLPanel>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

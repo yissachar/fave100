@@ -5,6 +5,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserRequest;
@@ -19,6 +20,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.EventBus;
@@ -84,11 +86,15 @@ public class MyFave100Presenter extends
 				AutoBeanCodex.decodeInto(AutoBeanCodex.encode(autoBean), newBean);				
 				songProxy = newBean.as();
 				// Add the SongProxy as a new FaveItem for the AppUser
-				Request<Boolean> createReq = appUserRequest.addFaveItemForCurrentUser(Long.valueOf(faveItemMap.getTrackId()), songProxy);
-				createReq.fire(new Receiver<Boolean>() {
+				Request<Void> createReq = appUserRequest.addFaveItemForCurrentUser(Long.valueOf(faveItemMap.getTrackId()), songProxy);
+				createReq.fire(new Receiver<Void>() {
 					@Override
-					public void onSuccess(Boolean response) {
+					public void onSuccess(Void response) {
 						getView().getFaveList().refreshFaveList();
+					}
+					@Override
+					public void onFailure(ServerFailure failure) {
+						SideNotification.show(failure.getMessage().replace("Server Error:", ""), true);
 					}
 				});
 				
