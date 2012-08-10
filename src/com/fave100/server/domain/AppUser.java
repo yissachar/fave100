@@ -59,24 +59,27 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static AppUser login(String username, String password) {
-		// TODO: DO NOT LOGIN WITH GOOGLE OVER HERE! They should be separate functions
 		AppUser loggedInUser;
-		// Check if the user is a google login
+		loggedInUser = findAppUser(username);		
+		if(loggedInUser != null) {
+			if(!BCrypt.checkpw(password, loggedInUser.getPassword())) throw new RuntimeException("Username or password incorrect");;
+			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+		} else {
+			throw new RuntimeException("Username or password incorrect");
+		}
+		return loggedInUser;
+	}
+	
+	/*public static AppUser loginWithGoogle() {
+		AppUser loggedInUser;
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 		if(user != null) {		
 			loggedInUser = findAppUserByGoogleId(user.getUserId());			
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
-		} else {
-			// If the user is not a logged in Google user, check if they are a native user
-			loggedInUser = findAppUser(username);		
-			if(loggedInUser != null) {
-				if(!BCrypt.checkpw(password, loggedInUser.getPassword())) return null;
-				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-			}			
-		}	
+		}
 		return loggedInUser;
-	}
+	}*/
 	
 	public static void logout() {
 		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, null);
