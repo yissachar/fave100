@@ -81,7 +81,8 @@ public class SongSuggestBox extends SuggestBox{
 	       		
 	       		// Get the new suggestions from the iTunes API       		
 	       		for (SuggestionResult entry : listResult.getResults()) {
-	    	    	String suggestionEntry = entry.getTrackName()+"<br/><span class='artistName'>"+entry.getArtistName()+"</span>";	  
+	    	    	String suggestionEntry = entry.getTrackName()+"<img src='"+entry.getArtworkUrl60()+
+	    	    			"'/><span class='artistName'>"+entry.getArtistName()+"</span>";	  
 	    	    	itemSuggestionMap.put(suggestionEntry, entry);
 	    	    }
 	       		suggestions.addAll(itemSuggestionMap.keySet());

@@ -12,12 +12,15 @@ public class MusicSuggestionOracle extends MultiWordSuggestOracle{
 	@Override
 	protected MultiWordSuggestion createSuggestion(String replacementString,String displayString) {
 		// Split the replacement string into two parts, song title and artist name
-		int tokenSplitPos = replacementString.indexOf("<br/><span class='artistName'>");
-		// The new replacement string will just be the song title
-		String newReplacementString = replacementString.substring(0, tokenSplitPos);
+		int imgPos = replacementString.indexOf("<img src='");
+		int artistPos = replacementString.indexOf("<span class='artistName'>");		
+		String songTitle = replacementString.substring(0, imgPos);
+		String img = replacementString.substring(imgPos, artistPos);
+		String artistName = replacementString.substring(artistPos, replacementString.length()); 
 		// The new display string will consist of both the song title and the artist name
-		String newDisplayString = newReplacementString+replacementString.substring(tokenSplitPos, replacementString.length());
-		return new MultiWordSuggestion(newReplacementString, newDisplayString);
+		//String newDisplayString = songTitle+replacementString.substring(tokenSplitPos, replacementString.length());
+		String newDisplayString = img+songTitle+"<br/>"+artistName;
+		return new MultiWordSuggestion(songTitle, newDisplayString);
 	}
 	
 }

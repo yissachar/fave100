@@ -8,7 +8,7 @@ import com.googlecode.objectify.annotation.Index;
 
 @Entity
 @Index
-public class Song extends DatastoreObject{
+public class Song extends DatastoreObject {
 	@Id private Long id;
 	@Index private long score = 0;
 	// iTunes results 

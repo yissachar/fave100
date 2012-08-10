@@ -74,8 +74,9 @@ input:focus{
 	overflow: hidden;
 	padding: 7px;
 }
-.item span{
-	float:left;
+.item img{
+	float: left;
+	margin-right: 9px;
 }
 .item-selected{
 	background-color: #A8DB88;
