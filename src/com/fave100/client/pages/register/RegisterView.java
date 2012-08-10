@@ -97,4 +97,18 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 	public SpanElement getThirdPartyUsernameStatusMessage() {
 		return thirdPartyUsernameStatusMessage;
 	}
+	
+	@UiField TextBox thirdPartyUsernameField;
+
+	@Override
+	public TextBox getThirdPartyUsernameField() {
+		return thirdPartyUsernameField;
+	}
+	
+	@UiField SpanElement passwordStatusMessage;
+
+	@Override
+	public SpanElement getPasswordStatusMessage() {
+		return passwordStatusMessage;
+	}
 }

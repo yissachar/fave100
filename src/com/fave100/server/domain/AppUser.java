@@ -116,56 +116,52 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		} else {
 			return null;
 		}
-	}	
-	
-	public static AppUser createAppUserFromCurrentGoogleUser(final String username) {		
-		// TODO: Disallow white-space, other special characters?		
-		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely 
-		AppUser newAppUser = ofy().transact(new Work<AppUser>() {
-			public AppUser run() {
-				UserService userService = UserServiceFactory.getUserService();
-				User user = userService.getCurrentUser();
-				if(ofy().load().type(AppUser.class).id(username).get() != null
-					|| ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
-					return null;
-				} else {
-					// Create the user
-					AppUser appUser = new AppUser();
-					appUser.setUsername(username);
-					appUser.setEmail(user.getEmail());
-					appUser.setGoogleId(user.getUserId());
-					// Create the GoogleID lookup
-					GoogleID googleID = new GoogleID(user.getUserId(), username);			
-					ofy().save().entities(appUser, googleID).now();					
-					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-					return appUser;
-				}
-			}			
-		});
-		return newAppUser;		
 	}
 	
 	public static AppUser createAppUser(final String username, final String password) {
-		// TODO: Disallow white-space, other special characters?		
+		// TODO: Disallow username white-space, other special characters?, validate password not null, username not null		
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely 
 		AppUser newAppUser = ofy().transact(new Work<AppUser>() {
 			public AppUser run() {
 				if(ofy().load().type(AppUser.class).id(username).get() != null) {
-					return null;
+					throw new RuntimeException("A user with that name already exists");
 				} else {
 					// Create the user
 					AppUser appUser = new AppUser(username, password);
-					//appUser.setEmail(user.getEmail());
-					//appUser.setGoogleId(user.getUserId());
-					// Create the GoogleID lookup
-					//GoogleID googleID = new GoogleID(user.getUserId(), username);			
-					//ofy().save().entities(appUser, googleID).now();
 					ofy().save().entity(appUser);
 					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 					return appUser;
 				}
 			}			
 		});		
+		return newAppUser;
+	}
+	
+	public static AppUser createAppUserFromGoogleAccount(final String username) {
+		// TODO: Disallow white-space, other special characters?		
+		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely 
+		AppUser newAppUser = ofy().transact(new Work<AppUser>() {
+			public AppUser run() {
+				UserService userService = UserServiceFactory.getUserService();
+				User user = userService.getCurrentUser();
+				if(ofy().load().type(AppUser.class).id(username).get() != null) {
+					throw new RuntimeException("A user with that name already exists");
+				}
+				if(ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
+					throw new RuntimeException("There is already a Fave100 account associated with this Google ID");
+				} 
+				// Create the user
+				AppUser appUser = new AppUser();
+				appUser.setUsername(username);
+				appUser.setEmail(user.getEmail());
+				appUser.setGoogleId(user.getUserId());
+				// Create the GoogleID lookup
+				GoogleID googleID = new GoogleID(user.getUserId(), username);			
+				ofy().save().entities(appUser, googleID).now();					
+				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+				return appUser;
+			}			
+		});
 		return newAppUser;
 	}
 	
@@ -179,10 +175,10 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		// TODO: Verify integrity of songProxy on server-side? 
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) {
-			throw new RuntimeException("Please log in.");
+			throw new RuntimeException("Please log in to complete this action");
 			//return false;
 		}
-		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list.");;		
+		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");;		
 		Song song = ofy().load().type(Song.class).id(songID).get();		
 		boolean unique = true;
 		// If the song does not exist, create it

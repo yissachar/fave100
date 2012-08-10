@@ -15,9 +15,9 @@
 		.registerContainer div{
 			float: left;
 		}		
-		.usernameStatusMessage{
+		.statusMessage{
 			display: block;
-			font-size: 0.8em;
+			font-size: 0.75em;
 			margin-bottom: 5px;
 		}
 		.orDivider{
@@ -35,22 +35,23 @@
 			<h1>Fave100 Registration</h1>
 			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
 				<div class="loginContainer fave100RegisterContainer">					
-					<span>Username:</span>					
+					<span>Username</span>					
 					<g:TextBox ui:field="usernameField"/>					
 					<br/>
-					<span class="{style.usernameStatusMessage} error" ui:field="usernameStatusMessage"/>
-					<span>Password:</span>
+					<span class="{style.statusMessage} error" ui:field="usernameStatusMessage"/>
+					<span>Password</span>
 					<g:PasswordTextBox ui:field="passwordField" />
 					<br/>
-					<span>Confirm password:</span>
+					<span>Confirm password</span>
 					<g:PasswordTextBox ui:field="passwordRepeatField" />
+					<span class="{style.statusMessage} error" ui:field="passwordStatusMessage"/>
 					<g:Button ui:field="registerButton">Register</g:Button>					
 				</div>
 				<div class="{style.orDivider}">or</div>
 				<div class="loginContainer otherRegisterContainer">
-					<span>Username:</span>
+					<span>Username</span>
 					<g:TextBox ui:field="thirdPartyUsernameField"/>
-					<span class="{style.usernameStatusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>
+					<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>
 					<div class="{style.thirdPartyUserNameReminder}">This will be your Fave100 username.</div>
 					<g:Button ui:field="registerWithGoogleButton">Register with Google</g:Button>
 				</div>
