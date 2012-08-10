@@ -30,8 +30,12 @@ input{
 	border: 1px solid #AAA;
 }
 
+input:hover{
+	border-color: #666;
+}
 input:focus{
-	border: 1px solid #98CB80;
+	border-color: #98CB80;
+	box-shadow: 0px 1px 1px #666 inset;
 }
 	
 
@@ -108,7 +112,6 @@ input:focus{
 	width: 10px;
 }
 .addColumn, .nonpersonalFaves th:nth-child(1) {
-	cursor: pointer;
 	width: 10px;
 	text-align: center;
 	font-size: 1.5em;

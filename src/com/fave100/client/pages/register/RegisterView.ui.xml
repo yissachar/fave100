@@ -39,6 +39,10 @@
 					<g:TextBox ui:field="usernameField"/>					
 					<br/>
 					<span class="{style.statusMessage} error" ui:field="usernameStatusMessage"/>
+					<span>Email</span>					
+					<g:TextBox ui:field="emailField"/>					
+					<br/>					
+					<span class="{style.statusMessage} error" ui:field="emailStatusMessage"/>
 					<span>Password</span>
 					<g:PasswordTextBox ui:field="passwordField" />
 					<br/>

@@ -253,6 +253,14 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return topSongs;
 	}
 	
+	public static boolean checkPassword(String password) {
+		if(password.equals("100GreatFaves!")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
     // Getters and setters
 
 	public String getGoogleId() {
