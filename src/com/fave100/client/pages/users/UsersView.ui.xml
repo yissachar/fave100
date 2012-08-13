@@ -55,12 +55,17 @@
 		}		
 		
 		.followButton {
-			background: #F9F9F9;
+			height: 35px;
+			margin-top: 10px;
+			border: 1px solid #AAA;
+			color: #666;			
+			background-color: #A8DB88;	
+			box-shadow: 0px 1px 1px #FFF inset;
 			font-size: 1.2em;
 		}
 		.followButton:hover {
-			cursor: pointer;
-			color: #999;
+			cursor: pointer;			
+			background-color: #A8EB88;
 		}
 	</ui:style>
 	<g:HTMLPanel>
@@ -68,7 +73,7 @@
 		<div class="container">			
 			<g:InlineHTML ui:field="usersList" styleName="{style.userList}"/>
 			<g:InlineHTML ui:field="userProfile" styleName="{style.userProfile}"/>
-			<g:InlineHTML ui:field="followButton" styleName="{style.followButton}">Follow</g:InlineHTML>
+			<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>
 			<w:FaveDataGrid ui:field="userFaveDataGrid" styleName="{style.faveList}"/>
 		</div>
 	</g:HTMLPanel>

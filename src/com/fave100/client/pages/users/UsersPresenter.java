@@ -30,6 +30,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
@@ -39,7 +40,7 @@ public class UsersPresenter extends
 	public interface MyView extends View {
 		InlineHTML getUserList();
 		InlineHTML getUserProfile();
-		InlineHTML getFollowButton();
+		Button getFollowButton();
 		FaveDataGrid getUserFaveDataGrid();
 	}
 	
@@ -93,6 +94,7 @@ public class UsersPresenter extends
 				} else {
 					requestedUser = historyTokens[0].split("=")[1];
 					refreshUserFave();
+					refreshFollowButton();
 				}
 			}
 		};
@@ -134,7 +136,7 @@ public class UsersPresenter extends
 	protected void onReveal() {
 	    super.onReveal();
 	    setInSlot(TOP_BAR_SLOT, topBar);
-	    
+	   // TODO: handle user visiting own page 
 	    if(requestedUser != "") {	 
 	    	// See if the request User actually exists
 	    	refreshUserFave();   
@@ -203,7 +205,7 @@ public class UsersPresenter extends
 		checkFollowing.fire(new Receiver<Boolean>() {
 			@Override
 			public void onSuccess(Boolean following) {
-				InlineHTML followButton = getView().getFollowButton();
+				Button followButton = getView().getFollowButton();
 				if(following) {
 					followButton.setHTML("Following");
 					followButton.addStyleName("alreadyFollowing");

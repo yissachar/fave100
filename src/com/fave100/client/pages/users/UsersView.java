@@ -5,6 +5,7 @@ import com.fave100.client.widgets.FaveDataGrid;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -63,10 +64,10 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 		return userFaveDataGrid;
 	}
 	
-	@UiField InlineHTML followButton;	
+	@UiField Button followButton;	
 
 	@Override
-	public InlineHTML getFollowButton() {
+	public Button getFollowButton() {
 		return followButton;
 	}
 	

@@ -35,8 +35,10 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	private String password;
 	private String googleId;
 	private String email;
-	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();// TODO: Plan ahead for hashtags
+	// TODO: Plan ahead for hashtags
+	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
 	// TODO: user avatar/gravatar
+	// TODO: location = for location based lists
 	
 	public AppUser() {}
 	
