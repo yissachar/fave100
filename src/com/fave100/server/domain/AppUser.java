@@ -346,6 +346,8 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 
 	public String getAvatar() {
+		// TODO: Need local avatar as well (if they don't have gravatar)
+		// TODO: Do we even want to show gravatars at all? some privacy issues
 		if(getEmail() == null) return "http://www.gravatar.com/avatar/?d=mm";
 		try {
 			byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");			

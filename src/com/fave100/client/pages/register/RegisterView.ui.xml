@@ -10,7 +10,7 @@
 		.registerContainer{
 			display: block;
 			margin: 0px auto;
-			width: 600px;
+			width: 800px;
 		}
 		.registerContainer div{
 			float: left;

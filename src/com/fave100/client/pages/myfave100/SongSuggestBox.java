@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -84,8 +85,10 @@ public class SongSuggestBox extends SuggestBox{
 	       		for (SuggestionResult entry : listResult.getResults()) {
 	    	    	String suggestionEntry = "<img src='"+entry.getArtworkUrl60()+"'/>"+
 	    	    			entry.getTrackName()+"</br><span class='artistName'>"+entry.getArtistName()+"</span>";	  
-	    	    	itemSuggestionMap.put(suggestionEntry, entry);
+	    	    	//itemSuggestionMap.put(suggestionEntry, entry);	    	    	
+	    	    	itemSuggestionMap.put(entry.getTrackName(), entry);
 	    	    }
+	       		// TODO: Duplicate suggestions are hidden! Song name "W" and "W" only one actually shown
 	       		suggestions.addAll(itemSuggestionMap.keySet());
 	    	    showSuggestionList();
 	    	    

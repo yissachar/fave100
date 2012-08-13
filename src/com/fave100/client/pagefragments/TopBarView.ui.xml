@@ -26,6 +26,15 @@
 			display: inline;
 			margin: 7px;
 		}		
+		
+		.notifications{
+			border: 1px solid #000;
+			position: absolute;
+			right: 0;
+			top: 40px;
+			width: 200px;
+			height: 200px
+		}
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
@@ -38,7 +47,8 @@
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getUsers}">Users</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">Home</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
-			</ul>
+			</ul>			
 		</div>
+		<div class="{style.notifications}"></div>
 	</g:HTMLPanel>
 </ui:UiBinder>
