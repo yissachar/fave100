@@ -55,16 +55,9 @@
 		}		
 		
 		.followButton {
-			height: 35px;
-			margin-top: 10px;
-			border: 1px solid #AAA;
-			color: #666;			
-			background-color: #A8DB88;	
-			box-shadow: 0px 1px 1px #FFF inset;
 			font-size: 1.2em;
 		}
-		.followButton:hover {
-			cursor: pointer;			
+		.followButton:hover {	
 			background-color: #A8EB88;
 		}
 	</ui:style>

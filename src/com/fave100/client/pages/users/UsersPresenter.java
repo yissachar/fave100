@@ -208,10 +208,10 @@ public class UsersPresenter extends
 				Button followButton = getView().getFollowButton();
 				if(following) {
 					followButton.setHTML("Following");
-					followButton.addStyleName("alreadyFollowing");
+					followButton.setEnabled(false);
 				} else {
 					followButton.setHTML("Follow");
-					followButton.removeStyleName("alreadyFollowing");
+					followButton.setEnabled(true);
 				}
 			}
 		});
