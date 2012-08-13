@@ -178,6 +178,14 @@ input:focus{
 	background-color: #A8EB88;
 }
 
+.alreadyFollowing {
+	color: #98CB80;
+}
+.alreadyFollowing:hover {
+	cursor: default !important;
+	color: #98CB80 !important;
+}
+
 .error{
 	color: #D54545;
 }
