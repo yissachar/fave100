@@ -58,7 +58,7 @@ public class SongSuggestBox extends SuggestBox{
 		AutoBean<ListResultOfSuggestion> result();		
 	}
 
-	private void getAutocompleteList() {	
+	private void getAutocompleteList() {// TODO: After switching to image thumbnails, doesn't always show autocomplete list	
 		// Build a JSONP request to grab the info from iTunes
 		String url = "http://itunes.apple.com/search?"+
 						"term="+this.getValue()+
@@ -81,8 +81,8 @@ public class SongSuggestBox extends SuggestBox{
 	       		
 	       		// Get the new suggestions from the iTunes API       		
 	       		for (SuggestionResult entry : listResult.getResults()) {
-	    	    	String suggestionEntry = entry.getTrackName()+"<img src='"+entry.getArtworkUrl60()+
-	    	    			"'/><span class='artistName'>"+entry.getArtistName()+"</span>";	  
+	    	    	String suggestionEntry = "<img src='"+entry.getArtworkUrl60()+"'/>"+
+	    	    			entry.getTrackName()+"</br><span class='artistName'>"+entry.getArtistName()+"</span>";	  
 	    	    	itemSuggestionMap.put(suggestionEntry, entry);
 	    	    }
 	       		suggestions.addAll(itemSuggestionMap.keySet());

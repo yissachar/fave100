@@ -19,7 +19,7 @@ public class MusicSuggestionOracle extends MultiWordSuggestOracle{
 		String artistName = replacementString.substring(artistPos, replacementString.length()); 
 		// The new display string will consist of both the song title and the artist name
 		//String newDisplayString = songTitle+replacementString.substring(tokenSplitPos, replacementString.length());
-		String newDisplayString = img+songTitle+"<br/>"+artistName;
+		String newDisplayString = img+songTitle+artistName;
 		return new MultiWordSuggestion(songTitle, newDisplayString);
 	}
 	
