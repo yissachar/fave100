@@ -30,6 +30,7 @@ public class SongSuggestBox extends SuggestBox{
 	private Timer suggestionsTimer;
 		
 	public SongSuggestBox(MusicSuggestionOracle suggestions, ApplicationRequestFactory requestFactory) {
+		// TODO: Need advanced search option (e.g. search by artist)
 		super(suggestions);
 		this.suggestions = suggestions;
 		this.setLimit(4);

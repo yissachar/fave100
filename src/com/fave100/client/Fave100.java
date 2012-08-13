@@ -16,7 +16,12 @@ public class Fave100 implements EntryPoint {
 	private final ClientGinjector ginjector = GWT.create(ClientGinjector.class);
 
 	@Override
-	public void onModuleLoad() {		
+	public void onModuleLoad() {
+		// TODO: HTTPS
+		// TODO: Gatekeepers
+		// TODO: import playlist from iTunes
+		// TODO: indexed vs. unindexed
+		
 		// This is required for Gwt-Platform proxy's generator		
 		DelayedBindRegistry.bind(ginjector);
 		
