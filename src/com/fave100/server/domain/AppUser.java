@@ -2,6 +2,8 @@ package com.fave100.server.domain;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	// TODO: Plan ahead for hashtags
 	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
 	// TODO: user avatar/gravatar
+	@IgnoreSave private String avatar;
 	// TODO: location = for location based lists
 	
 	public AppUser() {}
@@ -134,7 +137,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				} else {
 					// Create the user
 					AppUser appUser = new AppUser(username, password, email);
-					ofy().save().entity(appUser);
+					ofy().save().entity(appUser).now();
 					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 					return appUser;
 				}
@@ -340,5 +343,22 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 
 	public void setPassword(String password) {
 		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+	}
+
+	public String getAvatar() {
+		if(getEmail() == null) return "http://www.gravatar.com/avatar/?d=mm";
+		try {
+			byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");			
+	        BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
+	        String hash = String.format("%1$032x", i);
+	       return "http://www.gravatar.com/avatar/"+hash+"?d=mm";
+		} catch (Exception e) {
+			// TODO: Do we care what happens if an exception is thrown here?
+		}	
+		return null;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 }
