@@ -60,12 +60,21 @@
 		.followButton:hover {	
 			background-color: #A8EB88;
 		}
+		
+		.username {
+			margin: 15px;
+			font-size: 2.8em;
+			vertical-align: top;
+		}
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="container">			
 			<g:InlineHTML ui:field="usersList" styleName="{style.userList}"/>
-			<g:InlineHTML ui:field="userProfile" styleName="{style.userProfile}"/>
+			<g:HTMLPanel ui:field="userProfile" styleName="{style.userProfile}">
+				<g:Image ui:field="avatar"/>
+				<span class="{style.username}" ui:field="username"/>
+			</g:HTMLPanel>
 			<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>
 			<w:FaveDataGrid ui:field="userFaveDataGrid" styleName="{style.faveList}"/>
 		</div>

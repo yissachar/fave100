@@ -3,10 +3,12 @@ package com.fave100.client.pages.users;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.widgets.FaveDataGrid;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -52,10 +54,10 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 		return usersList;
 	}
 	
-	@UiField InlineHTML userProfile;
+	@UiField HTMLPanel userProfile;
 
 	@Override
-	public InlineHTML getUserProfile() {
+	public HTMLPanel getUserProfile() {
 		return userProfile;
 	}
 	
@@ -69,6 +71,20 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 	@Override
 	public Button getFollowButton() {
 		return followButton;
+	}
+	
+	@UiField Image avatar;
+
+	@Override
+	public Image getAvatar() {
+		return avatar;
+	}
+	
+	@UiField SpanElement username;
+
+	@Override
+	public SpanElement getUsernameSpan() {
+		return username;
 	}
 	
 }

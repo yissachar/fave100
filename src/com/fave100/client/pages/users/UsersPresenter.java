@@ -21,6 +21,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -31,6 +32,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
@@ -39,7 +42,9 @@ public class UsersPresenter extends
 
 	public interface MyView extends View {
 		InlineHTML getUserList();
-		InlineHTML getUserProfile();
+		HTMLPanel getUserProfile();
+		Image getAvatar();
+		SpanElement getUsernameSpan();		
 		Button getFollowButton();
 		FaveDataGrid getUserFaveDataGrid();
 	}
@@ -163,6 +168,7 @@ public class UsersPresenter extends
 					output += "<li>";
 					// TODO: profile image					
 					//output += "<img src='http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' />";
+					output += "<img src='"+user.getAvatar()+"'/>";
 					output += "<a href='"+Window.Location.getHref()+";u="+user.getUsername()+"'>";
 					output += "<div>"+user.getUsername()+"</div>";					
 					output += "</a>";
@@ -183,13 +189,10 @@ public class UsersPresenter extends
 	    		if(user != null) {	    				
     				// Hide userlist, and show user profile
     				getView().getUserList().setVisible(false);
-    				InlineHTML userProfile = getView().getUserProfile();
+    				HTMLPanel userProfile = getView().getUserProfile();
     				userProfile.setVisible(true);
-    				String output = "";
-    				// TODO: profile image
-    				//output += "<img src='http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' />";
-    				output += user.getUsername();    				
-    				userProfile.setHTML(output);
+    				getView().getAvatar().setUrl(user.getAvatar());
+    				getView().getUsernameSpan().setInnerText(user.getUsername());
     				getView().getFollowButton().setVisible(true);
     				getView().getUserFaveDataGrid().setVisible(true);
     	    		getView().getUserFaveDataGrid().setRowData(user.getFave100Songs());
