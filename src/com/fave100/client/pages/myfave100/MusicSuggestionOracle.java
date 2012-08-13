@@ -1,6 +1,8 @@
 package com.fave100.client.pages.myfave100;
 
-import com.google.gwt.user.client.Window;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 
 /**
@@ -10,21 +12,21 @@ import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
  */
 public class MusicSuggestionOracle extends MultiWordSuggestOracle{
 	
+	private Map<String, String> suggestionList = new HashMap<String, String>();
+	
+	public void addSuggestion(String replacementString, String displayString) {
+		suggestionList.put(replacementString, displayString);
+		this.add(replacementString);
+	}
+	
+	public void clearSuggestions() {
+		suggestionList.clear();
+		this.clear();
+	}
+	
 	@Override
 	protected MultiWordSuggestion createSuggestion(String replacementString, String displayString) {
-		return new MultiWordSuggestion(replacementString, displayString);
-		// TODO: We can't seem to do all this fancy stuff without messing up the suggestion results
-		// We still get some suggestion results but not as many as we should		
-		// Split the replacement string into two parts, song title and artist name
-		/*int imgEndPos = replacementString.indexOf(">")+1;
-		int artistStartPos = replacementString.indexOf("</br><span class='artistName'>");		
-		String songTitle = replacementString.substring(imgEndPos, artistStartPos);
-		String img = replacementString.substring(0, imgEndPos);
-		String artistName = replacementString.substring(artistStartPos, replacementString.length()); 
-		// The new display string will consist of both the song title and the artist name
-		//String newDisplayString = songTitle+replacementString.substring(tokenSplitPos, replacementString.length());
-		String newDisplayString = img+songTitle+artistName;
-		return new MultiWordSuggestion(songTitle, newDisplayString);*/
+		return new MultiWordSuggestion(replacementString, suggestionList.get(replacementString));		
 	}
 	
 }

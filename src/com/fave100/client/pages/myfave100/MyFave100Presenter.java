@@ -78,7 +78,7 @@ public class MyFave100Presenter extends
 				SongRequest songRequest = appUserRequest.append(requestFactory.songRequest());
 				
 				// Lookup the SuggestionResult corresponding to the selected String 
-				SuggestionResult faveItemMap = getView().getSongSuggestBox().getFromSuggestionMap(selectedItem.getDisplayString());				
+				SuggestionResult faveItemMap = getView().getSongSuggestBox().getFromSuggestionMap(selectedItem.getReplacementString());				
 				// and turn it into an SongProxy
 				SongProxy songProxy = songRequest.create(SongProxy.class);
 	       		AutoBean<SuggestionResult> autoBean = AutoBeanUtils.getAutoBean(faveItemMap);
