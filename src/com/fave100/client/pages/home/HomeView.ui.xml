@@ -9,12 +9,12 @@
 	
 	<ui:style>
 		@external .faveList;		
-		.faveList{}		
+		.faveList{}			
 	</ui:style>
 
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
 		<h1>Welcome to Fave100</h1>
-		<w:FaveDataGrid ui:field="masterFaveDataGrid" styleName="{style.faveList}"/>
+		<w:FaveDataGrid ui:field="masterFaveDataGrid" styleName="{style.faveList}"/>		
 	</g:HTMLPanel>
 </ui:UiBinder>

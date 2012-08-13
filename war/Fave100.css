@@ -182,7 +182,7 @@ button:disabled:hover{
 /* Login container */
 .loginContainer{
 	margin: 0px auto;
-	width: 200px;
+	width: 300px;
 	background-color: #EEE;
 	border: 1px solid #AAA;
 	padding: 20px;
@@ -192,7 +192,7 @@ button:disabled:hover{
 }
 .loginContainer input{
 	height: 23px;
-	width: 180px;	
+	width: 290px;	
 }
 
 .error{
