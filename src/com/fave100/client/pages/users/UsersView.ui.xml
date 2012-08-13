@@ -50,14 +50,25 @@
 			background-color: #FFF;
 			padding: 5px;
 			margin-top: 20px;
+			margin-bottom: 20px;
 			font-size: 1.6em;
 		}		
+		
+		.followButton {
+			background: #F9F9F9;
+			font-size: 1.2em;
+		}
+		.followButton:hover {
+			cursor: pointer;
+			color: #999;
+		}
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="container">			
 			<g:InlineHTML ui:field="usersList" styleName="{style.userList}"/>
 			<g:InlineHTML ui:field="userProfile" styleName="{style.userProfile}"/>
+			<g:InlineHTML ui:field="followButton" styleName="{style.followButton}">Follow</g:InlineHTML>
 			<w:FaveDataGrid ui:field="userFaveDataGrid" styleName="{style.faveList}"/>
 		</div>
 	</g:HTMLPanel>

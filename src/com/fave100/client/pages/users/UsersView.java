@@ -63,4 +63,11 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 		return userFaveDataGrid;
 	}
 	
+	@UiField InlineHTML followButton;	
+
+	@Override
+	public InlineHTML getFollowButton() {
+		return followButton;
+	}
+	
 }

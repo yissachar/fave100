@@ -17,15 +17,17 @@ public interface AppUserRequest extends RequestContext{
 	Request<String> getLoginLogoutURL(String destinationURL);
 	Request<AppUserProxy> createAppUserFromGoogleAccount(String username);
 	
+	Request<Void> followUser(String username);
+	Request<Boolean> checkFollowing(String username);
+	
 	Request<Void> removeFaveItemForCurrentUser(int index);
 	Request<Void> addFaveItemForCurrentUser(Long songID, SongProxy songProxy);
 	Request<Void> rerankFaveItemForCurrentUser(int currentIndex, int newIndex);
 	Request<List<SongProxy>> getMasterFaveList();
 	Request<AppUserProxy> login(String username, String password);
 	Request<Void> logout();
-	Request<AppUserProxy> createAppUser(String username, String password);
+	Request<AppUserProxy> createAppUser(String username, String password, String email);
 	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser();
 	
 	Request<Boolean> checkPassword(String password);
-	
 }

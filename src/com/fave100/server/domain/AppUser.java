@@ -40,8 +40,9 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	
 	public AppUser() {}
 	
-	public AppUser(String username, String password) {
+	public AppUser(String username, String password, String email) {
 		this.username = username;
+		this.email = email;
 		setPassword(password);
 	}
 	
@@ -121,7 +122,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}
 	}
 	
-	public static AppUser createAppUser(final String username, final String password) {
+	public static AppUser createAppUser(final String username, final String password, final String email) {
 		// TODO: Disallow username white-space, other special characters?, validate password not null, username not null		
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely 
 		AppUser newAppUser = ofy().transact(new Work<AppUser>() {
@@ -130,7 +131,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 					throw new RuntimeException("A user with that name already exists");
 				} else {
 					// Create the user
-					AppUser appUser = new AppUser(username, password);
+					AppUser appUser = new AppUser(username, password, email);
 					ofy().save().entity(appUser);
 					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 					return appUser;
@@ -254,6 +255,25 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}		
 		List<Song> topSongs = ofy().load().type(Song.class).order("-score").limit(100).list();		
 		return topSongs;
+	}
+	
+	public static void followUser(String username) {
+		// TODO: Check for already following to prevent duplicates
+		// TODO: Need a better method of message passing then RuntimeExceptions
+		AppUser currentUser = getLoggedInAppUser();
+		if(currentUser == null) throw new RuntimeException("Please log in");
+		if(currentUser.username.equals(username)) throw new RuntimeException("You cannot follow yourself");
+		if(ofy().load().type(Follower.class).id(currentUser.username+Follower.ID_SEPARATOR+username).get() != null) {
+			throw new RuntimeException("You are already following this user");
+		}
+		Follower follower = new Follower(currentUser.username, username);
+		ofy().save().entity(follower).now();
+	}
+	
+	public static boolean checkFollowing(String username) {
+		AppUser currentUser = getLoggedInAppUser();
+		if(currentUser == null) return false;
+		return ofy().load().type(Follower.class).id(currentUser.username+Follower.ID_SEPARATOR+username).get() != null;
 	}
 	
 	public static boolean checkPassword(String password) {

@@ -2,6 +2,7 @@ package com.fave100.server.guice;
 
 import com.fave100.server.domain.AppUser;
 import com.fave100.server.domain.FaveItem;
+import com.fave100.server.domain.Follower;
 import com.fave100.server.domain.GoogleID;
 import com.fave100.server.domain.Song;
 import com.googlecode.objectify.ObjectifyService;
@@ -14,6 +15,7 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(AppUser.class);
 		ObjectifyService.register(Song.class);
 		ObjectifyService.register(GoogleID.class);
+		ObjectifyService.register(Follower.class);
 	}
 	
 	@Override

@@ -104,7 +104,7 @@ public class RegisterPresenter extends
 					// TODO: password error message if don't match
 					// Create a new user with the username and password entered
 					Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(getView().getUsernameField().getValue(),
-							getView().getPasswordField().getValue());
+							getView().getPasswordField().getValue(), getView().getEmailField().getValue());
 					clearFields();				
 					createAppUserReq.fire(new Receiver<AppUserProxy>() {
 						@Override
