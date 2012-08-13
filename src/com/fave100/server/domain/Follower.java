@@ -19,8 +19,8 @@ public class Follower {
 	public Follower() {}
 	
 	public Follower(String follower, String followed) {
+		// We use this weird id to facilitate easy .get() operations
 		this.setId(follower + Follower.ID_SEPARATOR + followed);
-		// TODO: Do we really need separate storage for refs?
 		this.setFollower(Ref.create(Key.create(AppUser.class, follower)));
 		this.setFollowed(Ref.create(Key.create(AppUser.class, followed)));		
 	}
