@@ -46,7 +46,6 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 	protected void onReveal() {
 		super.onReveal();
 		// TODO: Use manual reveal to avoid delay from AppUseRequest
-		
 		// Whenever the page is refreshed, check to see if the user is logged in or not
 		// and change the top bar links and elements appropriately.
 		AppUserRequest appUserRequest = requestFactory.appUserRequest();
@@ -54,7 +53,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 		// after a successful login
 		String currentURL = Window.Location.getPath()+
 				Window.Location.getQueryString()+Window.Location.getHash();
-		Request<String> getLoginLogoutURLReq = appUserRequest.getLoginLogoutURL(currentURL);
+		Request<String> getLoginLogoutURLReq = appUserRequest.getGoogleLoginLogoutURL(currentURL);
 		getLoginLogoutURLReq.fire(new Receiver<String>() {
 			@Override public void onSuccess(final String url) {
 				AppUserRequest appUserRequest = requestFactory.appUserRequest();

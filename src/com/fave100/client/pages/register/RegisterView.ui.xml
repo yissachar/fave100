@@ -27,6 +27,17 @@
 			font-size: 0.7em;
 			margin-bottom: 15px;
 		}
+		
+		.registerWithGoogleButton {
+			height: 35px;
+			border: 1px solid #AAA;
+			color: #666;			
+			background-color: #A8DB88;	
+			font-size: 1em;
+			box-shadow: 0px 1px 1px #FFF inset;
+			border-radius: 3px;
+			float: left;
+		}
 	</ui:style>
 
 	<g:HTMLPanel>
@@ -52,12 +63,16 @@
 					<g:Button ui:field="registerButton">Register</g:Button>					
 				</div>
 				<div class="{style.orDivider}">or</div>
+				<div class="loginContainer otherRegisterContainer">					
+					<g:Anchor ui:field="registerWithGoogleButton" styleName="{style.registerWithGoogleButton}">Register with Google</g:Anchor>
+				</div>
+			</g:HTMLPanel>
+			<g:HTMLPanel ui:field="thirdPartyUsernamePrompt">
 				<div class="loginContainer otherRegisterContainer">
-					<span>Username</span>
+					<span>Please enter a username to complete the registration process</span>
 					<g:TextBox ui:field="thirdPartyUsernameField"/>
-					<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>
-					<div class="{style.thirdPartyUserNameReminder}">This will be your Fave100 username.</div>
-					<g:Button ui:field="registerWithGoogleButton">Register with Google</g:Button>
+					<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					
+					<g:Button ui:field="thirdPartyUsernameSubmitButton">Submit</g:Button>
 				</div>
 			</g:HTMLPanel>
 		</div>

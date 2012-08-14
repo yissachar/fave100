@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -45,8 +46,10 @@ public class RegisterPresenter extends
 		PasswordTextBox getPasswordRepeatField();
 		SpanElement getPasswordStatusMessage();
 		HTMLPanel getRegisterContainer();
+		HTMLPanel getThirdPartyUsernamePrompt();
 		Button getRegisterButton();
-		Button getRegisterWithGoogleButton();
+		Button getThirdPartyUsernameSubmitButton();
+		Anchor getRegisterWithGoogleButton();
 	}
 	
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
@@ -76,7 +79,45 @@ public class RegisterPresenter extends
 	@Override
 	public void prepareFromRequest(PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
-		String username = placeRequest.getParameter("username", "");
+		
+		Request<AppUserProxy> getLoggedInUserReq =  requestFactory.appUserRequest().getLoggedInAppUser();
+		getLoggedInUserReq.fire(new Receiver<AppUserProxy>() {
+			@Override
+			public void onSuccess(AppUserProxy user) {
+				if(user != null) {
+					// TODO: Gatekeeper instead?
+					// Logged in user trying to register: redirect them to home
+					placeManager.revealDefaultPlace();
+				}
+			}
+		});		
+		
+		
+		String provider = placeRequest.getParameter("provider", "");
+		if(provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
+			// The user is being redirected back to the register page after signing in to 
+			// their 3rd party account - prompt them for a username and create their account
+			AppUserRequest appUserRequest = requestFactory.appUserRequest();
+			Request<Boolean> checkGoogleUserLoggedIn = appUserRequest.isGoogleUserLoggedIn();
+			checkGoogleUserLoggedIn.fire(new Receiver<Boolean>() {
+				@Override
+				public void onSuccess(Boolean loggedIn) {
+					if(loggedIn) {
+						getView().getThirdPartyUsernamePrompt().setVisible(true);
+						getView().getRegisterContainer().setVisible(false);
+					} else {
+						getView().getThirdPartyUsernamePrompt().setVisible(false);
+						getView().getRegisterContainer().setVisible(true);
+					}				
+				}
+			});
+			getView().getThirdPartyUsernamePrompt().setVisible(true);
+			getView().getRegisterContainer().setVisible(false);
+		} else {
+			getView().getThirdPartyUsernamePrompt().setVisible(false);
+			getView().getRegisterContainer().setVisible(true);
+		}
+		/*String username = placeRequest.getParameter("username", "");
 		String provider = placeRequest.getParameter("provider", "");		
 		if(username != null && provider != null) {
 			// The user is being redirected back to the register page after signing in to 
@@ -84,7 +125,7 @@ public class RegisterPresenter extends
 			if(provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {				
 				createAppUserFromGoogleAccount(username);
 			}
-		}
+		}*/
 	}
 
 	@Override
@@ -95,6 +136,16 @@ public class RegisterPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+		
+		// Get the login url for Google
+		AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		Request<String> loginUrlReq = appUserRequest.getGoogleLoginURL(Window.Location.getHref()+";provider="+RegisterPresenter.PROVIDER_GOOGLE);
+		loginUrlReq.fire(new Receiver<String>() {
+			@Override 
+			public void onSuccess(String url) {
+				getView().getRegisterWithGoogleButton().setHref(url);
+			}
+		});
 		
 		registerHandler(getView().getRegisterButton().addClickHandler(new ClickHandler() {
 			@Override
@@ -121,7 +172,27 @@ public class RegisterPresenter extends
 			}
 		}));
 		
-		registerHandler(getView().getRegisterWithGoogleButton().addClickHandler(new ClickHandler() {
+		registerHandler(getView().getThirdPartyUsernameSubmitButton().addClickHandler(new ClickHandler() {			
+			@Override
+			public void onClick(ClickEvent event) {
+				if(validateThirdPartyFields()) {
+					AppUserRequest appUserRequest = requestFactory.appUserRequest();
+					Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromGoogleAccount(getView().getThirdPartyUsernameField().getValue());
+					createAppUserReq.fire(new Receiver<AppUserProxy>() {
+						@Override
+						public void onSuccess(AppUserProxy createdUser) {
+							appUserCreated();
+						}
+						@Override
+						public void onFailure(ServerFailure failure) {
+							getView().getThirdPartyUsernameStatusMessage().setInnerText(failure.getMessage().replace("Server Error:", ""));
+							getView().getThirdPartyUsernameField().addStyleName("errorInput");
+						}
+					});
+				}
+			}
+		}));
+		/*registerHandler(getView().getRegisterWithGoogleButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				clearFields();
@@ -136,7 +207,7 @@ public class RegisterPresenter extends
 						// We need the currentURL to redirect users back to this page after a successful login 
 						String currentURL = Window.Location.getHref();
 						String username = getView().getThirdPartyUsernameField().getValue();					
-					    Request<String> getLoginLogoutURL = appUserRequest.getLoginLogoutURL(currentURL+";username="+username+";provider="+RegisterPresenter.PROVIDER_GOOGLE);
+					    Request<String> getLoginLogoutURL = appUserRequest.getGoogleLoginLogoutURL(currentURL+";username="+username+";provider="+RegisterPresenter.PROVIDER_GOOGLE);
 					    getLoginLogoutURL.fire(new Receiver<String>() {
 					    	@Override
 					    	public void onSuccess(final String url) {
@@ -146,15 +217,15 @@ public class RegisterPresenter extends
 					}
 				}
 			}
-		}));
+		}));*/
 	}
 	
 	@Override
 	protected void onReveal() {
-		//TODO: If the user has already registered, redirect/otherwise handle
 	    super.onReveal();
 	    setInSlot(TOP_BAR_SLOT, topBar);  
 		
+	    // Check google login status of user
 	    AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		Request<Boolean> checkGoogleUserLoggedIn = appUserRequest.isGoogleUserLoggedIn();
 		checkGoogleUserLoggedIn.fire(new Receiver<Boolean>() {
@@ -229,7 +300,7 @@ public class RegisterPresenter extends
 		getView().getThirdPartyUsernameField().setValue("");
 	}
 	
-	private void createAppUserFromGoogleAccount(String username) {
+	/*private void createAppUserFromGoogleAccount(String username) {
 		AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromGoogleAccount(username);
 		createAppUserReq.fire(new Receiver<AppUserProxy>() {
@@ -243,7 +314,7 @@ public class RegisterPresenter extends
 				getView().getThirdPartyUsernameField().addStyleName("errorInput");
 			}
 		});
-	}
+	}*/
 	
 	private void appUserCreated() {
 		placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
