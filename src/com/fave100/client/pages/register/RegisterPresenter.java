@@ -76,6 +76,11 @@ public class RegisterPresenter extends
 	}
 	
 	@Override
+	public boolean useManualReveal() {
+		return true;
+	}
+	
+	@Override
 	public void prepareFromRequest(PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 		
@@ -108,18 +113,23 @@ public class RegisterPresenter extends
 						Request<AppUserProxy> loginWithGoogle = requestFactory.appUserRequest().loginWithGoogle();
 						loginWithGoogle.fire(new Receiver<AppUserProxy>() {
 							@Override
-							public void onSuccess(AppUserProxy user) {
-								placeManager.revealDefaultPlace();
+							public void onSuccess(AppUserProxy user) {	
+								if(user != null) {
+									placeManager.revealDefaultPlace();
+								}
+								getProxy().manualReveal(RegisterPresenter.this);
 							}
 						});
 						showThirdPartyUsernamePrompt();
-					} else {
+					} else {						
 						hideThirdPartyUsernamePrompt();
-					}				
+						getProxy().manualReveal(RegisterPresenter.this);
+					}
 				}
 			});			
 		} else {
 			hideThirdPartyUsernamePrompt();
+			getProxy().manualReveal(RegisterPresenter.this);
 		}
 	}
 	
@@ -206,7 +216,7 @@ public class RegisterPresenter extends
 	    setInSlot(TOP_BAR_SLOT, topBar);  
 	}
 	
-	private boolean validateFields() {
+	private boolean validateFields() {		
 		// Assume all valid
 		getView().getUsernameField().removeStyleName("errorInput");
 		getView().getPasswordField().removeStyleName("errorInput");
@@ -216,6 +226,8 @@ public class RegisterPresenter extends
 		getView().getPasswordStatusMessage().setInnerText("");
 		getView().getEmailStatusMessage().setInnerText("");
 		
+		// TODO: Must duplicate all validation on server...
+		
 		// Check for validity
 		String username = getView().getUsernameField().getValue();
 		String email = getView().getEmailField().getValue();
@@ -224,6 +236,12 @@ public class RegisterPresenter extends
 		if(username.equals("")) {
 			getView().getUsernameField().addStyleName("errorInput");
 			getView().getUsernameStatusMessage().setInnerText("You must enter a username");
+			return false;
+		}
+		String usernamePattern = "^[a-zA-Z0-9]+$";
+		if(!username.matches(usernamePattern)) {
+			getView().getUsernameField().addStyleName("errorInput");
+			getView().getUsernameStatusMessage().setInnerText("Username must only consist of letters and numbers");
 			return false;
 		}
 		String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.(?:[a-zA-Z]{2,6})$";
