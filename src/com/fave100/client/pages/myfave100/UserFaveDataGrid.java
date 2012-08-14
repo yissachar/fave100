@@ -49,7 +49,7 @@ public class UserFaveDataGrid extends FaveDataGridBase{
 				NativeEvent event, ValueUpdater<String> valueUpdater) {	
 				if(value == null) return;		
 				super.onBrowserEvent(context, parent, value, event, valueUpdater);
-				// TODO: Switch over to plain GWT
+				// TODO: Switch over to plain GWT?
 				if(event.getType().equals("mousedown")) {					
 					draggedRow = getRowElement(context.getIndex());
 					GQuery $row = $(draggedRow);
@@ -95,7 +95,7 @@ public class UserFaveDataGrid extends FaveDataGridBase{
 		this.addDomHandler(new MouseUpHandler() {
 			@Override
 			public void onMouseUp(MouseUpEvent event) {
-				// TODO: Switch over to plain GWT
+				// TODO: Switch over to plain GWT?
 				if(draggedRow == null) return;
 				GQuery $draggedItem = $(draggedRow);
 				// Get the index of the row being dragged

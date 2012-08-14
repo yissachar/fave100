@@ -85,9 +85,7 @@ public class UsersPresenter extends
 		super.onBind();
 		
 		// By default, just changing the parameters in the URL will not trigger onReveal,
-		// Therefore we must listen for URL change and then trigger onReveal manually
-		// TODO: This is not the most robust way of dealing with the problem; try to find
-		// another way.
+		// Therefore we must listen for URL change and then trigger onReveal manually		
 		ValueChangeHandler<String> URLHandler = new ValueChangeHandler<String>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {

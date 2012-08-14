@@ -18,7 +18,6 @@ public class SideNotification {
 	}
 	
 	public static void show(String message, boolean error, int delay) {
-		// TODO: Undo link
 		GQuery $sideNotification = $(".sideNotification");
 		if($sideNotification.length() == 0) {						
 			$("<div>/div>").insertAfter($("div").first()).addClass("sideNotification");
