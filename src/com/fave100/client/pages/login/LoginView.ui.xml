@@ -7,25 +7,42 @@
 	ui:generateLocales='default'>
 	
 	<ui:style>
+		.registerContainer{
+			display: block;
+			margin: 0px auto;
+			width: 800px;
+		}
+		.registerContainer div{
+			float: left;
+		}
 		.loginStatusMessage{
 			display: block;
 			font-size: 0.75em;
 			margin-bottom: 5px;
 		}
+		.orDivider{
+			padding: 50px;			
+		}
 	</ui:style>
 	<g:HTMLPanel>
 		<div class="container">
 			<h1>Fave100 Sign In</h1>
-			<div class="loginContainer">				
-				<g:Label>Username</g:Label>
-				<g:TextBox ui:field="usernameInput"/>
-				<br/>
-				<g:Label>Password</g:Label>
-				<g:PasswordTextBox ui:field="passwordInput"/>
-				<br/>
-				<span class="{style.loginStatusMessage} error" ui:field="loginStatusMessage"/>
-				<g:Button ui:field="loginButton">Sign In</g:Button>
-			</div>
+			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
+				<div class="loginContainer">				
+					<g:Label>Username</g:Label>
+					<g:TextBox ui:field="usernameInput"/>
+					<br/>
+					<g:Label>Password</g:Label>
+					<g:PasswordTextBox ui:field="passwordInput"/>
+					<br/>
+					<span class="{style.loginStatusMessage} error" ui:field="loginStatusMessage"/>
+					<g:Button ui:field="loginButton">Sign In</g:Button>
+				</div>
+				<div class="{style.orDivider}">or</div>
+				<div class="loginContainer">
+					<g:Anchor ui:field="signInWithGoogleButton">Sign in with Google</g:Anchor>
+				</div>
+			</g:HTMLPanel>	
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -27,6 +27,7 @@ public interface AppUserRequest extends RequestContext{
 	Request<Void> rerankFaveItemForCurrentUser(int currentIndex, int newIndex);
 	Request<List<SongProxy>> getMasterFaveList();
 	Request<AppUserProxy> login(String username, String password);
+	Request<AppUserProxy> loginWithGoogle();
 	Request<Void> logout();
 	Request<AppUserProxy> createAppUser(String username, String password, String email);
 	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser();
