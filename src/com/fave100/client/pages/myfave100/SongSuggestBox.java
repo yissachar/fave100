@@ -60,7 +60,7 @@ public class SongSuggestBox extends SuggestBox{
 		AutoBean<ListResultOfSuggestion> result();		
 	}
 
-	private void getAutocompleteList() {// TODO: After switching to image thumbnails, doesn't always show autocomplete list	
+	private void getAutocompleteList() {	
 		// Build a JSONP request to grab the info from iTunes
 		String url = "http://itunes.apple.com/search?"+
 						"term="+this.getValue()+
@@ -69,6 +69,11 @@ public class SongSuggestBox extends SuggestBox{
 						"&attribute=songTerm"+
 						"&limit=5";
 		JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+		// TODO: type "gr" then backspace twice and type "o", if "gr" request really long
+		// e.g. 6 seconds and "o" request very short, e.g. 100 ms, autocomplete will show results for 
+		// "gr" when it should really show for "o"
+		// solution, store requests in array, whenver request completes, clear it and any
+		// other reqeuests with lower index
 		jsonp.requestObject(url, new AsyncCallback<JavaScriptObject>() {			
 	       	public void onSuccess(JavaScriptObject jsObject) {	       		
 	       		// Turn the resulting JavaScriptObject into an AutoBean
@@ -91,7 +96,6 @@ public class SongSuggestBox extends SuggestBox{
 	    	    }
 	       		// TODO: Duplicate suggestions are hidden! Song name "W" and "W" only one actually shown
 	    	    showSuggestionList();
-	    	    
 	       	}
 
 			@Override

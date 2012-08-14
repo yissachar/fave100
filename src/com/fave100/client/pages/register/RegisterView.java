@@ -4,6 +4,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -77,10 +78,10 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 		return passwordRepeatField;
 	}
 	
-	@UiField Button registerWithGoogleButton;
+	@UiField Anchor registerWithGoogleButton;
 
 	@Override
-	public Button getRegisterWithGoogleButton() {
+	public Anchor getRegisterWithGoogleButton() {
 		return registerWithGoogleButton;
 	}
 	
@@ -124,5 +125,19 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 	@Override
 	public SpanElement getEmailStatusMessage() {
 		return emailStatusMessage;
+	}
+	
+	@UiField HTMLPanel thirdPartyUsernamePrompt;
+
+	@Override
+	public HTMLPanel getThirdPartyUsernamePrompt() {
+		return thirdPartyUsernamePrompt;
+	}
+
+	@UiField Button thirdPartyUsernameSubmitButton;
+	
+	@Override
+	public Button getThirdPartyUsernameSubmitButton() {		
+		return thirdPartyUsernameSubmitButton;
 	}
 }

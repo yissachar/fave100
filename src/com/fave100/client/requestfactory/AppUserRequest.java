@@ -14,7 +14,9 @@ public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> getLoggedInAppUser();
 
 	Request<Boolean> isGoogleUserLoggedIn();
-	Request<String> getLoginLogoutURL(String destinationURL);
+	Request<String> getGoogleLoginURL(String destinationURL);
+	Request<String> getGoogleLogoutURL(String destinationURL);
+	Request<String> getGoogleLoginLogoutURL(String destinationURL);
 	Request<AppUserProxy> createAppUserFromGoogleAccount(String username);
 	
 	Request<Void> followUser(String username);

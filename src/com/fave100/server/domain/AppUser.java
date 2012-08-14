@@ -76,16 +76,15 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return loggedInUser;
 	}
 	
-	/*public static AppUser loginWithGoogle() {
+	public static AppUser loginWithGoogle() {
 		AppUser loggedInUser;
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
-		if(user != null) {		
-			loggedInUser = findAppUserByGoogleId(user.getUserId());			
-			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
-		}
+		if(user == null) return null;		
+		loggedInUser = findAppUserByGoogleId(user.getUserId());			
+		if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());		
 		return loggedInUser;
-	}*/
+	}
 	
 	public static void logout() {
 		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, null);
@@ -100,7 +99,19 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return false;
 	}
 	
-	public static String getLoginLogoutURL(String destinationURL) {
+	public static String getGoogleLoginURL(String destinationURL) {
+		return UserServiceFactory.getUserService().createLoginURL(destinationURL);
+	}
+	
+	public static String getGoogleLogoutURL(String destinationURL) {
+		return UserServiceFactory.getUserService().createLogoutURL(destinationURL);
+	}
+	
+	/*
+	 * For when we want to get the correct URL depending on if the 
+	 * user is logged in or not, with a single request
+	 */	
+	public static String getGoogleLoginLogoutURL(String destinationURL) {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 		if(user == null) {
