@@ -24,6 +24,8 @@ import com.fave100.client.pages.login.LoginPresenter;
 import com.fave100.client.pages.login.LoginView;
 import com.fave100.client.pages.logout.LogoutPresenter;
 import com.fave100.client.pages.logout.LogoutView;
+import com.fave100.client.pages.userlist.UserlistPresenter;
+import com.fave100.client.pages.userlist.UserlistView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -54,6 +56,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(LogoutPresenter.class, LogoutPresenter.MyView.class,
 				LogoutView.class, LogoutPresenter.MyProxy.class);
+
+		bindPresenter(UserlistPresenter.class, UserlistPresenter.MyView.class,
+				UserlistView.class, UserlistPresenter.MyProxy.class);
 	}
 	
 	@Provides

@@ -216,7 +216,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;
 		currentUser.fave100Songs.remove(index);
-		ofy().save().entity(currentUser);
+		ofy().save().entity(currentUser).now();
 	}
 	
 	public static void rerankFaveItemForCurrentUser(final int currentIndex, final int newIndex) {		

@@ -44,7 +44,7 @@
 				<li><span ui:field="greeting"/></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getMyfave100}" ui:field="myFave100Link">My Fave100</g:InlineHyperlink></li>				
 				<li><span ui:field="logInLogOutLink">Log in</span></li>
-				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getUsers}">Users</g:InlineHyperlink></li>
+				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getUserlist}">Users</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">Home</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
 			</ul>			

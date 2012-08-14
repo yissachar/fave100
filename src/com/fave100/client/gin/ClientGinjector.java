@@ -13,6 +13,7 @@ import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.pages.login.LoginPresenter;
 import com.fave100.client.pages.logout.LogoutPresenter;
+import com.fave100.client.pages.userlist.UserlistPresenter;
 
 @GinModules({ DispatchAsyncModule.class, ClientModule.class })
 public interface ClientGinjector extends Ginjector {
@@ -32,4 +33,6 @@ public interface ClientGinjector extends Ginjector {
 	AsyncProvider<LoginPresenter> getLoginPresenter();
 
 	AsyncProvider<LogoutPresenter> getLogoutPresenter();
+
+	AsyncProvider<UserlistPresenter> getUserlistPresenter();
 }
