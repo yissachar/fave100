@@ -10,7 +10,7 @@ import com.googlecode.objectify.annotation.Index;
 @Entity @Index
 public class Follower {
 	// TODO: This will only work if we ban : in usernames
-	@IgnoreSave public static String ID_SEPARATOR = ":::";
+	@IgnoreSave public static String ID_SEPARATOR = ":";
 	
 	@Id private String id;
 	private Ref<AppUser> follower;

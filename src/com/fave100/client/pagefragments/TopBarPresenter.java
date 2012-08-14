@@ -69,6 +69,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 							getView().getLogInLogOutLink().setInnerHTML("<a href='"+Window.Location.getPath()
 									+Window.Location.getQueryString()+"#"+NameTokens.logout+"'>Logout</a>");
 						} else {
+							getView().getGreeting().setInnerHTML("");
 							getView().getMyFave100Link().setVisible(false);
 							getView().getRegisterLink().setVisible(true);				
 							//getView().getLogInLogOutLink().setInnerHTML("<a href='"+url+"'>Log in</a>");
