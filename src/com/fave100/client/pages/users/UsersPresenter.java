@@ -1,7 +1,5 @@
 package com.fave100.client.pages.users;
 
-import java.util.List;
-
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -14,6 +12,7 @@ import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.widgets.FaveDataGrid;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
@@ -24,24 +23,17 @@ import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class UsersPresenter extends
 		Presenter<UsersPresenter.MyView, UsersPresenter.MyProxy> {
 
-	public interface MyView extends View {
-		InlineHTML getUserList();
+	public interface MyView extends View {		
 		HTMLPanel getUserProfile();
 		Image getAvatar();
 		SpanElement getUsernameSpan();		
@@ -49,13 +41,13 @@ public class UsersPresenter extends
 		FaveDataGrid getUserFaveDataGrid();
 	}
 	
-	private String requestedUser;
-	private ApplicationRequestFactory requestFactory;
-	private HandlerRegistration URLHandlerRegistration;
-	
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
 	
 	@Inject TopBarPresenter topBar;
+	
+	private String requestedUsername;
+	private ApplicationRequestFactory requestFactory;
+	private PlaceManager placeManager;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.users)
@@ -64,9 +56,11 @@ public class UsersPresenter extends
 
 	@Inject
 	public UsersPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory) {
+			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
+			final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
+		this.placeManager = placeManager;
 	}
 
 	@Override
@@ -75,46 +69,69 @@ public class UsersPresenter extends
 	}
 	
 	@Override
+	public boolean useManualReveal() {
+		return true;
+	}
+	
+	@Override
 	public void prepareFromRequest(PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
-		requestedUser = placeRequest.getParameter("u", "");				
+		requestedUsername = placeRequest.getParameter("u", "");	
+		if(requestedUsername.equals("")) {
+			placeManager.revealDefaultPlace();
+		} else {
+			// Update follow button
+			Request<Boolean> checkFollowing = requestFactory.appUserRequest().checkFollowing(requestedUsername);
+			checkFollowing.fire(new Receiver<Boolean>() {
+				@Override
+				public void onSuccess(Boolean following) {
+					Button followButton = getView().getFollowButton();
+					if(following) {
+						followButton.setHTML("Following");
+						followButton.setEnabled(false);
+					} else {
+						followButton.setHTML("Follow");
+						followButton.setEnabled(true);
+					}
+				}
+			});
+			
+			// Update user profile
+		    Request<AppUserProxy> masterFaveListReq = requestFactory.appUserRequest().findAppUser(requestedUsername).with("fave100Songs");
+		    masterFaveListReq.fire(new Receiver<AppUserProxy>() {
+		    	@Override
+		    	public void onSuccess(AppUserProxy user) {
+		    		if(user != null) {	    				
+		    			// Upate user profile
+	    				getView().getAvatar().setUrl(user.getAvatar());
+	    				getView().getUsernameSpan().setInnerText(user.getUsername());
+	    	    		getView().getUserFaveDataGrid().setRowData(user.getFave100Songs());
+	    	    		getView().getUserFaveDataGrid().resizeFaveList();
+	    			} else {
+	    				placeManager.revealDefaultPlace();
+	    			}
+		    		getProxy().manualReveal(UsersPresenter.this);
+		    	}
+		    });			
+		}
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
 		
-		// By default, just changing the parameters in the URL will not trigger onReveal,
-		// Therefore we must listen for URL change and then trigger onReveal manually		
-		ValueChangeHandler<String> URLHandler = new ValueChangeHandler<String>() {
-			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				String hash = event.getValue();
-				if(hash.length() == 0) return;
-				String[] historyTokens = hash.split("&",0);				
-				if(historyTokens.length == 0 || !historyTokens[0].contains(";")) {
-					refreshUserList();
-				} else {
-					requestedUser = historyTokens[0].split("=")[1];
-					refreshUserFave();
-					refreshFollowButton();
-				}
-			}
-		};
-		
-		URLHandlerRegistration = History.addValueChangeHandler(URLHandler);
-		
 		registerHandler(getView().getFollowButton().addClickHandler(new ClickHandler() {			
 			@Override
 			public void onClick(ClickEvent event) {
 				if(!getView().getFollowButton().getStyleName().contains("alreadyFollowing")) {
 					AppUserRequest appUserRequest = requestFactory.appUserRequest();
-					Request<Void> followReq = appUserRequest.followUser(requestedUser);
+					Request<Void> followReq = appUserRequest.followUser(requestedUsername);
 					followReq.fire(new Receiver<Void>() {
 						@Override
 						public void onSuccess(Void response) {
 							SideNotification.show("Following!");
-							refreshFollowButton();
+							getView().getFollowButton().setHTML("Following");
+							getView().getFollowButton().setEnabled(false);
 						}
 						@Override
 						public void onFailure(ServerFailure failure) {
@@ -124,97 +141,12 @@ public class UsersPresenter extends
 				}
 			}
 		}));
-	
-		refreshUserList();
-	}
-	
-	@Override
-	protected void onUnbind() {
-		super.onUnbind();
-		
-		URLHandlerRegistration.removeHandler();
 	}
 	
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
 	    setInSlot(TOP_BAR_SLOT, topBar);
-	   // TODO: handle user visiting own page 
-	    if(requestedUser != "") {	 
-	    	// See if the request User actually exists
-	    	refreshUserFave();   
-	    	refreshFollowButton();
-	    } else {
-	    	// No valid user requested, just show user list	    	
-	    	getView().getUserList().setVisible(true);
-	    	getView().getUserProfile().setVisible(false);
-	    }
-	}
-	
-	private void refreshUserList() {
-		getView().getFollowButton().setVisible(false);
-		getView().getUserList().setVisible(true);
-    	getView().getUserProfile().setVisible(false);
-    	getView().getUserFaveDataGrid().setVisible(false);
-		AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		Request<List<AppUserProxy>> userListReq = appUserRequest.getAppUsers();
-		userListReq.fire(new Receiver<List<AppUserProxy>>() {
-			@Override
-			public void onSuccess(List<AppUserProxy> userList) {
-				String output = "<ul>";				
-				for(AppUserProxy user : userList) {
-					output += "<li>";
-					// TODO: profile image					
-					//output += "<img src='http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' />";
-					output += "<img src='"+user.getAvatar()+"'/>";
-					output += "<a href='"+Window.Location.getHref()+";u="+user.getUsername()+"'>";
-					output += "<div>"+user.getUsername()+"</div>";					
-					output += "</a>";
-					output += "</li>";
-				}
-				output += "</ul>";
-				getView().getUserList().setHTML(output);				
-			}			
-		});
-	}
-	
-	private void refreshUserFave() {
-		AppUserRequest appUserRequest = requestFactory.appUserRequest();
-	    Request<AppUserProxy> masterFaveListReq = appUserRequest.findAppUser(requestedUser).with("fave100Songs");
-	    masterFaveListReq.fire(new Receiver<AppUserProxy>() {
-	    	@Override
-	    	public void onSuccess(AppUserProxy user) {
-	    		if(user != null) {	    				
-    				// Hide userlist, and show user profile
-    				getView().getUserList().setVisible(false);
-    				HTMLPanel userProfile = getView().getUserProfile();
-    				userProfile.setVisible(true);
-    				getView().getAvatar().setUrl(user.getAvatar());
-    				getView().getUsernameSpan().setInnerText(user.getUsername());
-    				getView().getFollowButton().setVisible(true);
-    				getView().getUserFaveDataGrid().setVisible(true);
-    	    		getView().getUserFaveDataGrid().setRowData(user.getFave100Songs());
-    	    		getView().getUserFaveDataGrid().resizeFaveList();
-    			}
-	    	}
-	    });
-	}
-	
-	private void refreshFollowButton() {
-		AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		Request<Boolean> checkFollowing = appUserRequest.checkFollowing(requestedUser);
-		checkFollowing.fire(new Receiver<Boolean>() {
-			@Override
-			public void onSuccess(Boolean following) {
-				Button followButton = getView().getFollowButton();
-				if(following) {
-					followButton.setHTML("Following");
-					followButton.setEnabled(false);
-				} else {
-					followButton.setHTML("Follow");
-					followButton.setEnabled(true);
-				}
-			}
-		});
+	    // TODO: handle user visiting own page
 	}
 }

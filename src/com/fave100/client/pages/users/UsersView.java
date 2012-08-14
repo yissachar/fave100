@@ -9,7 +9,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -45,13 +44,6 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 			}
 		}
 		super.setInSlot(slot, content);
-	}
-
-	@UiField InlineHTML usersList;
-	
-	@Override
-	public InlineHTML getUserList() {
-		return usersList;
 	}
 	
 	@UiField HTMLPanel userProfile;

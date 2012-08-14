@@ -2,7 +2,10 @@ package com.fave100.client.pages.myfave100;
 
 import static com.google.gwt.query.client.GQuery.$;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import java_cup.internal_error;
 
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
@@ -17,6 +20,7 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
@@ -25,6 +29,7 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.RequestContext;
 
 /**
  * DataGrid for user to view and edit their personal Fave100 list.
@@ -35,12 +40,24 @@ public class UserFaveDataGrid extends FaveDataGridBase{
 	
 	private HandlerRegistration nativePreviewHandler;
 	private ApplicationRequestFactory requestFactory;
+	private ArrayList<FaveItemProxy> clientFaveList = new ArrayList<FaveItemProxy>();
+	/*private Timer idleTimer;	
+	private final int idleTimeLimit = 30000;// 30 seconds
+	private AppUserRequest requestContext;*/
 	private TableRowElement draggedRow;
 		
 	public UserFaveDataGrid(final ApplicationRequestFactory requestFactory) {		
 		super();
 		
 		this.requestFactory = requestFactory;
+		/*requestContext = requestFactory.appUserRequest();
+		
+		// After idle time limit send all queued actions to server 
+		idleTimer = new Timer() {
+			public void run() {
+				runQueuedActions();
+			}
+		};*/
 		
 		// Drag handler column		
 		MouseDownCell dragHandlerCell = new MouseDownCell(){
@@ -166,6 +183,28 @@ public class UserFaveDataGrid extends FaveDataGridBase{
 		//Set the styles for this tableheader
 		this.getTableHeadElement().setClassName("personalFaves");
 	}
+	
+	/*public void addActionToQueue(RequestContext context) {
+		idleTimer.cancel();
+		requestContext.append(context);
+		idleTimer.schedule(idleTimeLimit);
+	}
+	
+	public AppUserRequest getRequestContext() {	
+		return requestContext;
+	}
+	
+	private void runQueuedActions() {
+		Window.alert("Running queued actions");
+		requestContext.fire(new Receiver<Void>() {
+			@Override
+			public void onSuccess(Void response) {
+				Window.alert("Success!");
+			}
+		});
+		requestContext = requestFactory.appUserRequest();
+	}*/
+	
 	public void refreshFaveList() {
 		//TODO: To reduce number of RPC calls, perhaps don't refresh list every change
 		// instead, make changes locally on client by adding elements to DOM
@@ -175,7 +214,11 @@ public class UserFaveDataGrid extends FaveDataGridBase{
 		currentUserReq.fire(new Receiver<List<FaveItemProxy>>() {
 			@Override
 			public void onSuccess(List<FaveItemProxy> faveItems) {				
-				if(faveItems != null) setRowData(faveItems);
+				if(faveItems != null) {
+					clientFaveList.clear();
+					clientFaveList.addAll(faveItems);
+					setRowData(clientFaveList);
+				}
 				resizeFaveList();				
 			}
 		});
