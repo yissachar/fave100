@@ -22,9 +22,6 @@ public class FaveDataGrid extends FaveDataGridBase {
 	public FaveDataGrid(final ApplicationRequestFactory requestFactory) {		
 		super();
 		
-		// TODO: Handle what to do if user not logged in - don't show button, or show button
-		// but then prompt to log in in hopes of getting new users
-		
 		// TODO: Don't show button if user has in their list? also indicate some CSS that is already in list?
 		ActionCell<SongProxy> addButton = new ActionCell<SongProxy>("+", new Delegate<SongProxy>() {
 			@Override

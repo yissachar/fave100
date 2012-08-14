@@ -33,7 +33,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	@IgnoreSave public static final int MAX_FAVES = 100;
 	@IgnoreSave public static final String AUTH_USER = "loggedIn";
 	
-	@Id private String username;//TODO: username case sensitive??
+	@Id private String username;
 	private String password;
 	private String email;
 	// TODO: Plan ahead for hashtags
@@ -268,7 +268,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	
 	public static void followUser(String username) {
 		// TODO: Check for already following to prevent duplicates
-		// TODO: Need a better method of message passing then RuntimeExceptions
+		// TODO: Need a better method of message passing than RuntimeExceptions
 		AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) throw new RuntimeException("Please log in");
 		if(currentUser.username.equals(username)) throw new RuntimeException("You cannot follow yourself");

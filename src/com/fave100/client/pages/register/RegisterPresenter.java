@@ -89,7 +89,8 @@ public class RegisterPresenter extends
 			@Override
 			public void onSuccess(AppUserProxy user) {
 				if(user != null) {
-					// TODO: Gatekeeper instead?
+					// TODO: Gatekeeper instead? (need CurrentUser class in order for that to work,
+					// instead of RF every request)
 					// Logged in user trying to register: redirect them to home
 					placeManager.revealDefaultPlace();
 				}
@@ -168,7 +169,6 @@ public class RegisterPresenter extends
 			public void onClick(ClickEvent event) {
 				if(validateFields()) {
 					AppUserRequest appUserRequest = requestFactory.appUserRequest();
-					// TODO: password error message if don't match
 					// Create a new user with the username and password entered
 					Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(getView().getUsernameField().getValue(),
 							getView().getPasswordField().getValue(), getView().getEmailField().getValue());

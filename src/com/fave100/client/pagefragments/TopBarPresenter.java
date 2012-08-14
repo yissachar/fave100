@@ -6,6 +6,7 @@ import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -32,7 +33,8 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 	
 	@Inject
 	public TopBarPresenter(final EventBus eventBus, final MyView view,
-							final ApplicationRequestFactory requestFactory) {
+							final ApplicationRequestFactory requestFactory,
+							final PlaceManager placeManager) {
 		super(eventBus, view);
 		this.requestFactory = requestFactory;
 	}
@@ -45,7 +47,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		// TODO: Use manual reveal to avoid delay from AppUseRequest
+		// TODO: Use manual reveal to avoid delay from AppUseRequest = how can we use manual reveal on presenterwidget?
 		// Whenever the page is refreshed, check to see if the user is logged in or not
 		// and change the top bar links and elements appropriately.
 		AppUserRequest appUserRequest = requestFactory.appUserRequest();

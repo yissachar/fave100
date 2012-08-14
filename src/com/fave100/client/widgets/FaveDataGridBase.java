@@ -3,6 +3,7 @@ package com.fave100.client.widgets;
 import com.fave100.client.requestfactory.FaveListItem;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
@@ -75,7 +76,8 @@ public class FaveDataGridBase extends DataGrid<FaveListItem>{
 		int tableSize = 0;
 		for(int i = 0; i < getRowCount(); i++) {
 			//extra pixels because of border+padding
-			tableSize += getRowElement(i).getClientHeight()+5;
+			Element elem = getRowElement(i);
+			tableSize += elem.getClientHeight()+5;
 		}
 		int minSize = 120;
 		if(tableSize < minSize) {
