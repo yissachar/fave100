@@ -4,6 +4,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -53,5 +54,12 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
 	@Override
 	public SpanElement getLoginStatusMessage() {
 		return loginStatusMessage;
+	}
+	
+	@UiField Anchor signInWithGoogleButton;
+
+	@Override
+	public Anchor getSignInWithGoogleButton() {
+		return signInWithGoogleButton;
 	}
 }

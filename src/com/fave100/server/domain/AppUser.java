@@ -35,7 +35,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	
 	@Id private String username;//TODO: username case sensitive??
 	private String password;
-	private String googleId;
 	private String email;
 	// TODO: Plan ahead for hashtags
 	@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
@@ -90,6 +89,10 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, null);
 	}
 	
+	/*
+	 * Checks if the user is logged into Google (though not necessarily logged
+	 * into the app)
+	 */
 	public static boolean isGoogleUserLoggedIn() {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
@@ -121,15 +124,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static AppUser getLoggedInAppUser() {
-		/*UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-		if(user != null) {		e
-			AppUser appUser = findAppUserByGoogleId(user.getUserId());
-			if(appUser != null) {
-				return appUser;
-			}
-		} 
-		return null;*/
 		String username = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
 		if(username != null) {
 			return ofy().load().type(AppUser.class).id(username).get();
@@ -174,7 +168,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				AppUser appUser = new AppUser();
 				appUser.setUsername(username);
 				appUser.setEmail(user.getEmail());
-				appUser.setGoogleId(user.getUserId());
 				// Create the GoogleID lookup
 				GoogleID googleID = new GoogleID(user.getUserId(), username);			
 				ofy().save().entities(appUser, googleID).now();					
@@ -301,14 +294,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
     // Getters and setters
-
-	public String getGoogleId() {
-		return googleId;
-	}
-
-	public void setGoogleId(String googleId) {
-		this.googleId = googleId;
-	}
 
 	public String getEmail() {
 		return email;
