@@ -6,6 +6,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
 
 @Entity @Index
 public class Follower {
@@ -13,16 +14,16 @@ public class Follower {
 	@IgnoreSave public static String ID_SEPARATOR = ":";
 	
 	@Id private String id;
-	private Ref<AppUser> follower;
-	private Ref<AppUser> followed;
+	@Load private Ref<AppUser> follower;
+	@Load private Ref<AppUser> following;
 	
 	public Follower() {}
 	
-	public Follower(String follower, String followed) {
+	public Follower(String follower, String following) {
 		// We use this weird id to facilitate easy .get() operations
-		this.setId(follower + Follower.ID_SEPARATOR + followed);
+		this.setId(follower + Follower.ID_SEPARATOR + following);
 		this.setFollower(Ref.create(Key.create(AppUser.class, follower)));
-		this.setFollowed(Ref.create(Key.create(AppUser.class, followed)));		
+		this.setFollowing(Ref.create(Key.create(AppUser.class, following)));		
 	}
 
 	public String getId() {
@@ -41,11 +42,13 @@ public class Follower {
 		this.follower = follower;
 	}
 
-	public Ref<AppUser> getFollowed() {
-		return followed;
+	public Ref<AppUser> getFollowing() {
+		return following;
 	}
 
-	public void setFollowed(Ref<AppUser> followed) {
-		this.followed = followed;
+	public void setFollowing(Ref<AppUser> following) {
+		this.following = following;
 	}
+
+	
 }

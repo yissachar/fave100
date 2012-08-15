@@ -1,5 +1,8 @@
 package com.fave100.client.pagefragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
@@ -10,9 +13,11 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 
 /**
@@ -27,6 +32,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 		SpanElement getGreeting();
 		InlineHyperlink getMyFave100Link();
 		InlineHyperlink getRegisterLink();
+		InlineHTML getFaveFeed();
 	}
 	
 	private ApplicationRequestFactory requestFactory;
@@ -82,5 +88,25 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 				});
 			}
 		});
+		
+		// Update the FaveFeed
+		Request<List<String>> faveFeedReq = requestFactory.appUserRequest().getFaveFeedForCurrentUser();
+		faveFeedReq.fire(new Receiver<List<String>>() {
+			@Override
+			public void onSuccess(List<String> faveFeed) {
+				String output = "<ul>";
+				for(String notification : faveFeed) {
+					output += "<li>"+notification+"</li>";
+				}
+				output += "</ul>";
+				getView().getFaveFeed().setVisible(true);
+				getView().getFaveFeed().setHTML(output);
+			}
+			@Override
+			public void onFailure(ServerFailure failure) {
+				getView().getFaveFeed().setVisible(false);
+			}
+		});
+		
 	}
 }

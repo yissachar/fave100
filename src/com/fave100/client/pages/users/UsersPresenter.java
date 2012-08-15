@@ -147,6 +147,6 @@ public class UsersPresenter extends
 	protected void onReveal() {
 	    super.onReveal();
 	    setInSlot(TOP_BAR_SLOT, topBar);
-	    // TODO: handle user visiting own page
+	    // TODO: handle user visiting own page	    
 	}
 }

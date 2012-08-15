@@ -1,5 +1,6 @@
 package com.fave100.server.guice;
 
+import com.fave100.server.domain.Activity;
 import com.fave100.server.domain.AppUser;
 import com.fave100.server.domain.FaveItem;
 import com.fave100.server.domain.Follower;
@@ -11,11 +12,13 @@ import com.gwtplatform.dispatch.server.guice.HandlerModule;
 public class ServerModule extends HandlerModule {
 
 	static{
+		// Must manually register all datastore entities
 		ObjectifyService.register(FaveItem.class);
 		ObjectifyService.register(AppUser.class);
 		ObjectifyService.register(Song.class);
 		ObjectifyService.register(GoogleID.class);
 		ObjectifyService.register(Follower.class);
+		ObjectifyService.register(Activity.class);
 	}
 	
 	@Override

@@ -8,6 +8,16 @@ body{
 	color: #454;
 }
 
+/*
+::selection {
+	background: #FFF;
+	color: #98CB80;
+}
+::-moz-selection {
+	background: #FFF;
+	color: #98CB80;	
+}*/
+
 a{
 	color: #565;
 	text-decoration: none;
