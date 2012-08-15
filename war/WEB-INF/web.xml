@@ -27,6 +27,16 @@
         <servlet-name>appstats</servlet-name>
         <url-pattern>/appstats/*</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+	  	<servlet-name>_ah_sessioncleanup</servlet-name>
+	  	<servlet-class>com.google.apphosting.utils.servlet.SessionCleanupServlet</servlet-class>
+	</servlet>
+	 
+	<servlet-mapping>
+	  	<servlet-name>_ah_sessioncleanup</servlet-name>
+	 	<url-pattern>/_ah/sessioncleanup</url-pattern>
+	</servlet-mapping>
 
     <security-constraint>
         <web-resource-collection>
