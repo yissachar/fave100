@@ -1,5 +1,6 @@
 package com.fave100.client.requestfactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.server.domain.AppUser;
@@ -21,6 +22,8 @@ public interface AppUserRequest extends RequestContext{
 	
 	Request<Void> followUser(String username);
 	Request<Boolean> checkFollowing(String username);
+	
+	Request<List<String>> getFaveFeedForCurrentUser();
 	
 	Request<Void> removeFaveItemForCurrentUser(int index);
 	Request<Void> addFaveItemForCurrentUser(Long songID, SongProxy songProxy);

@@ -5,9 +5,11 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.fave100.server.bcrypt.BCrypt;
+import com.fave100.server.domain.Activity.Transaction;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -41,12 +43,14 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	// TODO: user avatar/gravatar
 	@IgnoreSave private String avatar;
 	// TODO: location = for location based lists
+	private Date faveFeedLastChecked;
 	
 	public AppUser() {}
 	
 	public AppUser(String username, String password, String email) {
 		this.username = username;
 		this.email = email;
+		this.setFaveFeedLastChecked(new Date());
 		setPassword(password);
 	}
 	
@@ -206,17 +210,22 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}
 		if(unique == false) throw new RuntimeException("The song is already in your list");;
 		// Create the new FaveItem 
-		FaveItem newFaveItem = new FaveItem();		
-		newFaveItem.setSong(Ref.create(Key.create(Song.class, songID)));
+		FaveItem newFaveItem = new FaveItem();
+		Ref<Song> songRef = Ref.create(Key.create(Song.class, songID));
+		newFaveItem.setSong(songRef);
 		currentUser.fave100Songs.add(newFaveItem);
-		ofy().save().entity(currentUser).now();
+		Activity activity = new Activity(currentUser.username, Transaction.FAVE_ADDED);
+		activity.setSong(songRef);
+		ofy().save().entities(currentUser, activity).now();
 	}
 	
 	public static void removeFaveItemForCurrentUser(int index) {
 		AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return;
+		if(currentUser == null) return;		
+		Activity activity = new Activity(currentUser.username, Transaction.FAVE_REMOVED);
+		activity.setSong(currentUser.fave100Songs.get(index).getSong());
 		currentUser.fave100Songs.remove(index);
-		ofy().save().entity(currentUser).now();
+		ofy().save().entities(currentUser, activity).now();	
 	}
 	
 	public static void rerankFaveItemForCurrentUser(final int currentIndex, final int newIndex) {		
@@ -226,9 +235,13 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 //			public void vrun() {
 				AppUser currentUser = AppUser.getLoggedInAppUser();
 				if(currentUser == null) return;	
+				Activity activity = new Activity(currentUser.username, Transaction.FAVE_POSITION_CHANGED);
+				activity.setSong(currentUser.fave100Songs.get(currentIndex).getSong());
+				activity.setPreviousLocation(currentIndex+1);
+				activity.setNewLocation(newIndex+1);
 				FaveItem faveAtCurrIndex = currentUser.fave100Songs.remove(currentIndex);
-				currentUser.fave100Songs.add(newIndex, faveAtCurrIndex);
-				ofy().save().entity(currentUser).now();
+				currentUser.fave100Songs.add(newIndex, faveAtCurrIndex);				
+				ofy().save().entities(currentUser, activity).now();
 //			}
 //		});		
 	}
@@ -266,9 +279,43 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return topSongs;
 	}
 	
+	public static List<String> getFaveFeedForCurrentUser() {
+		AppUser user = getLoggedInAppUser();
+		if(user == null) throw new RuntimeException("Not logged in");
+		// TODO: This is horrible, need to rethink strategy
+		Ref.create(Key.create(AppUser.class, user.username));
+		List<Follower> followingList = ofy().load().type(Follower.class).filter("follower", Ref.create(Key.create(AppUser.class, user.username))).list();
+		List<Activity> activityList = new ArrayList<Activity>();
+		for(Follower following : followingList) {
+			activityList.addAll(
+				ofy().load()
+				.type(Activity.class)
+				.filter("username", following.getFollowing().get().getUsername())
+				.order("-timestamp")
+				.list()
+			);
+		}	
+		ArrayList<String> faveFeed = new ArrayList<String>();		
+		for(Activity activity : activityList) {
+			String songName = activity.getSong().get().getTrackName();
+			String message = activity.getUsername();
+			if(activity.getTransactionType().equals(Transaction.FAVE_ADDED)) {
+				message += " added "+songName;
+			} else if (activity.getTransactionType().equals(Transaction.FAVE_REMOVED)) {
+				message += " removed "+songName;
+			} else if (activity.getTransactionType().equals(Transaction.FAVE_POSITION_CHANGED)) {
+				message += " changed the position of "+songName+" from "+activity.getPreviousLocation();
+				message += " to "+activity.getNewLocation();
+			}
+			faveFeed.add(message);
+		}
+		return faveFeed;
+	}
+	
 	public static void followUser(String username) {
 		// TODO: Check for already following to prevent duplicates
 		// TODO: Need a better method of message passing than RuntimeExceptions
+		// TODO: Move this into follower class
 		AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) throw new RuntimeException("Please log in");
 		if(currentUser.username.equals(username)) throw new RuntimeException("You cannot follow yourself");
@@ -358,5 +405,13 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
+	}
+
+	public Date getFaveFeedLastChecked() {
+		return faveFeedLastChecked;
+	}
+
+	public void setFaveFeedLastChecked(Date faveFeedLastChecked) {
+		this.faveFeedLastChecked = faveFeedLastChecked;
 	}
 }

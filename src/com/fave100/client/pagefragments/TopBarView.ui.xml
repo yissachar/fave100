@@ -20,20 +20,32 @@
 		.topNav ul{
 			list-style-type: none;	
 			float: right;			
-			margin-top: 10px; 	
+			margin-top: 10px;
 		}
 		.topNav li{
 			display: inline;
 			margin: 7px;
-		}		
-		
-		.notifications{
-			border: 1px solid #000;
+		}
+		.faveFeed{
 			position: absolute;
+			border: 1px solid #999;
 			right: 0;
-			top: 40px;
-			width: 200px;
-			height: 200px
+			top: 70px;
+			width: 200px;			
+			z-index: 99999;
+		}
+		.faveFeed ul {
+			list-style-type: none;
+			padding: 0;
+		}
+		.faveFeed li {
+			border-bottom: 1px solid #999;
+			padding: 7px;
+			cursor: pointer;
+			background-color: #F5F8E5;
+		}
+		.faveFeed li:hover{
+			background-color: #E7E7E7;
 		}
 	</ui:style>
 
@@ -49,6 +61,6 @@
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
 			</ul>			
 		</div>
-		<div class="{style.notifications}"></div>
+		<g:InlineHTML ui:field="faveFeed" styleName="{style.faveFeed}"/>
 	</g:HTMLPanel>
 </ui:UiBinder>
