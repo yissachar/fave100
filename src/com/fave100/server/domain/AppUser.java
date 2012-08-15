@@ -287,14 +287,14 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		Ref.create(Key.create(AppUser.class, user.username));
 		List<Follower> followingList = ofy().load().type(Follower.class).filter("follower", Ref.create(Key.create(AppUser.class, user.username))).list();
 		List<Activity> activityList = new ArrayList<Activity>();
-		Date fiveHoursAgo = new Date();
-		fiveHoursAgo.setTime(fiveHoursAgo.getTime()-(1000*60*60*5));
+		Date twoDaysAgo = new Date();
+		twoDaysAgo.setTime(twoDaysAgo.getTime()-(1000*60*60*24*2));
 		for(Follower following : followingList) {
 			activityList.addAll(
 				ofy().load()
 				.type(Activity.class)
 				.filter("username", following.getFollowing().get().getUsername())
-				.filter("timestamp >", fiveHoursAgo)
+				.filter("timestamp >", twoDaysAgo)
 				.order("-timestamp")
 				.list()
 			);
