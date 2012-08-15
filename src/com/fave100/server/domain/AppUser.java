@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.Activity.Transaction;
+import com.google.appengine.api.search.ExpressionParser.name_return;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -284,13 +285,16 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		AppUser user = getLoggedInAppUser();
 		if(user == null) throw new RuntimeException("Not logged in");
 		// TODO: This is horrible, need to rethink strategy
+		// Get all the users that the current user is following
 		Ref.create(Key.create(AppUser.class, user.username));
-		List<Follower> followingList = ofy().load().type(Follower.class).filter("follower", Ref.create(Key.create(AppUser.class, user.username))).list();
-		List<Activity> activityList = new ArrayList<Activity>();
+		List<Follower> followingList = ofy().load().type(Follower.class)
+				.filter("follower", Ref.create(Key.create(AppUser.class, user.username))).list();
+		List<List<Activity>> rawActivityList = new ArrayList<List<Activity>>();
 		Date twoDaysAgo = new Date();
 		twoDaysAgo.setTime(twoDaysAgo.getTime()-(1000*60*60*24*2));
+		// For each user that the current user is following, get their activity for past 2 days
 		for(Follower following : followingList) {
-			activityList.addAll(
+			rawActivityList.add(
 				ofy().load()
 				.type(Activity.class)
 				.filter("username", following.getFollowing().get().getUsername())
@@ -298,8 +302,52 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				.order("-timestamp")
 				.list()
 			);
-		}	
-		ArrayList<String> faveFeed = new ArrayList<String>();		
+		}
+		
+		ArrayList<String> faveFeed = new ArrayList<String>();
+		
+		// We will bunch all activities less than a day apart
+		int buncherTimeLimit = 1000*60*60*24;
+	
+		//TODO: This is probably horribly inefficient but is a start
+		for(List<Activity> activityList : rawActivityList) {
+			ArrayList<Activity> addedActivities = new ArrayList<Activity>();
+			//ArrayList<Activity> removedActivities = new ArrayList<Activity>();
+			//ArrayList<Activity> changedActivities = new ArrayList<Activity>();
+			
+			// Put all activities in the proper array
+			for(Activity activity : activityList) {
+				if(activity.getTransactionType().equals(Transaction.FAVE_ADDED)) {
+					addedActivities.add(activity);
+				}
+			}
+			
+			// Go through all activities and bunch them
+			int counter = 0;
+			for(int i = 0; i < addedActivities.size(); i++) {
+				counter = 0;
+				Activity activity = activityList.get(i);
+				String songName = activity.getSong().get().getTrackName();
+				String message = activity.getUsername() + " added " + songName;
+				boolean checkNextSong = true;
+				while(checkNextSong && i+1 < activityList.size()) {	
+					checkNextSong = false;
+					Activity nextActivity = activityList.get(i+1);
+					i++;
+					if(activity.getTimestamp().getTime()+buncherTimeLimit >= nextActivity.getTimestamp().getTime()) {
+						// The two activities are close enough in time, bunch them
+						counter++;
+						checkNextSong = true;
+					}
+				}
+				if(counter > 0) {
+					message += " and "+counter+" other songs";
+				}
+				faveFeed.add(message);
+			}
+		}
+		// Construct messages based on their activity
+		/*ArrayList<String> faveFeed = new ArrayList<String>();		
 		for(Activity activity : activityList) {
 			String songName = activity.getSong().get().getTrackName();
 			String message = activity.getUsername();
@@ -312,7 +360,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				message += " to "+activity.getNewLocation();
 			}
 			faveFeed.add(message);
-		}
+		}*/
 		return faveFeed;
 	}
 	
