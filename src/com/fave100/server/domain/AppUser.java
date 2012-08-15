@@ -22,6 +22,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 /**
  * A Fave100 user.
@@ -286,11 +287,14 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		Ref.create(Key.create(AppUser.class, user.username));
 		List<Follower> followingList = ofy().load().type(Follower.class).filter("follower", Ref.create(Key.create(AppUser.class, user.username))).list();
 		List<Activity> activityList = new ArrayList<Activity>();
+		Date fiveHoursAgo = new Date();
+		fiveHoursAgo.setTime(fiveHoursAgo.getTime()-(1000*60*60*5));
 		for(Follower following : followingList) {
 			activityList.addAll(
 				ofy().load()
 				.type(Activity.class)
 				.filter("username", following.getFollowing().get().getUsername())
+				.filter("timestamp >", fiveHoursAgo)
 				.order("-timestamp")
 				.list()
 			);
