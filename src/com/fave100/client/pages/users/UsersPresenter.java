@@ -45,8 +45,10 @@ public class UsersPresenter extends
 		Anchor getActivityTabLink();
 		InlineHTML getActivityTab();
 	}
-	
+		
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
+	public static final String FAVE_100_TAB = "fave100";
+	public static final String ACTIVITY_TAB = "activity";
 	
 	@Inject TopBarPresenter topBar;
 	
@@ -117,7 +119,21 @@ public class UsersPresenter extends
 	    			}
 		    		getProxy().manualReveal(UsersPresenter.this);
 		    	}
-		    });			
+		    });		
+		    
+		    String tab = placeRequest.getParameter("tab", UsersPresenter.FAVE_100_TAB);
+		    if(tab.equals(UsersPresenter.ACTIVITY_TAB)) {
+		    	getView().getActivityTab().setVisible(true);
+		    	getView().getUserFaveDataGrid().setVisible(false);
+		    	getView().getFave100TabLink().removeStyleName("selected");
+				getView().getActivityTabLink().addStyleName("selected");
+		    	;
+		    } else if(tab.equals(UsersPresenter.FAVE_100_TAB)) {
+		    	getView().getUserFaveDataGrid().setVisible(true);
+		    	getView().getActivityTab().setVisible(false);
+		    	getView().getActivityTabLink().removeStyleName("selected");
+				getView().getFave100TabLink().addStyleName("selected");
+		    }
 		}
 	}
 
@@ -151,18 +167,16 @@ public class UsersPresenter extends
 		// Fave100 tab link
 		registerHandler(getView().getFave100TabLink().addClickHandler(new ClickHandler() {			
 			@Override
-			public void onClick(ClickEvent event) {
-				getView().getActivityTabLink().removeStyleName("selected");
-				getView().getFave100TabLink().addStyleName("selected");
+			public void onClick(ClickEvent event) {				
+				placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.FAVE_100_TAB));				
 			}
 		}));
 		
 		// Activity tab link
 		registerHandler(getView().getActivityTabLink().addClickHandler(new ClickHandler() {			
 			@Override
-			public void onClick(ClickEvent event) {
-				getView().getFave100TabLink().removeStyleName("selected");
-				getView().getActivityTabLink().addStyleName("selected");
+			public void onClick(ClickEvent event) {				
+				placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.ACTIVITY_TAB));
 			}
 		}));
 	}
