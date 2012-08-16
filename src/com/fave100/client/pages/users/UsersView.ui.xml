@@ -42,7 +42,8 @@
 		.tabList li{
 			display: inline;
 			list-style-type: none;			
-			margin-right: 10px;			
+			margin-right: 10px;		
+			cursor: pointer;	
 		}
 		
 		.tabList a{
