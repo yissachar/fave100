@@ -25,9 +25,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class UsersPresenter extends
@@ -39,6 +41,9 @@ public class UsersPresenter extends
 		SpanElement getUsernameSpan();		
 		Button getFollowButton();
 		FaveDataGrid getUserFaveDataGrid();
+		Anchor getFave100TabLink();
+		Anchor getActivityTabLink();
+		InlineHTML getActivityTab();
 	}
 	
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
@@ -120,6 +125,7 @@ public class UsersPresenter extends
 	protected void onBind() {
 		super.onBind();
 		
+		// Follow button
 		registerHandler(getView().getFollowButton().addClickHandler(new ClickHandler() {			
 			@Override
 			public void onClick(ClickEvent event) {
@@ -139,6 +145,24 @@ public class UsersPresenter extends
 						}
 					});
 				}
+			}
+		}));
+		
+		// Fave100 tab link
+		registerHandler(getView().getFave100TabLink().addClickHandler(new ClickHandler() {			
+			@Override
+			public void onClick(ClickEvent event) {
+				getView().getActivityTabLink().removeStyleName("selected");
+				getView().getFave100TabLink().addStyleName("selected");
+			}
+		}));
+		
+		// Activity tab link
+		registerHandler(getView().getActivityTabLink().addClickHandler(new ClickHandler() {			
+			@Override
+			public void onClick(ClickEvent event) {
+				getView().getFave100TabLink().removeStyleName("selected");
+				getView().getActivityTabLink().addStyleName("selected");
 			}
 		}));
 	}
