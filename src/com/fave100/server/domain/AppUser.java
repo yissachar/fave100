@@ -2,11 +2,22 @@ package com.fave100.server.domain;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.Activity.Transaction;
@@ -32,6 +43,8 @@ import com.googlecode.objectify.annotation.Index;
 @Index
 public class AppUser extends DatastoreObject{//TODO: remove indexes before launch
 
+	@IgnoreSave public static final String CONSUMER_KEY = "GXXfKwE5cXgoXCfghEAg";
+	@IgnoreSave public static final String CONSUMER_SECRET = "cec1qLagfRSc0EDOo5r5iR8VUNKfw7DIo6GRuswgs";
 	@IgnoreSave public static final int MAX_FAVES = 100;
 	@IgnoreSave public static final String AUTH_USER = "loggedIn";
 	
@@ -67,6 +80,15 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}			
 	}
 	
+	public static AppUser findAppUserByTwitterId(long twitterID) {
+		TwitterID tId = ofy().load().type(TwitterID.class).id(twitterID).get();
+		if(tId != null) {			
+			return ofy().load().type(AppUser.class).id(tId.getUsername()).get();
+		} else {
+			return null;
+		}			
+	}
+	
 	public static AppUser login(String username, String password) {
 		AppUser loggedInUser;
 		loggedInUser = findAppUser(username);		
@@ -87,6 +109,60 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		loggedInUser = findAppUserByGoogleId(user.getUserId());			
 		if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());		
 		return loggedInUser;
+	}
+	
+	public static String getTwitterAuthUrl() {
+		Twitter twitter = new TwitterFactory().getInstance();
+		twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
+		
+		RequestToken requestToken;
+		try {
+			requestToken = twitter.getOAuthRequestToken();
+			String token = requestToken.getToken();
+			String tokenSecret = requestToken.getTokenSecret();
+			
+			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("token", token);
+			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("tokenSecret", tokenSecret);
+			
+			return(requestToken.getAuthorizationURL());
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block			
+		}
+		return null;
+	}
+	
+	public static boolean isTwitterUserLoggedIn() {
+		if(getTwitterUser() != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public static twitter4j.User getTwitterUser() {
+		Twitter twitter = new TwitterFactory().getInstance();
+		twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
+		String token = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("token");
+		String tokenSecret = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("tokenSecret");
+		AccessToken accessToken;
+		try {
+			accessToken = twitter.getOAuthAccessToken(token, tokenSecret);
+			twitter.setOAuthAccessToken(accessToken);
+			twitter4j.User twitterUser = twitter.verifyCredentials();
+			return twitterUser;
+		} catch (TwitterException e1) {
+			// TODO Auto-generated catch block			
+		}
+		return null;
+	}
+	
+	public static AppUser loginWithTwitter() {
+		twitter4j.User twitterUser = getTwitterUser();
+		if(twitterUser != null) {
+			AppUser loggedInUser = findAppUserByTwitterId(twitterUser.getId());			
+			if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());		
+			return loggedInUser;
+		}
+		return null;
 	}
 	
 	public static void logout() {

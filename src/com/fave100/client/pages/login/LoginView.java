@@ -62,4 +62,11 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
 	public Anchor getSignInWithGoogleButton() {
 		return signInWithGoogleButton;
 	}
+	
+	@UiField Anchor signInWithTwitterButton;
+	
+	@Override
+	public Anchor getSignInWithTwitterButton() {
+		return signInWithTwitterButton;
+	}
 }

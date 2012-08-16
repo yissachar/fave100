@@ -3,6 +3,8 @@ package com.fave100.client.requestfactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import twitter4j.User;
+
 import com.fave100.server.domain.AppUser;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
@@ -37,4 +39,7 @@ public interface AppUserRequest extends RequestContext{
 	
 	Request<Boolean> checkPassword(String password);
 	Request<List<String>> getActivityForUser(String username);
+	Request<String> getTwitterAuthUrl();
+	Request<AppUserProxy> loginWithTwitter();
+	Request<Boolean> isTwitterUserLoggedIn();
 }
