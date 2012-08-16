@@ -140,4 +140,11 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 	public Button getThirdPartyUsernameSubmitButton() {		
 		return thirdPartyUsernameSubmitButton;
 	}
+	
+	@UiField Anchor registerWithTwitterButton;
+	
+	@Override
+	public Anchor getRegisterWithTwitterButton() {
+		return registerWithTwitterButton;
+	}
 }

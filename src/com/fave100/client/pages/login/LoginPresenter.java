@@ -36,6 +36,7 @@ public class LoginPresenter extends
 		SpanElement getLoginStatusMessage();
 		Button getLoginButton();
 		Anchor getSignInWithGoogleButton();
+		Anchor getSignInWithTwitterButton();
 	}
 
 	@ProxyCodeSplit
@@ -72,6 +73,15 @@ public class LoginPresenter extends
 			@Override 
 			public void onSuccess(String url) {
 				getView().getSignInWithGoogleButton().setHref(url);
+			}
+		});
+		
+		// Get the Twitter auth url
+		Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl();
+		authUrlReq.fire(new Receiver<String>() {
+			@Override 
+			public void onSuccess(String url) {
+				getView().getSignInWithTwitterButton().setHref(url);
 			}
 		});
 		

@@ -41,6 +41,8 @@
 				<div class="{style.orDivider}">or</div>
 				<div class="loginContainer">
 					<g:Anchor ui:field="signInWithGoogleButton">Sign in with Google</g:Anchor>
+					<br/>
+					<g:Anchor ui:field="signInWithTwitterButton">Sign in with Twitter</g:Anchor>
 				</div>
 			</g:HTMLPanel>	
 		</div>

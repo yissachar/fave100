@@ -1,5 +1,7 @@
 package com.fave100.client.pages.register;
 
+import twitter4j.Twitter;
+
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -50,11 +52,13 @@ public class RegisterPresenter extends
 		Button getRegisterButton();
 		Button getThirdPartyUsernameSubmitButton();
 		Anchor getRegisterWithGoogleButton();
+		Anchor getRegisterWithTwitterButton();
 	}
 	
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
 	
-	public static final String PROVIDER_GOOGLE = "google";	
+	public static final String PROVIDER_GOOGLE = "google";
+	public static final String PROVIDER_TWITTER = "twitter";
 	
 	@Inject TopBarPresenter topBar;
 
@@ -96,7 +100,7 @@ public class RegisterPresenter extends
 				}
 			}
 		});		
-		
+		// TODO: Captcha
 		
 		String provider = placeRequest.getParameter("provider", "");
 		if(provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
@@ -127,7 +131,36 @@ public class RegisterPresenter extends
 						getProxy().manualReveal(RegisterPresenter.this);
 					}
 				}
-			});			
+			});
+		// TODO: Duplicate code with above, merge where possible	
+		} else if(provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
+			// The user is being redirected back to the register page after signing in to 
+			// their 3rd party account - prompt them for a username and create their account
+			
+			// TODO: Can we do this in one request?
+			// Make sure that the user is actually logged into Twitter
+			Request<Boolean> checkTwitterUser = requestFactory.appUserRequest().isTwitterUserLoggedIn();
+			checkTwitterUser.fire(new Receiver<Boolean>() {
+				@Override
+				public void onSuccess(Boolean loggedIn) {
+					if(loggedIn) {
+						Request<AppUserProxy> loginWithTwitter = requestFactory.appUserRequest().loginWithTwitter();
+						loginWithTwitter.fire(new Receiver<AppUserProxy>() {
+							@Override
+							public void onSuccess(AppUserProxy user) {	
+								if(user != null) {
+									placeManager.revealDefaultPlace();
+								}
+								getProxy().manualReveal(RegisterPresenter.this);
+							}
+						});
+						showThirdPartyUsernamePrompt();
+					} else {						
+						hideThirdPartyUsernamePrompt();
+						getProxy().manualReveal(RegisterPresenter.this);
+					}
+				}
+			});	
 		} else {
 			hideThirdPartyUsernamePrompt();
 			getProxy().manualReveal(RegisterPresenter.this);
@@ -161,6 +194,15 @@ public class RegisterPresenter extends
 			@Override 
 			public void onSuccess(String url) {
 				getView().getRegisterWithGoogleButton().setHref(url);
+			}
+		});
+		
+		// Get the login url for Twitter
+		Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl();
+		authUrlReq.fire(new Receiver<String>() {
+			@Override 
+			public void onSuccess(String url) {
+				getView().getRegisterWithTwitterButton().setHref(url);
 			}
 		});
 		
