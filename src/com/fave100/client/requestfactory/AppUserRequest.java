@@ -36,4 +36,5 @@ public interface AppUserRequest extends RequestContext{
 	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser();
 	
 	Request<Boolean> checkPassword(String password);
+	Request<List<String>> getActivityForUser(String username);
 }

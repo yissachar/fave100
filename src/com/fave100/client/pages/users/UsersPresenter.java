@@ -1,5 +1,7 @@
 package com.fave100.client.pages.users;
 
+import java.util.List;
+
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -25,6 +27,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -127,7 +130,21 @@ public class UsersPresenter extends
 		    	getView().getUserFaveDataGrid().setVisible(false);
 		    	getView().getFave100TabLink().removeStyleName("selected");
 				getView().getActivityTabLink().addStyleName("selected");
-		    	;
+				Request<List<String>> getActivityReq = requestFactory.appUserRequest().getActivityForUser(requestedUsername);
+				getActivityReq.fire(new Receiver<List<String>>() {
+					@Override
+					public void onSuccess(List<String> activityList) {
+						SafeHtmlBuilder builder = new SafeHtmlBuilder();
+						builder.appendHtmlConstant("<ul>");
+						for(String activity : activityList) {
+							builder.appendHtmlConstant("<li>");
+							builder.appendEscaped(activity);
+							builder.appendHtmlConstant("</li>");
+						}
+						builder.appendHtmlConstant("</ul>");
+						getView().getActivityTab().setHTML(builder.toSafeHtml());
+					}
+				});
 		    } else if(tab.equals(UsersPresenter.FAVE_100_TAB)) {
 		    	getView().getUserFaveDataGrid().setVisible(true);
 		    	getView().getActivityTab().setVisible(false);
