@@ -10,7 +10,6 @@ import java.util.List;
 
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.Activity.Transaction;
-import com.google.appengine.api.search.ExpressionParser.name_return;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -23,7 +22,6 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 /**
  * A Fave100 user.
@@ -309,41 +307,66 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		// We will bunch all activities less than a day apart
 		int buncherTimeLimit = 1000*60*60*24;
 	
-		//TODO: This is probably horribly inefficient but is a start
+		// TODO: This is probably horribly inefficient but is a start
+		// TODO: Decide if this how we want to bunch activity or a different way
 		for(List<Activity> activityList : rawActivityList) {
-			ArrayList<Activity> addedActivities = new ArrayList<Activity>();
-			//ArrayList<Activity> removedActivities = new ArrayList<Activity>();
-			//ArrayList<Activity> changedActivities = new ArrayList<Activity>();
 			
-			// Put all activities in the proper array
-			for(Activity activity : activityList) {
-				if(activity.getTransactionType().equals(Transaction.FAVE_ADDED)) {
-					addedActivities.add(activity);
-				}
-			}
-			
-			// Go through all activities and bunch them
-			int counter = 0;
-			for(int i = 0; i < addedActivities.size(); i++) {
-				counter = 0;
-				Activity activity = activityList.get(i);
-				String songName = activity.getSong().get().getTrackName();
-				String message = activity.getUsername() + " added " + songName;
-				boolean checkNextSong = true;
-				while(checkNextSong && i+1 < activityList.size()) {	
-					checkNextSong = false;
-					Activity nextActivity = activityList.get(i+1);
-					i++;
-					if(activity.getTimestamp().getTime()+buncherTimeLimit >= nextActivity.getTimestamp().getTime()) {
-						// The two activities are close enough in time, bunch them
-						counter++;
-						checkNextSong = true;
+			List<Transaction> transactions = new ArrayList<Activity.Transaction>();
+			transactions.add(Transaction.FAVE_ADDED);
+			transactions.add(Transaction.FAVE_REMOVED);
+			transactions.add(Transaction.FAVE_POSITION_CHANGED);
+						
+			// For each transaction type
+			for(Transaction transaction : transactions) {
+				// Go through all activities of that type and bunch them
+				for(int i = 0; i < activityList.size(); i++) {
+					int counter = 0;
+					Activity activity = activityList.get(i);
+					// Begin constructing the message
+					String songName = activity.getSong().get().getTrackName();					
+					String message = "";
+					if(activity.getTransactionType().equals(transaction)) {
+						if(transaction.equals(Transaction.FAVE_ADDED)) {
+							message += activity.getUsername() + " added " + songName;
+						} else if(transaction.equals(Transaction.FAVE_REMOVED)) {
+							message += activity.getUsername() + " removed " + songName;
+						} else if(transaction.equals(Transaction.FAVE_POSITION_CHANGED)) {
+							message += activity.getUsername() + " changed the position of " + songName;
+						}
+					}					
+					// Check for songs of the same activity type and within the time limit, so we can bunch them
+					if(activity.getTransactionType().equals(transaction)) {
+						boolean checkNextSong = true;
+						while(checkNextSong && i+1 < activityList.size()) {
+							Activity nextActivity = activityList.get(i+1);
+							i++;							 
+							if(activity.getTransactionType().equals(transaction) 
+								&& nextActivity.getTransactionType().equals(transaction)) {
+								// The two activities are of the same transaction type, check the time difference
+								checkNextSong = false;
+								if(activity.getTimestamp().getTime()-buncherTimeLimit < nextActivity.getTimestamp().getTime()) {
+									// The two activities are close enough in time - bunch them
+									counter++;
+									checkNextSong = true;
+								}
+							}
+						}
+					}	
+					if(counter == 1) {
+						message += " and 1 other song";
+					} else if(counter > 1) {					
+						message += " and "+counter+" other songs";
+					}
+					if(counter == 0 && transaction.equals(Transaction.FAVE_POSITION_CHANGED)
+						&& message != "") {
+						// Edge case: Sing song changed position, not bunched with other songs
+						message += " from "+activity.getPreviousLocation();
+						message += " to "+activity.getNewLocation();
+					}
+					if(message != "") {
+						faveFeed.add(message);
 					}
 				}
-				if(counter > 0) {
-					message += " and "+counter+" other songs";
-				}
-				faveFeed.add(message);
 			}
 		}
 		// Construct messages based on their activity

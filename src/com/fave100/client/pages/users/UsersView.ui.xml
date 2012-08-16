@@ -36,11 +36,17 @@
 			vertical-align: top;
 		}
 		
+		.tabList {
+			padding: 0;
+		}
 		.tabList li{
 			display: inline;
-			list-style-type: none;
-			padding: 6px;
+			list-style-type: none;			
 			margin-right: 10px;			
+		}
+		
+		.tabList a{
+			padding: 6px;
 		}
 	</ui:style>
 	<g:HTMLPanel>
@@ -52,10 +58,11 @@
 				<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>				
 			</g:HTMLPanel>
 			<ul class="{style.tabList}">
-				<li class="selected"><g:Anchor>Fave100</g:Anchor></li>
-				<li><g:Anchor>Activity</g:Anchor></li>
+				<li><g:Anchor ui:field="fave100TabLink">Fave100</g:Anchor></li>
+				<li><g:Anchor ui:field="activityTabLink">Activity</g:Anchor></li>
 			</ul>			
 			<w:FaveDataGrid ui:field="userFaveDataGrid" styleName="{style.faveList}"/>
+			<g:InlineHTML ui:field="activityTab"/>
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -6,9 +6,11 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -77,6 +79,27 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 	@Override
 	public SpanElement getUsernameSpan() {
 		return username;
+	}
+	
+	@UiField Anchor fave100TabLink;
+
+	@Override
+	public Anchor getFave100TabLink() {
+		return fave100TabLink;
+	}
+	
+	@UiField Anchor activityTabLink;
+
+	@Override
+	public Anchor getActivityTabLink() {
+		return activityTabLink;
+	}
+	
+	@UiField InlineHTML activityTab;
+
+	@Override
+	public InlineHTML getActivityTab() {
+		return activityTab;
 	}
 	
 }
