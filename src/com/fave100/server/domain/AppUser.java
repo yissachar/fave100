@@ -387,6 +387,28 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return faveFeed;
 	}
 	
+	public static List<String> getActivityForUser(String username) {
+		// TODO: some limit over here on how many results to return
+		List<Activity> activityList = ofy().load().type(Activity.class).filter("username", username).list();
+		ArrayList<String> faveFeed = new ArrayList<String>();		
+		for(Activity activity : activityList) {
+			String songName = activity.getSong().get().getTrackName();
+			String message = "";
+			if(activity.getTransactionType().equals(Transaction.FAVE_ADDED)) {
+				message += " Added "+songName;
+			} else if (activity.getTransactionType().equals(Transaction.FAVE_REMOVED)) {
+				message += " Removed "+songName;
+			} else if (activity.getTransactionType().equals(Transaction.FAVE_POSITION_CHANGED)) {
+				message += " Changed the position of "+songName+" from "+activity.getPreviousLocation();
+				message += " To "+activity.getNewLocation();
+			}
+			if(message != "") {
+				faveFeed.add(message);
+			}			
+		}
+		return faveFeed;
+	}
+	
 	public static void followUser(String username) {
 		// TODO: Check for already following to prevent duplicates
 		// TODO: Need a better method of message passing than RuntimeExceptions
