@@ -2,8 +2,10 @@ package com.fave100.client.pages.login;
 
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
@@ -12,6 +14,7 @@ import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -20,6 +23,7 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -38,12 +42,16 @@ public class LoginPresenter extends
 		Anchor getSignInWithGoogleButton();
 		Anchor getSignInWithTwitterButton();
 	}
+	
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.login)
 	public interface MyProxy extends ProxyPlace<LoginPresenter> {
 	}
 	
+	@Inject private TopBarPresenter topBar;
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
 	
@@ -95,12 +103,11 @@ public class LoginPresenter extends
 						getView().getPasswordInput().getValue());
 
 				// Clear the inputs immediately
-				getView().getUsernameInput().setValue("");
 				getView().getPasswordInput().setValue("");
+				getView().getLoginStatusMessage().setInnerText("");
 				loginReq.fire(new Receiver<AppUserProxy>() {
 					@Override
-					public void onSuccess(AppUserProxy appUser) {						
-						getView().getLoginStatusMessage().setInnerText("");
+					public void onSuccess(AppUserProxy appUser) {
 						placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
 					}
 					@Override
@@ -111,4 +118,10 @@ public class LoginPresenter extends
 			}
 		}));
 	}
+	
+	@Override
+	protected void onReveal() {
+	    super.onReveal();
+	    setInSlot(TOP_BAR_SLOT, topBar);
+	}	
 }
