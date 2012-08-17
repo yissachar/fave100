@@ -39,8 +39,7 @@ public class MyFave100View extends ViewImpl implements
 	@Override
 	public void setInSlot(Object slot, Widget content) {
 		if(slot == MyFave100Presenter.TOP_BAR_SLOT) {
-			topBar.clear();
-			
+			topBar.clear();			
 			if(content != null) {
 				topBar.add(content);
 			}

@@ -14,6 +14,7 @@ public class MusicSuggestionOracle extends MultiWordSuggestOracle{
 	
 	private Map<String, String> suggestionList = new HashMap<String, String>();
 	
+	// TODO: Need to enforce saftey of display string here, otherwise XSS
 	public void addSuggestion(String replacementString, String displayString) {
 		suggestionList.put(replacementString, displayString);
 		this.add(replacementString);

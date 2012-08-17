@@ -81,6 +81,7 @@ public class MyFave100Presenter extends
 				SuggestionResult faveItemMap = getView().getSongSuggestBox().getFromSuggestionMap(selectedItem.getReplacementString());				
 				// and turn it into an SongProxy
 				SongProxy songProxy = songRequest.create(SongProxy.class);
+				// Need to use AutoBeans to copy, as Request Factory won't allow reuse
 	       		AutoBean<SuggestionResult> autoBean = AutoBeanUtils.getAutoBean(faveItemMap);
 				AutoBean<SongProxy> newBean = AutoBeanUtils.getAutoBean(songProxy);
 				AutoBeanCodex.decodeInto(AutoBeanCodex.encode(autoBean), newBean);				
@@ -94,6 +95,7 @@ public class MyFave100Presenter extends
 					}
 					@Override
 					public void onFailure(ServerFailure failure) {
+						// TODO: This shouldn't just spit out any error
 						SideNotification.show(failure.getMessage().replace("Server Error:", ""), true);
 					}
 				});
