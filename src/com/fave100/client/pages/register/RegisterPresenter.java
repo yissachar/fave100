@@ -139,11 +139,11 @@ public class RegisterPresenter extends
 			
 			// TODO: Can we do this in one request?
 			// Make sure that the user is actually logged into Twitter
-			Request<Boolean> checkTwitterUser = requestFactory.appUserRequest().isTwitterUserLoggedIn();
+			/*Request<Boolean> checkTwitterUser = requestFactory.appUserRequest().isTwitterUserLoggedIn();
 			checkTwitterUser.fire(new Receiver<Boolean>() {
 				@Override
 				public void onSuccess(Boolean loggedIn) {
-					if(loggedIn) {
+					if(loggedIn) {Window.alert("logged in twitter");
 						Request<AppUserProxy> loginWithTwitter = requestFactory.appUserRequest().loginWithTwitter();
 						loginWithTwitter.fire(new Receiver<AppUserProxy>() {
 							@Override
@@ -155,12 +155,12 @@ public class RegisterPresenter extends
 							}
 						});
 						showThirdPartyUsernamePrompt();
-					} else {						
+					} else {						Window.alert("not logged in twitter");
 						hideThirdPartyUsernamePrompt();
 						getProxy().manualReveal(RegisterPresenter.this);
 					}
 				}
-			});	
+			});	*/
 		} else {
 			hideThirdPartyUsernamePrompt();
 			getProxy().manualReveal(RegisterPresenter.this);
@@ -197,7 +197,8 @@ public class RegisterPresenter extends
 			}
 		});
 		
-		// Get the login url for Twitter
+		// TODO: Auth url will expire - need to regenerate on click, not on page refresh
+		// Get the auth url for Twitter
 		Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl();
 		authUrlReq.fire(new Receiver<String>() {
 			@Override 
