@@ -26,10 +26,10 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 		return widget;
 	}
 	
-	@UiField SpanElement logInLogOutLink;
+	@UiField InlineHyperlink logInLogOutLink;
 
 	@Override
-	public SpanElement getLogInLogOutLink() {
+	public InlineHyperlink getLogInLogOutLink() {
 		return logInLogOutLink;
 	}
 	
