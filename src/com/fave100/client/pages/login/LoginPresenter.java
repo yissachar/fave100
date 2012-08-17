@@ -54,6 +54,8 @@ public class LoginPresenter extends
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
+		//TODO: Should we have autocomplete for the username box?
+		// See: http://code.google.com/p/google-web-toolkit-incubator/wiki/LoginSecurityFAQ
 	}
 
 	@Override

@@ -25,9 +25,9 @@ public class Fave100 implements EntryPoint {
 		// This is required for Gwt-Platform proxy's generator		
 		DelayedBindRegistry.bind(ginjector);
 		
-		checkPassword();
+		//checkPassword();
 	
-		//ginjector.getPlaceManager().revealCurrentPlace();
+		ginjector.getPlaceManager().revealCurrentPlace();
 	}
 	
 	private void checkPassword() {
