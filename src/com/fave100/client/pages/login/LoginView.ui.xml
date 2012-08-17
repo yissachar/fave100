@@ -25,6 +25,7 @@
 		}
 	</ui:style>
 	<g:HTMLPanel>
+		<g:HTMLPanel ui:field="topBar"/>
 		<div class="container">
 			<h1>Fave100 Sign In</h1>
 			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">

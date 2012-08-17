@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -26,6 +27,19 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
 	@Override
 	public Widget asWidget() {
 		return widget;
+	}
+	
+	@UiField HTMLPanel topBar;
+	
+	@Override
+	public void setInSlot(Object slot, Widget content) {
+		if(slot == LoginPresenter.TOP_BAR_SLOT) {
+			topBar.clear();			
+			if(content != null) {
+				topBar.add(content);
+			}
+		}
+		super.setInSlot(slot, content);
 	}
 	
 	@UiField Button loginButton;
