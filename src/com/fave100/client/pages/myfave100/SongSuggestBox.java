@@ -48,7 +48,7 @@ public class SongSuggestBox extends SuggestBox{
 				//To restrict amount of queries, don't bother searching unless more than 200ms have passed
 				//since the last keystroke.		
 				suggestionsTimer.cancel();
-				// don't search if it was just an arrow key being pressed
+				// Don't search if it was just an arrow key being pressed
 				if(!KeyCodeEvent.isArrow(event.getNativeKeyCode()) && event.getNativeKeyCode() != KeyCodes.KEY_ENTER) {
 					suggestionsTimer.schedule(200);
 				}
@@ -72,8 +72,8 @@ public class SongSuggestBox extends SuggestBox{
 		// TODO: type "gr" then backspace twice and type "o", if "gr" request really long
 		// e.g. 6 seconds and "o" request very short, e.g. 100 ms, autocomplete will show results for 
 		// "gr" when it should really show for "o"
-		// solution, store requests in array, whenver request completes, clear it and any
-		// other reqeuests with lower index
+		// solution: store requests in array, whenever request completes, clear it and any
+		// other requests with lower index
 		jsonp.requestObject(url, new AsyncCallback<JavaScriptObject>() {			
 	       	public void onSuccess(JavaScriptObject jsObject) {	       		
 	       		// Turn the resulting JavaScriptObject into an AutoBean
