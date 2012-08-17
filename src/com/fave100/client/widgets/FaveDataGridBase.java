@@ -1,5 +1,7 @@
 package com.fave100.client.widgets;
 
+import static com.google.gwt.query.client.GQuery.$;
+
 import com.fave100.client.requestfactory.FaveListItem;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -76,16 +78,13 @@ public class FaveDataGridBase extends DataGrid<FaveListItem>{
 		int tableSize = 0;
 		for(int i = 0; i < getRowCount(); i++) {
 			//extra pixels because of border+padding
-			Element elem = getRowElement(i);
-			tableSize += elem.getClientHeight()+5;
+			//Element elem = getRowElement(i);
+			//tableSize += elem.getClientHeight()+5;
+			tableSize += $(getRowElement(i)).outerHeight(true);
 		}
-		int minSize = 120;
-		if(tableSize < minSize) {
-			// Force a minimum size
-			setHeight(minSize+"px");
-		} else {
-			// Add a couple of extra pixels for good measure
-			setHeight(tableSize+20+"px");
-		}
+		tableSize += $(getTableHeadElement()).outerHeight(true);
+		// Some breathing room, just in case
+		tableSize += 5;
+		setHeight(tableSize+"px");
 	}
 }

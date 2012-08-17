@@ -6,6 +6,11 @@ import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.Window;
 
+/**
+ * Side ribbon to alert users about various actions/errors
+ * @author yissachar.radcliffe
+ *
+ */
 public class SideNotification {
 	
 	public static void show(String message) {

@@ -36,21 +36,19 @@ public class HomePresenter extends
 	
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
-
-	@Inject TopBarPresenter topBar;
-	
-	private ApplicationRequestFactory requestFactory;
 	
 	@ProxyCodeSplit
 	@NameToken(NameTokens.home)
 	public interface MyProxy extends ProxyPlace<HomePresenter> {
 	}
+	
+	@Inject private TopBarPresenter topBar;	
+	@Inject private ApplicationRequestFactory requestFactory;
 
 	@Inject
 	public HomePresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory) {
+			final MyProxy proxy) {
 		super(eventBus, view, proxy);
-		this.requestFactory = requestFactory;
 	}
 
 	@Override
@@ -61,7 +59,9 @@ public class HomePresenter extends
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
-	    setInSlot(TOP_BAR_SLOT, topBar);	    
+	    setInSlot(TOP_BAR_SLOT, topBar);
+	    
+	    // Get the master Fave list
 	    AppUserRequest appUserRequest = requestFactory.appUserRequest();
 	    Request<List<SongProxy>> masterFaveListReq = appUserRequest.getMasterFaveList();
 	    masterFaveListReq.fire(new Receiver<List<SongProxy>>() {
