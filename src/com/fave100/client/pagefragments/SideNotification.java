@@ -19,7 +19,8 @@ public class SideNotification {
 	
 	public static void show(String message, boolean error, int delay) {
 		GQuery $sideNotification = $(".sideNotification");
-		if($sideNotification.length() == 0) {						
+		if($sideNotification.length() == 0) {				
+			// If the side notification div does not exist yet, create it
 			$("<div>/div>").insertAfter($("div").first()).addClass("sideNotification");
 			$sideNotification = $(".sideNotification");
 		} 
