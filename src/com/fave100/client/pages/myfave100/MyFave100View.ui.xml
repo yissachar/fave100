@@ -14,6 +14,6 @@
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>		
 		<g:SuggestBox ui:field="songSuggestBox"/>
-		<d:UserFaveDataGrid ui:field="faveList" styleName="{style.faveList}"/>
+		<d:PersonalFaveList ui:field="personalFaveList" styleName="{style.faveList}"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

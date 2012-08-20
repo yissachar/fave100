@@ -73,7 +73,7 @@
 				<li><g:Anchor ui:field="fave100TabLink">Fave100</g:Anchor></li>
 				<li><g:Anchor ui:field="activityTabLink">Activity</g:Anchor></li>
 			</ul>			
-			<w:FaveDataGrid ui:field="userFaveDataGrid" styleName="{style.faveList}"/>
+			<w:FaveList ui:field="userFaveList" styleName="{style.faveList}"/>			
 			<g:InlineHTML ui:field="activityTab" styleName="{style.activityTab}"/>
 		</div>
 	</g:HTMLPanel>

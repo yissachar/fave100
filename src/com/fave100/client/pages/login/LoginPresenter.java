@@ -108,7 +108,8 @@ public class LoginPresenter extends
 				loginReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(AppUserProxy appUser) {
-						placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
+						getView().getUsernameInput().setValue("");
+						placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));						
 					}
 					@Override
 					public void onFailure(ServerFailure failure) {
