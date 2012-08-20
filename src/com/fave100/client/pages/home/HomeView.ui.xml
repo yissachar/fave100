@@ -15,6 +15,7 @@
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
 		<h1>Welcome to Fave100</h1>
-		<w:FaveDataGrid ui:field="masterFaveDataGrid" styleName="{style.faveList}"/>		
+		<w:FaveDataGrid ui:field="masterFaveDataGrid" styleName="{style.faveList}"/>
+		<w:FaveListBase ui:field="masterFaveList"/>	
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -107,8 +107,8 @@ public class UsersPresenter extends
 			});
 			
 			// Update user profile
-		    Request<AppUserProxy> masterFaveListReq = requestFactory.appUserRequest().findAppUser(requestedUsername).with("fave100Songs");
-		    masterFaveListReq.fire(new Receiver<AppUserProxy>() {
+		    Request<AppUserProxy> userFaveListReq = requestFactory.appUserRequest().findAppUser(requestedUsername).with("fave100Songs");
+		    userFaveListReq.fire(new Receiver<AppUserProxy>() {
 		    	@Override
 		    	public void onSuccess(AppUserProxy user) {
 		    		if(user != null) {	    				

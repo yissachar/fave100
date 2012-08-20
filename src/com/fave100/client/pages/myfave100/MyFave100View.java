@@ -26,7 +26,7 @@ public class MyFave100View extends ViewImpl implements
 		songSuggestBox = new SongSuggestBox(suggestions, requestFactory);
 		faveList = new UserFaveDataGrid(requestFactory);
 		widget = binder.createAndBindUi(this);
-		songSuggestBox.getElement().setAttribute("placeholder", "Search songs...");
+		songSuggestBox.getElement().setAttribute("placeholder", "Add a song...");
 	}
 
 	@Override

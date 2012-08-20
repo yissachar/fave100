@@ -66,6 +66,7 @@ public class UserlistPresenter extends
 		userListReq.fire(new Receiver<List<AppUserProxy>>() {
 			@Override
 			public void onSuccess(List<AppUserProxy> userList) {
+				// TODO: This needs to be safeHTML				
 				String output = "<ul>";				
 				for(AppUserProxy user : userList) {
 					output += "<li>";

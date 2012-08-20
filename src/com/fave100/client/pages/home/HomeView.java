@@ -2,6 +2,7 @@ package com.fave100.client.pages.home;
 
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.widgets.FaveDataGrid;
+import com.fave100.client.widgets.FaveListBase;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -20,7 +21,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	
 	@Inject
 	public HomeView(final Binder binder, final ApplicationRequestFactory requestFactory) {
-		masterFaveDataGrid = new FaveDataGrid(requestFactory);
+		masterFaveDataGrid = new FaveDataGrid(requestFactory);		
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -45,5 +46,12 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	@Override
 	public FaveDataGrid getMasterFaveDataGrid() {
 		return masterFaveDataGrid;
+	}
+	
+	@UiField FaveListBase masterFaveList;
+
+	@Override
+	public FaveListBase getMasterFaveList() {
+		return masterFaveList;
 	}
 }
