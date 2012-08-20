@@ -2,10 +2,15 @@ html, *{
 	margin: 0px;
 	padding 0px;
 }
+html{
+	height: 100%;
+}
+
 body{
 	background-color: #F9F9F9;
 	font-family: Helvetica,sans-serif;
 	color: #454;
+	height: 100%;
 }
 
 /*
@@ -119,6 +124,16 @@ button:disabled:hover{
 	font-style: italic;
 }
 
+/* Fave List Cell List! */
+.faveList div:nth-child(even) {
+	background-color: #FFF !important;
+}
+.faveList div:nth-child(odd) {
+	background-color: #EEE !important;
+}
+.faveList div{
+	border: 1px solid #999;
+}
 /* Fave List Data Grid */
 .faveList tr:nth-child(even) {
 	background-color: #FFF !important;

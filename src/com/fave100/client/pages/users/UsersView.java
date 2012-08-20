@@ -1,7 +1,7 @@
 package com.fave100.client.pages.users;
 
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.widgets.FaveDataGrid;
+import com.fave100.client.widgets.FaveList;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -21,11 +21,11 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 	public interface Binder extends UiBinder<Widget, UsersView> {		
 	}
 	
-	@UiField(provided = true) FaveDataGrid userFaveDataGrid;
+	@UiField(provided = true) FaveList userFaveList;
 
 	@Inject
 	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
-		userFaveDataGrid = new FaveDataGrid(requestFactory);
+		userFaveList = new FaveList(requestFactory);
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -53,11 +53,6 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 	@Override
 	public HTMLPanel getUserProfile() {
 		return userProfile;
-	}
-	
-	@Override
-	public FaveDataGrid getUserFaveDataGrid() {
-		return userFaveDataGrid;
 	}
 	
 	@UiField Button followButton;	
@@ -100,6 +95,11 @@ public class UsersView extends ViewImpl implements UsersPresenter.MyView {
 	@Override
 	public InlineHTML getActivityTab() {
 		return activityTab;
+	}	
+
+	@Override
+	public FaveList getUserFaveList() {
+		return userFaveList;
 	}
 	
 }

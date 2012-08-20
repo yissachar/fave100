@@ -1,6 +1,5 @@
 package com.fave100.client.pages.home;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.gwtplatform.mvp.client.Presenter;
@@ -12,21 +11,13 @@ import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.FaveListItem;
 import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.client.widgets.FaveDataGrid;
-import com.fave100.client.widgets.FaveItemCell;
-import com.fave100.client.widgets.FaveListBase;
+import com.fave100.client.widgets.FaveList;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.gwt.cell.client.Cell;
-import com.google.gwt.cell.client.CompositeCell;
-import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.HasCell;
-import com.google.gwt.cell.client.TextInputCell;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
@@ -40,8 +31,7 @@ public class HomePresenter extends
 		Presenter<HomePresenter.MyView, HomePresenter.MyProxy> {
 
 	public interface MyView extends View {
-		FaveDataGrid getMasterFaveDataGrid();
-		FaveListBase getMasterFaveList();
+		FaveList getMasterFaveList();
 	}
 	
 	@ContentSlot
@@ -77,10 +67,6 @@ public class HomePresenter extends
 	    masterFaveListReq.fire(new Receiver<List<SongProxy>>() {
 	    	@Override
 	    	public void onSuccess(List<SongProxy> masterFaveList) {
-	    		getView().getMasterFaveDataGrid().setRowData(masterFaveList);
-	    		getView().getMasterFaveDataGrid().resizeFaveList();
-	    		// Test
-	    		CompositeCell<FaveListItem> cell = new CompositeCell<FaveListItem>(cells);
 	    		getView().getMasterFaveList().setRowData(masterFaveList);
 	    	}
 	    });	    

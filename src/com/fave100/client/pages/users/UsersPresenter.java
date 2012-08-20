@@ -13,7 +13,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.widgets.FaveDataGrid;
+import com.fave100.client.widgets.FaveList;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
@@ -43,7 +43,7 @@ public class UsersPresenter extends
 		Image getAvatar();
 		SpanElement getUsernameSpan();		
 		Button getFollowButton();
-		FaveDataGrid getUserFaveDataGrid();
+		FaveList getUserFaveList();
 		Anchor getFave100TabLink();
 		Anchor getActivityTabLink();
 		InlineHTML getActivityTab();
@@ -115,8 +115,7 @@ public class UsersPresenter extends
 		    			// Upate user profile
 	    				getView().getAvatar().setUrl(user.getAvatar());
 	    				getView().getUsernameSpan().setInnerText(user.getUsername());
-	    	    		getView().getUserFaveDataGrid().setRowData(user.getFave100Songs());
-	    	    		getView().getUserFaveDataGrid().resizeFaveList();
+	    	    		getView().getUserFaveList().setRowData(user.getFave100Songs());
 	    			} else {
 	    				placeManager.revealDefaultPlace();
 	    			}
@@ -127,7 +126,7 @@ public class UsersPresenter extends
 		    String tab = placeRequest.getParameter("tab", UsersPresenter.FAVE_100_TAB);
 		    if(tab.equals(UsersPresenter.ACTIVITY_TAB)) {
 		    	getView().getActivityTab().setVisible(true);
-		    	getView().getUserFaveDataGrid().setVisible(false);
+		    	getView().getUserFaveList().setVisible(false);
 		    	getView().getFave100TabLink().removeStyleName("selected");
 				getView().getActivityTabLink().addStyleName("selected");
 				Request<List<String>> getActivityReq = requestFactory.appUserRequest().getActivityForUser(requestedUsername);
@@ -146,7 +145,7 @@ public class UsersPresenter extends
 					}
 				});
 		    } else if(tab.equals(UsersPresenter.FAVE_100_TAB)) {
-		    	getView().getUserFaveDataGrid().setVisible(true);
+		    	getView().getUserFaveList().setVisible(true);
 		    	getView().getActivityTab().setVisible(false);
 		    	getView().getActivityTabLink().removeStyleName("selected");
 				getView().getFave100TabLink().addStyleName("selected");

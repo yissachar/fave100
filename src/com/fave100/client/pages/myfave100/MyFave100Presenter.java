@@ -45,7 +45,7 @@ public class MyFave100Presenter extends
 
 	public interface MyView extends View {
 		SongSuggestBox getSongSuggestBox();
-		UserFaveDataGrid getFaveList();
+		PersonalFaveList getPersonalFaveList();
 	}
 
 	@ProxyCodeSplit
@@ -91,7 +91,7 @@ public class MyFave100Presenter extends
 				createReq.fire(new Receiver<Void>() {
 					@Override
 					public void onSuccess(Void response) {
-						getView().getFaveList().refreshFaveList();
+						getView().getPersonalFaveList().refreshList();
 					}
 					@Override
 					public void onFailure(ServerFailure failure) {
@@ -110,6 +110,6 @@ public class MyFave100Presenter extends
 	protected void onReveal() {
 	    super.onReveal();
 	    setInSlot(TOP_BAR_SLOT, topBar);
-	    getView().getFaveList().refreshFaveList();	
+	    getView().getPersonalFaveList().refreshList();
 	}
 }
