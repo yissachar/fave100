@@ -94,7 +94,8 @@ public class RegisterPresenter extends
 			public void onSuccess(AppUserProxy user) {
 				if(user != null) {
 					// TODO: Gatekeeper instead? (need CurrentUser class in order for that to work,
-					// instead of RF every request)
+					// instead of RF every request, uses evebts)
+					
 					// Logged in user trying to register: redirect them to home
 					placeManager.revealDefaultPlace();
 				}
