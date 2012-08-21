@@ -5,4 +5,6 @@ public interface FaveListItem {
 	String getArtistName();
 	String getTrackViewUrl();
 	String getReleaseYear();
+	String getArtworkUrl60();
+	String getWhyline();
 }

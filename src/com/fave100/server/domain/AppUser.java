@@ -2,12 +2,7 @@ package com.fave100.server.domain;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,19 +55,19 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	
 	public AppUser() {}
 	
-	public AppUser(String username, String password, String email) {
+	public AppUser(final String username, final String password, final String email) {
 		this.username = username;
 		this.email = email;
 		this.setFaveFeedLastChecked(new Date());
 		setPassword(password);
 	}
 	
-	public static AppUser findAppUser(String username) {
+	public static AppUser findAppUser(final String username) {
 		return ofy().load().type(AppUser.class).id(username).get();
 	}
 	
-	public static AppUser findAppUserByGoogleId(String googleID) {
-		GoogleID gId = ofy().load().type(GoogleID.class).id(googleID).get();
+	public static AppUser findAppUserByGoogleId(final String googleID) {
+		final GoogleID gId = ofy().load().type(GoogleID.class).id(googleID).get();
 		if(gId != null) {			
 			return ofy().load().type(AppUser.class).id(gId.getUsername()).get();
 		} else {
@@ -80,8 +75,8 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}			
 	}
 	
-	public static AppUser findAppUserByTwitterId(long twitterID) {
-		TwitterID tId = ofy().load().type(TwitterID.class).id(twitterID).get();
+	public static AppUser findAppUserByTwitterId(final long twitterID) {
+		final TwitterID tId = ofy().load().type(TwitterID.class).id(twitterID).get();
 		if(tId != null) {			
 			return ofy().load().type(AppUser.class).id(tId.getUsername()).get();
 		} else {
@@ -89,7 +84,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}			
 	}
 	
-	public static AppUser login(String username, String password) {
+	public static AppUser login(final String username, final String password) {
 		AppUser loggedInUser;
 		loggedInUser = findAppUser(username);		
 		if(loggedInUser != null) {
@@ -103,8 +98,8 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	
 	public static AppUser loginWithGoogle() {
 		AppUser loggedInUser;
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
+		final UserService userService = UserServiceFactory.getUserService();
+		final User user = userService.getCurrentUser();
 		if(user == null) return null;		
 		loggedInUser = findAppUserByGoogleId(user.getUserId());			
 		if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());		
@@ -112,21 +107,21 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static String getTwitterAuthUrl() {
-		Twitter twitter = new TwitterFactory().getInstance();
+		final Twitter twitter = new TwitterFactory().getInstance();
 		//twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
 		twitter.setOAuthConsumer("GXXfKwE5cXgoXCfghEAg", "cec1qLagfRSc0EDOo5r5iR8VUNKfw7DIo6GRuswgs");
 		
 		try {
-			RequestToken requestToken = twitter.getOAuthRequestToken();
+			final RequestToken requestToken = twitter.getOAuthRequestToken();
 			//String token = requestToken.getToken();
 			//String tokenSecret = requestToken.getTokenSecret();
-			String token = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
-			String tokenSecret = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
+			final String token = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
+			final String tokenSecret = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
 			
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("token", token);
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("tokenSecret", tokenSecret);
 			return(requestToken.getAuthorizationURL());
-		} catch (TwitterException e) {
+		} catch (final TwitterException e) {
 			// TODO Auto-generated catch block			
 			e.printStackTrace();
 		}
@@ -141,20 +136,20 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}
 	}
 	public static twitter4j.User getTwitterUser() {
-		Twitter twitter = new TwitterFactory().getInstance();
+		final Twitter twitter = new TwitterFactory().getInstance();
 		//twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
 		twitter.setOAuthConsumer("GXXfKwE5cXgoXCfghEAg", "cec1qLagfRSc0EDOo5r5iR8VUNKfw7DIo6GRuswgs");
 		//String token = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("token");
 		//String tokenSecret = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("tokenSecret");
-		String token = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
-		String tokenSecret = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
+		final String token = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
+		final String tokenSecret = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
 		try {
-			RequestToken requestToken = new RequestToken(token, tokenSecret);
-			AccessToken accessToken = twitter.getOAuthAccessToken(requestToken);
+			final RequestToken requestToken = new RequestToken(token, tokenSecret);
+			final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken);
 			twitter.setOAuthAccessToken(accessToken);
-			twitter4j.User twitterUser = twitter.verifyCredentials();
+			final twitter4j.User twitterUser = twitter.verifyCredentials();
 			return twitterUser;
-		} catch (TwitterException e1) {
+		} catch (final TwitterException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -162,9 +157,9 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static AppUser loginWithTwitter() {
-		twitter4j.User twitterUser = getTwitterUser();
+		final twitter4j.User twitterUser = getTwitterUser();
 		if(twitterUser != null) {
-			AppUser loggedInUser = findAppUserByTwitterId(twitterUser.getId());			
+			final AppUser loggedInUser = findAppUserByTwitterId(twitterUser.getId());			
 			if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());		
 			return loggedInUser;
 		}
@@ -180,19 +175,19 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	 * into the app)
 	 */
 	public static boolean isGoogleUserLoggedIn() {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
+		final UserService userService = UserServiceFactory.getUserService();
+		final User user = userService.getCurrentUser();
 		if(user != null) {
 			return true;
 		}
 		return false;
 	}
 	
-	public static String getGoogleLoginURL(String destinationURL) {
+	public static String getGoogleLoginURL(final String destinationURL) {
 		return UserServiceFactory.getUserService().createLoginURL(destinationURL);
 	}
 	
-	public static String getGoogleLogoutURL(String destinationURL) {
+	public static String getGoogleLogoutURL(final String destinationURL) {
 		return UserServiceFactory.getUserService().createLogoutURL(destinationURL);
 	}
 	
@@ -200,9 +195,9 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	 * For when we want to get the correct URL depending on if the 
 	 * user is logged in or not, with a single request
 	 */	
-	public static String getGoogleLoginLogoutURL(String destinationURL) {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
+	public static String getGoogleLoginLogoutURL(final String destinationURL) {
+		final UserService userService = UserServiceFactory.getUserService();
+		final User user = userService.getCurrentUser();
 		if(user == null) {
 			return userService.createLoginURL(destinationURL);
 		}
@@ -210,7 +205,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static AppUser getLoggedInAppUser() {
-		String username = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
+		final String username = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
 		if(username != null) {
 			return ofy().load().type(AppUser.class).id(username).get();
 		} else {
@@ -221,13 +216,14 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	public static AppUser createAppUser(final String username, final String password, final String email) {
 		// TODO: Disallow username white-space, other special characters?, validate password not null, username not null		
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely 
-		AppUser newAppUser = ofy().transact(new Work<AppUser>() {
+		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
+			@Override
 			public AppUser run() {
 				if(ofy().load().type(AppUser.class).id(username).get() != null) {
 					throw new RuntimeException("A user with that name already exists");
 				} else {
 					// Create the user
-					AppUser appUser = new AppUser(username, password, email);
+					final AppUser appUser = new AppUser(username, password, email);
 					ofy().save().entity(appUser).now();
 					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 					return appUser;
@@ -240,10 +236,11 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	public static AppUser createAppUserFromGoogleAccount(final String username) {
 		// TODO: Disallow white-space, other special characters?		
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely 
-		AppUser newAppUser = ofy().transact(new Work<AppUser>() {
+		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
+			@Override
 			public AppUser run() {
-				UserService userService = UserServiceFactory.getUserService();
-				User user = userService.getCurrentUser();
+				final UserService userService = UserServiceFactory.getUserService();
+				final User user = userService.getCurrentUser();
 				if(ofy().load().type(AppUser.class).id(username).get() != null) {
 					throw new RuntimeException("A user with that name already exists");
 				}
@@ -251,11 +248,11 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 					throw new RuntimeException("There is already a Fave100 account associated with this Google ID");
 				} 
 				// Create the user
-				AppUser appUser = new AppUser();
+				final AppUser appUser = new AppUser();
 				appUser.setUsername(username);
 				appUser.setEmail(user.getEmail());
 				// Create the GoogleID lookup
-				GoogleID googleID = new GoogleID(user.getUserId(), username);			
+				final GoogleID googleID = new GoogleID(user.getUserId(), username);			
 				ofy().save().entities(appUser, googleID).now();					
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 				return appUser;
@@ -270,15 +267,15 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return ofy().load().type(AppUser.class).list();
 	}
 	
-	public static void addFaveItemForCurrentUser(Long songID, Song songProxy) {
+	public static void addFaveItemForCurrentUser(final Long songID, final Song songProxy) {
 		// TODO: Verify integrity of songProxy on server-side? 
-		AppUser currentUser = AppUser.getLoggedInAppUser();
+		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) {
 			throw new RuntimeException("Please log in to complete this action");
 			//return false;
 		}
 		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");;		
-		Song song = ofy().load().type(Song.class).id(songID).get();		
+		final Song song = ofy().load().type(Song.class).id(songID).get();		
 		boolean unique = true;
 		// If the song does not exist, create it
 		if(song == null) {
@@ -286,25 +283,25 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			ofy().save().entity(songProxy);
 		} else {
 			// Check if it is a unique song for this user
-			for(FaveItem faveItem : currentUser.fave100Songs) {
+			for(final FaveItem faveItem : currentUser.fave100Songs) {
 				if(faveItem.getSong().get().getId().equals(song.getId())) unique = false;
 			}
 		}
 		if(unique == false) throw new RuntimeException("The song is already in your list");;
 		// Create the new FaveItem 
-		FaveItem newFaveItem = new FaveItem();
-		Ref<Song> songRef = Ref.create(Key.create(Song.class, songID));
+		final FaveItem newFaveItem = new FaveItem();
+		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songID));
 		newFaveItem.setSong(songRef);
 		currentUser.fave100Songs.add(newFaveItem);
-		Activity activity = new Activity(currentUser.username, Transaction.FAVE_ADDED);
+		final Activity activity = new Activity(currentUser.username, Transaction.FAVE_ADDED);
 		activity.setSong(songRef);
 		ofy().save().entities(currentUser, activity).now();
 	}
 	
-	public static void removeFaveItemForCurrentUser(int index) {
-		AppUser currentUser = AppUser.getLoggedInAppUser();
+	public static void removeFaveItemForCurrentUser(final int index) {
+		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;		
-		Activity activity = new Activity(currentUser.username, Transaction.FAVE_REMOVED);
+		final Activity activity = new Activity(currentUser.username, Transaction.FAVE_REMOVED);
 		activity.setSong(currentUser.fave100Songs.get(index).getSong());
 		currentUser.fave100Songs.remove(index);
 		ofy().save().entities(currentUser, activity).now();	
@@ -315,28 +312,38 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		// For some reason this throws a illegal state exception about deregistering a transaction that is not registered
 //		ofy().transact(new VoidWork() {
 //			public void vrun() {
-				AppUser currentUser = AppUser.getLoggedInAppUser();
+				final AppUser currentUser = AppUser.getLoggedInAppUser();
 				if(currentUser == null) return;	
-				Activity activity = new Activity(currentUser.username, Transaction.FAVE_POSITION_CHANGED);
+				final Activity activity = new Activity(currentUser.username, Transaction.FAVE_POSITION_CHANGED);
 				activity.setSong(currentUser.fave100Songs.get(currentIndex).getSong());
 				activity.setPreviousLocation(currentIndex+1);
 				activity.setNewLocation(newIndex+1);
-				FaveItem faveAtCurrIndex = currentUser.fave100Songs.remove(currentIndex);
+				final FaveItem faveAtCurrIndex = currentUser.fave100Songs.remove(currentIndex);
 				currentUser.fave100Songs.add(newIndex, faveAtCurrIndex);				
 				ofy().save().entities(currentUser, activity).now();
 //			}
 //		});		
 	}
 	
+	public static void editWhyline(final int index, final String whyline) {
+		//TODO: Sanitize the string
+		//TODO: Length restriction?
+		final AppUser currentUser = AppUser.getLoggedInAppUser();
+		if(currentUser == null) return;
+		currentUser.fave100Songs.get(index).setWhyline(whyline);
+		ofy().save().entity(currentUser).now();
+	}
+	
 	public static List<FaveItem> getFaveItemsForCurrentUser() {
-		AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) return null;
-		for(FaveItem faveItem : currentUser.fave100Songs) {
-			Song song = faveItem.getSong().get();
+		final AppUser currentUser = getLoggedInAppUser();
+		if(currentUser == null) return null;//TODO: use onload and @Load instead
+		for(final FaveItem faveItem : currentUser.fave100Songs) {
+			final Song song = faveItem.getSong().get();
 			faveItem.setTrackName(song.getTrackName());
 			faveItem.setArtistName(song.getArtistName());
 			faveItem.setTrackViewUrl(song.getTrackViewUrl());
 			faveItem.setReleaseYear(song.getReleaseYear());
+			faveItem.setArtworkUrl60(song.getArtworkUrl60());
 		}
 		return currentUser.fave100Songs;
 	}
@@ -344,36 +351,36 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	public static List<Song> getMasterFaveList() {
 		// TODO: For now, run on ever page refresh but should really be a background task
 		// TODO: Performance critical - optimize! This code is horrible performance-wise!
-		List<Song> allSongs = ofy().load().type(Song.class).list();
-		for(Song song : allSongs) {
+		final List<Song> allSongs = ofy().load().type(Song.class).list();
+		for(final Song song : allSongs) {
 			song.setScore(0);
 			ofy().save().entity(song).now();
 		}		
-		List<AppUser> allAppUsers = ofy().load().type(AppUser.class).list();
-		for(AppUser appUser : allAppUsers) {
+		final List<AppUser> allAppUsers = ofy().load().type(AppUser.class).list();
+		for(final AppUser appUser : allAppUsers) {
 			for(int i = 0; i < appUser.fave100Songs.size(); i++) {
-				Song song = appUser.fave100Songs.get(i).getSong().get();
+				final Song song = appUser.fave100Songs.get(i).getSong().get();
 				song.addScore(AppUser.MAX_FAVES - i);
 				ofy().save().entity(song).now();
 			}
 		}		
-		List<Song> topSongs = ofy().load().type(Song.class).order("-score").limit(100).list();		
+		final List<Song> topSongs = ofy().load().type(Song.class).order("-score").limit(100).list();		
 		return topSongs;
 	}
 	
 	public static List<String> getFaveFeedForCurrentUser() {
-		AppUser user = getLoggedInAppUser();
+		final AppUser user = getLoggedInAppUser();
 		if(user == null) throw new RuntimeException("Not logged in");
 		// TODO: This is horrible, need to rethink strategy
 		// Get all the users that the current user is following
 		Ref.create(Key.create(AppUser.class, user.username));
-		List<Follower> followingList = ofy().load().type(Follower.class)
+		final List<Follower> followingList = ofy().load().type(Follower.class)
 				.filter("follower", Ref.create(Key.create(AppUser.class, user.username))).list();
-		List<List<Activity>> rawActivityList = new ArrayList<List<Activity>>();
-		Date twoDaysAgo = new Date();
+		final List<List<Activity>> rawActivityList = new ArrayList<List<Activity>>();
+		final Date twoDaysAgo = new Date();
 		twoDaysAgo.setTime(twoDaysAgo.getTime()-(1000*60*60*24*2));
 		// For each user that the current user is following, get their activity for past 2 days
-		for(Follower following : followingList) {
+		for(final Follower following : followingList) {
 			rawActivityList.add(
 				ofy().load()
 				.type(Activity.class)
@@ -384,28 +391,28 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			);
 		}
 		
-		ArrayList<String> faveFeed = new ArrayList<String>();
+		final ArrayList<String> faveFeed = new ArrayList<String>();
 		
 		// We will bunch all activities less than a day apart
-		int buncherTimeLimit = 1000*60*60*24;
+		final int buncherTimeLimit = 1000*60*60*24;
 	
 		// TODO: This is probably horribly inefficient but is a start
 		// TODO: Decide if this how we want to bunch activity or a different way
-		for(List<Activity> activityList : rawActivityList) {
+		for(final List<Activity> activityList : rawActivityList) {
 			
-			List<Transaction> transactions = new ArrayList<Activity.Transaction>();
+			final List<Transaction> transactions = new ArrayList<Activity.Transaction>();
 			transactions.add(Transaction.FAVE_ADDED);
 			transactions.add(Transaction.FAVE_REMOVED);
 			transactions.add(Transaction.FAVE_POSITION_CHANGED);
 						
 			// For each transaction type
-			for(Transaction transaction : transactions) {
+			for(final Transaction transaction : transactions) {
 				// Go through all activities of that type and bunch them
 				for(int i = 0; i < activityList.size(); i++) {
 					int counter = 0;
-					Activity activity = activityList.get(i);
+					final Activity activity = activityList.get(i);
 					// Begin constructing the message
-					String songName = activity.getSong().get().getTrackName();					
+					final String songName = activity.getSong().get().getTrackName();					
 					String message = "";
 					if(activity.getTransactionType().equals(transaction)) {
 						if(transaction.equals(Transaction.FAVE_ADDED)) {
@@ -420,7 +427,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 					if(activity.getTransactionType().equals(transaction)) {
 						boolean checkNextSong = true;
 						while(checkNextSong && i+1 < activityList.size()) {
-							Activity nextActivity = activityList.get(i+1);
+							final Activity nextActivity = activityList.get(i+1);
 							i++;							 
 							if(activity.getTransactionType().equals(transaction) 
 								&& nextActivity.getTransactionType().equals(transaction)) {
@@ -469,12 +476,12 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return faveFeed;
 	}
 	
-	public static List<String> getActivityForUser(String username) {
+	public static List<String> getActivityForUser(final String username) {
 		// TODO: some limit over here on how many results to return
-		List<Activity> activityList = ofy().load().type(Activity.class).filter("username", username).list();
-		ArrayList<String> faveFeed = new ArrayList<String>();		
-		for(Activity activity : activityList) {
-			String songName = activity.getSong().get().getTrackName();
+		final List<Activity> activityList = ofy().load().type(Activity.class).filter("username", username).list();
+		final ArrayList<String> faveFeed = new ArrayList<String>();		
+		for(final Activity activity : activityList) {
+			final String songName = activity.getSong().get().getTrackName();
 			String message = "";
 			if(activity.getTransactionType().equals(Transaction.FAVE_ADDED)) {
 				message += " Added "+songName;
@@ -491,27 +498,27 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return faveFeed;
 	}
 	
-	public static void followUser(String username) {
+	public static void followUser(final String username) {
 		// TODO: Check for already following to prevent duplicates
 		// TODO: Need a better method of message passing than RuntimeExceptions
 		// TODO: Move this into follower class
-		AppUser currentUser = getLoggedInAppUser();
+		final AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) throw new RuntimeException("Please log in");
 		if(currentUser.username.equals(username)) throw new RuntimeException("You cannot follow yourself");
 		if(ofy().load().type(Follower.class).id(currentUser.username+Follower.ID_SEPARATOR+username).get() != null) {
 			throw new RuntimeException("You are already following this user");
 		}
-		Follower follower = new Follower(currentUser.username, username);
+		final Follower follower = new Follower(currentUser.username, username);
 		ofy().save().entity(follower).now();
 	}
 	
-	public static boolean checkFollowing(String username) {
-		AppUser currentUser = getLoggedInAppUser();
+	public static boolean checkFollowing(final String username) {
+		final AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) return false;
 		return ofy().load().type(Follower.class).id(currentUser.username+Follower.ID_SEPARATOR+username).get() != null;
 	}
 	
-	public static boolean checkPassword(String password) {
+	public static boolean checkPassword(final String password) {
 		if(password.equals("100GreatFaves!")) {
 			return true;
 		} else {
@@ -525,7 +532,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(final String email) {
 		this.email = email;
 	}
 
@@ -533,7 +540,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return username;
 	}
 
-	public void setUsername(String username) {
+	public void setUsername(final String username) {
 		this.username = username;
 	}
 	
@@ -542,8 +549,8 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 
 	public List<Song> getFave100Songs() {
-		List<Song> songs = new ArrayList<Song>();
-		for(FaveItem faveItem : fave100Songs) {
+		final List<Song> songs = new ArrayList<Song>();
+		for(final FaveItem faveItem : fave100Songs) {
 			songs.add(faveItem.getSong().get());
 			/*Song song = faveItem.getSong().get();
 			faveItem.setTrackName(song.getTrackName());
@@ -555,7 +562,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		//return fave100Songs;
 	}
 
-	public void setFave100Songs(List<FaveItem> fave100Songs) {
+	public void setFave100Songs(final List<FaveItem> fave100Songs) {
 		this.fave100Songs = fave100Songs;
 	}
 
@@ -563,7 +570,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(final String password) {
 		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
 	}
 
@@ -572,17 +579,17 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		// TODO: Do we even want to show gravatars at all? some privacy issues
 		if(getEmail() == null) return "http://www.gravatar.com/avatar/?d=mm";
 		try {
-			byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");			
-	        BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
-	        String hash = String.format("%1$032x", i);
+			final byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");			
+	        final BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
+	        final String hash = String.format("%1$032x", i);
 	       return "http://www.gravatar.com/avatar/"+hash+"?d=mm";
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// TODO: Do we care what happens if an exception is thrown here?
 		}	
 		return null;
 	}
 
-	public void setAvatar(String avatar) {
+	public void setAvatar(final String avatar) {
 		this.avatar = avatar;
 	}
 
@@ -590,7 +597,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return faveFeedLastChecked;
 	}
 
-	public void setFaveFeedLastChecked(Date faveFeedLastChecked) {
+	public void setFaveFeedLastChecked(final Date faveFeedLastChecked) {
 		this.faveFeedLastChecked = faveFeedLastChecked;
 	}
 }

@@ -33,6 +33,7 @@ public interface AppUserRequest extends RequestContext{
 	Request<Void> logout();
 	Request<AppUserProxy> createAppUser(String username, String password, String email);
 	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser();
+	Request<Void> editWhyline(int index, String whyline);
 	
 	Request<Boolean> checkPassword(String password);
 	Request<List<String>> getActivityForUser(String username);

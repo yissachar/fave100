@@ -2,9 +2,12 @@ package com.fave100.server.domain;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.OnLoad;
 
 @Entity
 @Index
@@ -40,32 +43,28 @@ public class Song extends DatastoreObject {
 	private String country;
 	private String currency;
 	private String primaryGenreName;
+	@IgnoreSave private String whyline;
 	
-	public static Song findSong(Long id) {
+	public static Song findSong(final Long id) {
 		//return ofy().get(Song.class, id);
 		return ofy().load().type(Song.class).id(id).get();
 	}
 	
-	public void addScore(int score) {
+	public void addScore(final int score) {
 		this.score += score;
 	}
 	
-	/*public Song persist() {
-		ofy().put(this);
-		return this;
+	@OnLoad 
+	private void setWhyline(final Objectify ofy) {
+		this.whyline = "This is a fake whyline";
 	}
-	
-	public void remove() {
-		ofy().delete(this);
-	}*/
-	
 	/* Getters and setters */	
 	
 	public String getWrapperType() {
 		return wrapperType;
 	}
 
-	public void setWrapperType(String wrapperType) {
+	public void setWrapperType(final String wrapperType) {
 		this.wrapperType = wrapperType;
 	}
 
@@ -73,7 +72,7 @@ public class Song extends DatastoreObject {
 		return kind;
 	}
 
-	public void setKind(String kind) {
+	public void setKind(final String kind) {
 		this.kind = kind;
 	}
 
@@ -81,7 +80,7 @@ public class Song extends DatastoreObject {
 		return artistId;
 	}
 
-	public void setArtistId(Integer artistId) {
+	public void setArtistId(final Integer artistId) {
 		this.artistId = artistId;
 	}
 
@@ -89,7 +88,7 @@ public class Song extends DatastoreObject {
 		return collectionId;
 	}
 
-	public void setCollectionId(Integer collectionId) {
+	public void setCollectionId(final Integer collectionId) {
 		this.collectionId = collectionId;
 	}
 
@@ -97,7 +96,7 @@ public class Song extends DatastoreObject {
 		return trackId;
 	}
 
-	public void setTrackId(Integer trackId) {
+	public void setTrackId(final Integer trackId) {
 		this.trackId = trackId;
 	}
 
@@ -105,7 +104,7 @@ public class Song extends DatastoreObject {
 		return artistName;
 	}
 
-	public void setArtistName(String artistName) {
+	public void setArtistName(final String artistName) {
 		this.artistName = artistName;
 	}
 
@@ -113,7 +112,7 @@ public class Song extends DatastoreObject {
 		return collectionName;
 	}
 
-	public void setCollectionName(String collectionName) {
+	public void setCollectionName(final String collectionName) {
 		this.collectionName = collectionName;
 	}
 
@@ -121,7 +120,7 @@ public class Song extends DatastoreObject {
 		return trackName;
 	}
 
-	public void setTrackName(String trackName) {
+	public void setTrackName(final String trackName) {
 		this.trackName = trackName;
 	}
 
@@ -129,7 +128,7 @@ public class Song extends DatastoreObject {
 		return collectionCensoredName;
 	}
 
-	public void setCollectionCensoredName(String collectionCensoredName) {
+	public void setCollectionCensoredName(final String collectionCensoredName) {
 		this.collectionCensoredName = collectionCensoredName;
 	}
 
@@ -137,7 +136,7 @@ public class Song extends DatastoreObject {
 		return trackCensoredName;
 	}
 
-	public void setTrackCensoredName(String trackCensoredName) {
+	public void setTrackCensoredName(final String trackCensoredName) {
 		this.trackCensoredName = trackCensoredName;
 	}
 
@@ -145,7 +144,7 @@ public class Song extends DatastoreObject {
 		return artistViewUrl;
 	}
 
-	public void setArtistViewUrl(String artistViewUrl) {
+	public void setArtistViewUrl(final String artistViewUrl) {
 		this.artistViewUrl = artistViewUrl;
 	}
 
@@ -153,7 +152,7 @@ public class Song extends DatastoreObject {
 		return collectionViewUrl;
 	}
 
-	public void setCollectionViewUrl(String collectionViewUrl) {
+	public void setCollectionViewUrl(final String collectionViewUrl) {
 		this.collectionViewUrl = collectionViewUrl;
 	}
 
@@ -161,7 +160,7 @@ public class Song extends DatastoreObject {
 		return trackViewUrl;
 	}
 
-	public void setTrackViewUrl(String trackViewUrl) {
+	public void setTrackViewUrl(final String trackViewUrl) {
 		this.trackViewUrl = trackViewUrl;
 	}
 
@@ -169,7 +168,7 @@ public class Song extends DatastoreObject {
 		return previewUrl;
 	}
 
-	public void setPreviewUrl(String previewUrl) {
+	public void setPreviewUrl(final String previewUrl) {
 		this.previewUrl = previewUrl;
 	}
 
@@ -177,7 +176,7 @@ public class Song extends DatastoreObject {
 		return collectionPrice;
 	}
 
-	public void setCollectionPrice(Double collectionPrice) {
+	public void setCollectionPrice(final Double collectionPrice) {
 		this.collectionPrice = collectionPrice;
 	}
 
@@ -185,7 +184,7 @@ public class Song extends DatastoreObject {
 		return trackPrice;
 	}
 
-	public void setTrackPrice(Double trackPrice) {
+	public void setTrackPrice(final Double trackPrice) {
 		this.trackPrice = trackPrice;
 	}
 
@@ -193,7 +192,7 @@ public class Song extends DatastoreObject {
 		return releaseDate;
 	}
 
-	public void setReleaseDate(String releaseDate) {
+	public void setReleaseDate(final String releaseDate) {
 		this.releaseDate = releaseDate;
 	}
 	
@@ -205,7 +204,7 @@ public class Song extends DatastoreObject {
 		return collectionExplicitness;
 	}
 
-	public void setCollectionExplicitness(String collectionExplicitness) {
+	public void setCollectionExplicitness(final String collectionExplicitness) {
 		this.collectionExplicitness = collectionExplicitness;
 	}
 
@@ -213,7 +212,7 @@ public class Song extends DatastoreObject {
 		return trackExplicitness;
 	}
 
-	public void setTrackExplicitness(String trackExplicitness) {
+	public void setTrackExplicitness(final String trackExplicitness) {
 		this.trackExplicitness = trackExplicitness;
 	}
 
@@ -221,7 +220,7 @@ public class Song extends DatastoreObject {
 		return discCount;
 	}
 
-	public void setDiscCount(Integer discCount) {
+	public void setDiscCount(final Integer discCount) {
 		this.discCount = discCount;
 	}
 
@@ -229,7 +228,7 @@ public class Song extends DatastoreObject {
 		return discNumber;
 	}
 
-	public void setDiscNumber(Integer discNumber) {
+	public void setDiscNumber(final Integer discNumber) {
 		this.discNumber = discNumber;
 	}
 
@@ -237,7 +236,7 @@ public class Song extends DatastoreObject {
 		return trackCount;
 	}
 
-	public void setTrackCount(Integer trackCount) {
+	public void setTrackCount(final Integer trackCount) {
 		this.trackCount = trackCount;
 	}
 
@@ -245,7 +244,7 @@ public class Song extends DatastoreObject {
 		return trackNumber;
 	}
 
-	public void setTrackNumber(Integer trackNumber) {
+	public void setTrackNumber(final Integer trackNumber) {
 		this.trackNumber = trackNumber;
 	}
 
@@ -253,7 +252,7 @@ public class Song extends DatastoreObject {
 		return trackTimeMillis;
 	}
 
-	public void setTrackTimeMillis(Integer trackTimeMillis) {
+	public void setTrackTimeMillis(final Integer trackTimeMillis) {
 		this.trackTimeMillis = trackTimeMillis;
 	}
 
@@ -261,7 +260,7 @@ public class Song extends DatastoreObject {
 		return country;
 	}
 
-	public void setCountry(String country) {
+	public void setCountry(final String country) {
 		this.country = country;
 	}
 
@@ -269,7 +268,7 @@ public class Song extends DatastoreObject {
 		return currency;
 	}
 
-	public void setCurrency(String currency) {
+	public void setCurrency(final String currency) {
 		this.currency = currency;
 	}
 
@@ -277,7 +276,7 @@ public class Song extends DatastoreObject {
 		return primaryGenreName;
 	}
 
-	public void setPrimaryGenreName(String primaryGenreName) {
+	public void setPrimaryGenreName(final String primaryGenreName) {
 		this.primaryGenreName = primaryGenreName;
 	}
 
@@ -285,7 +284,7 @@ public class Song extends DatastoreObject {
 		return score;
 	}
 
-	public void setScore(long score) {
+	public void setScore(final long score) {
 		this.score = score;
 	}
 
@@ -293,7 +292,7 @@ public class Song extends DatastoreObject {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
@@ -301,8 +300,16 @@ public class Song extends DatastoreObject {
 		return artworkUrl60;
 	}
 
-	public void setArtworkUrl60(String artworkUrl60) {
+	public void setArtworkUrl60(final String artworkUrl60) {
 		this.artworkUrl60 = artworkUrl60;
+	}
+
+	public String getWhyline() {
+		return whyline;
+	}
+
+	public void setWhyline(final String whyline) {
+		this.whyline = whyline;
 	}
 
 }
