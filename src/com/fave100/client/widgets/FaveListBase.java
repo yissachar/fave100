@@ -9,13 +9,13 @@ import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CompositeCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.HasCell;
-import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 
 public class FaveListBase extends HTMLPanel{
 	
@@ -85,23 +85,25 @@ public class FaveListBase extends HTMLPanel{
 				return SafeHtmlUtils.fromString(object.getReleaseYear());
 			}
 		});
-		_cells.add(new HasCell<FaveListItem, String>() {
-			private final ImageCell cell = new ImageCell();
+		_cells.add(new HasCell<FaveListItem, SafeHtml>() {
+			private final SafeHtmlCell cell = new SafeHtmlCell();
 
             @Override
-            public Cell<String> getCell() {
+            public Cell<SafeHtml> getCell() {
                 return cell;
             }
 
 			@Override
-			public FieldUpdater<FaveListItem, String> getFieldUpdater() {
+			public FieldUpdater<FaveListItem, SafeHtml> getFieldUpdater() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
-			public String getValue(final FaveListItem object) {
-				return object.getArtworkUrl60();
+			public SafeHtml getValue(final FaveListItem object) {
+				final Image image = new Image();
+				image.setUrl(object.getArtworkUrl60());
+				return SafeHtmlUtils.fromTrustedString(image.toString());
 			}
 		});
 		

@@ -194,7 +194,7 @@ public class PersonalFaveList extends FaveListBase {
 			}
 		});
 		
-		// Mouse up handler
+		// Mouse up handler for change position
 		RootPanel.get().addDomHandler(new MouseUpHandler() {
 			@Override
 			public void onMouseUp(final MouseUpEvent event) {
@@ -212,7 +212,12 @@ public class PersonalFaveList extends FaveListBase {
 					// Don't bother doing anything if the indices are the same
 					final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		    	  	final Request<Void> rankReq = appUserRequest.rerankFaveItemForCurrentUser(currentIndex, newIndex);
-		    	  	rankReq.fire();
+		    	  	rankReq.fire(new Receiver<Void>() {
+		    	  		@Override
+		    	  		public void onSuccess(final Void response) {
+		    	  			refreshList();
+		    	  		}
+					});
 				}    	 
 				//remove all drag associated items now that we are done with the drag
 	    	  	$draggedItem.removeClass("draggedFaveListItem");
@@ -222,7 +227,7 @@ public class PersonalFaveList extends FaveListBase {
 				draggedRow = null;	
 				// Reset the rows so that row numbers will update
 				// TODO: There has to be a better way of doing this...				
-				refreshList();
+				
 			}
 			
 		}, MouseUpEvent.getType());

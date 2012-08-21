@@ -177,6 +177,7 @@ button:disabled:hover{
 	cursor: move;
 	width: 10px;
 	padding: 0 15px;
+	vertical-align: top;
 }
 
 .addColumn, .nonpersonalFaves div>span:nth-child(1) {

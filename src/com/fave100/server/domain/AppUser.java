@@ -336,7 +336,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	
 	public static List<FaveItem> getFaveItemsForCurrentUser() {
 		final AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) return null;//TODO: use onload and @Load instead
+		if(currentUser == null) return null;
 		for(final FaveItem faveItem : currentUser.fave100Songs) {
 			final Song song = faveItem.getSong().get();
 			faveItem.setTrackName(song.getTrackName());
