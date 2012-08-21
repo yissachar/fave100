@@ -28,9 +28,10 @@ public class FaveItem extends DatastoreObject{
 	@IgnoreSave private String trackName;
 	@IgnoreSave private String trackViewUrl;
 	@IgnoreSave private String artistName;
-	@IgnoreSave private String releaseYear;	
+	@IgnoreSave private String releaseYear;
+	@IgnoreSave private String artworkUrl60;
 		
-	public static FaveItem findFaveItem(Long id) {
+	public static FaveItem findFaveItem(final Long id) {
 		return ofy().load().type(FaveItem.class).id(id).get();		
 	}
 	
@@ -40,7 +41,7 @@ public class FaveItem extends DatastoreObject{
 		return whyline;
 	}
 
-	public void setWhyline(String whyline) {
+	public void setWhyline(final String whyline) {
 		this.whyline = whyline;
 	}
 
@@ -48,7 +49,7 @@ public class FaveItem extends DatastoreObject{
 		return song;
 	}
 
-	public void setSong(Ref<Song> song) {
+	public void setSong(final Ref<Song> song) {
 		this.song = song;
 	}
 
@@ -56,7 +57,7 @@ public class FaveItem extends DatastoreObject{
 		return trackName;
 	}
 
-	public void setTrackName(String trackName) {
+	public void setTrackName(final String trackName) {
 		this.trackName = trackName;
 	}
 
@@ -64,7 +65,7 @@ public class FaveItem extends DatastoreObject{
 		return trackViewUrl;
 	}
 
-	public void setTrackViewUrl(String trackViewUrl) {
+	public void setTrackViewUrl(final String trackViewUrl) {
 		this.trackViewUrl = trackViewUrl;
 	}
 
@@ -72,7 +73,7 @@ public class FaveItem extends DatastoreObject{
 		return artistName;
 	}
 
-	public void setArtistName(String artistName) {
+	public void setArtistName(final String artistName) {
 		this.artistName = artistName;
 	}
 
@@ -80,7 +81,7 @@ public class FaveItem extends DatastoreObject{
 		return releaseYear;
 	}
 
-	public void setReleaseYear(String releaseYear) {
+	public void setReleaseYear(final String releaseYear) {
 		this.releaseYear = releaseYear;
 	}
 
@@ -88,8 +89,16 @@ public class FaveItem extends DatastoreObject{
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(final Long id) {
 		this.id = id;
+	}
+
+	public String getArtworkUrl60() {
+		return artworkUrl60;
+	}
+
+	public void setArtworkUrl60(final String artworkUrl60) {
+		this.artworkUrl60 = artworkUrl60;
 	}	
 	
 }

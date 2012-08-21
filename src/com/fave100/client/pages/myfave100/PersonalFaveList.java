@@ -12,6 +12,7 @@ import com.fave100.client.requestfactory.FaveListItem;
 import com.fave100.client.widgets.FaveListBase;
 import com.fave100.client.widgets.MouseClickCell;
 import com.google.gwt.cell.client.Cell;
+import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.HasCell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -22,6 +23,7 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.query.client.Function;
 import com.google.gwt.query.client.GQuery;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -30,23 +32,23 @@ public class PersonalFaveList extends FaveListBase {
 	
 	private Element draggedRow;
 	private ApplicationRequestFactory requestFactory;
-	private List<FaveListItem> clientFaveList = new ArrayList<FaveListItem>();
+	private final List<FaveListItem> clientFaveList = new ArrayList<FaveListItem>();
 	
 	public PersonalFaveList(final ApplicationRequestFactory requestFactory) {
 		super(requestFactory);
 		
 		this.requestFactory = requestFactory;
 		
-		cells.add(0, new HasCell<FaveListItem, String>() {
+		_cells.add(0, new HasCell<FaveListItem, String>() {
 			MouseDownCell cell = new MouseDownCell(){
 				@Override
-				public void onBrowserEvent(Context context, Element parent, String value,
-					NativeEvent event, ValueUpdater<String> valueUpdater) {	
+				public void onBrowserEvent(final Context context, final Element parent, final String value,
+					final NativeEvent event, final ValueUpdater<String> valueUpdater) {	
 					if(value == null) return;		
 					super.onBrowserEvent(context, parent, value, event, valueUpdater);					
 					if(event.getType().equals("mousedown")) {	
 						draggedRow = parent.getParentElement();
-						GQuery $row = $(draggedRow);
+						final GQuery $row = $(draggedRow);
 						addStyleName("unselectable");						
 						//GQuery $row = $(event.getEventTarget()).closest("div");
 						
@@ -54,24 +56,25 @@ public class PersonalFaveList extends FaveListBase {
 						$row.clone().css("visibility", "hidden").addClass("clonedHiddenRow").insertBefore($row);
 						$row.addClass("draggedFaveListItem");
 						
-						setPos($row, event.getClientY());
+						setPos($row, event.getClientY()+Window.getScrollTop());
 						
 						$("body").mousemove(new Function() {
-							public boolean f(Event event) {
+							@Override
+							public boolean f(final Event event) {
 								// Set the dragged row position to be equal to mouseY						
-								GQuery $draggedFaveListItem = $(".draggedFaveListItem");
-								setPos($draggedFaveListItem, event.getClientY());
+								final GQuery $draggedFaveListItem = $(".draggedFaveListItem");
+								setPos($draggedFaveListItem, event.getClientY()+Window.getScrollTop());
 								
-								int draggedTop = $draggedFaveListItem.offset().top;
-								int draggedBottom = draggedTop + $draggedFaveListItem.outerHeight(true);
+								final int draggedTop = $draggedFaveListItem.offset().top;
+								final int draggedBottom = draggedTop + $draggedFaveListItem.outerHeight(true);
 								// Check if dragged row collides with row above or row below								
-								GQuery $clonedHiddenRow = $(".clonedHiddenRow");
+								final GQuery $clonedHiddenRow = $(".clonedHiddenRow");
 								GQuery $previous = $clonedHiddenRow.prev();
 								GQuery $next = $clonedHiddenRow.next();
 								// Make sure we are not checking against the dragged row itself
 								if($previous.hasClass("draggedFaveListItem")) $previous = $previous.prev();
 								if($next.hasClass("draggedFaveListItem")) $next = $next.next();
-								int previousBottom = $previous.offset().top+$previous.outerHeight(true);
+								final int previousBottom = $previous.offset().top+$previous.outerHeight(true);
 								// Move the hidden row to the appropriate position
 								if(draggedTop < previousBottom) {
 									$(".clonedHiddenRow").insertBefore($previous);
@@ -97,26 +100,26 @@ public class PersonalFaveList extends FaveListBase {
 			}
 
 			@Override
-			public String getValue(FaveListItem object) {
+			public String getValue(final FaveListItem object) {
 				return clientFaveList.indexOf(object)+1+".";
 			}
 		});	
 		
 		// Delete button
-		cells.add(new HasCell<FaveListItem, String>() {
-			private MouseClickCell cell = new MouseClickCell(){
+		_cells.add(4, new HasCell<FaveListItem, String>() {
+			private final MouseClickCell cell = new MouseClickCell(){
 				@Override
-				public void onBrowserEvent(Context context, Element parent, String value,
-					NativeEvent event, ValueUpdater<String> valueUpdater) {	
+				public void onBrowserEvent(final Context context, final Element parent, final String value,
+					final NativeEvent event, final ValueUpdater<String> valueUpdater) {	
 					if(value == null) return;		
 					super.onBrowserEvent(context, parent, value, event, valueUpdater);
 					if(event.getType().equals("click")) {
 						// Delete the Fave Item
-				    	AppUserRequest appUserRequest = requestFactory.appUserRequest();
-				    	Request<Void> deleteReq = appUserRequest.removeFaveItemForCurrentUser(context.getIndex());
+				    	final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+				    	final Request<Void> deleteReq = appUserRequest.removeFaveItemForCurrentUser(context.getIndex());
 				    	deleteReq.fire(new Receiver<Void>() {
 				    		@Override
-				    		public void onSuccess(Void response) {
+				    		public void onSuccess(final Void response) {
 				    			refreshList();									
 				    		}								
 				    	});
@@ -136,29 +139,79 @@ public class PersonalFaveList extends FaveListBase {
 			}
 
 			@Override
-			public String getValue(FaveListItem object) {
+			public String getValue(final FaveListItem object) {
 				return "X";
 			}			
+		});
+		
+		_cells.add(6, new HasCell<FaveListItem, String>() {
+			private final EditTextCell cell = new EditTextCell(){
+				// TODO: CSS method won't work in all browser: get the following to work!
+				/*@Override
+				public void render(final Context context, final String value, final SafeHtmlBuilder sb) {
+					// Show some default text if there isn't a whyline
+					if(value == null || value.isEmpty()) {
+						super.render(context, "Click here to enter a whyline", sb);						
+					} else {
+						// Otherwise, just render the value
+						super.render(context, value, sb);
+					}
+				}*/
+			};
+			
+			private final FieldUpdater<FaveListItem, String> fieldUpdater = new FieldUpdater<FaveListItem, String>() {
+				@Override
+				public void update(final int index, final FaveListItem object, final String value) {
+					if(value.isEmpty()) {
+						// TODO: Need to handle null whylines in the list
+						//cell.clearViewData(_cellList.getKeyProvider().getKey(object));
+						//_cellList.redraw();						
+					} else {
+						final Request<Void> editWhyline = requestFactory.appUserRequest().editWhyline(clientFaveList.indexOf(object), value);
+						editWhyline.fire();
+					}
+				}
+			};
+
+			@Override
+			public Cell<String> getCell() {
+				return cell;
+			}
+
+			@Override
+			public FieldUpdater<FaveListItem, String> getFieldUpdater() {
+				// TODO Auto-generated method stub
+				return fieldUpdater;
+			}
+
+			@Override
+			public String getValue(final FaveListItem object) {
+				String whyline = object.getWhyline();
+				if(whyline == null || whyline.isEmpty()) {
+					whyline = "";
+				}
+				return whyline;
+			}
 		});
 		
 		// Mouse up handler
 		RootPanel.get().addDomHandler(new MouseUpHandler() {
 			@Override
-			public void onMouseUp(MouseUpEvent event) {
+			public void onMouseUp(final MouseUpEvent event) {
 				// TODO: Switch over to plain GWT?
 				if(draggedRow == null) return;
-				GQuery $draggedItem = $(".draggedFaveListItem").first();
+				final GQuery $draggedItem = $(".draggedFaveListItem").first();
 				// Get the index of the row being dragged
-				int currentIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedRow);
+				final int currentIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedRow);
 				// Insert the dragged row back into the table at the correct position
 				$draggedItem.first().insertAfter($(".clonedHiddenRow"));
 				// Get the new index
-				int newIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedRow);						
+				final int newIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedRow);						
 				// Rank on the server
 				if(currentIndex != newIndex) {
 					// Don't bother doing anything if the indices are the same
-					AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		    	  	Request<Void> rankReq = appUserRequest.rerankFaveItemForCurrentUser(currentIndex, newIndex);
+					final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		    	  	final Request<Void> rankReq = appUserRequest.rerankFaveItemForCurrentUser(currentIndex, newIndex);
 		    	  	rankReq.fire();
 				}    	 
 				//remove all drag associated items now that we are done with the drag
@@ -174,11 +227,11 @@ public class PersonalFaveList extends FaveListBase {
 			
 		}, MouseUpEvent.getType());
 		
-		createCellList();
+		createCellList("personalFaves");		
 	}
 	
-	private void setPos(GQuery element, int mouseY) {		
-		int newPos = mouseY-element.height()/2;		
+	private void setPos(final GQuery element, final int mouseY) {		
+		final int newPos = mouseY-element.height()/2;		
 		element.css("top", newPos+"px");
 		// TODO: // If dragged row goes out of top or bottom bounds, stop it
 		/*int draggedTop = element.offset().top;
@@ -194,11 +247,11 @@ public class PersonalFaveList extends FaveListBase {
 		// instead, make changes locally on client by adding elements to DOM
 		
 		// Get the data from the datastore
-		AppUserRequest appUserRequest = requestFactory.appUserRequest();		
-		Request<List<FaveItemProxy>> currentUserReq = appUserRequest.getFaveItemsForCurrentUser();
+		final AppUserRequest appUserRequest = requestFactory.appUserRequest();		
+		final Request<List<FaveItemProxy>> currentUserReq = appUserRequest.getFaveItemsForCurrentUser();
 		currentUserReq.fire(new Receiver<List<FaveItemProxy>>() {
 			@Override
-			public void onSuccess(List<FaveItemProxy> faveItems) {				
+			public void onSuccess(final List<FaveItemProxy> faveItems) {				
 				if(faveItems != null) {
 					clientFaveList.clear();
 					clientFaveList.addAll(faveItems);
