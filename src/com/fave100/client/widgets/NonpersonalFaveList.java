@@ -17,9 +17,9 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
-public class FaveList extends FaveListBase{
+public class NonpersonalFaveList extends FaveListBase{
 
-	public FaveList(final ApplicationRequestFactory requestFactory) {
+	public NonpersonalFaveList(final ApplicationRequestFactory requestFactory) {
 		super(requestFactory);
 		
 		_cells.add(0, new HasCell<FaveListItem, SongProxy>() {

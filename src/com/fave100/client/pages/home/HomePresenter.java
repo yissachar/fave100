@@ -12,7 +12,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.client.widgets.FaveList;
+import com.fave100.client.widgets.NonpersonalFaveList;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.google.inject.Inject;
@@ -31,7 +31,7 @@ public class HomePresenter extends
 		Presenter<HomePresenter.MyView, HomePresenter.MyProxy> {
 
 	public interface MyView extends View {
-		FaveList getMasterFaveList();
+		NonpersonalFaveList getMasterFaveList();
 	}
 	
 	@ContentSlot

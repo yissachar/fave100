@@ -56,6 +56,7 @@ public class Song extends DatastoreObject {
 	
 	@OnLoad 
 	private void setWhyline(final Objectify ofy) {
+		// TODO: pull a random whyline or something like that
 		this.whyline = "This is a fake whyline";
 	}
 	/* Getters and setters */	
