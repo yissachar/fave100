@@ -13,7 +13,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.widgets.FaveList;
+import com.fave100.client.widgets.NonpersonalFaveList;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
@@ -43,7 +43,7 @@ public class UsersPresenter extends
 		Image getAvatar();
 		SpanElement getUsernameSpan();		
 		Button getFollowButton();
-		FaveList getUserFaveList();
+		NonpersonalFaveList getUserFaveList();
 		Anchor getFave100TabLink();
 		Anchor getActivityTabLink();
 		InlineHTML getActivityTab();

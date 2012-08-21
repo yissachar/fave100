@@ -1,7 +1,7 @@
 package com.fave100.client.pages.home;
 
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.widgets.FaveList;
+import com.fave100.client.widgets.NonpersonalFaveList;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -16,11 +16,11 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	public interface Binder extends UiBinder<Widget, HomeView> {
 	}
 	
-	@UiField(provided = true) FaveList masterFaveList;
+	@UiField(provided = true) NonpersonalFaveList masterFaveList;
 	
 	@Inject
 	public HomeView(final Binder binder, final ApplicationRequestFactory requestFactory) {
-		masterFaveList = new FaveList(requestFactory);
+		masterFaveList = new NonpersonalFaveList(requestFactory);
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -43,7 +43,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	}	
 
 	@Override
-	public FaveList getMasterFaveList() {
+	public NonpersonalFaveList getMasterFaveList() {
 		return masterFaveList;
 	}
 }
