@@ -51,14 +51,12 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	// TODO: user avatar/gravatar
 	@IgnoreSave private String avatar;
 	// TODO: location = for location based lists
-	private Date faveFeedLastChecked;
 	
 	public AppUser() {}
 	
 	public AppUser(final String username, final String password, final String email) {
 		this.username = username;
 		this.email = email;
-		this.setFaveFeedLastChecked(new Date());
 		setPassword(password);
 	}
 	
@@ -224,7 +222,9 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				} else {
 					// Create the user
 					final AppUser appUser = new AppUser(username, password, email);
-					ofy().save().entity(appUser).now();
+					// Create the user's list
+					final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+					ofy().save().entities(appUser, faveList).now();
 					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 					return appUser;
 				}
@@ -251,9 +251,11 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				final AppUser appUser = new AppUser();
 				appUser.setUsername(username);
 				appUser.setEmail(user.getEmail());
+				// Create the user's list
+				final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);				
 				// Create the GoogleID lookup
 				final GoogleID googleID = new GoogleID(user.getUserId(), username);			
-				ofy().save().entities(appUser, googleID).now();					
+				ofy().save().entities(appUser, googleID, faveList).now();					
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 				return appUser;
 			}			
@@ -269,7 +271,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	
 	public static void addFaveItemForCurrentUser(final Long songID, final Song songProxy) {
 		// TODO: Verify integrity of songProxy on server-side? 
-		final AppUser currentUser = AppUser.getLoggedInAppUser();
+		/*final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) {
 			throw new RuntimeException("Please log in to complete this action");
 			//return false;
@@ -295,7 +297,35 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		currentUser.fave100Songs.add(newFaveItem);
 		final Activity activity = new Activity(currentUser.username, Transaction.FAVE_ADDED);
 		activity.setSong(songRef);
-		ofy().save().entities(currentUser, activity).now();
+		ofy().save().entities(currentUser, activity).now();*/
+		final AppUser currentUser = AppUser.getLoggedInAppUser();
+		if(currentUser == null) {
+			throw new RuntimeException("Please log in to complete this action");
+			//return false;
+		}
+		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.username+FaveList.SEPERATOR_TOKEN+FaveList.DEFAULT_HASHTAG).get();		
+		if(faveList.getList().size() >= AppUser.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");;		
+		final Song song = ofy().load().type(Song.class).id(songID).get();		
+		boolean unique = true;
+		// If the song does not exist, create it
+		if(song == null) {
+			songProxy.setId(songID);
+			ofy().save().entity(songProxy);
+		} else {
+			// Check if it is a unique song for this user
+			for(final FaveItem faveItem : faveList.getList()) {
+				if(faveItem.getSong().get().getId().equals(song.getId())) unique = false;
+			}
+		}
+		if(unique == false) throw new RuntimeException("The song is already in your list");;
+		// Create the new FaveItem 
+		final FaveItem newFaveItem = new FaveItem();
+		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songID));
+		newFaveItem.setSong(songRef);
+		faveList.getList().add(newFaveItem);
+		final Activity activity = new Activity(currentUser.username, Transaction.FAVE_ADDED);
+		activity.setSong(songRef);
+		ofy().save().entities(currentUser, activity, faveList).now();
 	}
 	
 	public static void removeFaveItemForCurrentUser(final int index) {
@@ -337,7 +367,8 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	public static List<FaveItem> getFaveItemsForCurrentUser() {
 		final AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) return null;
-		for(final FaveItem faveItem : currentUser.fave100Songs) {
+		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.username+FaveList.SEPERATOR_TOKEN+FaveList.DEFAULT_HASHTAG).get();
+		for(final FaveItem faveItem : faveList.getList()) {
 			final Song song = faveItem.getSong().get();
 			faveItem.setTrackName(song.getTrackName());
 			faveItem.setArtistName(song.getArtistName());
@@ -345,7 +376,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			faveItem.setReleaseYear(song.getReleaseYear());
 			faveItem.setArtworkUrl60(song.getArtworkUrl60());
 		}
-		return currentUser.fave100Songs;
+		return faveList.getList();
 	}
 	
 	public static List<Song> getMasterFaveList() {
@@ -591,13 +622,5 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 
 	public void setAvatar(final String avatar) {
 		this.avatar = avatar;
-	}
-
-	public Date getFaveFeedLastChecked() {
-		return faveFeedLastChecked;
-	}
-
-	public void setFaveFeedLastChecked(final Date faveFeedLastChecked) {
-		this.faveFeedLastChecked = faveFeedLastChecked;
 	}
 }
