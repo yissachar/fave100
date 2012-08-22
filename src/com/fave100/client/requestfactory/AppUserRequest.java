@@ -32,7 +32,7 @@ public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> loginWithGoogle();
 	Request<Void> logout();
 	Request<AppUserProxy> createAppUser(String username, String password, String email);
-	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser();
+	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser(String hashtag);
 	Request<Void> editWhyline(int index, String whyline);
 	
 	Request<Boolean> checkPassword(String password);
@@ -40,4 +40,6 @@ public interface AppUserRequest extends RequestContext{
 	Request<String> getTwitterAuthUrl();
 	Request<AppUserProxy> loginWithTwitter();
 	Request<Boolean> isTwitterUserLoggedIn();
+	
+	Request<List<FaveItemProxy>> getFaveList(String username, String hashtag);
 }

@@ -2,26 +2,15 @@ package com.fave100.client.pages.users;
 
 import java.util.List;
 
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
-import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.widgets.NonpersonalFaveList;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
-import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import com.google.inject.Inject;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.fave100.server.domain.FaveList;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -33,6 +22,19 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.inject.Inject;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
+import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class UsersPresenter extends
@@ -84,18 +86,18 @@ public class UsersPresenter extends
 	}
 	
 	@Override
-	public void prepareFromRequest(PlaceRequest placeRequest) {
+	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 		requestedUsername = placeRequest.getParameter("u", "");	
 		if(requestedUsername.equals("")) {
 			placeManager.revealDefaultPlace();
 		} else {
 			// Update follow button
-			Request<Boolean> checkFollowing = requestFactory.appUserRequest().checkFollowing(requestedUsername);
+			final Request<Boolean> checkFollowing = requestFactory.appUserRequest().checkFollowing(requestedUsername);
 			checkFollowing.fire(new Receiver<Boolean>() {
 				@Override
-				public void onSuccess(Boolean following) {
-					Button followButton = getView().getFollowButton();
+				public void onSuccess(final Boolean following) {
+					final Button followButton = getView().getFollowButton();
 					if(following) {
 						followButton.setHTML("Following");
 						followButton.setEnabled(false);
@@ -107,15 +109,14 @@ public class UsersPresenter extends
 			});
 			
 			// Update user profile
-		    Request<AppUserProxy> userFaveListReq = requestFactory.appUserRequest().findAppUser(requestedUsername).with("fave100Songs");
-		    userFaveListReq.fire(new Receiver<AppUserProxy>() {
+		    final Request<AppUserProxy> userReq = requestFactory.appUserRequest().findAppUser(requestedUsername);			
+		    userReq.fire(new Receiver<AppUserProxy>() {
 		    	@Override
-		    	public void onSuccess(AppUserProxy user) {
+		    	public void onSuccess(final AppUserProxy user) {
 		    		if(user != null) {	    				
 		    			// Upate user profile
 	    				getView().getAvatar().setUrl(user.getAvatar());
 	    				getView().getUsernameSpan().setInnerText(user.getUsername());
-	    	    		getView().getUserFaveList().setRowData(user.getFave100Songs());
 	    			} else {
 	    				placeManager.revealDefaultPlace();
 	    			}
@@ -123,19 +124,33 @@ public class UsersPresenter extends
 		    	}
 		    });		
 		    
-		    String tab = placeRequest.getParameter("tab", UsersPresenter.FAVE_100_TAB);
+		    // Update fave list
+			final Request<List<FaveItemProxy>> userFaveListReq = requestFactory.appUserRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
+		    userFaveListReq.fire(new Receiver<List<FaveItemProxy>>() {
+		    	@Override
+		    	public void onSuccess(final List<FaveItemProxy> faveList) {
+		    		if(faveList != null) {	    	
+	    	    		getView().getUserFaveList().setRowData(faveList);
+	    			} else {
+	    				placeManager.revealDefaultPlace();
+	    			}
+		    		getProxy().manualReveal(UsersPresenter.this);
+		    	}
+		    });	
+		    
+		    final String tab = placeRequest.getParameter("tab", UsersPresenter.FAVE_100_TAB);
 		    if(tab.equals(UsersPresenter.ACTIVITY_TAB)) {
 		    	getView().getActivityTab().setVisible(true);
 		    	getView().getUserFaveList().setVisible(false);
 		    	getView().getFave100TabLink().removeStyleName("selected");
 				getView().getActivityTabLink().addStyleName("selected");
-				Request<List<String>> getActivityReq = requestFactory.appUserRequest().getActivityForUser(requestedUsername);
+				final Request<List<String>> getActivityReq = requestFactory.appUserRequest().getActivityForUser(requestedUsername);
 				getActivityReq.fire(new Receiver<List<String>>() {
 					@Override
-					public void onSuccess(List<String> activityList) {
-						SafeHtmlBuilder builder = new SafeHtmlBuilder();
+					public void onSuccess(final List<String> activityList) {
+						final SafeHtmlBuilder builder = new SafeHtmlBuilder();
 						builder.appendHtmlConstant("<ul>");
-						for(String activity : activityList) {
+						for(final String activity : activityList) {
 							builder.appendHtmlConstant("<li>");
 							builder.appendEscaped(activity);
 							builder.appendHtmlConstant("</li>");
@@ -160,19 +175,19 @@ public class UsersPresenter extends
 		// Follow button
 		registerHandler(getView().getFollowButton().addClickHandler(new ClickHandler() {			
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onClick(final ClickEvent event) {
 				if(!getView().getFollowButton().getStyleName().contains("alreadyFollowing")) {
-					AppUserRequest appUserRequest = requestFactory.appUserRequest();
-					Request<Void> followReq = appUserRequest.followUser(requestedUsername);
+					final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+					final Request<Void> followReq = appUserRequest.followUser(requestedUsername);
 					followReq.fire(new Receiver<Void>() {
 						@Override
-						public void onSuccess(Void response) {
+						public void onSuccess(final Void response) {
 							SideNotification.show("Following!");
 							getView().getFollowButton().setHTML("Following");
 							getView().getFollowButton().setEnabled(false);
 						}
 						@Override
-						public void onFailure(ServerFailure failure) {
+						public void onFailure(final ServerFailure failure) {
 							SideNotification.show(failure.getMessage().replace("Server Error:", ""), true);
 						}
 					});
@@ -183,7 +198,7 @@ public class UsersPresenter extends
 		// Fave100 tab link
 		registerHandler(getView().getFave100TabLink().addClickHandler(new ClickHandler() {			
 			@Override
-			public void onClick(ClickEvent event) {				
+			public void onClick(final ClickEvent event) {				
 				placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.FAVE_100_TAB));				
 			}
 		}));
@@ -191,7 +206,7 @@ public class UsersPresenter extends
 		// Activity tab link
 		registerHandler(getView().getActivityTabLink().addClickHandler(new ClickHandler() {			
 			@Override
-			public void onClick(ClickEvent event) {				
+			public void onClick(final ClickEvent event) {				
 				placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.ACTIVITY_TAB));
 			}
 		}));
