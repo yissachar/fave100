@@ -11,6 +11,7 @@ import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveListItem;
 import com.fave100.client.widgets.FaveListBase;
 import com.fave100.client.widgets.MouseClickCell;
+import com.fave100.server.domain.FaveList;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -252,8 +253,8 @@ public class PersonalFaveList extends FaveListBase {
 		// instead, make changes locally on client by adding elements to DOM
 		
 		// Get the data from the datastore
-		final AppUserRequest appUserRequest = requestFactory.appUserRequest();		
-		final Request<List<FaveItemProxy>> currentUserReq = appUserRequest.getFaveItemsForCurrentUser();
+		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		final Request<List<FaveItemProxy>> currentUserReq = appUserRequest.getFaveItemsForCurrentUser(FaveList.DEFAULT_HASHTAG);
 		currentUserReq.fire(new Receiver<List<FaveItemProxy>>() {
 			@Override
 			public void onSuccess(final List<FaveItemProxy> faveItems) {				

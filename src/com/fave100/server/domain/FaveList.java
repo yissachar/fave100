@@ -30,8 +30,6 @@ public class FaveList extends DatastoreObject{
 		this.id = username+FaveList.SEPERATOR_TOKEN+hashtag;
 		this.user = Ref.create(Key.create(AppUser.class, username));
 		this.hashtag = hashtag;
-		final FaveItem foo = new FaveItem();
-		list.add(foo);
 	}
 	
 	/* Getters and Setters */
