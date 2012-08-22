@@ -5,10 +5,10 @@ import static com.google.gwt.query.client.GQuery.$;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveListItem;
+import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.widgets.FaveListBase;
 import com.fave100.client.widgets.MouseClickCell;
 import com.fave100.server.domain.FaveList;
@@ -116,8 +116,8 @@ public class PersonalFaveList extends FaveListBase {
 					super.onBrowserEvent(context, parent, value, event, valueUpdater);
 					if(event.getType().equals("click")) {
 						// Delete the Fave Item
-				    	final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-				    	final Request<Void> deleteReq = appUserRequest.removeFaveItemForCurrentUser(context.getIndex());
+				    	final FaveListRequest faveListRequest = requestFactory.faveListRequest();
+				    	final Request<Void> deleteReq = faveListRequest.removeFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, context.getIndex());
 				    	deleteReq.fire(new Receiver<Void>() {
 				    		@Override
 				    		public void onSuccess(final Void response) {
@@ -168,7 +168,7 @@ public class PersonalFaveList extends FaveListBase {
 						//cell.clearViewData(_cellList.getKeyProvider().getKey(object));
 						//_cellList.redraw();						
 					} else {
-						final Request<Void> editWhyline = requestFactory.appUserRequest().editWhyline(clientFaveList.indexOf(object), value);
+						final Request<Void> editWhyline = requestFactory.faveListRequest().editWhylineForCurrentUser(FaveList.DEFAULT_HASHTAG, clientFaveList.indexOf(object), value);
 						editWhyline.fire();
 					}
 				}
@@ -211,8 +211,8 @@ public class PersonalFaveList extends FaveListBase {
 				// Rank on the server
 				if(currentIndex != newIndex) {
 					// Don't bother doing anything if the indices are the same
-					final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		    	  	final Request<Void> rankReq = appUserRequest.rerankFaveItemForCurrentUser(currentIndex, newIndex);
+					final FaveListRequest faveListRequest = requestFactory.faveListRequest();
+		    	  	final Request<Void> rankReq = faveListRequest.rerankFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, currentIndex, newIndex);
 		    	  	rankReq.fire(new Receiver<Void>() {
 		    	  		@Override
 		    	  		public void onSuccess(final Void response) {
@@ -253,8 +253,8 @@ public class PersonalFaveList extends FaveListBase {
 		// instead, make changes locally on client by adding elements to DOM
 		
 		// Get the data from the datastore
-		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		final Request<List<FaveItemProxy>> currentUserReq = appUserRequest.getFaveItemsForCurrentUser(FaveList.DEFAULT_HASHTAG);
+		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
+		final Request<List<FaveItemProxy>> currentUserReq = faveListRequest.getFaveItemsForCurrentUser(FaveList.DEFAULT_HASHTAG);
 		currentUserReq.fire(new Receiver<List<FaveItemProxy>>() {
 			@Override
 			public void onSuccess(final List<FaveItemProxy> faveItems) {				

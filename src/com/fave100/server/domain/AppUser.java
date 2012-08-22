@@ -268,130 +268,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return ofy().load().type(AppUser.class).list();
 	}
 	
-	public static void addFaveItemForCurrentUser(final Long songID, final Song songProxy) {
-		// TODO: Verify integrity of songProxy on server-side? 
-		/*final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) {
-			throw new RuntimeException("Please log in to complete this action");
-			//return false;
-		}
-		if(currentUser.fave100Songs.size() >= AppUser.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");;		
-		final Song song = ofy().load().type(Song.class).id(songID).get();		
-		boolean unique = true;
-		// If the song does not exist, create it
-		if(song == null) {
-			songProxy.setId(songID);
-			ofy().save().entity(songProxy);
-		} else {
-			// Check if it is a unique song for this user
-			for(final FaveItem faveItem : currentUser.fave100Songs) {
-				if(faveItem.getSong().get().getId().equals(song.getId())) unique = false;
-			}
-		}
-		if(unique == false) throw new RuntimeException("The song is already in your list");;
-		// Create the new FaveItem 
-		final FaveItem newFaveItem = new FaveItem();
-		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songID));
-		newFaveItem.setSong(songRef);
-		currentUser.fave100Songs.add(newFaveItem);
-		final Activity activity = new Activity(currentUser.username, Transaction.FAVE_ADDED);
-		activity.setSong(songRef);
-		ofy().save().entities(currentUser, activity).now();*/
-		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) {
-			throw new RuntimeException("Please log in to complete this action");
-			//return false;
-		}
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.username+FaveList.SEPERATOR_TOKEN+FaveList.DEFAULT_HASHTAG).get();		
-		if(faveList.getList().size() >= AppUser.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");;		
-		final Song song = ofy().load().type(Song.class).id(songID).get();		
-		boolean unique = true;
-		// If the song does not exist, create it
-		if(song == null) {
-			songProxy.setId(songID);
-			ofy().save().entity(songProxy);
-		} else {
-			// Check if it is a unique song for this user
-			for(final FaveItem faveItem : faveList.getList()) {
-				if(faveItem.getSong().get().getId().equals(song.getId())) unique = false;
-			}
-		}
-		if(unique == false) throw new RuntimeException("The song is already in your list");;
-		// Create the new FaveItem 
-		final FaveItem newFaveItem = new FaveItem();
-		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songID));
-		newFaveItem.setSong(songRef);
-		faveList.getList().add(newFaveItem);
-		final Activity activity = new Activity(currentUser.username, Transaction.FAVE_ADDED);
-		activity.setSong(songRef);
-		ofy().save().entities(currentUser, activity, faveList).now();
-	}
 	
-	public static void removeFaveItemForCurrentUser(final int index) {
-		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return;	
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.username+FaveList.SEPERATOR_TOKEN+FaveList.DEFAULT_HASHTAG).get();
-		if(faveList == null) return;
-		final Activity activity = new Activity(currentUser.username, Transaction.FAVE_REMOVED);
-		activity.setSong(faveList.getList().get(index).getSong());
-		faveList.getList().remove(index);
-		ofy().save().entities(currentUser, activity, faveList).now();	
-	}
-	
-	public static void rerankFaveItemForCurrentUser(final int currentIndex, final int newIndex) {		
-		// TODO: Use a transaction to ensure that the indices are correct
-		// For some reason this throws a illegal state exception about deregistering a transaction that is not registered
-//		ofy().transact(new VoidWork() {
-//			public void vrun() {
-				final AppUser currentUser = AppUser.getLoggedInAppUser();
-				if(currentUser == null) return;
-				final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.username+FaveList.SEPERATOR_TOKEN+FaveList.DEFAULT_HASHTAG).get();
-				if(faveList == null) return;
-				final Activity activity = new Activity(currentUser.username, Transaction.FAVE_POSITION_CHANGED);
-				activity.setSong(faveList.getList().get(currentIndex).getSong());
-				activity.setPreviousLocation(currentIndex+1);
-				activity.setNewLocation(newIndex+1);
-				final FaveItem faveAtCurrIndex = faveList.getList().remove(currentIndex);
-				faveList.getList().add(newIndex, faveAtCurrIndex);				
-				ofy().save().entities(currentUser, activity, faveList).now();
-//			}
-//		});		
-	}
-	
-	public static void editWhyline(final int index, final String whyline) {
-		//TODO: Sanitize the string
-		//TODO: Length restriction?
-		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return;
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.username+FaveList.SEPERATOR_TOKEN+FaveList.DEFAULT_HASHTAG).get();
-		if(faveList == null) return;
-		faveList.getList().get(index).setWhyline(whyline);
-		ofy().save().entity(currentUser).now();
-	}	
-	
-	
-	public static List<Song> getMasterFaveList() {
-		// TODO: For now, run on ever page refresh but should really be a background task
-		// TODO: Performance critical - optimize! This code is horrible performance-wise!
-		final List<Song> allSongs = ofy().load().type(Song.class).list();
-		for(final Song song : allSongs) {
-			song.setScore(0);
-			ofy().save().entity(song).now();
-		}		
-		final List<AppUser> allAppUsers = ofy().load().type(AppUser.class).list();
-		for(final AppUser appUser : allAppUsers) {
-			final FaveList faveList = ofy().load().type(FaveList.class).id(appUser.username+FaveList.SEPERATOR_TOKEN+FaveList.DEFAULT_HASHTAG).get();
-			if(faveList != null) {
-				for(int i = 0; i < faveList.getList().size(); i++) {
-					final Song song = faveList.getList().get(i).getSong().get();
-					song.addScore(AppUser.MAX_FAVES - i);
-					ofy().save().entity(song).now();
-				}
-			}				
-		}		
-		final List<Song> topSongs = ofy().load().type(Song.class).order("-score").limit(100).list();		
-		return topSongs;
-	}
 	
 	public static List<String> getFaveFeedForCurrentUser() {
 		final AppUser user = getLoggedInAppUser();
@@ -483,55 +360,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				}
 			}
 		}
-		// Construct messages based on their activity
-		/*ArrayList<String> faveFeed = new ArrayList<String>();		
-		for(Activity activity : activityList) {
-			String songName = activity.getSong().get().getTrackName();
-			String message = activity.getUsername();
-			if(activity.getTransactionType().equals(Transaction.FAVE_ADDED)) {
-				message += " added "+songName;
-			} else if (activity.getTransactionType().equals(Transaction.FAVE_REMOVED)) {
-				message += " removed "+songName;
-			} else if (activity.getTransactionType().equals(Transaction.FAVE_POSITION_CHANGED)) {
-				message += " changed the position of "+songName+" from "+activity.getPreviousLocation();
-				message += " to "+activity.getNewLocation();
-			}
-			faveFeed.add(message);
-		}*/
 		return faveFeed;
-	}
-	
-	public static List<FaveItem> getFaveItemsForCurrentUser(final String hashtag) {
-		/*final AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) return null;
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.username+FaveList.SEPERATOR_TOKEN+FaveList.DEFAULT_HASHTAG).get();
-		for(final FaveItem faveItem : faveList.getList()) {
-			final Song song = faveItem.getSong().get();
-			faveItem.setTrackName(song.getTrackName());
-			faveItem.setArtistName(song.getArtistName());
-			faveItem.setTrackViewUrl(song.getTrackViewUrl());
-			faveItem.setReleaseYear(song.getReleaseYear());
-			faveItem.setArtworkUrl60(song.getArtworkUrl60());
-		}
-		return faveList.getList();*/
-		final AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) return null;
-		return getFaveList(currentUser.username, hashtag);
-		
-	}
-	
-	public static List<FaveItem> getFaveList(final String username, final String hashtag) {
-		final FaveList faveList = ofy().load().type(FaveList.class).id(username+FaveList.SEPERATOR_TOKEN+hashtag).get();
-		if(faveList == null) return null;
-		for(final FaveItem faveItem : faveList.getList()) {
-			final Song song = faveItem.getSong().get();
-			faveItem.setTrackName(song.getTrackName());
-			faveItem.setArtistName(song.getArtistName());
-			faveItem.setTrackViewUrl(song.getTrackViewUrl());
-			faveItem.setReleaseYear(song.getReleaseYear());
-			faveItem.setArtworkUrl60(song.getArtworkUrl60());
-		}
-		return faveList.getList();
 	}
 	
 	public static List<String> getActivityForUser(final String username) {
@@ -605,24 +434,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	public String getId() {
 		return username;
 	}
-
-	/*public List<Song> getFave100Songs() {
-		final List<Song> songs = new ArrayList<Song>();
-		for(final FaveItem faveItem : fave100Songs) {
-			songs.add(faveItem.getSong().get());
-//			Song song = faveItem.getSong().get();
-//			faveItem.setTrackName(song.getTrackName());
-//			faveItem.setArtistName(song.getArtistName());
-//			faveItem.setTrackViewUrl(song.getTrackViewUrl());
-//			faveItem.setReleaseYear(song.getReleaseYear());
-		}
-		return songs;
-		//return fave100Songs;
-	}
-
-	public void setFave100Songs(final List<FaveItem> fave100Songs) {
-		this.fave100Songs = fave100Songs;
-	}*/
 
 	public String getPassword() {
 		return password;
