@@ -137,31 +137,22 @@ public class RegisterPresenter extends
 			// The user is being redirected back to the register page after signing in to 
 			// their 3rd party account - prompt them for a username and create their account
 			
-			// TODO: Can we do this in one request?
-			// Make sure that the user is actually logged into Twitter
+			//TODO: Need to show some loading icon or something while waiting for the RF req
+			getView().getRegisterContainer().setVisible(false);
+			// Try to log the user in with Twitter
 			final String oauth_verifier = Window.Location.getParameter("oauth_verifier");
-			final Request<Boolean> checkTwitterUser = requestFactory.appUserRequest().isTwitterUserLoggedIn(oauth_verifier);
-			checkTwitterUser.fire(new Receiver<Boolean>() {
+			final Request<AppUserProxy> loginWithTwitter = requestFactory.appUserRequest().loginWithTwitter(oauth_verifier);
+			loginWithTwitter.fire(new Receiver<AppUserProxy>() {
 				@Override
-				public void onSuccess(final Boolean loggedIn) {
-					if(loggedIn) {
-						final Request<AppUserProxy> loginWithTwitter = requestFactory.appUserRequest().loginWithTwitter(oauth_verifier);
-						loginWithTwitter.fire(new Receiver<AppUserProxy>() {
-							@Override
-							public void onSuccess(final AppUserProxy user) {	
-								if(user != null) {
-									placeManager.revealDefaultPlace();
-								}
-								getProxy().manualReveal(RegisterPresenter.this);
-							}
-						});
+				public void onSuccess(final AppUserProxy user) {	
+					if(user != null) {						
+						goToMyFave100();
+					} else {
 						showThirdPartyUsernamePrompt();
-					} else {						
-						hideThirdPartyUsernamePrompt();
-						getProxy().manualReveal(RegisterPresenter.this);
 					}
+					getProxy().manualReveal(RegisterPresenter.this);
 				}
-			});	
+			});			
 		} else {
 			hideThirdPartyUsernamePrompt();
 			getProxy().manualReveal(RegisterPresenter.this);
@@ -259,8 +250,10 @@ public class RegisterPresenter extends
 						createAppUserReq.fire(new Receiver<AppUserProxy>() {
 							@Override
 							public void onSuccess(final AppUserProxy createdUser) {
+								//TODO: Not working if user already logged into twitter
 								appUserCreated();
 								// TODO: clean url from twitter on success
+								goToMyFave100();
 							}
 							@Override
 							public void onFailure(final ServerFailure failure) {
@@ -351,5 +344,17 @@ public class RegisterPresenter extends
 	private void appUserCreated() {
 		placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
 		SideNotification.show("Thanks for registering!", false, 1500);
+	}
+	
+	private void goToMyFave100() {
+		// TODO: Any better method than this?
+		String url = Window.Location.getHref();
+		url = url.replace(Window.Location.getParameter("oauth_token"), "");
+		url = url.replace("&oauth_token=", "");
+		url = url.replace(Window.Location.getParameter("oauth_verifier"), "");
+		url = url.replace("&oauth_verifier=", "");
+		url = url.replace(Window.Location.getHash(), "#myfave100");
+		Window.Location.assign(url);
+		
 	}
 }

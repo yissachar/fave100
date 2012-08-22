@@ -82,15 +82,17 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	
 	// Login methods
 	public static AppUser login(final String username, final String password) {
-		AppUser loggedInUser;
-		loggedInUser = findAppUser(username);		
-		if(loggedInUser != null) {
-			if(!BCrypt.checkpw(password, loggedInUser.getPassword())) throw new RuntimeException("Username or password incorrect");;
+		final AppUser loggingInUser = findAppUser(username);		
+		if(loggingInUser != null) {
+			if(!BCrypt.checkpw(password, loggingInUser.getPassword()) 
+				|| password == null || password.isEmpty()) {
+					throw new RuntimeException("Username or password incorrect");
+			}
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 		} else {
 			throw new RuntimeException("Username or password incorrect");
 		}
-		return loggedInUser;
+		return loggingInUser;
 	}
 	
 	public static AppUser loginWithGoogle() {
@@ -116,6 +118,8 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	// Logout
 	public static void logout() {
 		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, null);
+		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("requestToken", null);
+		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("twitterUser", null);
 	}
 	
 	public static String getTwitterAuthUrl() {
@@ -148,26 +152,32 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}		
 	}
 	public static twitter4j.User getTwitterUser(final String oauth_verifier) {
-		final Twitter twitter = new TwitterFactory().getInstance();
-		//twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
-		twitter.setOAuthConsumer("GXXfKwE5cXgoXCfghEAg", "cec1qLagfRSc0EDOo5r5iR8VUNKfw7DIo6GRuswgs");
-		final String token = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("token");
-		final String tokenSecret = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("tokenSecret");		
-		//final String tokenString = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
-		//final String tokenSecretString = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
-		final RequestToken requestToken = (RequestToken) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
-		//return requestToken.equals(RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken"));
-		try {
-			//final RequestToken requestToken = new RequestToken(token, tokenSecret);
-			final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
-			twitter.setOAuthAccessToken(accessToken);
-			final twitter4j.User twitterUser = twitter.verifyCredentials();
-			return twitterUser;
-		} catch (final TwitterException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		final twitter4j.User user = (twitter4j.User) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("twitterUser");
+		if(user == null) {
+			final Twitter twitter = new TwitterFactory().getInstance();
+			//twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
+			twitter.setOAuthConsumer("GXXfKwE5cXgoXCfghEAg", "cec1qLagfRSc0EDOo5r5iR8VUNKfw7DIo6GRuswgs");
+			final String token = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("token");
+			final String tokenSecret = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("tokenSecret");		
+			//final String tokenString = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
+			//final String tokenSecretString = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
+			final RequestToken requestToken = (RequestToken) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
+			//return requestToken.equals(RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken"));
+			try {
+				//final RequestToken requestToken = new RequestToken(token, tokenSecret);
+				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
+				twitter.setOAuthAccessToken(accessToken);
+				final twitter4j.User twitterUser = twitter.verifyCredentials();
+				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("twitterUser", twitterUser);
+				return twitterUser;
+			} catch (final TwitterException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			return null;
 		}
-		return null;
+		return user;
+		
 	}	
 	
 	
