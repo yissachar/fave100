@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.FaveItemProxy;
-import com.fave100.client.requestfactory.FaveListItem;
 import com.fave100.client.requestfactory.FaveListRequest;
+import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.FaveListBase;
 import com.fave100.client.widgets.MouseClickCell;
 import com.fave100.server.domain.FaveList;
@@ -33,14 +32,14 @@ public class PersonalFaveList extends FaveListBase {
 	
 	private Element draggedRow;
 	private ApplicationRequestFactory requestFactory;
-	private final List<FaveListItem> clientFaveList = new ArrayList<FaveListItem>();
+	private final List<SongProxy> clientFaveList = new ArrayList<SongProxy>();
 	
 	public PersonalFaveList(final ApplicationRequestFactory requestFactory) {
 		super(requestFactory);
 		
 		this.requestFactory = requestFactory;
 		
-		_cells.add(0, new HasCell<FaveListItem, String>() {
+		_cells.add(0, new HasCell<SongProxy, String>() {
 			MouseDownCell cell = new MouseDownCell(){
 				@Override
 				public void onBrowserEvent(final Context context, final Element parent, final String value,
@@ -95,19 +94,19 @@ public class PersonalFaveList extends FaveListBase {
             }
 
 			@Override
-			public FieldUpdater<FaveListItem, String> getFieldUpdater() {
+			public FieldUpdater<SongProxy, String> getFieldUpdater() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
-			public String getValue(final FaveListItem object) {
+			public String getValue(final SongProxy object) {
 				return clientFaveList.indexOf(object)+1+".";
 			}
 		});	
 		
 		// Delete button
-		_cells.add(4, new HasCell<FaveListItem, String>() {
+		_cells.add(4, new HasCell<SongProxy, String>() {
 			private final MouseClickCell cell = new MouseClickCell(){
 				@Override
 				public void onBrowserEvent(final Context context, final Element parent, final String value,
@@ -134,18 +133,18 @@ public class PersonalFaveList extends FaveListBase {
             }
 
 			@Override
-			public FieldUpdater<FaveListItem, String> getFieldUpdater() {
+			public FieldUpdater<SongProxy, String> getFieldUpdater() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
-			public String getValue(final FaveListItem object) {
+			public String getValue(final SongProxy object) {
 				return "X";
 			}			
 		});
 		
-		_cells.add(6, new HasCell<FaveListItem, String>() {
+		_cells.add(6, new HasCell<SongProxy, String>() {
 			private final EditTextCell cell = new EditTextCell(){
 				// TODO: CSS method won't work in all browser: get the following to work!
 				/*@Override
@@ -160,9 +159,9 @@ public class PersonalFaveList extends FaveListBase {
 				}*/
 			};
 			
-			private final FieldUpdater<FaveListItem, String> fieldUpdater = new FieldUpdater<FaveListItem, String>() {
+			private final FieldUpdater<SongProxy, String> fieldUpdater = new FieldUpdater<SongProxy, String>() {
 				@Override
-				public void update(final int index, final FaveListItem object, final String value) {
+				public void update(final int index, final SongProxy object, final String value) {
 					if(value.isEmpty()) {
 						// TODO: Need to handle null whylines in the list
 						//cell.clearViewData(_cellList.getKeyProvider().getKey(object));
@@ -180,13 +179,13 @@ public class PersonalFaveList extends FaveListBase {
 			}
 
 			@Override
-			public FieldUpdater<FaveListItem, String> getFieldUpdater() {
+			public FieldUpdater<SongProxy, String> getFieldUpdater() {
 				// TODO Auto-generated method stub
 				return fieldUpdater;
 			}
 
 			@Override
-			public String getValue(final FaveListItem object) {
+			public String getValue(final SongProxy object) {
 				String whyline = object.getWhyline();
 				if(whyline == null || whyline.isEmpty()) {
 					whyline = "";
@@ -254,10 +253,10 @@ public class PersonalFaveList extends FaveListBase {
 		
 		// Get the data from the datastore
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-		final Request<List<FaveItemProxy>> currentUserReq = faveListRequest.getFaveItemsForCurrentUser(FaveList.DEFAULT_HASHTAG);
-		currentUserReq.fire(new Receiver<List<FaveItemProxy>>() {
+		final Request<List<SongProxy>> currentUserReq = faveListRequest.getFaveItemsForCurrentUser(FaveList.DEFAULT_HASHTAG);
+		currentUserReq.fire(new Receiver<List<SongProxy>>() {
 			@Override
-			public void onSuccess(final List<FaveItemProxy> faveItems) {				
+			public void onSuccess(final List<SongProxy> faveItems) {				
 				if(faveItems != null) {
 					clientFaveList.clear();
 					clientFaveList.addAll(faveItems);

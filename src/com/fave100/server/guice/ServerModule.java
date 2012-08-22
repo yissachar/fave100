@@ -2,7 +2,6 @@ package com.fave100.server.guice;
 
 import com.fave100.server.domain.Activity;
 import com.fave100.server.domain.AppUser;
-import com.fave100.server.domain.FaveItem;
 import com.fave100.server.domain.FaveList;
 import com.fave100.server.domain.Follower;
 import com.fave100.server.domain.GoogleID;
@@ -14,7 +13,7 @@ public class ServerModule extends HandlerModule {
 
 	static{
 		// Must manually register all datastore entities
-		ObjectifyService.register(FaveItem.class);
+		//ObjectifyService.register(FaveItem.class);
 		ObjectifyService.register(AppUser.class);
 		ObjectifyService.register(Song.class);
 		ObjectifyService.register(GoogleID.class);

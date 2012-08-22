@@ -8,7 +8,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.FaveItemProxy;
+import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.NonpersonalFaveList;
 import com.fave100.server.domain.FaveList;
 import com.google.gwt.dom.client.SpanElement;
@@ -58,8 +58,8 @@ public class UsersPresenter extends
 	@Inject TopBarPresenter topBar;
 	
 	private String requestedUsername;
-	private ApplicationRequestFactory requestFactory;
-	private PlaceManager placeManager;
+	private final ApplicationRequestFactory requestFactory;
+	private final PlaceManager placeManager;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.users)
@@ -125,11 +125,11 @@ public class UsersPresenter extends
 		    });		
 		    
 		    // Update fave list
-			final Request<List<FaveItemProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
-		    userFaveListReq.fire(new Receiver<List<FaveItemProxy>>() {
+			final Request<List<SongProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
+		    userFaveListReq.fire(new Receiver<List<SongProxy>>() {
 		    	@Override
-		    	public void onSuccess(final List<FaveItemProxy> faveList) {
-		    		if(faveList != null) {	    	
+		    	public void onSuccess(final List<SongProxy> faveList) {
+		    		if(faveList != null) {	 
 	    	    		getView().getUserFaveList().setRowData(faveList);
 	    			} else {
 	    				placeManager.revealDefaultPlace();

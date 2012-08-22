@@ -4,7 +4,6 @@ import com.google.web.bindery.requestfactory.shared.RequestFactory;
 
 public interface ApplicationRequestFactory extends RequestFactory {
   
-	FaveItemRequest faveItemRequest();
 	AppUserRequest appUserRequest();
 	SongRequest songRequest();
 	FaveListRequest faveListRequest();
