@@ -1,10 +1,11 @@
 package com.fave100.client.widgets;
 
 import com.fave100.client.pagefragments.SideNotification;
-import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListItem;
+import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.server.domain.FaveList;
 import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.ActionCell.Delegate;
 import com.google.gwt.cell.client.Cell;
@@ -26,8 +27,8 @@ public class NonpersonalFaveList extends FaveListBase{
 			private final ActionCell<SongProxy> cell = new ActionCell<SongProxy>("+", new Delegate<SongProxy>() {
 				@Override
 				public void execute(final SongProxy song) {
-					final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-					final Request<Void> addFaveReq = appUserRequest.addFaveItemForCurrentUser(song.getId(), song);
+					final FaveListRequest faveListRequest = requestFactory.faveListRequest();
+					final Request<Void> addFaveReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, song.getId(), song);
 					addFaveReq.fire(new Receiver<Void>() {
 						@Override
 						public void onSuccess(final Void added) {

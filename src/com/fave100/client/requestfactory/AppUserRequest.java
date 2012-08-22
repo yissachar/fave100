@@ -12,34 +12,26 @@ public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> findAppUser(String username);
 	Request<List<AppUserProxy>> getAppUsers();
 	Request<AppUserProxy> getLoggedInAppUser();
+	
+	Request<AppUserProxy> login(String username, String password);
+	Request<Boolean> checkPassword(String password);	
+	Request<Void> logout();
+	Request<AppUserProxy> createAppUser(String username, String password, String email);
 
+	Request<AppUserProxy> loginWithGoogle();
 	Request<Boolean> isGoogleUserLoggedIn();
 	Request<String> getGoogleLoginURL(String destinationURL);
 	Request<String> getGoogleLogoutURL(String destinationURL);
 	Request<String> getGoogleLoginLogoutURL(String destinationURL);
 	Request<AppUserProxy> createAppUserFromGoogleAccount(String username);
 	
+	Request<AppUserProxy> loginWithTwitter();
+	Request<String> getTwitterAuthUrl();	
+	Request<Boolean> isTwitterUserLoggedIn();
+	
 	Request<Void> followUser(String username);
 	Request<Boolean> checkFollowing(String username);
 	
 	Request<List<String>> getFaveFeedForCurrentUser();
-	
-	Request<Void> removeFaveItemForCurrentUser(int index);
-	Request<Void> addFaveItemForCurrentUser(Long songID, SongProxy songProxy);
-	Request<Void> rerankFaveItemForCurrentUser(int currentIndex, int newIndex);
-	Request<List<SongProxy>> getMasterFaveList();
-	Request<AppUserProxy> login(String username, String password);
-	Request<AppUserProxy> loginWithGoogle();
-	Request<Void> logout();
-	Request<AppUserProxy> createAppUser(String username, String password, String email);
-	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser(String hashtag);
-	Request<Void> editWhyline(int index, String whyline);
-	
-	Request<Boolean> checkPassword(String password);
 	Request<List<String>> getActivityForUser(String username);
-	Request<String> getTwitterAuthUrl();
-	Request<AppUserProxy> loginWithTwitter();
-	Request<Boolean> isTwitterUserLoggedIn();
-	
-	Request<List<FaveItemProxy>> getFaveList(String username, String hashtag);
 }

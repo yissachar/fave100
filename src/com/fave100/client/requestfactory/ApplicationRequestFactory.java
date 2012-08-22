@@ -7,4 +7,5 @@ public interface ApplicationRequestFactory extends RequestFactory {
 	FaveItemRequest faveItemRequest();
 	AppUserRequest appUserRequest();
 	SongRequest songRequest();
+	FaveListRequest faveListRequest();
 }
