@@ -129,14 +129,9 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		
 		try {
 			final RequestToken requestToken = twitter.getOAuthRequestToken();
-			//String token = requestToken.getToken();
-			//String tokenSecret = requestToken.getTokenSecret();
-			final String token = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
-			final String tokenSecret = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
 			
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("requestToken", requestToken);
 			return requestToken.getAuthenticationURL();
-			//return(requestToken.getAuthorizationURL());
 		} catch (final TwitterException e) {
 			// TODO Auto-generated catch block			
 			e.printStackTrace();
@@ -155,16 +150,10 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		final twitter4j.User user = (twitter4j.User) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("twitterUser");
 		if(user == null) {
 			final Twitter twitter = new TwitterFactory().getInstance();
-			//twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
-			twitter.setOAuthConsumer("GXXfKwE5cXgoXCfghEAg", "cec1qLagfRSc0EDOo5r5iR8VUNKfw7DIo6GRuswgs");
-			final String token = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("token");
-			final String tokenSecret = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("tokenSecret");		
-			//final String tokenString = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
-			//final String tokenSecretString = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
+			twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
+			
 			final RequestToken requestToken = (RequestToken) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
-			//return requestToken.equals(RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken"));
 			try {
-				//final RequestToken requestToken = new RequestToken(token, tokenSecret);
 				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
 				twitter.setOAuthAccessToken(accessToken);
 				final twitter4j.User twitterUser = twitter.verifyCredentials();

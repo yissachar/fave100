@@ -51,6 +51,13 @@ public class RegisterPresenter extends
 		Button getThirdPartyUsernameSubmitButton();
 		Anchor getRegisterWithGoogleButton();
 		Anchor getRegisterWithTwitterButton();
+		
+		void clearFields();
+		void showThirdPartyUsernamePrompt();
+		void hideThirdPartyUsernamePrompt();
+		void setNativeUsernameError(String error);
+		void setThirdPartyUsernameError(String error);
+		void clearNativeErrors();
 	}
 	
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
@@ -125,9 +132,9 @@ public class RegisterPresenter extends
 								getProxy().manualReveal(RegisterPresenter.this);
 							}
 						});
-						showThirdPartyUsernamePrompt();
+						getView().showThirdPartyUsernamePrompt();
 					} else {						
-						hideThirdPartyUsernamePrompt();
+						getView().hideThirdPartyUsernamePrompt();
 						getProxy().manualReveal(RegisterPresenter.this);
 					}
 				}
@@ -138,7 +145,7 @@ public class RegisterPresenter extends
 			// their 3rd party account - prompt them for a username and create their account
 			
 			//TODO: Need to show some loading icon or something while waiting for the RF req
-			getView().getRegisterContainer().setVisible(false);
+			getView().showThirdPartyUsernamePrompt();
 			// Try to log the user in with Twitter
 			final String oauth_verifier = Window.Location.getParameter("oauth_verifier");
 			final Request<AppUserProxy> loginWithTwitter = requestFactory.appUserRequest().loginWithTwitter(oauth_verifier);
@@ -147,28 +154,15 @@ public class RegisterPresenter extends
 				public void onSuccess(final AppUserProxy user) {	
 					if(user != null) {						
 						goToMyFave100();
-					} else {
-						showThirdPartyUsernamePrompt();
 					}
 					getProxy().manualReveal(RegisterPresenter.this);
 				}
 			});			
 		} else {
-			hideThirdPartyUsernamePrompt();
+			getView().hideThirdPartyUsernamePrompt();
 			getProxy().manualReveal(RegisterPresenter.this);
 		}
-	}
-	
-	private void showThirdPartyUsernamePrompt() {
-		getView().getThirdPartyUsernamePrompt().setVisible(true);
-		getView().getRegisterContainer().setVisible(false);
-	}
-	
-	private void hideThirdPartyUsernamePrompt() {
-		getView().getThirdPartyUsernamePrompt().setVisible(false);
-		getView().getRegisterContainer().setVisible(true);
-	}
-	
+	}	
 
 	@Override
 	protected void revealInParent() {
@@ -207,16 +201,15 @@ public class RegisterPresenter extends
 					// Create a new user with the username and password entered
 					final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(getView().getUsernameField().getValue(),
 							getView().getPasswordField().getValue(), getView().getEmailField().getValue());
-					clearFields();				
+					getView().clearFields();				
 					createAppUserReq.fire(new Receiver<AppUserProxy>() {
 						@Override
 						public void onSuccess(final AppUserProxy createdUser) {
 							appUserCreated();
 						}
 						@Override
-						public void onFailure(final ServerFailure failure) {
-							getView().getUsernameStatusMessage().setInnerText(failure.getMessage().replace("Server Error:", ""));
-							getView().getThirdPartyUsernameField().addStyleName("errorInput");
+						public void onFailure(final ServerFailure failure) {							
+							getView().setNativeUsernameError(failure.getMessage().replace("Server Error:", ""));
 						}
 					});
 				}
@@ -238,8 +231,7 @@ public class RegisterPresenter extends
 							}
 							@Override
 							public void onFailure(final ServerFailure failure) {
-								getView().getThirdPartyUsernameStatusMessage().setInnerText(failure.getMessage().replace("Server Error:", ""));
-								getView().getThirdPartyUsernameField().addStyleName("errorInput");
+								getView().setThirdPartyUsernameError(failure.getMessage().replace("Server Error:", ""));
 							}
 						});
 					} else if(provider.equals(RegisterPresenter.PROVIDER_TWITTER)){
@@ -276,13 +268,7 @@ public class RegisterPresenter extends
 	
 	private boolean validateFields() {		
 		// Assume all valid
-		getView().getUsernameField().removeStyleName("errorInput");
-		getView().getPasswordField().removeStyleName("errorInput");
-		getView().getEmailField().removeStyleName("errorInput");
-		getView().getPasswordRepeatField().removeStyleName("errorInput");
-		getView().getUsernameStatusMessage().setInnerText("");
-		getView().getPasswordStatusMessage().setInnerText("");
-		getView().getEmailStatusMessage().setInnerText("");
+		getView().clearNativeErrors();
 		
 		// TODO: Must duplicate all validation on server...
 		
@@ -326,20 +312,11 @@ public class RegisterPresenter extends
 		getView().getThirdPartyUsernameField().removeStyleName("errorInput");				
 		final String username = getView().getThirdPartyUsernameField().getValue();
 		if(username.equals("")) {
-			getView().getThirdPartyUsernameStatusMessage().setInnerText("You must enter a username");	
-			getView().getThirdPartyUsernameField().addStyleName("errorInput");
+			getView().setThirdPartyUsernameError("You must enter a username");
 			return false;
 		}		
 		return true;
 	}
-	
-	private void clearFields() {
-		getView().getUsernameField().setValue("");
-		getView().getEmailField().setValue("");
-		getView().getPasswordField().setValue("");
-		getView().getPasswordRepeatField().setValue("");
-		getView().getThirdPartyUsernameField().setValue("");
-	}	
 	
 	private void appUserCreated() {
 		placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
