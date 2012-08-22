@@ -1,6 +1,5 @@
 package com.fave100.client.pages.register;
 
-import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -11,6 +10,7 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.gwtplatform.mvp.client.ViewImpl;
 
 public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 
@@ -32,7 +32,7 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 	@UiField HTMLPanel topBar;
 	
 	@Override
-	public void setInSlot(Object slot, Widget content) {
+	public void setInSlot(final Object slot, final Widget content) {
 		if(slot == RegisterPresenter.TOP_BAR_SLOT) {
 			topBar.clear();
 			
@@ -147,4 +147,50 @@ public class RegisterView extends ViewImpl implements RegisterPresenter.MyView {
 	public Anchor getRegisterWithTwitterButton() {
 		return registerWithTwitterButton;
 	}
+
+	@Override
+	public void clearFields() {
+		usernameField.setValue("");
+		emailField.setValue("");
+		passwordField.setValue("");
+		passwordRepeatField.setValue("");
+		thirdPartyUsernameField.setValue("");
+		
+	}
+
+	@Override
+	public void showThirdPartyUsernamePrompt() {
+		thirdPartyUsernamePrompt.setVisible(true);
+		registerContainer.setVisible(false);		
+	}
+
+	@Override
+	public void hideThirdPartyUsernamePrompt() {
+		thirdPartyUsernamePrompt.setVisible(false);
+		registerContainer.setVisible(true);
+	}
+
+	@Override
+	public void setNativeUsernameError(final String error) {
+		usernameStatusMessage.setInnerText(error);
+		usernameField.addStyleName("errorInput");
+	}
+	
+	@Override
+	public void setThirdPartyUsernameError(final String error) {
+		thirdPartyUsernameStatusMessage.setInnerText(error);
+		thirdPartyUsernameField.addStyleName("errorInput");
+		
+	}
+
+	@Override
+	public void clearNativeErrors() {
+		usernameField.removeStyleName("errorInput");
+		passwordField.removeStyleName("errorInput");
+		emailField.removeStyleName("errorInput");
+		passwordRepeatField.removeStyleName("errorInput");
+		usernameStatusMessage.setInnerText("");
+		passwordStatusMessage.setInnerText("");
+		emailStatusMessage.setInnerText("");		
+	}	
 }
