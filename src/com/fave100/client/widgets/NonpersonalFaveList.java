@@ -2,7 +2,6 @@ package com.fave100.client.widgets;
 
 import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.FaveListItem;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.server.domain.FaveList;
@@ -23,7 +22,7 @@ public class NonpersonalFaveList extends FaveListBase{
 	public NonpersonalFaveList(final ApplicationRequestFactory requestFactory) {
 		super(requestFactory);
 		
-		_cells.add(0, new HasCell<FaveListItem, SongProxy>() {
+		_cells.add(0, new HasCell<SongProxy, SongProxy>() {
 			private final ActionCell<SongProxy> cell = new ActionCell<SongProxy>("+", new Delegate<SongProxy>() {
 				@Override
 				public void execute(final SongProxy song) {
@@ -49,17 +48,17 @@ public class NonpersonalFaveList extends FaveListBase{
             }
 
 			@Override
-			public FieldUpdater<FaveListItem, SongProxy> getFieldUpdater() {
+			public FieldUpdater<SongProxy, SongProxy> getFieldUpdater() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
-			public SongProxy getValue(final FaveListItem object) {
-				return (SongProxy) object;
+			public SongProxy getValue(final SongProxy object) {
+				return object;
 			}			
 		});
-		_cells.add(new HasCell<FaveListItem, SafeHtml>() {
+		_cells.add(new HasCell<SongProxy, SafeHtml>() {
 			private final SafeHtmlCell cell = new SafeHtmlCell();
 
             @Override
@@ -68,14 +67,18 @@ public class NonpersonalFaveList extends FaveListBase{
             }
 
 			@Override
-			public FieldUpdater<FaveListItem, SafeHtml> getFieldUpdater() {
+			public FieldUpdater<SongProxy, SafeHtml> getFieldUpdater() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
-			public SafeHtml getValue(final FaveListItem object) {				
-				return SafeHtmlUtils.fromString(object.getWhyline());
+			public SafeHtml getValue(final SongProxy object) {		
+				String whyline = object.getWhyline();
+				if(whyline == null || whyline.isEmpty()) {
+					whyline = "";
+				}
+				return SafeHtmlUtils.fromString(whyline);
 			}
 		});
 		

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.FaveListItem;
+import com.fave100.client.requestfactory.SongProxy;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CompositeCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -19,13 +19,13 @@ import com.google.gwt.user.client.ui.Image;
 
 public class FaveListBase extends HTMLPanel{
 	
-	protected List<HasCell<FaveListItem, ?>> _cells = new ArrayList<HasCell<FaveListItem,?>>();
-	protected CellList<FaveListItem> _cellList;
+	protected List<HasCell<SongProxy, ?>> _cells = new ArrayList<HasCell<SongProxy,?>>();
+	protected CellList<SongProxy> _cellList;
 	
 	public FaveListBase(final ApplicationRequestFactory requestFactory) {
 		super("");
 		
-		_cells.add(new HasCell<FaveListItem, SafeHtml>() {
+		_cells.add(new HasCell<SongProxy, SafeHtml>() {
 			private final SafeHtmlCell cell = new SafeHtmlCell();
             @Override
             public SafeHtmlCell getCell() {
@@ -33,13 +33,13 @@ public class FaveListBase extends HTMLPanel{
             }
 
 			@Override
-			public FieldUpdater<FaveListItem, SafeHtml> getFieldUpdater() {
+			public FieldUpdater<SongProxy, SafeHtml> getFieldUpdater() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
-			public SafeHtml getValue(final FaveListItem object) {
+			public SafeHtml getValue(final SongProxy object) {
 				final Anchor anchor = new Anchor();
 				anchor.setHref(object.getTrackViewUrl());
 				anchor.setHTML(object.getTrackName());
@@ -47,7 +47,7 @@ public class FaveListBase extends HTMLPanel{
 				return SafeHtmlUtils.fromTrustedString(anchor.toString());
 			}			
 		});
-		_cells.add(new HasCell<FaveListItem, SafeHtml>() {
+		_cells.add(new HasCell<SongProxy, SafeHtml>() {
 			private final SafeHtmlCell cell = new SafeHtmlCell();
 
             @Override
@@ -56,17 +56,17 @@ public class FaveListBase extends HTMLPanel{
             }
 
 			@Override
-			public FieldUpdater<FaveListItem, SafeHtml> getFieldUpdater() {
+			public FieldUpdater<SongProxy, SafeHtml> getFieldUpdater() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
-			public SafeHtml getValue(final FaveListItem object) {
+			public SafeHtml getValue(final SongProxy object) {
 				return SafeHtmlUtils.fromString(object.getArtistName());
 			}
 		});
-		_cells.add(new HasCell<FaveListItem, SafeHtml>() {
+		_cells.add(new HasCell<SongProxy, SafeHtml>() {
 			private final SafeHtmlCell cell = new SafeHtmlCell();
 
             @Override
@@ -75,17 +75,17 @@ public class FaveListBase extends HTMLPanel{
             }
 
 			@Override
-			public FieldUpdater<FaveListItem, SafeHtml> getFieldUpdater() {
+			public FieldUpdater<SongProxy, SafeHtml> getFieldUpdater() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
-			public SafeHtml getValue(final FaveListItem object) {				
-				return SafeHtmlUtils.fromString(object.getReleaseYear());
+			public SafeHtml getValue(final SongProxy object) {				
+				return SafeHtmlUtils.fromString(object.getReleaseDate().substring(0, 4));
 			}
 		});
-		_cells.add(new HasCell<FaveListItem, SafeHtml>() {
+		_cells.add(new HasCell<SongProxy, SafeHtml>() {
 			private final SafeHtmlCell cell = new SafeHtmlCell();
 
             @Override
@@ -94,13 +94,13 @@ public class FaveListBase extends HTMLPanel{
             }
 
 			@Override
-			public FieldUpdater<FaveListItem, SafeHtml> getFieldUpdater() {
+			public FieldUpdater<SongProxy, SafeHtml> getFieldUpdater() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
-			public SafeHtml getValue(final FaveListItem object) {
+			public SafeHtml getValue(final SongProxy object) {
 				final Image image = new Image();
 				image.setUrl(object.getArtworkUrl60());
 				return SafeHtmlUtils.fromTrustedString(image.toString());
@@ -115,16 +115,16 @@ public class FaveListBase extends HTMLPanel{
 		createCellList("");
 	}
 	public void createCellList(final String stylename) {
-		final CompositeCell<FaveListItem> cell = new CompositeCell<FaveListItem>(_cells);
+		final CompositeCell<SongProxy> cell = new CompositeCell<SongProxy>(_cells);
 		clear();
-		_cellList = new CellList<FaveListItem>(cell);
+		_cellList = new CellList<SongProxy>(cell);
 		add(_cellList);
 		if(!stylename.isEmpty()) {
 			_cellList.getRowContainer().addClassName(stylename);
 		}
 	}
 	
-	public void setRowData(final List<? extends FaveListItem> data) {
+	public void setRowData(final List<SongProxy> data) {
 		_cellList.setRowData(data);
 	}
 }

@@ -25,9 +25,10 @@ public interface AppUserRequest extends RequestContext{
 	Request<String> getGoogleLoginLogoutURL(String destinationURL);
 	Request<AppUserProxy> createAppUserFromGoogleAccount(String username);
 	
-	Request<AppUserProxy> loginWithTwitter();
+	Request<AppUserProxy> loginWithTwitter(String oauth_verifier);
 	Request<String> getTwitterAuthUrl();	
-	Request<Boolean> isTwitterUserLoggedIn();
+	Request<Boolean> isTwitterUserLoggedIn(String oauth_verifier);
+	Request<AppUserProxy> createAppUserFromTwitterAccount(String username, String oauth_verifier);
 	
 	Request<Void> followUser(String username);
 	Request<Boolean> checkFollowing(String username);

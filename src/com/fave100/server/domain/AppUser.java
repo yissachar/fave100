@@ -39,14 +39,11 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 
 	@IgnoreSave public static final String CONSUMER_KEY = "GXXfKwE5cXgoXCfghEAg";
 	@IgnoreSave public static final String CONSUMER_SECRET = "cec1qLagfRSc0EDOo5r5iR8VUNKfw7DIo6GRuswgs";
-	@IgnoreSave public static final int MAX_FAVES = 100;
 	@IgnoreSave public static final String AUTH_USER = "loggedIn";
 	
 	@Id private String username;
 	private String password;
 	private String email;
-	// TODO: Plan ahead for hashtags
-	//@Embed private List<FaveItem> fave100Songs = new ArrayList<FaveItem>();
 	// TODO: user avatar/gravatar
 	@IgnoreSave private String avatar;
 	// TODO: location = for location based lists
@@ -59,6 +56,8 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		setPassword(password);
 	}
 	
+	
+	// Finder methods
 	public static AppUser findAppUser(final String username) {
 		return ofy().load().type(AppUser.class).id(username).get();
 	}
@@ -81,6 +80,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}			
 	}
 	
+	// Login methods
 	public static AppUser login(final String username, final String password) {
 		AppUser loggedInUser;
 		loggedInUser = findAppUser(username);		
@@ -103,6 +103,21 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return loggedInUser;
 	}
 	
+	public static AppUser loginWithTwitter(final String oauth_verifier) {
+		final twitter4j.User twitterUser = getTwitterUser(oauth_verifier);
+		if(twitterUser != null) {
+			final AppUser loggedInUser = findAppUserByTwitterId(twitterUser.getId());			
+			if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());		
+			return loggedInUser;
+		}
+		return null;
+	}
+	
+	// Logout
+	public static void logout() {
+		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, null);
+	}
+	
 	public static String getTwitterAuthUrl() {
 		final Twitter twitter = new TwitterFactory().getInstance();
 		//twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
@@ -115,9 +130,9 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			final String token = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
 			final String tokenSecret = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
 			
-			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("token", token);
-			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("tokenSecret", tokenSecret);
-			return(requestToken.getAuthorizationURL());
+			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("requestToken", requestToken);
+			return requestToken.getAuthenticationURL();
+			//return(requestToken.getAuthorizationURL());
 		} catch (final TwitterException e) {
 			// TODO Auto-generated catch block			
 			e.printStackTrace();
@@ -125,24 +140,26 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return null;
 	}
 	
-	public static boolean isTwitterUserLoggedIn() {
-		if(getTwitterUser() != null) {
+	public static boolean isTwitterUserLoggedIn(final String oauth_verifier) {
+		if(getTwitterUser(oauth_verifier) != null) {
 			return true;
 		} else {
 			return false;
-		}
+		}		
 	}
-	public static twitter4j.User getTwitterUser() {
+	public static twitter4j.User getTwitterUser(final String oauth_verifier) {
 		final Twitter twitter = new TwitterFactory().getInstance();
 		//twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
 		twitter.setOAuthConsumer("GXXfKwE5cXgoXCfghEAg", "cec1qLagfRSc0EDOo5r5iR8VUNKfw7DIo6GRuswgs");
-		//String token = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("token");
-		//String tokenSecret = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("tokenSecret");
-		final String token = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
-		final String tokenSecret = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
+		final String token = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("token");
+		final String tokenSecret = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("tokenSecret");		
+		//final String tokenString = "762086864-iRzF4wN7giaYIjUL59kvPsX6PQNwwCyobPLaqLjL";
+		//final String tokenSecretString = "XcZ8UdUdNh5bBba1kuIniiqaGqal6cdDfAbVtQLLGE";
+		final RequestToken requestToken = (RequestToken) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
+		//return requestToken.equals(RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken"));
 		try {
-			final RequestToken requestToken = new RequestToken(token, tokenSecret);
-			final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken);
+			//final RequestToken requestToken = new RequestToken(token, tokenSecret);
+			final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
 			twitter.setOAuthAccessToken(accessToken);
 			final twitter4j.User twitterUser = twitter.verifyCredentials();
 			return twitterUser;
@@ -151,21 +168,10 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			e1.printStackTrace();
 		}
 		return null;
-	}
+	}	
 	
-	public static AppUser loginWithTwitter() {
-		final twitter4j.User twitterUser = getTwitterUser();
-		if(twitterUser != null) {
-			final AppUser loggedInUser = findAppUserByTwitterId(twitterUser.getId());			
-			if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());		
-			return loggedInUser;
-		}
-		return null;
-	}
 	
-	public static void logout() {
-		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, null);
-	}
+	
 	
 	/*
 	 * Checks if the user is logged into Google (though not necessarily logged
@@ -210,6 +216,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}
 	}
 	
+	// TODO: Merge account creations to avoid duplication
 	public static AppUser createAppUser(final String username, final String password, final String email) {
 		// TODO: Disallow username white-space, other special characters?, validate password not null, username not null		
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely 
@@ -255,6 +262,36 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				// Create the GoogleID lookup
 				final GoogleID googleID = new GoogleID(user.getUserId(), username);			
 				ofy().save().entities(appUser, googleID, faveList).now();					
+				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+				return appUser;
+			}			
+		});
+		return newAppUser;
+	}
+	
+	public static AppUser createAppUserFromTwitterAccount(final String username, final String oauth_verifier) {
+		// TODO: Disallow white-space, other special characters?		
+		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely 
+		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
+			@Override
+			public AppUser run() {
+				final twitter4j.User user = getTwitterUser(oauth_verifier);
+				if(ofy().load().type(AppUser.class).id(username).get() != null) {
+					throw new RuntimeException("A user with that name already exists");
+				}
+				if(ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
+					throw new RuntimeException("There is already a Fave100 account associated with this Google ID");
+				} 
+				// Create the user
+				final AppUser appUser = new AppUser();
+				appUser.setUsername(username);
+				// TODO: Do we need an email for twitter users?
+				// Create the user's list
+				final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);				
+				// Create the TwitterID lookup
+				final TwitterID twitterID = new TwitterID(user.getId(), username);
+				// TODO: Store tokens in database?
+				ofy().save().entities(appUser, twitterID, faveList).now();					
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 				return appUser;
 			}			

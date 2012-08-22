@@ -8,7 +8,6 @@ import java.util.List;
 import com.fave100.server.domain.Activity.Transaction;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
-import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
@@ -24,15 +23,19 @@ public class FaveList extends DatastoreObject{
 	@Id private String id;
 	private Ref<AppUser> user;
 	private String hashtag;
-	@Embed private List<FaveItem> list = new ArrayList<FaveItem>();
+	private List<FaveItem> list = new ArrayList<FaveItem>();;
 	
 	@SuppressWarnings("unused")
-	private FaveList() {}
+	// Request Factory calls this in some way, so need to make sure
+	// that we initialize the list
+	private FaveList() {		
+		//list = new ArrayList<FaveItem>();
+	}
 	
 	public FaveList(final String username, final String hashtag) {
 		this.id = username+FaveList.SEPERATOR_TOKEN+hashtag;
 		this.user = Ref.create(Key.create(AppUser.class, username));
-		this.hashtag = hashtag;
+		this.hashtag = hashtag;		
 	}
 	
 	public static FaveList findFaveList(final String id) {
@@ -47,7 +50,7 @@ public class FaveList extends DatastoreObject{
 			//return false;
 		}
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();		
-		if(faveList.getList().size() >= AppUser.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");;		
+		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");;		
 		final Song song = ofy().load().type(Song.class).id(songID).get();		
 		boolean unique = true;
 		// If the song does not exist, create it
@@ -128,7 +131,7 @@ public class FaveList extends DatastoreObject{
 			if(faveList != null) {
 				for(int i = 0; i < faveList.getList().size(); i++) {
 					final Song song = faveList.getList().get(i).getSong().get();
-					song.addScore(AppUser.MAX_FAVES - i);
+					song.addScore(FaveList.MAX_FAVES - i);
 					ofy().save().entity(song).now();
 				}
 			}				
@@ -137,25 +140,30 @@ public class FaveList extends DatastoreObject{
 		return topSongs;
 	}
 	
-	public static List<FaveItem> getFaveItemsForCurrentUser(final String hashtag) {
+	public static List<Song> getFaveItemsForCurrentUser(final String hashtag) {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return null;
 		return getFaveList(currentUser.getUsername(), hashtag);
 		
 	}
 	
-	public static List<FaveItem> getFaveList(final String username, final String hashtag) {
+	public static List<Song> getFaveList(final String username, final String hashtag) {
 		final FaveList faveList = ofy().load().type(FaveList.class).id(username+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList == null) return null;
+		final ArrayList<Song> songArray = new ArrayList<Song>();
 		for(final FaveItem faveItem : faveList.getList()) {
 			final Song song = faveItem.getSong().get();
+			song.setWhyline(faveItem.getWhyline());
+			songArray.add(song);
+			/*final Song song = faveItem.getSong().get();
 			faveItem.setTrackName(song.getTrackName());
 			faveItem.setArtistName(song.getArtistName());
 			faveItem.setTrackViewUrl(song.getTrackViewUrl());
 			faveItem.setReleaseYear(song.getReleaseYear());
-			faveItem.setArtworkUrl60(song.getArtworkUrl60());
+			faveItem.setArtworkUrl60(song.getArtworkUrl60());*/
 		}
-		return faveList.getList();
+		//return faveList.getList();
+		return songArray;
 	}
 	
 	
