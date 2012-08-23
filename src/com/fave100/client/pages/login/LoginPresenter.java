@@ -1,46 +1,43 @@
 package com.fave100.client.pages.login;
 
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
-import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
-import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
-import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextBox;
+import com.gwtplatform.mvp.client.HasUiHandlers;
+import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.UiHandlers;
+import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
+import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class LoginPresenter extends
-		Presenter<LoginPresenter.MyView, LoginPresenter.MyProxy> {
+		Presenter<LoginPresenter.MyView, LoginPresenter.MyProxy>
+		implements LoginUiHandlers{
 
-	public interface MyView extends View {		
-		TextBox getUsernameInput();
-		PasswordTextBox getPasswordInput();
-		SpanElement getLoginStatusMessage();
-		Button getLoginButton();
-		Anchor getSignInWithGoogleButton();
-		Anchor getSignInWithTwitterButton();
+	public interface MyView extends View, HasUiHandlers<LoginUiHandlers> {	
+		String getUsername();
+		String getPassword();
+		void clearUsername();
+		void clearPassword();		
+		void setError(String error);
+		void setGoogleLoginUrl(String url);
+		void setTwitterLoginUrl(String url);
 	}
 	
 	@ContentSlot
@@ -62,6 +59,7 @@ public class LoginPresenter extends
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
+		getView().setUiHandlers(this);
 		//TODO: Should we have autocomplete for the username box?
 		// See: http://code.google.com/p/google-web-toolkit-incubator/wiki/LoginSecurityFAQ
 	}
@@ -76,53 +74,77 @@ public class LoginPresenter extends
 		super.onBind();
 		
 		// Get the login url for Google
-		AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		Request<String> loginUrlReq = appUserRequest.getGoogleLoginURL(Window.Location.getPath()+Window.Location.getQueryString()+"#"+
+		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		final Request<String> loginUrlReq = appUserRequest.getGoogleLoginURL(Window.Location.getPath()+Window.Location.getQueryString()+"#"+
 				NameTokens.register+";provider="+RegisterPresenter.PROVIDER_GOOGLE);
 		loginUrlReq.fire(new Receiver<String>() {
 			@Override 
-			public void onSuccess(String url) {
-				getView().getSignInWithGoogleButton().setHref(url);
+			public void onSuccess(final String url) {
+				getView().setGoogleLoginUrl(url);
 			}
 		});
 		
 		// Get the Twitter auth url
-		Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl();
+		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl();
 		authUrlReq.fire(new Receiver<String>() {
 			@Override 
-			public void onSuccess(String url) {
-				getView().getSignInWithTwitterButton().setHref(url);
+			public void onSuccess(final String url) {
+				getView().setTwitterLoginUrl(url);
 			}
 		});
 		
-		registerHandler(getView().getLoginButton().addClickHandler(new ClickHandler() {			
+		/*registerHandler(getView().getLoginButton().addClickHandler(new ClickHandler() {			
 			@Override
-			public void onClick(ClickEvent event) {
-				AppUserRequest appUserRequest = requestFactory.appUserRequest();
-				Request<AppUserProxy> loginReq = appUserRequest.login(getView().getUsernameInput().getValue(),
-						getView().getPasswordInput().getValue());
+			public void onClick(final ClickEvent event) {
+				final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+				final Request<AppUserProxy> loginReq = appUserRequest.login(getView().getUsername(),
+						getView().getPassword());
 
 				// Clear the inputs immediately
-				getView().getPasswordInput().setValue("");
-				getView().getLoginStatusMessage().setInnerText("");
+				getView().clearPassword();
 				loginReq.fire(new Receiver<AppUserProxy>() {
 					@Override
-					public void onSuccess(AppUserProxy appUser) {
-						getView().getUsernameInput().setValue("");
+					public void onSuccess(final AppUserProxy appUser) {
+						getView().clearUsername();
 						placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));						
 					}
 					@Override
-					public void onFailure(ServerFailure failure) {
-						getView().getLoginStatusMessage().setInnerText("Username or password incorrect.");
+					public void onFailure(final ServerFailure failure) {
+						getView().setError("Username or password incorrect");
 					}
 				});
 			}
-		}));
+		}));*/
 	}
 	
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
 	    setInSlot(TOP_BAR_SLOT, topBar);
-	}	
+	}
+
+	@Override
+	public void login() {
+		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		final Request<AppUserProxy> loginReq = appUserRequest.login(getView().getUsername(),
+				getView().getPassword());
+
+		// Clear the inputs immediately
+		getView().clearPassword();
+		loginReq.fire(new Receiver<AppUserProxy>() {
+			@Override
+			public void onSuccess(final AppUserProxy appUser) {
+				getView().clearUsername();
+				placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));						
+			}
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				getView().setError("Username or password incorrect");
+			}
+		});
+	}
+}
+
+interface LoginUiHandlers extends UiHandlers {
+	void login();
 }

@@ -6,7 +6,6 @@ import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.client.widgets.NonpersonalFaveList;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
@@ -30,7 +29,7 @@ public class HomePresenter extends
 		Presenter<HomePresenter.MyView, HomePresenter.MyProxy> {
 
 	public interface MyView extends View {
-		NonpersonalFaveList getMasterFaveList();
+		void updateMasterFaveList(List<SongProxy> faveList);
 	}
 	
 	@ContentSlot
@@ -65,7 +64,7 @@ public class HomePresenter extends
 	    masterFaveListReq.fire(new Receiver<List<SongProxy>>() {
 	    	@Override
 	    	public void onSuccess(final List<SongProxy> masterFaveList) {
-	    		getView().getMasterFaveList().setRowData(masterFaveList);
+	    		getView().updateMasterFaveList(masterFaveList);
 	    	}
 	    });	    
 	}
