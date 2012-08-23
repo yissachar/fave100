@@ -43,9 +43,9 @@
 		}
 	</ui:style>
 
-	<g:HTMLPanel>
+	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>
-		<div class="container">
+		<div class="content">
 			<g:InlineHTML ui:field="usersList" styleName="{style.userList}"/>						
 		</div>		
 		<pf:Footer/>

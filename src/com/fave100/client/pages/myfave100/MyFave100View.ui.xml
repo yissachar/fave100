@@ -12,10 +12,12 @@
 		@external .faveList;
 		.faveList{}			
 	</ui:style>
-	<g:HTMLPanel>
-		<g:HTMLPanel ui:field="topBar"/>		
-		<g:SuggestBox ui:field="songSuggestBox"/>
-		<d:PersonalFaveList ui:field="personalFaveList" styleName="{style.faveList}"/>
+	<g:HTMLPanel ui:styleName="container">
+		<g:HTMLPanel ui:field="topBar"/>
+		<div class="content">
+			<g:SuggestBox ui:field="songSuggestBox"/>
+			<d:PersonalFaveList ui:field="personalFaveList" styleName="{style.faveList}"/>
+		</div>	
 		<pf:Footer/>
 	</g:HTMLPanel>
 </ui:UiBinder>
