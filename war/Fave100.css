@@ -1,9 +1,12 @@
-html, *{
+*{
 	margin: 0px;
 	padding 0px;
 }
+
 html{
 	height: 100%;
+	margin: 0px;
+	padding 0px;
 }
 
 body{
@@ -77,15 +80,25 @@ button:disabled:hover{
 }
 
 footer {
-	display: block;
-	clear: both;
+	position: absolute;	
+	bottom: 0;
+	width: 100%;
 	text-align: center;
-	padding: 30px 0;
+	padding-bottom: 15px;
 }
 
 .container{
-	margin: 0 auto;
+	position: relative;
+	margin: 0 auto;	
+	height: auto !important;
+	min-height: 100%;
+	overflow: hidden;
+}
+
+.content {
 	width: 840px;
+	margin: 0 auto;
+	padding-bottom: 5em;
 }
 
 /* Suggest Box */
