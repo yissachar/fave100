@@ -2,6 +2,7 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -45,7 +46,8 @@
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="container">
-			<g:InlineHTML ui:field="usersList" styleName="{style.userList}"/>			
-		</div>
-	</g:HTMLPanel>
+			<g:InlineHTML ui:field="usersList" styleName="{style.userList}"/>						
+		</div>		
+		<pf:Footer/>
+	</g:HTMLPanel>	
 </ui:UiBinder>
