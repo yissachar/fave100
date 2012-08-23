@@ -45,8 +45,8 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	private String password;
 	private String email;
 	// TODO: user avatar/gravatar
-	@IgnoreSave private String avatar;
-	// TODO: location = for location based lists
+	private String avatar;
+	// TODO: location  = for location based lists
 	
 	public AppUser() {}
 	
@@ -109,7 +109,13 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		final twitter4j.User twitterUser = getTwitterUser(oauth_verifier);
 		if(twitterUser != null) {
 			final AppUser loggedInUser = findAppUserByTwitterId(twitterUser.getId());			
-			if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());		
+			if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
+			final String twitterAvatar = twitterUser.getProfileImageURL().toString();
+			if(!loggedInUser.getAvatar().equals(twitterAvatar)) {
+				// Update the user's avatar from Twitter
+				loggedInUser.setAvatar(twitterAvatar);
+				ofy().save().entity(loggedInUser).now();
+			}
 			return loggedInUser;
 		}
 		return null;
@@ -230,8 +236,9 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 					// Create the user's list
 					final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
 					ofy().save().entities(appUser, faveList).now();
-					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-					return appUser;
+					//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+					//return appUser;
+					return login(username, password);
 				}
 			}			
 		});		
@@ -261,8 +268,9 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				// Create the GoogleID lookup
 				final GoogleID googleID = new GoogleID(user.getUserId(), username);			
 				ofy().save().entities(appUser, googleID, faveList).now();					
-				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-				return appUser;
+				//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+				//return appUser;
+				return loginWithGoogle();
 			}			
 		});
 		return newAppUser;
@@ -291,8 +299,9 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				final TwitterID twitterID = new TwitterID(user.getId(), username);
 				// TODO: Store tokens in database?
 				ofy().save().entities(appUser, twitterID, faveList).now();					
-				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-				return appUser;
+				//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+				//return appUser;
+				return loginWithTwitter(oauth_verifier);
 			}			
 		});
 		return newAppUser;
@@ -479,18 +488,20 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 
 	public String getAvatar() {
-		// TODO: Need local avatar as well (if they don't have gravatar)
-		// TODO: Do we even want to show gravatars at all? some privacy issues
-		if(getEmail() == null) return "http://www.gravatar.com/avatar/?d=mm";
-		try {
-			final byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");			
-	        final BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
-	        final String hash = String.format("%1$032x", i);
-	       return "http://www.gravatar.com/avatar/"+hash+"?d=mm";
-		} catch (final Exception e) {
-			// TODO: Do we care what happens if an exception is thrown here?
+		// TODO: Need local avatar as well (if they don't have gravatar or twitter)
+		if(avatar == null) {
+			// TODO: Do we even want to show gravatars at all? some privacy issues
+			if(getEmail() == null) return "http://www.gravatar.com/avatar/?d=mm";
+			try {
+				final byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");			
+		        final BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
+		        final String hash = String.format("%1$032x", i);
+		       return "http://www.gravatar.com/avatar/"+hash+"?d=mm";
+			} catch (final Exception e) {
+				// TODO: Do we care what happens if an exception is thrown here?
+			}	
 		}	
-		return null;
+		return avatar;
 	}
 
 	public void setAvatar(final String avatar) {
