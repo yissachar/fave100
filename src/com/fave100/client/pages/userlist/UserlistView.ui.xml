@@ -26,6 +26,8 @@
 		}
 		.userList li img{
 			float: left;
+			width: 80px;
+			height: 80px;
 		}
 		.userList a{
 			display: block;
