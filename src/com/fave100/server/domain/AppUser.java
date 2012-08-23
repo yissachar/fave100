@@ -130,8 +130,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	
 	public static String getTwitterAuthUrl() {
 		final Twitter twitter = new TwitterFactory().getInstance();
-		//twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
-		twitter.setOAuthConsumer("GXXfKwE5cXgoXCfghEAg", "cec1qLagfRSc0EDOo5r5iR8VUNKfw7DIo6GRuswgs");
+		twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
 		
 		try {
 			final RequestToken requestToken = twitter.getOAuthRequestToken();

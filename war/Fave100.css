@@ -92,13 +92,13 @@ footer {
 	margin: 0 auto;	
 	height: auto !important;
 	min-height: 100%;
-	overflow: hidden;
 }
 
 .content {
 	width: 840px;
 	margin: 0 auto;
 	padding-bottom: 5em;
+	overflow: hidden;
 }
 
 /* Suggest Box */

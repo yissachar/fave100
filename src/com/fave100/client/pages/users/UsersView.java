@@ -2,6 +2,7 @@ package com.fave100.client.pages.users;
 
 import java.util.List;
 
+import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
@@ -53,9 +54,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
-		if(slot == UsersPresenter.TOP_BAR_SLOT) {
-			topBar.clear();
-			
+		if(slot == BasePresenter.TOP_BAR_SLOT) {
+			topBar.clear();			
 			if(content != null) {
 				topBar.add(content);
 			}
