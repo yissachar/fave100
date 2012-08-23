@@ -3,7 +3,8 @@ package com.fave100.client.pages.users;
 import java.util.List;
 
 import com.fave100.client.pagefragments.SideNotification;
-import com.fave100.client.pagefragments.TopBarPresenter;
+import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
@@ -11,7 +12,6 @@ import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.server.domain.FaveList;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.inject.Inject;
@@ -19,33 +19,18 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
-import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.UiHandlers;
-import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class UsersPresenter extends
-		Presenter<UsersPresenter.MyView, UsersPresenter.MyProxy> 
+		BasePresenter<UsersPresenter.MyView, UsersPresenter.MyProxy> 
 		implements UsersUiHandlers{
-	
-	
 
-	public interface MyView extends View, HasUiHandlers<UsersUiHandlers> {		
-		/*HTMLPanel getUserProfile();
-		Image getAvatar();
-		SpanElement getUsernameSpan();		
-		Button getFollowButton();
-		NonpersonalFaveList getUserFaveList();
-		Anchor getFave100TabLink();
-		Anchor getActivityTabLink();
-		InlineHTML getActivityTab();*/
+	public interface MyView extends BaseView, HasUiHandlers<UsersUiHandlers> {		
 		
 		void setFollowed();
 		void setUnfollowed();
@@ -55,12 +40,9 @@ public class UsersPresenter extends
 		void setUserFaveList(List<SongProxy> faveList);
 	}
 		
-	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
 	public static final String FAVE_100_TAB = "fave100";
 	public static final String ACTIVITY_TAB = "activity";
-	
-	@Inject TopBarPresenter topBar;
-	
+		
 	private String requestedUsername;
 	private final ApplicationRequestFactory requestFactory;
 	private final PlaceManager placeManager;
@@ -78,11 +60,6 @@ public class UsersPresenter extends
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
 		getView().setUiHandlers(this);
-	}
-
-	@Override
-	protected void revealInParent() {
-		RevealRootContentEvent.fire(this, this);
 	}
 	
 	@Override
@@ -161,13 +138,6 @@ public class UsersPresenter extends
 		    	getView().showFave100Tab();
 		    }
 		}
-	}
-	
-	@Override
-	protected void onReveal() {
-	    super.onReveal();
-	    setInSlot(TOP_BAR_SLOT, topBar);
-	    // TODO: handle user visiting own page	    
 	}
 
 	@Override

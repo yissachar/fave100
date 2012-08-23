@@ -1,9 +1,9 @@
 package com.fave100.client;
 
-import com.google.gwt.core.client.EntryPoint;
 import com.fave100.client.gin.ClientGinjector;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Window;
@@ -31,13 +31,13 @@ public class Fave100 implements EntryPoint {
 	}
 	
 	private void checkPassword() {
-		ApplicationRequestFactory requestFactory = GWT.create(ApplicationRequestFactory.class);
+		final ApplicationRequestFactory requestFactory = GWT.create(ApplicationRequestFactory.class);
 		requestFactory.initialize(new SimpleEventBus());
-		AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		Request<Boolean> correctPasswordReq = appUserRequest.checkPassword(Window.prompt("Please enter the password:", ""));
+		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		final Request<Boolean> correctPasswordReq = appUserRequest.checkPassword(Window.prompt("Please enter the password:", ""));
 		correctPasswordReq.fire(new Receiver<Boolean>() {
 			@Override
-			public void onSuccess(Boolean response) {			
+			public void onSuccess(final Boolean response) {			
 				if(response != true) {
 					checkPassword();
 				} else {					

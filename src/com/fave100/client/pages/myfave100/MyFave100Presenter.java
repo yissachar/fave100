@@ -1,7 +1,9 @@
 package com.fave100.client.pages.myfave100;
 
 import com.fave100.client.pagefragments.SideNotification;
-import com.fave100.client.pagefragments.TopBarPresenter;
+import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
+import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
@@ -20,14 +22,11 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 /**
  * Page for user to modify their own Fave100 list.
@@ -35,16 +34,16 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
  *
  */
 public class MyFave100Presenter extends
-		Presenter<MyFave100Presenter.MyView, MyFave100Presenter.MyProxy> {	
+		BasePresenter<MyFave100Presenter.MyView, MyFave100Presenter.MyProxy> {	
 		
-	private ApplicationRequestFactory requestFactory;
+	private ApplicationRequestFactory requestFactory;	
 	
-	@ContentSlot
-	public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot 
+	public static final Type<RevealContentHandler<?>> FAVE_FEED_SLOT = new Type<RevealContentHandler<?>>();
 	
-	@Inject TopBarPresenter topBar;
+	@Inject FaveFeedPresenter faveFeed;
 
-	public interface MyView extends View {
+	public interface MyView extends BaseView {
 		SongSuggestBox getSongSuggestBox();
 		PersonalFaveList getPersonalFaveList();
 	}
@@ -60,11 +59,6 @@ public class MyFave100Presenter extends
 		super(eventBus, view, proxy);
 		
 		this.requestFactory = requestFactory;
-	}
-
-	@Override
-	protected void revealInParent() {
-		RevealRootContentEvent.fire(this, this);
 	}
 
 	@Override
@@ -111,7 +105,7 @@ public class MyFave100Presenter extends
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
-	    setInSlot(TOP_BAR_SLOT, topBar);
+	    setInSlot(FAVE_FEED_SLOT, faveFeed);
 	    getView().getPersonalFaveList().refreshList();
 	}
 }

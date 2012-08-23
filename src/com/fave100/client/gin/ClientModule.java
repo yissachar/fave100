@@ -1,31 +1,33 @@
 package com.fave100.client.gin;
 
-import com.google.gwt.core.client.GWT;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.google.gwt.event.shared.EventBus;
-import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.gwtplatform.mvp.client.gin.DefaultModule;
-import com.fave100.client.pages.home.HomePresenter;
-import com.fave100.client.pages.home.HomeView;
-import com.fave100.client.place.ClientPlaceManager;
-import com.fave100.client.place.DefaultPlace;
-import com.fave100.client.place.NameTokens;
-import com.fave100.client.pages.myfave100.MyFave100Presenter;
-import com.fave100.client.pages.myfave100.MyFave100View;
 import com.fave100.client.pagefragments.TopBarPresenter;
 import com.fave100.client.pagefragments.TopBarView;
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.pages.register.RegisterPresenter;
-import com.fave100.client.pages.register.RegisterView;
-import com.fave100.client.pages.users.UsersPresenter;
-import com.fave100.client.pages.users.UsersView;
+import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
+import com.fave100.client.pagefragments.favefeed.FaveFeedView;
+import com.fave100.client.pages.home.HomePresenter;
+import com.fave100.client.pages.home.HomeView;
 import com.fave100.client.pages.login.LoginPresenter;
 import com.fave100.client.pages.login.LoginView;
 import com.fave100.client.pages.logout.LogoutPresenter;
 import com.fave100.client.pages.logout.LogoutView;
+import com.fave100.client.pages.myfave100.MyFave100Presenter;
+import com.fave100.client.pages.myfave100.MyFave100View;
+import com.fave100.client.pages.register.RegisterPresenter;
+import com.fave100.client.pages.register.RegisterView;
 import com.fave100.client.pages.userlist.UserlistPresenter;
 import com.fave100.client.pages.userlist.UserlistView;
+import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.pages.users.UsersView;
+import com.fave100.client.place.ClientPlaceManager;
+import com.fave100.client.place.DefaultPlace;
+import com.fave100.client.place.NameTokens;
+import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
+import com.gwtplatform.mvp.client.gin.DefaultModule;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -59,12 +61,15 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(UserlistPresenter.class, UserlistPresenter.MyView.class,
 				UserlistView.class, UserlistPresenter.MyProxy.class);
+
+		bindPresenterWidget(FaveFeedPresenter.class,
+				FaveFeedPresenter.MyView.class, FaveFeedView.class);
 	}
 	
 	@Provides
 	@Singleton
-	public ApplicationRequestFactory createApplicationRequestFactory(EventBus eventBus) {
-		ApplicationRequestFactory requestFactory = GWT.create(ApplicationRequestFactory.class);
+	public ApplicationRequestFactory createApplicationRequestFactory(final EventBus eventBus) {
+		final ApplicationRequestFactory requestFactory = GWT.create(ApplicationRequestFactory.class);
 		requestFactory.initialize(eventBus);
 		return requestFactory;
 	}

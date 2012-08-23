@@ -1,52 +1,31 @@
 package com.fave100.client.pages.register;
 
 import com.fave100.client.pagefragments.SideNotification;
-import com.fave100.client.pagefragments.TopBarPresenter;
+import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
-import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.UiHandlers;
-import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class RegisterPresenter extends
-		Presenter<RegisterPresenter.MyView, RegisterPresenter.MyProxy> 
+		BasePresenter<RegisterPresenter.MyView, RegisterPresenter.MyProxy> 
 		implements RegisterUiHandlers{
 
-	public interface MyView extends View, HasUiHandlers<RegisterUiHandlers> {
-		/*SpanElement getUsernameStatusMessage();
-		SpanElement getThirdPartyUsernameStatusMessage();
-		SpanElement getEmailStatusMessage();
-		TextBox getUsernameField();
-		TextBox getEmailField();
-		TextBox getThirdPartyUsernameField();
-		PasswordTextBox getPasswordField();
-		PasswordTextBox getPasswordRepeatField();
-		SpanElement getPasswordStatusMessage();
-		HTMLPanel getRegisterContainer();
-		HTMLPanel getThirdPartyUsernamePrompt();
-		Button getRegisterButton();
-		Button getThirdPartyUsernameSubmitButton();
-		Anchor getRegisterWithGoogleButton();
-		Anchor getRegisterWithTwitterButton();*/
-		
+	public interface MyView extends BaseView, HasUiHandlers<RegisterUiHandlers> {		
 		void setGoogleUrl(String url);
 		void setTwitterUrl(String url);
 		void clearFields();
@@ -59,14 +38,10 @@ public class RegisterPresenter extends
 		void setPasswordRepeatError(String error);
 		void clearNativeErrors();
 		void clearThirdPartyErrors();
-	}
-	
-	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
+	}	
 	
 	public static final String PROVIDER_GOOGLE = "google";
 	public static final String PROVIDER_TWITTER = "twitter";
-	
-	@Inject TopBarPresenter topBar;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.register)
@@ -167,11 +142,6 @@ public class RegisterPresenter extends
 	}	
 
 	@Override
-	protected void revealInParent() {
-		RevealRootContentEvent.fire(this, this);
-	}
-
-	@Override
 	protected void onBind() {
 		super.onBind();
 		
@@ -194,13 +164,7 @@ public class RegisterPresenter extends
 				getView().setTwitterUrl(url);
 			}
 		});				
-	}
-	
-	@Override
-	protected void onReveal() {
-	    super.onReveal();
-	    setInSlot(TOP_BAR_SLOT, topBar);  
-	}
+	}	
 	
 	@Override
 	public void register(final String username, final String email, final String password, 

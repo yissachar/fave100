@@ -17,6 +17,7 @@
 		<div class="content">
 			<g:SuggestBox ui:field="songSuggestBox"/>
 			<d:PersonalFaveList ui:field="personalFaveList" styleName="{style.faveList}"/>
+			<g:HTMLPanel ui:field="faveFeed"/>
 		</div>	
 		<pf:Footer/>
 	</g:HTMLPanel>
