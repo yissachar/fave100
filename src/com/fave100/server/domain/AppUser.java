@@ -456,7 +456,24 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}
 	}
 	
-    // Getters and setters
+	public String getAvatarImage() {
+		// TODO: Need local avatar as well (if they don't have gravatar or twitter)
+		if(avatar == null) {
+			// TODO: Do we even want to show gravatars at all? some privacy issues
+			if(getEmail() == null) return "http://www.gravatar.com/avatar/?d=mm";
+			try {
+				final byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");			
+		        final BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
+		        final String hash = String.format("%1$032x", i);
+		       return "http://www.gravatar.com/avatar/"+hash+"?d=mm";
+			} catch (final Exception e) {
+				// TODO: Do we care what happens if an exception is thrown here?
+			}	
+		}	
+		return avatar;
+	}
+	
+    // Getters and setters	
 
 	public String getEmail() {
 		return email;
@@ -487,19 +504,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 
 	public String getAvatar() {
-		// TODO: Need local avatar as well (if they don't have gravatar or twitter)
-		if(avatar == null) {
-			// TODO: Do we even want to show gravatars at all? some privacy issues
-			if(getEmail() == null) return "http://www.gravatar.com/avatar/?d=mm";
-			try {
-				final byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");			
-		        final BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
-		        final String hash = String.format("%1$032x", i);
-		       return "http://www.gravatar.com/avatar/"+hash+"?d=mm";
-			} catch (final Exception e) {
-				// TODO: Do we care what happens if an exception is thrown here?
-			}	
-		}	
 		return avatar;
 	}
 

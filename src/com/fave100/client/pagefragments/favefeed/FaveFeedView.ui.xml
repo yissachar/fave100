@@ -6,7 +6,31 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<g:HTMLPanel>
-		Naoksdafo
+	<ui:style>
+		.faveFeed{
+			position: absolute;
+			border: 1px solid #999;
+			right: 0;
+			top: 150px;
+			width: 200px;			
+			z-index: 99999;
+		}
+		.faveFeed ul {
+			list-style-type: none;
+			padding: 0;
+		}
+		.faveFeed li {
+			border-bottom: 1px solid #999;
+			padding: 7px;
+			cursor: pointer;
+			background-color: #F5F8E5;
+		}
+		.faveFeed li:hover{
+			background-color: #E7E7E7;
+		}	
+	</ui:style>
+	
+	<g:HTMLPanel styleName="{style.faveFeed}">
+		<g:InlineHTML ui:field="panel"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

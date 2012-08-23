@@ -25,28 +25,7 @@
 		.topNav li{
 			display: inline;
 			margin: 7px;
-		}
-		.faveFeed{
-			position: absolute;
-			border: 1px solid #999;
-			right: 0;
-			top: 70px;
-			width: 200px;			
-			z-index: 99999;
-		}
-		.faveFeed ul {
-			list-style-type: none;
-			padding: 0;
-		}
-		.faveFeed li {
-			border-bottom: 1px solid #999;
-			padding: 7px;
-			cursor: pointer;
-			background-color: #F5F8E5;
-		}
-		.faveFeed li:hover{
-			background-color: #E7E7E7;
-		}
+		}		
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
@@ -61,6 +40,5 @@
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
 			</ul>			
 		</div>
-		<g:InlineHTML ui:field="faveFeed" styleName="{style.faveFeed}"/>
 	</g:HTMLPanel>
 </ui:UiBinder>
