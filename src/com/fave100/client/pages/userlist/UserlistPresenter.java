@@ -53,7 +53,7 @@ public class UserlistPresenter extends
 					output += "<li>";
 					// TODO: profile image					
 					//output += "<img src='http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' />";
-					output += "<img src='"+user.getAvatar()+"'/>";
+					output += "<img src='"+user.getAvatarImage()+"'/>";
 					output += "<a href='"+Window.Location.getPath()+Window.Location.getQueryString()+"#"+NameTokens.users+";u="+user.getUsername()+"'>";
 					output += "<div>"+user.getUsername()+"</div>";					
 					output += "</a>";

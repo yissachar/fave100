@@ -109,7 +109,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Override
 	public void setUserProfile(final AppUserProxy user) {
-		avatar.setUrl(user.getAvatar());
+		avatar.setUrl(user.getAvatarImage());
 		username.setInnerText(user.getUsername());
 	}
 

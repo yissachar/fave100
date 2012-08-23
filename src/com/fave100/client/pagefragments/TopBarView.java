@@ -4,7 +4,6 @@ import com.fave100.client.place.NameTokens;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -21,7 +20,6 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 	@UiField SpanElement greeting;	
 	@UiField InlineHyperlink myFave100Link;	
 	@UiField InlineHyperlink registerLink;
-	@UiField InlineHTML faveFeed;
 
 	@Inject
 	public TopBarView(final Binder binder) {
@@ -31,11 +29,6 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 	@Override
 	public Widget asWidget() {
 		return widget;
-	}
-	
-	@Override
-	public InlineHTML getFaveFeed() {
-		return faveFeed;
 	}
 
 	@Override
