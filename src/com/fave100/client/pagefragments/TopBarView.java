@@ -1,6 +1,6 @@
 package com.fave100.client.pagefragments;
 
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.fave100.client.place.NameTokens;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.gwtplatform.mvp.client.ViewImpl;
 
 public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 
@@ -15,6 +16,12 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 
 	public interface Binder extends UiBinder<Widget, TopBarView> {
 	}
+	
+	@UiField InlineHyperlink logInLogOutLink;
+	@UiField SpanElement greeting;	
+	@UiField InlineHyperlink myFave100Link;	
+	@UiField InlineHyperlink registerLink;
+	@UiField InlineHTML faveFeed;
 
 	@Inject
 	public TopBarView(final Binder binder) {
@@ -26,38 +33,28 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 		return widget;
 	}
 	
-	@UiField InlineHyperlink logInLogOutLink;
-
-	@Override
-	public InlineHyperlink getLogInLogOutLink() {
-		return logInLogOutLink;
-	}
-	
-	@UiField SpanElement greeting;
-
-	@Override
-	public SpanElement getGreeting() {
-		return greeting;
-	}
-	
-	@UiField InlineHyperlink myFave100Link;
-
-	@Override
-	public InlineHyperlink getMyFave100Link() {
-		return myFave100Link;
-	}
-	
-	@UiField InlineHyperlink registerLink;
-	
-	@Override 
-	public InlineHyperlink getRegisterLink() {
-		return registerLink;
-	}
-	
-	@UiField InlineHTML faveFeed;
-	
 	@Override
 	public InlineHTML getFaveFeed() {
 		return faveFeed;
+	}
+
+	@Override
+	public void setLoggedIn(final String username) {
+		greeting.setInnerHTML(username);
+		myFave100Link.setVisible(true);
+		registerLink.setVisible(false);
+		logInLogOutLink.setText("Log out");
+		logInLogOutLink.setTargetHistoryToken(NameTokens.logout);
+		
+	}
+
+	@Override
+	public void setLoggedOut() {
+		greeting.setInnerHTML("");
+		myFave100Link.setVisible(false);
+		registerLink.setVisible(true);
+		logInLogOutLink.setText("Log in");
+		logInLogOutLink.setTargetHistoryToken(NameTokens.login);
+		
 	}
 }

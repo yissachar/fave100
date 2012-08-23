@@ -9,24 +9,18 @@ import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.client.widgets.NonpersonalFaveList;
 import com.fave100.server.domain.FaveList;
-import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -38,17 +32,27 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class UsersPresenter extends
-		Presenter<UsersPresenter.MyView, UsersPresenter.MyProxy> {
+		Presenter<UsersPresenter.MyView, UsersPresenter.MyProxy> 
+		implements UsersUiHandlers{
+	
+	
 
-	public interface MyView extends View {		
-		HTMLPanel getUserProfile();
+	public interface MyView extends View, HasUiHandlers<UsersUiHandlers> {		
+		/*HTMLPanel getUserProfile();
 		Image getAvatar();
 		SpanElement getUsernameSpan();		
 		Button getFollowButton();
 		NonpersonalFaveList getUserFaveList();
 		Anchor getFave100TabLink();
 		Anchor getActivityTabLink();
-		InlineHTML getActivityTab();
+		InlineHTML getActivityTab();*/
+		
+		void setFollowed();
+		void setUnfollowed();
+		void showFave100Tab();
+		void showActivityTab(SafeHtml html);
+		void setUserProfile(AppUserProxy user);
+		void setUserFaveList(List<SongProxy> faveList);
 	}
 		
 	@ContentSlot public static final Type<RevealContentHandler<?>> TOP_BAR_SLOT = new Type<RevealContentHandler<?>>();
@@ -73,6 +77,7 @@ public class UsersPresenter extends
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
+		getView().setUiHandlers(this);
 	}
 
 	@Override
@@ -97,13 +102,10 @@ public class UsersPresenter extends
 			checkFollowing.fire(new Receiver<Boolean>() {
 				@Override
 				public void onSuccess(final Boolean following) {
-					final Button followButton = getView().getFollowButton();
 					if(following) {
-						followButton.setHTML("Following");
-						followButton.setEnabled(false);
+						getView().setFollowed();
 					} else {
-						followButton.setHTML("Follow");
-						followButton.setEnabled(true);
+						getView().setUnfollowed();
 					}
 				}
 			});
@@ -115,8 +117,7 @@ public class UsersPresenter extends
 		    	public void onSuccess(final AppUserProxy user) {
 		    		if(user != null) {	    				
 		    			// Upate user profile
-	    				getView().getAvatar().setUrl(user.getAvatar());
-	    				getView().getUsernameSpan().setInnerText(user.getUsername());
+	    				getView().setUserProfile(user);
 	    			} else {
 	    				placeManager.revealDefaultPlace();
 	    			}
@@ -130,7 +131,7 @@ public class UsersPresenter extends
 		    	@Override
 		    	public void onSuccess(final List<SongProxy> faveList) {
 		    		if(faveList != null) {	 
-	    	    		getView().getUserFaveList().setRowData(faveList);
+	    	    		getView().setUserFaveList(faveList);
 	    			} else {
 	    				placeManager.revealDefaultPlace();
 	    			}
@@ -140,10 +141,7 @@ public class UsersPresenter extends
 		    
 		    final String tab = placeRequest.getParameter("tab", UsersPresenter.FAVE_100_TAB);
 		    if(tab.equals(UsersPresenter.ACTIVITY_TAB)) {
-		    	getView().getActivityTab().setVisible(true);
-		    	getView().getUserFaveList().setVisible(false);
-		    	getView().getFave100TabLink().removeStyleName("selected");
-				getView().getActivityTabLink().addStyleName("selected");
+		    	
 				final Request<List<String>> getActivityReq = requestFactory.appUserRequest().getActivityForUser(requestedUsername);
 				getActivityReq.fire(new Receiver<List<String>>() {
 					@Override
@@ -156,60 +154,13 @@ public class UsersPresenter extends
 							builder.appendHtmlConstant("</li>");
 						}
 						builder.appendHtmlConstant("</ul>");
-						getView().getActivityTab().setHTML(builder.toSafeHtml());
+						getView().showActivityTab(builder.toSafeHtml());
 					}
 				});
 		    } else if(tab.equals(UsersPresenter.FAVE_100_TAB)) {
-		    	getView().getUserFaveList().setVisible(true);
-		    	getView().getActivityTab().setVisible(false);
-		    	getView().getActivityTabLink().removeStyleName("selected");
-				getView().getFave100TabLink().addStyleName("selected");
+		    	getView().showFave100Tab();
 		    }
 		}
-	}
-
-	@Override
-	protected void onBind() {
-		super.onBind();
-		
-		// Follow button
-		registerHandler(getView().getFollowButton().addClickHandler(new ClickHandler() {			
-			@Override
-			public void onClick(final ClickEvent event) {
-				if(!getView().getFollowButton().getStyleName().contains("alreadyFollowing")) {
-					final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-					final Request<Void> followReq = appUserRequest.followUser(requestedUsername);
-					followReq.fire(new Receiver<Void>() {
-						@Override
-						public void onSuccess(final Void response) {
-							SideNotification.show("Following!");
-							getView().getFollowButton().setHTML("Following");
-							getView().getFollowButton().setEnabled(false);
-						}
-						@Override
-						public void onFailure(final ServerFailure failure) {
-							SideNotification.show(failure.getMessage().replace("Server Error:", ""), true);
-						}
-					});
-				}
-			}
-		}));
-		
-		// Fave100 tab link
-		registerHandler(getView().getFave100TabLink().addClickHandler(new ClickHandler() {			
-			@Override
-			public void onClick(final ClickEvent event) {				
-				placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.FAVE_100_TAB));				
-			}
-		}));
-		
-		// Activity tab link
-		registerHandler(getView().getActivityTabLink().addClickHandler(new ClickHandler() {			
-			@Override
-			public void onClick(final ClickEvent event) {				
-				placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.ACTIVITY_TAB));
-			}
-		}));
 	}
 	
 	@Override
@@ -218,4 +169,38 @@ public class UsersPresenter extends
 	    setInSlot(TOP_BAR_SLOT, topBar);
 	    // TODO: handle user visiting own page	    
 	}
+
+	@Override
+	public void follow() {
+		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		final Request<Void> followReq = appUserRequest.followUser(requestedUsername);
+		followReq.fire(new Receiver<Void>() {
+			@Override
+			public void onSuccess(final Void response) {
+				SideNotification.show("Following!");
+				getView().setFollowed();
+			}
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				SideNotification.show(failure.getMessage().replace("Server Error:", ""), true);
+			}
+		});
+	}
+
+	@Override
+	public void goToFave100Tab() {
+		placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.FAVE_100_TAB));
+	}
+
+	@Override
+	public void goToActivityTab() {
+		placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.ACTIVITY_TAB));
+	}
+}
+
+
+interface UsersUiHandlers extends UiHandlers{
+	void follow();
+	void goToFave100Tab();
+	void goToActivityTab();
 }

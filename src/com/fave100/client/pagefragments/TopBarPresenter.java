@@ -2,15 +2,12 @@ package com.fave100.client.pagefragments;
 
 import java.util.List;
 
-import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -26,11 +23,10 @@ import com.gwtplatform.mvp.client.View;
 public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 
 	public interface MyView extends View {
-		InlineHyperlink getLogInLogOutLink();
-		SpanElement getGreeting();
-		InlineHyperlink getMyFave100Link();
-		InlineHyperlink getRegisterLink();
 		InlineHTML getFaveFeed();
+		
+		void setLoggedIn(String username);
+		void setLoggedOut();
 	}
 	
 	@Inject private ApplicationRequestFactory requestFactory;
@@ -48,7 +44,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		// TODO: Use manual reveal to avoid delay from AppUseRequest = but how can we use manual reveal on presenterwidget?
+		// TODO: Use manual reveal to avoid delay from AppUseRequest = but how can we use manual reveal on a presenterwidget?
 		
 		// Whenever the page is refreshed, check to see if the user is logged in or not
 		// and change the top bar links and elements appropriately.
@@ -59,17 +55,9 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 			@Override
 			public void onSuccess(final AppUserProxy appUser) {						
 				if(appUser != null) {					
-					getView().getGreeting().setInnerHTML(appUser.getUsername());
-					getView().getMyFave100Link().setVisible(true);
-					getView().getRegisterLink().setVisible(false);
-					getView().getLogInLogOutLink().setText("Log out");
-					getView().getLogInLogOutLink().setTargetHistoryToken(NameTokens.logout);
+					getView().setLoggedIn(appUser.getUsername());
 				} else {
-					getView().getGreeting().setInnerHTML("");
-					getView().getMyFave100Link().setVisible(false);
-					getView().getRegisterLink().setVisible(true);
-					getView().getLogInLogOutLink().setText("Log in");
-					getView().getLogInLogOutLink().setTargetHistoryToken(NameTokens.login);
+					getView().setLoggedOut();
 				}				
 			}
 		});

@@ -1,13 +1,16 @@
 package com.fave100.client.pages.home;
 
+import java.util.List;
+
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.NonpersonalFaveList;
-import com.gwtplatform.mvp.client.ViewImpl;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.gwtplatform.mvp.client.ViewImpl;
 
 public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	
@@ -32,7 +35,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	@UiField HTMLPanel topBar;
 	
 	@Override
-	public void setInSlot(Object slot, Widget content) {
+	public void setInSlot(final Object slot, final Widget content) {
 		if(slot == HomePresenter.TOP_BAR_SLOT) {
 			topBar.clear();			
 			if(content != null) {
@@ -40,10 +43,10 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 			}
 		}
 		super.setInSlot(slot, content);
-	}	
+	}
 
 	@Override
-	public NonpersonalFaveList getMasterFaveList() {
-		return masterFaveList;
+	public void updateMasterFaveList(final List<SongProxy> faveList) {
+		masterFaveList.setRowData(faveList);
 	}
 }
