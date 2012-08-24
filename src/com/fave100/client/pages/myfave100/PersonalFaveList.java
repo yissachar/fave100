@@ -102,7 +102,7 @@ public class PersonalFaveList extends FaveListBase {
 
 			@Override
 			public String getValue(final SongProxy object) {
-				return clientFaveList.indexOf(object)+1+".";
+				return "^";
 			}
 		});	
 		
@@ -145,7 +145,7 @@ public class PersonalFaveList extends FaveListBase {
 			}			
 		});
 		
-		_cells.add(6, new HasCell<SongProxy, String>() {
+		_cells.add(7, new HasCell<SongProxy, String>() {
 			private final EditTextCell cell = new EditTextCell(){
 				// TODO: CSS method won't work in all browser: get the following to work!
 				/*@Override

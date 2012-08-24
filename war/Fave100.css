@@ -151,24 +151,20 @@ footer {
 	font-size: 1.05em;		
 }
 
-.faveList div{
+.faveList .personalFaves>div, .faveList .nonpersonalFaves>div{
 	border: 1px solid #999;
 }
 
-.faveList div:nth-child(even) {
+.faveList .personalFaves>div:nth-child(even), .faveList .nonpersonalFaves>div:nth-child(even) {
 	background-color: #FFF !important;
 }
 
-.faveList div:nth-child(odd) {
+.faveList .personalFaves>div:nth-child(odd), .faveList .nonpersonalFaves>div:nth-child(odd) {
 	background-color: #EEE !important;
 }
 
 .faveList a{
-	color: #548F2F;
-	width: 30%;
-	display: inline-block;
-	padding: 0 3px;
-	text-align: center;
+	color: #548F2F;	
 }
 
 .faveList table{
@@ -180,15 +176,26 @@ footer {
 	border: 1px solid #000;
 }
 
-.faveList button {
+.faveListAddButton, .faveListDeleteButton {
 	height: auto;
 	font-size: 0.7em;
 	margin: 3px;
+	vertical-align: top;
 }
 
-.faveList img {
+.faveListDeleteButton{
+	color: #FFF;
+	background-color: #FF5E5E;
+}
+
+.faveListDeleteButton:hover{
+	background-color: #FF4A4A !important;
+}
+
+.faveListImageThumb{
 	display: inline-block;
 }
+
 .personalFaves div, .nonpersonalFaves div {
 	padding: 5px;
 }
@@ -200,33 +207,30 @@ footer {
 	vertical-align: top;
 }
 
-.addColumn, .nonpersonalFaves div>span:nth-child(1) {
-	width: 10px;
+.faveListRank {
+	display: inline-block;
+	width: 20px;	
+	padding-right: 5px;
+}
+
+.faveListTrackName, .faveListArtistName, .faveListReleaseDate{
+	display: inline-block;
+	width: 29%;
+	padding: 0 3px;
 	text-align: center;
-	font-size: 1.5em;	
+	vertical-align: top;
 }
-.trackNameColumn, .nonpersonalFaves div>span:nth-child(2), .personalFaves div>span:nth-child(2){
-}
-.artistColumn, .nonpersonalFaves div>span:nth-child(3), .personalFaves div>span:nth-child(3){
+/*.deleteColumn, .personalFaves div>span:nth-child(4), .nonpersonalFaves div>span:nth-child(4){
 	display: inline-block;
 	width: 30%;
 	padding: 0 3px;
 	text-align: center;
-}
-.yearColumn{
-	width: 40px;
-}
-.deleteColumn, .personalFaves div>span:nth-child(4), .nonpersonalFaves div>span:nth-child(4){
-	cursor: pointer;
-	display: inline-block;
-	width: 30%;
-	padding: 0 3px;
-	text-align: center;
-}
+}*/
 .personalFaves div>span:nth-child(5) {
 	float: right;
 }
-.personalFaves div>span:nth-child(7), .nonpersonalFaves div>span:nth-child(6) {
+
+.faveListWhyline, .personalFaves div>span:nth-child(8), .nonpersonalFaves div>span:nth-child(7){
 	font-size: 1.2em;
 	display: inline-block;
 	padding: 3px;
@@ -234,10 +238,12 @@ footer {
 	margin: 15px;
 	width: 70%;
 }
-.personalFaves div>span:nth-child(7):empty:before{
+
+.faveListWhyline:empty:before, .personalFaves div>span:nth-child(8):empty:before{
 	content: "Click here to enter a WhyLine";
 	text-decoration: italics;
 }
+
 .personalFaves input{
 	width: 100%;
 }

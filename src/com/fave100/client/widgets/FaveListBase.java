@@ -11,11 +11,13 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.HasCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 
 public class FaveListBase extends HTMLPanel{
 	
@@ -25,6 +27,33 @@ public class FaveListBase extends HTMLPanel{
 	public FaveListBase(final ApplicationRequestFactory requestFactory) {
 		super("");
 		
+		_cells.add(new HasCell<SongProxy, SafeHtml>() {
+			private final SafeHtmlCell cell = new SafeHtmlCell() {
+				 @Override
+				  public void render(final Context context, final SafeHtml value, final SafeHtmlBuilder sb) {
+				    if (value != null) {
+				      sb.appendEscaped((context.getIndex()+1)+".");
+				    }
+				 }
+			};
+            @Override
+            public SafeHtmlCell getCell() {
+                return cell;
+            }
+
+			@Override
+			public FieldUpdater<SongProxy, SafeHtml> getFieldUpdater() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public SafeHtml getValue(final SongProxy object) {
+				final Label label = new Label();
+				label.setStyleName("faveListRank");
+				return SafeHtmlUtils.fromTrustedString(label.toString());
+			}			
+		});
 		_cells.add(new HasCell<SongProxy, SafeHtml>() {
 			private final SafeHtmlCell cell = new SafeHtmlCell();
             @Override
@@ -43,7 +72,7 @@ public class FaveListBase extends HTMLPanel{
 				final Anchor anchor = new Anchor();
 				anchor.setHref(object.getTrackViewUrl());
 				anchor.setHTML(object.getTrackName());
-				anchor.addStyleName("anchorCSS");
+				anchor.addStyleName("faveListTrackName");
 				return SafeHtmlUtils.fromTrustedString(anchor.toString());
 			}			
 		});
@@ -63,7 +92,10 @@ public class FaveListBase extends HTMLPanel{
 
 			@Override
 			public SafeHtml getValue(final SongProxy object) {
-				return SafeHtmlUtils.fromString(object.getArtistName());
+				final Label label = new Label();
+				label.setText(object.getArtistName());
+				label.setStyleName("faveListArtistName");
+				return SafeHtmlUtils.fromTrustedString(label.toString());
 			}
 		});
 		_cells.add(new HasCell<SongProxy, SafeHtml>() {
@@ -81,8 +113,11 @@ public class FaveListBase extends HTMLPanel{
 			}
 
 			@Override
-			public SafeHtml getValue(final SongProxy object) {				
-				return SafeHtmlUtils.fromString(object.getReleaseDate().substring(0, 4));
+			public SafeHtml getValue(final SongProxy object) {
+				final Label label = new Label();
+				label.setText(object.getReleaseDate().substring(0, 4));
+				label.setStyleName("faveListReleaseDate");
+				return SafeHtmlUtils.fromTrustedString(label.toString());
 			}
 		});
 		_cells.add(new HasCell<SongProxy, SafeHtml>() {
@@ -103,6 +138,7 @@ public class FaveListBase extends HTMLPanel{
 			public SafeHtml getValue(final SongProxy object) {
 				final Image image = new Image();
 				image.setUrl(object.getArtworkUrl60());
+				image.setStyleName("faveListImageThumb");
 				return SafeHtmlUtils.fromTrustedString(image.toString());
 			}
 		});

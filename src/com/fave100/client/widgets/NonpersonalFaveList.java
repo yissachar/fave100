@@ -22,7 +22,7 @@ public class NonpersonalFaveList extends FaveListBase{
 	public NonpersonalFaveList(final ApplicationRequestFactory requestFactory) {
 		super(requestFactory);
 		
-		_cells.add(0, new HasCell<SongProxy, SongProxy>() {
+		_cells.add(4, new HasCell<SongProxy, SongProxy>() {
 			private final ActionCell<SongProxy> cell = new ActionCell<SongProxy>("+", new Delegate<SongProxy>() {
 				@Override
 				public void execute(final SongProxy song) {
