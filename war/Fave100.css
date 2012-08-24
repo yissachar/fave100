@@ -214,11 +214,17 @@ footer {
 }
 
 .faveListTrackName, .faveListArtistName, .faveListReleaseDate{
-	display: inline-block;
-	width: 29%;
+	display: inline-block;	
 	padding: 0 3px;
 	text-align: center;
 	vertical-align: top;
+}
+
+.faveListTrackName, .faveListArtistName {
+	width: 38%;
+}
+.faveListReleaseDate{
+	width: 10%;
 }
 /*.deleteColumn, .personalFaves div>span:nth-child(4), .nonpersonalFaves div>span:nth-child(4){
 	display: inline-block;
@@ -249,7 +255,7 @@ footer {
 }
 .draggedFaveListItem{
 	position: absolute;
-	width: 685px;
+	width: 690px;
 }
 .unselectable, .draggedFaveListItem{	
   	-moz-user-select: none;
