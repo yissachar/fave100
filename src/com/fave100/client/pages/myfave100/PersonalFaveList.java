@@ -50,7 +50,6 @@ public class PersonalFaveList extends FaveListBase {
 						draggedRow = parent.getParentElement();
 						final GQuery $row = $(draggedRow);
 						addStyleName("unselectable");						
-						//GQuery $row = $(event.getEventTarget()).closest("div");
 						
 						// Add a hidden row to act as a placeholder while the real row is moved					
 						$row.clone().css("visibility", "hidden").addClass("clonedHiddenRow").insertBefore($row);
@@ -71,14 +70,16 @@ public class PersonalFaveList extends FaveListBase {
 								final GQuery $clonedHiddenRow = $(".clonedHiddenRow");
 								GQuery $previous = $clonedHiddenRow.prev();
 								GQuery $next = $clonedHiddenRow.next();
+								final int prevHeight = $previous.outerHeight(true);
+								final int nextHeight = $next.outerHeight(true);
 								// Make sure we are not checking against the dragged row itself
 								if($previous.hasClass("draggedFaveListItem")) $previous = $previous.prev();
 								if($next.hasClass("draggedFaveListItem")) $next = $next.next();
 								final int previousBottom = $previous.offset().top+$previous.outerHeight(true);
 								// Move the hidden row to the appropriate position
-								if(draggedTop < previousBottom) {
+								if(draggedTop < previousBottom-prevHeight/2) {
 									$(".clonedHiddenRow").insertBefore($previous);
-								} else if(draggedBottom > $next.offset().top+$next.outerHeight(true)) {
+								} else if(draggedBottom > $next.offset().top+nextHeight/2){//$next.outerHeight(true)) {
 									$(".clonedHiddenRow").insertAfter($next);
 								}
 								return true;
@@ -225,9 +226,6 @@ public class PersonalFaveList extends FaveListBase {
 				$(".clonedHiddenRow").remove();
 				$("body").unbind("mousemove");
 				draggedRow = null;	
-				// Reset the rows so that row numbers will update
-				// TODO: There has to be a better way of doing this...				
-				
 			}
 			
 		}, MouseUpEvent.getType());
@@ -235,16 +233,27 @@ public class PersonalFaveList extends FaveListBase {
 		createCellList("personalFaves");		
 	}
 	
-	private void setPos(final GQuery element, final int mouseY) {		
-		final int newPos = mouseY-element.height()/2;		
-		element.css("top", newPos+"px");
-		// TODO: // If dragged row goes out of top or bottom bounds, stop it
-		/*int draggedTop = element.offset().top;
-		int draggedBottom = draggedTop + element.outerHeight(true);
-		if(draggedTop >  $(".faveList").offset().top
-			&& draggedBottom < $(".faveList").offset().top+$(".faveList").outerHeight(true)) {
-				element.css("top", newPos+"px");
-		}*/
+	private void setPos(final GQuery element, final int mouseY) {	
+		//Window.alert(mouseY+" "+$(element).top()+" "+(mouseY-$(element).top()));
+		final int clonedHeight = $(".clonedHiddenRow").outerHeight(true);
+		final int elementHeight = element.outerHeight(true);
+		final int newPos = mouseY-elementHeight/2;
+		final int draggedTop = newPos;
+		final int draggedBottom = draggedTop + elementHeight;
+		final int faveListTop = $(".faveList").offset().top;
+		final int faveListBottom = faveListTop+$(".faveList").outerHeight(true)-clonedHeight;
+		
+		// If dragged row goes out of top or bottom bounds, stop it
+		if(draggedTop <  faveListTop) {
+			// Element is above the favelist, make it at the favelist height
+			element.css("top", faveListTop+"px");
+		} else if(draggedBottom > faveListBottom) {
+			// Element is below the favelist, set it at favelist bottom
+			element.css("top", faveListBottom-elementHeight+"px");
+		} else {
+			// Element is neither above or below faveList, position it correctly
+			element.css("top", newPos+"px");
+		}
 	}
 	
 	public void refreshList() {

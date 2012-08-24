@@ -147,7 +147,7 @@ footer {
 
 .faveList{
 	margin: 50px auto;
-	width: 840px;		
+	width: 700px;		
 	font-size: 1.05em;		
 }
 
@@ -223,6 +223,9 @@ footer {
 	padding: 0 3px;
 	text-align: center;
 }
+.personalFaves div>span:nth-child(5) {
+	float: right;
+}
 .personalFaves div>span:nth-child(7), .nonpersonalFaves div>span:nth-child(6) {
 	font-size: 1.2em;
 	display: inline-block;
@@ -240,7 +243,7 @@ footer {
 }
 .draggedFaveListItem{
 	position: absolute;
-	min-width: 825px;
+	width: 685px;
 }
 .unselectable, .draggedFaveListItem{	
   	-moz-user-select: none;
