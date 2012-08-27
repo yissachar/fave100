@@ -267,12 +267,17 @@ footer {
   	user-select: none;
 }
 /* Advanced Search */
-.advancedSearchTrackName{
-	font-size: 1.1em;
-	vertical-align: top;
+
+.advancedSearchInfoContainer {
+	display: inline-block;
 	white-space: nowrap;
 	overflow: hidden;
-	max-width: 85%;
+	max-width: 83%;
+}
+
+.advancedSearchTrackName{
+	font-size: 1.1em;
+	vertical-align: top;	
 }
 .advancedSearchReleaseDate  {
 	font-size: 0.9em;
@@ -280,13 +285,18 @@ footer {
 	overflow: hidden;
 }
 
-
 .advancedSearchArtistName {
 	font-style: italic;
 	white-space: nowrap;
 	overflow: hidden;
 }
 
+.advancedSearchAddButton {
+	font-size: 1.3em;
+	height: 30px;
+	float: right;
+	margin-top: 10px;
+}
 
 /* Side notification */
 .sideNotification{

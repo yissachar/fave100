@@ -28,6 +28,7 @@ public class SearchPresenter extends
 		implements SearchUiHandlers{
 
 	public interface MyView extends BaseView, HasUiHandlers<SearchUiHandlers> {
+		void resetView();
 		void setResults(List<SuggestionResult> resultList);
 	}
 
@@ -41,6 +42,12 @@ public class SearchPresenter extends
 			final MyProxy proxy) {
 		super(eventBus, view, proxy);
 		getView().setUiHandlers(this);
+	}
+	
+	@Override
+	protected void onHide() {
+		// Set the result list to be blank
+		getView().resetView();
 	}
 
 	@Override

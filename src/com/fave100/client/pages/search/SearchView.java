@@ -1,9 +1,11 @@
 package com.fave100.client.pages.search;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.myfave100.SuggestionResult;
+import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -11,6 +13,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -26,11 +29,12 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	@UiField HTMLPanel topBar;
 	@UiField TextBox searchBox;
 	@UiField Button searchButton;
+	@UiField Label searchStatus;
 	@UiField(provided=true) CellList<SuggestionResult> iTunesResults;
 
 	@Inject
-	public SearchView(final Binder binder) {
-		final AdvancedSearchResultCell cell = new AdvancedSearchResultCell();
+	public SearchView(final Binder binder, final ApplicationRequestFactory requestFactory) {
+		final AdvancedSearchResultCell cell = new AdvancedSearchResultCell(requestFactory);
 		iTunesResults = new CellList<SuggestionResult>(cell);
 		widget = binder.createAndBindUi(this);
 	}
@@ -60,5 +64,17 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	@Override
 	public void setResults(final List<SuggestionResult> resultList) {
 		iTunesResults.setRowData(resultList);
+		if(resultList.size() == 0) {
+			searchStatus.setText("No matches found");
+		} else {
+			searchStatus.setText(resultList.size()+" matches found");
+		}
+	}
+
+	@Override
+	public void resetView() {
+		searchBox.setValue("");
+		setResults(new ArrayList<SuggestionResult>());
+		searchStatus.setText("");
 	}
 }
