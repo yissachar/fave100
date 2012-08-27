@@ -11,4 +11,5 @@ public interface SongProxy extends EntityProxy, SuggestionResult {
 	Integer getVersion();
 	
 	String getWhyline();
+	int getWhylineScore();
 }
