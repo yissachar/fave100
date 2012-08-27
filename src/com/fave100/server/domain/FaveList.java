@@ -64,14 +64,13 @@ public class FaveList extends DatastoreObject{
 			}
 		}
 		if(unique == false) throw new RuntimeException("The song is already in your list");;
-		// Create the new FaveItem 
-		final FaveItem newFaveItem = new FaveItem();
+		// Create the new FaveItem 		
 		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songID));
-		newFaveItem.setSong(songRef);
+		final FaveItem newFaveItem = new FaveItem(songID);
 		faveList.getList().add(newFaveItem);
 		final Activity activity = new Activity(currentUser.getUsername(), Transaction.FAVE_ADDED);
 		activity.setSong(songRef);
-		ofy().save().entities(currentUser, activity, faveList).now();
+		ofy().save().entities(activity, faveList).now();
 	}
 	
 	public static void removeFaveItemForCurrentUser(final String hashtag, final int index) {
@@ -81,8 +80,10 @@ public class FaveList extends DatastoreObject{
 		if(faveList == null) return;
 		final Activity activity = new Activity(currentUser.getUsername(), Transaction.FAVE_REMOVED);
 		activity.setSong(faveList.getList().get(index).getSong());
+		// We must also delete the whyline
+		ofy().delete().entity(faveList.getList().get(index).getWhyline()).now();
 		faveList.getList().remove(index);
-		ofy().save().entities(currentUser, activity, faveList).now();	
+		ofy().save().entities(activity, faveList).now();		
 	}
 	
 	public static void rerankFaveItemForCurrentUser(final String hashtag, final int currentIndex, final int newIndex) {		
@@ -100,7 +101,7 @@ public class FaveList extends DatastoreObject{
 				activity.setNewLocation(newIndex+1);
 				final FaveItem faveAtCurrIndex = faveList.getList().remove(currentIndex);
 				faveList.getList().add(newIndex, faveAtCurrIndex);				
-				ofy().save().entities(currentUser, activity, faveList).now();
+				ofy().save().entities(activity, faveList).now();
 //			}
 //		});		
 	}
@@ -112,8 +113,20 @@ public class FaveList extends DatastoreObject{
 		if(currentUser == null) return;
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList == null) return;
-		faveList.getList().get(index).setWhyline(whyline);
-		ofy().save().entities(currentUser, faveList).now();
+		final FaveItem faveItem = faveList.getList().get(index);
+		final Ref<Whyline> currentWhyline = faveItem.getWhyline();
+		if(currentWhyline == null) {
+			// Need to create an external whyline
+			final Song song = faveItem.getSong().get();
+			final Whyline whylineEntity = new Whyline(whyline, song.getId(), currentUser.getUsername());
+			final String whylineID = currentUser.getUsername()+Whyline.SEPERATOR_TOKEN+song.getId();
+			faveItem.setWhyline(Ref.create(Key.create(Whyline.class, whylineID)));
+			ofy().save().entities(faveList, whylineEntity).now();
+		} else {
+			// Just modify the existing whyline
+			currentWhyline.get().setWhyline(whyline);
+			ofy().save().entity(currentWhyline).now();
+		}		
 	}	
 	
 	
@@ -153,16 +166,14 @@ public class FaveList extends DatastoreObject{
 		final ArrayList<Song> songArray = new ArrayList<Song>();
 		for(final FaveItem faveItem : faveList.getList()) {
 			final Song song = faveItem.getSong().get();
-			song.setWhyline(faveItem.getWhyline());
+			String whyline = "";
+			final Ref<Whyline> whylineRef = faveItem.getWhyline(); 
+			if(whylineRef != null) {
+				whyline = whylineRef.get().getWhyline();
+			}
+			song.setWhyline(whyline);
 			songArray.add(song);
-			/*final Song song = faveItem.getSong().get();
-			faveItem.setTrackName(song.getTrackName());
-			faveItem.setArtistName(song.getArtistName());
-			faveItem.setTrackViewUrl(song.getTrackViewUrl());
-			faveItem.setReleaseYear(song.getReleaseYear());
-			faveItem.setArtworkUrl60(song.getArtworkUrl60());*/
 		}
-		//return faveList.getList();
 		return songArray;
 	}
 	
