@@ -1,5 +1,7 @@
 package com.fave100.client.pages.search;
 
+import java.util.List;
+
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.myfave100.ListResultOfSuggestion;
@@ -12,8 +14,6 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -28,7 +28,7 @@ public class SearchPresenter extends
 		implements SearchUiHandlers{
 
 	public interface MyView extends BaseView, HasUiHandlers<SearchUiHandlers> {
-		void setResults(String results);
+		void setResults(List<SuggestionResult> resultList);
 	}
 
 	@ProxyCodeSplit
@@ -62,8 +62,7 @@ public class SearchPresenter extends
 		   		final AutoBean<ListResultOfSuggestion> autoBean = AutoBeanCodex.decode(factory, ListResultOfSuggestion.class, obj.toString());	       		
 		   		final ListResultOfSuggestion listResult = autoBean.as();		   	
 		   		
-		   		String output = "<ul>";
-		   		       		
+		   		/*String output = "<ul>";	
 		   		for (final SuggestionResult entry : listResult.getResults()) {
 		   			output += "<li>";
 		   			
@@ -77,11 +76,9 @@ public class SearchPresenter extends
 		   			output += trackName.toString();
 		   			
 		   			final Label releaseDate = new Label();
-		   			releaseDate.setText("("+entry.getReleaseDate().substring(0, 4)+")");
+		   			releaseDate.setText(entry.getReleaseDate().substring(0, 4));
 		   			releaseDate.addStyleName("advancedSearchReleaseDate");
-		   			output += releaseDate.toString();
-		   			
-		   			output += "<br/>";
+		   			output += releaseDate.toString();		   			
 		   			
 		   			final Label artistName = new Label();
 		   			artistName.setText(entry.getArtistName());
@@ -91,7 +88,8 @@ public class SearchPresenter extends
 			    	output += "</li>";
 			    }
 		   		output += "</ul>";
-		   		getView().setResults(output);
+		   		getView().setResults(output);*/
+		   		getView().setResults(listResult.getResults());
 		   	}
 		
 			@Override

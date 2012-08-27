@@ -1,13 +1,16 @@
 package com.fave100.client.pages.search;
 
+import java.util.List;
+
 import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.myfave100.SuggestionResult;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -23,10 +26,12 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	@UiField HTMLPanel topBar;
 	@UiField TextBox searchBox;
 	@UiField Button searchButton;
-	@UiField InlineHTML iTunesResults;
+	@UiField(provided=true) CellList<SuggestionResult> iTunesResults;
 
 	@Inject
 	public SearchView(final Binder binder) {
+		final AdvancedSearchResultCell cell = new AdvancedSearchResultCell();
+		iTunesResults = new CellList<SuggestionResult>(cell);
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -53,7 +58,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	}
 
 	@Override
-	public void setResults(final String results) {
-		iTunesResults.setHTML(results);
+	public void setResults(final List<SuggestionResult> resultList) {
+		iTunesResults.setRowData(resultList);
 	}
 }

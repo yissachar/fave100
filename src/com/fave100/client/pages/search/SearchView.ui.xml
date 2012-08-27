@@ -2,6 +2,7 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:c='urn:import:com.google.gwt.user.cellview.client'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -20,18 +21,20 @@
 			font-size: 1.3em;
 		}
 		
-		.iTunesResults ul {
-			list-style-type: none;
+		.iTunesResults{
 			padding: 0;
 			margin-top: 30px;
 			width: 700px;
 		}
-		.iTunesResults li {
+		.iTunesResults > div > div {
 			background: #FFF;
 			clear: both;
 			height: 60px;
 			padding: 10px;
 			border: 1px solid #999;
+		}
+		.iTunesResults > div > div:hover{
+			background: #EEE;
 		}
 		.iTunesResults img {
 			float: left;
@@ -45,7 +48,7 @@
 			<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
 			<g:Button ui:field="searchButton" ui:styleName="{style.searchButton}">Search</g:Button>
 			<br/>
-			<g:InlineHTML ui:field="iTunesResults" ui:styleName="{style.iTunesResults}"/>
+			<c:CellList ui:field="iTunesResults" ui:styleName="{style.iTunesResults}"/>
 		</div>			
 	</g:HTMLPanel>
 </ui:UiBinder>
