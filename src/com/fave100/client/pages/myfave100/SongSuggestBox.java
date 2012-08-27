@@ -92,12 +92,17 @@ public class SongSuggestBox extends SuggestBox{
 	       		// Get the new suggestions from the iTunes API       		
 	       		for (final SuggestionResult entry : listResult.getResults()) {
 	    	    	final String suggestionEntry = "<img src='"+UriUtils.sanitizeUri(entry.getArtworkUrl60())+"'/>"+
-	    	    			entry.getTrackName()+"</br><span class='artistName'>"+entry.getArtistName()+"</span>";		    	
-	    	    	itemSuggestionMap.put(entry.getTrackName(), entry);
+	    	    			entry.getTrackName()+"</br><span class='artistName'>"+entry.getArtistName()+"</span>";
+	    	    	
+	    	    	String mapEntry = entry.getTrackName();
+	    	    	// Use white space to sneak in duplicate song titles into the hashmap
+	    	    	while(itemSuggestionMap.get(mapEntry) != null) {
+	    	    		mapEntry += " ";
+	    	    	}
+	    	    	itemSuggestionMap.put(mapEntry, entry);
 	    	    	// TODO: Safe HTML?
-	    	    	suggestions.addSuggestion(entry.getTrackName(), suggestionEntry);
+	    	    	suggestions.addSuggestion(mapEntry, suggestionEntry);
 	    	    }
-	       		// TODO: Duplicate suggestions are hidden! Song name "W" and "W" only one actually shown
 	    	    showSuggestionList();
 	       	}
 
