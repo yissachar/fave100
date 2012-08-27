@@ -14,6 +14,7 @@
 			width: 450px;
 			font-size: 1.5em;
 			color: #444;
+			margin-bottom: 5px;
 		}
 		
 		.searchButton {
@@ -47,6 +48,7 @@
 		<div class="content">
 			<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
 			<g:Button ui:field="searchButton" ui:styleName="{style.searchButton}">Search</g:Button>
+			<g:Label ui:field="searchStatus"/>
 			<br/>
 			<c:CellList ui:field="iTunesResults" ui:styleName="{style.iTunesResults}"/>
 		</div>			
