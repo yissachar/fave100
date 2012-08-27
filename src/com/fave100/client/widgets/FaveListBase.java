@@ -32,7 +32,9 @@ public class FaveListBase extends HTMLPanel{
 				 @Override
 				  public void render(final Context context, final SafeHtml value, final SafeHtmlBuilder sb) {
 				    if (value != null) {
-				      sb.appendEscaped((context.getIndex()+1)+".");
+				    	sb.appendHtmlConstant("<div class='faveListRank'>");
+				    	sb.appendEscaped((context.getIndex()+1)+".");
+				    	sb.appendHtmlConstant("</div>");
 				    }
 				 }
 			};
@@ -49,9 +51,9 @@ public class FaveListBase extends HTMLPanel{
 
 			@Override
 			public SafeHtml getValue(final SongProxy object) {
-				final Label label = new Label();
-				label.setStyleName("faveListRank");
-				return SafeHtmlUtils.fromTrustedString(label.toString());
+				//final Label label = new Label();
+				//label.addStyleName("faveListRank");
+				return SafeHtmlUtils.fromTrustedString("");				
 			}			
 		});
 		_cells.add(new HasCell<SongProxy, SafeHtml>() {

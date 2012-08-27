@@ -9,6 +9,7 @@ public class NameTokens {
 	public static final String login = "login";
 	public static final String logout = "logout";
 	public static final String userlist = "userlist";
+	public static final String search = "search";
 
 	public static String getHome() {
 		return home;
@@ -36,5 +37,9 @@ public class NameTokens {
 
 	public static String getUserlist() {
 		return userlist;
+	}
+
+	public static String getSearch() {
+		return search;
 	}
 }

@@ -12,11 +12,14 @@
 		@external .faveList;
 		.faveList{}			
 	</ui:style>
+	
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="content">
 			<g:SuggestBox ui:field="songSuggestBox"/>
-			<d:PersonalFaveList ui:field="personalFaveList" styleName="{style.faveList}"/>
+			<g:InlineHyperlink targetHistoryToken="{nameTokens.getSearch}">Advanced search</g:InlineHyperlink>
+			<d:PersonalFaveList ui:field="personalFaveList" styleName="{style.faveList}"/>			
 			<g:HTMLPanel ui:field="faveFeed"/>
 		</div>	
 		<pf:Footer/>
