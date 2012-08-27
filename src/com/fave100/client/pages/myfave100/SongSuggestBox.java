@@ -30,7 +30,7 @@ public class SongSuggestBox extends SuggestBox{
 	private HashMap<String, SuggestionResult> itemSuggestionMap;
 	private Timer suggestionsTimer;
 		
-	public SongSuggestBox(MusicSuggestionOracle suggestions, ApplicationRequestFactory requestFactory) {
+	public SongSuggestBox(final MusicSuggestionOracle suggestions, final ApplicationRequestFactory requestFactory) {
 		// TODO: Need advanced search option (e.g. search by artist)
 		super(suggestions);
 		this.suggestions = suggestions;
@@ -38,13 +38,15 @@ public class SongSuggestBox extends SuggestBox{
 		itemSuggestionMap = new HashMap<String, SuggestionResult>();	
 		
 		suggestionsTimer = new Timer() {
+			@Override
 			public void run() {
 				getAutocompleteList();
 			}
 		};
 		
 		addKeyUpHandler(new KeyUpHandler() {
-			public void onKeyUp(KeyUpEvent event) {	
+			@Override
+			public void onKeyUp(final KeyUpEvent event) {	
 				//To restrict amount of queries, don't bother searching unless more than 200ms have passed
 				//since the last keystroke.		
 				suggestionsTimer.cancel();
@@ -62,33 +64,34 @@ public class SongSuggestBox extends SuggestBox{
 
 	private void getAutocompleteList() {	
 		// Build a JSONP request to grab the info from iTunes
-		String url = "http://itunes.apple.com/search?"+
+		final String url = "http://itunes.apple.com/search?"+
 						"term="+this.getValue()+
 						"&media=music"+
 						"&entity=song"+
 						"&attribute=songTerm"+
 						"&limit=5";
-		JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
 		// TODO: type "gr" then backspace twice and type "o", if "gr" request really long
 		// e.g. 6 seconds and "o" request very short, e.g. 100 ms, autocomplete will show results for 
 		// "gr" when it should really show for "o"
 		// solution: store requests in array, whenever request completes, clear it and any
 		// other requests with lower index
 		jsonp.requestObject(url, new AsyncCallback<JavaScriptObject>() {			
-	       	public void onSuccess(JavaScriptObject jsObject) {	       		
+	       	@Override
+			public void onSuccess(final JavaScriptObject jsObject) {	       		
 	       		// Turn the resulting JavaScriptObject into an AutoBean
-	       		JSONObject obj = new JSONObject(jsObject);
-	       		ListResultFactory factory = GWT.create(ListResultFactory.class);
-	       		AutoBean<ListResultOfSuggestion> autoBean = AutoBeanCodex.decode(factory, ListResultOfSuggestion.class, obj.toString());	       		
-	       		ListResultOfSuggestion listResult = autoBean.as();
+	       		final JSONObject obj = new JSONObject(jsObject);
+	       		final ListResultFactory factory = GWT.create(ListResultFactory.class);
+	       		final AutoBean<ListResultOfSuggestion> autoBean = AutoBeanCodex.decode(factory, ListResultOfSuggestion.class, obj.toString());	       		
+	       		final ListResultOfSuggestion listResult = autoBean.as();
 	       		
 	       		// Clear the current suggestions)
 	       		suggestions.clearSuggestions();
 	       		itemSuggestionMap.clear();
 	       		
 	       		// Get the new suggestions from the iTunes API       		
-	       		for (SuggestionResult entry : listResult.getResults()) {
-	    	    	String suggestionEntry = "<img src='"+UriUtils.sanitizeUri(entry.getArtworkUrl60())+"'/>"+
+	       		for (final SuggestionResult entry : listResult.getResults()) {
+	    	    	final String suggestionEntry = "<img src='"+UriUtils.sanitizeUri(entry.getArtworkUrl60())+"'/>"+
 	    	    			entry.getTrackName()+"</br><span class='artistName'>"+entry.getArtistName()+"</span>";		    	
 	    	    	itemSuggestionMap.put(entry.getTrackName(), entry);
 	    	    	// TODO: Safe HTML?
@@ -99,14 +102,14 @@ public class SongSuggestBox extends SuggestBox{
 	       	}
 
 			@Override
-			public void onFailure(Throwable caught) {
+			public void onFailure(final Throwable caught) {
 				// TODO Do Something with failure				
 			}
 		});		
 	}
 	
 	// Returns SuggestionResults mapped from the display string passed in
-	public SuggestionResult getFromSuggestionMap(String key) {
+	public SuggestionResult getFromSuggestionMap(final String key) {
 		return itemSuggestionMap.get(key);
 	}
 }
