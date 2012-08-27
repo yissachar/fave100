@@ -7,6 +7,8 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.myfave100.SuggestionResult;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -59,6 +61,13 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	@UiHandler("searchButton")
 	public void onClick(final ClickEvent event) {
 		getUiHandlers().showResults(searchBox.getValue());
+	}
+	
+	@UiHandler("searchBox")
+	public void onKeyUp(final KeyUpEvent event) {
+		if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+			searchButton.click();
+		}
 	}
 
 	@Override
