@@ -2,7 +2,11 @@ package com.fave100.server.domain;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.util.List;
+
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
@@ -54,10 +58,20 @@ public class Song extends DatastoreObject {
 		this.score += score;
 	}
 	
-	@OnLoad 
-	private void onLoad(final Objectify ofy) {
-		// TODO: pull a random whyline or something like that
-		this.whyline = "This is a fake whyline";
+	@OnLoad
+	@SuppressWarnings("unused")	 
+	private void onLoad(final Objectify ofy) {		 
+		final List<Whyline> list =  ofy.load().type(Whyline.class)						
+										.filter("song", Ref.create(Key.create(Song.class, getId())))
+										.order("score")
+										.limit(1)
+										.list();
+		if(list.size() > 0) {
+			whyline = list.get(0).getWhyline();
+		} else {
+			whyline = "";
+		}
+		
 	}
 	/* Getters and setters */	
 	

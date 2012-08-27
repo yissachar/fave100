@@ -50,6 +50,7 @@ public class SearchPresenter extends
 		getView().resetView();
 	}
 
+	// TODO: does this really need to be limited to 25?
 	@Override
 	public void showResults(final String searchTerm) {
 		final String url = "http://itunes.apple.com/search?"+
