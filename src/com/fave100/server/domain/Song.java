@@ -48,6 +48,7 @@ public class Song extends DatastoreObject {
 	private String currency;
 	private String primaryGenreName;
 	@IgnoreSave private String whyline;
+	@IgnoreSave private int whylineScore;
 	
 	public static Song findSong(final Long id) {
 		//return ofy().get(Song.class, id);
@@ -321,6 +322,14 @@ public class Song extends DatastoreObject {
 
 	public void setWhyline(final String whyline) {
 		this.whyline = whyline;
+	}
+
+	public int getWhylineScore() {
+		return whylineScore;
+	}
+
+	public void setWhylineScore(int whylineScore) {
+		this.whylineScore = whylineScore;
 	}
 
 }

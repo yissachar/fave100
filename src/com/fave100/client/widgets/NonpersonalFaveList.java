@@ -22,6 +22,7 @@ public class NonpersonalFaveList extends FaveListBase{
 	public NonpersonalFaveList(final ApplicationRequestFactory requestFactory) {
 		super(requestFactory);
 		
+		// Add fave button
 		_cells.add(4, new HasCell<SongProxy, SongProxy>() {
 			private final ActionCell<SongProxy> cell = new ActionCell<SongProxy>("+", new Delegate<SongProxy>() {
 				@Override
@@ -58,6 +59,8 @@ public class NonpersonalFaveList extends FaveListBase{
 				return object;
 			}			
 		});
+		
+		// Whyline
 		_cells.add(new HasCell<SongProxy, SafeHtml>() {
 			private final SafeHtmlCell cell = new SafeHtmlCell();
 
@@ -79,6 +82,31 @@ public class NonpersonalFaveList extends FaveListBase{
 					whyline = "";
 				}
 				return SafeHtmlUtils.fromString(whyline);
+			}
+		});
+		
+		// Whyline score
+		_cells.add(new HasCell<SongProxy, SafeHtml>() {
+			private final SafeHtmlCell cell = new SafeHtmlCell();
+
+            @Override
+            public Cell<SafeHtml> getCell() {
+                return cell;
+            }
+
+			@Override
+			public FieldUpdater<SongProxy, SafeHtml> getFieldUpdater() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public SafeHtml getValue(final SongProxy object) {		
+				String score = object.getWhylineScore()+"";
+				if(object.getWhylineScore() == 0) {
+					score = "";
+				}
+				return SafeHtmlUtils.fromString(score);
 			}
 		});
 		
