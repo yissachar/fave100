@@ -154,15 +154,16 @@ footer {
 
 .faveList .personalFaves>div, .faveList .nonpersonalFaves>div{
 	border: 1px solid #999;
+	background-color: #FFF;
 }
 
-.faveList .personalFaves>div:nth-child(even), .faveList .nonpersonalFaves>div:nth-child(even) {
+/*.faveList .personalFaves>div:nth-child(even), .faveList .nonpersonalFaves>div:nth-child(even) {
 	background-color: #FFF !important;
 }
 
 .faveList .personalFaves>div:nth-child(odd), .faveList .nonpersonalFaves>div:nth-child(odd) {
 	background-color: #EEE !important;
-}
+}*/
 
 .faveList a{
 	color: #548F2F;	
@@ -218,7 +219,9 @@ footer {
 	display: inline-block;	
 	padding: 0 3px;
 	text-align: center;
-	vertical-align: top;
+	/*vertical-align: top;*/
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .faveListTrackName {

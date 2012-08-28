@@ -33,11 +33,11 @@
 		<div class="{style.topNav}">		
 			<ul>
 				<li><span ui:field="greeting"/></li>
-				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getMyfave100}" ui:field="myFave100Link">My Fave100</g:InlineHyperlink></li>				
-				<li><g:InlineHyperlink ui:field="logInLogOutLink">Log in</g:InlineHyperlink></li>
+				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getMyfave100}" ui:field="myFave100Link">My Fave100</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getUserlist}">Users</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">Home</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
+				<li><g:InlineHyperlink ui:field="logInLogOutLink">Log in</g:InlineHyperlink></li>
 			</ul>			
 		</div>
 	</g:HTMLPanel>
