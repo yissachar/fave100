@@ -8,9 +8,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>
-		@external .faveList;
-		.faveList{}			
+	<ui:style>	
 	</ui:style>
 	
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
@@ -19,7 +17,7 @@
 		<div class="content">
 			<g:SuggestBox ui:field="songSuggestBox"/>
 			<g:InlineHyperlink targetHistoryToken="{nameTokens.getSearch}">Advanced search</g:InlineHyperlink>
-			<d:PersonalFaveList ui:field="personalFaveList" styleName="{style.faveList}"/>			
+			<d:PersonalFaveList ui:field="personalFaveList"/>			
 			<g:HTMLPanel ui:field="faveFeed"/>
 		</div>	
 		<pf:Footer/>

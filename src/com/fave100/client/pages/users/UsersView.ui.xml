@@ -8,10 +8,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>
-		@external .faveList;		
-		.faveList{}	
-		
+	<ui:style>		
 		.userProfile{
 			display: block;
 			margin: 30px auto;
@@ -74,7 +71,7 @@
 				<li><g:Anchor ui:field="fave100TabLink">Fave100</g:Anchor></li>
 				<li><g:Anchor ui:field="activityTabLink">Activity</g:Anchor></li>
 			</ul>			
-			<w:NonpersonalFaveList ui:field="userFaveList" styleName="{style.faveList}"/>			
+			<w:NonpersonalFaveList ui:field="userFaveList"/>			
 			<g:InlineHTML ui:field="activityTab" styleName="{style.activityTab}"/>
 		</div>
 		<pf:Footer/>

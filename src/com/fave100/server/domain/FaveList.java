@@ -80,8 +80,11 @@ public class FaveList extends DatastoreObject{
 		if(faveList == null) return;
 		final Activity activity = new Activity(currentUser.getUsername(), Transaction.FAVE_REMOVED);
 		activity.setSong(faveList.getList().get(index).getSong());
-		// We must also delete the whyline
-		ofy().delete().entity(faveList.getList().get(index).getWhyline()).now();
+		// We must also delete the whyline if it exists
+		final Ref<Whyline> currentWhyline = faveList.getList().get(index).getWhyline();
+		if(currentWhyline != null) {
+			ofy().delete().entity(currentWhyline).now();
+		}
 		faveList.getList().remove(index);
 		ofy().save().entities(activity, faveList).now();		
 	}
