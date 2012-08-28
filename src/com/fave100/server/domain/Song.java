@@ -50,6 +50,8 @@ public class Song extends DatastoreObject {
 	@IgnoreSave private String whyline;
 	@IgnoreSave private int whylineScore;
 	
+	//TODO: Need to periodically update cache
+	
 	public static Song findSong(final Long id) {
 		//return ofy().get(Song.class, id);
 		return ofy().load().type(Song.class).id(id).get();
@@ -328,7 +330,7 @@ public class Song extends DatastoreObject {
 		return whylineScore;
 	}
 
-	public void setWhylineScore(int whylineScore) {
+	public void setWhylineScore(final int whylineScore) {
 		this.whylineScore = whylineScore;
 	}
 

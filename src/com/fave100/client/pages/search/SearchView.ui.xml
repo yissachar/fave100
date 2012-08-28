@@ -14,12 +14,12 @@
 			width: 450px;
 			font-size: 1.5em;
 			color: #444;
-			margin-bottom: 5px;
+			margin-bottom: 10px;
 		}
 		
 		.searchButton {
-			margin-left: 20px;
 			font-size: 1.3em;
+			margin-top: 10px;
 		}
 		
 		.iTunesResults{
@@ -41,14 +41,29 @@
 			float: left;
 			padding-right: 10px;
 		}
+		
+		.searchAttributesListBox{
+			padding: 8px;
+			color: #444;
+		}
+		.searchStatus{
+			margin-top: 10px;
+		}
 	</ui:style>
 
 	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="content">
 			<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
-			<g:Button ui:field="searchButton" ui:styleName="{style.searchButton}">Search</g:Button>
-			<g:Label ui:field="searchStatus"/>
+			<br/>
+			<g:ListBox ui:field="searchAttributesListBox" ui:styleName="{style.searchAttributesListBox}">	
+				<g:item value='songTerm'>Song</g:item>
+				<g:item value='albumTerm'>Album</g:item>
+				<g:item value='artistTerm'>Artist</g:item>			
+			</g:ListBox>		
+			<br/>			
+			<g:Button ui:field="searchButton" ui:styleName="{style.searchButton}">Search</g:Button>				
+			<g:Label ui:field="searchStatus" ui:styleName="{style.searchStatus}"/>
 			<br/>
 			<c:CellList ui:field="iTunesResults" ui:styleName="{style.iTunesResults}"/>
 		</div>			
