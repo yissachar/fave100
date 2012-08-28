@@ -16,6 +16,7 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -32,6 +33,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	@UiField TextBox searchBox;
 	@UiField Button searchButton;
 	@UiField Label searchStatus;
+	@UiField ListBox searchAttributesListBox;
 	@UiField(provided=true) CellList<SuggestionResult> iTunesResults;
 
 	@Inject
@@ -60,7 +62,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	
 	@UiHandler("searchButton")
 	public void onClick(final ClickEvent event) {
-		getUiHandlers().showResults(searchBox.getValue());
+		getUiHandlers().showResults(searchBox.getValue(), searchAttributesListBox.getValue(searchAttributesListBox.getSelectedIndex()));
 	}
 	
 	@UiHandler("searchBox")

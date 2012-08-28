@@ -51,13 +51,14 @@ public class SearchPresenter extends
 	}
 
 	// TODO: does this really need to be limited to 25?
+	// TODO: need a global "loading" indicator
 	@Override
-	public void showResults(final String searchTerm) {
+	public void showResults(final String searchTerm, final String attribute) {
 		final String url = "http://itunes.apple.com/search?"+
 				"term="+searchTerm+
 				"&media=music"+
 				"&entity=song"+
-				"&attribute=songTerm"+
+				"&attribute="+attribute+
 				"&limit=25";
 		
 		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
@@ -70,33 +71,6 @@ public class SearchPresenter extends
 		   		final AutoBean<ListResultOfSuggestion> autoBean = AutoBeanCodex.decode(factory, ListResultOfSuggestion.class, obj.toString());	       		
 		   		final ListResultOfSuggestion listResult = autoBean.as();		   	
 		   		
-		   		/*String output = "<ul>";	
-		   		for (final SuggestionResult entry : listResult.getResults()) {
-		   			output += "<li>";
-		   			
-		   			final Image imageThumb = new Image();
-		   			imageThumb.setUrl(entry.getArtworkUrl60());
-		   			output += imageThumb.toString();
-		   			
-		   			final Label trackName = new Label();
-		   			trackName.setText(entry.getTrackName());
-		   			trackName.addStyleName("advancedSearchTrackName");
-		   			output += trackName.toString();
-		   			
-		   			final Label releaseDate = new Label();
-		   			releaseDate.setText(entry.getReleaseDate().substring(0, 4));
-		   			releaseDate.addStyleName("advancedSearchReleaseDate");
-		   			output += releaseDate.toString();		   			
-		   			
-		   			final Label artistName = new Label();
-		   			artistName.setText(entry.getArtistName());
-		   			artistName.addStyleName("advancedSearchArtistName");
-		   			output += artistName.toString();
-		   						    	
-			    	output += "</li>";
-			    }
-		   		output += "</ul>";
-		   		getView().setResults(output);*/
 		   		getView().setResults(listResult.getResults());
 		   	}
 		
@@ -109,5 +83,5 @@ public class SearchPresenter extends
 }
 
 interface SearchUiHandlers extends UiHandlers{
-	void showResults(String searchTerm);
+	void showResults(String searchTerm, String attribute);
 }
