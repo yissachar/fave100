@@ -217,7 +217,7 @@ public class PersonalFaveList extends FaveListBase {
 								$(".clonedHiddenRow").insertAfter($next);
 							}
 							return true;
-						}			
+						}		
 					});
 				}
 			}

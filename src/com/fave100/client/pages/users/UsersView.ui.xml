@@ -11,7 +11,8 @@
 	<ui:style>		
 		.userProfile{
 			display: block;
-			margin: 30px auto;
+			margin: 30px 0;
+			width: 685px;
 			border: 2px solid #444;
 			background-color: #FFF;
 			padding: 5px;
@@ -54,7 +55,7 @@
 		}
 		.activityTab li{
 			border: 1px solid #999;
-			background-color: #DDD;
+			background-color: #EFEFEF;
 			margin-top: 1px;
 			padding: 6px;
 		}
@@ -65,7 +66,7 @@
 			<g:HTMLPanel ui:field="userProfile" styleName="{style.userProfile}">
 				<g:Image ui:field="avatar"/>
 				<span class="{style.username}" ui:field="username"/>
-				<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>				
+				<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>			
 			</g:HTMLPanel>
 			<ul class="{style.tabList}">
 				<li><g:Anchor ui:field="fave100TabLink">Fave100</g:Anchor></li>

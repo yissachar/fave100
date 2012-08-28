@@ -316,8 +316,9 @@ footer {
 }
 
 .selected{
-	background: #CCC;
+	background: #EFEFEF;
 	border-radius: 6px;
+	border: 1px solid #777;
 }
 
 .error{

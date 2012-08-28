@@ -18,10 +18,10 @@
 		.faveFeed h4 {
 			background: #FFF;
 			border-bottom: 2px solid #666;
-			padding: 5px;			
+			padding: 7px;			
 		}
 		
-		.faveFeed a {
+		.faveFeed a, .faveFeed p {
 			display: block;
 			padding: 3px;
 		}
@@ -32,14 +32,14 @@
 		}
 		
 		.faveFeed li {
-			border-bottom: 1px solid #999;
-			padding: 7px;
+			border-bottom: 1px solid #999;			
 			cursor: pointer;
 			background-color: #FFF;
 		}
 		
 		.faveFeed li a {
 			text-decoration: none;
+			padding: 7px;
 		}
 		
 		.faveFeed li:hover{

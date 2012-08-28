@@ -25,11 +25,13 @@ public class Activity {
 	
 	public Activity() {}
 	
-	public Activity(String username, Transaction transactionType) {
+	public Activity(final String username, final Transaction transactionType) {
 		this.setUsername(username);
 		this.transactionType = transactionType;
 		this.timestamp = new Date();
 	}
+	
+	
 	
 	// Getters and Setters
 
@@ -37,7 +39,7 @@ public class Activity {
 		return transactionType;
 	}
 
-	public void setTransactionType(Transaction transactionType) {
+	public void setTransactionType(final Transaction transactionType) {
 		this.transactionType = transactionType;
 	}
 
@@ -45,7 +47,7 @@ public class Activity {
 		return timestamp;
 	}
 
-	public void setTimestamp(Date timestamp) {
+	public void setTimestamp(final Date timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -53,7 +55,7 @@ public class Activity {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
@@ -61,7 +63,7 @@ public class Activity {
 		return username;
 	}
 
-	public void setUsername(String username) {
+	public void setUsername(final String username) {
 		this.username = username;
 	}
 
@@ -69,7 +71,7 @@ public class Activity {
 		return song;
 	}
 
-	public void setSong(Ref<Song> song) {
+	public void setSong(final Ref<Song> song) {
 		this.song = song;
 	}
 
@@ -77,7 +79,7 @@ public class Activity {
 		return previousLocation;
 	}
 
-	public void setPreviousLocation(int previousLocation) {
+	public void setPreviousLocation(final int previousLocation) {
 		this.previousLocation = previousLocation;
 	}
 
@@ -85,7 +87,7 @@ public class Activity {
 		return newLocation;
 	}
 
-	public void setNewLocation(int newLocation) {
+	public void setNewLocation(final int newLocation) {
 		this.newLocation = newLocation;
 	}	
 

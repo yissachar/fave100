@@ -59,7 +59,9 @@ public class FaveFeedPresenter extends
 					}
 					builder.appendHtmlConstant("</ul>");
 				} else {
+					builder.appendHtmlConstant("<p>");
 					builder.appendEscaped("No recent activity.");
+					builder.appendHtmlConstant("</p>");
 				}
 				//getView().setVisible(true);
 				//getView().setHTML(builder.toSafeHtml());

@@ -310,16 +310,14 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return ofy().load().type(AppUser.class).list();
 	}
 	
-	
-	
 	public static List<String> getFaveFeedForCurrentUser() {
-		final AppUser user = getLoggedInAppUser();
+		final AppUser user = AppUser.getLoggedInAppUser();
 		if(user == null) throw new RuntimeException("Not logged in");
 		// TODO: This is horrible, need to rethink strategy
 		// Get all the users that the current user is following
-		Ref.create(Key.create(AppUser.class, user.username));
+		Ref.create(Key.create(AppUser.class, user.getUsername()));
 		final List<Follower> followingList = ofy().load().type(Follower.class)
-				.filter("follower", Ref.create(Key.create(AppUser.class, user.username))).list();
+				.filter("follower", Ref.create(Key.create(AppUser.class, user.getUsername()))).list();
 		final List<List<Activity>> rawActivityList = new ArrayList<List<Activity>>();
 		final Date twoDaysAgo = new Date();
 		twoDaysAgo.setTime(twoDaysAgo.getTime()-(1000*60*60*24*2));
