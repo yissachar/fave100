@@ -229,7 +229,7 @@ public class PersonalFaveList extends FaveListBase {
 	private void setPos(final GQuery element, final int mouseY) {	
 		final int clonedHeight = $(".clonedHiddenRow").outerHeight(true);
 		final int elementHeight = element.outerHeight(true);
-		final int newPos = mouseY-(elementHeight/2);
+		final int newPos = mouseY-(elementHeight);
 		final int draggedTop = newPos;
 		final int draggedBottom = draggedTop + elementHeight;
 		final int faveListTop = $(".faveList").offset().top-clonedHeight/2;
