@@ -17,8 +17,10 @@
 		<div class="content">
 			<g:SuggestBox ui:field="songSuggestBox"/>
 			<g:InlineHyperlink targetHistoryToken="{nameTokens.getSearch}">Advanced search</g:InlineHyperlink>
-			<d:PersonalFaveList ui:field="personalFaveList"/>			
-			<g:HTMLPanel ui:field="faveFeed"/>
+			<div>
+				<g:HTMLPanel ui:field="faveFeed"/>
+				<d:PersonalFaveList ui:field="personalFaveList"/>				
+			</div>
 		</div>	
 		<pf:Footer/>
 	</g:HTMLPanel>

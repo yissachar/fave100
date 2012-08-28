@@ -8,26 +8,42 @@
 
 	<ui:style>
 		.faveFeed{
-			position: absolute;
+			position: fixed;
 			border: 1px solid #999;
-			right: 0;
-			top: 0;
-			/*top: 150px;*/
-			width: 200px;			
+			margin-left: 720px;
+			width: 240px;			
 			z-index: 99999;
 		}
+		
+		.faveFeed h4 {
+			background: #FFF;
+			border-bottom: 2px solid #666;
+			padding: 5px;			
+		}
+		
+		.faveFeed a {
+			display: block;
+			padding: 3px;
+		}
+		
 		.faveFeed ul {
 			list-style-type: none;
 			padding: 0;
 		}
+		
 		.faveFeed li {
 			border-bottom: 1px solid #999;
 			padding: 7px;
 			cursor: pointer;
-			background-color: #F5F8E5;
+			background-color: #FFF;
 		}
+		
+		.faveFeed li a {
+			text-decoration: none;
+		}
+		
 		.faveFeed li:hover{
-			background-color: #E7E7E7;
+			background: #C1EDA6;
 		}	
 	</ui:style>
 	

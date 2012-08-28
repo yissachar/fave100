@@ -14,6 +14,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
+import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.Activity.Transaction;
 import com.google.appengine.api.users.User;
@@ -173,9 +174,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return user;
 		
 	}	
-	
-	
-	
 	
 	/*
 	 * Checks if the user is logged into Google (though not necessarily logged
@@ -361,6 +359,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 					final String songName = activity.getSong().get().getTrackName();					
 					String message = "";
 					if(activity.getTransactionType().equals(transaction)) {
+						message += "<a href='#users;u="+activity.getUsername()+";tab="+UsersPresenter.ACTIVITY_TAB+"'>";
 						if(transaction.equals(Transaction.FAVE_ADDED)) {
 							message += activity.getUsername() + " added " + songName;
 						} else if(transaction.equals(Transaction.FAVE_REMOVED)) {
@@ -399,6 +398,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 						message += " to "+activity.getNewLocation();
 					}
 					if(message != "") {
+						message += "</a>";
 						faveFeed.add(message);
 					}
 				}
