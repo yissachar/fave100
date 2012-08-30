@@ -246,6 +246,7 @@ footer {
 .draggedFaveListItem{
 	position: absolute;
 	width: 690px;
+	box-shadow: 1px 1px 3px 2px #999;
 }
 .unselectable, .draggedFaveListItem{	
   	-moz-user-select: none;

@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
-import com.fave100.client.pages.myfave100.ListResultOfSuggestion;
-import com.fave100.client.pages.myfave100.SongSuggestBox.ListResultFactory;
-import com.fave100.client.pages.myfave100.SuggestionResult;
+import com.fave100.client.pages.users.ListResultOfSuggestion;
+import com.fave100.client.pages.users.SuggestionResult;
+import com.fave100.client.pages.users.SongSuggestBox.ListResultFactory;
 import com.fave100.client.place.NameTokens;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;

@@ -3,6 +3,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:c='urn:import:com.google.gwt.user.cellview.client'
+	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -66,6 +67,7 @@
 			<g:Label ui:field="searchStatus" ui:styleName="{style.searchStatus}"/>
 			<br/>
 			<c:CellList ui:field="iTunesResults" ui:styleName="{style.iTunesResults}"/>
-		</div>			
+		</div>	
+		<pf:Footer/>		
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -1,4 +1,4 @@
-package com.fave100.client.pages.myfave100;
+package com.fave100.client.widgets;
 
 import static com.google.gwt.query.client.GQuery.$;
 
@@ -8,8 +8,6 @@ import java.util.List;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.client.widgets.FaveListBase;
-import com.fave100.client.widgets.PersonalFaveListCell;
 import com.fave100.server.domain.FaveList;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CompositeCell;

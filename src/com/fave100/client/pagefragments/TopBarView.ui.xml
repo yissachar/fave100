@@ -8,24 +8,35 @@
 
 	<ui:style>
 		.topNav{
-			/*position: absolute;
-			left: 0;
-			top: 0;
-			width: 100%;*/
 			background-color: #A8DB88;			
 			height: 40px;
 			border-bottom: 1px solid #555;
 			margin-bottom: 10px;
 		}
+		
 		.topNav ul{
 			list-style-type: none;	
-			float: right;			
-			margin-top: 10px;
+			float: right;		
+			height: 100%;
 		}
+		
 		.topNav li{
-			display: inline;
-			margin: 7px;
-		}		
+			display: inline-block;			
+			height: 100%;
+			vertical-align: top;
+			cursor: pointer
+		}	
+		
+		.topNav li:hover {
+			background-color: #AFEB8F; 
+		}
+		
+		.topNav li * {
+			display: inline-block;
+			margin-top: 10px;
+			text-decoration: none;
+			padding: 0 6px;
+		}
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
@@ -33,7 +44,7 @@
 		<div class="{style.topNav}">		
 			<ul>
 				<li><span ui:field="greeting"/></li>
-				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getMyfave100}" ui:field="myFave100Link">My Fave100</g:InlineHyperlink></li>
+				<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getUserlist}">Users</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">Home</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
