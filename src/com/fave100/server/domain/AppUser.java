@@ -17,6 +17,7 @@ import twitter4j.auth.RequestToken;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.Activity.Transaction;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -460,6 +461,10 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}
 	}
 	
+	public static String createBlobstoreUrl(final String successPath) {
+		return BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(successPath);
+	}
+	
 	public String getAvatarImage() {
 		// TODO: Need local avatar as well (if they don't have gravatar or twitter)
 		if(avatar == null) {
@@ -475,7 +480,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			}	
 		}	
 		return avatar;
-	}
+	} 
 	
     // Getters and setters	
 

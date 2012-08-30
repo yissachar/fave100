@@ -40,13 +40,14 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField(provided = true) PersonalFaveList personalFaveList;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel userProfile;	
+	@UiField InlineHyperlink editProfileButton;
 	@UiField Button followButton;		
 	@UiField Image avatar;	
 	@UiField SpanElement username;
 	@UiField Anchor fave100TabLink;
 	@UiField Anchor activityTabLink;
 	@UiField InlineHTML activityTab;
-	@UiField InlineHyperlink advancedSearchLink;
+	@UiField InlineHyperlink advancedSearchLink;	
 
 	@Inject
 	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
@@ -117,18 +118,26 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@Override
-	public void showActivityTab(final SafeHtml html) {
+	public void setActivityTab(final SafeHtml html) {
+		activityTab.setHTML(html);
+	}
+	
+	@Override
+	public void showActivityTab() {
 		activityTab.setVisible(true);
 		faveListContainer.setVisible(false);
+		songSuggestBox.setVisible(false);	
+		advancedSearchLink.setVisible(false);
     	fave100TabLink.removeStyleName("selected");
-		activityTabLink.addStyleName("selected");
-		activityTab.setHTML(html);
+		activityTabLink.addStyleName("selected");		
 	}
 
 	@Override
 	public void showFave100Tab() {
 		faveListContainer.setVisible(true);
     	activityTab.setVisible(false);
+    	songSuggestBox.setVisible(true);	
+		advancedSearchLink.setVisible(true);
     	activityTabLink.removeStyleName("selected");
 		fave100TabLink.addStyleName("selected");
 	}
@@ -150,21 +159,25 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@Override
-	public void showLoggedInUserView() {
+	public void showOwnPage() {
 		personalFaveList.setVisible(true);
 		userFaveList.setVisible(false);
 		songSuggestBox.setVisible(true);
 		advancedSearchLink.setVisible(true);
 		faveFeed.setVisible(true);
+		editProfileButton.setVisible(true);
+		followButton.setVisible(false);
 		refreshPersonalFaveList();		
 	}
 
 	@Override
-	public void showNonLoggedInUserView() {
+	public void showOtherPage() {
 		personalFaveList.setVisible(false);
 		userFaveList.setVisible(true);
 		songSuggestBox.setVisible(false);	
 		advancedSearchLink.setVisible(false);
+		editProfileButton.setVisible(false);
+		followButton.setVisible(true);
 		faveFeed.setVisible(false);
 	}
 	
