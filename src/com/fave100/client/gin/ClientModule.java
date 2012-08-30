@@ -28,6 +28,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
+import com.fave100.client.pages.profile.ProfilePresenter;
+import com.fave100.client.pages.profile.ProfileView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -63,6 +65,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(SearchPresenter.class, SearchPresenter.MyView.class,
 				SearchView.class, SearchPresenter.MyProxy.class);
+
+		bindPresenter(ProfilePresenter.class, ProfilePresenter.MyView.class,
+				ProfileView.class, ProfilePresenter.MyProxy.class);
 	}
 	
 	@Provides

@@ -33,9 +33,9 @@
 		
 		.topNav li * {
 			display: inline-block;
-			margin-top: 10px;
 			text-decoration: none;
 			padding: 0 6px;
+			line-height: 2.4em;
 		}
 	</ui:style>
 

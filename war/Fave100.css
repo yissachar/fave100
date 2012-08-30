@@ -51,31 +51,47 @@ input:hover, select:hover{
 }
 input:focus, select:focus{
 	border-color: #98CB80;
-	box-shadow: 0px 1px 1px #666 inset;
+	box-shadow: 0px 1px 1px #666 inset,
+				0px 0px 4px #A8DB88;
 }
 
 button{		
 	height: 35px;
 	border: 1px solid #AAA;
 	color: #666;			
-	background-color: #A8DB88;	
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top,  #ffffff 0%, #e0e0e0 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e0e0e0)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #ffffff 0%,#e0e0e0 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #ffffff 0%,#e0e0e0 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #ffffff 0%,#e0e0e0 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */		
 	font-size: 1em;
-	box-shadow: 0px 1px 1px #FFF inset;
-	border-radius: 3px;
+	border-radius: 4px;
 }
 button:hover{
-	background-color: #A8EB88;
+	border: 1px solid #999;
+	background: #f6f6f6; /* Old browsers */
+	background: -moz-linear-gradient(top,  #f6f6f6 0%, #dadada 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f6f6), color-stop(100%,#dadada)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #f6f6f6 0%,#dadada 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #f6f6f6 0%,#dadada 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #f6f6f6 0%,#dadada 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #f6f6f6 0%,#dadada 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f6f6', endColorstr='#dadada',GradientType=0 ); /* IE6-9 */
 	cursor: pointer;
 }
 
 button:disabled{
 	color: #999;
-	background-color: #CCC;
+	background: #e0e0e0; 
 }
 
 button:disabled:hover{
 	cursor: default;
 	background-color: #CCC !important;
+	background: #e0e0e0 !important;
 }
 
 footer {
@@ -107,8 +123,8 @@ footer {
 	display: block;
 	margin-top: 50px;
 	margin-bottom: 5px;
-	width: 500px;
-	height: 50px;	
+	width: 450px;
+	height: 40px;	
 	font-size: 2em;
 	border: 3px solid #999;
 	padding: 7px;
@@ -127,7 +143,7 @@ footer {
 	margin: 0px auto;
 	background-color: #FFF;
 	font-size: 1.3em;
-	width: 501px;
+	width: 451px;
 	white-space: normal !important;
 	overflow: hidden;
 	padding: 7px;
@@ -189,11 +205,25 @@ footer {
 
 .faveListDeleteButton{
 	color: #FFF;
-	background-color: #FF5E5E;
+	background: #f25c5c; /* Old browsers */
+	background: -moz-linear-gradient(top,  #f25c5c 0%, #c13e26 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f25c5c), color-stop(100%,#c13e26)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #f25c5c 0%,#c13e26 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #f25c5c 0%,#c13e26 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #f25c5c 0%,#c13e26 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #f25c5c 0%,#c13e26 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f25c5c', endColorstr='#c13e26',GradientType=0 ); /* IE6-9 */
 }
 
 .faveListDeleteButton:hover{
-	background-color: #FF4A4A !important;
+	background: #ed3636; /* Old browsers */
+	background: -moz-linear-gradient(top,  #ed3636 0%, #bc341c 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ed3636), color-stop(100%,#bc341c)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #ed3636 0%,#bc341c 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #ed3636 0%,#bc341c 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #ed3636 0%,#bc341c 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #ed3636 0%,#bc341c 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ed3636', endColorstr='#bc341c',GradientType=0 ); /* IE6-9 */	
 }
 
 .faveListImageThumb{
@@ -226,7 +256,7 @@ footer {
 }
 
 .faveListWhyline, .faveList div>span:nth-child(2){
-	font-size: 1.2em;
+	font-size: 1.1em;
 	display: inline-block;
 	padding: 3px;
 	vertical-align: top;
@@ -320,6 +350,7 @@ footer {
 	background: #EFEFEF;
 	border-radius: 6px;
 	border: 1px solid #777;
+	box-shadow: 1px 1px 2px #AAA;
 }
 
 .error{

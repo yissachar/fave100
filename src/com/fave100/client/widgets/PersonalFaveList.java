@@ -154,6 +154,9 @@ public class PersonalFaveList extends FaveListBase {
 				final Element eventTarget = event.getEventTarget().cast();
 				final String className = eventTarget.getClassName();
 				
+				// If the button that was clicked was middle or left, do nothing
+				if(event.getButton() != NativeEvent.BUTTON_LEFT) return;
+				
 				// Click on whyline - do nothing special
 				if(className.isEmpty()) return;
 				
@@ -161,7 +164,7 @@ public class PersonalFaveList extends FaveListBase {
 				if(className.contains("faveListDeleteButton")
 					|| className.contains("faveListTrackName")) {
 					
-					if(event.getType().equals("click")) {						
+					if(event.getType().equals("click")) {					
 						// Delete button was clicked
 				    	final FaveListRequest faveListRequest = requestFactory.faveListRequest();
 				    	final Request<Void> deleteReq = faveListRequest.removeFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, context.getIndex());

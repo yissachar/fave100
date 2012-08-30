@@ -43,20 +43,25 @@ public class UsersPresenter extends
 		void setFollowed();
 		void setUnfollowed();
 		void showFave100Tab();
-		void showActivityTab(SafeHtml html);
+		void setActivityTab(SafeHtml html);
+		void showActivityTab();
 		void setUserProfile(AppUserProxy user);
 		void setUserFaveList(List<SongProxy> faveList);
 		void refreshPersonalFaveList();
-		void showLoggedInUserView();
-		void showNonLoggedInUserView();
+		void showOwnPage();
+		void showOtherPage();
 	}
 		
 	public static final String FAVE_100_TAB = "fave100";
 	public static final String ACTIVITY_TAB = "activity";
 		
+	private int currentRequestProgress = 0;
 	private String requestedUsername;
 	private final ApplicationRequestFactory requestFactory;
 	private final PlaceManager placeManager;
+	private boolean ownPage = false;
+	private boolean following = false;
+	private String tab = UsersPresenter.FAVE_100_TAB;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.users)
@@ -92,20 +97,24 @@ public class UsersPresenter extends
 	@Override
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
+		
+		// Use parameters to determine what to reveal on page
 		requestedUsername = placeRequest.getParameter("u", "");	
 		if(requestedUsername.isEmpty()) {
+			// Malformed request, send the user away
 			placeManager.revealDefaultPlace();
 		} else {			
 			// Update follow button
 			final Request<Boolean> checkFollowing = requestFactory.appUserRequest().checkFollowing(requestedUsername);
 			checkFollowing.fire(new Receiver<Boolean>() {
 				@Override
-				public void onSuccess(final Boolean following) {
-					if(following) {
-						getView().setFollowed();
+				public void onSuccess(final Boolean followingUser) {
+					if(followingUser) {
+						following = true;
 					} else {
-						getView().setUnfollowed();
+						following = false;
 					}
+					checkTotalRequestProgress();
 				}
 			});
 			
@@ -114,43 +123,30 @@ public class UsersPresenter extends
 		    userReq.fire(new Receiver<AppUserProxy>() {
 		    	@Override
 		    	public void onSuccess(final AppUserProxy user) {
-		    		if(user != null) {	    				
-		    			// Upate user profile
+		    		if(user != null) {	    	
 	    				getView().setUserProfile(user);
-	    				// Check if user is logged in user 
+	    				// Check if user is the currently logged in user 
 	    				final Request<AppUserProxy> getLoggedInReq = requestFactory.appUserRequest().getLoggedInAppUser();
 	    				getLoggedInReq.fire(new Receiver<AppUserProxy>() {
 	    					@Override
 	    					public void onSuccess(final AppUserProxy loggedInUser) {
 	    						if(loggedInUser != null && loggedInUser.equals(user)) {
-	    							getView().showLoggedInUserView();	    							
+	    							ownPage = true; 							
 	    						} else {
-	    							getView().showNonLoggedInUserView();
-	    						}
+	    							ownPage = false;
+	    						}	    				
+	    						checkTotalRequestProgress();
 	    					}
 	    				});
+	    				checkTotalRequestProgress();
 	    			} else {
 	    				placeManager.revealDefaultPlace();
-	    			}
-		    		getProxy().manualReveal(UsersPresenter.this);
+	    			}		    		
 		    	}
-		    });		
+		    });		    
+		    	
 		    
-		    // Update fave list
-			final Request<List<SongProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
-		    userFaveListReq.fire(new Receiver<List<SongProxy>>() {
-		    	@Override
-		    	public void onSuccess(final List<SongProxy> faveList) {
-		    		if(faveList != null) {	 
-	    	    		getView().setUserFaveList(faveList);
-	    			} else {
-	    				placeManager.revealDefaultPlace();
-	    			}
-		    		getProxy().manualReveal(UsersPresenter.this);
-		    	}
-		    });	
-		    
-		    final String tab = placeRequest.getParameter("tab", UsersPresenter.FAVE_100_TAB);
+		    tab = placeRequest.getParameter("tab", UsersPresenter.FAVE_100_TAB);
 		    if(tab.equals(UsersPresenter.ACTIVITY_TAB)) {
 		    	
 				final Request<List<String>> getActivityReq = requestFactory.appUserRequest().getActivityForUser(requestedUsername);
@@ -165,13 +161,52 @@ public class UsersPresenter extends
 							builder.appendHtmlConstant("</li>");
 						}
 						builder.appendHtmlConstant("</ul>");
-						getView().showActivityTab(builder.toSafeHtml());
+						getView().setActivityTab(builder.toSafeHtml());
+						checkTotalRequestProgress();
 					}
 				});
-		    } else if(tab.equals(UsersPresenter.FAVE_100_TAB)) {
-		    	getView().showFave100Tab();
+		    } else if(tab.equals(UsersPresenter.FAVE_100_TAB)) {		    	
+		    	// Update fave list
+				final Request<List<SongProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
+			    userFaveListReq.fire(new Receiver<List<SongProxy>>() {
+			    	@Override
+			    	public void onSuccess(final List<SongProxy> faveList) {			    		
+			    		if(faveList != null) {	 
+			    			getView().setUserFaveList(faveList);
+		    			} else {
+		    				placeManager.revealDefaultPlace();
+		    			}
+			    		checkTotalRequestProgress();			    		
+			    	}
+			    });		    	
 		    }
 		}
+	}
+	
+	private void checkTotalRequestProgress() {
+		currentRequestProgress++;
+		if(currentRequestProgress >= 4) {
+			currentRequestProgress = 0;
+			
+			if(following) {
+				getView().setFollowed();
+			} else {
+				getView().setUnfollowed();
+			}
+			
+			if(ownPage) {
+				getView().showOwnPage();	   
+			} else {
+				getView().showOtherPage();
+			}
+			
+			if(tab.equals(UsersPresenter.FAVE_100_TAB)) {
+				getView().showFave100Tab();
+			} else if(tab.equals(UsersPresenter.ACTIVITY_TAB)) {
+				getView().showActivityTab();
+			}
+			getProxy().manualReveal(UsersPresenter.this);
+		}	
 	}
 
 	@Override
@@ -193,12 +228,16 @@ public class UsersPresenter extends
 
 	@Override
 	public void goToFave100Tab() {
-		placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.FAVE_100_TAB));
+		if(!tab.equals(UsersPresenter.FAVE_100_TAB)) {
+			placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.FAVE_100_TAB));
+		}		
 	}
 
 	@Override
 	public void goToActivityTab() {
-		placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.ACTIVITY_TAB));
+		if(!tab.equals(UsersPresenter.ACTIVITY_TAB)) {
+			placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.ACTIVITY_TAB));
+		}		
 	}
 	
 	@Override

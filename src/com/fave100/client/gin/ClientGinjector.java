@@ -13,6 +13,7 @@ import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.gwtplatform.dispatch.client.gin.DispatchAsyncModule;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.fave100.client.pages.profile.ProfilePresenter;
 
 @GinModules({ DispatchAsyncModule.class, ClientModule.class })
 public interface ClientGinjector extends Ginjector {
@@ -34,4 +35,6 @@ public interface ClientGinjector extends Ginjector {
 	AsyncProvider<UserlistPresenter> getUserlistPresenter();
 
 	AsyncProvider<SearchPresenter> getSearchPresenter();
+
+	AsyncProvider<ProfilePresenter> getProfilePresenter();
 }

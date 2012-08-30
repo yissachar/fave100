@@ -25,9 +25,6 @@
 			margin-top: 25px;
 			margin-right: 20px;
 		}
-		.followButton:hover {	
-			background-color: #A8EB88;
-		}
 		
 		.username {
 			margin: 15px;
@@ -69,6 +66,9 @@
 				<g:Image ui:field="avatar"/>
 				<span class="{style.username}" ui:field="username"/>
 				<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>			
+				<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
+					Edit Profile
+				</g:InlineHyperlink>
 			</g:HTMLPanel>
 			<ul class="{style.tabList}">
 				<li><g:Anchor ui:field="fave100TabLink">Fave100</g:Anchor></li>
