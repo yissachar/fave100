@@ -10,10 +10,10 @@ import com.fave100.client.pages.login.LoginPresenter;
 import com.fave100.client.pages.login.LoginView;
 import com.fave100.client.pages.logout.LogoutPresenter;
 import com.fave100.client.pages.logout.LogoutView;
-import com.fave100.client.pages.myfave100.MyFave100Presenter;
-import com.fave100.client.pages.myfave100.MyFave100View;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.register.RegisterView;
+import com.fave100.client.pages.search.SearchPresenter;
+import com.fave100.client.pages.search.SearchView;
 import com.fave100.client.pages.userlist.UserlistPresenter;
 import com.fave100.client.pages.userlist.UserlistView;
 import com.fave100.client.pages.users.UsersPresenter;
@@ -28,8 +28,6 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
-import com.fave100.client.pages.search.SearchPresenter;
-import com.fave100.client.pages.search.SearchView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -41,10 +39,6 @@ public class ClientModule extends AbstractPresenterModule {
 		
 		bindPresenter(HomePresenter.class, HomePresenter.MyView.class,
 				HomeView.class, HomePresenter.MyProxy.class);
-
-		bindPresenter(MyFave100Presenter.class,
-				MyFave100Presenter.MyView.class, MyFave100View.class,
-				MyFave100Presenter.MyProxy.class);
 
 		bindPresenterWidget(TopBarPresenter.class,
 				TopBarPresenter.MyView.class, TopBarView.class);	

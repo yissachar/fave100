@@ -406,7 +406,13 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static List<String> getActivityForUser(final String username) {
-		final List<Activity> activityList = ofy().load().type(Activity.class).filter("username", username).limit(50).list();
+		final List<Activity> activityList = ofy()
+											.load()
+											.type(Activity.class)
+											.filter("username", username)
+											.order("-timestamp")
+											.limit(50)
+											.list();
 		final ArrayList<String> faveFeed = new ArrayList<String>();		
 		for(final Activity activity : activityList) {
 			final String songName = activity.getSong().get().getTrackName();

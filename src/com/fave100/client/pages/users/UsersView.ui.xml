@@ -60,6 +60,8 @@
 			padding: 6px;
 		}
 	</ui:style>
+	
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="content">
@@ -71,8 +73,14 @@
 			<ul class="{style.tabList}">
 				<li><g:Anchor ui:field="fave100TabLink">Fave100</g:Anchor></li>
 				<li><g:Anchor ui:field="activityTabLink">Activity</g:Anchor></li>
-			</ul>			
-			<w:NonpersonalFaveList ui:field="userFaveList"/>			
+			</ul>	
+			<g:SuggestBox ui:field="songSuggestBox"/>
+			<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}">Advanced search</g:InlineHyperlink>
+			<g:HTMLPanel ui:field = "faveListContainer">
+				<g:HTMLPanel ui:field="faveFeed"/>
+				<w:PersonalFaveList ui:field="personalFaveList"/>
+				<w:NonpersonalFaveList ui:field="userFaveList"/>				
+			</g:HTMLPanel>						
 			<g:InlineHTML ui:field="activityTab" styleName="{style.activityTab}"/>
 		</div>
 		<pf:Footer/>

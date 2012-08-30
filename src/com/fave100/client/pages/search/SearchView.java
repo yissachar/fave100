@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.myfave100.SuggestionResult;
+import com.fave100.client.pages.users.SuggestionResult;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;

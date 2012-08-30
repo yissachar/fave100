@@ -1,4 +1,4 @@
-package com.fave100.client.pages.myfave100;
+package com.fave100.client.pages.users;
 
 import java.util.HashMap;
 

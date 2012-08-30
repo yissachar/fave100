@@ -4,6 +4,8 @@ import com.fave100.client.place.NameTokens;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -18,7 +20,7 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 	
 	@UiField InlineHyperlink logInLogOutLink;
 	@UiField SpanElement greeting;	
-	@UiField InlineHyperlink myFave100Link;	
+	@UiField Anchor myFave100Link;	
 	@UiField InlineHyperlink registerLink;
 
 	@Inject
@@ -35,6 +37,7 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 	public void setLoggedIn(final String username) {
 		greeting.setInnerHTML(username);
 		myFave100Link.setVisible(true);
+		myFave100Link.setHref(Window.Location.getPath()+Window.Location.getQueryString()+"#"+NameTokens.getUsers()+";u="+username);
 		registerLink.setVisible(false);
 		logInLogOutLink.setText("Log out");
 		logInLogOutLink.setTargetHistoryToken(NameTokens.logout);
@@ -44,7 +47,7 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 	@Override
 	public void setLoggedOut() {
 		greeting.setInnerHTML("");
-		myFave100Link.setVisible(false);
+		myFave100Link.setVisible(false);		
 		registerLink.setVisible(true);
 		logInLogOutLink.setText("Log in");
 		logInLogOutLink.setTargetHistoryToken(NameTokens.login);

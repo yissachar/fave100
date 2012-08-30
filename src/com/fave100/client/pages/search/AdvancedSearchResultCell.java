@@ -1,7 +1,7 @@
 package com.fave100.client.pages.search;
 
 import com.fave100.client.pagefragments.SideNotification;
-import com.fave100.client.pages.myfave100.SuggestionResult;
+import com.fave100.client.pages.users.SuggestionResult;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
