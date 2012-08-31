@@ -470,6 +470,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	public static void setAvatarForCurrentUser(final String avatar) {
 		final AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) return;
+		// TODO: Max upload size?
 		if(currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
 			BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
 		}		
