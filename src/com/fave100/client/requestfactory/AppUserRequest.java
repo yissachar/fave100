@@ -36,4 +36,5 @@ public interface AppUserRequest extends RequestContext{
 	Request<List<String>> getFaveFeedForCurrentUser();
 	Request<List<String>> getActivityForUser(String username);
 	Request<String> createBlobstoreUrl(String url);
+	Request<Void> setAvatarForCurrentUser(String avatar);
 }

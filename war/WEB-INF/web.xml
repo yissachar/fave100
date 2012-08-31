@@ -37,6 +37,16 @@
 	  	<servlet-name>_ah_sessioncleanup</servlet-name>
 	 	<url-pattern>/_ah/sessioncleanup</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+	  	<servlet-name>avatarUpload</servlet-name>
+	  	<servlet-class>com.fave100.server.servlets.AvatarUploadServlet</servlet-class>
+	</servlet>
+	 
+	<servlet-mapping>
+	  	<servlet-name>avatarUpload</servlet-name>
+	 	<url-pattern>/avatarUpload</url-pattern>
+	</servlet-mapping>
 
     <security-constraint>
         <web-resource-collection>

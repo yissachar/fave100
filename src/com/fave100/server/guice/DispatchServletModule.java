@@ -5,8 +5,8 @@ import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
 import com.googlecode.objectify.ObjectifyFilter;
-import com.gwtplatform.dispatch.shared.ActionImpl;
 import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;
+import com.gwtplatform.dispatch.shared.ActionImpl;
 
 public class DispatchServletModule extends ServletModule {
 
@@ -19,6 +19,6 @@ public class DispatchServletModule extends ServletModule {
 		serve("/gwtRequest").with(RequestFactoryServlet.class);
 		
 		bind(ObjectifyFilter.class).in(Singleton.class);
-		filter("/*").through(ObjectifyFilter.class);
+		filter("/*").through(ObjectifyFilter.class);		
 	}	
 }

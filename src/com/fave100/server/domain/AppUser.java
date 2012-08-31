@@ -17,7 +17,10 @@ import twitter4j.auth.RequestToken;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.Activity.Transaction;
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -46,7 +49,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	@Id private String username;
 	private String password;
 	private String email;
-	// TODO: user avatar/gravatar
 	private String avatar;
 	// TODO: location  = for location based lists
 	
@@ -465,9 +467,20 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(successPath);
 	}
 	
+	public static void setAvatarForCurrentUser(final String avatar) {
+		final AppUser currentUser = getLoggedInAppUser();
+		if(currentUser == null) return;
+		if(currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
+			BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
+		}		
+		currentUser.setAvatar(avatar);		
+		ofy().save().entity(currentUser).now();
+	}
+	
 	public String getAvatarImage() {
-		// TODO: Need local avatar as well (if they don't have gravatar or twitter)
-		if(avatar == null) {
+		// TODO: Need local avatar as well (if they don't have gravatar or twitter)		
+		if(avatar == null) {			
+			// If there is no avatar, serve a Gravatar
 			// TODO: Do we even want to show gravatars at all? some privacy issues
 			if(getEmail() == null) return "http://www.gravatar.com/avatar/?d=mm";
 			try {
@@ -479,6 +492,14 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				// TODO: Do we care what happens if an exception is thrown here?
 			}	
 		}	
+		// Serve the image blob from Google if it exists
+		final ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(new BlobKey(avatar));
+		final String servingUrl = ImagesServiceFactory.getImagesService().getServingUrl(options);
+		if(servingUrl != null) {
+			//TODO: This is bad hack, unfortunately needed for dev mode
+			return servingUrl.replace("http://0.0.0.0", "http://127.0.0.1");
+		}
+		// Otherwise serve the Twitter or FaceBook avatar
 		return avatar;
 	} 
 	
