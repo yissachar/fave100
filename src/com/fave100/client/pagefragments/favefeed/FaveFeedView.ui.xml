@@ -29,12 +29,12 @@
 		.faveFeed ul {
 			list-style-type: none;
 			padding: 0;
+			background-color: #FFF;
 		}
 		
 		.faveFeed li {
 			border-bottom: 1px solid #999;			
-			cursor: pointer;
-			background-color: #FFF;
+			cursor: pointer;			
 		}
 		
 		.faveFeed li a {

@@ -51,6 +51,7 @@
 			margin-top: 30px;
 		}
 		.activityTab li{
+			width: 685px;
 			border: 1px solid #999;
 			background-color: #EFEFEF;
 			margin-top: 1px;
@@ -62,6 +63,7 @@
 	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="content">
+		
 			<g:HTMLPanel ui:field="userProfile" styleName="{style.userProfile}">
 				<g:Image ui:field="avatar"/>
 				<span class="{style.username}" ui:field="username"/>
@@ -70,18 +72,24 @@
 					Edit Profile
 				</g:InlineHyperlink>
 			</g:HTMLPanel>
+			
 			<ul class="{style.tabList}">
 				<li><g:Anchor ui:field="fave100TabLink">Fave100</g:Anchor></li>
 				<li><g:Anchor ui:field="activityTabLink">Activity</g:Anchor></li>
 			</ul>	
-			<g:SuggestBox ui:field="songSuggestBox"/>
-			<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}">Advanced search</g:InlineHyperlink>
-			<g:HTMLPanel ui:field = "faveListContainer">
-				<g:HTMLPanel ui:field="faveFeed"/>
+			
+			<g:HTMLPanel ui:field="songSearchContainer">
+				<g:SuggestBox ui:field="songSuggestBox"/>
+				<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}">Advanced search</g:InlineHyperlink>		
+			</g:HTMLPanel>
+			
+			<g:HTMLPanel ui:field="faveFeed"/>
+			<g:HTMLPanel ui:field = "faveListContainer">				
 				<w:PersonalFaveList ui:field="personalFaveList"/>
-				<w:NonpersonalFaveList ui:field="userFaveList"/>				
+				<w:NonpersonalFaveList ui:field="userFaveList"/>								
 			</g:HTMLPanel>						
 			<g:InlineHTML ui:field="activityTab" styleName="{style.activityTab}"/>
+			
 		</div>
 		<pf:Footer/>
 	</g:HTMLPanel>

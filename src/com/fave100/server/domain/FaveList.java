@@ -42,6 +42,7 @@ public class FaveList extends DatastoreObject{
 		return ofy().load().type(FaveList.class).id(id).get();
 	}
 	
+	// TODO: Do FaveList activities need to be transactional? If so, need to set AppUser as parent
 	public static void addFaveItemForCurrentUser(final String hashtag, final Long songID, final Song songProxy) {
 		// TODO: Verify integrity of songProxy on server-side? 
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
