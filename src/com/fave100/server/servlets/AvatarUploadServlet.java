@@ -28,9 +28,12 @@ public class AvatarUploadServlet extends RequestFactoryServlet
        
         final BlobKey blobKey =  blobs.get("avatar").get(0);
         
-        if(blobKey != null) {
-        	res.sendRedirect("http://127.0.0.1:8888/Fave100.html?gwt.codesvr=127.0.0.1:9997"+"#"+NameTokens.profile+";blob-key=" + blobKey.getKeyString());
-        	//AppUser.setAvatarForCurrentUser(blobKey.getKeyString());
+        if(blobKey != null) {        	
+        	// TODO: Figure out why this doesn't work and put back in
+        	//res.setContentType("text/html");
+        	//res.getWriter().println(blobKey.getKeyString());
+        	// TODO: Remove hard coded URL
+        	res.sendRedirect("http://yissachar:8888/Fave100.html?gwt.codesvr=127.0.0.1:9997"+"#"+NameTokens.profile+";blob-key=" + blobKey.getKeyString());
         } 
     }
 }

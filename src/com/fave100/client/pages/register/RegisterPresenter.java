@@ -277,8 +277,7 @@ public class RegisterPresenter extends
 	}
 	
 	private void goToMyFave100() {
-		// TODO: Any better method than this?
-		// TODO: Instead - as soon as page loads, clean url and store vars 
+		// Need to strip out query params or they will stick around in URL forever
 		String url = Window.Location.getHref();
 		url = url.replace(Window.Location.getParameter("oauth_token"), "");
 		url = url.replace("&oauth_token=", "");

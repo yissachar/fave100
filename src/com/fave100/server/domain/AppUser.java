@@ -113,13 +113,15 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		final twitter4j.User twitterUser = getTwitterUser(oauth_verifier);
 		if(twitterUser != null) {
 			final AppUser loggedInUser = findAppUserByTwitterId(twitterUser.getId());			
-			if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
-			final String twitterAvatar = twitterUser.getProfileImageURL().toString();
-			if(!loggedInUser.getAvatar().equals(twitterAvatar)) {
-				// Update the user's avatar from Twitter
-				loggedInUser.setAvatar(twitterAvatar);
-				ofy().save().entity(loggedInUser).now();
-			}
+			if(loggedInUser != null) {
+				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
+				final String twitterAvatar = twitterUser.getProfileImageURL().toString();
+				if(!loggedInUser.getAvatar().equals(twitterAvatar)) {
+					// Update the user's avatar from Twitter
+					loggedInUser.setAvatar(twitterAvatar);
+					ofy().save().entity(loggedInUser).now();
+				}
+			}			
 			return loggedInUser;
 		}
 		return null;
@@ -137,8 +139,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
 		
 		try {
-			final RequestToken requestToken = twitter.getOAuthRequestToken();
-			
+			final RequestToken requestToken = twitter.getOAuthRequestToken();			
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("requestToken", requestToken);
 			return requestToken.getAuthenticationURL();
 		} catch (final TwitterException e) {
@@ -155,6 +156,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			return false;
 		}		
 	}
+	
 	public static twitter4j.User getTwitterUser(final String oauth_verifier) {
 		final twitter4j.User user = (twitter4j.User) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("twitterUser");
 		if(user == null) {
@@ -299,9 +301,9 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				final TwitterID twitterID = new TwitterID(user.getId(), username);
 				// TODO: Store tokens in database?
 				ofy().save().entities(appUser, twitterID, faveList).now();					
-				//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-				//return appUser;
-				return loginWithTwitter(oauth_verifier);
+				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+				return appUser;
+				//return loginWithTwitter(oauth_verifier);
 			}			
 		});
 		return newAppUser;
@@ -316,7 +318,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	public static List<String> getFaveFeedForCurrentUser() {
 		final AppUser user = AppUser.getLoggedInAppUser();
 		if(user == null) throw new RuntimeException("Not logged in");
-		// TODO: This is horrible, need to rethink strategy
+		
 		// Get all the users that the current user is following
 		Ref.create(Key.create(AppUser.class, user.getUsername()));
 		final List<Follower> followingList = ofy().load().type(Follower.class)
@@ -477,7 +479,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		currentUser.setAvatar(avatar);		
 		ofy().save().entity(currentUser).now();
 	}
-	
+		
 	public String getAvatarImage() {
 		// TODO: Need local avatar as well (if they don't have gravatar or twitter)		
 		if(avatar == null) {			

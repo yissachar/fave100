@@ -8,15 +8,18 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.gwtplatform.mvp.client.HasUiHandlers;
+import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 public class ProfilePresenter extends
-		BasePresenter<ProfilePresenter.MyView, ProfilePresenter.MyProxy> {
+		BasePresenter<ProfilePresenter.MyView, ProfilePresenter.MyProxy>
+		implements ProfileUiHandlers{
 
-	public interface MyView extends BaseView {
+	public interface MyView extends BaseView, HasUiHandlers<ProfileUiHandlers> {
 		void createActionUrl(String url);
 	}
 
@@ -32,6 +35,7 @@ public class ProfilePresenter extends
 			final MyProxy proxy, final ApplicationRequestFactory requestFactory) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
+		getView().setUiHandlers(this);
 	}
 	
 	@Override
@@ -52,8 +56,18 @@ public class ProfilePresenter extends
 		
 		final String blobKey = placeRequest.getParameter("blob-key","");
 		if(!blobKey.isEmpty()) {
-			requestFactory.appUserRequest().setAvatarForCurrentUser(blobKey).fire();
+			final Request<Void> avatarReq = requestFactory.appUserRequest().setAvatarForCurrentUser(blobKey);
+			avatarReq.fire();
 		}
 	}
 
+	@Override
+	public void setUserAvatarBlobKey(final String blobKey) {
+		requestFactory.appUserRequest().setAvatarForCurrentUser(blobKey).fire();
+	}
+
+}
+
+interface ProfileUiHandlers extends UiHandlers {
+	void setUserAvatarBlobKey(String blobKey);
 }

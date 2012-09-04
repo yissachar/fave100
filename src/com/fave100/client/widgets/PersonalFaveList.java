@@ -60,7 +60,7 @@ public class PersonalFaveList extends FaveListBase {
 		
 		_cells.add(new HasCell<SongProxy, String>() {
 			private final EditTextCell cell = new EditTextCell(){
-				// TODO: CSS method won't work in all browser: get the following to work!
+				// TODO: CSS method won't work in all browsers: get the following to work!
 				/*@Override
 				public void render(final Context context, final String value, final SafeHtmlBuilder sb) {
 					// Show some default text if there isn't a whyline
@@ -112,7 +112,6 @@ public class PersonalFaveList extends FaveListBase {
 		RootPanel.get().addDomHandler(new MouseUpHandler() {
 			@Override
 			public void onMouseUp(final MouseUpEvent event) {
-				// TODO: Switch over to plain GWT?
 				if(draggedRow == null) return;
 				final GQuery $draggedItem = $(".draggedFaveListItem").first();
 				// Get the index of the row being dragged
