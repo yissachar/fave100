@@ -458,7 +458,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static boolean checkPassword(final String password) {
-		if(password.equals("100GreatFaves!")) {
+		if(password.equals("100GreatFaves!")) {			
 			return true;
 		} else {
 			return false;
