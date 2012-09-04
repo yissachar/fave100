@@ -48,6 +48,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField Anchor activityTabLink;
 	@UiField InlineHTML activityTab;
 	@UiField InlineHyperlink advancedSearchLink;	
+	@UiField HTMLPanel songSearchContainer;
 
 	@Inject
 	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
@@ -126,8 +127,9 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public void showActivityTab() {
 		activityTab.setVisible(true);
 		faveListContainer.setVisible(false);
-		songSuggestBox.setVisible(false);	
-		advancedSearchLink.setVisible(false);
+		//songSuggestBox.setVisible(false);
+		songSearchContainer.setVisible(false);
+		//advancedSearchLink.setVisible(false);
     	fave100TabLink.removeStyleName("selected");
 		activityTabLink.addStyleName("selected");		
 	}
@@ -136,8 +138,9 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public void showFave100Tab() {
 		faveListContainer.setVisible(true);
     	activityTab.setVisible(false);
-    	songSuggestBox.setVisible(true);	
-		advancedSearchLink.setVisible(true);
+    	//songSuggestBox.setVisible(true);	
+		//advancedSearchLink.setVisible(true);
+    	songSearchContainer.setVisible(true);
     	activityTabLink.removeStyleName("selected");
 		fave100TabLink.addStyleName("selected");
 	}
