@@ -71,7 +71,7 @@ button{
 	border-radius: 4px;
 }
 button:hover{
-	border: 1px solid #999;
+	border: 1px solid #888;
 	background: #f6f6f6; /* Old browsers */
 	background: -moz-linear-gradient(top,  #f6f6f6 0%, #dadada 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f6f6), color-stop(100%,#dadada)); /* Chrome,Safari4+ */
@@ -331,8 +331,8 @@ footer {
 
 /* Login container */
 .loginContainer{
-	margin: 0px auto;
 	width: 300px;
+	float: left;
 	background-color: #EEE;
 	border: 1px solid #AAA;
 	padding: 20px;

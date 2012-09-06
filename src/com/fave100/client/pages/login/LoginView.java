@@ -1,17 +1,19 @@
 package com.fave100.client.pages.login;
 
 import com.fave100.client.pages.BasePresenter;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
@@ -33,10 +35,11 @@ public class LoginView extends ViewWithUiHandlers<LoginUiHandlers>
 		return widget;
 	}
 	
+	@UiField FormPanel loginForm;
 	@UiField HTMLPanel topBar;
 	@UiField TextBox usernameInput;	
 	@UiField PasswordTextBox passwordInput;
-	@UiField SpanElement loginStatusMessage;
+	@UiField Label loginStatusMessage;
 	@UiField Anchor signInWithGoogleButton;
 	@UiField Anchor signInWithTwitterButton;
 	@UiField Button loginButton;
@@ -52,14 +55,19 @@ public class LoginView extends ViewWithUiHandlers<LoginUiHandlers>
 		super.setInSlot(slot, content);
 	}
 	
-	@UiHandler("loginButton")
+	/*@UiHandler("loginButton")
 	void onLogInButtonClick(final ClickEvent event) {
+		getUiHandlers().login();
+	}*/
+	
+	@UiHandler("loginForm")
+	public void onSubmit(final SubmitEvent event) {
 		getUiHandlers().login();
 	}
 	
 	@Override
 	public void setError(final String error) {
-		loginStatusMessage.setInnerText(error);
+		loginStatusMessage.setText(error);
 	}
 
 	@Override
@@ -70,7 +78,7 @@ public class LoginView extends ViewWithUiHandlers<LoginUiHandlers>
 	@Override
 	public void clearPassword() {
 		passwordInput.setValue("");
-		loginStatusMessage.setInnerText("");
+		loginStatusMessage.setText("");
 	}
 
 	@Override
