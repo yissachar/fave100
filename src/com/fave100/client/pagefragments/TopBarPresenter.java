@@ -1,14 +1,18 @@
 package com.fave100.client.pagefragments;
 
+import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 /**
  * Top navigation bar that will be included on every page.
@@ -22,6 +26,10 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 		void setLoggedOut();
 	}
 	
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
+	
+	@Inject private LoginWidgetPresenter loginBox;
 	@Inject private ApplicationRequestFactory requestFactory;
 	
 	@Inject
@@ -32,11 +40,13 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView> {
 	@Override
 	protected void onBind() {
 		super.onBind();	
-	}
+	}	
 	
 	@Override
 	protected void onReveal() {
 		super.onReveal();
+		
+		 setInSlot(LOGIN_SLOT, loginBox);
 		// TODO: Use manual reveal to avoid delay from AppUseRequest = but how can we use manual reveal on a presenterwidget?
 		
 		// Whenever the page is refreshed, check to see if the user is logged in or not

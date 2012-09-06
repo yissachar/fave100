@@ -30,6 +30,8 @@ import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.fave100.client.pages.profile.ProfilePresenter;
 import com.fave100.client.pages.profile.ProfileView;
+import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
+import com.fave100.client.pagefragments.login.LoginWidgetView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -68,6 +70,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(ProfilePresenter.class, ProfilePresenter.MyView.class,
 				ProfileView.class, ProfilePresenter.MyProxy.class);
+
+		bindPresenterWidget(LoginWidgetPresenter.class,
+				LoginWidgetPresenter.MyView.class, LoginWidgetView.class);
 	}
 	
 	@Provides

@@ -272,7 +272,7 @@ public class RegisterPresenter extends
 	}
 	
 	private void appUserCreated() {
-		placeManager.revealPlace(new PlaceRequest(NameTokens.myfave100));
+		placeManager.revealPlace(new PlaceRequest(NameTokens.home));
 		SideNotification.show("Thanks for registering!", false, 1500);
 	}
 	
