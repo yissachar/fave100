@@ -14,10 +14,11 @@
 			margin-bottom: 10px;
 		}
 		
-		.topNav ul{
+		.topNav > ul{
 			list-style-type: none;	
 			float: right;		
 			height: 100%;
+			position: relative;
 		}
 		
 		.topNav li{
@@ -31,25 +32,40 @@
 			background-color: #AFEB8F; 
 		}
 		
-		.topNav li * {
+		.topNav li > a, .topNav li > span {
 			display: inline-block;
 			text-decoration: none;
 			padding: 0 6px;
 			line-height: 2.4em;
 		}
+		
+		.topNav li .loginDropdown {
+			position: absolute;
+			right: 0;
+			display:none;
+			float: left;
+		}
+		
+		.topNav li:hover .loginDropdown {
+			display: block;			
+		}	
+		
+		@external loginDropdown;		
+		
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
-	<g:HTMLPanel>
-		<div class="{style.topNav}">		
+	<g:HTMLPanel styleName="{style.topNav}">		
 			<ul>
 				<li><span ui:field="greeting"/></li>
 				<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getUserlist}">Users</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">Home</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
-				<li><g:InlineHyperlink ui:field="logInLogOutLink">Log in</g:InlineHyperlink></li>
-			</ul>			
-		</div>
+				<li>
+					<g:InlineHyperlink ui:field="logInLogOutLink">Log in</g:InlineHyperlink>
+					<g:HTMLPanel ui:field="loginBox" styleName="{style.loginDropdown}"/>
+				</li>
+			</ul>
 	</g:HTMLPanel>
 </ui:UiBinder>

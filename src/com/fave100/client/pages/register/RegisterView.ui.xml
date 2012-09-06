@@ -35,7 +35,7 @@
 		<div class="content">
 			<h1>Fave100 Registration</h1>
 			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
-				<div class="loginContainer fave100RegisterContainer">					
+				<div class="registerContainer">					
 					<span>Username</span>					
 					<g:TextBox ui:field="usernameField"/>					
 					<br/>
@@ -53,14 +53,14 @@
 					<g:Button ui:field="registerButton">Register</g:Button>					
 				</div>
 				<div class="{style.orDivider}">or</div>
-				<div class="loginContainer otherRegisterContainer">					
+				<div class="registerContainer">					
 					<g:Anchor ui:field="registerWithGoogleButton">Register with Google</g:Anchor>
 					<br/>
 					<g:Anchor ui:field="registerWithTwitterButton">Register with Twitter</g:Anchor>
 				</div>
 			</g:HTMLPanel>
 			<g:HTMLPanel ui:field="thirdPartyUsernamePrompt">
-				<div class="loginContainer otherRegisterContainer">
+				<div class="registerContainer">
 					<span>Please enter a username to complete the registration process</span>
 					<g:TextBox ui:field="thirdPartyUsernameField"/>
 					<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					

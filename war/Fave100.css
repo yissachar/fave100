@@ -330,7 +330,11 @@ footer {
 }
 
 /* Login container */
-.loginContainer{
+
+.loginDivider{
+	float: left;
+}
+.fullLoginPage .nativeLoginBox, .fullLoginPage .thirdPartyLoginBox, .registerContainer {
 	width: 300px;
 	float: left;
 	background-color: #EEE;
@@ -340,10 +344,29 @@ footer {
 				1px 1px 5px #FFF; 
 	border-radius: 5px;
 }
-.loginContainer input{
+.fullLoginPage .nativeLoginBox input, .fullLoginPage .thirdPartyLoginBox input, .registerContainer input{
 	height: 23px;
 	width: 290px;
 	margin: 13px 0;	
+}
+
+/* Login dropdown */
+
+.loginDropdown {
+	z-index: 99999;
+	background: #EFEFEF;
+	border: 1px solid #999;
+	border-top: 0px solid #999;
+	padding: 15px;
+	min-width: 350px;
+}
+
+.loginDropdown input {
+	margin: 7px 0;
+}
+
+.loginDropdown .nativeLoginBox, .loginDropdown .thirdPartyLoginBox {
+	float: left;
 }
 
 .selected{
