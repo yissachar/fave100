@@ -84,7 +84,7 @@ public class RegisterPresenter extends
 				}
 			}
 		});		
-		// TODO: Captcha
+		// TODO: Captcha/recaptcha? Other spam filtering to prevent registration?
 		
 		provider = placeRequest.getParameter("provider", "");
 		if(provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
@@ -213,9 +213,8 @@ public class RegisterPresenter extends
 				createAppUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(final AppUserProxy createdUser) {
-						//TODO: Not working if user already logged into twitter
+						//TODO: Twitter login broken again
 						appUserCreated();
-						// TODO: clean url from twitter on success
 						goToMyFave100();
 					}
 					@Override
