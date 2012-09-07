@@ -164,6 +164,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			twitter.setOAuthConsumer(AppUser.CONSUMER_KEY, AppUser.CONSUMER_SECRET);
 			
 			final RequestToken requestToken = (RequestToken) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
+			//Logger.getAnonymousLogger().log(Level.SEVERE, oauth_verifier+"hi "+(requestToken.getToken()));
 			try {
 				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
 				twitter.setOAuthAccessToken(accessToken);
@@ -438,7 +439,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static void followUser(final String username) {
-		// TODO: Check for already following to prevent duplicates
 		// TODO: Need a better method of message passing than RuntimeExceptions
 		// TODO: Move this into follower class
 		final AppUser currentUser = getLoggedInAppUser();
@@ -490,7 +490,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				final byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");			
 		        final BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
 		        final String hash = String.format("%1$032x", i);
-		       return "http://www.gravatar.com/avatar/"+hash+"?d=mm";
+		        return "http://www.gravatar.com/avatar/"+hash+"?d=mm";
 			} catch (final Exception e) {
 				// TODO: Do we care what happens if an exception is thrown here?
 			}	
