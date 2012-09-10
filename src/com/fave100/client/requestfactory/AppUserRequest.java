@@ -16,7 +16,8 @@ public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> login(String username, String password);
 	Request<Boolean> checkPassword(String password);	
 	Request<Void> logout();
-	Request<AppUserProxy> createAppUser(String username, String password, String email);
+	Request<AppUserProxy> createAppUser(String username, String password, 
+			String email);
 
 	Request<AppUserProxy> loginWithGoogle();
 	Request<Boolean> isGoogleUserLoggedIn();
@@ -28,7 +29,13 @@ public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> loginWithTwitter(String oauth_verifier);
 	Request<String> getTwitterAuthUrl();	
 	Request<Boolean> isTwitterUserLoggedIn(String oauth_verifier);
-	Request<AppUserProxy> createAppUserFromTwitterAccount(String username, String oauth_verifier);
+	Request<AppUserProxy> createAppUserFromTwitterAccount(String username, 
+			String oauth_verifier);
+	
+	//Request<AppUserProxy> loginWithFacebook(String state);
+	Request<String> getFacebookAuthUrl(String redirect);
+	Request<AppUserProxy> createAppUserFromFacebookAccount(String username,
+			String state, String code, String redirectUrl);	
 	
 	Request<Void> followUser(String username);
 	Request<Boolean> checkFollowing(String username);
@@ -36,5 +43,5 @@ public interface AppUserRequest extends RequestContext{
 	Request<List<String>> getFaveFeedForCurrentUser();
 	Request<List<String>> getActivityForUser(String username);
 	Request<String> createBlobstoreUrl(String url);
-	Request<Void> setAvatarForCurrentUser(String avatar);
+	Request<Void> setAvatarForCurrentUser(String avatar);		
 }

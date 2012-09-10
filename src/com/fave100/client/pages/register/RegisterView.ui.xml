@@ -57,6 +57,8 @@
 					<g:Anchor ui:field="registerWithGoogleButton">Register with Google</g:Anchor>
 					<br/>
 					<g:Anchor ui:field="registerWithTwitterButton">Register with Twitter</g:Anchor>
+					<br/>
+					<g:Anchor ui:field="registerWithFacebookButton">Register with Facebook</g:Anchor>
 				</div>
 			</g:HTMLPanel>
 			<g:HTMLPanel ui:field="thirdPartyUsernamePrompt">

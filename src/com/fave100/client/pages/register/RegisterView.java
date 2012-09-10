@@ -37,6 +37,7 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 	@UiField HTMLPanel thirdPartyUsernamePrompt;
 	@UiField Button thirdPartyUsernameSubmitButton;	
 	@UiField Anchor registerWithTwitterButton;
+	@UiField Anchor registerWithFacebookButton;
 
 	@Inject
 	public RegisterView(final Binder binder) {
@@ -104,8 +105,7 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 	@Override
 	public void setThirdPartyUsernameError(final String error) {
 		thirdPartyUsernameStatusMessage.setInnerText(error);
-		thirdPartyUsernameField.addStyleName("errorInput");
-		
+		thirdPartyUsernameField.addStyleName("errorInput");		
 	}	
 
 	@Override
@@ -154,4 +154,9 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 	public void setTwitterUrl(final String url) {
 		registerWithTwitterButton.setHref(url);
 	}	
+	
+	@Override
+	public void setFacebookUrl(final String url) {
+		registerWithFacebookButton.setHref(url);
+	}
 }
