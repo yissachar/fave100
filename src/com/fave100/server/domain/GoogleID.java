@@ -12,20 +12,14 @@ public class GoogleID {
 	
 	public GoogleID() {}
 	
-	public GoogleID(String googleID, String username) {
+	public GoogleID(final String googleID, final String username) {
 		this.googleID = googleID;
 		this.username = username;
 	}
 		
-	public static GoogleID findGoogleID(String id) {
+	public static GoogleID findGoogleID(final String id) {
 		return ofy().load().type(GoogleID.class).id(id).get();
-		//return ofy().get(GoogleID.class, id);		
 	}
-	
-	/*public GoogleID persist() {
-		ofy().put(this);
-		return this;
-	}*/
 	
 	
 	/* Getters and setters */
@@ -33,13 +27,13 @@ public class GoogleID {
 	public String getGoogleID() {
 		return googleID;
 	}
-	public void setGoogleID(String googleID) {
+	public void setGoogleID(final String googleID) {
 		this.googleID = googleID;
 	}
 	public String getUsername() {
 		return username;
 	}
-	public void setUsername(String username) {
+	public void setUsername(final String username) {
 		this.username = username;
 	}
 

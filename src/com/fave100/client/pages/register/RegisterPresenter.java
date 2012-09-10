@@ -28,6 +28,7 @@ public class RegisterPresenter extends
 	public interface MyView extends BaseView, HasUiHandlers<RegisterUiHandlers> {		
 		void setGoogleUrl(String url);
 		void setTwitterUrl(String url);
+		void setFacebookUrl(String url);
 		void clearFields();
 		void showThirdPartyUsernamePrompt();
 		void hideThirdPartyUsernamePrompt();
@@ -42,6 +43,7 @@ public class RegisterPresenter extends
 	
 	public static final String PROVIDER_GOOGLE = "google";
 	public static final String PROVIDER_TWITTER = "twitter";
+	public static final String PROVIDER_FACEBOOK = "facebook";
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.register)
@@ -51,6 +53,7 @@ public class RegisterPresenter extends
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
 	private String provider;
+	private String facebookRedirect;
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view,
@@ -116,7 +119,7 @@ public class RegisterPresenter extends
 					}
 				}
 			});
-		// TODO: Duplicate code with above, merge where possible	
+		// TODO: Duplicate code with above, merge where possible		
 		} else if(provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
 			// The user is being redirected back to the register page after signing in to 
 			// their 3rd party account - prompt them for a username and create their account
@@ -134,7 +137,23 @@ public class RegisterPresenter extends
 					}
 					getProxy().manualReveal(RegisterPresenter.this);
 				}
-			});			
+			});	
+		//} else if(provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
+		} else if(Window.Location.getParameter("code") != null){	 
+			getView().showThirdPartyUsernamePrompt();
+			getProxy().manualReveal(RegisterPresenter.this);
+			// Try to log the user in with Facebook
+			/*final String state = Window.Location.getParameter("state");
+			final Request<AppUserProxy> loginWithTwitter = requestFactory.appUserRequest().loginWithFacebook(state);
+			loginWithTwitter.fire(new Receiver<AppUserProxy>() {
+				@Override
+				public void onSuccess(final AppUserProxy user) {	
+					if(user != null) {						
+						goToMyFave100();
+					}
+					getProxy().manualReveal(RegisterPresenter.this);
+				}
+			});*/
 		} else {
 			getView().hideThirdPartyUsernamePrompt();
 			getProxy().manualReveal(RegisterPresenter.this);
@@ -163,7 +182,18 @@ public class RegisterPresenter extends
 			public void onSuccess(final String url) {
 				getView().setTwitterUrl(url);
 			}
-		});				
+		});
+		// TODO: This won't work in production mode...
+		//facebookRedirect ="http://"+Window.Location.getHost()+Window.Location.getPath()+"?gwt.codesvr=127.0.0.1:9997#";
+		//facebookRedirect += NameTokens.register+";provider="+RegisterPresenter.PROVIDER_FACEBOOK;
+		facebookRedirect = Window.Location.getHref();
+		final Request<String> fbAuthUrlReq = requestFactory.appUserRequest().getFacebookAuthUrl(facebookRedirect);
+		fbAuthUrlReq.fire(new Receiver<String>() {
+			@Override 
+			public void onSuccess(final String url) {
+				getView().setFacebookUrl(url);
+			}
+		});
 	}	
 	
 	@Override
@@ -216,6 +246,26 @@ public class RegisterPresenter extends
 						//TODO: Twitter login broken again
 						appUserCreated();
 						goToMyFave100();
+					}
+					@Override
+					public void onFailure(final ServerFailure failure) {
+						getView().setThirdPartyUsernameError(failure.getMessage().replace("Server Error:", ""));
+					}
+				});
+			//} else if (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
+			} else if(Window.Location.getParameter("code") != null) {
+				// Create Facebook linked account
+				final String state = Window.Location.getParameter("state");
+				final String code = Window.Location.getParameter("code");				
+				final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromFacebookAccount(username, state, code, facebookRedirect);
+				createAppUserReq.fire(new Receiver<AppUserProxy>() {
+					@Override
+					public void onSuccess(final AppUserProxy createdUser) {
+						if(createdUser != null) {
+							appUserCreated();
+							goToMyFave100();
+						}						
+						
 					}
 					@Override
 					public void onFailure(final ServerFailure failure) {

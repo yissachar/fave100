@@ -2,6 +2,7 @@ package com.fave100.server.guice;
 
 import com.fave100.server.domain.Activity;
 import com.fave100.server.domain.AppUser;
+import com.fave100.server.domain.FacebookID;
 import com.fave100.server.domain.FaveList;
 import com.fave100.server.domain.Follower;
 import com.fave100.server.domain.GoogleID;
@@ -20,6 +21,7 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(Song.class);
 		ObjectifyService.register(GoogleID.class);
 		ObjectifyService.register(TwitterID.class);
+		ObjectifyService.register(FacebookID.class);
 		ObjectifyService.register(Follower.class);
 		ObjectifyService.register(Activity.class);
 		ObjectifyService.register(FaveList.class);
