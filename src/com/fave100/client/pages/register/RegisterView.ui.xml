@@ -13,9 +13,16 @@
 			margin: 0px auto;
 			width: 800px;
 		}
+		
 		.registerContainer div{
 			float: left;
-		}		
+		}
+		
+		.registerContainer a {
+			margin: 5px 0;
+			width: 250px;
+		}
+		
 		.statusMessage{
 			display: block;
 			font-size: 0.75em;
@@ -54,11 +61,11 @@
 				</div>
 				<div class="{style.orDivider}">or</div>
 				<div class="registerContainer">					
-					<g:Anchor ui:field="registerWithGoogleButton">Register with Google</g:Anchor>
+					<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton">Register with Google</g:Anchor>
 					<br/>
-					<g:Anchor ui:field="registerWithTwitterButton">Register with Twitter</g:Anchor>
+					<g:Anchor styleName="zocial twitter" ui:field="registerWithTwitterButton">Register with Twitter</g:Anchor>
 					<br/>
-					<g:Anchor ui:field="registerWithFacebookButton">Register with Facebook</g:Anchor>
+					<g:Anchor styleName="zocial facebook" ui:field="registerWithFacebookButton">Register with Facebook</g:Anchor>
 				</div>
 			</g:HTMLPanel>
 			<g:HTMLPanel ui:field="thirdPartyUsernamePrompt">
