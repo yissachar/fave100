@@ -5,7 +5,7 @@
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
-
+	
 	<g:HTMLPanel>
 		<g:FormPanel ui:field="loginForm">
 			<g:VerticalPanel styleName="nativeLoginBox">
@@ -19,9 +19,9 @@
 		</g:FormPanel>
 		<div class="loginDivider"/>
 		<div class="thirdPartyLoginBox">
-			<g:Anchor ui:field="signInWithGoogleButton">Sign in with Google</g:Anchor>
+			<g:Anchor styleName="zocial googleplus" ui:field="signInWithGoogleButton">Sign in with Google</g:Anchor>
 			<br/>
-			<g:Anchor ui:field="signInWithTwitterButton">Sign in with Twitter</g:Anchor>
+			<g:Anchor styleName="zocial twitter" ui:field="signInWithTwitterButton">Sign in with Twitter</g:Anchor>
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

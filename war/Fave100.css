@@ -348,6 +348,12 @@ footer {
 				1px 1px 5px #FFF; 
 	border-radius: 5px;
 }
+
+.fullLoginPage .thirdPartyLoginBox a {
+	margin: 5px 0;
+	width: 250px;
+}
+		
 .fullLoginPage .nativeLoginBox input, .fullLoginPage .thirdPartyLoginBox input, .registerContainer input{
 	height: 23px;
 	width: 290px;
@@ -364,6 +370,12 @@ footer {
 	padding: 15px;
 	min-width: 450px;
 	margin-top: 2px;
+}
+
+.loginDropdown .thirdPartyLoginBox a {
+	margin: 5px 0;
+	width: 160px;
+	font-size: 80%;
 }
 
 .loginDropdown input {
