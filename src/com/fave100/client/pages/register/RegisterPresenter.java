@@ -137,7 +137,7 @@ public class RegisterPresenter extends
 					}
 					getProxy().manualReveal(RegisterPresenter.this);
 				}
-			});	
+			}); 
 		//} else if(provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 		} else if(Window.Location.getParameter("code") != null){	 
 			getView().showThirdPartyUsernamePrompt();
@@ -176,7 +176,7 @@ public class RegisterPresenter extends
 		
 		// TODO: Auth url will expire - need to regenerate on click, not on page refresh
 		// Get the auth url for Twitter
-		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl();
+		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl(Window.Location.getHref()+";provider="+RegisterPresenter.PROVIDER_TWITTER);
 		authUrlReq.fire(new Receiver<String>() {
 			@Override 
 			public void onSuccess(final String url) {

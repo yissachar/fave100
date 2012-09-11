@@ -61,7 +61,9 @@ public class LoginWidgetPresenter extends
 		});
 		
 		// Get the Twitter auth url
-		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl();
+		String redirect = "http://"+Window.Location.getHost()+Window.Location.getPath();
+		redirect += Window.Location.getQueryString()+"#"+NameTokens.register+";provider="+RegisterPresenter.PROVIDER_TWITTER;
+		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl(redirect);
 		authUrlReq.fire(new Receiver<String>() {
 			@Override 
 			public void onSuccess(final String url) {
