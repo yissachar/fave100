@@ -54,8 +54,8 @@ import com.googlecode.objectify.annotation.Index;
 @Index
 public class AppUser extends DatastoreObject{//TODO: remove indexes before launch
 
-	@IgnoreSave public static final String TWITTER_CONSUMER_KEY = "GXXfKwE5cXgoXCfghEAg";
-	@IgnoreSave public static final String TWITTER_CONSUMER_SECRET = "cec1qLagfRSc0EDOo5r5iR8VUNKfw7DIo6GRuswgs";
+	@IgnoreSave public static final String TWITTER_CONSUMER_KEY = "6pH9WlwZ6g49rEX9ZrKA";
+	@IgnoreSave public static final String TWITTER_CONSUMER_SECRET = "8ud7cvisWfiOU05YJPIrugdQf4EcUgvxOAetN3IN7w0";
 	@IgnoreSave public static final String FACEBOOK_APP_ID = "312128848885545";
 	@IgnoreSave public static final String FACEBOOK_APP_SECRET = "9cd2202cdfc0ee179b465434b1294611";
 	@IgnoreSave public static final String AUTH_USER = "loggedIn";
@@ -133,15 +133,15 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	}
 	
 	public static AppUser loginWithTwitter(final String oauth_verifier) {
-		final twitter4j.User twitterUser = getTwitterUser(oauth_verifier);
+		final twitter4j.User twitterUser = getTwitterUser(oauth_verifier);		
 		if(twitterUser != null) {
 			final AppUser loggedInUser = findAppUserByTwitterId(twitterUser.getId());			
 			if(loggedInUser != null) {
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
-				final String twitterAvatar = twitterUser.getProfileImageURL().toString();
-				if(!loggedInUser.getAvatar().equals(twitterAvatar)) {
+				final URL twitterAvatar =  twitterUser.getProfileImageURL();
+				if(loggedInUser.getAvatar() == null || !loggedInUser.getAvatar().equals(twitterAvatar.toString())) {
 					// Update the user's avatar from Twitter
-					loggedInUser.setAvatar(twitterAvatar);
+					loggedInUser.setAvatar(twitterAvatar.toString());
 					ofy().save().entity(loggedInUser).now();
 				}
 			}			
@@ -167,12 +167,12 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("twitterUser", null);
 	}
 	
-	public static String getTwitterAuthUrl() {
+	public static String getTwitterAuthUrl(final String redirectUrl) {
 		final Twitter twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer(AppUser.TWITTER_CONSUMER_KEY, AppUser.TWITTER_CONSUMER_SECRET);
 		
 		try {
-			final RequestToken requestToken = twitter.getOAuthRequestToken();			
+			final RequestToken requestToken = twitter.getOAuthRequestToken(redirectUrl);
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("requestToken", requestToken);
 			return requestToken.getAuthenticationURL();
 		} catch (final TwitterException e) {
@@ -197,12 +197,14 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			twitter.setOAuthConsumer(AppUser.TWITTER_CONSUMER_KEY, AppUser.TWITTER_CONSUMER_SECRET);
 			
 			final RequestToken requestToken = (RequestToken) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
-			//Logger.getAnonymousLogger().log(Level.SEVERE, oauth_verifier+"hi "+(requestToken.getToken()));
+			
 			try {
+				//TODO: Get real access tokens working!!
 				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
+				//AccessToken accessToken = new AccessToken("762086864-bRGmolj6Ax0BigCN6YJJn3N3gRsGOo2C4s7ncnpP", "8YcEtdQUfBvxW0V3uby3kYsDIWkpfD6iAoI1l73DQ");				
 				twitter.setOAuthAccessToken(accessToken);
 				final twitter4j.User twitterUser = twitter.verifyCredentials();
-				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("twitterUser", twitterUser);
+				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("twitterUser", twitterUser);				
 				return twitterUser;
 			} catch (final TwitterException e1) {
 				// TODO Auto-generated catch block
@@ -639,14 +641,19 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				// TODO: Do we care what happens if an exception is thrown here?
 			}	
 		}	
-		// Serve the image blob from Google if it exists
-		final ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(new BlobKey(avatar));
-		final String servingUrl = ImagesServiceFactory.getImagesService().getServingUrl(options);
-		if(servingUrl != null) {
-			//TODO: This is bad hack, unfortunately needed for dev mode
-			return servingUrl.replace("http://0.0.0.0", "http://127.0.0.1");
-		}
-		// Otherwise serve the Twitter or FaceBook avatar
+		try {
+			// Serve the image blob from Google if it exists
+			final BlobKey blobKey = new BlobKey(avatar);
+			final ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
+			final String servingUrl = ImagesServiceFactory.getImagesService().getServingUrl(options);
+			if(servingUrl != null) {
+				//TODO: This is bad hack, unfortunately needed for dev mode
+				return servingUrl.replace("http://0.0.0.0", "http://127.0.0.1");
+			}
+		} catch (final Exception e) {
+			// Blobkey not valid, we'll just serve their avatar 
+		}			
+		// Otherwise serve the Twitter, FaceBook, or native avatar
 		return avatar;
 	} 
 	
