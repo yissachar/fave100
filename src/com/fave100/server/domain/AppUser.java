@@ -172,8 +172,11 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		twitter.setOAuthConsumer(AppUser.TWITTER_CONSUMER_KEY, AppUser.TWITTER_CONSUMER_SECRET);
 		
 		try {
-			final RequestToken requestToken = twitter.getOAuthRequestToken(redirectUrl);
-			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("requestToken", requestToken);
+			RequestToken requestToken = (RequestToken) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
+			if(requestToken == null) {
+				requestToken = twitter.getOAuthRequestToken(redirectUrl);
+				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("requestToken", requestToken);
+			}			
 			return requestToken.getAuthenticationURL();
 		} catch (final TwitterException e) {
 			// TODO Auto-generated catch block			
