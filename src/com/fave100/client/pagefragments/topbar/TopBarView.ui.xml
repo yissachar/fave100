@@ -8,10 +8,10 @@
 
 	<ui:style>
 		.topNav{
-			background-color: #A8DB88;			
+			background-color: #948A54;			
 			height: 40px;
 			border-bottom: 1px solid #555;
-			margin-bottom: 10px;
+			margin-bottom: 25px;
 		}
 		
 		.topNav > ul{
@@ -29,10 +29,11 @@
 		}	
 		
 		.topNav li:hover {
-			background-color: #AFEB8F; 
+			background-color: #B3A766; 
 		}
 		
 		.topNav li > a, .topNav li > span {
+			color: #FFF;
 			display: inline-block;
 			text-decoration: none;
 			padding: 0 6px;
@@ -50,12 +51,44 @@
 			display: block;			
 		}	
 		
+		.subTopContainer{
+			display: block;
+			width: 960px;
+			margin: 0 auto;
+		}
+		
+		.faveLogo, .listOfTheDay {
+			background: #FFF;
+			border-radius: 5px;
+		}
+		
+		.faveLogo {
+			clear: both;			
+			width: 200px;
+			padding: 15px;
+			display: inline-block;
+		}
+		
+		.faveLogo h1 {
+			margin: 0;
+		}
+		
+		.listOfTheDay {
+			float: right;	
+			width: 400px;				
+		}
+		
+		.listOfTheDay p {
+			padding: 20px;
+		}
+		
 		@external loginDropdown;		
 		
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
-	<g:HTMLPanel styleName="{style.topNav}">		
+	<g:HTMLPanel>
+			<div class="{style.topNav}">		
 			<ul>
 				<li><span ui:field="greeting"/></li>
 				<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
@@ -67,5 +100,16 @@
 					<g:HTMLPanel ui:field="loginBox" styleName="{style.loginDropdown}"/>
 				</li>
 			</ul>
+			</div>
+			<div class="{style.subTopContainer}">
+				<div class="{style.faveLogo}">
+					<h1>Fave100</h1>
+					<p>Share your list</p>
+				</div>
+				<div class="{style.listOfTheDay}">
+					<h4 class="itemHeader">List of the Day</h4>
+					<p>To be implemented</p>
+				</div>
+			</div>			
 	</g:HTMLPanel>
 </ui:UiBinder>

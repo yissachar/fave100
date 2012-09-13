@@ -1,7 +1,5 @@
 package com.fave100.client.gin;
 
-import com.fave100.client.pagefragments.TopBarPresenter;
-import com.fave100.client.pagefragments.TopBarView;
 import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
 import com.fave100.client.pagefragments.favefeed.FaveFeedView;
 import com.fave100.client.pages.home.HomePresenter;
@@ -32,6 +30,8 @@ import com.fave100.client.pages.profile.ProfilePresenter;
 import com.fave100.client.pages.profile.ProfileView;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pagefragments.login.LoginWidgetView;
+import com.fave100.client.pagefragments.topbar.TopBarPresenter;
+import com.fave100.client.pagefragments.topbar.TopBarView;
 
 public class ClientModule extends AbstractPresenterModule {
 

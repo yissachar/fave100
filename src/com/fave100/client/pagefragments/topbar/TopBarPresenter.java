@@ -1,4 +1,4 @@
-package com.fave100.client.pagefragments;
+package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.requestfactory.AppUserProxy;

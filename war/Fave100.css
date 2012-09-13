@@ -10,7 +10,7 @@ html{
 }
 
 body{
-	background-color: #F9F9F9;
+	background-color: #AEE9FF;
 	font-family: Helvetica,sans-serif;
 	color: #454;
 	height: 100%;
@@ -70,6 +70,7 @@ button{
 	font-size: 1em;
 	border-radius: 4px;
 }
+
 button:hover{
 	border: 1px solid #888;
 	background: #f6f6f6; /* Old browsers */
@@ -117,6 +118,14 @@ footer {
 	overflow: hidden;
 }
 
+.itemHeader {
+	color: #FFF;
+	background: #948A54;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	padding: 10px;
+}
+
 /* Suggest Box */
 
 .gwt-SuggestBox {
@@ -162,9 +171,12 @@ footer {
 
 /* Fave List */
 
-.faveList{
+.faveListContainer{
 	margin-top: 50px;
 	width: 700px;		
+}
+
+.faveList{		
 	font-size: 1.05em;
 }
 
@@ -175,7 +187,7 @@ footer {
 }
 
 .faveList a{
-	color: #548F2F;	
+	color: #948A54;	
 }
 
 .faveList table{
@@ -344,8 +356,7 @@ footer {
 	background-color: #EEE;
 	border: 1px solid #AAA;
 	padding: 20px;
-	box-shadow: 1px 1px 5px #FFF inset,
-				1px 1px 5px #FFF; 
+	box-shadow: 1px 1px 5px #FFF inset
 	border-radius: 5px;
 }
 

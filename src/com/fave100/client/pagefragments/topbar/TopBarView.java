@@ -1,4 +1,4 @@
-package com.fave100.client.pagefragments;
+package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.place.NameTokens;
 import com.google.gwt.dom.client.SpanElement;

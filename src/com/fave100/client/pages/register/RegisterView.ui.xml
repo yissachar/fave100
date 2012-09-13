@@ -38,10 +38,9 @@
 	</ui:style>
 
 	<g:HTMLPanel ui:styleName="container">
-		<g:HTMLPanel ui:field="topBar"/>
 		<div class="content">
 			<h1>Fave100 Registration</h1>
-			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
+			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">				
 				<div class="registerContainer">					
 					<span>Username</span>					
 					<g:TextBox ui:field="usernameField"/>					
@@ -59,8 +58,8 @@
 					<span class="{style.statusMessage} error" ui:field="passwordStatusMessage"/>
 					<g:Button ui:field="registerButton">Register</g:Button>					
 				</div>
-				<div class="{style.orDivider}">or</div>
-				<div class="registerContainer">					
+				<div class="{style.orDivider}">or</div>				
+				<div class="registerContainer">			
 					<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton">Register with Google</g:Anchor>
 					<br/>
 					<g:Anchor styleName="zocial twitter" ui:field="registerWithTwitterButton">Register with Twitter</g:Anchor>
