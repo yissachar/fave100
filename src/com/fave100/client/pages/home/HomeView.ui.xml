@@ -12,10 +12,12 @@
 	</ui:style>
 
 	<g:HTMLPanel ui:styleName="container">
-		<g:HTMLPanel ui:field="topBar"/>
+		<g:HTMLPanel ui:field="topBar"/>		
 		<div class="content">
-			<h1>Welcome to Fave100</h1>
-			<w:NonpersonalFaveList ui:field="masterFaveList"/>
+			<div class="faveListContainer">
+				<h2 class="itemHeader">Fave100 Master List</h2>
+				<w:NonpersonalFaveList ui:field="masterFaveList"/>
+			</div>
 		</div>	
 		<pf:Footer/>
 	</g:HTMLPanel>	

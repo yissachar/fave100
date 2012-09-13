@@ -243,7 +243,6 @@ public class RegisterPresenter extends
 				createAppUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(final AppUserProxy createdUser) {
-						//TODO: Twitter login broken again
 						appUserCreated();
 						goToMyFave100();
 					}

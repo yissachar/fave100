@@ -1,6 +1,6 @@
 package com.fave100.client.pages;
 
-import com.fave100.client.pagefragments.TopBarPresenter;
+import com.fave100.client.pagefragments.topbar.TopBarPresenter;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
