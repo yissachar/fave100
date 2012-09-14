@@ -16,13 +16,12 @@
 		}
 		
 		.faveFeed h4 {
-			background: #FFF;
-			border-bottom: 2px solid #666;
 			padding: 7px;			
 		}
 		
 		.faveFeed a, .faveFeed p {
 			display: block;
+			background: #fff;
 			padding: 3px;
 		}
 		
