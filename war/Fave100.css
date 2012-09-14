@@ -115,7 +115,7 @@ footer {
 	width: 960px;
 	margin: 10px auto;
 	padding-bottom: 5em;
-	overflow: hidden;
+	overflow-y: hidden;
 }
 
 .itemHeader {
