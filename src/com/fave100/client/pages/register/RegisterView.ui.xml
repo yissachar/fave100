@@ -13,6 +13,10 @@
 			margin: 0px auto;
 			width: 800px;
 		}
+
+		.registerContainer h1 {
+			text-align: center;
+		}
 		
 		.registerContainer div{
 			float: left;
@@ -38,9 +42,9 @@
 	</ui:style>
 
 	<g:HTMLPanel ui:styleName="container">
-		<div class="content">
-			<h1>Fave100 Registration</h1>
-			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">				
+		<div class="content">			
+			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
+			    <h1>Fave100 Registration</h1>				
 				<div class="registerContainer">					
 					<span>Username</span>					
 					<g:TextBox ui:field="usernameField"/>					

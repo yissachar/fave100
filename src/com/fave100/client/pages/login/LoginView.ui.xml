@@ -12,25 +12,29 @@
 			display: block;
 			margin: 0px auto;
 			width: 800px;
+		}		
+
+		.registerContainer h1 {
+			text-align: center;
 		}
+
 		.registerContainer div{
 			float: left;
 		}
+
 		.loginStatusMessage{
 			display: block;
 			font-size: 0.75em;
 			margin-bottom: 5px;
 		}
-		.orDivider{
-			padding: 50px;	
-			width: 1px;
-			height: 100%;		
-		}
+
 	</ui:style>
 	<g:HTMLPanel ui:styleName="container">
-		<div class="container">
-		<h1>Fave100 Sign In</h1>
-		<g:HTMLPanel ui:field="loginContainer"/>
+		<div class="content">
+		    <g:HTMLPanel styleName="{style.registerContainer}">
+				<h1>Fave100 Sign In</h1>
+				<g:HTMLPanel ui:field="loginContainer"/>
+			</g:HTMLPanel>
 		</div>
 		<pf:Footer/>
 	</g:HTMLPanel>

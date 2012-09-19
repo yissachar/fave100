@@ -68,6 +68,8 @@ public class FaveFeedPresenter extends
 				//getView().setHTML(builder.toSafeHtml());
 				getView().setFaveFeedContent(builder.toSafeHtml());
 			}
+			
+			//TODO: Turn fave feed into part of base presenter
 			@Override
 			public void onFailure(final ServerFailure failure) {
 				// TODO: What if the error isn't login error?
