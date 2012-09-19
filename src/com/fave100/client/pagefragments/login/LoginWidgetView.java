@@ -1,5 +1,6 @@
 package com.fave100.client.pagefragments.login;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -45,6 +46,11 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers> impleme
 		getUiHandlers().login();
 	}
 	
+	@UiHandler("signInWithTwitterButton")
+	public void onClick(final ClickEvent event) {
+		getUiHandlers().goToTwitterAuth();
+	}
+	
 	@Override
 	public void setError(final String error) {
 		loginStatusMessage.setText(error);
@@ -74,11 +80,6 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers> impleme
 	@Override
 	public void setGoogleLoginUrl(final String url) {
 		signInWithGoogleButton.setHref(url);		
-	}
-
-	@Override
-	public void setTwitterLoginUrl(final String url) {
-		signInWithTwitterButton.setHref(url);		
 	}
 	
 }

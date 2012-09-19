@@ -29,7 +29,6 @@ public class LoginWidgetPresenter extends
 		void clearPassword();		
 		void setError(String error);
 		void setGoogleLoginUrl(String url);
-		void setTwitterLoginUrl(String url);
 	}
 	
 	private ApplicationRequestFactory requestFactory;
@@ -61,15 +60,7 @@ public class LoginWidgetPresenter extends
 		});
 		
 		// Get the Twitter auth url
-		String redirect = "http://"+Window.Location.getHost()+Window.Location.getPath();
-		redirect += Window.Location.getQueryString()+"#"+NameTokens.register+";provider="+RegisterPresenter.PROVIDER_TWITTER;
-		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl(redirect);
-		authUrlReq.fire(new Receiver<String>() {
-			@Override 
-			public void onSuccess(final String url) {
-				getView().setTwitterLoginUrl(url);
-			}
-		});
+		
 	}
 
 	@Override
@@ -92,9 +83,23 @@ public class LoginWidgetPresenter extends
 			}
 		});
 	}
+	
+	@Override
+	public void goToTwitterAuth() {
+		String redirect = "http://"+Window.Location.getHost()+Window.Location.getPath();
+		redirect += Window.Location.getQueryString()+"#"+NameTokens.register+";provider="+RegisterPresenter.PROVIDER_TWITTER;
+		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl(redirect);
+		authUrlReq.fire(new Receiver<String>() {
+			@Override 
+			public void onSuccess(final String url) {
+				Window.Location.assign(url);
+			}
+		});
+	}
 }
 
 
 interface LoginUiHandlers extends UiHandlers {
 	void login();
+	void goToTwitterAuth();
 }
