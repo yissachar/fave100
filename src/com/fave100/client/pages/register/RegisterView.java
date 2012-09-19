@@ -7,6 +7,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -22,6 +24,7 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 	}
 	
 	@UiField HTMLPanel registerContainer;
+	@UiField FormPanel registerForm;
 	@UiField Button registerButton;
 	@UiField TextBox usernameField;
 	@UiField PasswordTextBox passwordField;	
@@ -53,8 +56,10 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 		super.setInSlot(slot, content);
 	}
 	
-	@UiHandler("registerButton")
-	void onRegisterButtonClick(final ClickEvent event) {
+	//@UiHandler("registerButton")
+	@UiHandler("registerForm")
+	void onRegisterFormSubmit(final SubmitEvent event) {
+	//void onRegisterButtonClick(final ClickEvent event) {
 		getUiHandlers().register(usernameField.getValue(), emailField.getValue(), 
 				passwordField.getValue(), passwordRepeatField.getValue());				
 	}
