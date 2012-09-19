@@ -42,26 +42,25 @@
 	</ui:style>
 
 	<g:HTMLPanel ui:styleName="container">
-		<div class="content">			
+		<div class="content">		    	
 			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
-			    <h1>Fave100 Registration</h1>				
-				<div class="registerContainer">					
-					<span>Username</span>					
-					<g:TextBox ui:field="usernameField"/>					
-					<br/>
-					<span class="{style.statusMessage} error" ui:field="usernameStatusMessage"/>
-					<span>Email</span>					
-					<g:TextBox ui:field="emailField"/>					
-					<br/>					
-					<span class="{style.statusMessage} error" ui:field="emailStatusMessage"/>
-					<span>Password</span>
-					<g:PasswordTextBox ui:field="passwordField" />
-					<br/>
-					<span>Confirm password</span>
-					<g:PasswordTextBox ui:field="passwordRepeatField" />
-					<span class="{style.statusMessage} error" ui:field="passwordStatusMessage"/>
-					<g:Button ui:field="registerButton">Register</g:Button>					
-				</div>
+			    <h1>Fave100 Registration</h1>
+			    <g:FormPanel ui:field="registerForm">				
+					<g:HTMLPanel styleName="registerContainer">					
+						<g:Label>Username</g:Label>					
+						<g:TextBox ui:field="usernameField"/>
+						<span class="{style.statusMessage} error" ui:field="usernameStatusMessage"/>
+						<g:Label>Email</g:Label>					
+						<g:TextBox ui:field="emailField"/>
+						<span class="{style.statusMessage} error" ui:field="emailStatusMessage"/>
+						<g:Label>Password</g:Label>
+						<g:PasswordTextBox ui:field="passwordField" />
+						<g:Label>Confirm password</g:Label>
+						<g:PasswordTextBox ui:field="passwordRepeatField" />
+						<span class="{style.statusMessage} error" ui:field="passwordStatusMessage"/>
+						<g:SubmitButton ui:field="registerButton">Register</g:SubmitButton>					
+					</g:HTMLPanel>
+				</g:FormPanel>	
 				<div class="{style.orDivider}">or</div>				
 				<div class="registerContainer">			
 					<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton">Register with Google</g:Anchor>
@@ -71,6 +70,7 @@
 					<g:Anchor styleName="zocial facebook" ui:field="registerWithFacebookButton">Register with Facebook</g:Anchor>
 				</div>
 			</g:HTMLPanel>
+			
 			<g:HTMLPanel ui:field="thirdPartyUsernamePrompt">
 				<div class="registerContainer">
 					<span>Please enter a username to complete the registration process</span>
