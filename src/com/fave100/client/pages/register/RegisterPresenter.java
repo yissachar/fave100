@@ -27,7 +27,6 @@ public class RegisterPresenter extends
 
 	public interface MyView extends BaseView, HasUiHandlers<RegisterUiHandlers> {		
 		void setGoogleUrl(String url);
-		void setTwitterUrl(String url);
 		void setFacebookUrl(String url);
 		void clearFields();
 		void showThirdPartyUsernamePrompt();
@@ -174,15 +173,6 @@ public class RegisterPresenter extends
 			}
 		});
 		
-		// TODO: Auth url will expire - need to regenerate on click, not on page refresh
-		// Get the auth url for Twitter
-		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl(Window.Location.getHref()+";provider="+RegisterPresenter.PROVIDER_TWITTER);
-		authUrlReq.fire(new Receiver<String>() {
-			@Override 
-			public void onSuccess(final String url) {
-				getView().setTwitterUrl(url);
-			}
-		});
 		// TODO: This won't work in production mode...
 		//facebookRedirect ="http://"+Window.Location.getHost()+Window.Location.getPath()+"?gwt.codesvr=127.0.0.1:9997#";
 		//facebookRedirect += NameTokens.register+";provider="+RegisterPresenter.PROVIDER_FACEBOOK;
@@ -335,9 +325,22 @@ public class RegisterPresenter extends
 		Window.Location.assign(url);		
 	}
 	
+	@Override
+	public void goToTwitterAuth() {
+		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl(Window.Location.getHref()+";provider="+RegisterPresenter.PROVIDER_TWITTER);
+		authUrlReq.fire(new Receiver<String>() {
+			@Override 
+			public void onSuccess(final String url) {
+				Window.Location.assign(url);
+			}
+		});
+	}
+	
 }
 
 interface RegisterUiHandlers extends UiHandlers {
 	void register(String username, String email, String password, String passwordRepeat);
 	void registerThirdParty(String username);
+	void goToTwitterAuth();
+	
 }

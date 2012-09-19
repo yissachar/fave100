@@ -59,6 +59,11 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 				passwordField.getValue(), passwordRepeatField.getValue());				
 	}
 	
+	@UiHandler("registerWithTwitterButton")
+	void onRegisterWithTwitterButtonClick(final ClickEvent event) {
+		getUiHandlers().goToTwitterAuth();
+	}
+	
 	@UiHandler("thirdPartyUsernameSubmitButton")
 	void onThirdPartyRegisterClick(final ClickEvent event) {
 		getUiHandlers().registerThirdParty(thirdPartyUsernameField.getValue());
@@ -139,11 +144,6 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 	public void setGoogleUrl(final String url) {
 		registerWithGoogleButton.setHref(url);
 	}
-
-	@Override
-	public void setTwitterUrl(final String url) {
-		registerWithTwitterButton.setHref(url);
-	}	
 	
 	@Override
 	public void setFacebookUrl(final String url) {

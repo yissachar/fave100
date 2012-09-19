@@ -57,10 +57,7 @@ public class LoginWidgetPresenter extends
 			public void onSuccess(final String url) {
 				getView().setGoogleLoginUrl(url);
 			}
-		});
-		
-		// Get the Twitter auth url
-		
+		});		
 	}
 
 	@Override
