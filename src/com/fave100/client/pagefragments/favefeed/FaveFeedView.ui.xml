@@ -12,24 +12,24 @@
 			border: 1px solid #999;
 			margin-left: 720px;
 			width: 240px;			
-			z-index: 99999;
-			margin-top: 5opx;
+			z-index: 99998;
+			margin-top: 50px;
+			background: #fff;
 		}
 		
 		.faveFeed h4 {
+			background: #efefef;
 			padding: 7px;			
 		}
 		
 		.faveFeed a, .faveFeed p {
 			display: block;
-			background: #fff;
 			padding: 3px;
 		}
 		
 		.faveFeed ul {
 			list-style-type: none;
 			padding: 0;
-			background-color: #FFF;
 		}
 		
 		.faveFeed li {

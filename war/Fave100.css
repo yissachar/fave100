@@ -350,6 +350,12 @@ footer {
 	height: 100px;
 	margin: 50px;
 }
+
+.fullLoginPage {
+	width: 800px;
+	display: block;
+}
+
 .fullLoginPage .nativeLoginBox, .fullLoginPage .thirdPartyLoginBox, .registerContainer {
 	width: 300px;
 	float: left;
