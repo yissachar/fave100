@@ -13,6 +13,7 @@
 			margin-left: 720px;
 			width: 240px;			
 			z-index: 99999;
+			margin-top: 5opx;
 		}
 		
 		.faveFeed h4 {

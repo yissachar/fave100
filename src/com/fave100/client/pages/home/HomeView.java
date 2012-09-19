@@ -34,6 +34,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	}
 	
 	@UiField HTMLPanel topBar;
+	@UiField HTMLPanel faveFeed;
 	
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
@@ -41,6 +42,12 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 			topBar.clear();			
 			if(content != null) {
 				topBar.add(content);
+			}
+		}
+		if(slot == HomePresenter.FAVE_FEED_SLOT) {
+			faveFeed.clear();			
+			if(content != null) {
+				faveFeed.add(content);
 			}
 		}
 		super.setInSlot(slot, content);

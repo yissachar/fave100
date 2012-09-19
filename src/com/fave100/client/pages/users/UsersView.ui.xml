@@ -84,7 +84,7 @@
 			</g:HTMLPanel>
 			
 			<g:HTMLPanel ui:field="faveFeed"/>
-			<g:HTMLPanel ui:field = "faveListContainer">				
+			<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">				
 				<w:PersonalFaveList ui:field="personalFaveList"/>
 				<w:NonpersonalFaveList ui:field="userFaveList"/>								
 			</g:HTMLPanel>						
