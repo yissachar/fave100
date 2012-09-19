@@ -20,6 +20,7 @@
 		.faveFeed h4 {
 			background: #efefef;
 			padding: 7px;			
+			color: #333;
 		}
 		
 		.faveFeed a, .faveFeed p {
