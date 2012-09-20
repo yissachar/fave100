@@ -14,18 +14,19 @@
 			width: 240px;			
 			z-index: 99998;
 			margin-top: 50px;
-			background: #fff;
+			background: #FFF;
 		}
 		
 		.faveFeed h4 {
-			background: #efefef;
+			background: #E4E4E4;
 			padding: 7px;			
 			color: #333;
+			border-bottom: 1px solid #BBB;
 		}
 		
 		.faveFeed a, .faveFeed p {
 			display: block;
-			padding: 3px;
+			padding: 8px;
 		}
 		
 		.faveFeed ul {

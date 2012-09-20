@@ -76,11 +76,16 @@ public class FaveFeedPresenter extends
 				//getView().getFaveFeed().setVisible(false);
 				final SafeHtmlBuilder builder = new SafeHtmlBuilder();
 				builder.appendHtmlConstant("<h4>");
-				builder.appendEscaped("FaveFeed");
+				builder.appendEscaped("Get your list on!");
 				builder.appendHtmlConstant("</h4>");
+				builder.appendHtmlConstant("<p>");
+				String txt = "If you could only pick the cream of the crop, what ";
+				txt += "song would you choose?";
+				builder.appendEscaped(txt);
+				builder.appendHtmlConstant("</p>");
 				final InlineHyperlink link = new InlineHyperlink();
 				link.setTargetHistoryToken(NameTokens.login);
-				link.setText("Please log in to view the FaveFeed");
+				link.setText("Try out Fave100 today");
 				builder.appendHtmlConstant(link.toString());
 				getView().setFaveFeedContent(builder.toSafeHtml());
 			}
