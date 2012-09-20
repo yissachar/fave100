@@ -57,6 +57,10 @@
 			margin-top: 1px;
 			padding: 6px;
 		}
+		
+		.advancedSearchLink, .dndLabel {
+			font-size: 0.8em;
+		}
 	</ui:style>
 	
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
@@ -76,15 +80,17 @@
 			<ul class="{style.tabList}">
 				<li><g:Anchor ui:field="fave100TabLink">Fave100</g:Anchor></li>
 				<li><g:Anchor ui:field="activityTabLink">Activity</g:Anchor></li>
-			</ul>	
-			
-			<g:HTMLPanel ui:field="songSearchContainer">
-				<g:SuggestBox ui:field="songSuggestBox"/>
-				<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}">Advanced search</g:InlineHyperlink>		
-			</g:HTMLPanel>
+			</ul>
 			
 			<g:HTMLPanel ui:field="faveFeed"/>
-			<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">				
+			<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">
+				<g:HTMLPanel ui:field="songSearchContainer" styleName="itemHeader">
+					<span class="{style.dndLabel}">Drag and drop to rank</span>
+					<g:SuggestBox ui:field="songSuggestBox"/>
+					<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}" styleName="{style.advancedSearchLink}">
+						Advanced search
+					</g:InlineHyperlink>		
+				</g:HTMLPanel>				
 				<w:PersonalFaveList ui:field="personalFaveList"/>
 				<w:NonpersonalFaveList ui:field="userFaveList"/>								
 			</g:HTMLPanel>						

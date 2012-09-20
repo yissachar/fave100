@@ -48,7 +48,7 @@ public class FaveFeedPresenter extends
 			public void onSuccess(final List<String> faveFeed) {
 				// TODO: Should be a widget
 				final SafeHtmlBuilder builder = new SafeHtmlBuilder();
-				builder.appendHtmlConstant("<h4 class = 'itemHeader'>");
+				builder.appendHtmlConstant("<h4 class>");
 				builder.appendEscaped("FaveFeed");
 				builder.appendHtmlConstant("</h4>");
 				if(faveFeed.size() > 0) {

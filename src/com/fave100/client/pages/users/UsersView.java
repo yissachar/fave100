@@ -137,9 +137,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@Override
 	public void showFave100Tab() {
 		faveListContainer.setVisible(true);
-    	activityTab.setVisible(false);
-    	//songSuggestBox.setVisible(true);	
-		//advancedSearchLink.setVisible(true);
+    	activityTab.setVisible(false);    	
     	songSearchContainer.setVisible(true);
     	activityTabLink.removeStyleName("selected");
 		fave100TabLink.addStyleName("selected");
