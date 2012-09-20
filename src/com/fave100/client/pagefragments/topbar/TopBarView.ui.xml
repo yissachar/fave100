@@ -64,6 +64,7 @@
 		.faveLogo, .listOfTheDay {
 			background: #FFF;
 			border-radius: 5px;
+			border: 1px solid #AAA;
 		}
 		
 		.faveLogo {

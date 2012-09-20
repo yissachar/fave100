@@ -27,7 +27,7 @@ body{
 }*/
 
 a{
-	color: #565;
+	color: #343;
 	text-decoration: none;
 }
 a:hover{
@@ -121,6 +121,7 @@ footer {
 	background: #948A54;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
+	border: 1px solid #555;
 	padding: 10px;
 }
 
