@@ -125,44 +125,51 @@ footer {
 	padding: 10px;
 }
 
+.itemHeader a {
+	color: #FFF;	
+}
+
 /* Suggest Box */
 
 .gwt-SuggestBox {
-	display: block;
-	margin-top: 50px;
-	margin-bottom: 5px;
-	width: 450px;
-	height: 40px;	
-	font-size: 2em;
-	border: 3px solid #999;
+	width: 400px;
+	height: 20px;
+	border: 1px solid #777;
 	padding: 7px;
-	color: #AAA;	
+	color: #AAA;
+	margin: 0 10px;	
 }
+
 .gwt-SuggestBox:focus {
 	color: #555;
-	border: 3px solid #888;
+	border: 1px solid #000;
 }
+
 .gwt-SuggestBoxPopup table{
 	border: 1px solid #777;
 	border-collapse: collapse;
 	box-shadow: 1px 2px 2px #888;
 }
+
 .item{
 	margin: 0px auto;
 	background-color: #FFF;
 	font-size: 1.3em;
-	width: 451px;
+	width: 401px;
 	white-space: normal !important;
 	overflow: hidden;
 	padding: 7px;
 }
+
 .item img{
 	float: left;
 	margin-right: 9px;
 }
+
 .item-selected{
 	background-color: #5A9DE8;
 }
+
 .artistName{
 	font-size: 0.6em;
 	font-style: italic;
