@@ -28,13 +28,25 @@
 			margin-bottom: 5px;
 		}
 
+		#noAccountPrompt {
+			clear: both;
+			padding-top: 30px;
+			text-align: center;
+		}
+
 	</ui:style>
+	
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel ui:styleName="container">
 		<div class="content">
 		    <g:HTMLPanel styleName="{style.registerContainer}">
 				<h1>Fave100 Sign In</h1>
-				<g:HTMLPanel ui:field="loginContainer"/>
+				<g:HTMLPanel ui:field="loginContainer"/>				
 			</g:HTMLPanel>
+			<p id="noAccountPrompt">
+			    Don't have an account?
+			    <g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}">Register</g:InlineHyperlink>
+			</p>
 		</div>
 		<pf:Footer/>
 	</g:HTMLPanel>
