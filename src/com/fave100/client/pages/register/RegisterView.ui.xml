@@ -39,8 +39,15 @@
 			font-size: 0.7em;
 			margin-bottom: 15px;
 		}
+
+		#alreadyHaveAccountPrompt {
+			clear: both;
+			padding-top: 30px;
+			text-align: center;
+		}
 	</ui:style>
 
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel ui:styleName="container">
 		<div class="content">		    	
 			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
@@ -79,7 +86,12 @@
 					<g:Button ui:field="thirdPartyUsernameSubmitButton">Submit</g:Button>
 				</div>
 			</g:HTMLPanel>
-		</div>
+			
+			<p id="alreadyHaveAccountPrompt">
+			    Already have an account?
+			    <g:InlineHyperlink targetHistoryToken="{nameTokens.getLogin}">Log in</g:InlineHyperlink>
+			</p>
+		</div>		
 		<pf:Footer/>
 	</g:HTMLPanel>
 </ui:UiBinder>
