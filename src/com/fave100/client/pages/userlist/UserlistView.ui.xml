@@ -15,30 +15,28 @@
 		.userList li{
 			float: left;
 			cursor: pointer;
+			color: #666;
 			background-color: #FFF;
 			border: 1px solid #777;
 			width: 250px;
 			height: 80px;
 			margin: 20px;
+			box-shadow: 1px 1px 1px #999;
 		}
+		
 		.userList li:hover{
 			background-color: #FFF;
-			border-color: #000;
+			border-color: #000;			
 		}
+		
 		.userList li img{
 			float: left;
 			max-height: 80px;
 		}
-		.userList a{
-			display: block;
-			width: 100%;
-			height: 100%;			
-			text-decoration: none;
-		}
-		.userList a div{			
-			font-size: 1.5em;
+		
+		.userList li a {
+			font-size: 1.2em;
 			margin: 5px;
-			float: left;
 		}
 	</ui:style>
 
