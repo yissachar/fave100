@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -20,6 +21,7 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers> implement
 
 	@UiField HTMLPanel topBar;
 	@UiField FormPanel profileForm;
+	@UiField TextBox emailInput;
 	
 	@Inject
 	public ProfileView(final Binder binder) {
@@ -49,9 +51,12 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers> implement
 	
 	@UiHandler("profileForm")
 	public void onSubmit(final SubmitCompleteEvent event) {
-		// TODO: Figure out why this doesn't work and put back in
-		//Window.alert(event.getResults());
-		// Strip the blob key of HTML tags and pass it to the Presenter
-		//getUiHandlers().setUserAvatarBlobKey(event.getResults().replaceAll("\\<.*?\\>", ""));
+		getUiHandlers().setProfileData(emailInput.getValue());
+		//profileForm.reset();
+	}
+
+	@Override
+	public void setEmailValue(final String val) {
+		emailInput.setValue(val);
 	}
 }

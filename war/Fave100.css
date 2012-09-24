@@ -409,6 +409,12 @@ footer {
 	float: left;
 }
 
+.profileForm {
+	width: 300px;
+	margin: 0 auto;
+	float: none;
+}
+
 .selected{
 	background: #EFEFEF;
 	border-radius: 6px;
