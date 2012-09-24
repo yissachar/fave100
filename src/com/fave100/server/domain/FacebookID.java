@@ -8,27 +8,27 @@ import com.googlecode.objectify.annotation.Id;
 @Entity
 public class FacebookID {
 	
-	@Id private String facebookID;
+	@Id private Long facebookID;
 	private String username;
 	
 	@SuppressWarnings("unused")
 	private FacebookID() {}
 	
-	public FacebookID(final String facebookID, final String username) {
+	public FacebookID(final Long facebookID, final String username) {
 		this.setFacebookID(facebookID);
 		this.setUsername(username);
 	}
 	
-	public static FacebookID findFacebookID(final String id) {
+	public static FacebookID findFacebookID(final Long id) {
 		return ofy().load().type(FacebookID.class).id(id).get();
 	}
 	
 
-	public String getFacebookID() {
+	public Long getFacebookID() {
 		return facebookID;
 	}
 
-	public void setFacebookID(final String facebookID) {
+	public void setFacebookID(final Long facebookID) {
 		this.facebookID = facebookID;
 	}
 

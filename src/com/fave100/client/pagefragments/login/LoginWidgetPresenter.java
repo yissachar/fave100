@@ -29,6 +29,7 @@ public class LoginWidgetPresenter extends
 		void clearPassword();		
 		void setError(String error);
 		void setGoogleLoginUrl(String url);
+		void setFacebookLoginUrl(String url);
 	}
 	
 	private ApplicationRequestFactory requestFactory;
@@ -48,16 +49,28 @@ public class LoginWidgetPresenter extends
 	protected void onBind() {
 		super.onBind();
 		
+		String redirectUrl = "http://"+Window.Location.getHost()+Window.Location.getPath();
+		redirectUrl += Window.Location.getQueryString()+"#"+NameTokens.register+";provider=";
+		
 		// Get the login url for Google
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		final Request<String> loginUrlReq = appUserRequest.getGoogleLoginURL(Window.Location.getPath()+Window.Location.getQueryString()+"#"+
-				NameTokens.register+";provider="+RegisterPresenter.PROVIDER_GOOGLE);
+		final Request<String> loginUrlReq = appUserRequest.getGoogleLoginURL(redirectUrl+RegisterPresenter.PROVIDER_GOOGLE);
+		
 		loginUrlReq.fire(new Receiver<String>() {
 			@Override 
 			public void onSuccess(final String url) {
 				getView().setGoogleLoginUrl(url);
 			}
-		});		
+		});
+		
+		// Get the login url for Facebook
+		final Request<String> facebookLoginUrlReq = requestFactory.appUserRequest().getFacebookAuthUrl(redirectUrl+RegisterPresenter.PROVIDER_FACEBOOK);
+		facebookLoginUrlReq.fire(new Receiver<String>() {
+			@Override
+			public void onSuccess(final String url) {
+				getView().setFacebookLoginUrl(url);
+			}
+		});
 	}
 
 	@Override

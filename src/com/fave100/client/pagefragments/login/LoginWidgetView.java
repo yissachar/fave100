@@ -29,6 +29,7 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers> impleme
 	@UiField Label loginStatusMessage;
 	@UiField Anchor signInWithGoogleButton;
 	@UiField Anchor signInWithTwitterButton;
+	@UiField Anchor signInWithFacebookButton;
 	@UiField Button loginButton;
 
 	@Inject
@@ -80,6 +81,12 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers> impleme
 	@Override
 	public void setGoogleLoginUrl(final String url) {
 		signInWithGoogleButton.setHref(url);		
+	}
+
+	@Override
+	public void setFacebookLoginUrl(final String url) {
+		signInWithFacebookButton.setHref(url);
+		
 	}
 	
 }

@@ -35,16 +35,17 @@
 		.orDivider{
 			padding: 50px;			
 		}
-		.thirdPartyUserNameReminder{
-			font-size: 0.7em;
-			margin-bottom: 15px;
+		
+		.thirdPartyUsernamePrompt {
+			margin: 50px auto 0;
+			width: 300px;
 		}
 
 		#alreadyHaveAccountPrompt {
 			clear: both;
 			padding-top: 30px;
 			text-align: center;
-		}
+		}			
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
@@ -78,8 +79,8 @@
 				</div>
 			</g:HTMLPanel>
 			
-			<g:HTMLPanel ui:field="thirdPartyUsernamePrompt">
-				<div class="registerContainer">
+			<g:HTMLPanel ui:field="thirdPartyUsernamePrompt" styleName="{style.thirdPartyUsernamePrompt}">
+				<div class="registerContainer {style.thirdPartyUsernamePrompt}">
 					<span>Please enter a username to complete the registration process</span>
 					<g:TextBox ui:field="thirdPartyUsernameField"/>
 					<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					

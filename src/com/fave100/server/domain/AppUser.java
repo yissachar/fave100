@@ -2,23 +2,21 @@ package com.fave100.server.domain;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.FacebookApi;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
+import org.scribe.model.Verifier;
+import org.scribe.oauth.OAuthService;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -36,6 +34,9 @@ import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
@@ -59,6 +60,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 	@IgnoreSave public static final String FACEBOOK_APP_ID = "312128848885545";
 	@IgnoreSave public static final String FACEBOOK_APP_SECRET = "9cd2202cdfc0ee179b465434b1294611";
 	@IgnoreSave public static final String AUTH_USER = "loggedIn";
+	@IgnoreSave public static OAuthService facebookOAuthservice;
 	
 	@Id private String username;
 	private String password;
@@ -98,14 +100,14 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		}			
 	}
 	
-	/*public static AppUser findAppUserByFacebookId(final long twitterID) {
-		final TwitterID tId = ofy().load().type(TwitterID.class).id(twitterID).get();
-		if(tId != null) {			
-			return ofy().load().type(AppUser.class).id(tId.getUsername()).get();
+	public static AppUser findAppUserByFacebookId(final long facebookID) {
+		final FacebookID fId = ofy().load().type(FacebookID.class).id(facebookID).get();
+		if(fId != null) {			
+			return ofy().load().type(AppUser.class).id(fId.getUsername()).get();
 		} else {
 			return null;
 		}			
-	}*/
+	}
 	
 	// Login methods
 	public static AppUser login(final String username, final String password) {
@@ -150,15 +152,24 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return null;
 	}
 	
-	/*public static AppUser loginWithFacebook(final String state) {
-		AppUser loggedInUser;
-		final UserService userService = UserServiceFactory.getUserService();
-		final User user = userService.getCurrentUser();
-		if(user == null) return null;		
-		loggedInUser = findAppUserByFacebookId(user.getUserId());			
-		if(loggedInUser != null) RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());		
-		return loggedInUser;
-	}*/
+	public static AppUser loginWithFacebook(final String code) {
+		final Long facebookUserId = getCurrentFacebookUserId(code);		
+		if(facebookUserId != null) {
+			final AppUser loggedInUser = findAppUserByFacebookId(facebookUserId);			
+			if(loggedInUser != null) {
+				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
+				// TODO: Handle Facebook avatars
+			/*	final URL twitterAvatar =  twitterUser.getProfileImageURL();
+				if(loggedInUser.getAvatar() == null || !loggedInUser.getAvatar().equals(twitterAvatar.toString())) {
+					// Update the user's avatar from Twitter
+					loggedInUser.setAvatar(twitterAvatar.toString());
+					ofy().save().entity(loggedInUser).now();
+				}*/
+			}			
+			return loggedInUser;
+		}
+		return null;
+	}
 	
 	// Logout
 	public static void logout() {
@@ -202,9 +213,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			final RequestToken requestToken = (RequestToken) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
 			
 			try {
-				//TODO: Get real access tokens working!!
-				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
-				//AccessToken accessToken = new AccessToken("762086864-bRGmolj6Ax0BigCN6YJJn3N3gRsGOo2C4s7ncnpP", "8YcEtdQUfBvxW0V3uby3kYsDIWkpfD6iAoI1l73DQ");				
+				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);		
 				twitter.setOAuthAccessToken(accessToken);
 				final twitter4j.User twitterUser = twitter.verifyCredentials();
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("twitterUser", twitterUser);				
@@ -227,16 +236,35 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
         //final BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
         //final String hash = String.format("%1$032x", i);
 		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("fbState", fbState);
-		String url = "http://facebook.com/dialog/oauth/?client_id="+ AppUser.FACEBOOK_APP_ID;
-		try {
-			url += "&state="+fbState+"&redirect_uri="+URLEncoder.encode(redirectUrl, "UTF-8");
-		} catch (final UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Logger.getAnonymousLogger().log(Level.SEVERE, "First redirect url:"+redirectUrl);
-		return url;
+		final Token emptyToken = null;
+		 
+		facebookOAuthservice = new ServiceBuilder()
+									.provider(FacebookApi.class)
+									.apiKey(FACEBOOK_APP_ID)
+									.apiSecret(FACEBOOK_APP_SECRET)
+									.callback(redirectUrl)
+									.build();
+		
+		final String authUrl = facebookOAuthservice.getAuthorizationUrl(emptyToken);
+		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("facebookToken", emptyToken);		
+		return authUrl;
 	}	
+	
+	public static Long getCurrentFacebookUserId(final String code) {
+		final Verifier verifier = new Verifier(code);
+		final Token requestToken = (Token) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("facebookToken");
+		final Token accessToken = facebookOAuthservice.getAccessToken(requestToken, verifier);
+		
+		final OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/me");
+		facebookOAuthservice.signRequest(accessToken, request);
+	    final Response response = request.send();
+	    
+	    final JsonParser parser = new JsonParser();
+	    final JsonElement graphElement = parser.parse(response.getBody());
+	    final JsonObject graphObject = graphElement.getAsJsonObject();	
+	    
+	    return graphObject.get("id").getAsLong();
+	}
 	
 	
 	/*
@@ -368,96 +396,47 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		return newAppUser;
 	}
 	
-	// TODO: Broken: Error validating verification code
 	public static AppUser createAppUserFromFacebookAccount(final String username, final String state,
 			final String code, final String redirectUrl) {
 		// TODO: Disallow white-space, other special characters?		
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
-		Logger.getAnonymousLogger().log(Level.SEVERE, "URL:"+redirectUrl);
 		
+		// TODO: Do we need this now that we are using Scribe? 
 		// Stop CSRF attempts
-		if(!state.equals(RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("fbState"))) {			
+		/*if(!state.equals(RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("fbState"))) {			
 			return null;
-		}		
+		} */		
 		
 		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
 			@Override
-			public AppUser run() {
-				try {
-					// TODO: Redirect URI for production?
-					String urlString = "https://graph.facebook.com/oauth/access_token?client_id=";
-					urlString += AppUser.FACEBOOK_APP_ID+"&redirect_uri="+URLEncoder.encode(redirectUrl, "UTF-8");
-					urlString += "&client_secret="+AppUser.FACEBOOK_APP_SECRET+"&code="+code;
-					final URL url = new URL(urlString);
-					final BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-		            String line;
-		            while ((line = reader.readLine()) != null) {
-		            	 Logger.getAnonymousLogger().log(Level.SEVERE, "Line:"+ line);
-		            }
-		            reader.close();
-		           
-		            //final String graphUrl = "https://facebook.com/me?access_token="+getUrlParameters(line).get("access_token");
-		            //Logger.getAnonymousLogger().log(Level.SEVERE, "Graph URL:" + graphUrl);
-		            
-				} catch (final MalformedURLException  e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				} catch (final IOException e) {
-					// TODO: handle exception
-					e.printStackTrace();
-		        }
-
-				// TODO: return actual user
+			public AppUser run() {				   
+		    	final Long userFacebookId = getCurrentFacebookUserId(code);
+		    	if(userFacebookId != null) {
+			    	if(ofy().load().type(AppUser.class).id(username).get() != null) {
+						throw new RuntimeException("A user with that name already exists");
+					}
+					if(ofy().load().type(FacebookID.class).id(userFacebookId).get() != null) {
+						throw new RuntimeException("There is already a Fave100 account associated with this Facebook ID");
+					} 
+					// Create the user
+					final AppUser appUser = new AppUser();
+					appUser.setUsername(username);
+					// TODO: Do we need an email for facebook users?
+					// Create the user's list
+					final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);				
+					// Create the Facebook lookup
+					final FacebookID facebookID = new FacebookID(userFacebookId, username);
+					// TODO: Store oAuth tokens in database?
+					ofy().save().entities(appUser, facebookID, faveList).now();					
+					//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+					//return appUser;					
+					return loginWithFacebook(code);
+		    	}	
 				return null;
-				/*final twitter4j.User user = getTwitterUser(oauth_verifier);
-				if(ofy().load().type(AppUser.class).id(username).get() != null) {
-					throw new RuntimeException("A user with that name already exists");
-				}
-				if(ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
-					throw new RuntimeException("There is already a Fave100 account associated with this Facebook ID");
-				} 
-				// Create the user
-				final AppUser appUser = new AppUser();
-				appUser.setUsername(username);
-				// TODO: Do we need an email for twitter users?
-				// Create the user's list
-				final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);				
-				// Create the TwitterID lookup
-				final TwitterID twitterID = new TwitterID(user.getId(), username);
-				// TODO: Store tokens in database?
-				ofy().save().entities(appUser, twitterID, faveList).now();					
-				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-				return appUser;
-				//return loginWithTwitter(oauth_verifier);*/
 			}			
-		});
+		});		
 		return newAppUser;
 	}
-	
-	private static Map<String, List<String>> getUrlParameters(final String url)
-	        throws UnsupportedEncodingException {
-	    final Map<String, List<String>> params = new HashMap<String, List<String>>();
-	    final String[] urlParts = url.split("\\?");
-	    if (urlParts.length > 1) {
-	        final String query = urlParts[1];
-	        for (final String param : query.split("&")) {
-	            final String pair[] = param.split("=");
-	            final String key = URLDecoder.decode(pair[0], "UTF-8");
-	            String value = "";
-	            if (pair.length > 1) {
-	                value = URLDecoder.decode(pair[1], "UTF-8");
-	            }
-	            List<String> values = params.get(key);
-	            if (values == null) {
-	                values = new ArrayList<String>();
-	                params.put(key, values);
-	            }
-	            values.add(value);
-	        }
-	    }
-	    return params;
-	}
-
 	
 	public static List<AppUser> getAppUsers() {
 		// TODO: Add parameters to restrict amount of users returned
