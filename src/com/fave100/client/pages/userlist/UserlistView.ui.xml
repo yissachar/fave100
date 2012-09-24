@@ -14,8 +14,7 @@
 		}
 		.userList li{
 			float: left;
-			cursor: pointer;
-			color: #666;
+			cursor: pointer;			
 			background-color: #FFF;
 			border: 1px solid #777;
 			width: 250px;
@@ -37,6 +36,7 @@
 		.userList li a {
 			font-size: 1.2em;
 			margin: 5px;
+			color: #666;
 		}
 	</ui:style>
 

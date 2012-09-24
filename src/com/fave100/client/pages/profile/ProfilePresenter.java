@@ -3,6 +3,7 @@ package com.fave100.client.pages.profile;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
@@ -21,6 +22,7 @@ public class ProfilePresenter extends
 
 	public interface MyView extends BaseView, HasUiHandlers<ProfileUiHandlers> {
 		void createActionUrl(String url);
+		void setEmailValue(String val);
 	}
 
 	@ProxyCodeSplit
@@ -60,14 +62,32 @@ public class ProfilePresenter extends
 			avatarReq.fire();
 		}
 	}
+	
+	@Override
+	public void onReveal() {
+		final Request<AppUserProxy> loggedInUserReq = requestFactory.appUserRequest().getLoggedInAppUser();
+		loggedInUserReq.fire(new Receiver<AppUserProxy>() {
+			@Override
+			public void onSuccess(final AppUserProxy user) {
+				getView().setEmailValue(user.getEmail());
+			}			
+		});		
+	}
 
 	@Override
 	public void setUserAvatarBlobKey(final String blobKey) {
 		requestFactory.appUserRequest().setAvatarForCurrentUser(blobKey).fire();
+	}
+	
+	@Override
+	public void setProfileData(final String email) {
+		final Request<Void> setProfileDataReq = requestFactory.appUserRequest().setProfileData(email);
+		setProfileDataReq.fire();
 	}
 
 }
 
 interface ProfileUiHandlers extends UiHandlers {
 	void setUserAvatarBlobKey(String blobKey);
+	void setProfileData(String email);
 }

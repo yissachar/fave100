@@ -141,7 +141,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			if(loggedInUser != null) {
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
 				final URL twitterAvatar =  twitterUser.getProfileImageURL();
-				if(loggedInUser.getAvatar() == null || !loggedInUser.getAvatar().equals(twitterAvatar.toString())) {
+				if(loggedInUser.getAvatar() == null) {
 					// Update the user's avatar from Twitter
 					loggedInUser.setAvatar(twitterAvatar.toString());
 					ofy().save().entity(loggedInUser).now();
@@ -601,6 +601,7 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		final AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) return;
 		// TODO: Max upload size?
+		// TODO: Twitter user can't upload own avatar
 		if(currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
 			BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
 		}		
@@ -638,6 +639,13 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 		// Otherwise serve the Twitter, FaceBook, or native avatar
 		return avatar;
 	} 
+	
+	public static void setProfileData(final String email) {
+		final AppUser currentUser = getLoggedInAppUser();
+		if(currentUser == null) return;
+		currentUser.setEmail(email);
+		ofy().save().entity(currentUser).now();
+	}
 	
     // Getters and setters	
 

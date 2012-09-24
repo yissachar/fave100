@@ -9,7 +9,6 @@ public interface AppUserProxy extends EntityProxy{
 	Integer getVersion();
 	
 	String getUsername();
-	//List<SongProxy> getFave100Songs();
-
+	String getEmail();
 	String getAvatarImage();
 }
