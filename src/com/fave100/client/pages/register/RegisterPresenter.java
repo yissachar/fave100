@@ -163,6 +163,8 @@ public class RegisterPresenter extends
 	protected void onBind() {
 		super.onBind();
 		
+		// TODO: We should have 3rd party logins open in new window so as not to clutter up our URL
+		
 		// Get the login url for Google
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		final Request<String> loginUrlReq = appUserRequest.getGoogleLoginURL(Window.Location.getHref()+";provider="+RegisterPresenter.PROVIDER_GOOGLE);
@@ -173,10 +175,7 @@ public class RegisterPresenter extends
 			}
 		});
 		
-		// TODO: This won't work in production mode...
-		//facebookRedirect ="http://"+Window.Location.getHost()+Window.Location.getPath()+"?gwt.codesvr=127.0.0.1:9997#";
-		//facebookRedirect += NameTokens.register+";provider="+RegisterPresenter.PROVIDER_FACEBOOK;
-		facebookRedirect = Window.Location.getHref();
+		facebookRedirect = Window.Location.getHref()+";provider="+RegisterPresenter.PROVIDER_FACEBOOK;
 		final Request<String> fbAuthUrlReq = requestFactory.appUserRequest().getFacebookAuthUrl(facebookRedirect);
 		fbAuthUrlReq.fire(new Receiver<String>() {
 			@Override 
@@ -317,10 +316,18 @@ public class RegisterPresenter extends
 	private void goToMyFave100() {
 		// Need to strip out query params or they will stick around in URL forever
 		String url = Window.Location.getHref();
-		url = url.replace(Window.Location.getParameter("oauth_token"), "");
-		url = url.replace("&oauth_token=", "");
-		url = url.replace(Window.Location.getParameter("oauth_verifier"), "");
-		url = url.replace("&oauth_verifier=", "");
+		if(Window.Location.getParameter("oauth_token") != null) {
+			url = url.replace(Window.Location.getParameter("oauth_token"), "");
+			url = url.replace("&oauth_token=", "");
+		}		
+		if(Window.Location.getParameter("oauth_verifier") != null) {
+			url = url.replace(Window.Location.getParameter("oauth_verifier"), "");
+			url = url.replace("&oauth_verifier=", "");
+		}		
+		if(Window.Location.getParameter("code") != null) {
+			url = url.replace(Window.Location.getParameter("code"), "");
+			url = url.replace("&code=", "");
+		}		
 		url = url.replace(Window.Location.getHash(), "#myfave100");
 		Window.Location.assign(url);		
 	}

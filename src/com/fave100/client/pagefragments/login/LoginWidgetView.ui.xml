@@ -22,6 +22,8 @@
 			<g:Anchor styleName="zocial googleplus" ui:field="signInWithGoogleButton">Sign in with Google</g:Anchor>
 			<br/>
 			<g:Anchor styleName="zocial twitter" ui:field="signInWithTwitterButton">Sign in with Twitter</g:Anchor>
+			<br/>
+			<g:Anchor styleName="zocial facebook" ui:field="signInWithFacebookButton">Sign in with Facebook</g:Anchor>
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>
