@@ -65,6 +65,7 @@ public class ProfilePresenter extends
 	
 	@Override
 	public void onReveal() {
+		super.onReveal();
 		final Request<AppUserProxy> loggedInUserReq = requestFactory.appUserRequest().getLoggedInAppUser();
 		loggedInUserReq.fire(new Receiver<AppUserProxy>() {
 			@Override
