@@ -5,8 +5,8 @@ import java.util.List;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.users.ListResultOfSuggestion;
-import com.fave100.client.pages.users.SuggestionResult;
 import com.fave100.client.pages.users.SongSuggestBox.ListResultFactory;
+import com.fave100.client.pages.users.SuggestionResult;
 import com.fave100.client.place.NameTokens;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -79,6 +79,27 @@ public class SearchPresenter extends
 				// TODO Do Something with failure				
 			}
 		});	
+		
+		// TODO: Blend in with iTunes results
+		// Amazon Product API		
+		/*final String amazonAccessKey = "AKIAJISW3JUSF22DG5MQ";
+		final String amazonSecretKey = "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";
+		final String amazonAssociateTage = "fave100-20";
+		final AWSECommerceService service = new AWSECommerceService();
+		final AWSECommerceServicePortType port = service.getAWSECommerceServicePort();
+		final ItemSearchRequest itemRequest = new ItemSearchRequest();
+		
+		// Set the request object
+		itemRequest.setSearchIndex("Music");
+		itemRequest.setKeywords(searchTerm);
+		final ItemSearch itemElement = new ItemSearch();
+		itemElement.setAWSAccessKeyId(amazonAccessKey)
+		itemElement.getRequest().add(itemRequest);
+		
+		// Call the Web service operation and store the result
+		final ItemSearchResponse response = port.itemSearch(marketplaceDomain, amazonAccessKey, amazonAssociateTage,
+												xmlEscaping, validate, shared, request, operationRequest, items)*/
+		
 	}
 }
 
