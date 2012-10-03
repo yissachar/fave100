@@ -18,11 +18,21 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.xhr.client.ReadyStateChangeHandler;
 import com.google.gwt.xhr.client.XMLHttpRequest;
+import com.google.gwt.xml.client.DOMException;
+import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
+import com.google.gwt.xml.client.XMLParser;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.gwt.xml.client.CDATASection;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Element;
+import com.google.gwt.xml.client.NodeList;
+import com.google.gwt.xml.client.Text;
+import com.google.gwt.xml.client.XMLParser;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -68,6 +78,8 @@ public class SearchPresenter extends
 			searchUrl += "release/?query=release:";
 		}
 		searchUrl += searchTerm;
+		
+		// Get the search results from Musicbrainz
 		XMLHttpRequest xhr = XMLHttpRequest.create();
 		xhr.open("GET", searchUrl);
 		xhr.setOnReadyStateChange(new ReadyStateChangeHandler()	{
@@ -75,7 +87,22 @@ public class SearchPresenter extends
 		    public void onReadyStateChange(XMLHttpRequest xhr2) {
 		         if( xhr2.getReadyState() == XMLHttpRequest.DONE ) {
 		             xhr2.clearOnReadyStateChange();
-		             Window.alert(xhr2.getResponseText());
+		             try {
+	            	    // parse the XML document into a DOM
+	            	    Document messageDom = (Document) XMLParser.parse(xhr2.getResponseText());	            	    
+	            	    // Get all results
+	            	    NodeList releaseNodes = (NodeList) messageDom.getElementsByTagName("release");
+	            	    int length = releaseNodes.getLength();
+	            	    Window.alert("the length is: "+length);
+	            	    for(int i = 0; i < length; i++) {
+	            	    	Node releaseNode = releaseNodes.item(i);
+	            	    	Node titleNode = messageDom.getElementsByTagName("title").item(0);
+	            	    	Window.alert(titleNode.getNodeValue());
+	            	    }
+
+	            	  } catch (DOMException e) {
+	            	    Window.alert("Could not parse XML document.");
+	            	  }
 		         }
 		    }
 		});
