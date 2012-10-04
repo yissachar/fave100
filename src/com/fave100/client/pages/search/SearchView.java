@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.users.SuggestionResult;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -34,12 +33,12 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	@UiField Button searchButton;
 	@UiField Label searchStatus;
 	@UiField ListBox searchAttributesListBox;
-	@UiField(provided=true) CellList<SuggestionResult> iTunesResults;
+	@UiField(provided=true) CellList<MusicbrainzResult> iTunesResults;
 
 	@Inject
 	public SearchView(final Binder binder, final ApplicationRequestFactory requestFactory) {
 		final AdvancedSearchResultCell cell = new AdvancedSearchResultCell(requestFactory);
-		iTunesResults = new CellList<SuggestionResult>(cell);
+		iTunesResults = new CellList<MusicbrainzResult>(cell);
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -73,7 +72,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	}
 
 	@Override
-	public void setResults(final List<SuggestionResult> resultList) {
+	public void setResults(final List<MusicbrainzResult> resultList) {
 		iTunesResults.setRowData(resultList);
 		if(resultList.size() == 0) {
 			searchStatus.setText("No matches found");
@@ -85,7 +84,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	@Override
 	public void resetView() {
 		searchBox.setValue("");
-		setResults(new ArrayList<SuggestionResult>());
+		setResults(new ArrayList<MusicbrainzResult>());
 		searchStatus.setText("");
 	}
 }
