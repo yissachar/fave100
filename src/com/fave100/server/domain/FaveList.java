@@ -2,10 +2,19 @@ package com.fave100.server.domain;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.fave100.server.domain.Activity.Transaction;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
@@ -43,21 +52,55 @@ public class FaveList extends DatastoreObject{
 	}
 	
 	// TODO: Do FaveList activities need to be transactional? If so, need to set AppUser as parent
-	public static void addFaveItemForCurrentUser(final String hashtag, final Long songID, final Song songProxy) {
+	public static void addFaveItemForCurrentUser(final String hashtag, final String songID) {
+		
 		// TODO: Verify integrity of songProxy on server-side? 
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) {
 			throw new RuntimeException("Please log in to complete this action");
 			//return false;
-		}
+		}Logger.getAnonymousLogger().log(Level.SEVERE, "I know we are here..."+songID);
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();		
-		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");;		
-		final Song song = ofy().load().type(Song.class).id(songID).get();		
+		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");		
+		final Song song = ofy().load().type(Song.class).id(songID).get();
+		Logger.getAnonymousLogger().log(Level.SEVERE, "I know we are here...");
+		
 		boolean unique = true;
 		// If the song does not exist, create it
 		if(song == null) {
-			songProxy.setId(songID);
-			ofy().save().entity(songProxy);
+			Logger.getAnonymousLogger().log(Level.SEVERE, "Song is definitely null");
+			// TODO: Lookup the MBID in Musicbrainz and add to song database
+			try {
+			    final URL url = new URL("http://musicbrainz.org/ws/2/release/"+songID+"?inc=artists&fmt=json");
+			    final URLConnection conn = url.openConnection();
+			    final BufferedReader in = new BufferedReader(new InputStreamReader(
+		    		conn.getInputStream()));
+		    
+				String inputLine;
+				String content = "";
+				
+				while ((inputLine = in.readLine()) != null) {
+				    Logger.getAnonymousLogger().log(Level.SEVERE, inputLine);
+				    content += inputLine;
+				}
+				in.close();
+				
+				final JsonParser parser = new JsonParser();
+			    final JsonElement element = parser.parse(content);
+			    final JsonObject songObject = element.getAsJsonObject();	
+			    
+			    final Song newSong = new Song();
+			    newSong.setId(songObject.get("id").getAsString());
+			    newSong.setTrackName(songObject.get("title").getAsString());
+			    // TODO: What if more than 1 artist credited?
+			    newSong.setArtistName(songObject.get("artist-credit").getAsJsonArray().get(0).getAsString());
+			    newSong.setReleaseDate(songObject.get("date").getAsString());
+			    ofy().save().entity(newSong).now();
+					
+			} catch (final Exception e) {
+			}
+			//songProxy.setId(songID);
+			//ofy().save().entity(songProxy);
 		} else {
 			// Check if it is a unique song for this user
 			for(final FaveItem faveItem : faveList.getList()) {

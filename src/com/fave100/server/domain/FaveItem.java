@@ -20,11 +20,11 @@ public class FaveItem {
 	@SuppressWarnings("unused")
 	private FaveItem() {}
 	
-	public FaveItem(final Long songID) {
+	public FaveItem(final String songID) {
 		this(songID, null);
 	}
 	
-	public FaveItem(final Long songID, final Long whylineID) {
+	public FaveItem(final String songID, final Long whylineID) {
 		song = Ref.create(Key.create(Song.class, songID));
 		if(whylineID != null) {
 			whyline =  Ref.create(Key.create(Whyline.class, whylineID));

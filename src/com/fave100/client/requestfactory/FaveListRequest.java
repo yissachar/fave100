@@ -14,11 +14,14 @@ public interface FaveListRequest extends RequestContext {
 	
 	Request<List<SongProxy>> getFaveItemsForCurrentUser(String hashtag);
 	Request<Void> removeFaveItemForCurrentUser(String hashtag, int index);
-	Request<Void> addFaveItemForCurrentUser(String hashtag, Long songID, SongProxy songProxy);
+	// TODO: Remove this version of adding fave items
+//	Request<Void> addFaveItemForCurrentUser(String hashtag, Long songID, SongProxy songProxy);
 	Request<Void> rerankFaveItemForCurrentUser(String hashtag, int currentIndex, int newIndex);
 	Request<Void> editWhylineForCurrentUser(String hashtag, int index, String whyline);
 	
 	Request<List<SongProxy>> getMasterFaveList();	
 	Request<List<SongProxy>> getFaveList(String username, String hashtag);
+
+	Request<Void> addFaveItemForCurrentUser(String hashtag, String id);
 	
 }

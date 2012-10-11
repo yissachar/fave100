@@ -1,6 +1,9 @@
 package com.fave100.client.pages.search;
 
+import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.requestfactory.FaveListRequest;
+import com.fave100.server.domain.FaveList;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
@@ -8,6 +11,9 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 public class AdvancedSearchResultCell extends AbstractCell<MusicbrainzResult>{
 
@@ -61,20 +67,22 @@ public class AdvancedSearchResultCell extends AbstractCell<MusicbrainzResult>{
 			final Element eventTarget = event.getEventTarget().cast();
 			if(eventTarget.getClassName().contains("advancedSearchAddButton")) {
 			// TODO: Add this back in	
-			/*	final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-				final SongRequest songRequest = faveListRequest.append(requestFactory.songRequest());
+				final FaveListRequest faveListRequest = requestFactory.faveListRequest();
+			//	final SongRequest songRequest = faveListRequest.append(requestFactory.songRequest());
 				
 				final String hashtag = FaveList.DEFAULT_HASHTAG;
-				final Long id = Long.valueOf(song.getTrackId());
+			//	final Long id = Long.valueOf(song.getTrackId());
+				final String id = song.getMbid();
 				
 				// Turn the suggestion result into a song proxy
-				SongProxy songProxy = songRequest.create(SongProxy.class);
+			/*	SongProxy songProxy = songRequest.create(SongProxy.class);
 	       		final AutoBean<SuggestionResult> autoBean = AutoBeanUtils.getAutoBean(song);
 				final AutoBean<SongProxy> newBean = AutoBeanUtils.getAutoBean(songProxy);
 				AutoBeanCodex.decodeInto(AutoBeanCodex.encode(autoBean), newBean);				
 				songProxy = newBean.as();				
-						
-				final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(hashtag, id, songProxy);
+			*/			
+				//final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(hashtag, id, songProxy);
+				final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(hashtag, id);
 				addReq.fire(new Receiver<Void>() {
 					@Override
 					public void onSuccess(final Void response) {
@@ -84,7 +92,7 @@ public class AdvancedSearchResultCell extends AbstractCell<MusicbrainzResult>{
 					public void onFailure(final ServerFailure failure) {
 						SideNotification.show(failure.getMessage().replace("Server Error:", ""), true);
 					}					
-				});*/
+				});
 			}
 		}
 	}
