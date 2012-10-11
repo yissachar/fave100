@@ -59,16 +59,14 @@ public class FaveList extends DatastoreObject{
 		if(currentUser == null) {
 			throw new RuntimeException("Please log in to complete this action");
 			//return false;
-		}Logger.getAnonymousLogger().log(Level.SEVERE, "I know we are here..."+songID);
+		}
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();		
 		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");		
-		final Song song = ofy().load().type(Song.class).id(songID).get();
-		Logger.getAnonymousLogger().log(Level.SEVERE, "I know we are here...");
+		final Song song = ofy().load().type(Song.class).id(songID).get();		
 		
 		boolean unique = true;
 		// If the song does not exist, create it
-		if(song == null) {
-			Logger.getAnonymousLogger().log(Level.SEVERE, "Song is definitely null");
+		if(song == null) {			
 			// TODO: Lookup the MBID in Musicbrainz and add to song database
 			try {
 			    final URL url = new URL("http://musicbrainz.org/ws/2/release/"+songID+"?inc=artists&fmt=json");
@@ -92,8 +90,8 @@ public class FaveList extends DatastoreObject{
 			    final Song newSong = new Song();
 			    newSong.setId(songObject.get("id").getAsString());
 			    newSong.setTrackName(songObject.get("title").getAsString());
-			    // TODO: What if more than 1 artist credited?
-			    newSong.setArtistName(songObject.get("artist-credit").getAsJsonArray().get(0).getAsString());
+			    // TODO: What if more than 1 artist credited?			    
+			    newSong.setArtistName(songObject.get("artist-credit").getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString());
 			    newSong.setReleaseDate(songObject.get("date").getAsString());
 			    ofy().save().entity(newSong).now();
 					
