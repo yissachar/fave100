@@ -47,7 +47,11 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 	
 	protected String getReleaseDate(final SongProxy object) {
 		String releaseDate = "<span class='faveListReleaseDate'>";
-	    releaseDate += object.getReleaseDate().substring(0, 4)+"</span>";
+		final String dateVal = object.getReleaseDate();
+		if(dateVal != null && !dateVal.isEmpty()) {
+			releaseDate += object.getReleaseDate().substring(0, 4);
+		}
+	    releaseDate += "</span>";
 	    return releaseDate;
 	}
 	

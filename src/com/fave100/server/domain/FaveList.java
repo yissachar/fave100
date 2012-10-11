@@ -77,8 +77,7 @@ public class FaveList extends DatastoreObject{
 				String inputLine;
 				String content = "";
 				
-				while ((inputLine = in.readLine()) != null) {
-				    Logger.getAnonymousLogger().log(Level.SEVERE, inputLine);
+				while ((inputLine = in.readLine()) != null) {				    
 				    content += inputLine;
 				}
 				in.close();
@@ -87,12 +86,18 @@ public class FaveList extends DatastoreObject{
 			    final JsonElement element = parser.parse(content);
 			    final JsonObject songObject = element.getAsJsonObject();	
 			    
+			    // TODO: Deal with null values here
+			    // TODO: Check for coverart
 			    final Song newSong = new Song();
 			    newSong.setId(songObject.get("id").getAsString());
 			    newSong.setTrackName(songObject.get("title").getAsString());
 			    // TODO: What if more than 1 artist credited?			    
 			    newSong.setArtistName(songObject.get("artist-credit").getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString());
-			    newSong.setReleaseDate(songObject.get("date").getAsString().substring(0, 4));
+			    final String releaseDate = songObject.get("date").getAsString();
+			    Logger.getAnonymousLogger().log(Level.SEVERE,"The relase date is: "+releaseDate);
+			    if(releaseDate != null && !releaseDate.isEmpty()) {
+			    	newSong.setReleaseDate(releaseDate.substring(0, 4));
+			    }			    
 			    ofy().save().entity(newSong).now();
 					
 			} catch (final Exception e) {
