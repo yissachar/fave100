@@ -16,7 +16,7 @@ import com.googlecode.objectify.annotation.OnLoad;
 @Entity
 @Index
 public class Song extends DatastoreObject {
-	@Id private Long id;
+	@Id private String id;
 	@Index private long score = 0;
 	// iTunes results 
 	private Integer trackId;
@@ -302,11 +302,11 @@ public class Song extends DatastoreObject {
 		this.score = score;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(final Long id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 

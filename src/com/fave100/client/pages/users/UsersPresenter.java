@@ -256,7 +256,8 @@ public class UsersPresenter extends
 		AutoBeanCodex.decodeInto(AutoBeanCodex.encode(autoBean), newBean);				
 		songProxy = newBean.as();
 		// Add the SongProxy as a new FaveItem for the AppUser
-		final Request<Void> createReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, Long.valueOf(faveItemMap.getTrackId()), songProxy);
+		//TODO: Remove dummy placeholder string
+		final Request<Void> createReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, "foo");//faveItemMap.getTrackId());
 		createReq.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {

@@ -20,7 +20,7 @@ public class Whyline {
 	@SuppressWarnings("unused")
 	private Whyline() {}
 	
-	public Whyline(final String whyline, final Long songID, final String username) {
+	public Whyline(final String whyline, final String songID, final String username) {
 		this.id = username+Whyline.SEPERATOR_TOKEN+songID;
 		this.whyline = whyline;
 		this.song = Ref.create(Key.create(Song.class, songID));

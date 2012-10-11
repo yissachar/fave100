@@ -7,7 +7,7 @@ import com.google.web.bindery.requestfactory.shared.ProxyFor;
 
 @ProxyFor(Song.class)
 public interface SongProxy extends EntityProxy, SuggestionResult {
-	Long getId();
+	String getId();
 	Integer getVersion();
 	
 	String getWhyline();

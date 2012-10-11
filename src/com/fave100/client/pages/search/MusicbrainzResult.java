@@ -1,15 +1,16 @@
 package com.fave100.client.pages.search;
 
-public class MusicbrainzResult {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class MusicbrainzResult implements Serializable {
 	
+	private String mbid;
 	private String trackName;
 	private String artistName;
 	private String releaseDate;
 	
-	public MusicbrainzResult(final String trackName, final String artistName, final String releaseDate) {
-		this.trackName = trackName;
-		this.artistName = artistName;
-		this.releaseDate = releaseDate;
+	public MusicbrainzResult() {
 	}
 
 	public String getTrackName() {
@@ -34,6 +35,14 @@ public class MusicbrainzResult {
 
 	public void setReleaseDate(final String releaseDate) {
 		this.releaseDate = releaseDate;
+	}
+
+	public String getMbid() {
+		return mbid;
+	}
+
+	public void setMbid(String mbid) {
+		this.mbid = mbid;
 	}
 
 }

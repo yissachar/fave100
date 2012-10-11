@@ -2,10 +2,9 @@ package com.fave100.client.pages.search;
 
 import java.util.ArrayList;
 
-import com.google.gwt.xml.client.Element;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.xml.client.DOMException;
 import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
@@ -22,11 +21,15 @@ public class MusicbrainzResultList extends ArrayList<MusicbrainzResult>{
     	    //Window.alert("the length is: "+length);
     	    for(int i = 0; i < length; i++) {
     	    	
+    	    	String mbid = "";
     	    	String track = "";
     	    	String artist = "";
     	    	String releaseDate = "";
     	    	
     	    	final Element releaseElement = (Element) messageDom.getElementsByTagName("release").item(i);
+    	    	
+    	    	// Musicbrainz ID
+    	    	mbid = releaseElement.getAttribute("id");
     	    	
     	    	// Track name
     	    	final Element titleElement = (Element) releaseElement.getElementsByTagName("title").item(0);
@@ -50,7 +53,13 @@ public class MusicbrainzResultList extends ArrayList<MusicbrainzResult>{
     	    		releaseDate = dateElement.getChildNodes().item(0).getNodeValue();
     	    	}
     	    	
-    	    	add(new MusicbrainzResult(track, artist, releaseDate));
+    	    	final MusicbrainzResult result = new MusicbrainzResult();
+    	    	result.setMbid(mbid);
+    	    	result.setTrackName(track);
+    	    	result.setArtistName(artist);    	    	
+    	    	result.setReleaseDate(releaseDate);
+    	    	add(result);
+    	    	//add(new MusicbrainzResult(track, artist, releaseDate));
     	    }
 
     	  } catch (final DOMException e) {
