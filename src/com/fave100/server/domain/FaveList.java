@@ -92,7 +92,7 @@ public class FaveList extends DatastoreObject{
 			    newSong.setTrackName(songObject.get("title").getAsString());
 			    // TODO: What if more than 1 artist credited?			    
 			    newSong.setArtistName(songObject.get("artist-credit").getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString());
-			    newSong.setReleaseDate(songObject.get("date").getAsString());
+			    newSong.setReleaseDate(songObject.get("date").getAsString().substring(0, 4));
 			    ofy().save().entity(newSong).now();
 					
 			} catch (final Exception e) {
