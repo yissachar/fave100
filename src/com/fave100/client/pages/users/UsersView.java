@@ -101,7 +101,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 	
 	@UiHandler("songSuggestBox")
-	void onItemSelected(final SelectionEvent<Suggestion> event) {		
+	void onItemSelected(final SelectionEvent<Suggestion> event) {
+		// Look up the selected song in the song map and add it to user fave list
 		getUiHandlers().addSong(((SongSuggestBox) songSuggestBox).getFromSuggestionMap(event.getSelectedItem().getReplacementString()));
 		songSuggestBox.setValue("");
 	}

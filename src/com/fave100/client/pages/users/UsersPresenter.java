@@ -6,6 +6,7 @@ import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
+import com.fave100.client.pages.search.MusicbrainzResult;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
@@ -19,9 +20,6 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
@@ -241,23 +239,23 @@ public class UsersPresenter extends
 	}
 	
 	@Override
-	public void addSong(final SuggestionResult faveItemMap) {		
+	public void addSong(final MusicbrainzResult faveItemMap) {		
 		
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
 		final SongRequest songRequest = faveListRequest.append(requestFactory.songRequest());
 		
-		// Lookup the SuggestionResult corresponding to the selected String 
-	//	final SuggestionResult faveItemMap = getView().getSongSuggestBox().getFromSuggestionMap(selectedItem.getReplacementString());				
+		// Lookup the MusicbrainsResult corresponding to the selected String 
+	//	final MusicbrainzResult faveItemMap = getView().getSongSuggestBox().getFromSuggestionMap(selectedItem.getReplacementString());				
 		// and turn it into an SongProxy
-		SongProxy songProxy = songRequest.create(SongProxy.class);
+	/*	SongProxy songProxy = songRequest.create(SongProxy.class);
 		// Need to use AutoBeans to copy, as Request Factory won't allow reuse
-   		final AutoBean<SuggestionResult> autoBean = AutoBeanUtils.getAutoBean(faveItemMap);
+   		final AutoBean<MusicbrainsResult> autoBean = AutoBeanUtils.getAutoBean(faveItemMap);
 		final AutoBean<SongProxy> newBean = AutoBeanUtils.getAutoBean(songProxy);
 		AutoBeanCodex.decodeInto(AutoBeanCodex.encode(autoBean), newBean);				
 		songProxy = newBean.as();
-		// Add the SongProxy as a new FaveItem for the AppUser
+	*/	// Add the SongProxy as a new FaveItem for the AppUser
 		//TODO: Remove dummy placeholder string
-		final Request<Void> createReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, "foo");//faveItemMap.getTrackId());
+		final Request<Void> createReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, faveItemMap.getMbid());
 		createReq.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
@@ -278,5 +276,5 @@ interface UsersUiHandlers extends UiHandlers{
 	void follow();
 	void goToFave100Tab();
 	void goToActivityTab();
-	void addSong(SuggestionResult selectedItem);
+	void addSong(MusicbrainzResult selectedItem);
 }

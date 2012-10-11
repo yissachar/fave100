@@ -30,6 +30,8 @@ public class SearchPresenter extends
 	public interface MyProxy extends ProxyPlace<SearchPresenter> {
 	}
 	
+	public static final String BASE_SEARCH_URL = "http://musicbrainz.org/ws/2/";
+	
 	private ApplicationRequestFactory requestFactory;
 
 	@Inject
@@ -50,7 +52,7 @@ public class SearchPresenter extends
 	// TODO: need a global "loading" indicator
 	@Override
 	public void showResults(final String searchTerm, final String attribute) {
-		String searchUrl = "http://musicbrainz.org/ws/2/";
+		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
 		if(attribute.equals("songTerm")) {
 			searchUrl += "release/?query=release:";
 		}

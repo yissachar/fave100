@@ -34,7 +34,8 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 	}
 	
 	protected String getTrackName(final SongProxy object) {
-		String trackName = "<a href='"+object.getTrackViewUrl()+"'";
+		// TODO: Generate internal song url
+		String trackName = "<a href='"+"PLACEHOLDER - FIX ME"+"'";
 		trackName += "class='faveListTrackName'>"+object.getTrackName()+"</a>";
 		return(trackName);
 	}
@@ -52,7 +53,7 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 	
 	protected String getImageThumb(final SongProxy object) {
 		String imageThumb = "<img class='faveListImageThumb'";
-		imageThumb += "src='"+object.getArtworkUrl60()+"'/>";
+		imageThumb += "src='"+object.getCoverArtUrl()+"'/>";
 		return imageThumb;
 	}
 }
