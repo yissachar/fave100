@@ -3,16 +3,19 @@ package com.fave100.client.pages.search;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class MusicbrainzResult implements Serializable {
+public class MusicbrainzResult implements Serializable, SongInterface {
 	
 	private String mbid;
 	private String trackName;
 	private String artistName;
 	private String releaseDate;
+	private String coverArtUrl;
+	private String primaryGenreName;
 	
 	public MusicbrainzResult() {
 	}
 
+	@Override
 	public String getTrackName() {
 		return trackName;
 	}
@@ -21,6 +24,7 @@ public class MusicbrainzResult implements Serializable {
 		this.trackName = trackName;
 	}
 
+	@Override
 	public String getArtistName() {
 		return artistName;
 	}
@@ -29,6 +33,7 @@ public class MusicbrainzResult implements Serializable {
 		this.artistName = artistName;
 	}
 
+	@Override
 	public String getReleaseDate() {
 		return releaseDate;
 	}
@@ -37,12 +42,29 @@ public class MusicbrainzResult implements Serializable {
 		this.releaseDate = releaseDate;
 	}
 
+	@Override
 	public String getMbid() {
 		return mbid;
 	}
 
-	public void setMbid(String mbid) {
+	public void setMbid(final String mbid) {
 		this.mbid = mbid;
+	}
+
+	public String getCoverArtUrl() {
+		return coverArtUrl;
+	}
+
+	public void setCoverArtUrl(final String coverArtUrl) {
+		this.coverArtUrl = coverArtUrl;
+	}
+
+	public String getPrimaryGenreName() {
+		return primaryGenreName;
+	}
+
+	public void setPrimaryGenreName(String primaryGenreName) {
+		this.primaryGenreName = primaryGenreName;
 	}
 
 }
