@@ -246,6 +246,7 @@ footer {
 
 .faveListImageThumb{
 	display: inline-block;
+	max-width: 80px;
 }
 
 .faveListRank {
