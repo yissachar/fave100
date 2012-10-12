@@ -4,6 +4,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fave100.server.domain.Activity.Transaction;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -67,7 +69,7 @@ public class FaveList extends DatastoreObject{
 		boolean unique = true;
 		// If the song does not exist, create it
 		if(song == null) {			
-			// TODO: Lookup the MBID in Musicbrainz and add to song database
+			// Lookup the MBID in Musicbrainz and add to song database
 			try {
 			    final URL url = new URL("http://musicbrainz.org/ws/2/release/"+songID+"?inc=artists&fmt=json");
 			    final URLConnection conn = url.openConnection();
@@ -86,8 +88,6 @@ public class FaveList extends DatastoreObject{
 			    final JsonElement element = parser.parse(content);
 			    final JsonObject songObject = element.getAsJsonObject();	
 			    
-			    // TODO: Deal with null values here
-			    // TODO: Check for coverart
 			    final Song newSong = new Song();
 			    newSong.setId(songObject.get("id").getAsString());
 			    newSong.setTrackName(songObject.get("title").getAsString());
@@ -98,10 +98,57 @@ public class FaveList extends DatastoreObject{
 			    if(releaseDate != null && !releaseDate.isEmpty()) {
 			    	newSong.setReleaseDate(releaseDate.substring(0, 4));
 			    }			    
+			    
+			    // Look up the cover art and add it if it exists
+				try {
+				    final URL coverArtUrl = new URL("http://coverartarchive.org/release/"+songID);
+				    final HttpURLConnection coverArtConn = (HttpURLConnection) coverArtUrl.openConnection();
+				    final BufferedReader coverArtIn = new BufferedReader(new InputStreamReader(
+				    		coverArtConn.getInputStream()));
+				    
+				    if(coverArtConn.getResponseCode() != 404) {
+						String coverArtInputLine;
+						String coverArtContent = "";
+						
+						while ((coverArtInputLine = coverArtIn.readLine()) != null) {				    
+							coverArtContent += coverArtInputLine;					   
+						}
+						coverArtIn.close();
+						
+						final JsonParser coverArtParser = new JsonParser();
+					    final JsonElement coverArtElement = coverArtParser.parse(coverArtContent);
+					    final JsonObject coverArtObject = coverArtElement.getAsJsonObject();
+					    final JsonArray imagesArray = coverArtObject.get("images").getAsJsonArray();
+					    final JsonObject imagesObject = imagesArray.get(0).getAsJsonObject();
+					    String imageUrl = "";
+					    
+					    final JsonObject thumbnailsObject = imagesObject.get("thumbnails").getAsJsonObject();
+					    final String smallThumbnail = thumbnailsObject.get("small").getAsString();
+					    final String largeThumbnail = thumbnailsObject.get("large").getAsString();
+					    
+					    // Try to get the smallest image possible
+					    if(smallThumbnail != null && !smallThumbnail.isEmpty()) {
+					    	imageUrl = smallThumbnail;
+					    } else if(largeThumbnail != null && !largeThumbnail.isEmpty()) {
+							imageUrl = largeThumbnail;
+						} else {
+							imageUrl = imagesObject.get("image").getAsString();
+						}
+					    
+					    newSong.setCoverArtUrl(imageUrl);
+					    
+				    }
+				    
+				} catch(final Exception e){		
+					
+				}
+				
 			    ofy().save().entity(newSong).now();
 					
 			} catch (final Exception e) {
 			}
+			
+			
 			//songProxy.setId(songID);
 			//ofy().save().entity(songProxy);
 		} else {
