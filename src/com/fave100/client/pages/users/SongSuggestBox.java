@@ -74,9 +74,12 @@ public class SongSuggestBox extends SuggestBox{
 		       		
 		       		// Get the new suggestions from the iTunes API       		
 		       		for (final MusicbrainzResult entry : resultList) {
-		    	    	final String suggestionEntry = "<img src='"+UriUtils.sanitizeUri(entry.getCoverArtUrl())+"'/>"+
-		    	    			entry.getTrackName()+"</br><span class='artistName'>"+entry.getArtistName()+"</span>";
-		    	    	
+		       			String imageUrl = "";
+		       			if(entry.getCoverArtUrl() != null) {
+		       				imageUrl = UriUtils.sanitizeUri(entry.getCoverArtUrl());;
+		       			}
+		    	    	final String suggestionEntry = "<img src='"+imageUrl+"'/>"+
+		    	    			entry.getTrackName()+"</br><span class='artistName'>"+entry.getArtistName()+"</span>";		    	    	
 		    	    	String mapEntry = entry.getTrackName();
 		    	    	// Use white space to sneak in duplicate song titles into the hashmap
 		    	    	while(itemSuggestionMap.get(mapEntry) != null) {
