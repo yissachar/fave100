@@ -57,7 +57,9 @@ public class SongSuggestBox extends SuggestBox{
 
 	private void getAutocompleteList() {	
 		// XHR to get info from Musicbrainz
-		final String searchUrl = SearchPresenter.BASE_SEARCH_URL+"release/?query=release:"+this.getValue();
+		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
+		searchUrl += "recording/?query="+this.getValue();
+		searchUrl += "&limit=5";
 		
 		final XMLHttpRequest xhr = XMLHttpRequest.create();
 		xhr.open("GET", searchUrl);

@@ -71,7 +71,7 @@ public class FaveList extends DatastoreObject{
 		if(song == null) {			
 			// Lookup the MBID in Musicbrainz and add to song database
 			try {
-			    final URL url = new URL("http://musicbrainz.org/ws/2/release/"+songID+"?inc=artists&fmt=json");
+			    final URL url = new URL("http://musicbrainz.org/ws/2/recording/"+songID+"?inc=artists+releases&fmt=json");
 			    final URLConnection conn = url.openConnection();
 			    final BufferedReader in = new BufferedReader(new InputStreamReader(
 		    		conn.getInputStream()));
@@ -83,7 +83,7 @@ public class FaveList extends DatastoreObject{
 				    content += inputLine;
 				}
 				in.close();
-				
+				Logger.getAnonymousLogger().log(Level.SEVERE, content);
 				final JsonParser parser = new JsonParser();
 			    final JsonElement element = parser.parse(content);
 			    final JsonObject songObject = element.getAsJsonObject();	
@@ -91,12 +91,30 @@ public class FaveList extends DatastoreObject{
 			    final Song newSong = new Song();
 			    newSong.setId(songObject.get("id").getAsString());
 			    newSong.setTrackName(songObject.get("title").getAsString());
-			    // TODO: What if more than 1 artist credited?			    
+			    // TODO: What if more than 1 artist credited?	
 			    newSong.setArtistName(songObject.get("artist-credit").getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString());
-			    final String releaseDate = songObject.get("date").getAsString();
-			    Logger.getAnonymousLogger().log(Level.SEVERE,"The relase date is: "+releaseDate);
-			    if(releaseDate != null && !releaseDate.isEmpty()) {
-			    	newSong.setReleaseDate(releaseDate.substring(0, 4));
+			    Logger.getAnonymousLogger().log(Level.SEVERE, "sadder");
+			    
+			    // Get the earliest release date
+			    // TODO: Getting as JSON seems to strip release list
+			    String earliestReleaseDate = "";
+			    if(songObject.get("release") != null) {
+			    	final JsonArray releaseArray = songObject.get("release").getAsJsonArray();
+				    Logger.getAnonymousLogger().log(Level.SEVERE, "length: "+releaseArray.size());
+				    for(int i = 0; i < releaseArray.size(); i++) {
+				    	Logger.getAnonymousLogger().log(Level.SEVERE,"i:  "+i);
+				    	final JsonElement releaseDate = releaseArray.get(i).getAsJsonObject().get("date");
+				    	Logger.getAnonymousLogger().log(Level.SEVERE,"The curr relase date is: "+releaseDate.getAsString());
+				    	if(releaseDate != null && !releaseDate.getAsString().isEmpty()) {
+				    		if(earliestReleaseDate.isEmpty() || releaseDate.getAsInt() > Integer.parseInt(earliestReleaseDate)) {
+					    		earliestReleaseDate = releaseDate.getAsString();
+					    	}
+				    	}			    	
+				    }
+			    }
+			    Logger.getAnonymousLogger().log(Level.SEVERE,"The relase date is: "+earliestReleaseDate);
+			    if(earliestReleaseDate != null && !earliestReleaseDate.isEmpty()) {
+			    	newSong.setReleaseDate(earliestReleaseDate.substring(0, 4));
 			    }			    
 			    
 			    // Look up the cover art and add it if it exists
