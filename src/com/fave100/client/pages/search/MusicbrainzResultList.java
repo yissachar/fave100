@@ -9,16 +9,18 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
+@SuppressWarnings("serial")
 public class MusicbrainzResultList extends ArrayList<MusicbrainzResult>{
 	
 	public MusicbrainzResultList(final String data) {
 		try {
     	    // parse the XML document into a DOM
-    	    final Document messageDom = XMLParser.parse(data);	            	    
+    	    final Document messageDom = XMLParser.parse(data);	
+    	    
     	    // Get all results
-    	    final NodeList releaseNodes = messageDom.getElementsByTagName("release");
-    	    final int length = releaseNodes.getLength();
-    	    //Window.alert("the length is: "+length);
+    	    final NodeList recordingNodes = messageDom.getElementsByTagName("recording");
+    	    final int length = recordingNodes.getLength();
+    	    
     	    for(int i = 0; i < length; i++) {
     	    	
     	    	String mbid = "";
@@ -26,17 +28,17 @@ public class MusicbrainzResultList extends ArrayList<MusicbrainzResult>{
     	    	String artist = "";
     	    	String releaseDate = "";
     	    	
-    	    	final Element releaseElement = (Element) messageDom.getElementsByTagName("release").item(i);
+    	    	final Element recordingElement = (Element) messageDom.getElementsByTagName("recording").item(i);
     	    	
     	    	// Musicbrainz ID
-    	    	mbid = releaseElement.getAttribute("id");
+    	    	mbid = recordingElement.getAttribute("id");
     	    	
     	    	// Track name
-    	    	final Element titleElement = (Element) releaseElement.getElementsByTagName("title").item(0);
+    	    	final Element titleElement = (Element) recordingElement.getElementsByTagName("title").item(0);
     	    	track = titleElement.getChildNodes().item(0).getNodeValue();
     	    	
     	    	// Artist name
-    	    	final Element artistElement = (Element) releaseElement.getElementsByTagName("artist").item(0);
+    	    	final Element artistElement = (Element) recordingElement.getElementsByTagName("artist").item(0);
     	    	if(artistElement != null) {
     	    		final Node artistNameNode = artistElement.getChildNodes().item(0);
     	    		//artist = artistNameNode.getNodeName();
@@ -47,7 +49,7 @@ public class MusicbrainzResultList extends ArrayList<MusicbrainzResult>{
     	    	}
     	    	
     	    	// Release date
-    	    	final Element dateElement = (Element) releaseElement.getElementsByTagName("date").item(0);
+    	    	final Element dateElement = (Element) recordingElement.getElementsByTagName("date").item(0);
     	    	if(dateElement != null) {
     	    		// TODO: Date format inconsistent, need to manage discrepancies
     	    		releaseDate = dateElement.getChildNodes().item(0).getNodeValue();
@@ -59,7 +61,6 @@ public class MusicbrainzResultList extends ArrayList<MusicbrainzResult>{
     	    	result.setArtistName(artist);    	    	
     	    	result.setReleaseDate(releaseDate);
     	    	add(result);
-    	    	//add(new MusicbrainzResult(track, artist, releaseDate));
     	    }
 
     	  } catch (final DOMException e) {

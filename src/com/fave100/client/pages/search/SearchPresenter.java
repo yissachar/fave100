@@ -53,13 +53,13 @@ public class SearchPresenter extends
 	@Override
 	public void showResults(final String searchTerm, final String attribute) {
 		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
-		// TODO: Implement search by album properly
+		// TODO: Implement search by album or artist properly
 		if(attribute.equals("songTerm")) {
-			searchUrl += "release/?query=release:";
+			searchUrl += "recording/?query=recording:";
 		} else if(attribute.equals("artistTerm")) {
-			searchUrl += "release/?query=artist:";
+			searchUrl += "recording/?query=artist:";
 		} else if(attribute.equals("albumTerm")) {
-			searchUrl += "release/?type=album&query=release:";
+			searchUrl += "recording/?type=album&query=release:";
 		}
 		searchUrl += searchTerm;
 		
