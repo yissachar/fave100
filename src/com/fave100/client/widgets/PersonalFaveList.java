@@ -158,10 +158,8 @@ public class PersonalFaveList extends FaveListBase {
 				
 				// Click on whyline - do nothing special
 				if(className.isEmpty()) return;
-				
-				// Make sure that mousedown doesn't capture clicks meant for buttons and links
-				if(className.contains("faveListDeleteButton")
-					|| className.contains("faveListTrackName")) {
+								
+				if(className.contains("faveListDeleteButton")) {
 					
 					if(event.getType().equals("click")) {					
 						// Delete button was clicked
@@ -175,7 +173,8 @@ public class PersonalFaveList extends FaveListBase {
 				    	});
 						
 					}
-				} else if(event.getType().equals("mousedown")) {	
+				// Make sure that mousedown doesn't capture clicks meant for buttons and links	
+				} else if(!className.contains("faveListTrackName") && event.getType().equals("mousedown")) {	
 					if(className.contains("faveListImageThumb")) {
 						// Stop image from being draggable
 						event.preventDefault();
