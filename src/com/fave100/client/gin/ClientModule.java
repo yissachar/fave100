@@ -32,6 +32,8 @@ import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pagefragments.login.LoginWidgetView;
 import com.fave100.client.pagefragments.topbar.TopBarPresenter;
 import com.fave100.client.pagefragments.topbar.TopBarView;
+import com.fave100.client.pages.song.SongPresenter;
+import com.fave100.client.pages.song.SongView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -73,6 +75,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenterWidget(LoginWidgetPresenter.class,
 				LoginWidgetPresenter.MyView.class, LoginWidgetView.class);
+
+		bindPresenter(SongPresenter.class, SongPresenter.MyView.class,
+				SongView.class, SongPresenter.MyProxy.class);
 	}
 	
 	@Provides
