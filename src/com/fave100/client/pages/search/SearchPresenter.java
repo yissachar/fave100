@@ -47,7 +47,8 @@ public class SearchPresenter extends
 		// Set the result list to be blank
 		getView().resetView();
 	}
-
+	// TODO: Proper advanced - separate fields for artist, title, album
+	// TODO: Remove duplicates on client and then remove again on server
 	// TODO: does this really need to be limited to 25?
 	// TODO: need a global "loading" indicator
 	@Override
@@ -55,13 +56,15 @@ public class SearchPresenter extends
 		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
 		// TODO: Implement search by album or artist properly
 		if(attribute.equals("songTerm")) {
-			searchUrl += "recording/?query=recording:";
+			searchUrl += "recording/?query=";
 		} else if(attribute.equals("artistTerm")) {
 			searchUrl += "recording/?query=artist:";
 		} else if(attribute.equals("albumTerm")) {
 			searchUrl += "recording/?type=album&query=release:";
 		}
 		searchUrl += searchTerm;
+		searchUrl += "+AND+NOT+type:Compilation";
+		searchUrl += "+AND+NOT+type:Live";
 		
 		// Get the search results from Musicbrainz
 		final XMLHttpRequest xhr = XMLHttpRequest.create();
