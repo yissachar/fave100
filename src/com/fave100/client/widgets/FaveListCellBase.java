@@ -1,9 +1,11 @@
 package com.fave100.client.widgets;
 
+import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Window;
 
 public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 	
@@ -35,7 +37,11 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 	
 	protected String getTrackName(final SongProxy object) {
 		// TODO: Generate internal song url
-		String trackName = "<a href='"+"PLACEHOLDER - FIX ME"+"'";
+		String songUrl = "http://"+Window.Location.getHost()+Window.Location.getPath();
+		songUrl += Window.Location.getQueryString()+"#"+NameTokens.song+";id=";
+		songUrl += object.getMbid();
+		
+		String trackName = "<a href='"+songUrl+"'";
 		trackName += "class='faveListTrackName'>"+object.getTrackName()+"</a>";
 		return(trackName);
 	}
