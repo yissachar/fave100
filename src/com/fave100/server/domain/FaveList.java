@@ -83,7 +83,7 @@ public class FaveList extends DatastoreObject{
 				    content += inputLine;
 				}
 				in.close();
-				Logger.getAnonymousLogger().log(Level.SEVERE, content);
+				
 				final JsonParser parser = new JsonParser();
 			    final JsonElement element = parser.parse(content);
 			    final JsonObject songObject = element.getAsJsonObject();	
@@ -94,17 +94,16 @@ public class FaveList extends DatastoreObject{
 			    // TODO: What if more than 1 artist credited?	
 			    newSong.setArtistName(songObject.get("artist-credit").getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString());
 			    Logger.getAnonymousLogger().log(Level.SEVERE, "sadder");
+			    			    
+			    String firstReleaseId = "";
 			    
 			    // Get the earliest release date
-			    // TODO: Getting as JSON seems to strip release list
 			    String earliestReleaseDate = "";
-			    if(songObject.get("release") != null) {
-			    	final JsonArray releaseArray = songObject.get("release").getAsJsonArray();
-				    Logger.getAnonymousLogger().log(Level.SEVERE, "length: "+releaseArray.size());
-				    for(int i = 0; i < releaseArray.size(); i++) {
-				    	Logger.getAnonymousLogger().log(Level.SEVERE,"i:  "+i);
+			    if(songObject.get("releases") != null) {			    	
+			    	final JsonArray releaseArray = songObject.get("releases").getAsJsonArray();
+				    for(int i = 0; i < releaseArray.size(); i++) {				    	
 				    	final JsonElement releaseDate = releaseArray.get(i).getAsJsonObject().get("date");
-				    	Logger.getAnonymousLogger().log(Level.SEVERE,"The curr relase date is: "+releaseDate.getAsString());
+				    	firstReleaseId = releaseArray.get(i).getAsJsonObject().get("id").getAsString();
 				    	if(releaseDate != null && !releaseDate.getAsString().isEmpty()) {
 				    		if(earliestReleaseDate.isEmpty() || releaseDate.getAsInt() > Integer.parseInt(earliestReleaseDate)) {
 					    		earliestReleaseDate = releaseDate.getAsString();
@@ -112,54 +111,59 @@ public class FaveList extends DatastoreObject{
 				    	}			    	
 				    }
 			    }
-			    Logger.getAnonymousLogger().log(Level.SEVERE,"The relase date is: "+earliestReleaseDate);
+			    
 			    if(earliestReleaseDate != null && !earliestReleaseDate.isEmpty()) {
 			    	newSong.setReleaseDate(earliestReleaseDate.substring(0, 4));
 			    }			    
 			    
+			    // TODO: Cover art lookup is slow, 2-3s, user shouldn't have to wait for coverart
+			    // to see their updated list. Maybe batch coverart lookups at later point?
 			    // Look up the cover art and add it if it exists
-				try {
-				    final URL coverArtUrl = new URL("http://coverartarchive.org/release/"+songID);
-				    final HttpURLConnection coverArtConn = (HttpURLConnection) coverArtUrl.openConnection();
-				    final BufferedReader coverArtIn = new BufferedReader(new InputStreamReader(
-				    		coverArtConn.getInputStream()));
-				    
-				    if(coverArtConn.getResponseCode() != 404) {
-						String coverArtInputLine;
-						String coverArtContent = "";
+			    if(!firstReleaseId.isEmpty()) {
+			    	// TODO: We should really check all releases for coverart, not just first one
+					try {
+					    final URL coverArtUrl = new URL("http://coverartarchive.org/release/"+firstReleaseId);
+					    final HttpURLConnection coverArtConn = (HttpURLConnection) coverArtUrl.openConnection();
+					    final BufferedReader coverArtIn = new BufferedReader(new InputStreamReader(
+					    		coverArtConn.getInputStream()));
+					    
+					    if(coverArtConn.getResponseCode() != 404) {
+							String coverArtInputLine;
+							String coverArtContent = "";
+							
+							while ((coverArtInputLine = coverArtIn.readLine()) != null) {				    
+								coverArtContent += coverArtInputLine;					   
+							}
+							coverArtIn.close();
+							
+							final JsonParser coverArtParser = new JsonParser();
+						    final JsonElement coverArtElement = coverArtParser.parse(coverArtContent);
+						    final JsonObject coverArtObject = coverArtElement.getAsJsonObject();
+						    final JsonArray imagesArray = coverArtObject.get("images").getAsJsonArray();
+						    final JsonObject imagesObject = imagesArray.get(0).getAsJsonObject();
+						    String imageUrl = "";
+						    
+						    final JsonObject thumbnailsObject = imagesObject.get("thumbnails").getAsJsonObject();
+						    final String smallThumbnail = thumbnailsObject.get("small").getAsString();
+						    final String largeThumbnail = thumbnailsObject.get("large").getAsString();
+						    
+						    // Try to get the smallest image possible
+						    if(smallThumbnail != null && !smallThumbnail.isEmpty()) {
+						    	imageUrl = smallThumbnail;
+						    } else if(largeThumbnail != null && !largeThumbnail.isEmpty()) {
+								imageUrl = largeThumbnail;
+							} else {
+								imageUrl = imagesObject.get("image").getAsString();
+							}
+						    
+						    newSong.setCoverArtUrl(imageUrl);
+						    
+					    }
+					    
+					} catch(final Exception e){		
 						
-						while ((coverArtInputLine = coverArtIn.readLine()) != null) {				    
-							coverArtContent += coverArtInputLine;					   
-						}
-						coverArtIn.close();
-						
-						final JsonParser coverArtParser = new JsonParser();
-					    final JsonElement coverArtElement = coverArtParser.parse(coverArtContent);
-					    final JsonObject coverArtObject = coverArtElement.getAsJsonObject();
-					    final JsonArray imagesArray = coverArtObject.get("images").getAsJsonArray();
-					    final JsonObject imagesObject = imagesArray.get(0).getAsJsonObject();
-					    String imageUrl = "";
-					    
-					    final JsonObject thumbnailsObject = imagesObject.get("thumbnails").getAsJsonObject();
-					    final String smallThumbnail = thumbnailsObject.get("small").getAsString();
-					    final String largeThumbnail = thumbnailsObject.get("large").getAsString();
-					    
-					    // Try to get the smallest image possible
-					    if(smallThumbnail != null && !smallThumbnail.isEmpty()) {
-					    	imageUrl = smallThumbnail;
-					    } else if(largeThumbnail != null && !largeThumbnail.isEmpty()) {
-							imageUrl = largeThumbnail;
-						} else {
-							imageUrl = imagesObject.get("image").getAsString();
-						}
-					    
-					    newSong.setCoverArtUrl(imageUrl);
-					    
-				    }
-				    
-				} catch(final Exception e){		
-					
-				}
+					}
+			    }
 				
 			    ofy().save().entity(newSong).now();
 					
