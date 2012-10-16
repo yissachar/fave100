@@ -1,7 +1,9 @@
 package com.fave100.client.pages.song;
 
 import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.client.widgets.WhylineWaterfall;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -16,15 +18,17 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 
 	public interface Binder extends UiBinder<Widget, SongView> {
 	}
-	
+
+	@UiField(provided = true) WhylineWaterfall whylineWaterfall;
 	@UiField HTMLPanel topBar;
 	@UiField Label songTitle;
 	@UiField Label artistName;
 	@UiField Label releaseDate;
 
 	@Inject
-	public SongView(final Binder binder) {
-		widget = binder.createAndBindUi(this);
+	public SongView(final Binder binder, final ApplicationRequestFactory requestFactory) {
+		whylineWaterfall = new WhylineWaterfall(requestFactory);
+		widget = binder.createAndBindUi(this);		
 	}
 
 	@Override
