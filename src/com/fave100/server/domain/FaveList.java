@@ -22,9 +22,8 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
-import com.googlecode.objectify.annotation.Index;
 
-@Entity @Index
+@Entity 
 public class FaveList extends DatastoreObject{
 	
 	@IgnoreSave public static final String SEPERATOR_TOKEN = ":";
@@ -56,7 +55,6 @@ public class FaveList extends DatastoreObject{
 	// TODO: Do FaveList activities need to be transactional? If so, need to set AppUser as parent
 	public static void addFaveItemForCurrentUser(final String hashtag, final String songID) {
 		
-		// TODO: Verify integrity of songProxy on server-side? 
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) {
 			throw new RuntimeException("Please log in to complete this action");

@@ -51,8 +51,6 @@ public class UserlistPresenter extends
 				String output = "<ul>";				
 				for(final AppUserProxy user : userList) {
 					output += "<li>";
-					// TODO: profile image					
-					//output += "<img src='http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' />";
 					output += "<img src='"+user.getAvatarImage()+"'/>";
 					output += "<a href='"+Window.Location.getPath()+Window.Location.getQueryString()+"#"+NameTokens.users+";u="+user.getUsername()+"'>";
 					output += user.getUsername()+"</a>";

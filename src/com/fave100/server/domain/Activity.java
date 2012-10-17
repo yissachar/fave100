@@ -5,10 +5,9 @@ import java.util.Date;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 
-@Entity @Index
+@Entity
 public class Activity {
 	
 	@Id private Long id;

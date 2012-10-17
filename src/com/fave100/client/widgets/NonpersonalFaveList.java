@@ -22,7 +22,6 @@ public class NonpersonalFaveList extends FaveListBase{
 
 			@Override
 			public FieldUpdater<SongProxy, SongProxy> getFieldUpdater() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 

@@ -244,17 +244,7 @@ public class UsersPresenter extends
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
 		final SongRequest songRequest = faveListRequest.append(requestFactory.songRequest());
 		
-		// Lookup the MusicbrainsResult corresponding to the selected String 
-	//	final MusicbrainzResult faveItemMap = getView().getSongSuggestBox().getFromSuggestionMap(selectedItem.getReplacementString());				
-		// and turn it into an SongProxy
-	/*	SongProxy songProxy = songRequest.create(SongProxy.class);
-		// Need to use AutoBeans to copy, as Request Factory won't allow reuse
-   		final AutoBean<MusicbrainsResult> autoBean = AutoBeanUtils.getAutoBean(faveItemMap);
-		final AutoBean<SongProxy> newBean = AutoBeanUtils.getAutoBean(songProxy);
-		AutoBeanCodex.decodeInto(AutoBeanCodex.encode(autoBean), newBean);				
-		songProxy = newBean.as();
-	*/	// Add the SongProxy as a new FaveItem for the AppUser
-		//TODO: Remove dummy placeholder string
+		// Add the MBID as a FaveItem
 		final Request<Void> createReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, faveItemMap.getMbid());
 		createReq.fire(new Receiver<Void>() {
 			@Override

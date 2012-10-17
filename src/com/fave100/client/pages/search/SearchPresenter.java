@@ -49,7 +49,7 @@ public class SearchPresenter extends
 	}
 	// TODO: Proper advanced - separate fields for artist, title, album
 	// TODO: Remove duplicates on client and then remove again on server
-	// TODO: does this really need to be limited to 25?
+	// TODO: instead of limiting to 25 results, should give paged results?
 	// TODO: need a global "loading" indicator
 	@Override
 	public void showResults(final String searchTerm, final String attribute) {
@@ -80,39 +80,6 @@ public class SearchPresenter extends
 		    }
 		});
 		xhr.send();
-		/*Window.alert("search"+searchTerm+" attribute "+attribute);
-		final Request<String> searchReq = requestFactory.songRequest().search(searchTerm, attribute);
-		searchReq.fire(new Receiver<String>(){
-			@Override
-			public void onSuccess(String response) {
-				
-			}			
-		});*/
-		/*final String url = "http://itunes.apple.com/search?"+
-				"term="+searchTerm+
-				"&media=music"+
-				"&entity=song"+
-				"&attribute="+attribute+
-				"&limit=25";
-		
-		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-		jsonp.requestObject(url, new AsyncCallback<JavaScriptObject>() {			
-		   	@Override
-			public void onSuccess(final JavaScriptObject jsObject) {	       		
-		   		// Turn the resulting JavaScriptObject into an AutoBean
-		   		final JSONObject obj = new JSONObject(jsObject);
-		   		final ListResultFactory factory = GWT.create(ListResultFactory.class);
-		   		final AutoBean<ListResultOfSuggestion> autoBean = AutoBeanCodex.decode(factory, ListResultOfSuggestion.class, obj.toString());	       		
-		   		final ListResultOfSuggestion listResult = autoBean.as();		   	
-		   		
-		   		getView().setResults(listResult.getResults());
-		   	}
-		
-			@Override
-			public void onFailure(final Throwable caught) {
-				// TODO Do Something with failure				
-			}
-		});*/	
 	}
 }
 

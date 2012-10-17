@@ -4,9 +4,8 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Index;
 
-@Entity @Index // TODO: unindex
+@Entity
 public class Whyline {
 	
 	public static final String SEPERATOR_TOKEN = ":";

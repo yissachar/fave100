@@ -36,7 +36,6 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 	}
 	
 	protected String getTrackName(final SongProxy object) {
-		// TODO: Generate internal song url
 		String songUrl = "http://"+Window.Location.getHost()+Window.Location.getPath();
 		songUrl += Window.Location.getQueryString()+"#"+NameTokens.song+";id=";
 		songUrl += object.getMbid();
