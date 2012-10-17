@@ -27,8 +27,7 @@ public class SongSuggestBox extends SuggestBox{
 	private HashMap<String, MusicbrainzResult> itemSuggestionMap;
 	private Timer suggestionsTimer;
 		
-	public SongSuggestBox(final MusicSuggestionOracle suggestions, final ApplicationRequestFactory requestFactory) {
-		// TODO: Need advanced search option (e.g. search by artist)
+	public SongSuggestBox(final MusicSuggestionOracle suggestions, final ApplicationRequestFactory requestFactory) {		
 		super(suggestions);
 		this.suggestions = suggestions;
 		this.setLimit(4);
@@ -100,56 +99,7 @@ public class SongSuggestBox extends SuggestBox{
 		// e.g. 6 seconds and "o" request very short, e.g. 100 ms, autocomplete will show results for 
 		// "gr" when it should really show for "o"
 		// solution: store requests in array, whenever request completes, clear it and any
-		// other requests with lower index
-		
-		// Build a JSONP request to grab the info from iTunes
-		/*final String url = "http://itunes.apple.com/search?"+
-						"term="+this.getValue()+
-						"&media=music"+
-						"&entity=song"+
-						"&attribute=songTerm"+
-						"&limit=5";
-		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-		// TODO: type "gr" then backspace twice and type "o", if "gr" request really long
-		// e.g. 6 seconds and "o" request very short, e.g. 100 ms, autocomplete will show results for 
-		// "gr" when it should really show for "o"
-		// solution: store requests in array, whenever request completes, clear it and any
-		// other requests with lower index
-		jsonp.requestObject(url, new AsyncCallback<JavaScriptObject>() {			
-	       	@Override
-			public void onSuccess(final JavaScriptObject jsObject) {	       		
-	       		// Turn the resulting JavaScriptObject into an AutoBean
-	       		final JSONObject obj = new JSONObject(jsObject);
-	       		final ListResultFactory factory = GWT.create(ListResultFactory.class);
-	       		final AutoBean<ListResultOfSuggestion> autoBean = AutoBeanCodex.decode(factory, ListResultOfSuggestion.class, obj.toString());	       		
-	       		final ListResultOfSuggestion listResult = autoBean.as();
-	       		
-	       		// Clear the current suggestions)
-	       		suggestions.clearSuggestions();
-	       		itemSuggestionMap.clear();
-	       		
-	       		// Get the new suggestions from the iTunes API       		
-	       		for (final MusicbrainzResult entry : listResult.getResults()) {
-	    	    	final String suggestionEntry = "<img src='"+UriUtils.sanitizeUri(entry.getArtworkUrl60())+"'/>"+
-	    	    			entry.getTrackName()+"</br><span class='artistName'>"+entry.getArtistName()+"</span>";
-	    	    	
-	    	    	String mapEntry = entry.getTrackName();
-	    	    	// Use white space to sneak in duplicate song titles into the hashmap
-	    	    	while(itemSuggestionMap.get(mapEntry) != null) {
-	    	    		mapEntry += " ";
-	    	    	}
-	    	    	itemSuggestionMap.put(mapEntry, entry);
-	    	    	// TODO: Safe HTML?
-	    	    	suggestions.addSuggestion(mapEntry, suggestionEntry);
-	    	    }
-	    	    showSuggestionList();
-	       	}
-
-			@Override
-			public void onFailure(final Throwable caught) {
-				// TODO Do Something with failure				
-			}
-		});*/		
+		// other requests with lower index		
 	}
 	
 	// Returns MusicbrainzResults mapped from the display string passed in

@@ -47,8 +47,7 @@ public class PersonalFaveList extends FaveListBase {
             }
 
 			@Override
-			public FieldUpdater<SongProxy, SongProxy> getFieldUpdater() {
-				// TODO Auto-generated method stub
+			public FieldUpdater<SongProxy, SongProxy> getFieldUpdater() {				
 				return null;
 			}
 
@@ -94,7 +93,6 @@ public class PersonalFaveList extends FaveListBase {
 
 			@Override
 			public FieldUpdater<SongProxy, String> getFieldUpdater() {
-				// TODO Auto-generated method stub
 				return fieldUpdater;
 			}
 

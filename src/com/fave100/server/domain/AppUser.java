@@ -44,7 +44,6 @@ import com.googlecode.objectify.Work;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
-import com.googlecode.objectify.annotation.Index;
 
 /**
  * A Fave100 user.
@@ -52,8 +51,7 @@ import com.googlecode.objectify.annotation.Index;
  *
  */
 @Entity
-@Index
-public class AppUser extends DatastoreObject{//TODO: remove indexes before launch
+public class AppUser extends DatastoreObject{
 
 	@IgnoreSave public static final String TWITTER_CONSUMER_KEY = "6pH9WlwZ6g49rEX9ZrKA";
 	@IgnoreSave public static final String TWITTER_CONSUMER_SECRET = "8ud7cvisWfiOU05YJPIrugdQf4EcUgvxOAetN3IN7w0";
@@ -190,7 +188,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 			}			
 			return requestToken.getAuthenticationURL();
 		} catch (final TwitterException e) {
-			// TODO Auto-generated catch block			
 			e.printStackTrace();
 		}
 		return null;
@@ -219,7 +216,6 @@ public class AppUser extends DatastoreObject{//TODO: remove indexes before launc
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("twitterUser", twitterUser);				
 				return twitterUser;
 			} catch (final TwitterException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			return null;

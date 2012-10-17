@@ -69,22 +69,12 @@ public class AdvancedSearchResultCell extends AbstractCell<MusicbrainzResult>{
 		if(event.getType().equals("click")) {
 			final Element eventTarget = event.getEventTarget().cast();
 			if(eventTarget.getClassName().contains("advancedSearchAddButton")) {
-			// TODO: Add this back in	
+				
 				final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-			//	final SongRequest songRequest = faveListRequest.append(requestFactory.songRequest());
 				
 				final String hashtag = FaveList.DEFAULT_HASHTAG;
-			//	final Long id = Long.valueOf(song.getTrackId());
 				final String id = song.getMbid();
 				
-				// Turn the suggestion result into a song proxy
-			/*	SongProxy songProxy = songRequest.create(SongProxy.class);
-	       		final AutoBean<SuggestionResult> autoBean = AutoBeanUtils.getAutoBean(song);
-				final AutoBean<SongProxy> newBean = AutoBeanUtils.getAutoBean(songProxy);
-				AutoBeanCodex.decodeInto(AutoBeanCodex.encode(autoBean), newBean);				
-				songProxy = newBean.as();				
-			*/			
-				//final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(hashtag, id, songProxy);
 				final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(hashtag, id);
 				addReq.fire(new Receiver<Void>() {
 					@Override

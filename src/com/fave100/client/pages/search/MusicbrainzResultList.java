@@ -51,7 +51,6 @@ public class MusicbrainzResultList extends ArrayList<MusicbrainzResult>{
     	    	// Release date
     	    	final Element dateElement = (Element) recordingElement.getElementsByTagName("date").item(0);
     	    	if(dateElement != null) {
-    	    		// TODO: Date format inconsistent, need to manage discrepancies
     	    		releaseDate = dateElement.getChildNodes().item(0).getNodeValue();
     	    	}
     	    	
