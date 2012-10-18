@@ -53,10 +53,10 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 @Entity
 public class AppUser extends DatastoreObject{
 
-	@IgnoreSave public static final String TWITTER_CONSUMER_KEY = "6pH9WlwZ6g49rEX9ZrKA";
-	@IgnoreSave public static final String TWITTER_CONSUMER_SECRET = "8ud7cvisWfiOU05YJPIrugdQf4EcUgvxOAetN3IN7w0";
-	@IgnoreSave public static final String FACEBOOK_APP_ID = "312128848885545";
-	@IgnoreSave public static final String FACEBOOK_APP_SECRET = "9cd2202cdfc0ee179b465434b1294611";
+	@IgnoreSave public static String TWITTER_CONSUMER_KEY = "";
+	@IgnoreSave public static String TWITTER_CONSUMER_SECRET = "";
+	@IgnoreSave public static String FACEBOOK_APP_ID = "";
+	@IgnoreSave public static String FACEBOOK_APP_SECRET = "";
 	@IgnoreSave public static final String AUTH_USER = "loggedIn";
 	@IgnoreSave public static OAuthService facebookOAuthservice;
 	
