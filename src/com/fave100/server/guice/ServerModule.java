@@ -1,5 +1,8 @@
 package com.fave100.server.guice;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
+import com.fave100.server.domain.APIKey;
 import com.fave100.server.domain.Activity;
 import com.fave100.server.domain.AppUser;
 import com.fave100.server.domain.FacebookID;
@@ -16,7 +19,6 @@ public class ServerModule extends HandlerModule {
 
 	static{
 		// Must manually register all datastore entities
-		//ObjectifyService.register(FaveItem.class);
 		ObjectifyService.register(AppUser.class);
 		ObjectifyService.register(Song.class);
 		ObjectifyService.register(GoogleID.class);
@@ -26,6 +28,16 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(Activity.class);
 		ObjectifyService.register(FaveList.class);
 		ObjectifyService.register(Whyline.class);
+		ObjectifyService.register(APIKey.class);		
+		
+		// Set API keys
+		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").get();
+		AppUser.FACEBOOK_APP_ID = facebookApiKey.getKey();
+		AppUser.FACEBOOK_APP_SECRET = facebookApiKey.getSecret();
+		final APIKey twitterApiKey = ofy().load().type(APIKey.class).id("twitter").get();
+		AppUser.TWITTER_CONSUMER_KEY = twitterApiKey.getKey();
+		AppUser.TWITTER_CONSUMER_SECRET = twitterApiKey.getSecret();
+		
 	}
 	
 	@Override
