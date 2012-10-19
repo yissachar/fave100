@@ -1,6 +1,7 @@
 package com.fave100.client.pages.search;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.google.gwt.xml.client.DOMException;
 import com.google.gwt.xml.client.Document;
@@ -20,6 +21,9 @@ public class MusicbrainzResultList extends ArrayList<MusicbrainzResult>{
     	    // Get all results
     	    final NodeList recordingNodes = messageDom.getElementsByTagName("recording");
     	    final int length = recordingNodes.getLength();
+    	    
+    	    // Hash map to ensure we only show one results per songTitle:Artist
+    	    final HashMap<String, String> uniqueSongMap = new HashMap<String, String>();
     	    
     	    for(int i = 0; i < length; i++) {
     	    	
@@ -54,12 +58,20 @@ public class MusicbrainzResultList extends ArrayList<MusicbrainzResult>{
     	    		releaseDate = dateElement.getChildNodes().item(0).getNodeValue();
     	    	}
     	    	
-    	    	final MusicbrainzResult result = new MusicbrainzResult();
-    	    	result.setMbid(mbid);
-    	    	result.setTrackName(track);
-    	    	result.setArtistName(artist);    	    	
-    	    	result.setReleaseDate(releaseDate);
-    	    	add(result);
+    	    	final String separatorToken = ":%:";
+    	    	
+    	    	// SongTitle+Artist is unique, add it
+    	    	if(uniqueSongMap.get(track+separatorToken+artist) == null) {
+    	    		final MusicbrainzResult result = new MusicbrainzResult();
+        	    	result.setMbid(mbid);
+        	    	result.setTrackName(track);
+        	    	result.setArtistName(artist);    	    	
+        	    	result.setReleaseDate(releaseDate);
+        	    	add(result);
+        	    	
+        	    	uniqueSongMap.put(track+separatorToken+artist, "unique");
+    	    	}
+    	    	
     	    }
 
     	  } catch (final DOMException e) {
