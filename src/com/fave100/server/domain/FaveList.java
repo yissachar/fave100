@@ -35,11 +35,7 @@ public class FaveList extends DatastoreObject{
 	private List<FaveItem> list = new ArrayList<FaveItem>();;
 	
 	@SuppressWarnings("unused")
-	// Request Factory calls this in some way, so need to make sure
-	// that we initialize the list
-	private FaveList() {		
-		//list = new ArrayList<FaveItem>();
-	}
+	private FaveList() {}
 	
 	public FaveList(final String username, final String hashtag) {
 		this.id = username+FaveList.SEPERATOR_TOKEN+hashtag;
@@ -52,7 +48,8 @@ public class FaveList extends DatastoreObject{
 	}
 	
 	// TODO: Do FaveList activities need to be transactional? If so, need to set AppUser as parent
-	public static void addFaveItemForCurrentUser(final String hashtag, final String songID) {
+	public static void addFaveItemForCurrentUser(final String hashtag, final String songID,
+			final String songTitle, final String artist) {
 		
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) {
@@ -61,11 +58,13 @@ public class FaveList extends DatastoreObject{
 		}
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();		
 		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");		
-		final Song song = ofy().load().type(Song.class).id(songID).get();		
+		
+		// See if the song exists in our datastore
+		final Song song = Song.findSongByTitleAndArtist(songTitle, artist);
 		
 		boolean unique = true;
 		// If the song does not exist, create it
-		if(song == null) {			
+		if(song == null) {	Logger.getAnonymousLogger().log(Level.SEVERE, "No song match, fetching from Musicbrainz");		
 			// Lookup the MBID in Musicbrainz and add to song database
 			try {
 			    final URL url = new URL("http://musicbrainz.org/ws/2/recording/"+songID+"?inc=artists+releases&fmt=json");
@@ -85,32 +84,31 @@ public class FaveList extends DatastoreObject{
 			    final JsonElement element = parser.parse(content);
 			    final JsonObject songObject = element.getAsJsonObject();	
 			    
-			    final Song newSong = new Song();
-			    newSong.setId(songObject.get("id").getAsString());
-			    newSong.setTrackName(songObject.get("title").getAsString());
-			    // TODO: What if more than 1 artist credited?	
-			    newSong.setArtistName(songObject.get("artist-credit").getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString());
-			    Logger.getAnonymousLogger().log(Level.SEVERE, "sadder");
+			    final String title = songObject.get("title").getAsString();
+			    final String songArtist = songObject.get("artist-credit").getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString();
+			    final String mbid = songObject.get("id").getAsString();
+			    final Song newSong = new Song(title, songArtist, mbid);		    	
 			    			    
 			    String firstReleaseId = "";
 			    
 			    // Get the earliest release date
-			    String earliestReleaseDate = "";
+			    String earliestReleaseDate = "";			    
 			    if(songObject.get("releases") != null) {			    	
 			    	final JsonArray releaseArray = songObject.get("releases").getAsJsonArray();
 				    for(int i = 0; i < releaseArray.size(); i++) {				    	
-				    	final JsonElement releaseDate = releaseArray.get(i).getAsJsonObject().get("date");
+				    	String releaseDate = releaseArray.get(i).getAsJsonObject().get("date").getAsString();
+				    	if(releaseDate.length() > 4) releaseDate = releaseDate.substring(0, 4);
 				    	firstReleaseId = releaseArray.get(i).getAsJsonObject().get("id").getAsString();
-				    	if(releaseDate != null && !releaseDate.getAsString().isEmpty()) {
-				    		if(earliestReleaseDate.isEmpty() || releaseDate.getAsInt() > Integer.parseInt(earliestReleaseDate)) {
-					    		earliestReleaseDate = releaseDate.getAsString();
+				    	if(releaseDate != null && !releaseDate.isEmpty()) {
+				    		if(earliestReleaseDate.isEmpty() || Integer.parseInt(releaseDate) > Integer.parseInt(earliestReleaseDate)) {
+					    		earliestReleaseDate = releaseDate;
 					    	}
 				    	}			    	
 				    }
 			    }
 			    
 			    if(earliestReleaseDate != null && !earliestReleaseDate.isEmpty()) {
-			    	newSong.setReleaseDate(earliestReleaseDate.substring(0, 4));
+			    	newSong.setReleaseDate(earliestReleaseDate);
 			    }			    
 			    
 			    // TODO: Removed cover art lookup, too slow for the < 1% it will find artwork
@@ -163,9 +161,14 @@ public class FaveList extends DatastoreObject{
 					}
 			    }*/
 				
-			    ofy().save().entity(newSong).now();
+			    // Before saving double-check that we do not have this record
+			    // (Since we cannot really trust that the passed songTitle+artist is valid
+			    if(Song.findSongByTitleAndArtist(newSong.getTrackName(), newSong.getArtistName()) == null) {
+			    	ofy().save().entity(newSong).now();
+			    }			    
 					
 			} catch (final Exception e) {
+				e.printStackTrace();
 			}
 			
 			
@@ -179,8 +182,9 @@ public class FaveList extends DatastoreObject{
 		}
 		if(unique == false) throw new RuntimeException("The song is already in your list");;
 		// Create the new FaveItem 		
-		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songID));
-		final FaveItem newFaveItem = new FaveItem(songID);
+		final String songArtistID = songTitle+Song.TOKEN_SEPARATOR+artist;
+		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songArtistID));
+		final FaveItem newFaveItem = new FaveItem(songArtistID);
 		faveList.getList().add(newFaveItem);
 		final Activity activity = new Activity(currentUser.getUsername(), Transaction.FAVE_ADDED);
 		activity.setSong(songRef);

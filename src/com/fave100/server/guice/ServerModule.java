@@ -28,7 +28,7 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(Activity.class);
 		ObjectifyService.register(FaveList.class);
 		ObjectifyService.register(Whyline.class);
-		ObjectifyService.register(APIKey.class);		
+		ObjectifyService.register(APIKey.class);	
 		
 		// Set API keys
 		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").get();
