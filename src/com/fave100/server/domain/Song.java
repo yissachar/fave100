@@ -15,10 +15,12 @@ import com.googlecode.objectify.annotation.OnLoad;
 
 @Entity
 public class Song extends DatastoreObject {
+	
+	@IgnoreSave public static final String TOKEN_SEPARATOR = ":%:";
+	
 	@Id private String id;
 	@Index private long score = 0;
-	// iTunes results 
-	private Integer trackId;	
+	private String mbid;
 	private String artistName;
 	private String trackName;
 	private String trackViewUrl;
@@ -30,9 +32,26 @@ public class Song extends DatastoreObject {
 	
 	//TODO: Need to periodically update cache
 	
+	@SuppressWarnings("unused")
+	private Song(){}
+	
+	public Song(final String songTitle, final String artist, final String mbid) {
+		this.trackName = songTitle;
+		this.artistName = artist;
+		this.mbid = mbid;
+		this.id = songTitle + Song.TOKEN_SEPARATOR + artist;
+	}
+	
 	public static Song findSong(final String id) {
 		//return ofy().get(Song.class, id);
 		return ofy().load().type(Song.class).id(id).get();
+	}
+	
+	public static Song findSongByTitleAndArtist(final String songTitle,
+		final String artist) {
+			
+		final String id = songTitle + Song.TOKEN_SEPARATOR + artist;
+		return ofy().load().type(Song.class).id(id).get();		
 	}
 	
 	public void addScore(final int score) {
@@ -56,15 +75,6 @@ public class Song extends DatastoreObject {
 	}
 	/* Getters and setters */	
 	
-
-	public Integer getTrackId() {
-		return trackId;
-	}
-
-	public void setTrackId(final Integer trackId) {
-		this.trackId = trackId;
-	}
-
 	public String getArtistName() {
 		return artistName;
 	}
@@ -121,10 +131,6 @@ public class Song extends DatastoreObject {
 	public void setId(final String id) {
 		this.id = id;
 	}
-	
-	public String getMbid() {
-		return id;
-	}
 
 	public String getCoverArtUrl() {
 		return coverArtUrl;
@@ -149,5 +155,13 @@ public class Song extends DatastoreObject {
 	public void setWhylineScore(final int whylineScore) {
 		this.whylineScore = whylineScore;
 	}
+	
+	public String getMbid() {
+		return id;
+	}
+
+	public void setMbid(final String mbid) {
+		this.mbid = mbid;
+	}	
 
 }

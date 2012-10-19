@@ -245,7 +245,9 @@ public class UsersPresenter extends
 		final SongRequest songRequest = faveListRequest.append(requestFactory.songRequest());
 		
 		// Add the MBID as a FaveItem
-		final Request<Void> createReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, faveItemMap.getMbid());
+		final Request<Void> createReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
+				faveItemMap.getMbid(), faveItemMap.getTrackName(), faveItemMap.getArtistName());
+		
 		createReq.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {

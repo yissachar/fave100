@@ -63,8 +63,6 @@ public class SearchPresenter extends
 			searchUrl += "recording/?type=album&query=release:";
 		}
 		searchUrl += searchTerm;
-		searchUrl += "+AND+NOT+type:Compilation";
-		searchUrl += "+AND+NOT+type:Live";
 		
 		// Get the search results from Musicbrainz
 		final XMLHttpRequest xhr = XMLHttpRequest.create();

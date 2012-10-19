@@ -75,7 +75,9 @@ public class AdvancedSearchResultCell extends AbstractCell<MusicbrainzResult>{
 				final String hashtag = FaveList.DEFAULT_HASHTAG;
 				final String id = song.getMbid();
 				
-				final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(hashtag, id);
+				final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(hashtag, id,
+					song.getTrackName(), song.getArtistName());
+				
 				addReq.fire(new Receiver<Void>() {
 					@Override
 					public void onSuccess(final Void response) {

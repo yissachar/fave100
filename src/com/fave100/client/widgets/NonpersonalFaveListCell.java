@@ -50,7 +50,9 @@ public class NonpersonalFaveListCell extends FaveListCellBase{
 			if(eventTarget.getClassName().contains("faveListAddButton")) {
 				// Favelist add button was clicked
 				final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-				final Request<Void> addFaveReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, song.getId());
+				final Request<Void> addFaveReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
+						song.getId(), song.getTrackName(), song.getArtistName());
+				
 				addFaveReq.fire(new Receiver<Void>() {
 					@Override
 					public void onSuccess(final Void added) {
