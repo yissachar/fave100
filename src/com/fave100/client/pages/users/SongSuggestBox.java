@@ -58,9 +58,7 @@ public class SongSuggestBox extends SuggestBox{
 		// XHR to get info from Musicbrainz
 		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
 		searchUrl += "recording/?query="+this.getValue();
-		searchUrl += "+AND+NOT+type:Compilation";
-		searchUrl += "+AND+NOT+type:Live";
-		searchUrl += "&limit=5";
+		searchUrl += "&limit=10";
 		
 		final XMLHttpRequest xhr = XMLHttpRequest.create();
 		xhr.open("GET", searchUrl);
