@@ -4,7 +4,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -114,10 +113,11 @@ public class FaveList extends DatastoreObject{
 			    	newSong.setReleaseDate(earliestReleaseDate.substring(0, 4));
 			    }			    
 			    
+			    // TODO: Removed cover art lookup, too slow for the < 1% it will find artwork
 			    // TODO: Cover art lookup is slow, 2-3s, user shouldn't have to wait for coverart
 			    // to see their updated list. Maybe batch coverart lookups at later point?
 			    // Look up the cover art and add it if it exists
-			    if(!firstReleaseId.isEmpty()) {
+			   /* if(!firstReleaseId.isEmpty()) {
 			    	// TODO: We should really check all releases for coverart, not just first one
 					try {
 					    final URL coverArtUrl = new URL("http://coverartarchive.org/release/"+firstReleaseId);
@@ -161,7 +161,7 @@ public class FaveList extends DatastoreObject{
 					} catch(final Exception e){		
 						
 					}
-			    }
+			    }*/
 				
 			    ofy().save().entity(newSong).now();
 					
