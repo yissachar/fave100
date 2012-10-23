@@ -287,13 +287,17 @@ public class FaveList extends DatastoreObject{
 		final ArrayList<Song> songArray = new ArrayList<Song>();
 		for(final FaveItem faveItem : faveList.getList()) {
 			final Song song = faveItem.getSong().get();
-			String whyline = "";
-			final Ref<Whyline> whylineRef = faveItem.getWhyline(); 
-			if(whylineRef != null) {
-				whyline = whylineRef.get().getWhyline();
+			if(song != null) {
+				String whyline = "";
+				final Ref<Whyline> whylineRef = faveItem.getWhyline(); 
+				if(whylineRef != null) {
+					whyline = whylineRef.get().getWhyline();
+				}
+				song.setWhyline(whyline);
+				songArray.add(song);
+			} else {
+				Logger.getAnonymousLogger().log(Level.SEVERE, "Null song entry for favelist "+faveList.id);
 			}
-			song.setWhyline(whyline);
-			songArray.add(song);
 		}
 		return songArray;
 	}
