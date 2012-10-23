@@ -3,18 +3,18 @@ package com.fave100.client.pages.users;
 import java.util.HashMap;
 
 import com.fave100.client.pages.search.MusicbrainzResult;
-import com.fave100.client.pages.search.MusicbrainzResultList;
-import com.fave100.client.pages.search.SearchPresenter;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.KeyCodeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.safehtml.shared.UriUtils;
+import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.xhr.client.ReadyStateChangeHandler;
-import com.google.gwt.xhr.client.XMLHttpRequest;
 
 /**
  * SuggestBox that pulls its suggestions from iTunes Search API.
@@ -54,9 +54,55 @@ public class SongSuggestBox extends SuggestBox{
 		});
 	}	
 
-	private void getAutocompleteList() {	
-		// XHR to get info from Musicbrainz
-		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
+	private void getAutocompleteList() {
+		// TODO: Needs to be hosted on actual server
+		String url = "http://192.168.214.146:7080/";
+		url += "?songName="+this.getValue();
+		
+		 final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+		 jsonp.requestObject(url, new AsyncCallback<AutocompleteJSON>() {
+			 
+		    @Override
+			public void onFailure(final Throwable throwable) {
+		    	Window.alert("Fail!");
+		    }
+
+		    @Override
+			public void onSuccess(final AutocompleteJSON json) {
+			
+				// Clear the current suggestions)
+	       		suggestions.clearSuggestions();
+	       		itemSuggestionMap.clear();
+	       		
+	       		// Get the new suggestions from the iTunes API       		
+	       		final JsArray<JSONResult> results = json.getEntries();
+		        for (int i = 0; i < results.length(); i++) {
+		        	final JSONResult jsonResult = results.get(i);
+		        	final MusicbrainzResult entry = new MusicbrainzResult();
+		        	entry.setTrackName(jsonResult.getTrackName());
+		        	entry.setArtistName(jsonResult.getArtistName());
+		        	entry.setMbid(jsonResult.getMbid());
+		        	
+	       			final String imageUrl = "";
+	       			/*if(entry.getCoverArtUrl() != null) {
+	       				imageUrl = UriUtils.sanitizeUri(entry.getCoverArtUrl());;
+	       			}*/
+	    	    	final String suggestionEntry = "<img src='"+imageUrl+"'/>"+
+	    	    			entry.getTrackName()+"</br><span class='artistName'>"+entry.getArtistName()+"</span>";		    	    	
+	    	    	String mapEntry = entry.getTrackName();
+	    	    	// Use white space to sneak in duplicate song titles into the hashmap
+	    	    	while(itemSuggestionMap.get(mapEntry) != null) {
+	    	    		mapEntry += " ";
+	    	    	}
+	    	    	itemSuggestionMap.put(mapEntry, entry);
+	    	    	// TODO: Safe HTML?
+	    	    	suggestions.addSuggestion(mapEntry, suggestionEntry);
+	    	    }
+	    	    showSuggestionList();		         
+		    }
+		});
+		// XHR to get info from Musicbrainz 
+		/*String searchUrl = SearchPresenter.BASE_SEARCH_URL;
 		searchUrl += "recording/?query="+this.getValue();
 		searchUrl += "&limit=10";
 		
@@ -94,7 +140,7 @@ public class SongSuggestBox extends SuggestBox{
 		         }
 		    }
 		});
-		xhr.send();
+		xhr.send();*/
 		// TODO: type "gr" then backspace twice and type "o", if "gr" request really long
 		// e.g. 6 seconds and "o" request very short, e.g. 100 ms, autocomplete will show results for 
 		// "gr" when it should really show for "o"
@@ -107,3 +153,30 @@ public class SongSuggestBox extends SuggestBox{
 		return itemSuggestionMap.get(key);
 	}
 }
+
+
+/** Overlays for autocomplete JSON **/
+class JSONResult extends JavaScriptObject {
+   protected JSONResult() {}
+
+   public final native String getTrackName() /*-{
+     return this[0];
+   }-*/;
+
+   public final native String getArtistName() /*-{
+     return this[1];
+   }-*/;
+
+   public final native String getMbid() /*-{
+     return this[2];
+   }-*/;
+
+ }
+
+ class AutocompleteJSON extends JavaScriptObject {
+   protected AutocompleteJSON() {}
+
+   public final native JsArray<JSONResult> getEntries() /*-{
+     return this.results;
+   }-*/;
+ }
