@@ -48,7 +48,10 @@ public class SongSuggestBox extends SuggestBox{
 				suggestionsTimer.cancel();
 				// Don't search if it was just an arrow key being pressed
 				if(!KeyCodeEvent.isArrow(event.getNativeKeyCode()) && event.getNativeKeyCode() != KeyCodes.KEY_ENTER) {
-					suggestionsTimer.schedule(200);
+					// Min delay 200ms, Max 1500
+					int delay = 200+(20*getText().length());					
+					if(delay > 1500) delay = 1500;
+					suggestionsTimer.schedule(delay);
 				}
 			}
 		});
