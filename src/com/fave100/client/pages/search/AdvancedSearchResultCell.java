@@ -39,14 +39,6 @@ public class AdvancedSearchResultCell extends AbstractCell<MusicbrainzResult>{
 				trackName.addStyleName("advancedSearchTrackName");
 				sb.appendHtmlConstant(trackName.toString());
 				
-				final Label releaseDate = new Label();
-				final String dateVal = result.getReleaseDate();
-				if(dateVal != null && !dateVal.isEmpty()) {
-					releaseDate.setText(dateVal.substring(0, 4));
-				} 			
-				releaseDate.addStyleName("advancedSearchReleaseDate");
-				sb.appendHtmlConstant(releaseDate.toString());		   			
-				
 				final Label artistName = new Label();
 				artistName.setText(result.getArtistName());
 				artistName.addStyleName("advancedSearchArtistName");
