@@ -55,17 +55,25 @@
 	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="content">
-			<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
-			<br/>
-			<g:ListBox ui:field="searchAttributesListBox" ui:styleName="{style.searchAttributesListBox}">	
-				<g:item value='songTerm'>Song</g:item>
-				<g:item value='albumTerm'>Album</g:item>
-				<g:item value='artistTerm'>Artist</g:item>			
-			</g:ListBox>		
-			<br/>			
-			<g:Button ui:field="searchButton" ui:styleName="{style.searchButton}">Search</g:Button>				
-			<g:Label ui:field="searchStatus" ui:styleName="{style.searchStatus}"/>
-			<br/>
+			 <g:FormPanel ui:field="searchForm">				
+				<g:HTMLPanel>
+					<g:Label>Song</g:Label>
+					<g:TextBox ui:field="songSearchBox" ui:styleName="{style.searchBox}"/>
+					<g:CheckBox ui:field="songCheckBox">Exact Phrase</g:CheckBox>
+					<br/>
+					<g:Label>Artist</g:Label>
+					<g:TextBox ui:field="artistSearchBox" ui:styleName="{style.searchBox}"/>
+					<g:CheckBox ui:field="artistCheckBox">Exact Phrase</g:CheckBox>
+					<br/>
+					<g:Label>Album</g:Label>
+					<g:TextBox ui:field="albumSearchBox" ui:styleName="{style.searchBox}"/>
+					<g:CheckBox ui:field="albumCheckBox">Exact Phrase</g:CheckBox>			
+					<br/>			
+					<g:SubmitButton ui:field="searchButton" ui:styleName="{style.searchButton}">Search</g:SubmitButton>				
+					<g:Label ui:field="searchStatus" ui:styleName="{style.searchStatus}"/>
+					<br/>
+				</g:HTMLPanel>
+			</g:FormPanel>
 			<c:CellList ui:field="iTunesResults" ui:styleName="{style.iTunesResults}"/>
 		</div>	
 		<pf:Footer/>		

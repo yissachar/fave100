@@ -5,17 +5,16 @@ import java.util.List;
 
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -29,10 +28,15 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	}
 	
 	@UiField HTMLPanel topBar;
-	@UiField TextBox searchBox;
+	@UiField FormPanel searchForm;
+	@UiField TextBox songSearchBox;
+	@UiField TextBox artistSearchBox;
+	@UiField TextBox albumSearchBox;
+	@UiField CheckBox songCheckBox;
+	@UiField CheckBox artistCheckBox;
+	@UiField CheckBox albumCheckBox;
 	@UiField Button searchButton;
 	@UiField Label searchStatus;
-	@UiField ListBox searchAttributesListBox;
 	@UiField(provided=true) CellList<MusicbrainzResult> iTunesResults;
 
 	@Inject
@@ -59,16 +63,11 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 		super.setInSlot(slot, content);
 	}
 	
-	@UiHandler("searchButton")
-	public void onClick(final ClickEvent event) {
-		getUiHandlers().showResults(searchBox.getValue(), searchAttributesListBox.getValue(searchAttributesListBox.getSelectedIndex()));
-	}
-	
-	@UiHandler("searchBox")
-	public void onKeyUp(final KeyUpEvent event) {
-		if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			searchButton.click();
-		}
+	@UiHandler("searchForm")
+	void onSearchFormSubmit(final SubmitEvent event) {
+		getUiHandlers().showResults(songSearchBox.getValue(), songCheckBox.getValue(),
+				artistSearchBox.getValue(), artistCheckBox.getValue(),
+				albumSearchBox.getValue(), albumCheckBox.getValue());
 	}
 
 	@Override
@@ -83,7 +82,9 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 
 	@Override
 	public void resetView() {
-		searchBox.setValue("");
+		songSearchBox.setValue("");
+		artistSearchBox.setValue("");
+		albumSearchBox.setValue("");
 		setResults(new ArrayList<MusicbrainzResult>());
 		searchStatus.setText("");
 	}
