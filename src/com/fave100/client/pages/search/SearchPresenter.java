@@ -47,22 +47,41 @@ public class SearchPresenter extends
 		// Set the result list to be blank
 		getView().resetView();
 	}
-	// TODO: Proper advanced - separate fields for artist, title, album
-	// TODO: Remove duplicates on client and then remove again on server
+	
 	// TODO: instead of limiting to 25 results, should give paged results?
 	// TODO: need a global "loading" indicator
 	@Override
-	public void showResults(final String searchTerm, final String attribute) {
+	public void showResults(final String songTerm, final Boolean songExactly, final String artistTerm,
+			final Boolean artistExactly, final String albumTerm, final Boolean albumExactly ) {
 		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
-		// TODO: Implement search by album or artist properly
-		if(attribute.equals("songTerm")) {
-			searchUrl += "recording/?query=";
-		} else if(attribute.equals("artistTerm")) {
-			searchUrl += "recording/?query=artist:";
-		} else if(attribute.equals("albumTerm")) {
-			searchUrl += "recording/?type=album&query=release:";
+		searchUrl += "recording/?query=";
+		
+		if(!songTerm.isEmpty()) {
+			searchUrl += "recording:";
+			if(songExactly) {
+				searchUrl += '"'+songTerm+'"';  
+			} else {
+				searchUrl += songTerm;
+			}			
+		} 
+		if(!artistTerm.isEmpty()) {
+			searchUrl += "+AND+";
+			searchUrl += "artist:";
+			if(artistExactly) {
+				searchUrl += '"'+artistTerm+'"';  
+			} else {
+				searchUrl += artistTerm;
+			}			
 		}
-		searchUrl += searchTerm;
+		if(!albumTerm.isEmpty()) {
+			searchUrl += "+AND+";
+			searchUrl += "release:";
+			if(albumExactly) {
+				searchUrl += '"'+albumTerm+'"';  
+			} else {
+				searchUrl += albumTerm;
+			}			
+		}
 		
 		// Get the search results from Musicbrainz
 		final XMLHttpRequest xhr = XMLHttpRequest.create();
@@ -82,5 +101,6 @@ public class SearchPresenter extends
 }
 
 interface SearchUiHandlers extends UiHandlers{
-	void showResults(String searchTerm, String attribute);
+	void showResults(String songTerm, Boolean songExactly, String artistTerm,
+			Boolean artistExactly, String albumTerm, Boolean albumExactly);
 }
