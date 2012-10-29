@@ -60,23 +60,23 @@ public class FaveList extends DatastoreObject{
 		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");		
 		
 		// See if the song exists in our datastore
-		final Song song = Song.findSongByTitleAndArtist(songTitle, artist);
-		
+		Song song = Song.findSongByTitleAndArtist(songTitle, artist);
+				
 		boolean unique = true;
 		// If the song does not exist, create it
-		if(song == null) {	Logger.getAnonymousLogger().log(Level.SEVERE, "No song match, fetching from Musicbrainz");		
+		if(song == null) {			
 			// Lookup the MBID in Musicbrainz and add to song database
 			try {
-			    final URL url = new URL("http://musicbrainz.org/ws/2/recording/"+songID+"?inc=artists+releases&fmt=json");
+			    final URL url = new URL("http://musicbrainz.org/ws/2/recording/"+songID+"?inc=artists+releases&fmt=json");			    
 			    final URLConnection conn = url.openConnection();
 			    final BufferedReader in = new BufferedReader(new InputStreamReader(
-		    		conn.getInputStream()));
-		    
+		    		conn.getInputStream(), "UTF-8"));
+			    
 				String inputLine;
 				String content = "";
 				
 				while ((inputLine = in.readLine()) != null) {				    
-				    content += inputLine;
+				    content += inputLine;				    
 				}
 				in.close();
 				
@@ -84,11 +84,12 @@ public class FaveList extends DatastoreObject{
 			    final JsonElement element = parser.parse(content);
 			    final JsonObject songObject = element.getAsJsonObject();	
 			    
+			   
 			    final String title = songObject.get("title").getAsString();
 			    final String songArtist = songObject.get("artist-credit").getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString();
 			    final String mbid = songObject.get("id").getAsString();
-			    final Song newSong = new Song(title, songArtist, mbid);		    	
-			    			    
+			    final Song newSong = new Song(title, songArtist, mbid);		   
+			    
 			    String firstReleaseId = "";
 			    
 			    // Get the earliest release date
@@ -162,27 +163,30 @@ public class FaveList extends DatastoreObject{
 			    }*/
 				
 			    // Before saving double-check that we do not have this record
-			    // (Since we cannot really trust that the passed songTitle+artist is valid
+			    // (Since we cannot really trust that the passed songTitle+artist is valid			    
 			    if(Song.findSongByTitleAndArtist(newSong.getTrackName(), newSong.getArtistName()) == null) {
 			    	ofy().save().entity(newSong).now();
+			    	song = newSong;
 			    }			    
 					
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}
 			
-			
-			//songProxy.setId(songID);
-			//ofy().save().entity(songProxy);
 		} else {
 			// Check if it is a unique song for this user
 			for(final FaveItem faveItem : faveList.getList()) {
-				if(faveItem.getSong().get().getId().equals(song.getId())) unique = false;
+				final Song faveSong = faveItem.getSong().get();
+				if(faveSong != null) {
+					if(faveSong.getId().equals(song.getId())) {
+						unique = false;
+					}
+				}				
 			}
 		}
 		if(unique == false) throw new RuntimeException("The song is already in your list");;
 		// Create the new FaveItem 		
-		final String songArtistID = songTitle+Song.TOKEN_SEPARATOR+artist;
+		final String songArtistID = song.getTrackName()+Song.TOKEN_SEPARATOR+song.getArtistName();
 		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songArtistID));
 		final FaveItem newFaveItem = new FaveItem(songArtistID);
 		faveList.getList().add(newFaveItem);
