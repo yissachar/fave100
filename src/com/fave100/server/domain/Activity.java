@@ -5,13 +5,14 @@ import java.util.Date;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 
 @Entity
 public class Activity {
 	
 	@Id private Long id;
-	private String username;
+	@Index private String username;
 	@Load private Ref<Song> song;
 	private Transaction transactionType;
 	private int previousLocation;
