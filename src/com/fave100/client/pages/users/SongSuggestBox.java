@@ -12,7 +12,6 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestBox;
 
@@ -30,7 +29,6 @@ public class SongSuggestBox extends SuggestBox{
 	public SongSuggestBox(final MusicSuggestionOracle suggestions, final ApplicationRequestFactory requestFactory) {		
 		super(suggestions);
 		this.suggestions = suggestions;
-		this.setLimit(4);
 		itemSuggestionMap = new HashMap<String, MusicbrainzResult>();	
 		
 		suggestionsTimer = new Timer() {
@@ -59,7 +57,7 @@ public class SongSuggestBox extends SuggestBox{
 
 	private void getAutocompleteList() {
 		// TODO: Needs to be hosted on actual server
-		String url = "http://192.168.214.146:7080/";
+		String url = "http://192.168.214.170:7080/";
 		url += "?songName="+this.getValue();
 		
 		 final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
@@ -67,7 +65,7 @@ public class SongSuggestBox extends SuggestBox{
 			 
 		    @Override
 			public void onFailure(final Throwable throwable) {
-		    	Window.alert("Fail!");
+		    	//Window.alert("Fail!");
 		    }
 
 		    @Override

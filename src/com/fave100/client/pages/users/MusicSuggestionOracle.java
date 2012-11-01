@@ -1,6 +1,8 @@
 package com.fave100.client.pages.users;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
@@ -12,22 +14,36 @@ import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
  */
 public class MusicSuggestionOracle extends MultiWordSuggestOracle{
 	
-	private Map<String, String> suggestionList = new HashMap<String, String>();
+	private Map<String, String> suggestionMap = new HashMap<String, String>();
 	
 	// TODO: Need to enforce saftey of display string here, otherwise XSS
-	public void addSuggestion(String replacementString, String displayString) {
-		suggestionList.put(replacementString, displayString);
+	public void addSuggestion(final String replacementString, final String displayString) {
+		suggestionMap.put(replacementString, displayString);
 		this.add(replacementString);
 	}
 	
 	public void clearSuggestions() {
-		suggestionList.clear();
+		suggestionMap.clear();
 		this.clear();
 	}
 	
 	@Override
-	protected MultiWordSuggestion createSuggestion(String replacementString, String displayString) {
-		return new MultiWordSuggestion(replacementString, suggestionList.get(replacementString));		
+	protected MultiWordSuggestion createSuggestion(final String replacementString, final String displayString) {
+		return new MultiWordSuggestion(replacementString, suggestionMap.get(replacementString));		
+	}
+	
+	// Override GWT SuggestBox and use all suggestions that were added
+	@Override
+	public void requestSuggestions(final Request request, final Callback callback) {
+		final List<MultiWordSuggestion> suggestions = new ArrayList<MultiWordSuggestOracle.MultiWordSuggestion>();
+		
+		for(final String suggestionKey : suggestionMap.keySet()) {
+			suggestions.add(new MultiWordSuggestion(suggestionKey, suggestionMap.get(suggestionKey)));
+		}
+
+	    final Response response = new Response(suggestions);
+
+	    callback.onSuggestionsReady(request, response);
 	}
 	
 }
