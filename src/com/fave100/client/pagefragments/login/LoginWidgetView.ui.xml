@@ -6,6 +6,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 	
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel>
 		<g:FormPanel ui:field="loginForm">
 			<g:VerticalPanel styleName="nativeLoginBox">
@@ -15,6 +16,7 @@
 				<g:PasswordTextBox ui:field="passwordInput"/>
 				<g:Label styleName="error" ui:field="loginStatusMessage"/>
 				<g:SubmitButton ui:field="loginButton">Sign In</g:SubmitButton>
+				<g:InlineHyperlink targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
 			</g:VerticalPanel>
 		</g:FormPanel>
 		<div class="loginDivider"/>

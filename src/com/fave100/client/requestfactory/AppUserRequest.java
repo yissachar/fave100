@@ -31,8 +31,7 @@ public interface AppUserRequest extends RequestContext{
 	Request<Boolean> isTwitterUserLoggedIn(String oauth_verifier);
 	Request<AppUserProxy> createAppUserFromTwitterAccount(String username, 
 			String oauth_verifier);
-	
-	//Request<AppUserProxy> loginWithFacebook(String state);
+		
 	Request<String> getFacebookAuthUrl(String redirect);
 	Request<AppUserProxy> createAppUserFromFacebookAccount(String username,
 			String state, String code, String redirectUrl);	
@@ -44,5 +43,6 @@ public interface AppUserRequest extends RequestContext{
 	Request<List<String>> getActivityForUser(String username);
 	Request<String> createBlobstoreUrl(String url);
 	Request<Void> setAvatarForCurrentUser(String avatar);
-	Request<Void> setProfileData(String email);		
+	Request<Void> setProfileData(String email);
+	Request<Boolean> emailPasswordResetToken(String username, String emailAddress);
 }
