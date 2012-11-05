@@ -1,7 +1,7 @@
 package com.fave100.client.pages.users;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
  */
 public class MusicSuggestionOracle extends MultiWordSuggestOracle{
 	
-	private Map<String, String> suggestionMap = new HashMap<String, String>();
+	private Map<String, String> suggestionMap = new LinkedHashMap<String, String>();
 	
 	// TODO: Need to enforce saftey of display string here, otherwise XSS
 	public void addSuggestion(final String replacementString, final String displayString) {
