@@ -17,7 +17,7 @@ public class Activity {
 	private Transaction transactionType;
 	private int previousLocation;
 	private int newLocation;
-	private Date timestamp;
+	@Index private Date timestamp;
 	
 	public enum Transaction {
 		FAVE_ADDED, FAVE_REMOVED, FAVE_POSITION_CHANGED, FOLLOWED, FOLLOWED_BY;
