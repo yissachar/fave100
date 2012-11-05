@@ -4,6 +4,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
 
@@ -40,7 +41,7 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 		songUrl += Window.Location.getQueryString()+"#"+NameTokens.song+";id=";
 		songUrl += object.getMbid();
 		
-		String trackName = "<a href='"+songUrl+"'";
+		String trackName = "<a href='"+URL.encode(songUrl).replace("'", "%27")+"'";
 		trackName += "class='faveListTrackName'>"+object.getTrackName()+"</a>";
 		return(trackName);
 	}
