@@ -6,6 +6,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -55,7 +56,7 @@ public class SongPresenter extends
 		super.prepareFromRequest(placeRequest);
 		
 		// Use parameters to determine what to reveal on page
-		final String songId = placeRequest.getParameter("id", "");	
+		final String songId = URL.decode(placeRequest.getParameter("id", ""));	
 		if(songId.isEmpty()) {
 			// Malformed request, send the user away
 			placeManager.revealDefaultPlace();
