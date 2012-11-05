@@ -15,6 +15,7 @@ import com.gwtplatform.dispatch.client.gin.DispatchAsyncModule;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.fave100.client.pages.profile.ProfilePresenter;
 import com.fave100.client.pages.song.SongPresenter;
+import com.fave100.client.pages.passwordreset.PasswordResetPresenter;
 
 @GinModules({ DispatchAsyncModule.class, ClientModule.class })
 public interface ClientGinjector extends Ginjector {
@@ -40,4 +41,6 @@ public interface ClientGinjector extends Ginjector {
 	AsyncProvider<ProfilePresenter> getProfilePresenter();
 
 	AsyncProvider<SongPresenter> getSongPresenter();
+
+	AsyncProvider<PasswordResetPresenter> getPasswordResetPresenter();
 }

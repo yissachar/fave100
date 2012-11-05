@@ -34,6 +34,8 @@ import com.fave100.client.pagefragments.topbar.TopBarPresenter;
 import com.fave100.client.pagefragments.topbar.TopBarView;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.pages.song.SongView;
+import com.fave100.client.pages.passwordreset.PasswordResetPresenter;
+import com.fave100.client.pages.passwordreset.PasswordResetView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -78,6 +80,10 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(SongPresenter.class, SongPresenter.MyView.class,
 				SongView.class, SongPresenter.MyProxy.class);
+
+		bindPresenter(PasswordResetPresenter.class,
+				PasswordResetPresenter.MyView.class, PasswordResetView.class,
+				PasswordResetPresenter.MyProxy.class);
 	}
 	
 	@Provides

@@ -2,12 +2,22 @@ package com.fave100.server.domain;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
@@ -641,6 +651,40 @@ public class AppUser extends DatastoreObject{
 		if(currentUser == null) return;
 		currentUser.setEmail(email);
 		ofy().save().entity(currentUser).now();
+	}
+	
+	public static Boolean emailPasswordResetToken(final String username, final String emailAddress) {
+		if(!username.isEmpty() && !emailAddress.isEmpty()) {
+			final AppUser appUser = findAppUser(username);
+			if(appUser != null) {
+				if(appUser.email.equals(emailAddress)) {
+					final Properties props = new Properties();
+			        final Session session = Session.getDefaultInstance(props, null);
+
+			        // TODO: wording?
+			        final String msgBody = "Your Fave100 password has been reset";
+
+			        try {
+			        	// TODO: Test on appengine to see if working
+			            final Message msg = new MimeMessage(session);
+			            msg.setFrom(new InternetAddress("fave100test@gmail.com", "Fave100"));
+			            msg.addRecipient(Message.RecipientType.TO,
+			                             new InternetAddress(emailAddress, username));
+			            msg.setSubject("Fave100 Password Reset");
+			            msg.setText(msgBody);
+			            Transport.send(msg);
+			            return true;			    
+			        } catch (final AddressException e) {
+			            // ...
+			        } catch (final MessagingException e) {
+			            // ...
+			        } catch (final UnsupportedEncodingException e) {
+						// ...
+					}					
+				}
+			}
+		}		
+		return false;
 	}
 	
     // Getters and setters	

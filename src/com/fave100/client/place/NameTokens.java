@@ -11,6 +11,7 @@ public class NameTokens {
 	public static final String search = "search";
 	public static final String profile = "profile";
 	public static final String song = "song";
+	public static final String passwordreset = "passwordreset";
 
 	public static String getHome() {
 		return home;
@@ -46,5 +47,9 @@ public class NameTokens {
 
 	public static String getSong() {
 		return song;
+	}
+
+	public static String getPasswordreset() {
+		return passwordreset;
 	}
 }
