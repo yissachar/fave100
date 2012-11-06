@@ -7,8 +7,8 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.xhr.client.ReadyStateChangeHandler;
-import com.google.gwt.xhr.client.XMLHttpRequest;
+import com.google.gwt.jsonp.client.JsonpRequestBuilder;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -30,7 +30,7 @@ public class SearchPresenter extends
 	public interface MyProxy extends ProxyPlace<SearchPresenter> {
 	}
 	
-	public static final String BASE_SEARCH_URL = "http://musicbrainz.org/ws/2/";
+	public static final String BASE_SEARCH_URL = "http://192.168.214.170:7080/";//"http://musicbrainz.org/ws/2/";
 	
 	private ApplicationRequestFactory requestFactory;
 
@@ -51,56 +51,39 @@ public class SearchPresenter extends
 	// TODO: instead of limiting to 25 results, should give paged results?
 	// TODO: need a global "loading" indicator
 	@Override
-	public void showResults(final String songTerm, final Boolean songExactly, final String artistTerm,
-			final Boolean artistExactly, final String albumTerm, final Boolean albumExactly ) {
+	public void showResults(final String songTerm,final String artistTerm) {
 		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
-		searchUrl += "recording/?query=";
+		searchUrl += "?limit=25&";
 		
 		if(!songTerm.isEmpty()) {
-			searchUrl += "recording:";
-			if(songExactly) {
-				searchUrl += '"'+songTerm+'"';  
-			} else {
-				searchUrl += songTerm;
-			}			
+			searchUrl += "song="+songTerm;	
 		} 
-		if(!artistTerm.isEmpty()) {
-			searchUrl += "+AND+";
-			searchUrl += "artist:";
-			if(artistExactly) {
-				searchUrl += '"'+artistTerm+'"';  
-			} else {
-				searchUrl += artistTerm;
-			}			
-		}
-		if(!albumTerm.isEmpty()) {
-			searchUrl += "+AND+";
-			searchUrl += "release:";
-			if(albumExactly) {
-				searchUrl += '"'+albumTerm+'"';  
-			} else {
-				searchUrl += albumTerm;
-			}			
-		}
 		
-		// Get the search results from Musicbrainz
-		final XMLHttpRequest xhr = XMLHttpRequest.create();
-		xhr.open("GET", searchUrl);
-		xhr.setOnReadyStateChange(new ReadyStateChangeHandler()	{
+		if(!artistTerm.isEmpty()) {
+			if(!songTerm.isEmpty()) {
+				searchUrl += "&";
+			}
+			searchUrl += "artist="+artistTerm;
+		}
+		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+		jsonp.requestObject(searchUrl, new AsyncCallback<AutocompleteJSON>() {
+			 
 		    @Override
-		    public void onReadyStateChange(final XMLHttpRequest xhr2) {
-		         if( xhr2.getReadyState() == XMLHttpRequest.DONE ) {
-		             xhr2.clearOnReadyStateChange();
-		             final MusicbrainzResultList resultList = new MusicbrainzResultList(xhr2.getResponseText());
-		             getView().setResults(resultList);
-		         }
+			public void onFailure(final Throwable throwable) {
+		    	//Window.alert("Fail!");
+		    }
+
+		    @Override
+			public void onSuccess(final AutocompleteJSON json) {			
+	       		
+		    	final MusicbrainzResultList resultList = new MusicbrainzResultList(json);
+	            getView().setResults(resultList);
+	            
 		    }
 		});
-		xhr.send();
 	}
 }
 
 interface SearchUiHandlers extends UiHandlers{
-	void showResults(String songTerm, Boolean songExactly, String artistTerm,
-			Boolean artistExactly, String albumTerm, Boolean albumExactly);
+	void showResults(String songTerm, String artistTerm);
 }
