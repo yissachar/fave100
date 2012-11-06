@@ -58,7 +58,7 @@ public class SongSuggestBox extends SuggestBox{
 	private void getAutocompleteList() {
 		// TODO: Needs to be hosted on actual server
 		String url = "http://192.168.214.170:7080/";
-		url += "?songName="+this.getValue();
+		url += "?song="+this.getValue();
 		
 		 final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
 		 jsonp.requestObject(url, new AsyncCallback<AutocompleteJSON>() {
