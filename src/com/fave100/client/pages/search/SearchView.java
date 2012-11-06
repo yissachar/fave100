@@ -10,7 +10,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -31,10 +30,6 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	@UiField FormPanel searchForm;
 	@UiField TextBox songSearchBox;
 	@UiField TextBox artistSearchBox;
-	@UiField TextBox albumSearchBox;
-	@UiField CheckBox songCheckBox;
-	@UiField CheckBox artistCheckBox;
-	@UiField CheckBox albumCheckBox;
 	@UiField Button searchButton;
 	@UiField Label searchStatus;
 	@UiField(provided=true) CellList<MusicbrainzResult> iTunesResults;
@@ -65,9 +60,8 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	
 	@UiHandler("searchForm")
 	void onSearchFormSubmit(final SubmitEvent event) {
-		getUiHandlers().showResults(songSearchBox.getValue(), songCheckBox.getValue(),
-				artistSearchBox.getValue(), artistCheckBox.getValue(),
-				albumSearchBox.getValue(), albumCheckBox.getValue());
+		getUiHandlers().showResults(songSearchBox.getValue(),
+				artistSearchBox.getValue());
 	}
 
 	@Override
@@ -84,7 +78,6 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	public void resetView() {
 		songSearchBox.setValue("");
 		artistSearchBox.setValue("");
-		albumSearchBox.setValue("");
 		setResults(new ArrayList<MusicbrainzResult>());
 		searchStatus.setText("");
 	}

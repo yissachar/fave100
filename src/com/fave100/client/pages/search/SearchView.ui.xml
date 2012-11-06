@@ -59,15 +59,9 @@
 				<g:HTMLPanel>
 					<g:Label>Song</g:Label>
 					<g:TextBox ui:field="songSearchBox" ui:styleName="{style.searchBox}"/>
-					<g:CheckBox ui:field="songCheckBox">Exact Phrase</g:CheckBox>
 					<br/>
 					<g:Label>Artist</g:Label>
 					<g:TextBox ui:field="artistSearchBox" ui:styleName="{style.searchBox}"/>
-					<g:CheckBox ui:field="artistCheckBox">Exact Phrase</g:CheckBox>
-					<br/>
-					<g:Label>Album</g:Label>
-					<g:TextBox ui:field="albumSearchBox" ui:styleName="{style.searchBox}"/>
-					<g:CheckBox ui:field="albumCheckBox">Exact Phrase</g:CheckBox>			
 					<br/>			
 					<g:SubmitButton ui:field="searchButton" ui:styleName="{style.searchButton}">Search</g:SubmitButton>				
 					<g:Label ui:field="searchStatus" ui:styleName="{style.searchStatus}"/>
