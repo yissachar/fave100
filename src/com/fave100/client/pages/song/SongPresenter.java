@@ -56,13 +56,14 @@ public class SongPresenter extends
 		super.prepareFromRequest(placeRequest);
 		
 		// Use parameters to determine what to reveal on page
-		final String songId = URL.decode(placeRequest.getParameter("id", ""));	
-		if(songId.isEmpty()) {
+		final String song = URL.decode(placeRequest.getParameter("song", ""));
+		final String artist = URL.decode(placeRequest.getParameter("artist", ""));
+		if(song.isEmpty() || artist.isEmpty()) {
 			// Malformed request, send the user away
 			placeManager.revealDefaultPlace();
 		} else {
 			// Load the song from the datastore
-			final Request<SongProxy> getSongReq = requestFactory.songRequest().findSong(songId);
+			final Request<SongProxy> getSongReq = requestFactory.songRequest().findSongByTitleAndArtist(song, artist);
 			getSongReq.fire(new Receiver<SongProxy>() {
 				@Override
 				public void onSuccess(final SongProxy song) {

@@ -12,5 +12,6 @@ public interface SongRequest extends RequestContext{
 	// but need at least one Request or RequestFactory doesn't "know" about 
 	// the class and throws exceptions
 	Request<SongProxy> findSong(String id);
+	Request<SongProxy> findSongByTitleAndArtist(String title, String artist);
 
 }
