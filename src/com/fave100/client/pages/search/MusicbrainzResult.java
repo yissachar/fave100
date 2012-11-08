@@ -51,6 +51,7 @@ public class MusicbrainzResult implements Serializable, SongInterface {
 		this.mbid = mbid;
 	}
 
+	@Override
 	public String getCoverArtUrl() {
 		return coverArtUrl;
 	}
@@ -59,12 +60,19 @@ public class MusicbrainzResult implements Serializable, SongInterface {
 		this.coverArtUrl = coverArtUrl;
 	}
 
+	@Override
 	public String getPrimaryGenreName() {
 		return primaryGenreName;
 	}
 
-	public void setPrimaryGenreName(String primaryGenreName) {
+	public void setPrimaryGenreName(final String primaryGenreName) {
 		this.primaryGenreName = primaryGenreName;
+	}
+
+	@Override
+	public String getYouTubeEmbedUrl() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

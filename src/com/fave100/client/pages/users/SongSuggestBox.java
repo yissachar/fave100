@@ -59,7 +59,7 @@ public class SongSuggestBox extends SuggestBox{
 	private void getAutocompleteList() {
 		// TODO: Needs to be hosted on actual server
 		String url = SearchPresenter.BASE_SEARCH_URL;
-		url += "?limit=5&song="+this.getValue();
+		url += "search?limit=5&song="+this.getValue();
 		
 		 final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
 		 jsonp.requestObject(url, new AsyncCallback<AutocompleteJSON>() {

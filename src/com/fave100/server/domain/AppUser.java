@@ -555,19 +555,22 @@ public class AppUser extends DatastoreObject{
 											.list();
 		final ArrayList<String> faveFeed = new ArrayList<String>();		
 		for(final Activity activity : activityList) {
-			final String songName = activity.getSong().get().getTrackName();
-			String message = "";
-			if(activity.getTransactionType().equals(Transaction.FAVE_ADDED)) {
-				message += " Added "+songName;
-			} else if (activity.getTransactionType().equals(Transaction.FAVE_REMOVED)) {
-				message += " Removed "+songName;
-			} else if (activity.getTransactionType().equals(Transaction.FAVE_POSITION_CHANGED)) {
-				message += " Changed the position of "+songName+" from "+activity.getPreviousLocation();
-				message += " To "+activity.getNewLocation();
+			final Song song = activity.getSong().get();
+			if(song != null) {
+				final String songName = song.getTrackName();
+				String message = "";
+				if(activity.getTransactionType().equals(Transaction.FAVE_ADDED)) {
+					message += " Added "+songName;
+				} else if (activity.getTransactionType().equals(Transaction.FAVE_REMOVED)) {
+					message += " Removed "+songName;
+				} else if (activity.getTransactionType().equals(Transaction.FAVE_POSITION_CHANGED)) {
+					message += " Changed the position of "+songName+" from "+activity.getPreviousLocation();
+					message += " To "+activity.getNewLocation();
+				}
+				if(message != "") {
+					faveFeed.add(message);
+				}	
 			}
-			if(message != "") {
-				faveFeed.add(message);
-			}			
 		}
 		return faveFeed;
 	}
