@@ -53,7 +53,7 @@ public class SearchPresenter extends
 	@Override
 	public void showResults(final String songTerm,final String artistTerm) {
 		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
-		searchUrl += "?limit=25&";
+		searchUrl += "search?limit=25&";
 		
 		if(!songTerm.isEmpty()) {
 			searchUrl += "song="+songTerm;	

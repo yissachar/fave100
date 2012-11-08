@@ -23,6 +23,7 @@ public class Song extends DatastoreObject {
 	private String mbid;
 	private String artistName;
 	private String trackName;
+	private String youTubeId;
 	private String trackViewUrl;
 	private String coverArtUrl;
 	private String releaseDate;
@@ -30,7 +31,7 @@ public class Song extends DatastoreObject {
 	@IgnoreSave private String whyline;
 	@IgnoreSave private int whylineScore;
 	
-	//TODO: Need to periodically update cache
+	//TODO: Need to periodically update cache?
 	
 	@SuppressWarnings("unused")
 	private Song(){}
@@ -43,7 +44,6 @@ public class Song extends DatastoreObject {
 	}
 	
 	public static Song findSong(final String id) {
-		//return ofy().get(Song.class, id);
 		return ofy().load().type(Song.class).id(id).get();
 	}
 	
@@ -162,6 +162,21 @@ public class Song extends DatastoreObject {
 
 	public void setMbid(final String mbid) {
 		this.mbid = mbid;
-	}	
+	}
+
+	public String getYouTubeId() {
+		return youTubeId;
+	}
+
+	public void setYouTubeId(final String youTubeId) {
+		this.youTubeId = youTubeId;
+	}
+	
+	public String getYouTubeEmbedUrl() {
+		if(getYouTubeId() != null && !getYouTubeId().isEmpty()) {
+			return "http://www.youtube.com/embed/"+getYouTubeId();
+		}
+		return null;
+	}
 
 }
