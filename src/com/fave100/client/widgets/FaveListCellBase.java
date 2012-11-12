@@ -41,6 +41,7 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 		songUrl += Window.Location.getQueryString()+"#"+NameTokens.song+";song=";		
 		songUrl += URL.encodeQueryString(object.getTrackName());
 		songUrl += ";artist="+URL.encodeQueryString(object.getArtistName());
+		songUrl = URL.encode(songUrl);
 		
 		String trackName = "<a href='"+songUrl.replace("'", "%27")+"'";
 		trackName += "class='faveListTrackName'>"+object.getTrackName()+"</a>";
