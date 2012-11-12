@@ -56,6 +56,7 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 		setSongTitle(song.getTrackName());
 		setArtistName(song.getArtistName());
 		setReleaseDate(song.getReleaseDate());
+		youTubePlayer.setVisible(false);
 		final String url = song.getYouTubeEmbedUrl(); 
 		if(url != null && !url.isEmpty()) {
 			youTubePlayer.setUrl(url);
