@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		
+	</ui:style>
+	<g:HTMLPanel>
+		<g:Anchor ui:field="previousLink">Previous</g:Anchor>
+		<ul ui:field="pageLinks"></ul>
+		<g:Anchor ui:field="nextLink">Next</g:Anchor>
+		<g:Label ui:field="pageNumLabel"/>
+	</g:HTMLPanel>
+</ui:UiBinder> 

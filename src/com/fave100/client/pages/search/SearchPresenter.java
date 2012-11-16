@@ -22,6 +22,8 @@ public class SearchPresenter extends
 
 	public interface MyView extends BaseView, HasUiHandlers<SearchUiHandlers> {
 		void resetView();
+		int getPageNum();
+		void setResultCount(int count);
 		void setResults(List<MusicbrainzResult> resultList);
 	}
 
@@ -29,9 +31,10 @@ public class SearchPresenter extends
 	@NameToken(NameTokens.search)
 	public interface MyProxy extends ProxyPlace<SearchPresenter> {
 	}
-	
+
 	public static final String BASE_SEARCH_URL = "http://192.168.214.170:7080/";//"http://musicbrainz.org/ws/2/";
-	
+	public static final int RESULTS_PER_PAGE = 25;
+
 	private ApplicationRequestFactory requestFactory;
 
 	@Inject
@@ -41,44 +44,63 @@ public class SearchPresenter extends
 		this.requestFactory = requestFactory;
 		getView().setUiHandlers(this);
 	}
-	
+
 	@Override
 	protected void onHide() {
 		// Set the result list to be blank
 		getView().resetView();
 	}
-	
+
 	// TODO: instead of limiting to 25 results, should give paged results?
 	// TODO: need a global "loading" indicator
 	@Override
-	public void showResults(final String songTerm,final String artistTerm) {
+	public void showResults(final String songTerm, final String artistTerm) {
 		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
-		searchUrl += "search?limit=25&";
-		
+		searchUrl += "search?limit="+SearchPresenter.RESULTS_PER_PAGE;
+		searchUrl += "&offset="+RESULTS_PER_PAGE*(getView().getPageNum()-1)+"&";
+
 		if(!songTerm.isEmpty()) {
-			searchUrl += "song="+songTerm;	
-		} 
-		
+			searchUrl += "song="+songTerm;
+		}
+
 		if(!artistTerm.isEmpty()) {
 			if(!songTerm.isEmpty()) {
 				searchUrl += "&";
 			}
 			searchUrl += "artist="+artistTerm;
 		}
-		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-		jsonp.requestObject(searchUrl, new AsyncCallback<AutocompleteJSON>() {
-			 
+		// One request for the amount of results found
+		final JsonpRequestBuilder jsonpCount = new JsonpRequestBuilder();
+		jsonpCount.requestObject(searchUrl+"&count=true", new AsyncCallback<AutocompleteJSON>() {
+
 		    @Override
 			public void onFailure(final Throwable throwable) {
 		    	//Window.alert("Fail!");
 		    }
 
 		    @Override
-			public void onSuccess(final AutocompleteJSON json) {			
-	       		
+			public void onSuccess(final AutocompleteJSON json) {
+
+		    	getView().setResultCount(Integer.parseInt(json.getEntries().get(0).getTrackName()));
+
+		    }
+		});
+
+		// And one request for the actual results
+		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+		jsonp.requestObject(searchUrl, new AsyncCallback<AutocompleteJSON>() {
+
+		    @Override
+			public void onFailure(final Throwable throwable) {
+		    	//Window.alert("Fail!");
+		    }
+
+		    @Override
+			public void onSuccess(final AutocompleteJSON json) {
+
 		    	final MusicbrainzResultList resultList = new MusicbrainzResultList(json);
 	            getView().setResults(resultList);
-	            
+
 		    }
 		});
 	}
