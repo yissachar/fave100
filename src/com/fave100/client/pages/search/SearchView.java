@@ -90,10 +90,11 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	public void setResultCount(final int count) {
 		if(count == 0) {
 			searchStatus.setText("No matches found");
+			pager.setMaxPageNumber(1);
 		} else {
 			searchStatus.setText(count+" matches found");
+			pager.setMaxPageNumber((int)Math.ceil( (double) count/SearchPresenter.RESULTS_PER_PAGE));
 		}
-		pager.setMaxPageNumber((int)Math.ceil( (double) count/SearchPresenter.RESULTS_PER_PAGE));
 	}
 
 	@Override
