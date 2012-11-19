@@ -269,11 +269,11 @@ footer {
 	width: 53%;
 }
 .faveListArtistName{
-	width: 28%;
+	width: 34%;
 }
-.faveListReleaseDate{
+/*.faveListReleaseDate{
 	width: 6%;
-}
+}*/
 
 .faveListWhyline, .faveList div>span:nth-child(2){
 	font-size: 1.1em;
