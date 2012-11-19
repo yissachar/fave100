@@ -44,8 +44,7 @@
 				<g:HTMLPanel ui:field="loginContainer"/>				
 			</g:HTMLPanel>
 			<p id="noAccountPrompt">
-			    Don't have an account?
-			    <g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}">Register</g:InlineHyperlink>
+			    <g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}"> Don't have an account? Register</g:InlineHyperlink>
 			</p>
 		</div>
 		<pf:Footer/>
