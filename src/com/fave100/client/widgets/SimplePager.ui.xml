@@ -2,12 +2,20 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
+		.pageLinks a, .pageLinks div, .previousLink, .nextLink{
+			margin-top: 6px;
+			margin-right: 6px;
+			float: left;
+			cursor: pointer;
+		}
 		
+		.pageLinks div {
+			font-weight: bold;
+		}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:Anchor ui:field="previousLink">Previous</g:Anchor>
-		<ul ui:field="pageLinks"></ul>
-		<g:Anchor ui:field="nextLink">Next</g:Anchor>
-		<g:Label ui:field="pageNumLabel"/>
+		<g:Anchor ui:field="previousLink" ui:styleName="{style.previousLink}">Previous</g:Anchor>
+		<g:HTMLPanel ui:field="pageLinks" ui:styleName="{style.pageLinks}"/>
+		<g:Anchor ui:field="nextLink" ui:styleName="{style.nextLink}">Next</g:Anchor>		
 	</g:HTMLPanel>
 </ui:UiBinder> 

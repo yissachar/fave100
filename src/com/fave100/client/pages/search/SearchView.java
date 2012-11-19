@@ -12,6 +12,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
@@ -52,6 +53,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 
 			@Override
 			public void onPageChanged(final ResultPageChangedEvent event) {
+				Window.scrollTo(0, 0);
 				getUiHandlers().showResults(songSearchBox.getValue(),
 						artistSearchBox.getValue());
 			}
