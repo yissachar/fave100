@@ -47,7 +47,7 @@ public class SimplePager extends Composite {
 		return pageNumber;
 	}
 
-	private void setPageNumber(final int number) {
+	public void setPageNumber(final int number) {
 
 		final int lastPageNum = pageNumber;
 
