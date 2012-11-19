@@ -77,6 +77,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 
 	@UiHandler("searchForm")
 	void onSearchFormSubmit(final SubmitEvent event) {
+		pager.setPageNumber(1);
 		getUiHandlers().showResults(songSearchBox.getValue(),
 				artistSearchBox.getValue());
 	}
