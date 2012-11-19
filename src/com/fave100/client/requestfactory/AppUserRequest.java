@@ -8,15 +8,15 @@ import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;
 
 @Service(AppUser.class)
-public interface AppUserRequest extends RequestContext{	
+public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> findAppUser(String username);
 	Request<List<AppUserProxy>> getAppUsers();
 	Request<AppUserProxy> getLoggedInAppUser();
-	
+
 	Request<AppUserProxy> login(String username, String password);
-	Request<Boolean> checkPassword(String password);	
+	Request<Boolean> checkPassword(String password);
 	Request<Void> logout();
-	Request<AppUserProxy> createAppUser(String username, String password, 
+	Request<AppUserProxy> createAppUser(String username, String password,
 			String email);
 
 	Request<AppUserProxy> loginWithGoogle();
@@ -25,24 +25,25 @@ public interface AppUserRequest extends RequestContext{
 	Request<String> getGoogleLogoutURL(String destinationURL);
 	Request<String> getGoogleLoginLogoutURL(String destinationURL);
 	Request<AppUserProxy> createAppUserFromGoogleAccount(String username);
-	
+
 	Request<AppUserProxy> loginWithTwitter(String oauth_verifier);
-	Request<String> getTwitterAuthUrl(String redirectUrl);	
+	Request<String> getTwitterAuthUrl(String redirectUrl);
 	Request<Boolean> isTwitterUserLoggedIn(String oauth_verifier);
-	Request<AppUserProxy> createAppUserFromTwitterAccount(String username, 
+	Request<AppUserProxy> createAppUserFromTwitterAccount(String username,
 			String oauth_verifier);
-		
+
 	Request<String> getFacebookAuthUrl(String redirect);
 	Request<AppUserProxy> createAppUserFromFacebookAccount(String username,
-			String state, String code, String redirectUrl);	
-	
+			String state, String code, String redirectUrl);
+
 	Request<Void> followUser(String username);
 	Request<Boolean> checkFollowing(String username);
-	
+
 	Request<List<String>> getFaveFeedForCurrentUser();
 	Request<List<String>> getActivityForUser(String username);
 	Request<String> createBlobstoreUrl(String url);
 	Request<Void> setAvatarForCurrentUser(String avatar);
 	Request<Void> setProfileData(String email);
 	Request<Boolean> emailPasswordResetToken(String username, String emailAddress);
+	Request<Boolean> changePassword(String password, String token);
 }
