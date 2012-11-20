@@ -22,28 +22,30 @@ public class Fave100 implements EntryPoint {
 		// TODO: Gatekeepers
 		// TODO: import playlist from iTunes
 		// TODO: indexed vs. unindexed
-		
-		// This is required for Gwt-Platform proxy's generator		
+		// TODO: Does email have to be separate Objectify object (to allow secure changing of email or multiple emails for account)
+		// TODO: Backend cron job that cleans up expired password tokens
+
+		// This is required for Gwt-Platform proxy's generator
 		DelayedBindRegistry.bind(ginjector);
-		
+
 		//checkPassword();
-	
+
 		ginjector.getPlaceManager().revealCurrentPlace();
 	}
-	
+
 	private void checkPassword() {
 		final ApplicationRequestFactory requestFactory = GWT.create(ApplicationRequestFactory.class);
 		requestFactory.initialize(new SimpleEventBus());
-		
+
 		if(Cookies.getCookie("pw") != "true") {
 			final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 			final Request<Boolean> correctPasswordReq = appUserRequest.checkPassword(Window.prompt("Please enter the password:", ""));
 			correctPasswordReq.fire(new Receiver<Boolean>() {
 				@Override
-				public void onSuccess(final Boolean response) {			
+				public void onSuccess(final Boolean response) {
 					if(response != true) {
 						checkPassword();
-					} else {					
+					} else {
 						ginjector.getPlaceManager().revealCurrentPlace();
 						Cookies.setCookie("pw", "true");
 					}

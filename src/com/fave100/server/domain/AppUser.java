@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -664,9 +666,6 @@ public class AppUser extends DatastoreObject{
 					final Properties props = new Properties();
 			        final Session session = Session.getDefaultInstance(props, null);
 
-			        // TODO: wording?
-			        final String msgBody = "Your Fave100 password has been reset";
-
 			        try {
 			        	// TODO: Test on appengine to see if working
 			        	final PwdResetToken pwdResetToken = new PwdResetToken(appUser.getUsername());
@@ -675,8 +674,13 @@ public class AppUser extends DatastoreObject{
 			            msg.setFrom(new InternetAddress("fave100test@gmail.com", "Fave100"));
 			            msg.addRecipient(Message.RecipientType.TO,
 			                             new InternetAddress(emailAddress, username));
-			            msg.setSubject("Fave100 Password Reset");
+			            msg.setSubject("Fave100 Password Change");
+			            // TODO: wording?
+				        String msgBody = "To change your Fave100 password, please visit the following URL and change your password within 24 hours.";
+				        // TODO: change hardcoded url
+				        msgBody += "http://fave100test.appspot.com/#passwordreset;token="+pwdResetToken.getToken();
 			            msg.setText(msgBody);
+
 			            Transport.send(msg);
 			            return true;
 			        } catch (final AddressException e) {
@@ -696,6 +700,7 @@ public class AppUser extends DatastoreObject{
 		final PwdResetToken pwdResetToken = PwdResetToken.findPwdResetToken(token);
 		if(pwdResetToken != null) {
 			final Date now = new Date();
+			Logger.getAnonymousLogger().log(Level.SEVERE, "we are here"+pwdResetToken.getExpiry().getTime() + " now: "+now.getTime());
 			if(pwdResetToken.getExpiry().getTime() > now.getTime()) {
 				// Token hasn't expired yet, change password
 				final AppUser appUser = pwdResetToken.getAppUser().get();
@@ -704,6 +709,7 @@ public class AppUser extends DatastoreObject{
 					ofy().save().entity(appUser).now();
 					// Delete token now that we've used it
 					ofy().delete().entity(pwdResetToken);
+					return true;
 				}
 			} else {
 				// Token expired, delete it

@@ -5,7 +5,6 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -26,6 +25,9 @@ public class PasswordResetPresenter
 	public interface MyView extends BaseView, HasUiHandlers<PasswordResetUiHandlers> {
 		void showPwdChangeForm();
 		void showSendTokenForm();
+		void showTokenError();
+		void showTokenSuccess();
+		void showPwdError();
 	}
 
 	private ApplicationRequestFactory requestFactory;
@@ -82,9 +84,14 @@ public class PasswordResetPresenter
 		final Request<Boolean> sendEmailReq = requestFactory.appUserRequest().emailPasswordResetToken(username, emailAddress);
 		sendEmailReq.fire(new Receiver<Boolean>() {
 			@Override
-			public void onSuccess(final Boolean validInfo) {Window.alert(validInfo.toString());
-				//TODO: Warn user if invalid username or email
-				//TODO: On success tell user email was sent
+			public void onSuccess(final Boolean validInfo) {
+				if(validInfo == false) {
+					// Warn user if invalid username or email
+					getView().showTokenError();
+				} else {
+					//  On success tell user email was sent
+					getView().showTokenSuccess();
+				}
 			}
 		});
 
@@ -96,8 +103,11 @@ public class PasswordResetPresenter
 		changePasswordReq.fire(new Receiver<Boolean>() {
 			@Override
 			public void onSuccess(final Boolean pwdChanged) {
-				// TODO: Notify user here
-				// TODO: Redirect user to login page
+				if(pwdChanged == false) {
+					getView().showPwdError();
+				} else {
+					placeManager.revealPlace(new PlaceRequest(NameTokens.login));
+				}
 			}
 		});
 	}
