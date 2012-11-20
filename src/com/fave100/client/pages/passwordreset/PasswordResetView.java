@@ -7,7 +7,9 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -21,9 +23,12 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 	@UiField FormPanel sendTokenForm;
 	@UiField TextBox usernameInput;
 	@UiField TextBox emailInput;
+	@UiField Label tokenStatusMessage;
+	@UiField SubmitButton sendTokenButton;
 	@UiField FormPanel changePasswordForm;
 	@UiField PasswordTextBox passwordInput;
 	@UiField PasswordTextBox passwordRepeat;
+	@UiField Label pwdStatusMessage;
 
 	public interface Binder extends UiBinder<Widget, PasswordResetView> {
 	}
@@ -51,6 +56,8 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 
 	@UiHandler("sendTokenForm")
 	public void onTokenSubmit(final SubmitEvent event) {
+		// Clear error text
+		tokenStatusMessage.setText("");
 		getUiHandlers().sendEmail(usernameInput.getValue(), emailInput.getValue());
 	}
 // TODO: Validate password! Check that matches repeat... etc.
@@ -61,15 +68,40 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 
 	@Override
 	public void showPwdChangeForm() {
+		changePasswordForm.reset();
+		pwdStatusMessage.setText("");
 		sendTokenForm.setVisible(false);
 		changePasswordForm.setVisible(true);
 	}
 
 	@Override
 	public void showSendTokenForm() {
+		sendTokenForm.reset();
+		tokenStatusMessage.setText("");
+		sendTokenButton.setVisible(true);
 		sendTokenForm.setVisible(true);
 		changePasswordForm.setVisible(false);
 	}
 
+	@Override
+	public void showTokenError() {
+		tokenStatusMessage.setText("Incorrect username or email");
+		tokenStatusMessage.addStyleName("error");
+	}
+
+	@Override
+	public void showTokenSuccess() {
+		String msg = "An email has been sent to your email address.";
+		msg += "Please follow the instructions contained within.";
+		tokenStatusMessage.setText(msg);
+		tokenStatusMessage.removeStyleName("error");
+		sendTokenButton.setVisible(false);
+	}
+
+	@Override
+	public void showPwdError() {
+		pwdStatusMessage.setText("Token expired or doesn't exist");
+		pwdStatusMessage.addStyleName("error");
+	}
 
 }
