@@ -321,7 +321,6 @@ public class AppUser extends DatastoreObject{
 
 	// TODO: Merge account creations to avoid duplication
 	public static AppUser createAppUser(final String username, final String password, final String email) {
-		// TODO: Disallow username white-space, other special characters?, validate password not null, username not null
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
 			@Override
@@ -364,25 +363,26 @@ public class AppUser extends DatastoreObject{
 				if(ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
 					throw new RuntimeException("There is already a Fave100 account associated with this Google ID");
 				}
-				// Create the user
-				final AppUser appUser = new AppUser();
-				appUser.setUsername(username);
-				appUser.setEmail(user.getEmail());
-				// Create the user's list
-				final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
-				// Create the GoogleID lookup
-				final GoogleID googleID = new GoogleID(user.getUserId(), username);
-				ofy().save().entities(appUser, googleID, faveList).now();
-				//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-				//return appUser;
-				return loginWithGoogle();
+				if(Validator.validateUsername(username) == null) {
+					// Create the user
+					final AppUser appUser = new AppUser();
+					appUser.setUsername(username);
+					appUser.setEmail(user.getEmail());
+					// Create the user's list
+					final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+					// Create the GoogleID lookup
+					final GoogleID googleID = new GoogleID(user.getUserId(), username);
+					ofy().save().entities(appUser, googleID, faveList).now();
+					return loginWithGoogle();
+				}
+				return null;
+
 			}
 		});
 		return newAppUser;
 	}
 
 	public static AppUser createAppUserFromTwitterAccount(final String username, final String oauth_verifier) {
-		// TODO: Disallow white-space, other special characters?
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
 			@Override
@@ -394,19 +394,21 @@ public class AppUser extends DatastoreObject{
 				if(ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
 					throw new RuntimeException("There is already a Fave100 account associated with this Twitter ID");
 				}
-				// Create the user
-				final AppUser appUser = new AppUser();
-				appUser.setUsername(username);
-				// TODO: Do we need an email for twitter users?
-				// Create the user's list
-				final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
-				// Create the TwitterID lookup
-				final TwitterID twitterID = new TwitterID(user.getId(), username);
-				// TODO: Store tokens in database?
-				ofy().save().entities(appUser, twitterID, faveList).now();
-				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-				return appUser;
-				//return loginWithTwitter(oauth_verifier);
+				if(Validator.validateUsername(username) == null) {
+					// Create the user
+					final AppUser appUser = new AppUser();
+					appUser.setUsername(username);
+					// TODO: Do we need an email for twitter users?
+					// Create the user's list
+					final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+					// Create the TwitterID lookup
+					final TwitterID twitterID = new TwitterID(user.getId(), username);
+					// TODO: Store tokens in database?
+					ofy().save().entities(appUser, twitterID, faveList).now();
+					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+					return appUser;
+				}
+				return null;
 			}
 		});
 		return newAppUser;
@@ -414,7 +416,6 @@ public class AppUser extends DatastoreObject{
 
 	public static AppUser createAppUserFromFacebookAccount(final String username, final String state,
 			final String code, final String redirectUrl) {
-		// TODO: Disallow white-space, other special characters?
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 
 		// TODO: Do we need this now that we are using Scribe?
@@ -434,19 +435,20 @@ public class AppUser extends DatastoreObject{
 					if(ofy().load().type(FacebookID.class).id(userFacebookId).get() != null) {
 						throw new RuntimeException("There is already a Fave100 account associated with this Facebook ID");
 					}
-					// Create the user
-					final AppUser appUser = new AppUser();
-					appUser.setUsername(username);
-					// TODO: Do we need an email for facebook users?
-					// Create the user's list
-					final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
-					// Create the Facebook lookup
-					final FacebookID facebookID = new FacebookID(userFacebookId, username);
-					// TODO: Store oAuth tokens in database?
-					ofy().save().entities(appUser, facebookID, faveList).now();
-					//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-					//return appUser;
-					return loginWithFacebook(code);
+					if(Validator.validateUsername(username) == null) {
+						// Create the user
+						final AppUser appUser = new AppUser();
+						appUser.setUsername(username);
+						// TODO: Do we need an email for facebook users?
+						// Create the user's list
+						final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+						// Create the Facebook lookup
+						final FacebookID facebookID = new FacebookID(userFacebookId, username);
+						// TODO: Store oAuth tokens in database?
+						ofy().save().entities(appUser, facebookID, faveList).now();
+						return loginWithFacebook(code);
+					}
+					return null;
 		    	}
 				return null;
 			}
