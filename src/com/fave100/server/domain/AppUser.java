@@ -39,6 +39,7 @@ import twitter4j.auth.RequestToken;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.Activity.Transaction;
+import com.fave100.shared.Validator;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.images.ImagesServiceFactory;
@@ -326,16 +327,23 @@ public class AppUser extends DatastoreObject{
 			@Override
 			public AppUser run() {
 				if(ofy().load().type(AppUser.class).id(username).get() != null) {
+					// TODO: Better method of message passing needed...
 					throw new RuntimeException("A user with that name already exists");
 				} else {
-					// Create the user
-					final AppUser appUser = new AppUser(username, password, email);
-					// Create the user's list
-					final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
-					ofy().save().entities(appUser, faveList).now();
-					//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-					//return appUser;
-					return login(username, password);
+					if(Validator.validateUsername(username) == null
+						&& Validator.validatePassword(password) == null
+						&& Validator.validateEmail(email) == null){
+
+						// Everything passes validation, create the user
+						final AppUser appUser = new AppUser(username, password, email);
+						// Create the user's list
+						final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+						ofy().save().entities(appUser, faveList).now();
+						//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+						//return appUser;
+						return login(username, password);
+					}
+					return null;
 				}
 			}
 		});
