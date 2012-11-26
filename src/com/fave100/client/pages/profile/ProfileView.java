@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,6 +26,7 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers> implement
 	@UiField HTMLPanel topBar;
 	@UiField FormPanel profileForm;
 	@UiField TextBox emailInput;
+	@UiField Image avatarImg;
 	@UiField Label emailStatusMessage;
 	@UiField Label formStatusMessage;
 
@@ -56,7 +58,7 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers> implement
 
 	@UiHandler("profileForm")
 	public void onSubmit(final SubmitCompleteEvent event) {
-		getUiHandlers().setProfileData(emailInput.getValue());
+		getUiHandlers().saveProfileData(emailInput.getValue());
 		//profileForm.reset();
 	}
 
@@ -66,7 +68,13 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers> implement
 	}
 
 	@Override
+	public void setAvatarImg(final String src) {
+		avatarImg.setUrl(src);
+	}
+
+	@Override
 	public void setEmailError(final String error) {
+		emailInput.addStyleName("errorInput");
 		emailStatusMessage.setText(error);
 	}
 
@@ -80,6 +88,12 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers> implement
 	@Override
 	public void clearErrors() {
 		formStatusMessage.setText("");
+		emailInput.removeStyleName("errorInput");
 		emailStatusMessage.setText("");
+	}
+
+	@Override
+	public void clearForm() {
+		profileForm.reset();
 	}
 }

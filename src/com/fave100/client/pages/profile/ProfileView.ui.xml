@@ -12,11 +12,18 @@
 			margin: 10px;
 			text-align: center;
 		}
+		
 		.formStatusMessage {
 			display: inline-block;
 			margin-left: 10px;
 		}
+		
+		.avatarImg {
+			max-width: 80px;
+			max-height: 80px;
+		}
 	</ui:style>
+	
 	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="content">
@@ -27,6 +34,7 @@
 					<g:TextBox  ui:field="emailInput"/>
 					<g:Label styleName="error inputStatusMessage" ui:field="emailStatusMessage"/>
 					<g:Label>Avatar</g:Label>
+					<g:Image ui:field="avatarImg" ui:styleName="{style.avatarImg}"/>
 					<g:FileUpload name="avatar" />
 					<g:SubmitButton>Save</g:SubmitButton>
 					<g:Label ui:field="formStatusMessage" ui:styleName="{style.formStatusMessage}"/>

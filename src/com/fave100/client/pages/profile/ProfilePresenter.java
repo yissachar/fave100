@@ -27,6 +27,8 @@ public class ProfilePresenter extends
 		void setEmailError(String error);
 		void clearErrors();
 		void setFormStatusMessage(String message);
+		void setAvatarImg(String src);
+		void clearForm();
 	}
 
 	@ProxyCodeSplit
@@ -44,9 +46,12 @@ public class ProfilePresenter extends
 		getView().setUiHandlers(this);
 	}
 
+	// Should have a button to remove current avatar if they have uploaded a native avatar
 	@Override
 	public void onBind() {
 		super.onBind();
+
+		// Create the blobstore URL that the avatar will be uploaded to
 		final Request<String> blobRequest = requestFactory.appUserRequest().createBlobstoreUrl("/avatarUpload");
 		blobRequest.fire(new Receiver<String>() {
 			@Override
@@ -70,11 +75,25 @@ public class ProfilePresenter extends
 	@Override
 	public void onReveal() {
 		super.onReveal();
+
+		setProfileData();
+	}
+
+	@Override
+	public void onHide() {
+		super.onHide();
+
+		getView().clearForm();
+	}
+
+	private void setProfileData() {
 		final Request<AppUserProxy> loggedInUserReq = requestFactory.appUserRequest().getLoggedInAppUser();
 		loggedInUserReq.fire(new Receiver<AppUserProxy>() {
 			@Override
 			public void onSuccess(final AppUserProxy user) {
+				getView().clearForm();
 				getView().setEmailValue(user.getEmail());
+				getView().setAvatarImg(user.getAvatarImage());
 			}
 		});
 	}
@@ -85,7 +104,7 @@ public class ProfilePresenter extends
 	}
 
 	@Override
-	public void setProfileData(final String email) {
+	public void saveProfileData(final String email) {
 		getView().clearErrors();
 
 		final String emailError = Validator.validateEmail(email);
@@ -95,6 +114,7 @@ public class ProfilePresenter extends
 				@Override
 				public void onSuccess(final Boolean saved) {
 					if(saved == true) {
+						setProfileData();
 						getView().setFormStatusMessage("Profile saved");
 					}
 				}
@@ -108,5 +128,5 @@ public class ProfilePresenter extends
 
 interface ProfileUiHandlers extends UiHandlers {
 	void setUserAvatarBlobKey(String blobKey);
-	void setProfileData(String email);
+	void saveProfileData(String email);
 }
