@@ -28,16 +28,16 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 
 public class PersonalFaveList extends FaveListBase {
-	
+
 	private Element draggedRow;
 	private ApplicationRequestFactory requestFactory;
 	private final List<SongProxy> clientFaveList = new ArrayList<SongProxy>();
-	
+
 	public PersonalFaveList(final ApplicationRequestFactory requestFactory) {
 		super(requestFactory);
-		
-		this.requestFactory = requestFactory;	
-		
+
+		this.requestFactory = requestFactory;
+
 		_cells.add(new HasCell<SongProxy, SongProxy>() {
 			private final PersonalFaveListCell cell = new PersonalFaveListCell(requestFactory);
 
@@ -47,7 +47,7 @@ public class PersonalFaveList extends FaveListBase {
             }
 
 			@Override
-			public FieldUpdater<SongProxy, SongProxy> getFieldUpdater() {				
+			public FieldUpdater<SongProxy, SongProxy> getFieldUpdater() {
 				return null;
 			}
 
@@ -56,29 +56,30 @@ public class PersonalFaveList extends FaveListBase {
 				return object;
 			}
 		});
-		
+
 		_cells.add(new HasCell<SongProxy, String>() {
 			private final EditTextCell cell = new EditTextCell(){
 				// TODO: CSS method won't work in all browsers: get the following to work!
+				// or decide what browsers we will not support in which case CSS may be fine
 				/*@Override
 				public void render(final Context context, final String value, final SafeHtmlBuilder sb) {
 					// Show some default text if there isn't a whyline
 					if(value == null || value.isEmpty()) {
-						super.render(context, "Click here to enter a whyline", sb);						
+						super.render(context, "Click here to enter a whyline", sb);
 					} else {
 						// Otherwise, just render the value
 						super.render(context, value, sb);
 					}
 				}*/
 			};
-			
+
 			private final FieldUpdater<SongProxy, String> fieldUpdater = new FieldUpdater<SongProxy, String>() {
 				@Override
 				public void update(final int index, final SongProxy object, final String value) {
 					if(value.isEmpty()) {
 						// TODO: Need to handle null whylines in the list
 						//cell.clearViewData(_cellList.getKeyProvider().getKey(object));
-						//_cellList.redraw();						
+						//_cellList.redraw();
 					} else {
 						final Request<Void> editWhyline = requestFactory.faveListRequest().editWhylineForCurrentUser(FaveList.DEFAULT_HASHTAG, clientFaveList.indexOf(object), value);
 						editWhyline.fire();
@@ -105,7 +106,7 @@ public class PersonalFaveList extends FaveListBase {
 				return whyline;
 			}
 		});
-		
+
 		// Mouse up handler for change position
 		RootPanel.get().addDomHandler(new MouseUpHandler() {
 			@Override
@@ -117,7 +118,7 @@ public class PersonalFaveList extends FaveListBase {
 				// Insert the dragged row back into the table at the correct position
 				$draggedItem.first().insertAfter($(".clonedHiddenRow"));
 				// Get the new index
-				final int newIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedRow);						
+				final int newIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedRow);
 				// Rank on the server
 				if(currentIndex != newIndex) {
 					// Don't bother doing anything if the indices are the same
@@ -129,75 +130,75 @@ public class PersonalFaveList extends FaveListBase {
 		    	  			refreshList();
 		    	  		}
 					});
-				}    	 
+				}
 				//remove all drag associated items now that we are done with the drag
 	    	  	$draggedItem.removeClass("draggedFaveListItem");
 				removeStyleName("unselectable");
 				$(".clonedHiddenRow").remove();
 				$("body").unbind("mousemove");
-				draggedRow = null;	
+				draggedRow = null;
 			}
-			
+
 		}, MouseUpEvent.getType());
-		
+
 		final CompositeCell<SongProxy> cell = new CompositeCell<SongProxy>(_cells) {
 			@Override
 			public void onBrowserEvent(final Context context, final Element parent, final SongProxy song,
-				final NativeEvent event, final ValueUpdater<SongProxy> valueUpdater) {	
-				
-				if(song == null) return;		
+				final NativeEvent event, final ValueUpdater<SongProxy> valueUpdater) {
+
+				if(song == null) return;
 				super.onBrowserEvent(context, parent, song, event, valueUpdater);
-				
+
 				final Element eventTarget = event.getEventTarget().cast();
 				final String className = eventTarget.getClassName();
-				
+
 				// If the button that was clicked was middle or left, do nothing
 				if(event.getButton() != NativeEvent.BUTTON_LEFT) return;
-				
+
 				// Click on whyline - do nothing special
 				if(className.isEmpty()) return;
-								
+
 				if(className.contains("faveListDeleteButton")) {
-					
-					if(event.getType().equals("click")) {					
+
+					if(event.getType().equals("click")) {
 						// Delete button was clicked
 				    	final FaveListRequest faveListRequest = requestFactory.faveListRequest();
 				    	final Request<Void> deleteReq = faveListRequest.removeFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, context.getIndex());
 				    	deleteReq.fire(new Receiver<Void>() {
 				    		@Override
 				    		public void onSuccess(final Void response) {
-				    			refreshList();									
-				    		}								
+				    			refreshList();
+				    		}
 				    	});
-						
+
 					}
-				// Make sure that mousedown doesn't capture clicks meant for buttons and links	
-				} else if(!className.contains("faveListTrackName") && event.getType().equals("mousedown")) {	
+				// Make sure that mousedown doesn't capture clicks meant for buttons and links
+				} else if(!className.contains("faveListTrackName") && event.getType().equals("mousedown")) {
 					if(className.contains("faveListImageThumb")) {
 						// Stop image from being draggable
 						event.preventDefault();
 					}
-					
+
 					draggedRow = parent;
 					final GQuery $row = $(draggedRow);
-					addStyleName("unselectable");						
-					
-					// Add a hidden row to act as a placeholder while the real row is moved					
+					addStyleName("unselectable");
+
+					// Add a hidden row to act as a placeholder while the real row is moved
 					$row.clone().css("visibility", "hidden").addClass("clonedHiddenRow").insertBefore($row);
 					$row.addClass("draggedFaveListItem");
-					
+
 					setPos($row, event.getClientY()+Window.getScrollTop());
-					
+
 					$("body").mousemove(new Function() {
 						@Override
 						public boolean f(final Event event) {
-							// Set the dragged row position to be equal to mouseY						
+							// Set the dragged row position to be equal to mouseY
 							final GQuery $draggedFaveListItem = $(".draggedFaveListItem");
 							setPos($draggedFaveListItem, event.getClientY()+Window.getScrollTop());
-							
+
 							final int draggedTop = $draggedFaveListItem.offset().top;
 							final int draggedBottom = draggedTop + $draggedFaveListItem.outerHeight(true);
-							// Check if dragged row collides with row above or row below								
+							// Check if dragged row collides with row above or row below
 							final GQuery $clonedHiddenRow = $(".clonedHiddenRow");
 							GQuery $previous = $clonedHiddenRow.prev();
 							GQuery $next = $clonedHiddenRow.next();
@@ -214,23 +215,23 @@ public class PersonalFaveList extends FaveListBase {
 								$(".clonedHiddenRow").insertAfter($next);
 							}
 							return true;
-						}		
+						}
 					});
 				}
 			}
 		};
-		
+
 		createCellList(cell).addClassName("rankableFaveList");
 	}
-	
-	private void setPos(final GQuery element, final int mouseY) {	
+
+	private void setPos(final GQuery element, final int mouseY) {
 		final int clonedHeight = $(".clonedHiddenRow").outerHeight(true);
 		final int elementHeight = element.outerHeight(true);
 		final int newPos = mouseY-(elementHeight*2);
 		final int draggedBottom = newPos + elementHeight;
 		final int faveListTop = (int) ($(".faveList").offset().top-(clonedHeight*1.65));
 		final int faveListBottom = faveListTop+$(".faveList").outerHeight(true);//-clonedHeight/2;
-		
+
 		// If dragged row goes out of top or bottom bounds, stop it
 		if(newPos <  faveListTop) {
 			// Element is above the favelist, make it at the favelist height
@@ -243,22 +244,22 @@ public class PersonalFaveList extends FaveListBase {
 			element.css("top", newPos+"px");
 		}
 	}
-	
+
 	public void refreshList() {
 		//TODO: To reduce number of RPC calls, perhaps don't refresh list every change
 		// instead, make changes locally on client by adding elements to DOM
-		
+
 		// Get the data from the datastore
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
 		final Request<List<SongProxy>> currentUserReq = faveListRequest.getFaveItemsForCurrentUser(FaveList.DEFAULT_HASHTAG);
 		currentUserReq.fire(new Receiver<List<SongProxy>>() {
 			@Override
-			public void onSuccess(final List<SongProxy> faveItems) {				
+			public void onSuccess(final List<SongProxy> faveItems) {
 				if(faveItems != null) {
 					clientFaveList.clear();
 					clientFaveList.addAll(faveItems);
 					setRowData(clientFaveList);
-				}			
+				}
 			}
 		});
 	}

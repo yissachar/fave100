@@ -348,7 +348,6 @@ public class AppUser extends DatastoreObject{
 	}
 
 	public static AppUser createAppUserFromGoogleAccount(final String username) {
-		// TODO: Disallow white-space, other special characters?
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
 			@Override
@@ -587,7 +586,6 @@ public class AppUser extends DatastoreObject{
 
 	public static void followUser(final String username) {
 		// TODO: Need a better method of message passing than RuntimeExceptions
-		// TODO: Move this into follower class
 		final AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) throw new RuntimeException("Please log in");
 		if(currentUser.username.equals(username)) throw new RuntimeException("You cannot follow yourself");
@@ -629,7 +627,6 @@ public class AppUser extends DatastoreObject{
 	}
 
 	public String getAvatarImage() {
-		// TODO: Need local avatar as well (if they don't have gravatar or twitter)
 		if(avatar == null) {
 			// If there is no avatar, serve a Gravatar
 			// TODO: Do we even want to show gravatars at all? some privacy issues
@@ -640,7 +637,7 @@ public class AppUser extends DatastoreObject{
 		        final String hash = String.format("%1$032x", i);
 		        return "http://www.gravatar.com/avatar/"+hash+"?d=mm";
 			} catch (final Exception e) {
-				// TODO: Do we care what happens if an exception is thrown here?
+				// Don't care
 			}
 		}
 		try {
@@ -675,10 +672,10 @@ public class AppUser extends DatastoreObject{
 			        final Session session = Session.getDefaultInstance(props, null);
 
 			        try {
-			        	// TODO: Test on appengine to see if working
 			        	final PwdResetToken pwdResetToken = new PwdResetToken(appUser.getUsername());
 			        	ofy().save().entity(pwdResetToken).now();
 			            final Message msg = new MimeMessage(session);
+			            // TODO: Change email sender to proper one for launch
 			            msg.setFrom(new InternetAddress("fave100test@gmail.com", "Fave100"));
 			            msg.addRecipient(Message.RecipientType.TO,
 			                             new InternetAddress(emailAddress, username));

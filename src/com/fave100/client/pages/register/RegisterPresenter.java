@@ -80,7 +80,7 @@ public class RegisterPresenter extends
 			public void onSuccess(final AppUserProxy user) {
 				if(user != null) {
 					// TODO: Gatekeeper instead? (need CurrentUser class in order for that to work,
-					// instead of RF every request, uses evebts)
+					// instead of RF every request, uses events)
 
 					// Logged in user trying to register: redirect them to home
 					placeManager.revealDefaultPlace();
@@ -94,7 +94,6 @@ public class RegisterPresenter extends
 			// The user is being redirected back to the register page after signing in to
 			// their 3rd party account - prompt them for a username and create their account
 
-			// TODO: Can we do this in one request?
 			// Make sure that the user is actually logged into Google
 			final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 			final Request<Boolean> checkGoogleUserLoggedIn = appUserRequest.isGoogleUserLoggedIn();
@@ -102,6 +101,7 @@ public class RegisterPresenter extends
 				@Override
 				public void onSuccess(final Boolean loggedIn) {
 					if(loggedIn) {
+						// If user is logged in to Google, log them in to Fave100
 						final Request<AppUserProxy> loginWithGoogle = requestFactory.appUserRequest().loginWithGoogle();
 						loginWithGoogle.fire(new Receiver<AppUserProxy>() {
 							@Override
@@ -119,7 +119,7 @@ public class RegisterPresenter extends
 					}
 				}
 			});
-		// TODO: Duplicate code with above, merge where possible
+
 		} else if(provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
 			// The user is being redirected back to the register page after signing in to
 			// their 3rd party account - prompt them for a username and create their account
@@ -138,22 +138,12 @@ public class RegisterPresenter extends
 					getProxy().manualReveal(RegisterPresenter.this);
 				}
 			});
-		//} else if(provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
+
 		} else if(Window.Location.getParameter("code") != null){
+
 			getView().showThirdPartyUsernamePrompt();
 			getProxy().manualReveal(RegisterPresenter.this);
-			// Try to log the user in with Facebook
-			/*final String state = Window.Location.getParameter("state");
-			final Request<AppUserProxy> loginWithTwitter = requestFactory.appUserRequest().loginWithFacebook(state);
-			loginWithTwitter.fire(new Receiver<AppUserProxy>() {
-				@Override
-				public void onSuccess(final AppUserProxy user) {
-					if(user != null) {
-						goToMyFave100();
-					}
-					getProxy().manualReveal(RegisterPresenter.this);
-				}
-			});*/
+
 		} else {
 			getView().hideThirdPartyUsernamePrompt();
 			getProxy().manualReveal(RegisterPresenter.this);

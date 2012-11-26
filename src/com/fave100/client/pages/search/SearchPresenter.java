@@ -51,7 +51,6 @@ public class SearchPresenter extends
 		getView().resetView();
 	}
 
-	// TODO: instead of limiting to 25 results, should give paged results?
 	// TODO: need a global "loading" indicator
 	@Override
 	public void showResults(final String songTerm, final String artistTerm) {
