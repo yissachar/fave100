@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -710,7 +708,7 @@ public class AppUser extends DatastoreObject{
 		final PwdResetToken pwdResetToken = PwdResetToken.findPwdResetToken(token);
 		if(pwdResetToken != null) {
 			final Date now = new Date();
-			Logger.getAnonymousLogger().log(Level.SEVERE, "we are here"+pwdResetToken.getExpiry().getTime() + " now: "+now.getTime());
+
 			if(pwdResetToken.getExpiry().getTime() > now.getTime()) {
 				// Token hasn't expired yet, change password
 				final AppUser appUser = pwdResetToken.getAppUser().get();
