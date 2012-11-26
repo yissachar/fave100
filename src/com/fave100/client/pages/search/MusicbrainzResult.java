@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class MusicbrainzResult implements Serializable, SongInterface {
-	
+
 	private String mbid;
 	private String trackName;
 	private String artistName;
 	private String releaseDate;
 	private String coverArtUrl;
 	private String primaryGenreName;
-	
+
 	public MusicbrainzResult() {
 	}
 
@@ -71,7 +71,6 @@ public class MusicbrainzResult implements Serializable, SongInterface {
 
 	@Override
 	public String getYouTubeEmbedUrl() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

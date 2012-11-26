@@ -66,7 +66,8 @@ public class SongSuggestBox extends SuggestBox{
 
 		    @Override
 			public void onFailure(final Throwable throwable) {
-		    	//Window.alert("Fail!");
+		    	// We don't care if it fails as there is nothing we
+		    	// can do
 		    }
 
 		    @Override
@@ -93,7 +94,7 @@ public class SongSuggestBox extends SuggestBox{
 	    	    		mapEntry += " ";
 	    	    	}
 	    	    	itemSuggestionMap.put(mapEntry, entry);
-	    	    	// TODO: Safe HTML?
+
 	    	    	suggestions.addSuggestion(mapEntry, suggestionEntry);
 	    	    }
 	    	    showSuggestionList();

@@ -10,7 +10,6 @@ import com.googlecode.objectify.annotation.Load;
 
 @Entity
 public class Follower {
-	// TODO: This will only work if we ban : in usernames
 	@IgnoreSave public static String ID_SEPARATOR = ":";
 
 	@Id private String id;

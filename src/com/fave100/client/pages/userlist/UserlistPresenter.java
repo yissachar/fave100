@@ -29,7 +29,7 @@ public class UserlistPresenter extends
 	@NameToken(NameTokens.userlist)
 	public interface MyProxy extends ProxyPlace<UserlistPresenter> {
 	}
-	
+
 	@Inject ApplicationRequestFactory requestFactory;
 
 	@Inject
@@ -37,18 +37,18 @@ public class UserlistPresenter extends
 			final MyProxy proxy) {
 		super(eventBus, view, proxy);
 	}
-	
+
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
-	    
+
 	    final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		final Request<List<AppUserProxy>> userListReq = appUserRequest.getAppUsers();
 		userListReq.fire(new Receiver<List<AppUserProxy>>() {
 			@Override
 			public void onSuccess(final List<AppUserProxy> userList) {
-				// TODO: This needs to be safeHTML				
-				String output = "<ul>";				
+				// TODO: Needs to be widget...
+				String output = "<ul>";
 				for(final AppUserProxy user : userList) {
 					output += "<li>";
 					output += "<img src='"+user.getAvatarImage()+"'/>";
@@ -57,8 +57,8 @@ public class UserlistPresenter extends
 					output += "</li>";
 				}
 				output += "</ul>";
-				getView().getUserList().setHTML(output);				
-			}			
+				getView().getUserList().setHTML(output);
+			}
 		});
 	}
 }

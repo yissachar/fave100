@@ -13,30 +13,29 @@ import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
  *
  */
 public class MusicSuggestionOracle extends MultiWordSuggestOracle{
-	
+
 	private Map<String, String> suggestionMap = new LinkedHashMap<String, String>();
-	
-	// TODO: Need to enforce saftey of display string here, otherwise XSS
+
 	public void addSuggestion(final String replacementString, final String displayString) {
 		suggestionMap.put(replacementString, displayString);
 		this.add(replacementString);
 	}
-	
+
 	public void clearSuggestions() {
 		suggestionMap.clear();
 		this.clear();
 	}
-	
+
 	@Override
 	protected MultiWordSuggestion createSuggestion(final String replacementString, final String displayString) {
-		return new MultiWordSuggestion(replacementString, suggestionMap.get(replacementString));		
+		return new MultiWordSuggestion(replacementString, suggestionMap.get(replacementString));
 	}
-	
+
 	// Override GWT SuggestBox and use all suggestions that were added
 	@Override
 	public void requestSuggestions(final Request request, final Callback callback) {
 		final List<MultiWordSuggestion> suggestions = new ArrayList<MultiWordSuggestOracle.MultiWordSuggestion>();
-		
+
 		for(final String suggestionKey : suggestionMap.keySet()) {
 			suggestions.add(new MultiWordSuggestion(suggestionKey, suggestionMap.get(suggestionKey)));
 		}
@@ -45,5 +44,5 @@ public class MusicSuggestionOracle extends MultiWordSuggestOracle{
 
 	    callback.onSuggestionsReady(request, response);
 	}
-	
+
 }

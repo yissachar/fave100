@@ -6,6 +6,7 @@ public abstract class Validator {
 	// TODO: Other validations?
 
 	public static String validateUsername(final String username) {
+		// TODO: What characters do we allow for password?
 		final String usernamePattern = "^[a-zA-Z0-9]+$";
 		if(username == null || username.equals("")) {
 			return "Username cannot be left empty";
