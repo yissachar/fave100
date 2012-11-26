@@ -12,6 +12,10 @@
 			margin: 10px;
 			text-align: center;
 		}
+		.formStatusMessage {
+			display: inline-block;
+			margin-left: 10px;
+		}
 	</ui:style>
 	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>
@@ -19,11 +23,13 @@
 			<h2 class="{style.pageTitle}">Profile</h2>			
 			<g:FormPanel method="POST" encoding="multipart/form-data" ui:field="profileForm">
 				<g:HTMLPanel styleName="registerContainer profileForm">
-					<g:Label>Email</g:Label>
+					<g:Label>Email</g:Label>					
 					<g:TextBox  ui:field="emailInput"/>
+					<g:Label styleName="error inputStatusMessage" ui:field="emailStatusMessage"/>
 					<g:Label>Avatar</g:Label>
 					<g:FileUpload name="avatar" />
 					<g:SubmitButton>Save</g:SubmitButton>
+					<g:Label ui:field="formStatusMessage" ui:styleName="{style.formStatusMessage}"/>
 				</g:HTMLPanel>
 			</g:FormPanel>
 		</div>

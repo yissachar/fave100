@@ -130,6 +130,12 @@ footer {
 	color: #FFF;	
 }
 
+.inputStatusMessage {
+	display: block;
+	font-size: 0.75em;
+	margin-bottom: 5px;
+}
+
 /* Standard Form */
 
 .standardForm {

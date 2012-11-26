@@ -656,11 +656,12 @@ public class AppUser extends DatastoreObject{
 		return avatar;
 	}
 
-	public static void setProfileData(final String email) {
+	public static Boolean setProfileData(final String email) {
 		final AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) return;
+		if(currentUser == null) return false;
 		currentUser.setEmail(email);
 		ofy().save().entity(currentUser).now();
+		return true;
 	}
 
 	public static Boolean emailPasswordResetToken(final String username, final String emailAddress) {

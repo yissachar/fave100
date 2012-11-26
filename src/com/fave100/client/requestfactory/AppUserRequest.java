@@ -43,7 +43,7 @@ public interface AppUserRequest extends RequestContext{
 	Request<List<String>> getActivityForUser(String username);
 	Request<String> createBlobstoreUrl(String url);
 	Request<Void> setAvatarForCurrentUser(String avatar);
-	Request<Void> setProfileData(String email);
+	Request<Boolean> setProfileData(String email);
 	Request<Boolean> emailPasswordResetToken(String username, String emailAddress);
 	Request<Boolean> changePassword(String password, String token);
 }
