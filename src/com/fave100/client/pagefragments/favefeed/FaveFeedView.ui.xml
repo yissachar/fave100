@@ -17,39 +17,44 @@
 			background: #FFF;
 		}
 		
-		.faveFeed h4 {
+		.faveFeed h4, .faveFeedTitle {
 			background: #E4E4E4;
 			padding: 7px;			
 			color: #333;
 			border-bottom: 1px solid #BBB;
 		}
 		
-		.faveFeed a, .faveFeed p {
+		.faveFeed a, .faveFeed p, .faveFeedMessage {
 			display: block;
 			padding: 8px;
 		}
 		
-		.faveFeed ul {
+		.faveFeed ul, .activityPanel {
 			list-style-type: none;
 			padding: 0;
 		}
 		
-		.faveFeed li {
+		.faveFeed li, .activityPanel a {
 			border-bottom: 1px solid #999;			
 			cursor: pointer;			
 		}
 		
-		.faveFeed li a {
+		.faveFeed li a, .activityPanel a {
 			text-decoration: none;
 			padding: 7px;
 		}
 		
-		.faveFeed li:hover{
+		.faveFeed li:hover, .activityPanel a:hover{
 			background: #C1EDA6;
 		}	
 	</ui:style>
 	
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel styleName="{style.faveFeed}">
 		<g:InlineHTML ui:field="panel"/>
+		<g:Label ui:field='faveFeedTitle' ui:styleName='{style.faveFeedTitle}'/>
+		<g:InlineHTML ui:field='activityPanel' ui:styleName='{style.activityPanel}'/>
+		<g:Label ui:field='faveFeedMessage' ui:styleName='{style.faveFeedMessage}'/>
+		<g:InlineHyperlink targetHistoryToken='{nameTokens.getLogin}' ui:field='loginLink'>Try out Fave100 today</g:InlineHyperlink>
 	</g:HTMLPanel>
 </ui:UiBinder>
