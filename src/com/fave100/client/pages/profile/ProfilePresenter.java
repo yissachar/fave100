@@ -5,6 +5,7 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.Validator;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -23,13 +24,16 @@ public class ProfilePresenter extends
 	public interface MyView extends BaseView, HasUiHandlers<ProfileUiHandlers> {
 		void createActionUrl(String url);
 		void setEmailValue(String val);
+		void setEmailError(String error);
+		void clearErrors();
+		void setFormStatusMessage(String message);
 	}
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.profile)
 	public interface MyProxy extends ProxyPlace<ProfilePresenter> {
 	}
-	
+
 	private ApplicationRequestFactory requestFactory;
 
 	@Inject
@@ -39,7 +43,7 @@ public class ProfilePresenter extends
 		this.requestFactory = requestFactory;
 		getView().setUiHandlers(this);
 	}
-	
+
 	@Override
 	public void onBind() {
 		super.onBind();
@@ -51,18 +55,18 @@ public class ProfilePresenter extends
 			}
 		});
 	}
-	
+
 	@Override
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
-		
+
 		final String blobKey = placeRequest.getParameter("blob-key","");
 		if(!blobKey.isEmpty()) {
 			final Request<Void> avatarReq = requestFactory.appUserRequest().setAvatarForCurrentUser(blobKey);
 			avatarReq.fire();
 		}
 	}
-	
+
 	@Override
 	public void onReveal() {
 		super.onReveal();
@@ -71,19 +75,33 @@ public class ProfilePresenter extends
 			@Override
 			public void onSuccess(final AppUserProxy user) {
 				getView().setEmailValue(user.getEmail());
-			}			
-		});		
+			}
+		});
 	}
 
 	@Override
 	public void setUserAvatarBlobKey(final String blobKey) {
 		requestFactory.appUserRequest().setAvatarForCurrentUser(blobKey).fire();
 	}
-	
+
 	@Override
 	public void setProfileData(final String email) {
-		final Request<Void> setProfileDataReq = requestFactory.appUserRequest().setProfileData(email);
-		setProfileDataReq.fire();
+		getView().clearErrors();
+
+		final String emailError = Validator.validateEmail(email);
+		if(emailError == null) {
+			final Request<Boolean> setProfileDataReq = requestFactory.appUserRequest().setProfileData(email);
+			setProfileDataReq.fire(new Receiver<Boolean>() {
+				@Override
+				public void onSuccess(final Boolean saved) {
+					if(saved == true) {
+						getView().setFormStatusMessage("Profile saved");
+					}
+				}
+			});
+		} else {
+			getView().setEmailError(emailError);
+		}
 	}
 
 }
