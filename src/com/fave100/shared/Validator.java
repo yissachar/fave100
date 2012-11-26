@@ -17,7 +17,7 @@ public abstract class Validator {
 	}
 
 	public static String validatePassword(final String password) {
-		final int minPwdSize = 8;
+		final int minPwdSize = 6;
 		// TODO: force uppercase, lowercase, special char in pwd?
 		if(password == null || password.equals("")) {
 			return "Password cannot be left empty";
