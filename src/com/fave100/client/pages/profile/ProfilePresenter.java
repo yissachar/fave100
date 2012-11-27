@@ -50,15 +50,6 @@ public class ProfilePresenter extends
 	@Override
 	public void onBind() {
 		super.onBind();
-
-		// Create the blobstore URL that the avatar will be uploaded to
-		final Request<String> blobRequest = requestFactory.appUserRequest().createBlobstoreUrl("/avatarUpload");
-		blobRequest.fire(new Receiver<String>() {
-			@Override
-			public void onSuccess(final String url) {
-				getView().createActionUrl(url);
-			}
-		});
 	}
 
 	@Override
@@ -92,8 +83,21 @@ public class ProfilePresenter extends
 			@Override
 			public void onSuccess(final AppUserProxy user) {
 				getView().clearForm();
+				setUploadAction();
 				getView().setEmailValue(user.getEmail());
 				getView().setAvatarImg(user.getAvatarImage());
+			}
+		});
+	}
+
+	private void setUploadAction() {
+		// Create the blobstore URL that the avatar will be uploaded to
+		// Need to recreate each time because session expires after succesful upload
+		final Request<String> blobRequest = requestFactory.appUserRequest().createBlobstoreUrl("/avatarUpload");
+		blobRequest.fire(new Receiver<String>() {
+			@Override
+			public void onSuccess(final String url) {
+				getView().createActionUrl(url);
 			}
 		});
 	}
