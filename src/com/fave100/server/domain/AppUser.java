@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -621,7 +619,7 @@ public class AppUser extends DatastoreObject{
 		if(currentUser == null) return;
 		// TODO: Max upload size?
 		// TODO: Twitter user can't upload own avatar
-		if(currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {Logger.getAnonymousLogger().log(Level.SEVERE, "uh what?");
+		if(currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
 			BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
 		}
 		currentUser.setAvatar(avatar);
