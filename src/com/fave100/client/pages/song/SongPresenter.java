@@ -5,6 +5,7 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
@@ -22,13 +23,14 @@ public class SongPresenter extends
 
 	public interface MyView extends BaseView {
 		void setSongInfo(SongProxy song);
+		void setYouTubeVideos(YouTubeSearchListJSON videos);
 	}
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.song)
-	public interface MyProxy extends ProxyPlace<SongPresenter> {		
+	public interface MyProxy extends ProxyPlace<SongPresenter> {
 	}
-	
+
 	private final ApplicationRequestFactory requestFactory;
 	private final PlaceManager placeManager;
 
@@ -45,16 +47,16 @@ public class SongPresenter extends
 	protected void revealInParent() {
 		RevealRootContentEvent.fire(this, this);
 	}
-	
+
 	@Override
 	public boolean useManualReveal() {
 		return true;
 	}
-	
+
 	@Override
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
-		
+
 		// Use parameters to determine what to reveal on page
 		final String song = URL.decode(placeRequest.getParameter("song", ""));
 		final String artist = URL.decode(placeRequest.getParameter("artist", ""));
@@ -69,6 +71,16 @@ public class SongPresenter extends
 				public void onSuccess(final SongProxy song) {
 					getView().setSongInfo(song);
 					getProxy().manualReveal(SongPresenter.this);
+				}
+			});
+
+			// Get any YouTube videos
+			final Request<String> getYoutubeReq = requestFactory.songRequest().getYouTubeResults(song, artist);
+			getYoutubeReq.fire(new Receiver<String>() {
+				@Override
+				public void onSuccess(final String json) {
+					final YouTubeSearchListJSON youTubeResults = JsonUtils.safeEval(json);
+					getView().setYouTubeVideos(youTubeResults);
 				}
 			});
 		}

@@ -4,6 +4,7 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.WhylineWaterfall;
+import com.fave100.client.widgets.YouTubeWidget;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Frame;
@@ -26,11 +27,12 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 	@UiField Label artistName;
 	@UiField Label releaseDate;
 	@UiField Frame youTubePlayer;
+	@UiField YouTubeWidget youTubeWidget;
 
 	@Inject
 	public SongView(final Binder binder, final ApplicationRequestFactory requestFactory) {
 		whylineWaterfall = new WhylineWaterfall(requestFactory);
-		widget = binder.createAndBindUi(this);		
+		widget = binder.createAndBindUi(this);
 		youTubePlayer.setVisible(false);
 	}
 
@@ -38,41 +40,46 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 	public Widget asWidget() {
 		return widget;
 	}
-	
+
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
 		if(slot == BasePresenter.TOP_BAR_SLOT) {
 			topBar.clear();
-			
+
 			if(content != null) {
 				topBar.add(content);
 			}
 		}
 		super.setInSlot(slot, content);
 	}
-	
+
 	@Override
 	public void setSongInfo(final SongProxy song) {
 		setSongTitle(song.getTrackName());
 		setArtistName(song.getArtistName());
 		setReleaseDate(song.getReleaseDate());
 		youTubePlayer.setVisible(false);
-		final String url = song.getYouTubeEmbedUrl(); 
+		final String url = song.getYouTubeEmbedUrl();
 		if(url != null && !url.isEmpty()) {
 			youTubePlayer.setUrl(url);
 			youTubePlayer.setVisible(true);
 		}
 	}
 
+	@Override
+	public void setYouTubeVideos(final YouTubeSearchListJSON videos) {
+		youTubeWidget.setVideoData(videos.getItems().get(0));
+	}
+
 	private void setSongTitle(final String title) {
 		songTitle.setText(title);
 	}
-	
+
 	private void setArtistName(final String name) {
 		artistName.setText(name);
 	}
 
 	private void setReleaseDate(final String date) {
 		releaseDate.setText(date);
-	}	
+	}
 }
