@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
@@ -98,7 +96,7 @@ public class Song extends DatastoreObject {
 			    content += inputLine;
 			}
 			in.close();
-			Logger.getAnonymousLogger().log(Level.SEVERE, content);
+
 			return content;
 		} catch (final Exception e) {
 
