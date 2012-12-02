@@ -81,7 +81,7 @@ public class Song extends DatastoreObject {
 
 	public static String getYouTubeResults(final String song, final String artist) {
 		try {
-			String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&maxResults=5&type=music";
+			String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&maxResults=5&type=video";
 			searchUrl += "&q="+song.replace(" ", "+")+"+"+artist.replace(" ", "+");
 			searchUrl += "&key="+Song.YOUTUBE_API_KEY;
 		    final URL url = new URL(searchUrl);
