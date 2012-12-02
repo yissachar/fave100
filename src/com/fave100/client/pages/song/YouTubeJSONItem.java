@@ -14,4 +14,8 @@ public class YouTubeJSONItem extends JavaScriptObject{
 		return this.id.videoId;
 	}-*/;
 
+	public final native String getThumbnail() /*-{
+		return this.snippet.thumbnails['default'].url;
+	}-*/;
+
 }

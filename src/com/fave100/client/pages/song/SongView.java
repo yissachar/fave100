@@ -68,7 +68,7 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 
 	@Override
 	public void setYouTubeVideos(final YouTubeSearchListJSON videos) {
-		youTubeWidget.setVideoData(videos.getItems().get(0));
+		youTubeWidget.setVideoData(videos.getItems());
 	}
 
 	private void setSongTitle(final String title) {
