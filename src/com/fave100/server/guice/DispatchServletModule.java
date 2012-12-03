@@ -2,9 +2,9 @@ package com.fave100.server.guice;
 
 
 import com.fave100.server.filters.EncodingFilter;
+import com.fave100.server.servlets.CustomRequestFactoryServlet;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
-import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
 import com.googlecode.objectify.ObjectifyFilter;
 import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;
 import com.gwtplatform.dispatch.shared.ActionImpl;
@@ -15,14 +15,14 @@ public class DispatchServletModule extends ServletModule {
 	public void configureServlets() {
 		serve("/" + ActionImpl.DEFAULT_SERVICE_NAME)
 				.with(DispatchServiceImpl.class);
-		
-		bind(RequestFactoryServlet.class).in(Singleton.class);
-		serve("/gwtRequest").with(RequestFactoryServlet.class);
-		
+
+		bind(CustomRequestFactoryServlet.class).in(Singleton.class);
+		serve("/gwtRequest").with(CustomRequestFactoryServlet.class);
+
 		bind(ObjectifyFilter.class).in(Singleton.class);
-		filter("/*").through(ObjectifyFilter.class);	
-		
+		filter("/*").through(ObjectifyFilter.class);
+
 		bind(EncodingFilter.class).in(Singleton.class);
 		filter("/*").through(EncodingFilter.class);
-	}	
+	}
 }
