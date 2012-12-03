@@ -13,6 +13,9 @@ import java.util.logging.Logger;
 
 import com.fave100.client.pages.search.SearchPresenter;
 import com.fave100.server.domain.Activity.Transaction;
+import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
+import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
+import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -49,14 +52,15 @@ public class FaveList extends DatastoreObject{
 
 	// TODO: Do FaveList activities need to be transactional? If so, need to set AppUser as parent
 	public static void addFaveItemForCurrentUser(final String hashtag, final String songID,
-			final String songTitle, final String artist) {
+			final String songTitle, final String artist)
+					throws NotLoggedInException, SongLimitReachedException, SongAlreadyInListException {
 
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) {
-			throw new RuntimeException("Please log in to complete this action");
+			throw new NotLoggedInException();
 		}
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
-		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new RuntimeException("You cannot have more than 100 songs in list");
+		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new SongLimitReachedException();
 
 		// See if the song exists in our datastore
 		Song song = Song.findSongByTitleAndArtist(songTitle, artist);
@@ -118,7 +122,7 @@ public class FaveList extends DatastoreObject{
 				}
 			}
 		}
-		if(unique == false) throw new RuntimeException("The song is already in your list");;
+		if(unique == false) throw new SongAlreadyInListException();;
 		// Create the new FaveItem
 		final String songArtistID = song.getTrackName()+Song.TOKEN_SEPARATOR+song.getArtistName();
 		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songArtistID));

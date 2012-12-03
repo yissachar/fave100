@@ -8,6 +8,10 @@ import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.Validator;
+import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
+import com.fave100.shared.exceptions.user.GoogleIdAlreadyExistsException;
+import com.fave100.shared.exceptions.user.TwitterIdAlreadyExistsException;
+import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -192,12 +196,16 @@ public class RegisterPresenter extends
 					if(createdUser != null) {
 						appUserCreated();
 					} else {
-						getView().setPasswordError("Username already in use");
+						getView().setPasswordError("An error occured");
 					}
 				}
 				@Override
-				public void onFailure(final ServerFailure failure) {// TODO: Use custom ServerFailur exceptions?
-					getView().setNativeUsernameError(failure.getMessage().replace("Server Error:", ""));
+				public void onFailure(final ServerFailure failure) {
+					String errorMsg = "An error occured";
+					if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
+						errorMsg = "A user with that name already exists";
+					}
+					getView().setNativeUsernameError(errorMsg);
 				}
 			});
 		}
@@ -217,7 +225,13 @@ public class RegisterPresenter extends
 					}
 					@Override
 					public void onFailure(final ServerFailure failure) {
-						getView().setThirdPartyUsernameError(failure.getMessage().replace("Server Error:", ""));
+						String errorMsg = "An error occured";
+						if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
+							errorMsg = "A user with that name already exists";
+						} else if (failure.getExceptionType().equals(GoogleIdAlreadyExistsException.class.getName())) {
+							errorMsg = "A Fave100 account is already associated with that Google account";
+						}
+						getView().setThirdPartyUsernameError(errorMsg);
 					}
 				});
 			} else if(provider.equals(RegisterPresenter.PROVIDER_TWITTER)){
@@ -232,7 +246,13 @@ public class RegisterPresenter extends
 					}
 					@Override
 					public void onFailure(final ServerFailure failure) {
-						getView().setThirdPartyUsernameError(failure.getMessage().replace("Server Error:", ""));
+						String errorMsg = "An error occured";
+						if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
+							errorMsg = "A user with that name already exists";
+						} else if (failure.getExceptionType().equals(TwitterIdAlreadyExistsException.class.getName())) {
+							errorMsg = "A Fave100 account is already associated with that Twitter account";
+						}
+						getView().setThirdPartyUsernameError(errorMsg);
 					}
 				});
 			//} else if (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
@@ -252,7 +272,13 @@ public class RegisterPresenter extends
 					}
 					@Override
 					public void onFailure(final ServerFailure failure) {
-						getView().setThirdPartyUsernameError(failure.getMessage().replace("Server Error:", ""));
+						String errorMsg = "An error occured";
+						if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
+							errorMsg = "A user with that name already exists";
+						} else if (failure.getExceptionType().equals(FacebookIdAlreadyExistsException.class.getName())) {
+							errorMsg = "A Fave100 account is already associated with that Facebook account";
+						}
+						getView().setThirdPartyUsernameError(errorMsg);
 					}
 				});
 			}

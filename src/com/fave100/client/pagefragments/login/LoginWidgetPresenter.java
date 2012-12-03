@@ -5,6 +5,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.exceptions.user.IncorrectLoginException;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -26,12 +27,12 @@ public class LoginWidgetPresenter extends
 		String getUsername();
 		String getPassword();
 		void clearUsername();
-		void clearPassword();		
+		void clearPassword();
 		void setError(String error);
 		void setGoogleLoginUrl(String url);
 		void setFacebookLoginUrl(String url);
 	}
-	
+
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
 
@@ -48,21 +49,21 @@ public class LoginWidgetPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
-		
+
 		String redirectUrl = "http://"+Window.Location.getHost()+Window.Location.getPath();
 		redirectUrl += Window.Location.getQueryString()+"#"+NameTokens.register+";provider=";
-		
+
 		// Get the login url for Google
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		final Request<String> loginUrlReq = appUserRequest.getGoogleLoginURL(redirectUrl+RegisterPresenter.PROVIDER_GOOGLE);
-		
+
 		loginUrlReq.fire(new Receiver<String>() {
-			@Override 
+			@Override
 			public void onSuccess(final String url) {
 				getView().setGoogleLoginUrl(url);
 			}
 		});
-		
+
 		// Get the login url for Facebook
 		final Request<String> facebookLoginUrlReq = requestFactory.appUserRequest().getFacebookAuthUrl(redirectUrl+RegisterPresenter.PROVIDER_FACEBOOK);
 		facebookLoginUrlReq.fire(new Receiver<String>() {
@@ -85,22 +86,27 @@ public class LoginWidgetPresenter extends
 			@Override
 			public void onSuccess(final AppUserProxy appUser) {
 				getView().clearUsername();
-				placeManager.revealPlace(new PlaceRequest(NameTokens.home));						
+				placeManager.revealPlace(new PlaceRequest(NameTokens.home));
 			}
+
 			@Override
 			public void onFailure(final ServerFailure failure) {
-				getView().setError("Username or password incorrect");
+				String errorMsg = "An error occured";
+				if(failure.getExceptionType().equals(IncorrectLoginException.class.getName())) {
+					errorMsg = "Username or password incorrect";
+				}
+				getView().setError(errorMsg);
 			}
 		});
 	}
-	
+
 	@Override
 	public void goToTwitterAuth() {
 		String redirect = "http://"+Window.Location.getHost()+Window.Location.getPath();
 		redirect += Window.Location.getQueryString()+"#"+NameTokens.register+";provider="+RegisterPresenter.PROVIDER_TWITTER;
 		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl(redirect);
 		authUrlReq.fire(new Receiver<String>() {
-			@Override 
+			@Override
 			public void onSuccess(final String url) {
 				Window.Location.assign(url);
 			}
