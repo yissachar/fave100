@@ -13,6 +13,7 @@
         
     </filter>
 
+	<!--  AppEngine Stats -->
     <filter-mapping>
         <filter-name>appstats</filter-name>
         <url-pattern>/*</url-pattern>
@@ -28,6 +29,7 @@
         <url-pattern>/appstats/*</url-pattern>
     </servlet-mapping>
     
+    <!--  Clean up expired sessions -->
     <servlet>
 	  	<servlet-name>_ah_sessioncleanup</servlet-name>
 	  	<servlet-class>com.google.apphosting.utils.servlet.SessionCleanupServlet</servlet-class>
@@ -38,6 +40,7 @@
 	 	<url-pattern>/_ah/sessioncleanup</url-pattern>
 	</servlet-mapping>
 	
+	<!-- Avatar upload -->
 	<servlet>
 	  	<servlet-name>avatarUpload</servlet-name>
 	  	<servlet-class>com.fave100.server.servlets.AvatarUploadServlet</servlet-class>
@@ -47,6 +50,8 @@
 	  	<servlet-name>avatarUpload</servlet-name>
 	 	<url-pattern>/avatarUpload</url-pattern>
 	</servlet-mapping>
+	
+	<!-- Stop unauthorized access to stats -->
 
     <security-constraint>
         <web-resource-collection>
