@@ -15,6 +15,10 @@ import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.requestfactory.SongRequest;
 import com.fave100.server.domain.FaveList;
+import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
+import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
+import com.fave100.shared.exceptions.following.AlreadyFollowingException;
+import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -34,10 +38,10 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class UsersPresenter extends
-		BasePresenter<UsersPresenter.MyView, UsersPresenter.MyProxy> 
+		BasePresenter<UsersPresenter.MyView, UsersPresenter.MyProxy>
 		implements UsersUiHandlers{
 
-	public interface MyView extends BaseView, HasUiHandlers<UsersUiHandlers> {			
+	public interface MyView extends BaseView, HasUiHandlers<UsersUiHandlers> {
 		void setFollowed();
 		void setUnfollowed();
 		void showFave100Tab();
@@ -49,10 +53,10 @@ public class UsersPresenter extends
 		void showOwnPage();
 		void showOtherPage();
 	}
-		
+
 	public static final String FAVE_100_TAB = "fave100";
 	public static final String ACTIVITY_TAB = "activity";
-		
+
 	private int currentRequestProgress = 0;
 	private String requestedUsername;
 	private final ApplicationRequestFactory requestFactory;
@@ -65,10 +69,10 @@ public class UsersPresenter extends
 	@NameToken(NameTokens.users)
 	public interface MyProxy extends ProxyPlace<UsersPresenter> {
 	}
-	
-	@ContentSlot 
+
+	@ContentSlot
 	public static final Type<RevealContentHandler<?>> FAVE_FEED_SLOT = new Type<RevealContentHandler<?>>();
-	
+
 	@Inject FaveFeedPresenter faveFeed;
 
 	@Inject
@@ -80,28 +84,28 @@ public class UsersPresenter extends
 		this.placeManager = placeManager;
 		getView().setUiHandlers(this);
 	}
-	
+
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
 	    setInSlot(FAVE_FEED_SLOT, faveFeed);
 	}
-			
+
 	@Override
 	public boolean useManualReveal() {
 		return true;
 	}
-	
+
 	@Override
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
-		
+
 		// Use parameters to determine what to reveal on page
-		requestedUsername = placeRequest.getParameter("u", "");	
+		requestedUsername = placeRequest.getParameter("u", "");
 		if(requestedUsername.isEmpty()) {
 			// Malformed request, send the user away
 			placeManager.revealDefaultPlace();
-		} else {			
+		} else {
 			// Update follow button
 			final Request<Boolean> checkFollowing = requestFactory.appUserRequest().checkFollowing(requestedUsername);
 			checkFollowing.fire(new Receiver<Boolean>() {
@@ -115,38 +119,38 @@ public class UsersPresenter extends
 					checkTotalRequestProgress();
 				}
 			});
-			
+
 			// Update user profile
-		    final Request<AppUserProxy> userReq = requestFactory.appUserRequest().findAppUser(requestedUsername);			
+		    final Request<AppUserProxy> userReq = requestFactory.appUserRequest().findAppUser(requestedUsername);
 		    userReq.fire(new Receiver<AppUserProxy>() {
 		    	@Override
 		    	public void onSuccess(final AppUserProxy user) {
-		    		if(user != null) {	    	
+		    		if(user != null) {
 	    				getView().setUserProfile(user);
-	    				// Check if user is the currently logged in user 
+	    				// Check if user is the currently logged in user
 	    				final Request<AppUserProxy> getLoggedInReq = requestFactory.appUserRequest().getLoggedInAppUser();
 	    				getLoggedInReq.fire(new Receiver<AppUserProxy>() {
 	    					@Override
 	    					public void onSuccess(final AppUserProxy loggedInUser) {
 	    						if(loggedInUser != null && loggedInUser.equals(user)) {
-	    							ownPage = true; 							
+	    							ownPage = true;
 	    						} else {
 	    							ownPage = false;
-	    						}	    				
+	    						}
 	    						checkTotalRequestProgress();
 	    					}
 	    				});
 	    				checkTotalRequestProgress();
 	    			} else {
 	    				placeManager.revealDefaultPlace();
-	    			}		    		
+	    			}
 		    	}
-		    });		    
-		    	
-		    
+		    });
+
+
 		    tab = placeRequest.getParameter("tab", UsersPresenter.FAVE_100_TAB);
 		    if(tab.equals(UsersPresenter.ACTIVITY_TAB)) {
-		    	
+
 				final Request<List<String>> getActivityReq = requestFactory.appUserRequest().getActivityForUser(requestedUsername);
 				getActivityReq.fire(new Receiver<List<String>>() {
 					@Override
@@ -163,48 +167,48 @@ public class UsersPresenter extends
 						checkTotalRequestProgress();
 					}
 				});
-		    } else if(tab.equals(UsersPresenter.FAVE_100_TAB)) {		    	
+		    } else if(tab.equals(UsersPresenter.FAVE_100_TAB)) {
 		    	// Update fave list
 				final Request<List<SongProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
 			    userFaveListReq.fire(new Receiver<List<SongProxy>>() {
 			    	@Override
-			    	public void onSuccess(final List<SongProxy> faveList) {			    		
-			    		if(faveList != null) {	 
+			    	public void onSuccess(final List<SongProxy> faveList) {
+			    		if(faveList != null) {
 			    			getView().setUserFaveList(faveList);
 		    			} else {
 		    				placeManager.revealDefaultPlace();
 		    			}
-			    		checkTotalRequestProgress();			    		
+			    		checkTotalRequestProgress();
 			    	}
-			    });		    	
+			    });
 		    }
 		}
 	}
-	
+
 	private void checkTotalRequestProgress() {
 		currentRequestProgress++;
 		if(currentRequestProgress >= 4) {
 			currentRequestProgress = 0;
-			
+
 			if(following) {
 				getView().setFollowed();
 			} else {
 				getView().setUnfollowed();
 			}
-			
+
 			if(ownPage) {
-				getView().showOwnPage();	   
+				getView().showOwnPage();
 			} else {
 				getView().showOtherPage();
 			}
-			
+
 			if(tab.equals(UsersPresenter.FAVE_100_TAB)) {
 				getView().showFave100Tab();
 			} else if(tab.equals(UsersPresenter.ACTIVITY_TAB)) {
 				getView().showActivityTab();
 			}
 			getProxy().manualReveal(UsersPresenter.this);
-		}	
+		}
 	}
 
 	@Override
@@ -219,7 +223,9 @@ public class UsersPresenter extends
 			}
 			@Override
 			public void onFailure(final ServerFailure failure) {
-				SideNotification.show(failure.getMessage().replace("Server Error:", ""), true);
+				if(failure.getExceptionType().equals(AlreadyFollowingException.class.getName())) {
+					SideNotification.show("You are already following this user", true);
+				}
 			}
 		});
 	}
@@ -228,26 +234,26 @@ public class UsersPresenter extends
 	public void goToFave100Tab() {
 		if(!tab.equals(UsersPresenter.FAVE_100_TAB)) {
 			placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.FAVE_100_TAB));
-		}		
+		}
 	}
 
 	@Override
 	public void goToActivityTab() {
 		if(!tab.equals(UsersPresenter.ACTIVITY_TAB)) {
 			placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.ACTIVITY_TAB));
-		}		
+		}
 	}
-	
+
 	@Override
-	public void addSong(final MusicbrainzResult faveItemMap) {		
-		
+	public void addSong(final MusicbrainzResult faveItemMap) {
+
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
 		final SongRequest songRequest = faveListRequest.append(requestFactory.songRequest());
-		
+
 		// Add the MBID as a FaveItem
 		final Request<Void> createReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
 				faveItemMap.getMbid(), faveItemMap.getTrackName(), faveItemMap.getArtistName());
-		
+
 		createReq.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
@@ -256,10 +262,15 @@ public class UsersPresenter extends
 			}
 			@Override
 			public void onFailure(final ServerFailure failure) {
-				// TODO: This shouldn't just spit out any error
-				SideNotification.show(failure.getMessage().replace("Server Error:", ""), true);
+				if(failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					placeManager.revealPlace(new PlaceRequest(NameTokens.login));
+				} else if(failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
+					SideNotification.show("You cannot have more than 100 songs in list");
+				} else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
+					SideNotification.show("The song is already in your list");
+				}
 			}
-		});		
+		});
 	}
 }
 

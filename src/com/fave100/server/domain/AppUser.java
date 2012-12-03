@@ -38,6 +38,14 @@ import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.Activity.Transaction;
 import com.fave100.shared.Validator;
+import com.fave100.shared.exceptions.following.AlreadyFollowingException;
+import com.fave100.shared.exceptions.following.CannotFollowYourselfException;
+import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
+import com.fave100.shared.exceptions.user.GoogleIdAlreadyExistsException;
+import com.fave100.shared.exceptions.user.IncorrectLoginException;
+import com.fave100.shared.exceptions.user.NotLoggedInException;
+import com.fave100.shared.exceptions.user.TwitterIdAlreadyExistsException;
+import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.images.ImagesServiceFactory;
@@ -119,16 +127,16 @@ public class AppUser extends DatastoreObject{
 	}
 
 	// Login methods
-	public static AppUser login(final String username, final String password) {
+	public static AppUser login(final String username, final String password) throws IncorrectLoginException {
 		final AppUser loggingInUser = findAppUser(username);
 		if(loggingInUser != null) {
 			if(!BCrypt.checkpw(password, loggingInUser.getPassword())
 				|| password == null || password.isEmpty()) {
-					throw new RuntimeException("Username or password incorrect");
+					throw new IncorrectLoginException();
 			}
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 		} else {
-			throw new RuntimeException("Username or password incorrect");
+			throw new IncorrectLoginException();
 		}
 		return loggingInUser;
 	}
@@ -318,101 +326,145 @@ public class AppUser extends DatastoreObject{
 	}
 
 	// TODO: Merge account creations to avoid duplication
-	public static AppUser createAppUser(final String username, final String password, final String email) {
+	public static AppUser createAppUser(final String username, final String password, final String email) throws UsernameAlreadyExistsException {
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
-		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
-			@Override
-			public AppUser run() {
-				if(ofy().load().type(AppUser.class).id(username).get() != null) {
-					// TODO: Better method of message passing needed...
-					throw new RuntimeException("A user with that name already exists");
-				} else {
-					if(Validator.validateUsername(username) == null
-						&& Validator.validatePassword(password) == null
-						&& Validator.validateEmail(email) == null){
+		final String userExistsMsg = "A user with that name already exists";
+		AppUser newAppUser = null;
+		try {
+			newAppUser = ofy().transact(new Work<AppUser>() {
+				@Override
+				public AppUser run() {
+					if(ofy().load().type(AppUser.class).id(username).get() != null) {
+						// Username already exists
+						throw new RuntimeException(userExistsMsg);
+					} else {
+						if(Validator.validateUsername(username) == null
+							&& Validator.validatePassword(password) == null
+							&& Validator.validateEmail(email) == null){
 
-						// Everything passes validation, create the user
-						final AppUser appUser = new AppUser(username, password, email);
+							// Everything passes validation, create the user
+							final AppUser appUser = new AppUser(username, password, email);
+							// Create the user's list
+							final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+							ofy().save().entities(appUser, faveList).now();
+							//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+							//return appUser;
+							try {
+								return login(username, password);
+							} catch (final IncorrectLoginException e) {
+								return null;
+							}
+						}
+						return null;
+					}
+				}
+			});
+
+		} catch (final RuntimeException e) {
+			if(e.getMessage().equals(userExistsMsg)) {
+				throw new UsernameAlreadyExistsException();
+			}
+		}
+
+		return newAppUser;
+	}
+
+	public static AppUser createAppUserFromGoogleAccount(final String username)
+			throws UsernameAlreadyExistsException, GoogleIdAlreadyExistsException {
+
+		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
+		final String userExistsMsg = "A user with that name already exists";
+		final String googleIDMsg = "There is already a Fave100 account associated with this Google ID";
+		AppUser newAppUser = null;
+		try {
+			newAppUser = ofy().transact(new Work<AppUser>() {
+				@Override
+				public AppUser run() {
+					final UserService userService = UserServiceFactory.getUserService();
+					final User user = userService.getCurrentUser();
+					if(ofy().load().type(AppUser.class).id(username).get() != null) {
+						throw new RuntimeException(userExistsMsg);
+					}
+					if(ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
+						throw new RuntimeException(googleIDMsg);
+					}
+					if(Validator.validateUsername(username) == null) {
+						// Create the user
+						final AppUser appUser = new AppUser();
+						appUser.setUsername(username);
+						appUser.setEmail(user.getEmail());
 						// Create the user's list
 						final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
-						ofy().save().entities(appUser, faveList).now();
-						//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-						//return appUser;
-						return login(username, password);
+						// Create the GoogleID lookup
+						final GoogleID googleID = new GoogleID(user.getUserId(), username);
+						ofy().save().entities(appUser, googleID, faveList).now();
+						return loginWithGoogle();
+					}
+					return null;
+
+				}
+			});
+		} catch (final RuntimeException e) {
+			if(e.getMessage().equals(userExistsMsg)) {
+				throw new UsernameAlreadyExistsException();
+			} else if (e.getMessage().equals(googleIDMsg)) {
+				throw new GoogleIdAlreadyExistsException();
+			}
+		}
+
+		return newAppUser;
+	}
+
+	public static AppUser createAppUserFromTwitterAccount(final String username, final String oauth_verifier)
+			throws UsernameAlreadyExistsException, TwitterIdAlreadyExistsException {
+
+		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
+		final String userExistsMsg = "A user with that name already exists";
+		final String twitterIDMsg = "There is already a Fave100 account associated with this Twitter ID";
+		AppUser newAppUser = null;
+		try {
+			newAppUser = ofy().transact(new Work<AppUser>() {
+				@Override
+				public AppUser run() {
+					final twitter4j.User user = getTwitterUser(oauth_verifier);
+					if(ofy().load().type(AppUser.class).id(username).get() != null) {
+						throw new RuntimeException(userExistsMsg);
+					}
+					if(ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
+						throw new RuntimeException(twitterIDMsg);
+					}
+					if(Validator.validateUsername(username) == null) {
+						// Create the user
+						final AppUser appUser = new AppUser();
+						appUser.setUsername(username);
+						// TODO: Do we need an email for twitter users?
+						// Create the user's list
+						final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+						// Create the TwitterID lookup
+						final TwitterID twitterID = new TwitterID(user.getId(), username);
+						// TODO: Store tokens in database?
+						ofy().save().entities(appUser, twitterID, faveList).now();
+						RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+						return appUser;
 					}
 					return null;
 				}
+			});
+		} catch (final RuntimeException e) {
+			if (e.getMessage().equals(userExistsMsg)) {
+				throw new UsernameAlreadyExistsException();
+			} else if (e.getMessage().equals(twitterIDMsg)) {
+				throw new TwitterIdAlreadyExistsException();
 			}
-		});
-		return newAppUser;
-	}
+		}
 
-	public static AppUser createAppUserFromGoogleAccount(final String username) {
-		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
-		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
-			@Override
-			public AppUser run() {
-				final UserService userService = UserServiceFactory.getUserService();
-				final User user = userService.getCurrentUser();
-				if(ofy().load().type(AppUser.class).id(username).get() != null) {
-					throw new RuntimeException("A user with that name already exists");
-				}
-				if(ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
-					throw new RuntimeException("There is already a Fave100 account associated with this Google ID");
-				}
-				if(Validator.validateUsername(username) == null) {
-					// Create the user
-					final AppUser appUser = new AppUser();
-					appUser.setUsername(username);
-					appUser.setEmail(user.getEmail());
-					// Create the user's list
-					final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
-					// Create the GoogleID lookup
-					final GoogleID googleID = new GoogleID(user.getUserId(), username);
-					ofy().save().entities(appUser, googleID, faveList).now();
-					return loginWithGoogle();
-				}
-				return null;
-
-			}
-		});
-		return newAppUser;
-	}
-
-	public static AppUser createAppUserFromTwitterAccount(final String username, final String oauth_verifier) {
-		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
-		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
-			@Override
-			public AppUser run() {
-				final twitter4j.User user = getTwitterUser(oauth_verifier);
-				if(ofy().load().type(AppUser.class).id(username).get() != null) {
-					throw new RuntimeException("A user with that name already exists");
-				}
-				if(ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
-					throw new RuntimeException("There is already a Fave100 account associated with this Twitter ID");
-				}
-				if(Validator.validateUsername(username) == null) {
-					// Create the user
-					final AppUser appUser = new AppUser();
-					appUser.setUsername(username);
-					// TODO: Do we need an email for twitter users?
-					// Create the user's list
-					final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
-					// Create the TwitterID lookup
-					final TwitterID twitterID = new TwitterID(user.getId(), username);
-					// TODO: Store tokens in database?
-					ofy().save().entities(appUser, twitterID, faveList).now();
-					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-					return appUser;
-				}
-				return null;
-			}
-		});
 		return newAppUser;
 	}
 
 	public static AppUser createAppUserFromFacebookAccount(final String username, final String state,
-			final String code, final String redirectUrl) {
+			final String code, final String redirectUrl)
+					throws UsernameAlreadyExistsException, FacebookIdAlreadyExistsException {
+
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 
 		// TODO: Do we need this now that we are using Scribe?
@@ -420,36 +472,47 @@ public class AppUser extends DatastoreObject{
 		/*if(!state.equals(RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("fbState"))) {
 			return null;
 		} */
-
-		final AppUser newAppUser = ofy().transact(new Work<AppUser>() {
-			@Override
-			public AppUser run() {
-		    	final Long userFacebookId = getCurrentFacebookUserId(code);
-		    	if(userFacebookId != null) {
-			    	if(ofy().load().type(AppUser.class).id(username).get() != null) {
-						throw new RuntimeException("A user with that name already exists");
-					}
-					if(ofy().load().type(FacebookID.class).id(userFacebookId).get() != null) {
-						throw new RuntimeException("There is already a Fave100 account associated with this Facebook ID");
-					}
-					if(Validator.validateUsername(username) == null) {
-						// Create the user
-						final AppUser appUser = new AppUser();
-						appUser.setUsername(username);
-						// TODO: Do we need an email for facebook users?
-						// Create the user's list
-						final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
-						// Create the Facebook lookup
-						final FacebookID facebookID = new FacebookID(userFacebookId, username);
-						// TODO: Store oAuth tokens in database?
-						ofy().save().entities(appUser, facebookID, faveList).now();
-						return loginWithFacebook(code);
-					}
+		final String userExistsMsg = "A user with that name already exists";
+		final String facebookIDMsg = "There is already a Fave100 account associated with this Facebook ID";
+		AppUser newAppUser = null;
+		try {
+			newAppUser = ofy().transact(new Work<AppUser>() {
+				@Override
+				public AppUser run() {
+			    	final Long userFacebookId = getCurrentFacebookUserId(code);
+			    	if(userFacebookId != null) {
+				    	if(ofy().load().type(AppUser.class).id(username).get() != null) {
+							throw new RuntimeException(userExistsMsg);
+						}
+						if(ofy().load().type(FacebookID.class).id(userFacebookId).get() != null) {
+							throw new RuntimeException(facebookIDMsg);
+						}
+						if(Validator.validateUsername(username) == null) {
+							// Create the user
+							final AppUser appUser = new AppUser();
+							appUser.setUsername(username);
+							// TODO: Do we need an email for facebook users?
+							// Create the user's list
+							final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+							// Create the Facebook lookup
+							final FacebookID facebookID = new FacebookID(userFacebookId, username);
+							// TODO: Store oAuth tokens in database?
+							ofy().save().entities(appUser, facebookID, faveList).now();
+							return loginWithFacebook(code);
+						}
+						return null;
+			    	}
 					return null;
-		    	}
-				return null;
+				}
+			});
+		} catch (final RuntimeException e) {
+			if (e.getMessage().equals(userExistsMsg)) {
+				throw new UsernameAlreadyExistsException();
+			} else if (e.getMessage().equals(facebookIDMsg)) {
+				throw new FacebookIdAlreadyExistsException();
 			}
-		});
+		}
+
 		return newAppUser;
 	}
 
@@ -459,9 +522,9 @@ public class AppUser extends DatastoreObject{
 		return ofy().load().type(AppUser.class).list();
 	}
 
-	public static List<String> getFaveFeedForCurrentUser() {
+	public static List<String> getFaveFeedForCurrentUser() throws NotLoggedInException {
 		final AppUser user = AppUser.getLoggedInAppUser();
-		if(user == null) throw new RuntimeException("Not logged in");
+		if(user == null) throw new NotLoggedInException();
 
 		// Get all the users that the current user is following
 		Ref.create(Key.create(AppUser.class, user.getUsername()));
@@ -584,13 +647,14 @@ public class AppUser extends DatastoreObject{
 		return faveFeed;
 	}
 
-	public static void followUser(final String username) {
-		// TODO: Need a better method of message passing than RuntimeExceptions
+	public static void followUser(final String username)
+			throws NotLoggedInException, AlreadyFollowingException, CannotFollowYourselfException {
+
 		final AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) throw new RuntimeException("Please log in");
-		if(currentUser.username.equals(username)) throw new RuntimeException("You cannot follow yourself");
+		if(currentUser == null) throw new NotLoggedInException();
+		if(currentUser.username.equals(username)) throw new CannotFollowYourselfException();
 		if(ofy().load().type(Follower.class).id(currentUser.username+Follower.ID_SEPARATOR+username).get() != null) {
-			throw new RuntimeException("You are already following this user");
+			throw new AlreadyFollowingException();
 		}
 		final Follower follower = new Follower(currentUser.username, username);
 		ofy().save().entity(follower).now();

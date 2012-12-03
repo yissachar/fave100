@@ -5,6 +5,8 @@ import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.server.domain.FaveList;
+import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
+import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -61,7 +63,11 @@ public class NonpersonalFaveListCell extends FaveListCellBase{
 
 					@Override
 					public void onFailure(final ServerFailure failure) {
-						SideNotification.show(failure.getMessage().replace("Server Error:", ""), true);
+						if(failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
+							SideNotification.show("You cannot have more than 100 songs in list");
+						} else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
+							SideNotification.show("The song is already in your list");
+						}
 					}
 				});
 
