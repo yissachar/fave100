@@ -732,7 +732,11 @@ public class AppUser extends DatastoreObject{
 		if(!username.isEmpty() && !emailAddress.isEmpty()) {
 			final AppUser appUser = findAppUser(username);
 			if(appUser != null) {
-				if(appUser.email.equals(emailAddress)) {
+				// Make sure that Google, Twitter, Facebook users can't "forget password"
+				if(appUser.getPassword() == null || appUser.getPassword().isEmpty()) return false;
+				if(appUser.getEmail() == null || appUser.getEmail().isEmpty()) return false;
+
+				if(appUser.getEmail().equals(emailAddress)) {
 					final Properties props = new Properties();
 			        final Session session = Session.getDefaultInstance(props, null);
 
