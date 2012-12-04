@@ -26,6 +26,9 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 	@UiField Label tokenStatusMessage;
 	@UiField SubmitButton sendTokenButton;
 	@UiField FormPanel changePasswordForm;
+	@UiField Label currPasswordLabel;
+	@UiField PasswordTextBox currPasswordInput;
+	@UiField Label currPwdStatusMsg;
 	@UiField PasswordTextBox passwordInput;
 	@UiField PasswordTextBox passwordRepeat;
 	@UiField Label pwdStatusMessage;
@@ -60,17 +63,31 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 		tokenStatusMessage.setText("");
 		getUiHandlers().sendEmail(usernameInput.getValue(), emailInput.getValue());
 	}
-// TODO: Validate password! Check that matches repeat... etc.
+
 	@UiHandler("changePasswordForm")
 	public void onPasswordSubmit(final SubmitEvent event) {
-		getUiHandlers().changePassword(passwordInput.getValue());
+		getUiHandlers().changePassword(passwordInput.getValue(), passwordRepeat.getValue(),
+				currPasswordInput.getValue());
 	}
 
 	@Override
-	public void showPwdChangeForm() {
+	public void showPwdChangeForm(final Boolean requireOldPwd) {
 		changePasswordForm.reset();
 		pwdStatusMessage.setText("");
+		pwdStatusMessage.removeStyleName("errorInput");
+		currPwdStatusMsg.setText("");
+		currPasswordInput.removeStyleName("errorInput");
+		passwordInput.removeStyleName("errorInput");
 		sendTokenForm.setVisible(false);
+		if(requireOldPwd) {
+			currPasswordLabel.setVisible(true);
+			currPasswordInput.setVisible(true);
+			currPwdStatusMsg.setVisible(false);
+		} else {
+			currPasswordLabel.setVisible(false);
+			currPasswordInput.setVisible(false);
+			currPwdStatusMsg.setVisible(false);
+		}
 		changePasswordForm.setVisible(true);
 	}
 
@@ -78,6 +95,7 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 	public void showSendTokenForm() {
 		sendTokenForm.reset();
 		tokenStatusMessage.setText("");
+		tokenStatusMessage.removeStyleName("error");
 		sendTokenButton.setVisible(true);
 		sendTokenForm.setVisible(true);
 		changePasswordForm.setVisible(false);
@@ -99,9 +117,20 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 	}
 
 	@Override
-	public void showPwdError() {
-		pwdStatusMessage.setText("Token expired or doesn't exist");
+	public void showPwdError(final String errorMsg, final Boolean inputError) {
+		pwdStatusMessage.setText(errorMsg);
 		pwdStatusMessage.addStyleName("error");
+		if(inputError) {
+			passwordInput.addStyleName("errorInput");
+		} else {
+			passwordInput.removeStyleName("errorInput");
+		}
+	}
+
+	@Override
+	public void showCurrPwdError(final String errorMsg) {
+		currPasswordInput.addStyleName("errorInput");
+		currPwdStatusMsg.setText(errorMsg);
 	}
 
 }

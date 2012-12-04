@@ -770,26 +770,55 @@ public class AppUser extends DatastoreObject{
 		return false;
 	}
 
-	public static Boolean changePassword(final String password, final String token) {
-		final PwdResetToken pwdResetToken = PwdResetToken.findPwdResetToken(token);
-		if(pwdResetToken != null) {
-			final Date now = new Date();
+	public static Boolean changePassword(final String newPassword, final String tokenOrPassword) {
 
+		if(Validator.validatePassword(newPassword) != null
+			|| tokenOrPassword == null || tokenOrPassword.isEmpty()) {
+
+			return false;
+		}
+
+		AppUser appUser = null;
+		Boolean changePwd = false;
+
+		// Check if the string is a password reset token
+		final PwdResetToken pwdResetToken = PwdResetToken.findPwdResetToken(tokenOrPassword);
+		if(pwdResetToken != null) {
+			// Check if reset token has expired
+			final Date now = new Date();
 			if(pwdResetToken.getExpiry().getTime() > now.getTime()) {
 				// Token hasn't expired yet, change password
-				final AppUser appUser = pwdResetToken.getAppUser().get();
+				appUser = pwdResetToken.getAppUser().get();
 				if(appUser != null) {
-					appUser.setPassword(password);
-					ofy().save().entity(appUser).now();
-					// Delete token now that we've used it
-					ofy().delete().entity(pwdResetToken);
-					return true;
+					changePwd = true;
 				}
 			} else {
 				// Token expired, delete it
 				ofy().delete().entity(pwdResetToken);
 			}
+		} else {
+			// No password reset token, check for logged in user
+			appUser = getLoggedInAppUser();
+			if(appUser != null) {
+				// We have a logged in user, check if pwd matches
+				if(BCrypt.checkpw(tokenOrPassword, appUser.getPassword()) == true) {
+					// Password matches, allow password change
+					changePwd = true;
+				}
+			}
 		}
+
+		if(appUser != null && changePwd == true) {
+			// Change the password
+			appUser.setPassword(newPassword);
+			ofy().save().entity(appUser).now();
+			if(pwdResetToken != null) {
+				// Delete token now that we've used it
+				ofy().delete().entity(pwdResetToken);
+			}
+			return true;
+		}
+
 		return false;
 	}
 
