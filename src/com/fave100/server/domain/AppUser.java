@@ -130,8 +130,8 @@ public class AppUser extends DatastoreObject{
 	public static AppUser login(final String username, final String password) throws IncorrectLoginException {
 		final AppUser loggingInUser = findAppUser(username);
 		if(loggingInUser != null) {
-			if(!BCrypt.checkpw(password, loggingInUser.getPassword())
-				|| password == null || password.isEmpty()) {
+			if(password == null || password.isEmpty()
+				|| !BCrypt.checkpw(password, loggingInUser.getPassword())) {
 					throw new IncorrectLoginException();
 			}
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
