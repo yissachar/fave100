@@ -196,12 +196,12 @@ public class RegisterPresenter extends
 					if(createdUser != null) {
 						appUserCreated();
 					} else {
-						getView().setPasswordError("An error occured");
+						getView().setPasswordError("An error occurred");
 					}
 				}
 				@Override
 				public void onFailure(final ServerFailure failure) {
-					String errorMsg = "An error occured";
+					String errorMsg = "An error occurred";
 					if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
 						errorMsg = "A user with that name already exists";
 					}
@@ -225,7 +225,7 @@ public class RegisterPresenter extends
 					}
 					@Override
 					public void onFailure(final ServerFailure failure) {
-						String errorMsg = "An error occured";
+						String errorMsg = "An error occurred";
 						if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
 							errorMsg = "A user with that name already exists";
 						} else if (failure.getExceptionType().equals(GoogleIdAlreadyExistsException.class.getName())) {
@@ -246,7 +246,7 @@ public class RegisterPresenter extends
 					}
 					@Override
 					public void onFailure(final ServerFailure failure) {
-						String errorMsg = "An error occured";
+						String errorMsg = "An error occurred";
 						if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
 							errorMsg = "A user with that name already exists";
 						} else if (failure.getExceptionType().equals(TwitterIdAlreadyExistsException.class.getName())) {
@@ -272,7 +272,7 @@ public class RegisterPresenter extends
 					}
 					@Override
 					public void onFailure(final ServerFailure failure) {
-						String errorMsg = "An error occured";
+						String errorMsg = "An error occurred";
 						if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
 							errorMsg = "A user with that name already exists";
 						} else if (failure.getExceptionType().equals(FacebookIdAlreadyExistsException.class.getName())) {

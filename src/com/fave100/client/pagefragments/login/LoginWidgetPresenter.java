@@ -91,7 +91,7 @@ public class LoginWidgetPresenter extends
 
 			@Override
 			public void onFailure(final ServerFailure failure) {
-				String errorMsg = "An error occured";
+				String errorMsg = "An error occurred";
 				if(failure.getExceptionType().equals(IncorrectLoginException.class.getName())) {
 					errorMsg = "Username or password incorrect";
 				}
