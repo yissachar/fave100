@@ -114,11 +114,8 @@ public class FaveList extends DatastoreObject{
 		} else {
 			// Check if it is a unique song for this user
 			for(final FaveItem faveItem : faveList.getList()) {
-				final Song faveSong = faveItem.getSong().get();
-				if(faveSong != null) {
-					if(faveSong.getId().equals(song.getId())) {
-						unique = false;
-					}
+				if(faveItem.getSong().equals(Ref.create(Key.create(Song.class, song.getId())))){
+					unique = false;
 				}
 			}
 		}
