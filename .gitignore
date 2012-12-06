@@ -6,3 +6,5 @@ war/WEB-INF/appengine-generated/
 war/WEB-INF/deploy/
 .classpath
 .settings/
+.factorypath
+.project
