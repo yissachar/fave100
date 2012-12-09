@@ -198,16 +198,13 @@ public class FaveList extends DatastoreObject{
 			song.setScore(0);
 			ofy().save().entity(song).now();
 		}
-		final List<AppUser> allAppUsers = ofy().load().type(AppUser.class).list();
-		for(final AppUser appUser : allAppUsers) {
-			final FaveList faveList = ofy().load().type(FaveList.class).id(appUser.getUsername()+FaveList.SEPERATOR_TOKEN+FaveList.DEFAULT_HASHTAG).get();
-			if(faveList != null) {
-				for(int i = 0; i < faveList.getList().size(); i++) {
-					final Song song = faveList.getList().get(i).getSong().get();
-					if(song != null) {
-						song.addScore(FaveList.MAX_FAVES - i);
-						ofy().save().entity(song).now();
-					}
+		final List<FaveList> allFaveLists = ofy().load().type(FaveList.class).list();
+		for(final FaveList faveList : allFaveLists) {
+			for(int i = 0; i < faveList.getList().size(); i++) {
+				final Song song = faveList.getList().get(i).getSong().get();
+				if(song != null) {
+					song.addScore(FaveList.MAX_FAVES - i);
+					ofy().save().entity(song).now();
 				}
 			}
 		}
