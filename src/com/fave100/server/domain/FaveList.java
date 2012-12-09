@@ -24,6 +24,7 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
+import com.googlecode.objectify.cmd.QueryKeys;
 
 @Entity
 public class FaveList extends DatastoreObject{
@@ -191,6 +192,17 @@ public class FaveList extends DatastoreObject{
 
 
 	public static List<Song> getMasterFaveList() {
+		setMasterFaveList();
+
+		final List<Song> topSongs = new ArrayList<Song>();
+		final List<Ref<Song>> songRefs = ofy().load().type(Fave100MasterList.class).id("current").get().getSongList();
+		for(final Ref<Song> songRef : songRefs) {
+			topSongs.add(songRef.get());
+		}
+		return topSongs;
+	}
+
+	public static void setMasterFaveList() {
 		// TODO: Once fully on AppEngine, turn into background task
 		// TODO: Performance critical - optimize! This code is horrible performance-wise!
 		final List<Song> allSongs = ofy().load().type(Song.class).list();
@@ -208,8 +220,15 @@ public class FaveList extends DatastoreObject{
 				}
 			}
 		}
-		final List<Song> topSongs = ofy().load().type(Song.class).order("-score").limit(100).list();
-		return topSongs;
+
+		final Fave100MasterList newMasterList = new Fave100MasterList("current");
+		final QueryKeys<Song> songKeys = ofy().load().type(Song.class).order("-score").limit(100).keys();
+		final List<Ref<Song>> songRefs = new ArrayList<Ref<Song>>();
+		for(final Key<Song> songKey : songKeys) {
+			songRefs.add(Ref.create(songKey));
+		}
+		newMasterList.setSongList(songRefs);
+		ofy().save().entity(newMasterList).now();
 	}
 
 	public static List<Song> getFaveItemsForCurrentUser(final String hashtag) {

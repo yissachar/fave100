@@ -6,6 +6,7 @@ import com.fave100.server.domain.APIKey;
 import com.fave100.server.domain.Activity;
 import com.fave100.server.domain.AppUser;
 import com.fave100.server.domain.FacebookID;
+import com.fave100.server.domain.Fave100MasterList;
 import com.fave100.server.domain.FaveList;
 import com.fave100.server.domain.Follower;
 import com.fave100.server.domain.GoogleID;
@@ -31,6 +32,7 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(Whyline.class);
 		ObjectifyService.register(APIKey.class);
 		ObjectifyService.register(PwdResetToken.class);
+		ObjectifyService.register(Fave100MasterList.class);
 
 		// Set API keys
 		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").get();
