@@ -7,12 +7,15 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fave100.client.pages.search.SearchPresenter;
 import com.fave100.server.domain.Activity.Transaction;
+import com.fave100.server.util.FixedSizePriorityQueue;
+import com.fave100.server.util.SongComparator;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -24,7 +27,6 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
-import com.googlecode.objectify.cmd.QueryKeys;
 
 @Entity
 public class FaveList extends DatastoreObject{
@@ -195,7 +197,8 @@ public class FaveList extends DatastoreObject{
 		setMasterFaveList();
 
 		final List<Song> topSongs = new ArrayList<Song>();
-		final List<Ref<Song>> songRefs = ofy().load().type(Fave100MasterList.class).id("current").get().getSongList();
+		final List<Ref<Song>> songRefs = ofy().load().type(Fave100MasterList.class)
+										.id(Fave100MasterList.CURRENT_MASTER).get().getSongList();
 		for(final Ref<Song> songRef : songRefs) {
 			topSongs.add(songRef.get());
 		}
@@ -210,6 +213,9 @@ public class FaveList extends DatastoreObject{
 			song.setScore(0);
 			ofy().save().entity(song).now();
 		}
+
+		final FixedSizePriorityQueue<Song> songHeap = new FixedSizePriorityQueue<Song>(100, new SongComparator());
+
 		final List<FaveList> allFaveLists = ofy().load().type(FaveList.class).list();
 		for(final FaveList faveList : allFaveLists) {
 			for(int i = 0; i < faveList.getList().size(); i++) {
@@ -217,16 +223,21 @@ public class FaveList extends DatastoreObject{
 				if(song != null) {
 					song.addScore(FaveList.MAX_FAVES - i);
 					ofy().save().entity(song).now();
+					// Shift the 100 top scoring into songHeap
+					if(!songHeap.contains(song)) {
+						songHeap.add(song);
+					}
 				}
 			}
 		}
 
-		final Fave100MasterList newMasterList = new Fave100MasterList("current");
-		final QueryKeys<Song> songKeys = ofy().load().type(Song.class).order("-score").limit(100).keys();
+		final Fave100MasterList newMasterList = new Fave100MasterList(Fave100MasterList.CURRENT_MASTER);
 		final List<Ref<Song>> songRefs = new ArrayList<Ref<Song>>();
-		for(final Key<Song> songKey : songKeys) {
-			songRefs.add(Ref.create(songKey));
+		for(final Song song : songHeap) {
+			songRefs.add(Ref.create(Key.create(Song.class, song.getId())));
 		}
+
+		Collections.reverse(songRefs);
 		newMasterList.setSongList(songRefs);
 		ofy().save().entity(newMasterList).now();
 	}

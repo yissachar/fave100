@@ -6,10 +6,13 @@ import java.util.List;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Load;
 
 @Entity
 public class Fave100MasterList {
+
+	@IgnoreSave public static final String CURRENT_MASTER = "currentMaster";
 
 	@Id private String id;
 	@Load private List<Ref<Song>> songList = new ArrayList<Ref<Song>>();

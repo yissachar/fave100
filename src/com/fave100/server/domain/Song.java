@@ -14,7 +14,6 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
-import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.OnLoad;
 
 @Entity
@@ -24,7 +23,7 @@ public class Song extends DatastoreObject {
 	@IgnoreSave public static String YOUTUBE_API_KEY = "";
 
 	@Id private String id;
-	@Index private long score = 0;
+	private long score = 0;
 	private String mbid;
 	private String artistName;
 	private String trackName;
@@ -102,6 +101,19 @@ public class Song extends DatastoreObject {
 
 		}
 		return null;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (obj.getClass() != getClass())
+            return false;
+        if(((Song) obj).getId().equals(this.getId()))
+        	return true;
+        return false;
 	}
 
 	/* Getters and setters */
