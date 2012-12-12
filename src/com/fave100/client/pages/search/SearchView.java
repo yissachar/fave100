@@ -6,6 +6,7 @@ import java.util.List;
 import com.fave100.client.events.ResultPageChangedEvent;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.SimplePager;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -36,14 +37,14 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	@UiField TextBox artistSearchBox;
 	@UiField Button searchButton;
 	@UiField Label searchStatus;
-	@UiField(provided = true) CellList<MusicbrainzResult> iTunesResults;
+	@UiField(provided = true) CellList<SongProxy> iTunesResults;
 	@UiField(provided = true) SimplePager pager;
 
 	@Inject
 	public SearchView(final Binder binder, final ApplicationRequestFactory requestFactory,
 			final EventBus eventBus) {
 		final AdvancedSearchResultCell cell = new AdvancedSearchResultCell(requestFactory);
-		iTunesResults = new CellList<MusicbrainzResult>(cell);
+		iTunesResults = new CellList<SongProxy>(cell);
 		pager = new SimplePager(eventBus);
 		widget = binder.createAndBindUi(this);
 
@@ -84,11 +85,6 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 				artistSearchBox.getValue());
 	}
 
-	/*@UiHandler("pager")
-	void onPageChanged(final ResultPageChangedEvent event) {
-		Window.alert("Page num: "+event.getPageNumber());
-	}*/
-
 	@Override
 	public void setResultCount(final int count) {
 		if(count == 0) {
@@ -101,7 +97,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	}
 
 	@Override
-	public void setResults(final List<MusicbrainzResult> resultList) {
+	public void setResults(final List<SongProxy> resultList) {
 		iTunesResults.setRowData(resultList);
 		pager.setVisible(true);
 	}
@@ -110,7 +106,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	public void resetView() {
 		songSearchBox.setValue("");
 		artistSearchBox.setValue("");
-		setResults(new ArrayList<MusicbrainzResult>());
+		setResults(new ArrayList<SongProxy>());
 		searchStatus.setText("");
 	}
 

@@ -1,20 +1,18 @@
 package com.fave100.client.pages.users;
 
 import java.util.HashMap;
+import java.util.List;
 
-import com.fave100.client.pages.search.AutocompleteJSON;
-import com.fave100.client.pages.search.MusicbrainzResult;
-import com.fave100.client.pages.search.MusicbrainzResultList;
-import com.fave100.client.pages.search.SearchPresenter;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.requestfactory.SongProxy;
 import com.google.gwt.event.dom.client.KeyCodeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.Request;
 
 /**
  * SuggestBox that pulls its suggestions from iTunes Search API.
@@ -24,13 +22,15 @@ import com.google.gwt.user.client.ui.SuggestBox;
 public class SongSuggestBox extends SuggestBox{
 
 	private MusicSuggestionOracle suggestions;
-	private HashMap<String, MusicbrainzResult> itemSuggestionMap;
+	private HashMap<String, SongProxy> itemSuggestionMap;
 	private Timer suggestionsTimer;
+	private ApplicationRequestFactory requestFactory;
 
 	public SongSuggestBox(final MusicSuggestionOracle suggestions, final ApplicationRequestFactory requestFactory) {
 		super(suggestions);
 		this.suggestions = suggestions;
-		itemSuggestionMap = new HashMap<String, MusicbrainzResult>();
+		this.requestFactory = requestFactory;
+		itemSuggestionMap = new HashMap<String, SongProxy>();
 
 		suggestionsTimer = new Timer() {
 			@Override
@@ -57,30 +57,18 @@ public class SongSuggestBox extends SuggestBox{
 	}
 
 	private void getAutocompleteList() {
-		// TODO: Needs to be hosted on actual server
-		String url = SearchPresenter.BASE_SEARCH_URL;
-		url += "autocomplete?song="+this.getValue();
-
-		 final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-		 jsonp.requestObject(url, new AsyncCallback<AutocompleteJSON>() {
-
-		    @Override
-			public void onFailure(final Throwable throwable) {
-		    	// We don't care if it fails as there is nothing we
-		    	// can do
-		    }
-
-		    @Override
-			public void onSuccess(final AutocompleteJSON json) {
-
+		final Request<List<SongProxy>> autocompleteReq = requestFactory.songRequest().getAutocomplete(this.getValue());
+		autocompleteReq.fire(new Receiver<List<SongProxy>>() {
+			@Override
+			public void onSuccess(final List<SongProxy> results) {
 				// Clear the current suggestions)
 	       		suggestions.clearSuggestions();
 	       		itemSuggestionMap.clear();
 
 	       		// Get the new suggestions from the autocomplete API
-	       		final MusicbrainzResultList results = new MusicbrainzResultList(json);
+	       		//final MusicbrainzResultList results = new MusicbrainzResultList(json);
 		        for (int i = 0; i < results.size(); i++) {
-		        	final MusicbrainzResult entry = results.get(i);
+		        	final SongProxy entry = results.get(i);
 
 	       			final String imageUrl = "";
 	       			/*if(entry.getCoverArtUrl() != null) {
@@ -98,7 +86,7 @@ public class SongSuggestBox extends SuggestBox{
 	    	    	suggestions.addSuggestion(mapEntry, suggestionEntry);
 	    	    }
 	    	    showSuggestionList();
-		    }
+			}
 		});
 		// TODO: type "gr" then backspace twice and type "o", if "gr" request really long
 		// e.g. 6 seconds and "o" request very short, e.g. 100 ms, autocomplete will show results for
@@ -108,7 +96,7 @@ public class SongSuggestBox extends SuggestBox{
 	}
 
 	// Returns MusicbrainzResults mapped from the display string passed in
-	public MusicbrainzResult getFromSuggestionMap(final String key) {
+	public SongProxy getFromSuggestionMap(final String key) {
 		return itemSuggestionMap.get(key);
 	}
 }

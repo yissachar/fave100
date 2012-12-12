@@ -6,14 +6,12 @@ import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
-import com.fave100.client.pages.search.MusicbrainzResult;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.client.requestfactory.SongRequest;
 import com.fave100.server.domain.FaveList;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
@@ -245,19 +243,17 @@ public class UsersPresenter extends
 	}
 
 	@Override
-	public void addSong(final MusicbrainzResult faveItemMap) {
+	public void addSong(final SongProxy faveItemMap) {
 
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-		final SongRequest songRequest = faveListRequest.append(requestFactory.songRequest());
 
-		// Add the MBID as a FaveItem
-		final Request<Void> createReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
+		// Add the song as a FaveItem
+		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
 				faveItemMap.getMbid(), faveItemMap.getTrackName(), faveItemMap.getArtistName());
 
-		createReq.fire(new Receiver<Void>() {
+		addReq.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
-				//getView().getPersonalFaveList().refreshList();
 				getView().refreshPersonalFaveList();
 			}
 			@Override
@@ -279,5 +275,5 @@ interface UsersUiHandlers extends UiHandlers{
 	void follow();
 	void goToFave100Tab();
 	void goToActivityTab();
-	void addSong(MusicbrainzResult selectedItem);
+	void addSong(SongProxy selectedItem);
 }

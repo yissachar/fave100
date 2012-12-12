@@ -3,6 +3,7 @@ package com.fave100.client.pages.search;
 import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
+import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.server.domain.FaveList;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
@@ -17,7 +18,7 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
-public class AdvancedSearchResultCell extends AbstractCell<MusicbrainzResult>{
+public class AdvancedSearchResultCell extends AbstractCell<SongProxy>{
 
 	private ApplicationRequestFactory requestFactory;
 
@@ -27,7 +28,7 @@ public class AdvancedSearchResultCell extends AbstractCell<MusicbrainzResult>{
 	}
 
 	@Override
-	public void render(final Context context, final MusicbrainzResult result,
+	public void render(final Context context, final SongProxy result,
 			final SafeHtmlBuilder sb) {
 
 			/*final Image imageThumb = new Image();
@@ -55,8 +56,8 @@ public class AdvancedSearchResultCell extends AbstractCell<MusicbrainzResult>{
 	}
 
 	@Override
-	public void onBrowserEvent(final Context context, final Element parent, final MusicbrainzResult song,
-		final NativeEvent event, final ValueUpdater<MusicbrainzResult> valueUpdater) {
+	public void onBrowserEvent(final Context context, final Element parent, final SongProxy song,
+		final NativeEvent event, final ValueUpdater<SongProxy> valueUpdater) {
 
 		if(song == null) return;
 		super.onBrowserEvent(context, parent, song, event, valueUpdater);
