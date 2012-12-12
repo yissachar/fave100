@@ -6,10 +6,11 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.requestfactory.SongProxy;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.jsonp.client.JsonpRequestBuilder;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -24,7 +25,7 @@ public class SearchPresenter extends
 		void resetView();
 		int getPageNum();
 		void setResultCount(int count);
-		void setResults(List<MusicbrainzResult> resultList);
+		void setResults(List<SongProxy> resultList);
 	}
 
 	@ProxyCodeSplit
@@ -32,7 +33,6 @@ public class SearchPresenter extends
 	public interface MyProxy extends ProxyPlace<SearchPresenter> {
 	}
 
-	public static final String BASE_SEARCH_URL = "http://192.168.214.170:7080/";//"http://musicbrainz.org/ws/2/";
 	public static final int RESULTS_PER_PAGE = 25;
 
 	private ApplicationRequestFactory requestFactory;
@@ -54,53 +54,32 @@ public class SearchPresenter extends
 	// TODO: need a global "loading" indicator
 	@Override
 	public void showResults(final String songTerm, final String artistTerm) {
-		String searchUrl = SearchPresenter.BASE_SEARCH_URL;
-		searchUrl += "search?limit="+SearchPresenter.RESULTS_PER_PAGE;
-		searchUrl += "&offset="+RESULTS_PER_PAGE*(getView().getPageNum()-1)+"&";
 
+		final int offset = RESULTS_PER_PAGE*(getView().getPageNum()-1);
+		Request<List<SongProxy>> searchReq;
 		if(!songTerm.isEmpty()) {
-			searchUrl += "song="+songTerm;
-		}
-
-		if(!artistTerm.isEmpty()) {
-			if(!songTerm.isEmpty()) {
-				searchUrl += "&";
+			if(!artistTerm.isEmpty()) {
+				searchReq = requestFactory.songRequest().search(songTerm, artistTerm, offset);
+			} else {
+				searchReq = requestFactory.songRequest().searchSong(songTerm, offset);
 			}
-			searchUrl += "artist="+artistTerm;
+		} else if(!artistTerm.isEmpty()) {
+			searchReq = requestFactory.songRequest().searchArtist(artistTerm, offset);
+		} else {
+			return;
 		}
-		// One request for the amount of results found
-		final JsonpRequestBuilder jsonpCount = new JsonpRequestBuilder();
-		jsonpCount.requestObject(searchUrl+"&count=true", new AsyncCallback<AutocompleteJSON>() {
 
-		    @Override
-			public void onFailure(final Throwable throwable) {
-		    	//Window.alert("Fail!");
-		    }
-
-		    @Override
-			public void onSuccess(final AutocompleteJSON json) {
-
-		    	getView().setResultCount(Integer.parseInt(json.getEntries().get(0).getTrackName()));
-
-		    }
-		});
-
-		// And one request for the actual results
-		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-		jsonp.requestObject(searchUrl, new AsyncCallback<AutocompleteJSON>() {
-
-		    @Override
-			public void onFailure(final Throwable throwable) {
-		    	//Window.alert("Fail!");
-		    }
-
-		    @Override
-			public void onSuccess(final AutocompleteJSON json) {
-
-		    	final MusicbrainzResultList resultList = new MusicbrainzResultList(json);
-	            getView().setResults(resultList);
-
-		    }
+		searchReq.fire(new Receiver<List<SongProxy>>() {
+			@Override
+			public void onSuccess(final List<SongProxy> resultList) {
+				getView().setResults(resultList);
+				if(resultList.size() > 0) {
+					getView().setResultCount(resultList.get(0).getResultCount());
+				} else {
+					// No result, set to 0
+					getView().setResultCount(0);
+				}
+			}
 		});
 	}
 }

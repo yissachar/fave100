@@ -2,26 +2,24 @@ package com.fave100.server.domain;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.fave100.client.pages.search.SearchPresenter;
 import com.fave100.server.domain.Activity.Transaction;
 import com.fave100.server.util.FixedSizePriorityQueue;
 import com.fave100.server.util.SongComparator;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.appengine.api.rdbms.AppEngineDriver;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
@@ -72,46 +70,35 @@ public class FaveList extends DatastoreObject{
 		// If the song does not exist, create it
 		if(song == null) {
 			// Look up the song in the SQL database and add to AppEngine datastore
+			Connection connection = null;
 			try {
-			    final URL url = new URL(SearchPresenter.BASE_SEARCH_URL+"lookup?song="+songTitle.replace(" ", "+")+"&artist="+artist.replace(" ", "+"));
-			    final URLConnection conn = url.openConnection();
-			    final BufferedReader in = new BufferedReader(new InputStreamReader(
-		    		conn.getInputStream(), "UTF-8"));
-
-				String inputLine;
-				String content = "";
-
-				while ((inputLine = in.readLine()) != null) {
-				    content += inputLine;
+				// Make connection
+				DriverManager.registerDriver(new AppEngineDriver());
+				connection = DriverManager.getConnection("jdbc:google:rdbms://caseware.com:fave100:fave100dev/testgoogle");
+				// Make SQL query
+				String statement = "SELECT song, artist, mbid, youtube_id FROM autocomplete_search WHERE ";
+				statement += "searchable_song = LOWER(?) AND song = (?) AND artist = (?) LIMIT 1";
+				final PreparedStatement stmt = connection.prepareStatement(statement);
+				stmt.setString(1, songTitle);
+				stmt.setString(2, songTitle);
+				stmt.setString(3, artist);
+				final ResultSet results = stmt.executeQuery();
+				// Turn results into Song and save
+				if(results.next()) {
+					final Song newSong = new Song(results.getString("song"), results.getString("artist"), results.getString("mbid"));
+					if(Song.findSongByTitleAndArtist(newSong.getTrackName(), newSong.getArtistName()) == null) {
+				    	ofy().save().entity(newSong).now();
+				    	song = newSong;
+				    }
 				}
-				in.close();
-
-				final JsonParser parser = new JsonParser();
-			    final JsonElement element = parser.parse(content);
-			    final JsonObject songObject = element.getAsJsonObject();
-
-			    final String title = songObject.get("song").getAsString();
-			    final String songArtist = songObject.get("artist").getAsString();
-			    final String mbid = songObject.get("mbid").getAsString();
-			    String youTubeId = "";
-			    final JsonElement youTubeElement = songObject.get("youtube_id");
-			    if(youTubeElement != null) {
-			    	youTubeId = youTubeElement.getAsString();
-			    }
-			    final Song newSong = new Song(title, songArtist, mbid);
-			    if(!youTubeId.isEmpty()) {
-			    	newSong.setYouTubeId(youTubeId);
-			    }
-
-			    // Before saving double-check that we do not have this record
-			    // (Since we cannot really trust that the passed songTitle+artist is valid
-			    if(Song.findSongByTitleAndArtist(newSong.getTrackName(), newSong.getArtistName()) == null) {
-			    	ofy().save().entity(newSong).now();
-			    	song = newSong;
-			    }
-
-			} catch (final Exception e) {
-				e.printStackTrace();
+			} catch (final SQLException ignore) {
+			} finally {
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (final SQLException ignore) {
+					}
+				}
 			}
 
 		} else {

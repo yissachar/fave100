@@ -6,8 +6,15 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.google.appengine.api.rdbms.AppEngineDriver;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.Ref;
@@ -34,6 +41,7 @@ public class Song extends DatastoreObject {
 	private String primaryGenreName;
 	@IgnoreSave private String whyline;
 	@IgnoreSave private int whylineScore;
+	@IgnoreSave private int resultCount;
 
 	//TODO: Need to periodically update cache?
 
@@ -101,6 +109,119 @@ public class Song extends DatastoreObject {
 
 		}
 		return null;
+	}
+
+	public static List<Song> getAutocomplete(final String songTerm) {
+		Connection connection = null;
+		final List<Song> autocompleteList = new ArrayList<Song>();
+		try {
+			// Make connection
+			DriverManager.registerDriver(new AppEngineDriver());
+			connection = DriverManager.getConnection("jdbc:google:rdbms://caseware.com:fave100:fave100dev/testgoogle");
+			// Make SQL query
+			String statement = "SELECT song, artist, mbid FROM autocomplete_search WHERE searchable_song ";
+			statement += "LIKE LOWER(?) ORDER BY rank DESC LIMIT 5";
+			final PreparedStatement stmt = connection.prepareStatement(statement);
+			stmt.setString(1, songTerm+"%");
+			final ResultSet results = stmt.executeQuery();
+			// Turn results into ArrayList
+			while(results.next()) {
+				final Song song = new Song(results.getString("song"), results.getString("artist"), results.getString("mbid"));
+				autocompleteList.add(song);
+			}
+		} catch (final SQLException ignore) {
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (final SQLException ignore) {
+				}
+			}
+		}
+		return autocompleteList;
+	}
+
+	public static List<Song> searchSong(final String song, final int offset) {
+		return search(song, "", offset);
+	}
+
+	public static List<Song> searchArtist(final String artist, final int offset) {
+		return search("", artist, offset);
+	}
+
+	public static List<Song> search(final String song, final String artist, final int offset) {
+		final int limit = 25;
+
+		if(song.isEmpty() && artist.isEmpty()) return null;
+
+		String baseQuery = "";
+		String resultQuery = "SELECT song, artist, mbid FROM autocomplete_search WHERE ";
+		String countQuery = "SELECT COUNT(*) AS count FROM autocomplete_search WHERE ";
+		if(!song.isEmpty()) {
+			baseQuery += "MATCH(searchable_song) AGAINST (LOWER(?) IN BOOLEAN MODE) ";
+		}
+		if(!artist.isEmpty()) {
+			if(!song.isEmpty()) baseQuery += " AND ";
+			baseQuery += "MATCH(searchable_artist) AGAINST (LOWER(?) IN BOOLEAN MODE) ";
+		}
+
+		resultQuery += baseQuery;
+		resultQuery += "ORDER BY rank DESC LIMIT ? OFFSET ?";
+
+		countQuery += baseQuery;
+
+		String query = "SELECT * FROM (";
+		query += resultQuery + ") AS result CROSS JOIN (";
+		query += countQuery + ") AS count;";
+
+		final List<Song> searchResults = new ArrayList<Song>();
+		Connection connection = null;
+		try {
+			// Make connection
+			DriverManager.registerDriver(new AppEngineDriver());
+			connection = DriverManager.getConnection("jdbc:google:rdbms://caseware.com:fave100:fave100dev/testgoogle");
+			// Make SQL query
+			final PreparedStatement stmt = connection.prepareStatement(query);
+			int pos = 1;
+			// Set params for result query
+			if(!song.isEmpty()){
+				stmt.setString(pos, song);
+				pos++;
+			}
+			if(!artist.isEmpty()){
+				stmt.setString(pos, artist);
+				pos++;
+			}
+			stmt.setInt(pos, limit);
+			pos++;
+			stmt.setInt(pos, offset);
+			pos++;
+			// Set params for count query
+			if(!song.isEmpty()){
+				stmt.setString(pos, song);
+				pos++;
+			}
+			if(!artist.isEmpty()){
+				stmt.setString(pos, artist);
+				pos++;
+			}
+			final ResultSet results = stmt.executeQuery();
+			// Turn results into ArrayList
+			while(results.next()) {
+				final Song songResult = new Song(results.getString("song"), results.getString("artist"), results.getString("mbid"));
+				songResult.setResultCount(results.getInt("count"));
+				searchResults.add(songResult);
+			}
+		} catch (final SQLException ignore) {
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (final SQLException ignore) {
+				}
+			}
+		}
+		return searchResults;
 	}
 
 	@Override
@@ -200,7 +321,7 @@ public class Song extends DatastoreObject {
 	}
 
 	public String getMbid() {
-		return id;
+		return mbid;
 	}
 
 	public void setMbid(final String mbid) {
@@ -220,6 +341,14 @@ public class Song extends DatastoreObject {
 			return "http://www.youtube.com/embed/"+getYouTubeId();
 		}
 		return null;
+	}
+
+	public int getResultCount() {
+		return resultCount;
+	}
+
+	public void setResultCount(final int resultCount) {
+		this.resultCount = resultCount;
 	}
 
 }
