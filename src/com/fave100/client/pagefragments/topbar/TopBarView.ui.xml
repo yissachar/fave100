@@ -82,22 +82,16 @@
 			margin: 0;
 		}
 		
-		.listOfTheDay {
-			float: right;	
-			width: 400px;				
-		}
-		
-		.listOfTheDay p {
-			padding: 20px;
-		}
-		
 		@external loginDropdown;		
 		
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel>
-			<div class="{style.topNav}">		
+			<div class="{style.topNav}">
+			<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
+				<img src="img/Logo.png" alt="Fave100 logo"/>
+			</g:InlineHyperlink>
 			<ul>
 				<li><span ui:field="greeting"/></li>
 				<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
@@ -109,16 +103,6 @@
 					<g:HTMLPanel ui:field="loginBox" styleName="{style.loginDropdown}"/>
 				</li>
 			</ul>
-			</div>
-			<div class="{style.subTopContainer}">
-				<div class="{style.faveLogo}">
-					<h1>Fave100</h1>
-					<p>Share your list</p>
-				</div>
-				<div class="{style.listOfTheDay}">
-					<h4 class="itemHeader">List of the Day</h4>
-					<p>To be implemented</p>
-				</div>
 			</div>			
 	</g:HTMLPanel>
 </ui:UiBinder>
