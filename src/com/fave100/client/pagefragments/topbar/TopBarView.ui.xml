@@ -8,7 +8,7 @@
 
 	<ui:style>
 		.topNav{
-			background-color: #948A54;			
+			background-color: #5eaae5;			
 			height: 40px;
 			border-bottom: 1px solid #555;
 			margin-bottom: 25px;
@@ -29,8 +29,8 @@
 		}	
 		
 		.topNav li:hover {
-			background-color: #B3A766; 
-		}
+			background-color: #FFFFFF; 
+		}				
 		
 		.topNav li > a, .topNav li > span {
 			color: #FFF;
@@ -38,6 +38,10 @@
 			text-decoration: none;
 			padding: 0 6px;
 			line-height: 2.4em;
+		}
+		
+		.topNav li:hover > a, .topNav li:hover > span {
+			color: #5eaae5;
 		}
 
 		.loginDropdown {
