@@ -10,7 +10,7 @@ html{
 }
 
 body{
-	background-color: #AEE9FF;
+	background-color: #EFEFEF;
 	font-family: Helvetica,sans-serif;
 	color: #454;
 	height: 100%;
@@ -119,7 +119,7 @@ footer {
 
 .itemHeader {
 	color: #FFF;
-	background: #948A54;
+	background: #5eaae5;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 	border: 1px solid #555;
@@ -216,7 +216,7 @@ footer {
 }
 
 .faveList a{
-	color: #948A54;	
+	color: #5eaae5;	
 }
 
 .faveList table{
