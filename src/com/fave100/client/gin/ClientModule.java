@@ -2,16 +2,26 @@ package com.fave100.client.gin;
 
 import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
 import com.fave100.client.pagefragments.favefeed.FaveFeedView;
+import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
+import com.fave100.client.pagefragments.login.LoginWidgetView;
+import com.fave100.client.pagefragments.topbar.TopBarPresenter;
+import com.fave100.client.pagefragments.topbar.TopBarView;
 import com.fave100.client.pages.home.HomePresenter;
 import com.fave100.client.pages.home.HomeView;
 import com.fave100.client.pages.login.LoginPresenter;
 import com.fave100.client.pages.login.LoginView;
 import com.fave100.client.pages.logout.LogoutPresenter;
 import com.fave100.client.pages.logout.LogoutView;
+import com.fave100.client.pages.passwordreset.PasswordResetPresenter;
+import com.fave100.client.pages.passwordreset.PasswordResetView;
+import com.fave100.client.pages.profile.ProfilePresenter;
+import com.fave100.client.pages.profile.ProfileView;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.register.RegisterView;
 import com.fave100.client.pages.search.SearchPresenter;
 import com.fave100.client.pages.search.SearchView;
+import com.fave100.client.pages.song.SongPresenter;
+import com.fave100.client.pages.song.SongView;
 import com.fave100.client.pages.userlist.UserlistPresenter;
 import com.fave100.client.pages.userlist.UserlistView;
 import com.fave100.client.pages.users.UsersPresenter;
@@ -26,16 +36,6 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
-import com.fave100.client.pages.profile.ProfilePresenter;
-import com.fave100.client.pages.profile.ProfileView;
-import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
-import com.fave100.client.pagefragments.login.LoginWidgetView;
-import com.fave100.client.pagefragments.topbar.TopBarPresenter;
-import com.fave100.client.pagefragments.topbar.TopBarView;
-import com.fave100.client.pages.song.SongPresenter;
-import com.fave100.client.pages.song.SongView;
-import com.fave100.client.pages.passwordreset.PasswordResetPresenter;
-import com.fave100.client.pages.passwordreset.PasswordResetView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -44,12 +44,12 @@ public class ClientModule extends AbstractPresenterModule {
 		install(new DefaultModule(ClientPlaceManager.class));
 
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
-		
+
 		bindPresenter(HomePresenter.class, HomePresenter.MyView.class,
 				HomeView.class, HomePresenter.MyProxy.class);
 
-		bindPresenterWidget(TopBarPresenter.class,
-				TopBarPresenter.MyView.class, TopBarView.class);	
+		bindSingletonPresenterWidget(TopBarPresenter.class,
+				TopBarPresenter.MyView.class, TopBarView.class);
 
 		bindPresenter(RegisterPresenter.class, RegisterPresenter.MyView.class,
 				RegisterView.class, RegisterPresenter.MyProxy.class);
@@ -85,7 +85,7 @@ public class ClientModule extends AbstractPresenterModule {
 				PasswordResetPresenter.MyView.class, PasswordResetView.class,
 				PasswordResetPresenter.MyProxy.class);
 	}
-	
+
 	@Provides
 	@Singleton
 	public ApplicationRequestFactory createApplicationRequestFactory(final EventBus eventBus) {
