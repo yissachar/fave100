@@ -9,7 +9,7 @@
 	<ui:style>
 		.topNav{
 			background-color: #5eaae5;			
-			height: 40px;
+			height: 50px;
 			border-bottom: 1px solid #555;
 			margin-bottom: 25px;
 		}
@@ -37,6 +37,7 @@
 			display: inline-block;
 			text-decoration: none;
 			padding: 0 6px;
+			font-size: 1.3em;
 			line-height: 2.4em;
 		}
 		
@@ -95,8 +96,6 @@
 			<ul>
 				<li><span ui:field="greeting"/></li>
 				<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
-				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getUserlist}">Users</g:InlineHyperlink></li>
-				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">Home</g:InlineHyperlink></li>
 				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
 				<li>
 					<g:InlineHyperlink ui:field="logInLogOutLink">Log in</g:InlineHyperlink>
