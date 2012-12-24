@@ -7,7 +7,6 @@ import com.fave100.client.widgets.WhylineWaterfall;
 import com.fave100.client.widgets.YouTubeWidget;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -26,14 +25,12 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 	@UiField Label songTitle;
 	@UiField Label artistName;
 	@UiField Label releaseDate;
-	@UiField Frame youTubePlayer;
 	@UiField YouTubeWidget youTubeWidget;
 
 	@Inject
 	public SongView(final Binder binder, final ApplicationRequestFactory requestFactory) {
 		whylineWaterfall = new WhylineWaterfall(requestFactory);
 		widget = binder.createAndBindUi(this);
-		youTubePlayer.setVisible(false);
 	}
 
 	@Override
@@ -58,12 +55,6 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 		setSongTitle(song.getTrackName());
 		setArtistName(song.getArtistName());
 		setReleaseDate(song.getReleaseDate());
-		youTubePlayer.setVisible(false);
-		final String url = song.getYouTubeEmbedUrl();
-		if(url != null && !url.isEmpty()) {
-			youTubePlayer.setUrl(url);
-			youTubePlayer.setVisible(true);
-		}
 	}
 
 	@Override
