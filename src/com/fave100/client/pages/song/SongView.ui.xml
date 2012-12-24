@@ -14,7 +14,6 @@
 			<g:Label ui:field="songTitle">Song Title</g:Label>
 			<g:Label ui:field="artistName">Artist Name</g:Label>
 			<g:Label ui:field="releaseDate">Release Date</g:Label>
-			<g:Frame width="640px" height="360px" ui:styleName="youTubePlayer" ui:field="youTubePlayer"/>
 			<w:YouTubeWidget ui:field="youTubeWidget"/>
 			<w:WhylineWaterfall ui:field="whylineWaterfall"/>
 		</div>	
