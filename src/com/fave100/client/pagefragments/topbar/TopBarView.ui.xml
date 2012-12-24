@@ -12,6 +12,10 @@
 			height: 50px;
 			border-bottom: 1px solid #555;
 			margin-bottom: 25px;
+			position: fixed;
+			width: 100%;
+			top: 0;
+			z-index: 99999;
 		}
 		
 		.topNav > ul{
