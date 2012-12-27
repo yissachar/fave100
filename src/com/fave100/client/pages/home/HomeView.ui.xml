@@ -16,7 +16,7 @@
 		<div class="content">
 		    <g:HTMLPanel ui:field="faveFeed"/>
 			<div class="faveListContainer">
-				<h2 class="itemHeader">Fave100 Master List</h2>
+				<h2 class="itemHeader">The Fave100</h2>
 				<w:NonpersonalFaveList ui:field="masterFaveList"/>
 			</div>
 		</div>	
