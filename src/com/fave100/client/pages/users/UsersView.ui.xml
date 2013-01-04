@@ -11,14 +11,12 @@
 	<ui:style>		
 		.userProfile{
 			display: block;
-			margin: 30px 0;
-			width: 685px;
-			border: 1px solid #999;
-			color: #FFF;
-			background-color: #EAEAEA;
+			margin-top: 30px;
+			width: 688px;
+			border: 1px solid #555;			
+			background-color: #5eaae5;
 			padding: 5px;
-			font-size: 1.6em;
-			border-radius: 5px;
+			color: #FFF;
 		}		
 				
 		.followButton {
@@ -30,36 +28,8 @@
 		
 		.username {
 			margin: 15px;
-			font-size: 1.8em;
+			font-size: 2.3em;
 			vertical-align: top;
-			color: #787878;
-			text-shadow: 1px 1px 1px #FFF;
-		}
-		
-		.tabList {
-			padding: 0;
-		}
-		.tabList li{
-			display: inline;
-			list-style-type: none;			
-			margin-right: 10px;		
-			cursor: pointer;	
-		}		
-		.tabList a{
-			padding: 6px;
-		}
-		
-		.activityTab ul{
-			padding: 0;
-			list-style-type: none;
-			margin-top: 30px;
-		}
-		.activityTab li{
-			width: 685px;
-			border: 1px solid #999;
-			background-color: #FFFFFF;
-			margin-top: 1px;
-			padding: 6px;
 		}
 		
 		.advancedSearchLink, .dndLabel {
@@ -75,6 +45,7 @@
 			<g:HTMLPanel ui:field="userProfile" styleName="{style.userProfile}">
 				<g:Image ui:field="avatar"/>
 				<span class="{style.username}" ui:field="username"/>
+				<span class="{style.dndLabel}">Drag and drop to rank</span>
 				<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>			
 				<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
 					Edit Profile
@@ -83,8 +54,7 @@
 			
 			<g:HTMLPanel ui:field="faveFeed"/>
 			<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">
-				<g:HTMLPanel ui:field="songSearchContainer">
-					<span class="{style.dndLabel}">Drag and drop to rank</span>
+				<g:HTMLPanel ui:field="songSearchContainer">					
 					<g:SuggestBox ui:field="songSuggestBox"/>
 					<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}" styleName="{style.advancedSearchLink}">
 						Advanced search
@@ -93,7 +63,6 @@
 				<w:PersonalFaveList ui:field="personalFaveList"/>
 				<w:NonpersonalFaveList ui:field="userFaveList"/>								
 			</g:HTMLPanel>						
-			<g:InlineHTML ui:field="activityTab" styleName="{style.activityTab}"/>
 			
 		</div>
 		<pf:Footer/>
