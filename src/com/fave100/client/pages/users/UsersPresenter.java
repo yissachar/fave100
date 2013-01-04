@@ -197,20 +197,6 @@ public class UsersPresenter extends
 	}
 
 	@Override
-	public void goToFave100Tab() {
-		if(!tab.equals(UsersPresenter.FAVE_100_TAB)) {
-			placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.FAVE_100_TAB));
-		}
-	}
-
-	@Override
-	public void goToActivityTab() {
-		if(!tab.equals(UsersPresenter.ACTIVITY_TAB)) {
-			placeManager.revealPlace(new PlaceRequest(NameTokens.users).with("u", requestedUsername).with("tab", UsersPresenter.ACTIVITY_TAB));
-		}
-	}
-
-	@Override
 	public void addSong(final SongProxy faveItemMap) {
 
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
@@ -241,7 +227,5 @@ public class UsersPresenter extends
 
 interface UsersUiHandlers extends UiHandlers{
 	void follow();
-	void goToFave100Tab();
-	void goToActivityTab();
 	void addSong(SongProxy selectedItem);
 }
