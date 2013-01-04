@@ -81,14 +81,9 @@
 				</g:InlineHyperlink>
 			</g:HTMLPanel>
 			
-			<ul class="{style.tabList}">
-				<li><g:Anchor ui:field="fave100TabLink">Fave100</g:Anchor></li>
-				<li><g:Anchor ui:field="activityTabLink">Activity</g:Anchor></li>
-			</ul>
-			
 			<g:HTMLPanel ui:field="faveFeed"/>
 			<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">
-				<g:HTMLPanel ui:field="songSearchContainer" styleName="itemHeader">
+				<g:HTMLPanel ui:field="songSearchContainer">
 					<span class="{style.dndLabel}">Drag and drop to rank</span>
 					<g:SuggestBox ui:field="songSuggestBox"/>
 					<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}" styleName="{style.advancedSearchLink}">
