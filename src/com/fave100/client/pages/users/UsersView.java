@@ -17,7 +17,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
@@ -42,7 +41,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField Button followButton;
 	@UiField Image avatar;
 	@UiField SpanElement username;
-	@UiField InlineHTML activityTab;
 	@UiField InlineHyperlink advancedSearchLink;
 	@UiField HTMLPanel songSearchContainer;
 
