@@ -13,11 +13,28 @@
 			display: block;
 			margin-top: 30px;
 			width: 688px;
+			height: 80px;
 			border: 1px solid #555;			
 			background-color: #5eaae5;
 			padding: 5px;
 			color: #FFF;
 		}		
+		
+		.avatar {
+			float: left;
+		}
+		
+		.nameContainer {
+			float: left;
+			margin-left: 10px;
+		}
+		
+		.influenceContainer {
+			float: left;
+			margin-left: 50px;
+			margin-top: 10px;
+			font-size: 1.3em;
+		}
 				
 		.followButton {
 			font-size: 1em;
@@ -43,9 +60,17 @@
 		<div class="content">
 		
 			<g:HTMLPanel ui:field="userProfile" styleName="{style.userProfile}">
-				<g:Image ui:field="avatar"/>
-				<span class="{style.username}" ui:field="username"/>
-				<span class="{style.dndLabel}">Drag and drop to rank</span>
+				<g:Image styleName="{style.avatar}" ui:field="avatar"/>
+				<div class="{style.nameContainer}">
+					<span class="{style.username}" ui:field="username"/>
+					<br/>
+					<span class="{style.dndLabel}">Drag and drop to rank</span>
+				</div>
+				<div class="{style.influenceContainer}">
+					<span>Following:</span>
+					<br/>
+					<span>Followers:</span>
+				</div>
 				<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>			
 				<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
 					Edit Profile
