@@ -19,8 +19,6 @@ import com.fave100.shared.exceptions.following.AlreadyFollowingException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -42,9 +40,6 @@ public class UsersPresenter extends
 	public interface MyView extends BaseView, HasUiHandlers<UsersUiHandlers> {
 		void setFollowed();
 		void setUnfollowed();
-		void showFave100Tab();
-		void setActivityTab(SafeHtml html);
-		void showActivityTab();
 		void setUserProfile(AppUserProxy user);
 		void setUserFaveList(List<SongProxy> faveList);
 		void refreshPersonalFaveList();
@@ -145,41 +140,19 @@ public class UsersPresenter extends
 		    	}
 		    });
 
-
-		    tab = placeRequest.getParameter("tab", UsersPresenter.FAVE_100_TAB);
-		    if(tab.equals(UsersPresenter.ACTIVITY_TAB)) {
-
-				final Request<List<String>> getActivityReq = requestFactory.appUserRequest().getActivityForUser(requestedUsername);
-				getActivityReq.fire(new Receiver<List<String>>() {
-					@Override
-					public void onSuccess(final List<String> activityList) {
-						final SafeHtmlBuilder builder = new SafeHtmlBuilder();
-						builder.appendHtmlConstant("<ul>");
-						for(final String activity : activityList) {
-							builder.appendHtmlConstant("<li>");
-							builder.appendEscaped(activity);
-							builder.appendHtmlConstant("</li>");
-						}
-						builder.appendHtmlConstant("</ul>");
-						getView().setActivityTab(builder.toSafeHtml());
-						checkTotalRequestProgress();
-					}
-				});
-		    } else if(tab.equals(UsersPresenter.FAVE_100_TAB)) {
-		    	// Update fave list
-				final Request<List<SongProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
-			    userFaveListReq.fire(new Receiver<List<SongProxy>>() {
-			    	@Override
-			    	public void onSuccess(final List<SongProxy> faveList) {
-			    		if(faveList != null) {
-			    			getView().setUserFaveList(faveList);
-		    			} else {
-		    				placeManager.revealDefaultPlace();
-		    			}
-			    		checkTotalRequestProgress();
-			    	}
-			    });
-		    }
+	    	// Update fave list
+			final Request<List<SongProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
+		    userFaveListReq.fire(new Receiver<List<SongProxy>>() {
+		    	@Override
+		    	public void onSuccess(final List<SongProxy> faveList) {
+		    		if(faveList != null) {
+		    			getView().setUserFaveList(faveList);
+	    			} else {
+	    				placeManager.revealDefaultPlace();
+	    			}
+		    		checkTotalRequestProgress();
+		    	}
+		    });
 		}
 	}
 
@@ -200,11 +173,6 @@ public class UsersPresenter extends
 				getView().showOtherPage();
 			}
 
-			if(tab.equals(UsersPresenter.FAVE_100_TAB)) {
-				getView().showFave100Tab();
-			} else if(tab.equals(UsersPresenter.ACTIVITY_TAB)) {
-				getView().showActivityTab();
-			}
 			getProxy().manualReveal(UsersPresenter.this);
 		}
 	}
