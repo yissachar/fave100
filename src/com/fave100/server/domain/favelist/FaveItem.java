@@ -1,5 +1,7 @@
-package com.fave100.server.domain;
+package com.fave100.server.domain.favelist;
 
+import com.fave100.server.domain.Song;
+import com.fave100.server.domain.Whyline;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Embed;

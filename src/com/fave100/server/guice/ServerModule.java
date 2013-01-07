@@ -4,16 +4,16 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import com.fave100.server.domain.APIKey;
 import com.fave100.server.domain.Activity;
-import com.fave100.server.domain.AppUser;
-import com.fave100.server.domain.FacebookID;
-import com.fave100.server.domain.Fave100MasterList;
-import com.fave100.server.domain.FaveList;
-import com.fave100.server.domain.Follower;
-import com.fave100.server.domain.GoogleID;
-import com.fave100.server.domain.PwdResetToken;
 import com.fave100.server.domain.Song;
-import com.fave100.server.domain.TwitterID;
 import com.fave100.server.domain.Whyline;
+import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.server.domain.appuser.FacebookID;
+import com.fave100.server.domain.appuser.Follower;
+import com.fave100.server.domain.appuser.GoogleID;
+import com.fave100.server.domain.appuser.PwdResetToken;
+import com.fave100.server.domain.appuser.TwitterID;
+import com.fave100.server.domain.favelist.Fave100MasterList;
+import com.fave100.server.domain.favelist.FaveList;
 import com.googlecode.objectify.ObjectifyService;
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
 
