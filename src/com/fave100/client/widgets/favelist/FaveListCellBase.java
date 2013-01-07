@@ -26,7 +26,7 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 		sb.appendHtmlConstant(getTrackName(object));
 		sb.appendHtmlConstant(getArtistName(object));
 		//sb.appendHtmlConstant(getReleaseDate(object));
-		sb.appendHtmlConstant(getImageThumb(object));
+		//sb.appendHtmlConstant(getImageThumb(object));
 	}
 
 
@@ -63,10 +63,10 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 	    return releaseDate;
 	}
 
-	protected String getImageThumb(final SongProxy object) {
+	/*protected String getImageThumb(final SongProxy object) {
 		String imageThumb = "<img class='faveListImageThumb'";
 		imageThumb += "src='"+object.getCoverArtUrl()+"'/>";
 		return imageThumb;
-	}
+	}*/
 }
 
