@@ -5,15 +5,19 @@ import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.WhylineWaterfall;
 import com.fave100.client.widgets.YouTubeWidget;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class SongView extends ViewImpl implements SongPresenter.MyView {
+public class SongView extends ViewWithUiHandlers<SongUiHandlers>
+	implements SongPresenter.MyView {
 
 	private final Widget widget;
 
@@ -24,6 +28,7 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 	@UiField HTMLPanel topBar;
 	@UiField Label songTitle;
 	@UiField Label artistName;
+	@UiField Button addToFave100Button;
 	@UiField YouTubeWidget youTubeWidget;
 
 	@Inject
@@ -47,6 +52,11 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 			}
 		}
 		super.setInSlot(slot, content);
+	}
+
+	@UiHandler("addToFave100Button")
+	void onClick(final ClickEvent event) {
+		getUiHandlers().addSong();
 	}
 
 	@Override
