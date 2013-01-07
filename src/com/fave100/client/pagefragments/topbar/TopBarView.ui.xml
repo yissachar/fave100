@@ -7,6 +7,12 @@
 	ui:generateLocales='default'>
 
 	<ui:style>
+		.topNavSticky {
+			background-color: #5eaae5;			
+			height: 50px;
+			border-bottom: 1px solid #555;
+			margin-bottom: 25px;
+		}
 		.topNav{
 			background-color: #5eaae5;			
 			height: 50px;
@@ -93,19 +99,25 @@
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel>
+			<!-- We will hide the topNavSticky element behind the real top nav in order to get a sticky header effect
+				 without using any JavaScript. topNav is the actual element with position:fixed ensuring it stays at 
+				 top of screen. topNavSticky is a normally positioned blank element that provides the proper buffer 
+				 when the browser is at 0, 0.
+			 -->
+			<div class="{style.topNavSticky}"/>
 			<div class="{style.topNav}">
-			<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
-				<img src="img/Logo.png" alt="Fave100 logo"/>
-			</g:InlineHyperlink>
-			<ul>
-				<li><span ui:field="greeting"/></li>
-				<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
-				<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
-				<li>
-					<g:InlineHyperlink ui:field="logInLogOutLink">Log in</g:InlineHyperlink>
-					<g:HTMLPanel ui:field="loginBox" styleName="{style.loginDropdown}"/>
-				</li>
-			</ul>
+				<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
+					<img src="img/Logo.png" alt="Fave100 logo"/>
+				</g:InlineHyperlink>
+				<ul>
+					<li><span ui:field="greeting"/></li>
+					<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
+					<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
+					<li>
+						<g:InlineHyperlink ui:field="logInLogOutLink">Log in</g:InlineHyperlink>
+						<g:HTMLPanel ui:field="loginBox" styleName="{style.loginDropdown}"/>
+					</li>
+				</ul>
 			</div>			
 	</g:HTMLPanel>
 </ui:UiBinder>
