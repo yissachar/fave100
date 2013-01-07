@@ -1,4 +1,4 @@
-package com.fave100.server.domain;
+package com.fave100.server.domain.favelist;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -13,7 +13,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.fave100.server.domain.Activity;
+import com.fave100.server.domain.DatastoreObject;
+import com.fave100.server.domain.Song;
+import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.Activity.Transaction;
+import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.util.FixedSizePriorityQueue;
 import com.fave100.server.util.SongComparator;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;

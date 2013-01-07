@@ -1,5 +1,6 @@
 package com.fave100.server.domain;
 
+import com.fave100.server.domain.appuser.AppUser;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;

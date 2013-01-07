@@ -1,4 +1,4 @@
-package com.fave100.server.domain;
+package com.fave100.server.domain.appuser;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;

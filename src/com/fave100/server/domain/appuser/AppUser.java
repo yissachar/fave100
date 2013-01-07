@@ -1,4 +1,4 @@
-package com.fave100.server.domain;
+package com.fave100.server.domain.appuser;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -36,7 +36,11 @@ import twitter4j.auth.RequestToken;
 
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.server.bcrypt.BCrypt;
+import com.fave100.server.domain.Activity;
+import com.fave100.server.domain.DatastoreObject;
+import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Activity.Transaction;
+import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.following.AlreadyFollowingException;
 import com.fave100.shared.exceptions.following.CannotFollowYourselfException;

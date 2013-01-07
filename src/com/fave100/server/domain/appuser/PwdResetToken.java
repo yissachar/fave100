@@ -1,4 +1,4 @@
-package com.fave100.server.domain;
+package com.fave100.server.domain.appuser;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 

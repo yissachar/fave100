@@ -8,7 +8,7 @@ import java.util.List;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.server.domain.FaveList;
+import com.fave100.server.domain.favelist.FaveList;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CompositeCell;
 import com.google.gwt.cell.client.EditTextCell;
