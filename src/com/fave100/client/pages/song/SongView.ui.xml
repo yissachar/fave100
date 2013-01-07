@@ -13,6 +13,14 @@
 			width: 700px;
 		}
 		
+		.songHeader {
+			height: 40px;
+		}
+		
+		.songDetails {
+			float: left;
+		}
+		
 		.songTitle {
 			font-size: 1.3em;
 		}
@@ -23,9 +31,17 @@
 			padding: 20px;
 		}
 		
+		.addToFave100Button {
+			float: right;
+		}
+		
 		.youtubeWidget {
 			margin: 0 auto;
 			width: 640px;
+		}
+		
+		.whylineWaterfall {
+			margin: 0 auto;
 		}
 	</ui:style>
 	
@@ -33,13 +49,16 @@
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="content">
 			<div class="{style.songContainer}">
-				<div class="itemHeader">
-					<g:Label ui:field="songTitle" styleName="{style.songTitle}"/>
-					<g:Label ui:field="artistName"/>
+				<div class="itemHeader {style.songHeader}">
+					<div class="{style.songDetails}">
+						<g:Label ui:field="songTitle" styleName="{style.songTitle}"/>
+						<g:Label ui:field="artistName"/>
+					</div>
+					<g:Button ui:field="addToFave100Button" styleName="{style.addToFave100Button}">+Fave100</g:Button>
 				</div>
 				<div class="{style.songBody}">
 					<w:YouTubeWidget ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>
-					<w:WhylineWaterfall ui:field="whylineWaterfall"/>
+					<w:WhylineWaterfall ui:field="whylineWaterfall" styleName="{style.whylineWaterfall}"/>
 				</div>
 			</div>
 		</div>	

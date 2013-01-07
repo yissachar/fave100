@@ -1,16 +1,25 @@
 package com.fave100.client.pages.song;
 
+import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
+import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
+import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.mvp.client.HasUiHandlers;
+import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
@@ -19,9 +28,10 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 public class SongPresenter extends
-		BasePresenter<SongPresenter.MyView, SongPresenter.MyProxy> {
+		BasePresenter<SongPresenter.MyView, SongPresenter.MyProxy>
+		implements SongUiHandlers{
 
-	public interface MyView extends BaseView {
+	public interface MyView extends BaseView, HasUiHandlers<SongUiHandlers> {
 		void setSongInfo(SongProxy song);
 		void setYouTubeVideos(YouTubeSearchListJSON videos);
 	}
@@ -33,6 +43,7 @@ public class SongPresenter extends
 
 	private final ApplicationRequestFactory requestFactory;
 	private final PlaceManager placeManager;
+	private SongProxy songProxy;
 
 	@Inject
 	public SongPresenter(final EventBus eventBus, final MyView view,
@@ -41,6 +52,7 @@ public class SongPresenter extends
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
+		getView().setUiHandlers(this);
 	}
 
 	@Override
@@ -69,6 +81,7 @@ public class SongPresenter extends
 			getSongReq.fire(new Receiver<SongProxy>() {
 				@Override
 				public void onSuccess(final SongProxy song) {
+					songProxy = song;
 					getView().setSongInfo(song);
 					getProxy().manualReveal(SongPresenter.this);
 				}
@@ -90,4 +103,38 @@ public class SongPresenter extends
 	protected void onBind() {
 		super.onBind();
 	}
+
+	@Override
+	public void addSong() {
+
+		if(songProxy == null) return;
+
+		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
+
+		// Add the song as a FaveItem
+		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
+				songProxy.getId(), songProxy.getTrackName(), songProxy.getArtistName());
+
+		addReq.fire(new Receiver<Void>() {
+			@Override
+			public void onSuccess(final Void response) {
+				SideNotification.show("Added");
+			}
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				if(failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					placeManager.revealPlace(new PlaceRequest(NameTokens.login));
+				} else if(failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
+					SideNotification.show("You cannot have more than 100 songs in list");
+				} else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
+					SideNotification.show("The song is already in your list");
+				}
+			}
+		});
+
+	}
+}
+
+interface SongUiHandlers extends UiHandlers{
+	void addSong();
 }
