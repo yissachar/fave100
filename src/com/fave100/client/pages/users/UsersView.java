@@ -36,7 +36,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField(provided = true) SuggestBox songSuggestBox;
 	@UiField(provided = true) PersonalFaveList personalFaveList;
 	@UiField HTMLPanel faveListContainer;
-	@UiField HTMLPanel userProfile;
 	@UiField InlineHyperlink editProfileButton;
 	@UiField Button followButton;
 	@UiField Image avatar;
