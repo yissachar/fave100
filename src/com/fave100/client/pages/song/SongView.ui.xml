@@ -8,14 +8,40 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
+	<ui:style>	
+		.songContainer {			
+			width: 700px;
+		}
+		
+		.songTitle {
+			font-size: 1.3em;
+		}
+		
+		.songBody {
+			background-color: #FFF;
+			border: 1px solid #555;
+			padding: 20px;
+		}
+		
+		.youtubeWidget {
+			margin: 0 auto;
+			width: 640px;
+		}
+	</ui:style>
+	
 	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="content">
-			<g:Label ui:field="songTitle">Song Title</g:Label>
-			<g:Label ui:field="artistName">Artist Name</g:Label>
-			<g:Label ui:field="releaseDate">Release Date</g:Label>
-			<w:YouTubeWidget ui:field="youTubeWidget"/>
-			<w:WhylineWaterfall ui:field="whylineWaterfall"/>
+			<div class="{style.songContainer}">
+				<div class="itemHeader">
+					<g:Label ui:field="songTitle" styleName="{style.songTitle}"/>
+					<g:Label ui:field="artistName"/>
+				</div>
+				<div class="{style.songBody}">
+					<w:YouTubeWidget ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>
+					<w:WhylineWaterfall ui:field="whylineWaterfall"/>
+				</div>
+			</div>
 		</div>	
 		<pf:Footer/>
 	</g:HTMLPanel>

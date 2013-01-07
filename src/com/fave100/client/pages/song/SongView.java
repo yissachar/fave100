@@ -24,7 +24,6 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 	@UiField HTMLPanel topBar;
 	@UiField Label songTitle;
 	@UiField Label artistName;
-	@UiField Label releaseDate;
 	@UiField YouTubeWidget youTubeWidget;
 
 	@Inject
@@ -54,7 +53,6 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 	public void setSongInfo(final SongProxy song) {
 		setSongTitle(song.getTrackName());
 		setArtistName(song.getArtistName());
-		setReleaseDate(song.getReleaseDate());
 	}
 
 	@Override
@@ -68,9 +66,5 @@ public class SongView extends ViewImpl implements SongPresenter.MyView {
 
 	private void setArtistName(final String name) {
 		artistName.setText(name);
-	}
-
-	private void setReleaseDate(final String date) {
-		releaseDate.setText(date);
 	}
 }
