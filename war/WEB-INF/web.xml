@@ -31,13 +31,13 @@
     
     <!--  Clean up expired sessions -->
     <servlet>
-	  	<servlet-name>_ah_sessioncleanup</servlet-name>
+	  	<servlet-name>cron_sessioncleanup</servlet-name>
 	  	<servlet-class>com.google.apphosting.utils.servlet.SessionCleanupServlet</servlet-class>
 	</servlet>
 	 
 	<servlet-mapping>
-	  	<servlet-name>_ah_sessioncleanup</servlet-name>
-	 	<url-pattern>/_ah/sessioncleanup</url-pattern>
+	  	<servlet-name>cron_sessioncleanup</servlet-name>
+	 	<url-pattern>/cron/sessioncleanup</url-pattern>
 	</servlet-mapping>
 	
 	<!-- Avatar upload -->
