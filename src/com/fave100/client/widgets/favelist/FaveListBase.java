@@ -1,4 +1,4 @@
-package com.fave100.client.widgets;
+package com.fave100.client.widgets.favelist;
 
 import java.util.ArrayList;
 import java.util.List;

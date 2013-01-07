@@ -1,4 +1,4 @@
-package com.fave100.client.widgets;
+package com.fave100.client.widgets.favelist;
 
 import static com.google.gwt.query.client.GQuery.$;
 

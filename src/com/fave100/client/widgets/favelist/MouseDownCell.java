@@ -1,4 +1,4 @@
-package com.fave100.client.widgets;
+package com.fave100.client.widgets.favelist;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.safehtml.shared.SafeHtml;
