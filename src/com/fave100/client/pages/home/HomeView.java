@@ -5,7 +5,7 @@ import java.util.List;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.client.widgets.NonpersonalFaveList;
+import com.fave100.client.widgets.favelist.NonpersonalFaveList;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;

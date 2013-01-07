@@ -1,4 +1,4 @@
-package com.fave100.client.widgets;
+package com.fave100.client.widgets.favelist;
 
 import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
