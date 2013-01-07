@@ -2,7 +2,7 @@
 
 <cronentries>
   <cron>
-    <url>/_ah/sessioncleanup?clear</url>
+    <url>/cron/sessioncleanup?clear</url>
     <description>Clean up sessions</description>
     <schedule>every 15 minutes</schedule>
   </cron>
