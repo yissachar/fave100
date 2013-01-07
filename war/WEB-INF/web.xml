@@ -61,6 +61,16 @@
             <role-name>admin</role-name>
         </auth-constraint>
     </security-constraint>
+    
+    <!-- Stop unauthorized access to cron jobs -->
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/cron/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
 	  
 	<!-- Default page to serve -->
 	<welcome-file-list>
