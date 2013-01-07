@@ -5,8 +5,17 @@
 	<ui:style>		
 		.thumbnailPanel img {
 			margin-top: 5px;
-			margin-right: 53px;
+			margin-right: 54px;
 			cursor: pointer;
+			border: 1px solid #999;
+		}
+		
+		.thumbnailPanel img:last-child {
+			margin-right: 0;
+		}
+		
+		.thumbnailPanel img:hover{
+			border: 1px solid #555;
 		}
 	</ui:style>
 	
