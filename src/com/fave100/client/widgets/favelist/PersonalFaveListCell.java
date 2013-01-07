@@ -23,6 +23,6 @@ public class PersonalFaveListCell extends FaveListCellBase{
 		final String deleteButton = "<button class='faveListDeleteButton'>X</button>";
 		sb.appendHtmlConstant(deleteButton);
 
-		sb.appendHtmlConstant(getImageThumb(object));
+		//sb.appendHtmlConstant(getImageThumb(object));
 	}
 }

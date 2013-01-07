@@ -34,7 +34,7 @@ public class NonpersonalFaveListCell extends FaveListCellBase{
 		final String addButton = "<button class='faveListAddButton'>+</button>";
 		sb.appendHtmlConstant(addButton);
 
-		sb.appendHtmlConstant(getImageThumb(object));
+		//sb.appendHtmlConstant(getImageThumb(object));
 
 		final String whyline = "<span class='faveListWhyline'>"+object.getWhyline()+"</span>";
 		sb.appendHtmlConstant(whyline);
