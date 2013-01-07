@@ -5,9 +5,10 @@
 	<ui:style>		
 		.thumbnailPanel img {
 			margin-top: 5px;
-			margin-right: 54px;
+			margin-right: 50px;
 			cursor: pointer;
 			border: 1px solid #999;
+			width: 120px;
 		}
 		
 		.thumbnailPanel img:last-child {
