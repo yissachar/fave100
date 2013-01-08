@@ -1,6 +1,6 @@
 package com.fave100.client.widgets;
 
-import com.fave100.client.place.NameTokens;
+import com.fave100.client.requestfactory.WhylineProxy;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Label;
@@ -8,16 +8,19 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class WhylineWidget extends Composite {
 
-	public WhylineWidget() {
+	public WhylineWidget(final WhylineProxy whyline) {
 		final VerticalPanel container = new VerticalPanel();
 		initWidget(container);
 
-		final Label whyline = new Label("This is a sample Whyline");
-		container.add(whyline);
+		final Label whylineLabel = new Label(whyline.getWhyline());
+		container.add(whylineLabel);
 
 		final InlineHyperlink whylineAuthor = new InlineHyperlink();
-		whylineAuthor.setTargetHistoryToken(NameTokens.userlist);
-		whylineAuthor.setText("AnAuthor");
+		// TODO: This throws errors about infinite loop
+	//	final ClientGinjector ginjector = GWT.create(ClientGinjector.class);
+	//	final String historyToken = ginjector.getPlaceManager().buildHistoryToken(new PlaceRequest(NameTokens.users).with("u", "Tester"));
+	//	whylineAuthor.setTargetHistoryToken(historyToken);
+		whylineAuthor.setText(whyline.getUsername());
 		container.add(whylineAuthor);
 	}
 
