@@ -12,15 +12,15 @@ public class WhylineWidget extends Composite {
 		final VerticalPanel container = new VerticalPanel();
 		initWidget(container);
 
-		final Label whylineLabel = new Label(whyline.getWhyline());
+		final Label whylineLabel = new Label('"'+whyline.getWhyline()+'"');
 		container.add(whylineLabel);
 
 		final InlineHyperlink whylineAuthor = new InlineHyperlink();
 		// TODO: This throws errors about infinite loop
-	//	final ClientGinjector ginjector = GWT.create(ClientGinjector.class);
-	//	final String historyToken = ginjector.getPlaceManager().buildHistoryToken(new PlaceRequest(NameTokens.users).with("u", "Tester"));
-	//	whylineAuthor.setTargetHistoryToken(historyToken);
-		whylineAuthor.setText(whyline.getUsername());
+/*		final ClientGinjector ginjector = GWT.create(ClientGinjector.class);
+		final String historyToken = ginjector.getPlaceManager().buildHistoryToken(new PlaceRequest(NameTokens.users).with("u", whyline.getUsername()));
+		whylineAuthor.setTargetHistoryToken(historyToken);
+	*/	whylineAuthor.setText("-"+whyline.getUsername());
 		container.add(whylineAuthor);
 	}
 
