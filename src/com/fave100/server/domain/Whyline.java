@@ -3,8 +3,6 @@ package com.fave100.server.domain;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.fave100.server.domain.appuser.AppUser;
 import com.googlecode.objectify.Key;
@@ -43,8 +41,6 @@ public class Whyline extends DatastoreObject{
 	}
 
 	public static List<Whyline> getWhylinesForSong(final Song song) {
-		Logger.getAnonymousLogger().log(Level.SEVERE, song + " "+ Ref.create(song));
-		Logger.getAnonymousLogger().log(Level.SEVERE, ofy().load().type(Whyline.class).filter("song", Ref.create(song)).limit(20).list().get(0) + " ");
 		final List<Whyline> whylines = ofy().load().type(Whyline.class).filter("song", Ref.create(song)).limit(15).list();
 		for(final Whyline whyline : whylines) {
 			whyline.setUsername(whyline.getUser().getUsername());
