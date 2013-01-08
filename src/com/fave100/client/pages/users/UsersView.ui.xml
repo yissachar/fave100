@@ -66,12 +66,14 @@
 					<br/>
 					<span class="{style.dndLabel}">Drag and drop to rank</span>
 				</div>
-				<div class="{style.influenceContainer}">
+				<!-- <div class="{style.influenceContainer}">
 					<span>Following:</span>
 					<br/>
 					<span>Followers:</span>
 				</div>
-				<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>			
+				
+				<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>
+				 -->			
 				<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
 					Edit Profile
 				</g:InlineHyperlink>
