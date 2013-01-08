@@ -18,10 +18,10 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 
 	public interface Binder extends UiBinder<Widget, TopBarView> {
 	}
-	
+
 	@UiField InlineHyperlink logInLogOutLink;
-	@UiField SpanElement greeting;	
-	@UiField Anchor myFave100Link;	
+	@UiField SpanElement greeting;
+	@UiField Anchor myFave100Link;
 	@UiField InlineHyperlink registerLink;
 	@UiField HTMLPanel loginBox;
 
@@ -34,13 +34,13 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 	public Widget asWidget() {
 		return widget;
 	}
-	
+
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
 		super.setInSlot(slot, content);
-		
+
 		if(slot == TopBarPresenter.LOGIN_SLOT) {
-			loginBox.clear();			
+			loginBox.clear();
 			if(content != null) {
 				loginBox.add(content);
 			}
@@ -51,17 +51,17 @@ public class TopBarView extends ViewImpl implements TopBarPresenter.MyView {
 	public void setLoggedIn(final String username) {
 		greeting.setInnerHTML(username);
 		myFave100Link.setVisible(true);
-		myFave100Link.setHref(Window.Location.getPath()+Window.Location.getQueryString()+"#"+NameTokens.getUsers()+";u="+username);		
+		myFave100Link.setHref(Window.Location.getPath()+Window.Location.getQueryString()+"#"+NameTokens.getUsers()+";u="+username);
 		registerLink.setVisible(false);
 		logInLogOutLink.setText("Log out");
 		logInLogOutLink.setTargetHistoryToken(NameTokens.logout);
-		loginBox.setVisible(false);		
+		loginBox.setVisible(false);
 	}
 
 	@Override
 	public void setLoggedOut() {
 		greeting.setInnerHTML("");
-		myFave100Link.setVisible(false);		
+		myFave100Link.setVisible(false);
 		registerLink.setVisible(true);
 		logInLogOutLink.setText("Log in");
 		logInLogOutLink.setTargetHistoryToken(NameTokens.login);

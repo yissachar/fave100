@@ -79,7 +79,7 @@ public class UsersPresenter extends
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
-	    setInSlot(FAVE_FEED_SLOT, faveFeed);
+	    //setInSlot(FAVE_FEED_SLOT, faveFeed);
 	}
 
 	@Override

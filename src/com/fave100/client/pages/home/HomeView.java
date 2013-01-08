@@ -14,14 +14,14 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 public class HomeView extends ViewImpl implements HomePresenter.MyView {
-	
+
 	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, HomeView> {
 	}
-	
+
 	@UiField(provided = true) NonpersonalFaveList masterFaveList;
-	
+
 	@Inject
 	public HomeView(final Binder binder, final ApplicationRequestFactory requestFactory) {
 		masterFaveList = new NonpersonalFaveList(requestFactory);
@@ -32,24 +32,24 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	public Widget asWidget() {
 		return widget;
 	}
-	
+
 	@UiField HTMLPanel topBar;
-	@UiField HTMLPanel faveFeed;
-	
+	//@UiField HTMLPanel faveFeed;
+
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
 		if(slot == BasePresenter.TOP_BAR_SLOT) {
-			topBar.clear();			
+			topBar.clear();
 			if(content != null) {
 				topBar.add(content);
 			}
-		}
+		}/* Currently not using FaveFeed
 		if(slot == HomePresenter.FAVE_FEED_SLOT) {
-			faveFeed.clear();			
+			faveFeed.clear();
 			if(content != null) {
 				faveFeed.add(content);
 			}
-		}
+		}*/
 		super.setInSlot(slot, content);
 	}
 

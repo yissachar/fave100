@@ -14,7 +14,7 @@
 	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>		
 		<div class="content">
-		    <g:HTMLPanel ui:field="faveFeed"/>
+		    <!-- <g:HTMLPanel ui:field="faveFeed"/> -->
 			<div class="faveListContainer">
 				<h2 class="itemHeader">The Fave100</h2>
 				<w:NonpersonalFaveList ui:field="masterFaveList"/>

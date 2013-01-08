@@ -79,7 +79,7 @@
 				</g:InlineHyperlink>
 			</g:HTMLPanel>
 			
-			<g:HTMLPanel ui:field="faveFeed"/>
+			<!-- <g:HTMLPanel ui:field="faveFeed"/> -->
 			<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">
 				<g:HTMLPanel ui:field="songSearchContainer">					
 					<g:SuggestBox ui:field="songSuggestBox"/>
