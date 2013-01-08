@@ -9,12 +9,10 @@ import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.favelist.NonpersonalFaveList;
 import com.fave100.client.widgets.favelist.PersonalFaveList;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -37,7 +35,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField(provided = true) PersonalFaveList personalFaveList;
 	@UiField HTMLPanel faveListContainer;
 	@UiField InlineHyperlink editProfileButton;
-	@UiField Button followButton;
+	//@UiField Button followButton;
 	@UiField Image avatar;
 	@UiField SpanElement username;
 	@UiField InlineHyperlink advancedSearchLink;
@@ -78,10 +76,10 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		super.setInSlot(slot, content);
 	}
 
-	@UiHandler("followButton")
+	/*@UiHandler("followButton")
 	void onFollowButtonClicked(final ClickEvent event) {
 		getUiHandlers().follow();
-	}
+	}*/
 
 	@UiHandler("songSuggestBox")
 	void onItemSelected(final SelectionEvent<Suggestion> event) {
@@ -90,7 +88,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		songSuggestBox.setValue("");
 	}
 
-	@Override
+	/*@Override
 	public void setFollowed() {
 		followButton.setHTML("Following");
 		followButton.setEnabled(false);
@@ -100,7 +98,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public void setUnfollowed() {
 		followButton.setHTML("Follow");
 		followButton.setEnabled(true);
-	}
+	}*/
 
 	@Override
 	public void setUserProfile(final AppUserProxy user) {
@@ -126,7 +124,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		advancedSearchLink.setVisible(true);
 		faveFeed.setVisible(true);
 		editProfileButton.setVisible(true);
-		followButton.setVisible(false);
+		//followButton.setVisible(false);
 		refreshPersonalFaveList();
 	}
 
@@ -137,7 +135,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		songSuggestBox.setVisible(false);
 		advancedSearchLink.setVisible(false);
 		editProfileButton.setVisible(false);
-		followButton.setVisible(true);
+		//followButton.setVisible(true);
 		faveFeed.setVisible(false);
 	}
 

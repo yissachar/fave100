@@ -8,14 +8,12 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
-import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
-import com.fave100.shared.exceptions.following.AlreadyFollowingException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -38,8 +36,8 @@ public class UsersPresenter extends
 		implements UsersUiHandlers{
 
 	public interface MyView extends BaseView, HasUiHandlers<UsersUiHandlers> {
-		void setFollowed();
-		void setUnfollowed();
+		//void setFollowed();
+		//void setUnfollowed();
 		void setUserProfile(AppUserProxy user);
 		void setUserFaveList(List<SongProxy> faveList);
 		void refreshPersonalFaveList();
@@ -100,7 +98,7 @@ public class UsersPresenter extends
 			placeManager.revealDefaultPlace();
 		} else {
 			// Update follow button
-			final Request<Boolean> checkFollowing = requestFactory.appUserRequest().checkFollowing(requestedUsername);
+			/*final Request<Boolean> checkFollowing = requestFactory.appUserRequest().checkFollowing(requestedUsername);
 			checkFollowing.fire(new Receiver<Boolean>() {
 				@Override
 				public void onSuccess(final Boolean followingUser) {
@@ -111,7 +109,7 @@ public class UsersPresenter extends
 					}
 					checkTotalRequestProgress();
 				}
-			});
+			});*/
 
 			// Update user profile
 		    final Request<AppUserProxy> userReq = requestFactory.appUserRequest().findAppUser(requestedUsername);
@@ -158,14 +156,14 @@ public class UsersPresenter extends
 
 	private void checkTotalRequestProgress() {
 		currentRequestProgress++;
-		if(currentRequestProgress >= 4) {
+		if(currentRequestProgress >= 3) {
 			currentRequestProgress = 0;
 
-			if(following) {
+			/*if(following) {
 				getView().setFollowed();
 			} else {
 				getView().setUnfollowed();
-			}
+			}*/
 
 			if(ownPage) {
 				getView().showOwnPage();
@@ -177,7 +175,7 @@ public class UsersPresenter extends
 		}
 	}
 
-	@Override
+	/*@Override
 	public void follow() {
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		final Request<Void> followReq = appUserRequest.followUser(requestedUsername);
@@ -194,7 +192,7 @@ public class UsersPresenter extends
 				}
 			}
 		});
-	}
+	}*/
 
 	@Override
 	public void addSong(final SongProxy faveItemMap) {
@@ -226,6 +224,6 @@ public class UsersPresenter extends
 
 
 interface UsersUiHandlers extends UiHandlers{
-	void follow();
+	//void follow();
 	void addSong(SongProxy selectedItem);
 }
