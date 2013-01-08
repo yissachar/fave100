@@ -57,7 +57,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@UiField HTMLPanel topBar;
-	@UiField HTMLPanel faveFeed;
+	//@UiField HTMLPanel faveFeed;
+
 
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
@@ -66,13 +67,13 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 			if(content != null) {
 				topBar.add(content);
 			}
-		}
+		}/* Currently not using FaveFeed
 		if(slot == UsersPresenter.FAVE_FEED_SLOT) {
 			faveFeed.clear();
 			if(content != null) {
 				faveFeed.add(content);
 			}
-		}
+		}*/
 		super.setInSlot(slot, content);
 	}
 
@@ -122,7 +123,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		userFaveList.setVisible(false);
 		songSuggestBox.setVisible(true);
 		advancedSearchLink.setVisible(true);
-		faveFeed.setVisible(true);
+		//faveFeed.setVisible(true);
 		editProfileButton.setVisible(true);
 		//followButton.setVisible(false);
 		refreshPersonalFaveList();
@@ -136,7 +137,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		advancedSearchLink.setVisible(false);
 		editProfileButton.setVisible(false);
 		//followButton.setVisible(true);
-		faveFeed.setVisible(false);
+		//faveFeed.setVisible(false);
 	}
 
 }

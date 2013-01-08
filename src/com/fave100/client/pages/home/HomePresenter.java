@@ -2,7 +2,6 @@ package com.fave100.client.pages.home;
 
 import java.util.List;
 
-import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
@@ -30,17 +29,17 @@ public class HomePresenter extends
 	public interface MyView extends BaseView {
 		void updateMasterFaveList(List<SongProxy> faveList);
 	}
-	
-	@ContentSlot 
+
+	@ContentSlot
 	public static final Type<RevealContentHandler<?>> FAVE_FEED_SLOT = new Type<RevealContentHandler<?>>();
-	
-	@Inject FaveFeedPresenter faveFeed;
-	
+
+	//@Inject FaveFeedPresenter faveFeed;
+
 	@ProxyCodeSplit
 	@NameToken(NameTokens.home)
 	public interface MyProxy extends ProxyPlace<HomePresenter> {
-	}	
-		
+	}
+
 	@Inject private ApplicationRequestFactory requestFactory;
 
 	@Inject
@@ -48,12 +47,12 @@ public class HomePresenter extends
 			final MyProxy proxy) {
 		super(eventBus, view, proxy);
 	}
-		
+
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
-	    setInSlot(FAVE_FEED_SLOT, faveFeed);
-	    
+	    //setInSlot(FAVE_FEED_SLOT, faveFeed);
+
 	    // Get the master Fave list
 	    final Request<List<SongProxy>> masterFaveListReq = requestFactory.faveListRequest().getMasterFaveList();
 	    masterFaveListReq.fire(new Receiver<List<SongProxy>>() {
@@ -61,6 +60,6 @@ public class HomePresenter extends
 	    	public void onSuccess(final List<SongProxy> masterFaveList) {
 	    		getView().updateMasterFaveList(masterFaveList);
 	    	}
-	    });	    
+	    });
 	}
 }
