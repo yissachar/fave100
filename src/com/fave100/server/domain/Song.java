@@ -62,8 +62,45 @@ public class Song extends DatastoreObject {
 	public static Song findSongByTitleAndArtist(final String songTitle,
 		final String artist) {
 
+		// Try to find the song
 		final String id = songTitle + Song.TOKEN_SEPARATOR + artist;
-		return ofy().load().type(Song.class).id(id).get();
+		Song song = ofy().load().type(Song.class).id(id).get();
+		if(song != null) {
+			return song;
+		} else {
+			// Look up the song in the SQL database and add to AppEngine datastore
+			Connection connection = null;
+			try {
+				// Make connection
+				DriverManager.registerDriver(new AppEngineDriver());
+				connection = DriverManager.getConnection("jdbc:google:rdbms://caseware.com:fave100:fave100dev/testgoogle");
+				// Make SQL query
+				String statement = "SELECT song, artist, mbid, youtube_id FROM autocomplete_search WHERE ";
+				statement += "searchable_song = LOWER(?) AND song = (?) AND artist = (?) LIMIT 1";
+				final PreparedStatement stmt = connection.prepareStatement(statement);
+				stmt.setString(1, songTitle);
+				stmt.setString(2, songTitle);
+				stmt.setString(3, artist);
+				final ResultSet results = stmt.executeQuery();
+				// Turn results into Song and save
+				if(results.next()) {
+					song = new Song(results.getString("song"), results.getString("artist"), results.getString("mbid"));
+				    ofy().save().entity(song).now();
+				}
+				stmt.close();
+			} catch (final SQLException ignore) {
+			} finally {
+				if (connection != null) {
+					try {
+
+						connection.close();
+					} catch (final SQLException ignore) {
+					}
+				}
+			}
+		}
+
+		return song;
 	}
 
 	public void addScore(final int score) {
@@ -109,6 +146,13 @@ public class Song extends DatastoreObject {
 
 		}
 		return null;
+	}
+
+	public static Song addSong(final String song, final String artist) {
+		final Song newSong = null;
+
+
+		return newSong;
 	}
 
 	public static List<Song> getAutocomplete(final String songTerm) {
