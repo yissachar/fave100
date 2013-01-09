@@ -16,11 +16,11 @@ public class Notification {
 
 	public static void show(final String message) {
 		label.setText(message);
-		Notification.show(message, false, 5000);
+		Notification.show(message, false, 3000);
 	}
 
 	public static void show(final String message, final boolean error) {
-		final int delayTime = error ? 7500 : 5000;
+		final int delayTime = error ? 5000 : 3000;
 		Notification.show(message, error, delayTime);
 	}
 
@@ -31,6 +31,6 @@ public class Notification {
 		} else {
 			label.removeStyleName("error");
 		}
-		$(label).fadeOut(delay);
+		$(label).delay(delay).fadeOut(300);
 	}
 }
