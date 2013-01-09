@@ -76,21 +76,17 @@
 			margin: 0 auto;
 		}
 		
-		.faveLogo, .listOfTheDay {
-			background: #FFF;
-			border-radius: 5px;
-			border: 1px solid #AAA;
+		.faveLogo {		
+			float: left;	
+		}		
+		
+		.songSearchContainer {
+			float: left;
+			margin: 5px 50px;
 		}
 		
-		.faveLogo {
-			clear: both;			
-			width: 200px;
-			padding: 15px;
-			display: inline-block;
-		}
-		
-		.faveLogo h1 {
-			margin: 0;
+		.advancedSearchLink {
+			font-size: 0.8em;
 		}
 		
 		@external loginDropdown;		
@@ -107,8 +103,14 @@
 			<div class="{style.topNavSticky}"/>
 			<div class="{style.topNav}">
 				<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
-					<img src="img/Logo.png" alt="Fave100 logo"/>
+					<img class="{style.faveLogo}" src="img/Logo.png" alt="Fave100 logo"/>
 				</g:InlineHyperlink>
+				<g:HTMLPanel ui:field="songSearchContainer" ui:styleName="{style.songSearchContainer}">					
+					<g:SuggestBox ui:field="songSuggestBox"/>
+					<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}" styleName="{style.advancedSearchLink}">
+						Advanced search
+					</g:InlineHyperlink>		
+				</g:HTMLPanel>
 				<ul>
 					<li><span ui:field="greeting"/></li>
 					<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>

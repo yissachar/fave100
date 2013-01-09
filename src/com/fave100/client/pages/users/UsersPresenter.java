@@ -2,6 +2,7 @@ package com.fave100.client.pages.users;
 
 import java.util.List;
 
+import com.fave100.client.events.SongSelectedEvent;
 import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
 import com.fave100.client.pages.BasePresenter;
@@ -52,6 +53,7 @@ public class UsersPresenter extends
 	private String requestedUsername;
 	private final ApplicationRequestFactory requestFactory;
 	private final PlaceManager placeManager;
+	private final EventBus eventBus;
 	private boolean ownPage = false;
 	private boolean following = false;
 	private String tab = UsersPresenter.FAVE_100_TAB;
@@ -71,9 +73,32 @@ public class UsersPresenter extends
 			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
 			final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
+		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
 		getView().setUiHandlers(this);
+
+
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+		SongSelectedEvent.register(eventBus, new SongSelectedEvent.Handler() {
+
+			@Override
+			public void onSongSelected(final SongSelectedEvent event) {
+				//Window.alert("Song selected from User page: "+event.getSong().getTrackName());
+				final SongProxy song = event.getSong();
+				// If we are on Users page add the song, otherwise go to song page
+				if(isVisible()) {
+					addSong(song);
+					// TODO: If the user is not logged in should be following:
+					//placeManager.revealPlace(new PlaceRequest(NameTokens.song)
+					//.with("song", song.getTrackName()).with("artist", song.getArtistName()));
+				}
+			}
+		});
 	}
 
 	@Override
@@ -194,7 +219,6 @@ public class UsersPresenter extends
 		});
 	}*/
 
-	@Override
 	public void addSong(final SongProxy faveItemMap) {
 
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
@@ -225,5 +249,4 @@ public class UsersPresenter extends
 
 interface UsersUiHandlers extends UiHandlers{
 	//void follow();
-	void addSong(SongProxy selectedItem);
 }
