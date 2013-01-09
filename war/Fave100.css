@@ -308,7 +308,7 @@ footer {
 	cursor: pointer;	
 }
 
-.faveList div>span:nth-child(2):empty:before{
+.faveList > div:hover > span:nth-child(2):empty:before{
 	content: "Click here to enter a WhyLine";
 	text-decoration: italics;
 }
