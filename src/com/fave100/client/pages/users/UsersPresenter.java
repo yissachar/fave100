@@ -48,6 +48,7 @@ public class UsersPresenter extends
 
 	public static final String FAVE_100_TAB = "fave100";
 	public static final String ACTIVITY_TAB = "activity";
+	public static final String USER_PARAM = "u";
 
 	private int currentRequestProgress = 0;
 	private String requestedUsername;
