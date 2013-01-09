@@ -1,6 +1,6 @@
 package com.fave100.client.pages.register;
 
-import com.fave100.client.pagefragments.SideNotification;
+import com.fave100.client.pagefragments.topbar.Notification;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
@@ -328,7 +328,7 @@ public class RegisterPresenter extends
 
 	private void appUserCreated() {
 		placeManager.revealPlace(new PlaceRequest(NameTokens.home));
-		SideNotification.show("Thanks for registering!", false, 1500);
+		Notification.show("Thanks for registering!");
 	}
 
 	private void goToMyFave100() {

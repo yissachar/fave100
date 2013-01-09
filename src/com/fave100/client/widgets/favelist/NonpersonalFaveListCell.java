@@ -1,6 +1,6 @@
 package com.fave100.client.widgets.favelist;
 
-import com.fave100.client.pagefragments.SideNotification;
+import com.fave100.client.pagefragments.topbar.Notification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
@@ -58,15 +58,15 @@ public class NonpersonalFaveListCell extends FaveListCellBase{
 				addFaveReq.fire(new Receiver<Void>() {
 					@Override
 					public void onSuccess(final Void added) {
-						SideNotification.show("Added!");
+						Notification.show("Added!");
 					}
 
 					@Override
 					public void onFailure(final ServerFailure failure) {
 						if(failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
-							SideNotification.show("You cannot have more than 100 songs in list");
+							Notification.show("You cannot have more than 100 songs in list");
 						} else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
-							SideNotification.show("The song is already in your list");
+							Notification.show("The song is already in your list");
 						}
 					}
 				});

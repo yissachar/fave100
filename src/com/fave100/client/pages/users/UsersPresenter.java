@@ -3,8 +3,8 @@ package com.fave100.client.pages.users;
 import java.util.List;
 
 import com.fave100.client.events.SongSelectedEvent;
-import com.fave100.client.pagefragments.SideNotification;
 import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
+import com.fave100.client.pagefragments.topbar.Notification;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
@@ -56,7 +56,7 @@ public class UsersPresenter extends
 	private final PlaceManager placeManager;
 	private final EventBus eventBus;
 	private boolean ownPage = false;
-	private boolean following = false;
+	//private boolean following = false;
 	private String tab = UsersPresenter.FAVE_100_TAB;
 
 	@ProxyCodeSplit
@@ -208,7 +208,7 @@ public class UsersPresenter extends
 		followReq.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
-				SideNotification.show("Following!");
+				Notification.show("Following!");
 				getView().setFollowed();
 			}
 			@Override
@@ -231,6 +231,7 @@ public class UsersPresenter extends
 		addReq.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
+				Notification.show("Song added");
 				getView().refreshPersonalFaveList();
 			}
 			@Override
@@ -238,9 +239,9 @@ public class UsersPresenter extends
 				if(failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
 					placeManager.revealPlace(new PlaceRequest(NameTokens.login));
 				} else if(failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
-					SideNotification.show("You cannot have more than 100 songs in list");
+					Notification.show("You cannot have more than 100 songs in list");
 				} else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
-					SideNotification.show("The song is already in your list");
+					Notification.show("The song is already in your list");
 				}
 			}
 		});
