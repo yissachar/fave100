@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.Widget;
@@ -29,6 +30,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers>
 
 	@UiField(provided = true) SuggestBox songSuggestBox;
 	@UiField InlineHyperlink logInLogOutLink;
+	@UiField Label notification;
 	@UiField SpanElement greeting;
 	@UiField Anchor myFave100Link;
 	@UiField InlineHyperlink registerLink;
@@ -40,6 +42,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers>
 		songSuggestBox = new SongSuggestBox(suggestions, requestFactory);
 		songSuggestBox.getElement().setAttribute("placeholder", "Search songs...");
 		widget = binder.createAndBindUi(this);
+		Notification.init(notification);
 	}
 
 	@Override

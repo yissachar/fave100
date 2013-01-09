@@ -1,5 +1,6 @@
 package com.fave100.client.pagefragments.login;
 
+import com.fave100.client.pagefragments.topbar.Notification;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
@@ -87,6 +88,7 @@ public class LoginWidgetPresenter extends
 			@Override
 			public void onSuccess(final AppUserProxy appUser) {
 				getView().clearUsername();
+				Notification.show("Logged in successfully");
 				placeManager.revealPlace(new PlaceRequest(NameTokens.users).with(UsersPresenter.USER_PARAM, appUser.getUsername()));
 			}
 

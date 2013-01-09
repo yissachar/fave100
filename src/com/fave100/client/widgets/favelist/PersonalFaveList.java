@@ -5,6 +5,7 @@ import static com.google.gwt.query.client.GQuery.$;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.client.pagefragments.topbar.Notification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
@@ -167,6 +168,7 @@ public class PersonalFaveList extends FaveListBase {
 				    	deleteReq.fire(new Receiver<Void>() {
 				    		@Override
 				    		public void onSuccess(final Void response) {
+				    			Notification.show("Song deleted");
 				    			refreshList();
 				    		}
 				    	});

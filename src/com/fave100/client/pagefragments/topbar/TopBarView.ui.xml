@@ -76,6 +76,11 @@
 			margin: 0 auto;
 		}
 		
+		.notification {
+			float: left;
+			margin-top: 10px;
+		}
+		
 		.faveLogo {		
 			float: left;	
 		}		
@@ -111,6 +116,7 @@
 						Advanced search
 					</g:InlineHyperlink>		
 				</g:HTMLPanel>
+				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
 				<ul>
 					<li><span ui:field="greeting"/></li>
 					<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
