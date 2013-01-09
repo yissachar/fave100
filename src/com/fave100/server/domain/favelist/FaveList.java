@@ -2,11 +2,6 @@ package com.fave100.server.domain.favelist;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,17 +9,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fave100.server.domain.Activity;
+import com.fave100.server.domain.Activity.Transaction;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
-import com.fave100.server.domain.Activity.Transaction;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.util.FixedSizePriorityQueue;
 import com.fave100.server.util.SongComparator;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
-import com.google.appengine.api.rdbms.AppEngineDriver;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
@@ -68,52 +62,18 @@ public class FaveList extends DatastoreObject{
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new SongLimitReachedException();
 
-		// See if the song exists in our datastore
-		Song song = Song.findSongByTitleAndArtist(songTitle, artist);
+		// Get the song from datastore or create it
+		final Song song = Song.findSongByTitleAndArtist(songTitle, artist);
+		if(song == null) return;
 
+		// Check if it is a unique song for this user
 		boolean unique = true;
-		// If the song does not exist, create it
-		if(song == null) {
-			// Look up the song in the SQL database and add to AppEngine datastore
-			Connection connection = null;
-			try {
-				// Make connection
-				DriverManager.registerDriver(new AppEngineDriver());
-				connection = DriverManager.getConnection("jdbc:google:rdbms://caseware.com:fave100:fave100dev/testgoogle");
-				// Make SQL query
-				String statement = "SELECT song, artist, mbid, youtube_id FROM autocomplete_search WHERE ";
-				statement += "searchable_song = LOWER(?) AND song = (?) AND artist = (?) LIMIT 1";
-				final PreparedStatement stmt = connection.prepareStatement(statement);
-				stmt.setString(1, songTitle);
-				stmt.setString(2, songTitle);
-				stmt.setString(3, artist);
-				final ResultSet results = stmt.executeQuery();
-				// Turn results into Song and save
-				if(results.next()) {
-					final Song newSong = new Song(results.getString("song"), results.getString("artist"), results.getString("mbid"));
-					if(Song.findSongByTitleAndArtist(newSong.getTrackName(), newSong.getArtistName()) == null) {
-				    	ofy().save().entity(newSong).now();
-				    	song = newSong;
-				    }
-				}
-			} catch (final SQLException ignore) {
-			} finally {
-				if (connection != null) {
-					try {
-						connection.close();
-					} catch (final SQLException ignore) {
-					}
-				}
-			}
-
-		} else {
-			// Check if it is a unique song for this user
-			for(final FaveItem faveItem : faveList.getList()) {
-				if(faveItem.getSong().equals(Ref.create(Key.create(Song.class, song.getId())))){
-					unique = false;
-				}
+		for(final FaveItem faveItem : faveList.getList()) {
+			if(faveItem.getSong().equals(Ref.create(Key.create(Song.class, song.getId())))){
+				unique = false;
 			}
 		}
+
 		if(unique == false) throw new SongAlreadyInListException();;
 		// Create the new FaveItem
 		final String songArtistID = song.getTrackName()+Song.TOKEN_SEPARATOR+song.getArtistName();
