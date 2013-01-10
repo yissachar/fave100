@@ -18,6 +18,7 @@ import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -246,9 +247,22 @@ public class UsersPresenter extends
 			}
 		});
 	}
+
+	@Override
+	public void shareTwitter() {
+		final String url = "http://twitter.com/share?text=Check out my Fave100 songs: "+Window.Location.getHref();
+		Window.open(url, "_blank", "");
+	}
+
+	@Override
+	public void shareFacebook() {
+		// TODO: implement
+	}
 }
 
 
 interface UsersUiHandlers extends UiHandlers{
 	//void follow();
+	void shareTwitter();
+	void shareFacebook();
 }

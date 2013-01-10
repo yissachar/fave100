@@ -9,8 +9,11 @@ import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.favelist.NonpersonalFaveList;
 import com.fave100.client.widgets.favelist.PersonalFaveList;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -29,6 +32,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField(provided = true) NonpersonalFaveList userFaveList;
 	@UiField(provided = true) PersonalFaveList personalFaveList;
 	@UiField HTMLPanel faveListContainer;
+	@UiField Button twitterButton;
+	@UiField Button facebookButton;
 	@UiField InlineHyperlink editProfileButton;
 	//@UiField Button followButton;
 	@UiField Image avatar;
@@ -65,6 +70,16 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 			}
 		}*/
 		super.setInSlot(slot, content);
+	}
+
+	@UiHandler("twitterButton")
+	void onTwitterButtonClicked(final ClickEvent event) {
+		getUiHandlers().shareTwitter();
+	}
+
+	@UiHandler("facebookButton")
+	void onFacebookButtonClicked(final ClickEvent event) {
+		getUiHandlers().shareFacebook();
 	}
 
 	/*@UiHandler("followButton")

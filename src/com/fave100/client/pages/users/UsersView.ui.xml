@@ -29,11 +29,15 @@
 			margin-left: 10px;
 		}
 		
-		.influenceContainer {
+		.socialContainer {
 			float: left;
 			margin-left: 50px;
-			margin-top: 10px;
-			font-size: 1.3em;
+			font-size: 0.9em;
+		}
+		
+		.socialContainer button {
+			width: 100%;
+			margin-bottom: 5px;
 		}
 				
 		.followButton {
@@ -65,6 +69,13 @@
 					<span class="{style.username}" ui:field="username"/>
 					<br/>
 					<span class="{style.dndLabel}">Drag and drop to rank</span>
+				</div>
+				<div class="{style.socialContainer}">
+					<g:Button ui:field="twitterButton">
+						Share list on Twitter
+					</g:Button>
+					<br/>
+					<g:Button ui:field="facebookButton">Share list on Facebook</g:Button>
 				</div>
 				<!-- <div class="{style.influenceContainer}">
 					<span>Following:</span>
