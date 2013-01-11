@@ -33,7 +33,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField(provided = true) PersonalFaveList personalFaveList;
 	@UiField HTMLPanel faveListContainer;
 	@UiField Button twitterButton;
-	@UiField Button facebookButton;
 	@UiField InlineHyperlink editProfileButton;
 	//@UiField Button followButton;
 	@UiField Image avatar;
@@ -75,11 +74,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiHandler("twitterButton")
 	void onTwitterButtonClicked(final ClickEvent event) {
 		getUiHandlers().shareTwitter();
-	}
-
-	@UiHandler("facebookButton")
-	void onFacebookButtonClicked(final ClickEvent event) {
-		getUiHandlers().shareFacebook();
 	}
 
 	/*@UiHandler("followButton")
