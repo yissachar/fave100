@@ -14,7 +14,6 @@ public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> getLoggedInAppUser();
 
 	Request<AppUserProxy> login(String username, String password);
-	Request<Boolean> checkPassword(String password);
 	Request<Void> logout();
 	Request<AppUserProxy> createAppUser(String username, String password,
 			String email);
