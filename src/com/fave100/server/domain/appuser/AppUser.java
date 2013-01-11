@@ -37,9 +37,9 @@ import twitter4j.auth.RequestToken;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.Activity;
+import com.fave100.server.domain.Activity.Transaction;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.Song;
-import com.fave100.server.domain.Activity.Transaction;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.following.AlreadyFollowingException;
@@ -668,14 +668,6 @@ public class AppUser extends DatastoreObject{
 		final AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) return false;
 		return ofy().load().type(Follower.class).id(currentUser.username+Follower.ID_SEPARATOR+username).get() != null;
-	}
-
-	public static boolean checkPassword(final String password) {
-		if(password.equals("100GreatFaves!")) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public static String createBlobstoreUrl(final String successPath) {
