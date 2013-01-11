@@ -75,7 +75,7 @@
 						Share list on Twitter
 					</g:Button>
 					<br/>
-					<g:Button ui:field="facebookButton">Share list on Facebook</g:Button>
+					<div class="fb-like" data-width="150"></div>					
 				</div>
 				<!-- <div class="{style.influenceContainer}">
 					<span>Following:</span>
