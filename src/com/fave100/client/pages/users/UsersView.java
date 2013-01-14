@@ -33,6 +33,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField(provided = true) PersonalFaveList personalFaveList;
 	@UiField HTMLPanel faveListContainer;
 	@UiField Button twitterButton;
+	@UiField HTMLPanel socialContainer;
 	@UiField InlineHyperlink editProfileButton;
 	//@UiField Button followButton;
 	@UiField Image avatar;
@@ -113,8 +114,9 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public void showOwnPage() {
 		personalFaveList.setVisible(true);
 		userFaveList.setVisible(false);
-		//faveFeed.setVisible(true);
+		socialContainer.setVisible(true);
 		editProfileButton.setVisible(true);
+		//faveFeed.setVisible(true);
 		//followButton.setVisible(false);
 		refreshPersonalFaveList();
 	}
@@ -123,6 +125,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public void showOtherPage() {
 		personalFaveList.setVisible(false);
 		userFaveList.setVisible(true);
+		socialContainer.setVisible(false);
 		editProfileButton.setVisible(false);
 		//followButton.setVisible(true);
 		//faveFeed.setVisible(false);
