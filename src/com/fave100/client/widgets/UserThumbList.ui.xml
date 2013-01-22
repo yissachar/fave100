@@ -1,0 +1,55 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:style>
+		.userThumbList {
+			border: 1px solid #555;
+			width: 200px;
+			height: 150px;
+			font-size: 1.2em;
+			background-color: #FFF;
+			margin: 30px 15px;
+		}
+		
+		.header {
+			width: 100%;
+			background-color: #5eaae5;
+			color: #FFF;
+			border-bottom: 1px solid #555;
+			padding: 5px;
+		}
+		
+		.userProfileImage {
+			max-width: 30px;
+			max-height: 30px;
+		}
+		
+		.listArea {			
+			color: #5eaae5;
+			padding: 5px;
+			text-align: center;
+		}
+		
+		.songRank {			
+			font-weight: bold;
+			padding: 5px;
+		}
+		
+		.songTitle {
+			color: #5eaae5;
+		}
+		
+	</ui:style>
+	
+	<g:HTMLPanel ui:styleName="{style.userThumbList}">
+		<g:HorizontalPanel styleName="{style.header}">
+			<g:Image ui:styleName="{style.userProfileImage}" ui:field="userProfileImage"/>
+			<g:Label ui:field="username"/>
+		</g:HorizontalPanel>
+		<div class="{style.listArea}">
+			<g:Label ui:styleName="{style.songRank}" ui:field="songRank"/>
+			<g:InlineHyperlink ui:styleName="{style.songTitle}" ui:field="songTitle"/>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

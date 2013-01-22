@@ -1,13 +1,18 @@
 package com.fave100.client.pages.home;
 
+import java.util.List;
+
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
@@ -24,6 +29,7 @@ public class HomePresenter extends
 
 	public interface MyView extends BaseView {
 		//void updateMasterFaveList(List<SongProxy> faveList);
+		void addUserThumb(AppUserProxy appUser);
 	}
 
 	//@ContentSlot
@@ -40,12 +46,29 @@ public class HomePresenter extends
 	public interface MyProxy extends ProxyPlace<HomePresenter> {
 	}
 
-	@Inject private ApplicationRequestFactory requestFactory;
+	private ApplicationRequestFactory requestFactory;
 
 	@Inject
-	public HomePresenter(final EventBus eventBus, final MyView view,
+	public HomePresenter(final ApplicationRequestFactory requestFactory,
+			final EventBus eventBus, final MyView view,
 			final MyProxy proxy) {
 		super(eventBus, view, proxy);
+		this.requestFactory = requestFactory;
+	}
+
+	@Override
+	protected void onBind() {
+		// Get a list of 4 random users
+	    final Request<List<AppUserProxy>> randomUsers = requestFactory.appUserRequest().getRandomUsers(4);
+	    randomUsers.fire(new Receiver<List<AppUserProxy>>() {
+	    	@Override
+	    	public void onSuccess(final List<AppUserProxy> userList) {
+	    		for(final AppUserProxy appUser : userList) {
+	    			// Create thumbs to display songs from the user's lists
+	    			getView().addUserThumb(appUser);
+	    		}
+	    	}
+		});
 	}
 
 	@Override

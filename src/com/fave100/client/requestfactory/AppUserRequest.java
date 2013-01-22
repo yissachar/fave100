@@ -11,6 +11,7 @@ import com.google.web.bindery.requestfactory.shared.Service;
 public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> findAppUser(String username);
 	Request<List<AppUserProxy>> getAppUsers();
+	Request<List<AppUserProxy>> getRandomUsers(int num);
 	Request<AppUserProxy> getLoggedInAppUser();
 
 	Request<AppUserProxy> login(String username, String password);
