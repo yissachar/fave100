@@ -16,29 +16,28 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 public class LoginPresenter extends
 		BasePresenter<LoginPresenter.MyView, LoginPresenter.MyProxy> {
 
-	public interface MyView extends BaseView {	
+	public interface MyView extends BaseView {
 	}
-	
+
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
-	
+
 	@Inject LoginWidgetPresenter loginContainer;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.login)
 	public interface MyProxy extends ProxyPlace<LoginPresenter> {
-	}	
-	
+	}
+
 	@Inject
 	public LoginPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy) {
-		super(eventBus, view, proxy);		
+		super(eventBus, view, proxy);
 	}
-	
+
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
 	    setInSlot(LOGIN_SLOT, loginContainer);
-	    loginContainer.getView().asWidget().addStyleName("fullLoginPage");
 	}
 }
