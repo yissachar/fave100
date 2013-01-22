@@ -6,6 +6,16 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 	
+	<ui:style>		
+		.forgotPasswordLink {
+			display: block;
+			font-size: 0.8em;
+			padding: 5px;
+			margin-top: 5px;
+			margin-left: 5px;
+		}
+	</ui:style>
+	
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel>
 		<g:FormPanel ui:field="loginForm">
@@ -15,8 +25,10 @@
 				<g:Label>Password</g:Label>
 				<g:PasswordTextBox ui:field="passwordInput"/>
 				<g:Label styleName="error" ui:field="loginStatusMessage"/>
-				<g:SubmitButton ui:field="loginButton">Sign In</g:SubmitButton>
-				<g:InlineHyperlink targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
+				<g:HorizontalPanel>
+					<g:SubmitButton ui:field="loginButton">Sign In</g:SubmitButton>
+					<g:InlineHyperlink styleName="{style.forgotPasswordLink}" targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
+				</g:HorizontalPanel>
 			</g:VerticalPanel>
 		</g:FormPanel>
 		<div class="loginDivider"/>

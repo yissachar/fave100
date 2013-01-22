@@ -56,7 +56,7 @@
 		}
 
 		.loginDropdown {
-			width: 500px;
+			width: 510px;
 		}
 		
 		.topNav li .loginDropdown {
