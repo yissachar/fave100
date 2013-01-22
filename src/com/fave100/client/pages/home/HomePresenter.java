@@ -16,6 +16,8 @@ import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
@@ -47,17 +49,21 @@ public class HomePresenter extends
 	}
 
 	private ApplicationRequestFactory requestFactory;
+	private PlaceManager placeManager;
 
 	@Inject
 	public HomePresenter(final ApplicationRequestFactory requestFactory,
 			final EventBus eventBus, final MyView view,
-			final MyProxy proxy) {
+			final MyProxy proxy, final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
+		this.placeManager = placeManager;
 	}
 
 	@Override
 	protected void onBind() {
+		super.onBind();
+
 		// Get a list of 4 random users
 	    final Request<List<AppUserProxy>> randomUsers = requestFactory.appUserRequest().getRandomUsers(4);
 	    randomUsers.fire(new Receiver<List<AppUserProxy>>() {
@@ -76,6 +82,20 @@ public class HomePresenter extends
 	    super.onReveal();
 	    //setInSlot(FAVE_FEED_SLOT, faveFeed);
 	    setInSlot(LOGIN_SLOT, loginWidget);
+
+	    // TODO: Can see the redirect - either use GateKeepers or manual reveal
+	    // If a logged in user accesses #Home redirect to their own page
+	    final Request<AppUserProxy> getLoggedInUserReq =  requestFactory.appUserRequest().getLoggedInAppUser();
+		getLoggedInUserReq.fire(new Receiver<AppUserProxy>() {
+			@Override
+			public void onSuccess(final AppUserProxy appUser) {
+				if(appUser != null) {
+					final PlaceRequest placeRequest = new PlaceRequest(NameTokens.users)
+													.with("u", appUser.getUsername());
+					placeManager.revealPlace(placeRequest);
+				}
+			}
+		});
 
 	    // Get the master Fave list
 	    /*final Request<List<SongProxy>> masterFaveListReq = requestFactory.faveListRequest().getMasterFaveList();
