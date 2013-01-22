@@ -1,11 +1,7 @@
 package com.fave100.client.pages.home;
 
-import java.util.List;
-
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.client.widgets.favelist.NonpersonalFaveList;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -20,11 +16,12 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 	public interface Binder extends UiBinder<Widget, HomeView> {
 	}
 
-	@UiField(provided = true) NonpersonalFaveList masterFaveList;
+	//@UiField(provided = true) NonpersonalFaveList masterFaveList;
+	@UiField HTMLPanel loginBox;
 
 	@Inject
 	public HomeView(final Binder binder, final ApplicationRequestFactory requestFactory) {
-		masterFaveList = new NonpersonalFaveList(requestFactory);
+		//masterFaveList = new NonpersonalFaveList(requestFactory);
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -43,7 +40,17 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 			if(content != null) {
 				topBar.add(content);
 			}
-		}/* Currently not using FaveFeed
+		}
+
+		if(slot == HomePresenter.LOGIN_SLOT) {
+			loginBox.clear();
+			if(content != null) {
+				loginBox.add(content);
+				loginBox.addStyleName("fullLoginPage");
+			}
+		}
+
+		/* Currently not using FaveFeed
 		if(slot == HomePresenter.FAVE_FEED_SLOT) {
 			faveFeed.clear();
 			if(content != null) {
@@ -53,8 +60,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 		super.setInSlot(slot, content);
 	}
 
-	@Override
+	/*@Override
 	public void updateMasterFaveList(final List<SongProxy> faveList) {
 		masterFaveList.setRowData(faveList);
-	}
+	}*/
 }

@@ -9,16 +9,50 @@
 	ui:generateLocales='default'>
 	
 	<ui:style>	
+		.registerContainer{
+			display: block;
+			margin: 0px auto;
+			width: 800px;
+		}		
+
+		.registerContainer h1 {
+			text-align: center;
+		}
+
+		.registerContainer div{
+			float: left;
+		}
+
+		.loginStatusMessage{
+			display: block;
+			font-size: 0.75em;
+			margin-bottom: 5px;
+		}
+
+		#noAccountPrompt {
+			clear: both;
+			padding-top: 30px;
+			text-align: center;
+		}
 	</ui:style>
 
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel ui:styleName="container">
 		<g:HTMLPanel ui:field="topBar"/>		
 		<div class="content">
-		    <!-- <g:HTMLPanel ui:field="faveFeed"/> -->
+			<g:HTMLPanel styleName="{style.registerContainer}">
+				<h1>Start building your list</h1>
+				<g:HTMLPanel ui:field="loginBox"/>				
+			</g:HTMLPanel>
+			<p id="noAccountPrompt">
+			    <g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}"> Don't have an account? Register</g:InlineHyperlink>
+			</p>
+		    <!-- <g:HTMLPanel ui:field="faveFeed"/>
 			<div class="faveListContainer">
 				<h2 class="itemHeader">The Fave100</h2>
 				<w:NonpersonalFaveList ui:field="masterFaveList"/>
 			</div>
+			 -->
 		</div>	
 		<pf:Footer/>
 	</g:HTMLPanel>	
