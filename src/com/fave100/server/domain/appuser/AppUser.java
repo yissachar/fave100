@@ -526,6 +526,11 @@ public class AppUser extends DatastoreObject{
 		return ofy().load().type(AppUser.class).list();
 	}
 
+	public static List<AppUser> getRandomUsers(final int num) {
+		// TODO: Should be more random than this
+		return ofy().load().type(AppUser.class).limit(num).list();
+	}
+
 	public static List<String> getFaveFeedForCurrentUser() throws NotLoggedInException {
 		final AppUser user = AppUser.getLoggedInAppUser();
 		if(user == null) throw new NotLoggedInException();
