@@ -379,7 +379,7 @@ footer {
 	margin: 50px;
 }
 
-.fullLoginPage {
+.fullLoginPage > div {
 	width: 800px;
 	display: block;
 }

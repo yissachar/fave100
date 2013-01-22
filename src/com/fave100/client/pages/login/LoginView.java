@@ -24,16 +24,17 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
 		return widget;
 	}
 	@UiField HTMLPanel loginContainer;
-	
+
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
-		super.setInSlot(slot, content);		
-		
+		super.setInSlot(slot, content);
+
 		if(slot == LoginPresenter.LOGIN_SLOT) {
-			loginContainer.clear();			
+			loginContainer.clear();
 			if(content != null) {
 				loginContainer.add(content);
+				loginContainer.addStyleName("fullLoginPage");
 			}
 		}
-	}	
+	}
 }
