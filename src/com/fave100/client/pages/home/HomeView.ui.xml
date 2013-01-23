@@ -10,45 +10,68 @@
 	ui:generateLocales='default'>
 	
 	<ui:style>	
-		.registerContainer{
+		.topBackground {
+			width: 100%;
+			position: absolute;
+			top: 0;
+			background-color: #5eaae5;
 			display: block;
-			margin: 0px auto;
-			width: 800px;
-		}		
-
-		.registerContainer h1 {
+			height: 320px;
+		}
+		
+		.homePageContainer {
+			margin-top: 107px; 
+		}
+		
+		.userThumbListPanel {
+			width: 500px;
+		}
+		
+		.CTApanel { 
+			margin-top: 100px;
+		}
+		
+		.logo { 
+			width: 182px;
+			height: 65px;
+		}
+		
+		.tagLine {
+			font-size: 1.6em;
+			color: #FFF;
+		}
+		
+		.registerCTA {
+			font-size: 1.6em;
+			margin: 30px 0;
+		}
+		
+		.buttonContainer a {
+			width: 130px;
+			height: 20px;
+			margin-right: 10px;
+			display: inline-block;
 			text-align: center;
-		}
-
-		.registerContainer div{
-			float: left;
-		}
-
-		.loginStatusMessage{
-			display: block;
-			font-size: 0.75em;
-			margin-bottom: 5px;
-		}
-
-		#noAccountPrompt {
-			clear: both;
-			padding-top: 30px;
-			text-align: center;
+			line-height: 18px;
 		}
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel ui:styleName="container">
-		<g:HTMLPanel ui:field="topBar"/>		
-		<div class="content">
-			<g:HorizontalPanel ui:field="userThumbListPanel"/>
-			<g:HTMLPanel styleName="{style.registerContainer}">
-				<h1>Start building your list</h1>
-				<g:HTMLPanel ui:field="loginBox"/>				
-			</g:HTMLPanel>
-			<p id="noAccountPrompt">
-			    <g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}"> Don't have an account? Register</g:InlineHyperlink>
-			</p>
+		<div class="{style.topBackground}"/>	
+		<div class="content">			
+			<g:HorizontalPanel styleName="{style.homePageContainer}">
+				<g:HTMLPanel styleName="{style.userThumbListPanel}" ui:field="userThumbListPanel"/>
+				<g:VerticalPanel styleName="{style.CTApanel}">
+					<g:Image styleName="{style.logo}" url="img/Logo.png"/>		
+					<g:Label styleName="{style.tagLine}">Get your list on.</g:Label>
+					<g:Label styleName="{style.registerCTA}">Share your favorite songs quickly and easily.</g:Label>
+					<g:HorizontalPanel styleName="{style.buttonContainer}">
+					    <g:InlineHyperlink styleName="button" targetHistoryToken="{nameTokens.getRegister}">Register</g:InlineHyperlink>					
+					    <g:InlineHyperlink styleName="button" targetHistoryToken="{nameTokens.getLogin}">Login</g:InlineHyperlink>
+					</g:HorizontalPanel>					    
+				</g:VerticalPanel>
+			</g:HorizontalPanel>
 		    <!-- <g:HTMLPanel ui:field="faveFeed"/>
 			<div class="faveListContainer">
 				<h2 class="itemHeader">The Fave100</h2>

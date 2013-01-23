@@ -2,24 +2,20 @@ package com.fave100.client.pages.home;
 
 import java.util.List;
 
-import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 /**
  * Default page that the user will see.
@@ -37,11 +33,7 @@ public class HomePresenter extends
 	//@ContentSlot
 	//public static final Type<RevealContentHandler<?>> FAVE_FEED_SLOT = new Type<RevealContentHandler<?>>();
 
-	@ContentSlot
-	public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
-
 	//@Inject FaveFeedPresenter faveFeed;
-	@Inject LoginWidgetPresenter loginWidget;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.home)
@@ -81,7 +73,6 @@ public class HomePresenter extends
 	protected void onReveal() {
 	    super.onReveal();
 	    //setInSlot(FAVE_FEED_SLOT, faveFeed);
-	    setInSlot(LOGIN_SLOT, loginWidget);
 
 	    // TODO: Can see the redirect - either use GateKeepers or manual reveal
 	    // If a logged in user accesses #Home redirect to their own page
