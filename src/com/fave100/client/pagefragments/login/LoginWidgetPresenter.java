@@ -21,22 +21,34 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
+/**
+ * A {@link PresenterWidget} that displays native and third party login options.
+ * The majority of the styling is left to the parent class.
+ *
+ * @author yissachar.radcliffe
+ *
+ */
 public class LoginWidgetPresenter extends
-		PresenterWidget<LoginWidgetPresenter.MyView>
-		implements LoginUiHandlers{
+		PresenterWidget<LoginWidgetPresenter.MyView> implements LoginUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<LoginUiHandlers> {
 		String getUsername();
+
 		String getPassword();
+
 		void clearUsername();
+
 		void clearPassword();
+
 		void setError(String error);
+
 		void setGoogleLoginUrl(String url);
+
 		void setFacebookLoginUrl(String url);
 	}
 
-	private ApplicationRequestFactory requestFactory;
-	private PlaceManager placeManager;
+	private ApplicationRequestFactory	requestFactory;
+	private PlaceManager				placeManager;
 
 	@Inject
 	public LoginWidgetPresenter(final EventBus eventBus, final MyView view,
@@ -52,12 +64,16 @@ public class LoginWidgetPresenter extends
 	protected void onBind() {
 		super.onBind();
 
-		String redirectUrl = "http://"+Window.Location.getHost()+Window.Location.getPath();
-		redirectUrl += Window.Location.getQueryString()+"#"+NameTokens.register+";provider=";
+		String redirectUrl = "http://" + Window.Location.getHost()
+				+ Window.Location.getPath();
+		redirectUrl += Window.Location.getQueryString() + "#"
+				+ NameTokens.register + ";provider=";
 
 		// Get the login url for Google
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		final Request<String> loginUrlReq = appUserRequest.getGoogleLoginURL(redirectUrl+RegisterPresenter.PROVIDER_GOOGLE);
+		final Request<String> loginUrlReq = appUserRequest
+				.getGoogleLoginURL(redirectUrl
+						+ RegisterPresenter.PROVIDER_GOOGLE);
 
 		loginUrlReq.fire(new Receiver<String>() {
 			@Override
@@ -67,7 +83,9 @@ public class LoginWidgetPresenter extends
 		});
 
 		// Get the login url for Facebook
-		final Request<String> facebookLoginUrlReq = requestFactory.appUserRequest().getFacebookAuthUrl(redirectUrl+RegisterPresenter.PROVIDER_FACEBOOK);
+		final Request<String> facebookLoginUrlReq = requestFactory
+				.appUserRequest().getFacebookAuthUrl(
+						redirectUrl + RegisterPresenter.PROVIDER_FACEBOOK);
 		facebookLoginUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
@@ -79,8 +97,8 @@ public class LoginWidgetPresenter extends
 	@Override
 	public void login() {
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		final Request<AppUserProxy> loginReq = appUserRequest.login(getView().getUsername(),
-				getView().getPassword());
+		final Request<AppUserProxy> loginReq = appUserRequest.login(getView()
+				.getUsername(), getView().getPassword());
 
 		// Clear the inputs immediately
 		getView().clearPassword();
@@ -89,13 +107,15 @@ public class LoginWidgetPresenter extends
 			public void onSuccess(final AppUserProxy appUser) {
 				getView().clearUsername();
 				Notification.show("Logged in successfully");
-				placeManager.revealPlace(new PlaceRequest(NameTokens.users).with(UsersPresenter.USER_PARAM, appUser.getUsername()));
+				placeManager.revealPlace(new PlaceRequest(NameTokens.users)
+						.with(UsersPresenter.USER_PARAM, appUser.getUsername()));
 			}
 
 			@Override
 			public void onFailure(final ServerFailure failure) {
 				String errorMsg = "An error occurred";
-				if(failure.getExceptionType().equals(IncorrectLoginException.class.getName())) {
+				if (failure.getExceptionType().equals(
+						IncorrectLoginException.class.getName())) {
 					errorMsg = "Username or password incorrect";
 				}
 				getView().setError(errorMsg);
@@ -105,9 +125,13 @@ public class LoginWidgetPresenter extends
 
 	@Override
 	public void goToTwitterAuth() {
-		String redirect = "http://"+Window.Location.getHost()+Window.Location.getPath();
-		redirect += Window.Location.getQueryString()+"#"+NameTokens.register+";provider="+RegisterPresenter.PROVIDER_TWITTER;
-		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl(redirect);
+		String redirect = "http://" + Window.Location.getHost()
+				+ Window.Location.getPath();
+		redirect += Window.Location.getQueryString() + "#"
+				+ NameTokens.register + ";provider="
+				+ RegisterPresenter.PROVIDER_TWITTER;
+		final Request<String> authUrlReq = requestFactory.appUserRequest()
+				.getTwitterAuthUrl(redirect);
 		authUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
@@ -117,8 +141,8 @@ public class LoginWidgetPresenter extends
 	}
 }
 
-
 interface LoginUiHandlers extends UiHandlers {
 	void login();
+
 	void goToTwitterAuth();
 }

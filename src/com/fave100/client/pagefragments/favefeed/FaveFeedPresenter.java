@@ -3,6 +3,8 @@ package com.fave100.client.pagefragments.favefeed;
 import java.util.List;
 
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.server.domain.appuser.Follower;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -11,6 +13,13 @@ import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 
+/**
+ * A FaveFeed will display information about an {@link AppUser}'s
+ * {@link Follower}'s recent activities.
+ *
+ * @author yissachar.radcliffe
+ *
+ */
 public class FaveFeedPresenter extends
 		PresenterWidget<FaveFeedPresenter.MyView> {
 
@@ -18,7 +27,7 @@ public class FaveFeedPresenter extends
 		void setFaveFeedContent(List<String> activityList);
 	}
 
-	private ApplicationRequestFactory requestFactory;
+	private ApplicationRequestFactory	requestFactory;
 
 	@Inject
 	public FaveFeedPresenter(final EventBus eventBus, final MyView view,
@@ -38,7 +47,8 @@ public class FaveFeedPresenter extends
 		super.onReveal();
 
 		// Update the FaveFeed
-		final Request<List<String>> faveFeedReq = requestFactory.appUserRequest().getFaveFeedForCurrentUser();
+		final Request<List<String>> faveFeedReq = requestFactory
+				.appUserRequest().getFaveFeedForCurrentUser();
 		faveFeedReq.fire(new Receiver<List<String>>() {
 			@Override
 			public void onSuccess(final List<String> faveFeed) {
