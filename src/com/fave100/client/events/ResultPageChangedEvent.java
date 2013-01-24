@@ -4,6 +4,12 @@ import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+/**
+ * This event will be dispatched when a {@link SimplePager}
+ * changes its page.
+ * @author yissachar.radcliffe
+ *
+ */
 public class ResultPageChangedEvent extends Event<ResultPageChangedEvent.Handler> {
 
     public interface Handler {
