@@ -15,22 +15,30 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers> implements
-		LoginWidgetPresenter.MyView {
+public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
+		implements LoginWidgetPresenter.MyView {
 
-	private final Widget widget;
+	private final Widget	widget;
 
 	public interface Binder extends UiBinder<Widget, LoginWidgetView> {
 	}
-	
-	@UiField FormPanel loginForm;
-	@UiField TextBox usernameInput;	
-	@UiField PasswordTextBox passwordInput;
-	@UiField Label loginStatusMessage;
-	@UiField Anchor signInWithGoogleButton;
-	@UiField Anchor signInWithTwitterButton;
-	@UiField Anchor signInWithFacebookButton;
-	@UiField Button loginButton;
+
+	@UiField
+	FormPanel		loginForm;
+	@UiField
+	TextBox			usernameInput;
+	@UiField
+	PasswordTextBox	passwordInput;
+	@UiField
+	Label			loginStatusMessage;
+	@UiField
+	Anchor			signInWithGoogleButton;
+	@UiField
+	Anchor			signInWithTwitterButton;
+	@UiField
+	Anchor			signInWithFacebookButton;
+	@UiField
+	Button			loginButton;
 
 	@Inject
 	public LoginWidgetView(final Binder binder) {
@@ -40,18 +48,18 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers> impleme
 	@Override
 	public Widget asWidget() {
 		return widget;
-	}		
-	
+	}
+
 	@UiHandler("loginForm")
 	public void onSubmit(final SubmitEvent event) {
 		getUiHandlers().login();
 	}
-	
+
 	@UiHandler("signInWithTwitterButton")
 	public void onClick(final ClickEvent event) {
 		getUiHandlers().goToTwitterAuth();
 	}
-	
+
 	@Override
 	public void setError(final String error) {
 		loginStatusMessage.setText(error);
@@ -80,13 +88,13 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers> impleme
 
 	@Override
 	public void setGoogleLoginUrl(final String url) {
-		signInWithGoogleButton.setHref(url);		
+		signInWithGoogleButton.setHref(url);
 	}
 
 	@Override
 	public void setFacebookLoginUrl(final String url) {
 		signInWithFacebookButton.setHref(url);
-		
+
 	}
-	
+
 }

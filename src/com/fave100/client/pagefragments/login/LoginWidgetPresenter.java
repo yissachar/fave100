@@ -63,7 +63,11 @@ public class LoginWidgetPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+		// As soon as the LoginWidget is constructed, st the Google and Facebook
+		// auth URL's
 
+		// Construct a redirect URL that third party logins will use to send
+		// users back to our site
 		String redirectUrl = "http://" + Window.Location.getHost()
 				+ Window.Location.getPath();
 		redirectUrl += Window.Location.getQueryString() + "#"
@@ -94,14 +98,16 @@ public class LoginWidgetPresenter extends
 		});
 	}
 
+	// Native login
 	@Override
 	public void login() {
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		final Request<AppUserProxy> loginReq = appUserRequest.login(getView()
 				.getUsername(), getView().getPassword());
 
-		// Clear the inputs immediately
+		// Clear the password immediately
 		getView().clearPassword();
+		// Attempt to log the user in
 		loginReq.fire(new Receiver<AppUserProxy>() {
 			@Override
 			public void onSuccess(final AppUserProxy appUser) {
@@ -123,13 +129,20 @@ public class LoginWidgetPresenter extends
 		});
 	}
 
+	// Twitter auth URL's expire relatively quickly, so instead of setting a
+	// link pointing to an auth URL we have to generate the auth URL whenever a
+	// user clicks on the Twitter button.
 	@Override
 	public void goToTwitterAuth() {
+		// Construct a redirect URL that Twitter will use to send users back to
+		// our site
 		String redirect = "http://" + Window.Location.getHost()
 				+ Window.Location.getPath();
 		redirect += Window.Location.getQueryString() + "#"
 				+ NameTokens.register + ";provider="
 				+ RegisterPresenter.PROVIDER_TWITTER;
+
+		// Authenticate the user with Twitter
 		final Request<String> authUrlReq = requestFactory.appUserRequest()
 				.getTwitterAuthUrl(redirect);
 		authUrlReq.fire(new Receiver<String>() {
