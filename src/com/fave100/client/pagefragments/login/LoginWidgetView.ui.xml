@@ -1,12 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
-	
-	<ui:style>		
+
+	<ui:style>
 		.forgotPasswordLink {
 			display: block;
 			font-size: 0.8em;
@@ -15,29 +14,33 @@
 			margin-left: 5px;
 		}
 	</ui:style>
-	
-	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
+
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
 	<g:HTMLPanel>
 		<g:FormPanel ui:field="loginForm">
 			<g:VerticalPanel styleName="nativeLoginBox">
 				<g:Label>Username</g:Label>
-				<g:TextBox ui:field="usernameInput"/>
+				<g:TextBox ui:field="usernameInput" />
 				<g:Label>Password</g:Label>
-				<g:PasswordTextBox ui:field="passwordInput"/>
-				<g:Label styleName="error" ui:field="loginStatusMessage"/>
+				<g:PasswordTextBox ui:field="passwordInput" />
+				<g:Label styleName="error" ui:field="loginStatusMessage" />
 				<g:HorizontalPanel>
 					<g:SubmitButton ui:field="loginButton">Sign In</g:SubmitButton>
-					<g:InlineHyperlink styleName="{style.forgotPasswordLink}" targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
+					<g:InlineHyperlink styleName="{style.forgotPasswordLink}"
+						targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
 				</g:HorizontalPanel>
 			</g:VerticalPanel>
 		</g:FormPanel>
-		<div class="loginDivider"/>
+		<div class="loginDivider" />
 		<div class="thirdPartyLoginBox">
-			<g:Anchor styleName="zocial googleplus" ui:field="signInWithGoogleButton">Sign in with Google</g:Anchor>
-			<br/>
-			<g:Anchor styleName="zocial twitter" ui:field="signInWithTwitterButton">Sign in with Twitter</g:Anchor>
-			<br/>
-			<g:Anchor styleName="zocial facebook" ui:field="signInWithFacebookButton">Sign in with Facebook</g:Anchor>
+			<g:Anchor styleName="zocial googleplus" ui:field="signInWithGoogleButton">Sign in
+				with Google</g:Anchor>
+			<br />
+			<g:Anchor styleName="zocial twitter" ui:field="signInWithTwitterButton">Sign in with
+				Twitter</g:Anchor>
+			<br />
+			<g:Anchor styleName="zocial facebook" ui:field="signInWithFacebookButton">Sign in with
+				Facebook</g:Anchor>
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>
