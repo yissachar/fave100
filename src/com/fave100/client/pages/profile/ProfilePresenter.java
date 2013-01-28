@@ -1,10 +1,10 @@
 package com.fave100.client.pages.profile;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.Validator;
 import com.google.gwt.event.shared.EventBus;
@@ -19,6 +19,11 @@ import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
+/**
+ * Shows the logged in user their profile
+ * @author yissachar.radcliffe
+ *
+ */
 public class ProfilePresenter extends
 		BasePresenter<ProfilePresenter.MyView, ProfilePresenter.MyProxy>
 		implements ProfileUiHandlers{
@@ -40,12 +45,15 @@ public class ProfilePresenter extends
 	}
 
 	private ApplicationRequestFactory requestFactory;
+	private CurrentUser currentUser;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory) {
+			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
+			final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
+		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 	}
 
@@ -81,16 +89,10 @@ public class ProfilePresenter extends
 	}
 
 	private void setProfileData() {
-		final Request<AppUserProxy> loggedInUserReq = requestFactory.appUserRequest().getLoggedInAppUser();
-		loggedInUserReq.fire(new Receiver<AppUserProxy>() {
-			@Override
-			public void onSuccess(final AppUserProxy user) {
-				getView().clearForm();
-				setUploadAction();
-				getView().setEmailValue(user.getEmail());
-				getView().setAvatarImg(user.getAvatarImage());
-			}
-		});
+		getView().clearForm();
+		setUploadAction();
+		getView().setEmailValue(currentUser.getEmail());
+		getView().setAvatarImg(currentUser.getAvatarImage());
 	}
 
 	private void setUploadAction() {
