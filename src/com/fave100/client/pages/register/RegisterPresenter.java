@@ -3,6 +3,7 @@ package com.fave100.client.pages.register;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
+import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
@@ -24,6 +25,7 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
@@ -49,6 +51,7 @@ public class RegisterPresenter extends
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.register)
+	@UseGatekeeper(NotLoggedInGatekeeper.class)
 	public interface MyProxy extends ProxyPlace<RegisterPresenter> {
 	}
 
@@ -84,19 +87,6 @@ public class RegisterPresenter extends
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 
-		final Request<AppUserProxy> getLoggedInUserReq =  requestFactory.appUserRequest().getLoggedInAppUser();
-		getLoggedInUserReq.fire(new Receiver<AppUserProxy>() {
-			@Override
-			public void onSuccess(final AppUserProxy user) {
-				if(user != null) {
-					// TODO: Gatekeeper instead? (need CurrentUser class in order for that to work,
-					// instead of RF every request, uses events)
-
-					// Logged in user trying to register: redirect them to home
-					placeManager.revealDefaultPlace();
-				}
-			}
-		});
 		// TODO: Captcha/recaptcha? Other spam filtering to prevent registration?
 
 		provider = placeRequest.getParameter("provider", "");
