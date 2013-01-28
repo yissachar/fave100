@@ -1,9 +1,9 @@
 package com.fave100.client.pages.passwordreset;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.Validator;
 import com.google.gwt.event.shared.EventBus;
@@ -19,9 +19,13 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
+/**
+ * Allows users to change their password or request a password reset token
+ * @author yissachar.radcliffe
+ *
+ */
 public class PasswordResetPresenter
-	extends
-	BasePresenter<PasswordResetPresenter.MyView, PasswordResetPresenter.MyProxy>
+	extends	BasePresenter<PasswordResetPresenter.MyView, PasswordResetPresenter.MyProxy>
 	implements PasswordResetUiHandlers{
 
 	public interface MyView extends BaseView, HasUiHandlers<PasswordResetUiHandlers> {
@@ -35,6 +39,7 @@ public class PasswordResetPresenter
 
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
+	private CurrentUser currentUser;
 	private String token;
 
 	@ProxyCodeSplit
@@ -45,10 +50,11 @@ public class PasswordResetPresenter
 	@Inject
 	public PasswordResetPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager) {
+			final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
+		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 	}
 
@@ -73,26 +79,21 @@ public class PasswordResetPresenter
 
 		// Use parameters to determine what to reveal on page
 		token = placeRequest.getParameter("token", "");
-		final Request<AppUserProxy> userReq = requestFactory.appUserRequest().getLoggedInAppUser();
-		userReq.fire(new Receiver<AppUserProxy>() {
-			@Override
-			public void onSuccess(final AppUserProxy user) {
-				if(user != null) {
-					// User is logged in allow password change if they enter old
-					// password first
-					getView().showPwdChangeForm(true);
-				} else if(!token.isEmpty()) {
-					// User is not logged in but has a password change token
-					// Allow changing password without old password
-					getView().showPwdChangeForm(false);
-				} else {
-					// User not logged in and does not have a password change token
-					// allow them to request a password change token
-					getView().showSendTokenForm();
-				}
-				getProxy().manualReveal(PasswordResetPresenter.this);
-			}
-		});
+
+		if(currentUser.getAppUser() != null) {
+			// User is logged in allow password change if they enter old
+			// password first
+			getView().showPwdChangeForm(true);
+		} else if(!token.isEmpty()) {
+			// User is not logged in but has a password change token
+			// allow changing password without old password
+			getView().showPwdChangeForm(false);
+		} else {
+			// User not logged in and does not have a password change token
+			// allow them to request a password change token
+			getView().showSendTokenForm();
+		}
+		getProxy().manualReveal(PasswordResetPresenter.this);
 	}
 
 	@Override
@@ -117,7 +118,7 @@ public class PasswordResetPresenter
 	public void changePassword(final String newPassword, final String newPasswordRepeat,
 			final String currPassword) {
 
-		// Set error message if currPassword doesn't validate
+		// Set error message if newPassword doesn't validate
 		final String errorMsg = Validator.validatePassword(newPassword);
 		if(errorMsg != null) {
 			getView().showPwdError(errorMsg, true);
