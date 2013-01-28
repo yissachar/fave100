@@ -79,7 +79,7 @@ public class HomePresenter extends
 
 		if (currentUser.isLoggedIn()) {
 			final PlaceRequest placeRequest = new PlaceRequest(NameTokens.users)
-					.with("u", currentUser.getAppUser().getUsername());
+					.with("u", currentUser.getUsername());
 			placeManager.revealPlace(placeRequest);
 		}
 		getProxy().manualReveal(HomePresenter.this);

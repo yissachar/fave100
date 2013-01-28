@@ -15,23 +15,37 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandlers> implements
+public class PasswordResetView extends
+		ViewWithUiHandlers<PasswordResetUiHandlers> implements
 		PasswordResetPresenter.MyView {
 
-	private final Widget widget;
-	@UiField HTMLPanel topBar;
-	@UiField FormPanel sendTokenForm;
-	@UiField TextBox usernameInput;
-	@UiField TextBox emailInput;
-	@UiField Label tokenStatusMessage;
-	@UiField SubmitButton sendTokenButton;
-	@UiField FormPanel changePasswordForm;
-	@UiField Label currPasswordLabel;
-	@UiField PasswordTextBox currPasswordInput;
-	@UiField Label currPwdStatusMsg;
-	@UiField PasswordTextBox passwordInput;
-	@UiField PasswordTextBox passwordRepeat;
-	@UiField Label pwdStatusMessage;
+	private final Widget	widget;
+	@UiField
+	HTMLPanel				topBar;
+	@UiField
+	FormPanel				sendTokenForm;
+	@UiField
+	TextBox					usernameInput;
+	@UiField
+	TextBox					emailInput;
+	@UiField
+	Label					tokenStatusMessage;
+	@UiField
+	SubmitButton			sendTokenButton;
+	@UiField
+	FormPanel				changePasswordForm;
+	@UiField
+	Label					currPasswordLabel;
+	@UiField
+	PasswordTextBox			currPasswordInput;
+	@UiField
+	Label					currPwdStatusMsg;
+	@UiField
+	PasswordTextBox			passwordInput;
+	@UiField
+	PasswordTextBox			passwordRepeat;
+	@UiField
+	Label					pwdStatusMessage;
 
 	public interface Binder extends UiBinder<Widget, PasswordResetView> {
 	}
@@ -49,9 +63,9 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
-		if(slot == BasePresenter.TOP_BAR_SLOT) {
+		if (slot == BasePresenter.TOP_BAR_SLOT) {
 			topBar.clear();
-			if(content != null) {
+			if (content != null) {
 				topBar.add(content);
 			}
 		}
@@ -61,13 +75,14 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 	public void onTokenSubmit(final SubmitEvent event) {
 		// Clear error text
 		tokenStatusMessage.setText("");
-		getUiHandlers().sendEmail(usernameInput.getValue(), emailInput.getValue());
+		getUiHandlers().sendEmail(usernameInput.getValue(),
+				emailInput.getValue());
 	}
 
 	@UiHandler("changePasswordForm")
 	public void onPasswordSubmit(final SubmitEvent event) {
-		getUiHandlers().changePassword(passwordInput.getValue(), passwordRepeat.getValue(),
-				currPasswordInput.getValue());
+		getUiHandlers().changePassword(passwordInput.getValue(),
+				passwordRepeat.getValue(), currPasswordInput.getValue());
 	}
 
 	@Override
@@ -79,7 +94,7 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 		currPasswordInput.removeStyleName("errorInput");
 		passwordInput.removeStyleName("errorInput");
 		sendTokenForm.setVisible(false);
-		if(requireOldPwd) {
+		if (requireOldPwd) {
 			currPasswordLabel.setVisible(true);
 			currPasswordInput.setVisible(true);
 			currPwdStatusMsg.setVisible(false);
@@ -120,7 +135,7 @@ public class PasswordResetView extends ViewWithUiHandlers<PasswordResetUiHandler
 	public void showPwdError(final String errorMsg, final Boolean inputError) {
 		pwdStatusMessage.setText(errorMsg);
 		pwdStatusMessage.addStyleName("error");
-		if(inputError) {
+		if (inputError) {
 			passwordInput.addStyleName("errorInput");
 		} else {
 			passwordInput.removeStyleName("errorInput");
