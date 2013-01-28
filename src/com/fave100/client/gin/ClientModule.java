@@ -91,8 +91,10 @@ public class ClientModule extends AbstractPresenterModule {
 
 	@Provides
 	@Singleton
-	public ApplicationRequestFactory createApplicationRequestFactory(final EventBus eventBus) {
-		final ApplicationRequestFactory requestFactory = GWT.create(ApplicationRequestFactory.class);
+	public ApplicationRequestFactory createApplicationRequestFactory(
+			final EventBus eventBus) {
+		final ApplicationRequestFactory requestFactory = GWT
+				.create(ApplicationRequestFactory.class);
 		requestFactory.initialize(eventBus);
 		return requestFactory;
 	}

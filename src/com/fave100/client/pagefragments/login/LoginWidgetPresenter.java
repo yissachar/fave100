@@ -2,6 +2,7 @@ package com.fave100.client.pagefragments.login;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
+import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
@@ -48,6 +49,7 @@ public class LoginWidgetPresenter extends
 		void setFacebookLoginUrl(String url);
 	}
 
+	private EventBus 					eventBus;
 	private ApplicationRequestFactory	requestFactory;
 	private PlaceManager				placeManager;
 	private CurrentUser					currentUser;
@@ -57,6 +59,7 @@ public class LoginWidgetPresenter extends
 			final ApplicationRequestFactory requestFactory,
 			final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
+		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
 		this.currentUser = currentUser;
@@ -115,7 +118,7 @@ public class LoginWidgetPresenter extends
 			@Override
 			public void onSuccess(final AppUserProxy appUser) {
 				getView().clearUsername();
-				currentUser.setAppUser(appUser);
+				eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 				Notification.show("Logged in successfully");
 				placeManager.revealPlace(new PlaceRequest(NameTokens.users)
 						.with(UsersPresenter.USER_PARAM, appUser.getUsername()));
