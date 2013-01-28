@@ -1,5 +1,6 @@
 package com.fave100.client.pages.profile;
 
+import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
@@ -14,6 +15,7 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
@@ -33,6 +35,7 @@ public class ProfilePresenter extends
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.profile)
+	@UseGatekeeper(LoggedInGatekeeper.class)
 	public interface MyProxy extends ProxyPlace<ProfilePresenter> {
 	}
 
