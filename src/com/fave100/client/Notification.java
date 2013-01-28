@@ -1,14 +1,20 @@
-package com.fave100.client.pagefragments.topbar;
+package com.fave100.client;
 
 import static com.google.gwt.query.client.GQuery.$;
 
 import com.google.gwt.user.client.ui.Label;
 
+/**
+ * A notification will alert the user to various events and errors.
+ * @author yissachar.radcliffe
+ *
+ */
 public class Notification {
 
-	public Notification(){}
+	public Notification() {
+	}
 
-	public static Label label;
+	public static Label	label;
 
 	public static void init(final Label _label) {
 		label = _label;
@@ -24,9 +30,10 @@ public class Notification {
 		Notification.show(message, error, delayTime);
 	}
 
-	public static void show(final String message, final boolean error, final int delay) {
+	public static void show(final String message, final boolean error,
+			final int delay) {
 		label.setVisible(true);
-		if(error) {
+		if (error) {
 			label.addStyleName("error");
 		} else {
 			label.removeStyleName("error");
