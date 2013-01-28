@@ -21,6 +21,10 @@ public class CurrentUser {
 				});
 	}
 
+	public boolean isLoggedIn() {
+		return getAppUser() != null;
+	}
+
 	public AppUserProxy getAppUser() {
 		return appUser;
 	}
@@ -28,5 +32,4 @@ public class CurrentUser {
 	public void setAppUser(final AppUserProxy appUser) {
 		this.appUser = appUser;
 	}
-
 }

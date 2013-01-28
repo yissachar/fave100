@@ -1,6 +1,7 @@
 package com.fave100.client.gin;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
 import com.fave100.client.pagefragments.favefeed.FaveFeedView;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
@@ -45,6 +46,8 @@ public class ClientModule extends AbstractPresenterModule {
 		install(new DefaultModule(ClientPlaceManager.class));
 
 		bind(CurrentUser.class).asEagerSingleton();
+
+		bind(LoggedInGatekeeper.class).asEagerSingleton();
 
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
 
