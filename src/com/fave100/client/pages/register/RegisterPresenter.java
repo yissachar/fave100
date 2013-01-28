@@ -1,6 +1,7 @@
 package com.fave100.client.pages.register;
 
-import com.fave100.client.pagefragments.topbar.Notification;
+import com.fave100.client.CurrentUser;
+import com.fave100.client.Notification;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
@@ -45,27 +46,29 @@ public class RegisterPresenter extends
 		void clearThirdPartyErrors();
 	}
 
-	public static final String PROVIDER_GOOGLE = "google";
-	public static final String PROVIDER_TWITTER = "twitter";
-	public static final String PROVIDER_FACEBOOK = "facebook";
-
 	@ProxyCodeSplit
 	@NameToken(NameTokens.register)
 	public interface MyProxy extends ProxyPlace<RegisterPresenter> {
 	}
 
+	public static final String PROVIDER_GOOGLE = "google";
+	public static final String PROVIDER_TWITTER = "twitter";
+	public static final String PROVIDER_FACEBOOK = "facebook";
+
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
+	private CurrentUser currentUser;
 	private String provider;
 	private String facebookRedirect;
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager) {
+			final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
+		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 	}
 
@@ -110,6 +113,7 @@ public class RegisterPresenter extends
 						loginWithGoogle.fire(new Receiver<AppUserProxy>() {
 							@Override
 							public void onSuccess(final AppUserProxy user) {
+								currentUser.setAppUser(user);
 								if(user != null) {
 									placeManager.revealDefaultPlace();
 								}
@@ -136,6 +140,7 @@ public class RegisterPresenter extends
 			loginWithTwitter.fire(new Receiver<AppUserProxy>() {
 				@Override
 				public void onSuccess(final AppUserProxy user) {
+					currentUser.setAppUser(user);
 					if(user != null) {
 						goToMyFave100();
 					}
@@ -193,6 +198,7 @@ public class RegisterPresenter extends
 			createAppUserReq.fire(new Receiver<AppUserProxy>() {
 				@Override
 				public void onSuccess(final AppUserProxy createdUser) {
+					currentUser.setAppUser(createdUser);
 					if(createdUser != null) {
 						appUserCreated();
 					} else {
@@ -221,6 +227,7 @@ public class RegisterPresenter extends
 				createAppUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(final AppUserProxy createdUser) {
+						currentUser.setAppUser(createdUser);
 						appUserCreated();
 					}
 					@Override
@@ -241,6 +248,7 @@ public class RegisterPresenter extends
 				createAppUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(final AppUserProxy createdUser) {
+						currentUser.setAppUser(createdUser);
 						appUserCreated();
 						goToMyFave100();
 					}
@@ -264,6 +272,7 @@ public class RegisterPresenter extends
 				createAppUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(final AppUserProxy createdUser) {
+						currentUser.setAppUser(createdUser);
 						if(createdUser != null) {
 							appUserCreated();
 							goToMyFave100();

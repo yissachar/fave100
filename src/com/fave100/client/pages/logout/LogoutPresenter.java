@@ -1,6 +1,7 @@
 package com.fave100.client.pages.logout;
 
-import com.fave100.client.pagefragments.topbar.Notification;
+import com.fave100.client.CurrentUser;
+import com.fave100.client.Notification;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
@@ -30,15 +31,17 @@ public class LogoutPresenter extends
 
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
+	private CurrentUser currentUser;
 
 	@Inject
 	public LogoutPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager) {
+			final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
+		this.currentUser = currentUser;
 	}
 
 	@Override
@@ -60,6 +63,7 @@ public class LogoutPresenter extends
 		logoutReq.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
+				currentUser.setAppUser(null);
 				Notification.show("Logged out successfully");
 				placeManager.revealPlace(new PlaceRequest(NameTokens.home));
 			}
