@@ -1,6 +1,7 @@
 package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.events.SongSelectedEvent;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.place.NameTokens;
@@ -54,6 +55,15 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	@Override
 	protected void onBind() {
 		super.onBind();
+
+		CurrentUserChangedEvent.register(eventBus,
+				new CurrentUserChangedEvent.Handler() {
+					@Override
+					public void onCurrentUserChanged(
+							final CurrentUserChangedEvent event) {
+						setTopBar();
+					}
+				});
 	}
 
 	@Override
@@ -61,12 +71,12 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		super.onReveal();
 
 		setInSlot(LOGIN_SLOT, loginBox);
+		setTopBar();
+	}
 
-		// Whenever the page is refreshed, check to see if the user is logged in
-		// or not
-		// and change the top bar links and elements appropriately.
-		if (currentUser != null && currentUser.getAppUser() != null) {
-			getView().setLoggedIn(currentUser.getAppUser().getUsername());
+	private void setTopBar() {
+		if (currentUser != null && currentUser.isLoggedIn()) {
+			getView().setLoggedIn(currentUser.getUsername());
 		} else {
 			getView().setLoggedOut();
 		}

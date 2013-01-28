@@ -21,26 +21,34 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 /**
  * Allows users to change their password or request a password reset token
+ *
  * @author yissachar.radcliffe
  *
  */
 public class PasswordResetPresenter
-	extends	BasePresenter<PasswordResetPresenter.MyView, PasswordResetPresenter.MyProxy>
-	implements PasswordResetUiHandlers{
+		extends
+		BasePresenter<PasswordResetPresenter.MyView, PasswordResetPresenter.MyProxy>
+		implements PasswordResetUiHandlers {
 
-	public interface MyView extends BaseView, HasUiHandlers<PasswordResetUiHandlers> {
+	public interface MyView extends BaseView,
+			HasUiHandlers<PasswordResetUiHandlers> {
 		void showPwdChangeForm(Boolean requireOldPwd);
+
 		void showSendTokenForm();
+
 		void showTokenError();
+
 		void showTokenSuccess();
+
 		void showPwdError(String errorMsg, Boolean inputError);
+
 		void showCurrPwdError(String errorMsg);
 	}
 
-	private ApplicationRequestFactory requestFactory;
-	private PlaceManager placeManager;
-	private CurrentUser currentUser;
-	private String token;
+	private ApplicationRequestFactory	requestFactory;
+	private PlaceManager				placeManager;
+	private CurrentUser					currentUser;
+	private String						token;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.passwordreset)
@@ -49,7 +57,8 @@ public class PasswordResetPresenter
 
 	@Inject
 	public PasswordResetPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
+			final MyProxy proxy,
+			final ApplicationRequestFactory requestFactory,
 			final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
@@ -80,11 +89,11 @@ public class PasswordResetPresenter
 		// Use parameters to determine what to reveal on page
 		token = placeRequest.getParameter("token", "");
 
-		if(currentUser.getAppUser() != null) {
-			// User is logged in allow password change if they enter old
+		if (currentUser.isLoggedIn()) {
+			// User is logged in, allow password change if they enter old
 			// password first
 			getView().showPwdChangeForm(true);
-		} else if(!token.isEmpty()) {
+		} else if (!token.isEmpty()) {
 			// User is not logged in but has a password change token
 			// allow changing password without old password
 			getView().showPwdChangeForm(false);
@@ -98,15 +107,16 @@ public class PasswordResetPresenter
 
 	@Override
 	public void sendEmail(final String username, final String emailAddress) {
-		final Request<Boolean> sendEmailReq = requestFactory.appUserRequest().emailPasswordResetToken(username, emailAddress);
+		final Request<Boolean> sendEmailReq = requestFactory.appUserRequest()
+				.emailPasswordResetToken(username, emailAddress);
 		sendEmailReq.fire(new Receiver<Boolean>() {
 			@Override
 			public void onSuccess(final Boolean validInfo) {
-				if(validInfo == false) {
+				if (validInfo == false) {
 					// Warn user if invalid username or email
 					getView().showTokenError();
 				} else {
-					//  On success tell user email was sent
+					// On success tell user email was sent
 					getView().showTokenSuccess();
 				}
 			}
@@ -115,12 +125,12 @@ public class PasswordResetPresenter
 	}
 
 	@Override
-	public void changePassword(final String newPassword, final String newPasswordRepeat,
-			final String currPassword) {
+	public void changePassword(final String newPassword,
+			final String newPasswordRepeat, final String currPassword) {
 
 		// Set error message if newPassword doesn't validate
 		final String errorMsg = Validator.validatePassword(newPassword);
-		if(errorMsg != null) {
+		if (errorMsg != null) {
 			getView().showPwdError(errorMsg, true);
 			return;
 		} else if (!newPassword.equals(newPasswordRepeat)) {
@@ -131,22 +141,24 @@ public class PasswordResetPresenter
 		// Try to change password with old password if exists
 		// Otherwise use token to change password if exists
 		String passwordOrToken = token;
-		if(currPassword != null && !currPassword.isEmpty()) {
+		if (currPassword != null && !currPassword.isEmpty()) {
 			passwordOrToken = currPassword;
 		}
 
-		final Request<Boolean> changePasswordReq = requestFactory.appUserRequest().changePassword(newPassword, passwordOrToken);
+		final Request<Boolean> changePasswordReq = requestFactory
+				.appUserRequest().changePassword(newPassword, passwordOrToken);
 		changePasswordReq.fire(new Receiver<Boolean>() {
 			@Override
 			public void onSuccess(final Boolean pwdChanged) {
-				if(pwdChanged == false) {
+				if (pwdChanged == false) {
 					String errorMsg = "Incorrect password";
-					if(!token.isEmpty()) {
+					if (!token.isEmpty()) {
 						errorMsg = "Token expired or doesn't exist";
 					}
 					getView().showPwdError(errorMsg, false);
 				} else {
-					placeManager.revealPlace(new PlaceRequest(NameTokens.login));
+					placeManager
+							.revealPlace(new PlaceRequest(NameTokens.login));
 				}
 			}
 		});
@@ -155,5 +167,7 @@ public class PasswordResetPresenter
 
 interface PasswordResetUiHandlers extends UiHandlers {
 	void sendEmail(String username, String emailAddress);
-	void changePassword(String newPassword, final String newPasswordRepeat, String currPassword);
+
+	void changePassword(String newPassword, final String newPasswordRepeat,
+			String currPassword);
 }
