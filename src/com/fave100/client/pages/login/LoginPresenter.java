@@ -1,5 +1,6 @@
 package com.fave100.client.pages.login;
 
+import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
@@ -10,6 +11,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
@@ -26,6 +28,7 @@ public class LoginPresenter extends
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.login)
+	@UseGatekeeper(NotLoggedInGatekeeper.class)
 	public interface MyProxy extends ProxyPlace<LoginPresenter> {
 	}
 
