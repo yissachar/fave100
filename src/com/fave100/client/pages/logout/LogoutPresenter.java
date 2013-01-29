@@ -1,8 +1,8 @@
 package com.fave100.client.pages.logout;
 
-import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
+import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserRequest;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
@@ -14,11 +14,17 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
+/**
+ * A page to logout the current user.
+ * @author yissachar.radcliffe
+ *
+ */
 public class LogoutPresenter extends
 		Presenter<LogoutPresenter.MyView, LogoutPresenter.MyProxy> {
 
@@ -27,24 +33,23 @@ public class LogoutPresenter extends
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.logout)
+	@UseGatekeeper(LoggedInGatekeeper.class)
 	public interface MyProxy extends ProxyPlace<LogoutPresenter> {
 	}
 
-	private EventBus eventBus;
-	private ApplicationRequestFactory requestFactory;
-	private PlaceManager placeManager;
-	private CurrentUser currentUser;
+	private EventBus					eventBus;
+	private ApplicationRequestFactory	requestFactory;
+	private PlaceManager				placeManager;
 
 	@Inject
 	public LogoutPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager, final CurrentUser currentUser) {
+			final MyProxy proxy, final PlaceManager placeManager,
+			final ApplicationRequestFactory requestFactory) {
 		super(eventBus, view, proxy);
 
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
-		this.currentUser = currentUser;
 	}
 
 	@Override
@@ -61,6 +66,7 @@ public class LogoutPresenter extends
 	protected void onReveal() {
 		super.onReveal();
 
+		// Whenever this page is visited, log out the current user
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		final Request<Void> logoutReq = appUserRequest.logout();
 		logoutReq.fire(new Receiver<Void>() {

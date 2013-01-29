@@ -16,19 +16,26 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers> implements ProfilePresenter.MyView {
+public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
+		implements ProfilePresenter.MyView {
 
-	private final Widget widget;
+	private final Widget	widget;
 
 	public interface Binder extends UiBinder<Widget, ProfileView> {
 	}
 
-	@UiField HTMLPanel topBar;
-	@UiField FormPanel profileForm;
-	@UiField TextBox emailInput;
-	@UiField Image avatarImg;
-	@UiField Label emailStatusMessage;
-	@UiField Label formStatusMessage;
+	@UiField
+	HTMLPanel	topBar;
+	@UiField
+	FormPanel	profileForm;
+	@UiField
+	TextBox		emailInput;
+	@UiField
+	Image		avatarImg;
+	@UiField
+	Label		emailStatusMessage;
+	@UiField
+	Label		formStatusMessage;
 
 	@Inject
 	public ProfileView(final Binder binder) {
@@ -42,9 +49,9 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers> implement
 
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
-		if(slot == BasePresenter.TOP_BAR_SLOT) {
+		if (slot == BasePresenter.TOP_BAR_SLOT) {
 			topBar.clear();
-			if(content != null) {
+			if (content != null) {
 				topBar.add(content);
 			}
 		}
@@ -59,7 +66,7 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers> implement
 	@UiHandler("profileForm")
 	public void onSubmit(final SubmitCompleteEvent event) {
 		getUiHandlers().saveProfileData(emailInput.getValue());
-		//profileForm.reset();
+		// profileForm.reset();
 	}
 
 	@Override

@@ -12,18 +12,18 @@ import com.gwtplatform.mvp.client.ViewImpl;
 
 public class HomeView extends ViewImpl implements HomePresenter.MyView {
 
-	private final Widget widget;
+	private final Widget	widget;
 
 	public interface Binder extends UiBinder<Widget, HomeView> {
 	}
 
-	@UiField HTMLPanel userThumbListPanel;
-	//@UiField(provided = true) NonpersonalFaveList masterFaveList;
-	private ApplicationRequestFactory requestFactory;
+	@UiField
+	HTMLPanel							userThumbListPanel;
+	private ApplicationRequestFactory	requestFactory;
 
 	@Inject
-	public HomeView(final Binder binder, final ApplicationRequestFactory requestFactory) {
-		//masterFaveList = new NonpersonalFaveList(requestFactory);
+	public HomeView(final Binder binder,
+			final ApplicationRequestFactory requestFactory) {
 		widget = binder.createAndBindUi(this);
 		this.requestFactory = requestFactory;
 	}
@@ -33,29 +33,15 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 		return widget;
 	}
 
-	//@UiField HTMLPanel faveFeed;
-
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
-
-		/* Currently not using FaveFeed
-		if(slot == HomePresenter.FAVE_FEED_SLOT) {
-			faveFeed.clear();
-			if(content != null) {
-				faveFeed.add(content);
-			}
-		}*/
 		super.setInSlot(slot, content);
 	}
 
 	@Override
 	public void addUserThumb(final AppUserProxy appUser) {
-		final UserThumbList userThumbList = new UserThumbList(requestFactory, appUser);
+		final UserThumbList userThumbList = new UserThumbList(requestFactory,
+				appUser);
 		userThumbListPanel.add(userThumbList);
 	}
-
-	/*@Override
-	public void updateMasterFaveList(final List<SongProxy> faveList) {
-		masterFaveList.setRowData(faveList);
-	}*/
 }

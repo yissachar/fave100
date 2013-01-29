@@ -1,52 +1,52 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
-	
+
 	<ui:style>
-		.registerContainer{
+		.registerContainer {
 			display: block;
 			margin: 0px auto;
 			width: 800px;
-		}		
-
+		}
+		
 		.registerContainer h1 {
 			text-align: center;
 		}
-
-		.registerContainer div{
+		
+		.registerContainer div {
 			float: left;
 		}
-
-		.loginStatusMessage{
+		
+		.loginStatusMessage {
 			display: block;
 			font-size: 0.75em;
 			margin-bottom: 5px;
 		}
-
+		
 		#noAccountPrompt {
 			clear: both;
 			padding-top: 30px;
 			text-align: center;
 		}
-
 	</ui:style>
-	
-	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
+
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
 	<g:HTMLPanel ui:styleName="container">
 		<div class="content">
-		    <g:HTMLPanel styleName="{style.registerContainer}">
+			<g:HTMLPanel styleName="{style.registerContainer}">
 				<h1>Fave100 Sign In</h1>
-				<g:HTMLPanel ui:field="loginContainer"/>				
+				<g:HTMLPanel ui:field="loginContainer" />
 			</g:HTMLPanel>
 			<p id="noAccountPrompt">
-			    <g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}"> Don't have an account? Register</g:InlineHyperlink>
+				<g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}">
+					Don't have an account? Register
+				</g:InlineHyperlink>
 			</p>
 		</div>
-		<pf:Footer/>
+		<pf:Footer />
 	</g:HTMLPanel>
 </ui:UiBinder>

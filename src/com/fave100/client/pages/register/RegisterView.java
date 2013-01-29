@@ -16,30 +16,48 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> implements RegisterPresenter.MyView {
+public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
+		implements RegisterPresenter.MyView {
 
-	private final Widget widget;
+	private final Widget	widget;
 
 	public interface Binder extends UiBinder<Widget, RegisterView> {
 	}
-	
-	@UiField HTMLPanel registerContainer;
-	@UiField FormPanel registerForm;
-	@UiField Button registerButton;
-	@UiField TextBox usernameField;
-	@UiField PasswordTextBox passwordField;	
-	@UiField PasswordTextBox passwordRepeatField;	
-	@UiField Anchor registerWithGoogleButton;	
-	@UiField SpanElement usernameStatusMessage;	
-	@UiField SpanElement thirdPartyUsernameStatusMessage;
-	@UiField TextBox thirdPartyUsernameField;	
-	@UiField SpanElement passwordStatusMessage;
-	@UiField TextBox emailField;	
-	@UiField SpanElement emailStatusMessage;	
-	@UiField HTMLPanel thirdPartyUsernamePrompt;
-	@UiField Button thirdPartyUsernameSubmitButton;	
-	@UiField Anchor registerWithTwitterButton;
-	@UiField Anchor registerWithFacebookButton;
+
+	@UiField
+	HTMLPanel		registerContainer;
+	@UiField
+	FormPanel		registerForm;
+	@UiField
+	Button			registerButton;
+	@UiField
+	TextBox			usernameField;
+	@UiField
+	PasswordTextBox	passwordField;
+	@UiField
+	PasswordTextBox	passwordRepeatField;
+	@UiField
+	Anchor			registerWithGoogleButton;
+	@UiField
+	SpanElement		usernameStatusMessage;
+	@UiField
+	SpanElement		thirdPartyUsernameStatusMessage;
+	@UiField
+	TextBox			thirdPartyUsernameField;
+	@UiField
+	SpanElement		passwordStatusMessage;
+	@UiField
+	TextBox			emailField;
+	@UiField
+	SpanElement		emailStatusMessage;
+	@UiField
+	HTMLPanel		thirdPartyUsernamePrompt;
+	@UiField
+	Button			thirdPartyUsernameSubmitButton;
+	@UiField
+	Anchor			registerWithTwitterButton;
+	@UiField
+	Anchor			registerWithFacebookButton;
 
 	@Inject
 	public RegisterView(final Binder binder) {
@@ -50,25 +68,24 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 	public Widget asWidget() {
 		return widget;
 	}
-	
+
 	@Override
-	public void setInSlot(final Object slot, final Widget content) {		
+	public void setInSlot(final Object slot, final Widget content) {
 		super.setInSlot(slot, content);
 	}
-	
-	//@UiHandler("registerButton")
+
 	@UiHandler("registerForm")
 	void onRegisterFormSubmit(final SubmitEvent event) {
-	//void onRegisterButtonClick(final ClickEvent event) {
-		getUiHandlers().register(usernameField.getValue(), emailField.getValue(), 
-				passwordField.getValue(), passwordRepeatField.getValue());				
+		getUiHandlers().register(usernameField.getValue(),
+				emailField.getValue(), passwordField.getValue(),
+				passwordRepeatField.getValue());
 	}
-	
+
 	@UiHandler("registerWithTwitterButton")
 	void onRegisterWithTwitterButtonClick(final ClickEvent event) {
 		getUiHandlers().goToTwitterAuth();
 	}
-	
+
 	@UiHandler("thirdPartyUsernameSubmitButton")
 	void onThirdPartyRegisterClick(final ClickEvent event) {
 		getUiHandlers().registerThirdParty(thirdPartyUsernameField.getValue());
@@ -81,13 +98,13 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 		passwordField.setValue("");
 		passwordRepeatField.setValue("");
 		thirdPartyUsernameField.setValue("");
-		
+
 	}
 
 	@Override
 	public void showThirdPartyUsernamePrompt() {
 		thirdPartyUsernamePrompt.setVisible(true);
-		registerContainer.setVisible(false);		
+		registerContainer.setVisible(false);
 	}
 
 	@Override
@@ -101,18 +118,18 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 		usernameStatusMessage.setInnerText(error);
 		usernameField.addStyleName("errorInput");
 	}
-	
+
 	@Override
 	public void setThirdPartyUsernameError(final String error) {
 		thirdPartyUsernameStatusMessage.setInnerText(error);
-		thirdPartyUsernameField.addStyleName("errorInput");		
-	}	
+		thirdPartyUsernameField.addStyleName("errorInput");
+	}
 
 	@Override
 	public void setEmailError(final String error) {
 		emailStatusMessage.setInnerText(error);
 		emailField.addStyleName("errorInput");
-		
+
 	}
 
 	@Override
@@ -126,14 +143,14 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 		passwordStatusMessage.setInnerText(error);
 		passwordField.addStyleName("errorInput");
 		passwordRepeatField.addStyleName("errorInput");
-		
+
 	}
-	
+
 	@Override
 	public void clearThirdPartyErrors() {
 		thirdPartyUsernameField.removeStyleName("errorInput");
 	}
-	
+
 	@Override
 	public void clearNativeErrors() {
 		usernameField.removeStyleName("errorInput");
@@ -142,14 +159,14 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers> impleme
 		passwordRepeatField.removeStyleName("errorInput");
 		usernameStatusMessage.setInnerText("");
 		passwordStatusMessage.setInnerText("");
-		emailStatusMessage.setInnerText("");		
+		emailStatusMessage.setInnerText("");
 	}
 
 	@Override
 	public void setGoogleUrl(final String url) {
 		registerWithGoogleButton.setHref(url);
 	}
-	
+
 	@Override
 	public void setFacebookUrl(final String url) {
 		registerWithFacebookButton.setHref(url);

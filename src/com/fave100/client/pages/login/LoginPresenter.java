@@ -15,6 +15,12 @@ import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
+/**
+ * A login page
+ *
+ * @author yissachar.radcliffe
+ *
+ */
 public class LoginPresenter extends
 		BasePresenter<LoginPresenter.MyView, LoginPresenter.MyProxy> {
 
@@ -22,9 +28,10 @@ public class LoginPresenter extends
 	}
 
 	@ContentSlot
-	public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
+	public static final Type<RevealContentHandler<?>>	LOGIN_SLOT	= new Type<RevealContentHandler<?>>();
 
-	@Inject LoginWidgetPresenter loginContainer;
+	@Inject
+	private LoginWidgetPresenter						loginContainer;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.login)
@@ -40,7 +47,7 @@ public class LoginPresenter extends
 
 	@Override
 	protected void onReveal() {
-	    super.onReveal();
-	    setInSlot(LOGIN_SLOT, loginContainer);
+		super.onReveal();
+		setInSlot(LOGIN_SLOT, loginContainer);
 	}
 }

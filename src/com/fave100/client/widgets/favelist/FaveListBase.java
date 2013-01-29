@@ -10,32 +10,33 @@ import com.google.gwt.cell.client.CompositeCell;
 import com.google.gwt.cell.client.HasCell;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
-public class FaveListBase extends HTMLPanel{
-	
+public class FaveListBase extends FlowPanel {
+
 	protected List<HasCell<SongProxy, ?>> _cells = new ArrayList<HasCell<SongProxy,?>>();
 	protected CellList<SongProxy> _cellList;
-	
+
+
 	public FaveListBase(final ApplicationRequestFactory requestFactory) {
-		super("");
-		
+//		super("");
+
 		createCellList();
 	}
-	
-	public void createCellList() {		
+
+	public void createCellList() {
 		final CompositeCell<SongProxy> cell = new CompositeCell<SongProxy>(_cells);
 		createCellList(cell);
 	}
-	
+
 	public Element createCellList(final Cell<SongProxy> cell) {
 		clear();
 		_cellList = new CellList<SongProxy>(cell);
-		add(_cellList);	
+		add(_cellList);
 		_cellList.getRowContainer().addClassName("faveList");
 		return _cellList.getRowContainer();
 	}
-	
+
 	public void setRowData(final List<SongProxy> data) {
 		_cellList.setRowData(data);
 	}

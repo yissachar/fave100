@@ -1,7 +1,9 @@
 package com.fave100.client.pagefragments.topbar;
 
+import com.fave100.client.Notification;
 import com.fave100.client.pages.users.MusicSuggestionOracle;
 import com.fave100.client.pages.users.SongSuggestBox;
+import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.dom.client.SpanElement;
@@ -20,27 +22,36 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers>
-	implements TopBarPresenter.MyView {
+public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
+		TopBarPresenter.MyView {
 
-	private final Widget widget;
+	private final Widget	widget;
 
 	public interface Binder extends UiBinder<Widget, TopBarView> {
 	}
 
-	@UiField(provided = true) SuggestBox songSuggestBox;
-	@UiField InlineHyperlink logInLogOutLink;
-	@UiField Label notification;
-	@UiField SpanElement greeting;
-	@UiField Anchor myFave100Link;
-	@UiField InlineHyperlink registerLink;
-	@UiField HTMLPanel loginBox;
+	@UiField(provided = true)
+	SuggestBox		songSuggestBox;
+	@UiField
+	InlineHyperlink	logInLogOutLink;
+	@UiField
+	Label			notification;
+	@UiField
+	SpanElement		greeting;
+	@UiField
+	Anchor			myFave100Link;
+	@UiField
+	InlineHyperlink	registerLink;
+	@UiField
+	HTMLPanel		loginBox;
 
 	@Inject
-	public TopBarView(final Binder binder, final ApplicationRequestFactory requestFactory) {
+	public TopBarView(final Binder binder,
+			final ApplicationRequestFactory requestFactory) {
 		final MusicSuggestionOracle suggestions = new MusicSuggestionOracle();
 		songSuggestBox = new SongSuggestBox(suggestions, requestFactory);
-		songSuggestBox.getElement().setAttribute("placeholder", "Search songs...");
+		songSuggestBox.getElement().setAttribute("placeholder",
+				"Search songs...");
 		widget = binder.createAndBindUi(this);
 		Notification.init(notification);
 	}
@@ -54,9 +65,9 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers>
 	public void setInSlot(final Object slot, final Widget content) {
 		super.setInSlot(slot, content);
 
-		if(slot == TopBarPresenter.LOGIN_SLOT) {
+		if (slot == TopBarPresenter.LOGIN_SLOT) {
 			loginBox.clear();
-			if(content != null) {
+			if (content != null) {
 				loginBox.add(content);
 			}
 		}
@@ -64,8 +75,10 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers>
 
 	@UiHandler("songSuggestBox")
 	void onItemSelected(final SelectionEvent<Suggestion> event) {
-		// Look up the selected song in the song map and add it to user fave list
-		getUiHandlers().songSelected(((SongSuggestBox) songSuggestBox).getFromSuggestionMap(event.getSelectedItem().getReplacementString()));
+		// Look up the selected song in the song map and add it to user list
+		getUiHandlers().songSelected(
+				((SongSuggestBox) songSuggestBox).getFromSuggestionMap(event
+						.getSelectedItem().getReplacementString()));
 		songSuggestBox.setValue("");
 	}
 
@@ -73,7 +86,10 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers>
 	public void setLoggedIn(final String username) {
 		greeting.setInnerHTML(username);
 		myFave100Link.setVisible(true);
-		myFave100Link.setHref(Window.Location.getPath()+Window.Location.getQueryString()+"#"+NameTokens.getUsers()+";u="+username);
+		myFave100Link.setHref(Window.Location.getPath()
+				+ Window.Location.getQueryString() + "#"
+				+ NameTokens.getUsers() + ";" + UsersPresenter.USER_PARAM + "="
+				+ username);
 		registerLink.setVisible(false);
 		logInLogOutLink.setText("Log out");
 		logInLogOutLink.setTargetHistoryToken(NameTokens.logout);

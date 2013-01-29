@@ -9,7 +9,9 @@ import com.gwtplatform.mvp.client.ViewImpl;
 
 public class LoginView extends ViewImpl implements LoginPresenter.MyView {
 
-	private final Widget widget;
+	private final Widget	widget;
+	@UiField
+	HTMLPanel				loginContainer;
 
 	public interface Binder extends UiBinder<Widget, LoginView> {
 	}
@@ -23,15 +25,14 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
 	public Widget asWidget() {
 		return widget;
 	}
-	@UiField HTMLPanel loginContainer;
 
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
 		super.setInSlot(slot, content);
 
-		if(slot == LoginPresenter.LOGIN_SLOT) {
+		if (slot == LoginPresenter.LOGIN_SLOT) {
 			loginContainer.clear();
-			if(content != null) {
+			if (content != null) {
 				loginContainer.add(content);
 				loginContainer.addStyleName("fullLoginPage");
 			}

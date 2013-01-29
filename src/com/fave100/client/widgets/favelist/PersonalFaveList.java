@@ -5,7 +5,7 @@ import static com.google.gwt.query.client.GQuery.$;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fave100.client.pagefragments.topbar.Notification;
+import com.fave100.client.Notification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;

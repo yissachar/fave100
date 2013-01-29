@@ -1,15 +1,13 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	xmlns:w="urn:import:com.fave100.client.widgets"
-	xmlns:wf="urn:import:com.fave100.client.widgets.favelist"
-	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:w="urn:import:com.fave100.client.widgets"
+	xmlns:wf="urn:import:com.fave100.client.widgets.favelist" xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
-	
-	<ui:style>	
+
+	<ui:style>
 		.topBackground {
 			width: 100%;
 			position: absolute;
@@ -20,19 +18,19 @@
 		}
 		
 		.homePageContainer {
-			margin-top: 107px; 
+			margin-top: 107px;
 		}
 		
 		.userThumbListPanel {
 			width: 500px;
 		}
 		
-		.CTApanel { 
+		.CTApanel {
 			margin-top: 90px;
 			width: 320px;
 		}
 		
-		.logo { 
+		.logo {
 			width: 182px;
 			height: 65px;
 		}
@@ -57,29 +55,29 @@
 		}
 	</ui:style>
 
-	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
 	<g:HTMLPanel ui:styleName="container">
-		<div class="{style.topBackground}"/>	
-		<div class="content">			
+		<div class="{style.topBackground}" />
+		<div class="content">
 			<g:HorizontalPanel styleName="{style.homePageContainer}">
-				<g:HTMLPanel styleName="{style.userThumbListPanel}" ui:field="userThumbListPanel"/>
+				<g:HTMLPanel styleName="{style.userThumbListPanel}"
+					ui:field="userThumbListPanel" />
 				<g:VerticalPanel styleName="{style.CTApanel}">
-					<g:Image styleName="{style.logo}" url="img/Logo.png"/>		
+					<g:Image styleName="{style.logo}" url="img/Logo.png" />
 					<g:Label styleName="{style.tagLine}">Get your list on.</g:Label>
 					<g:Label styleName="{style.registerCTA}">What are your top songs of all-time?</g:Label>
 					<g:HorizontalPanel styleName="{style.buttonContainer}">
-					    <g:InlineHyperlink styleName="button" targetHistoryToken="{nameTokens.getRegister}">Register</g:InlineHyperlink>					
-					    <g:InlineHyperlink styleName="button" targetHistoryToken="{nameTokens.getLogin}">Login</g:InlineHyperlink>
-					</g:HorizontalPanel>					    
+						<g:InlineHyperlink styleName="button"
+							targetHistoryToken="{nameTokens.getRegister}">Register</g:InlineHyperlink>
+						<g:InlineHyperlink styleName="button"
+							targetHistoryToken="{nameTokens.getLogin}">Login</g:InlineHyperlink>
+					</g:HorizontalPanel>
 				</g:VerticalPanel>
 			</g:HorizontalPanel>
-		    <!-- <g:HTMLPanel ui:field="faveFeed"/>
-			<div class="faveListContainer">
-				<h2 class="itemHeader">The Fave100</h2>
-				<wf:NonpersonalFaveList ui:field="masterFaveList"/>
-			</div>
-			 -->
-		</div>	
-		<pf:Footer/>
-	</g:HTMLPanel>	
+			<!-- <g:HTMLPanel ui:field="faveFeed"/> <div class="faveListContainer"> 
+				<h2 class="itemHeader">The Fave100</h2> <wf:NonpersonalFaveList ui:field="masterFaveList"/> 
+				</div> -->
+		</div>
+		<pf:Footer />
+	</g:HTMLPanel>
 </ui:UiBinder>
