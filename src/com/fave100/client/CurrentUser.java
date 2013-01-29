@@ -4,8 +4,9 @@ import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 
-public class CurrentUser {
+public class CurrentUser implements AppUserProxy {
 
 	private AppUserProxy	appUser;
 
@@ -22,14 +23,36 @@ public class CurrentUser {
 	}
 
 	public boolean isLoggedIn() {
-		return getAppUser() != null;
-	}
-
-	public AppUserProxy getAppUser() {
-		return appUser;
+		return appUser != null;
 	}
 
 	public void setAppUser(final AppUserProxy appUser) {
 		this.appUser = appUser;
+	}
+
+	@Override
+	public EntityProxyId<?> stableId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer getVersion() {
+		return appUser.getVersion();
+	}
+
+	@Override
+	public String getUsername() {
+		return appUser.getUsername();
+	}
+
+	@Override
+	public String getEmail() {
+		return appUser.getEmail();
+	}
+
+	@Override
+	public String getAvatarImage() {
+		return appUser.getAvatarImage();
 	}
 }
