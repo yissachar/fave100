@@ -1,6 +1,5 @@
 package com.fave100.client.pages.register;
 
-import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
@@ -30,22 +29,38 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
+/**
+ * Registration page
+ * @author yissachar.radcliffe
+ *
+ */
 public class RegisterPresenter extends
 		BasePresenter<RegisterPresenter.MyView, RegisterPresenter.MyProxy>
-		implements RegisterUiHandlers{
+		implements RegisterUiHandlers {
 
 	public interface MyView extends BaseView, HasUiHandlers<RegisterUiHandlers> {
 		void setGoogleUrl(String url);
+
 		void setFacebookUrl(String url);
+
 		void clearFields();
+
 		void showThirdPartyUsernamePrompt();
+
 		void hideThirdPartyUsernamePrompt();
+
 		void setNativeUsernameError(String error);
+
 		void setThirdPartyUsernameError(String error);
+
 		void setEmailError(String error);
+
 		void setPasswordError(String error);
+
 		void setPasswordRepeatError(String error);
+
 		void clearNativeErrors();
+
 		void clearThirdPartyErrors();
 	}
 
@@ -55,26 +70,25 @@ public class RegisterPresenter extends
 	public interface MyProxy extends ProxyPlace<RegisterPresenter> {
 	}
 
-	public static final String PROVIDER_GOOGLE = "google";
-	public static final String PROVIDER_TWITTER = "twitter";
-	public static final String PROVIDER_FACEBOOK = "facebook";
+	public static final String			PROVIDER_GOOGLE		= "google";
+	public static final String			PROVIDER_TWITTER	= "twitter";
+	public static final String			PROVIDER_FACEBOOK	= "facebook";
 
-	private EventBus eventBus;
-	private ApplicationRequestFactory requestFactory;
-	private PlaceManager placeManager;
-	private CurrentUser currentUser;
-	private String provider;
-	private String facebookRedirect;
+	private EventBus					eventBus;
+	private ApplicationRequestFactory	requestFactory;
+	private PlaceManager				placeManager;
+	private String						provider;
+	private String						facebookRedirect;
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager, final CurrentUser currentUser) {
+			final MyProxy proxy,
+			final ApplicationRequestFactory requestFactory,
+			final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
-		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 	}
 
@@ -87,27 +101,34 @@ public class RegisterPresenter extends
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 
-		// TODO: Captcha/recaptcha? Other spam filtering to prevent registration?
+		// TODO: Captcha/recaptcha? Other spam filtering to prevent
+		// registration?
 
 		provider = placeRequest.getParameter("provider", "");
-		if(provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
-			// The user is being redirected back to the register page after signing in to
-			// their 3rd party account - prompt them for a username and create their account
+		if (provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
+			// The user is being redirected back to the register page after
+			// signing in to their 3rd party account - prompt them for a
+			// username and create their account
 
 			// Make sure that the user is actually logged into Google
-			final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-			final Request<Boolean> checkGoogleUserLoggedIn = appUserRequest.isGoogleUserLoggedIn();
+			final AppUserRequest appUserRequest = requestFactory
+					.appUserRequest();
+			final Request<Boolean> checkGoogleUserLoggedIn = appUserRequest
+					.isGoogleUserLoggedIn();
 			checkGoogleUserLoggedIn.fire(new Receiver<Boolean>() {
 				@Override
 				public void onSuccess(final Boolean loggedIn) {
-					if(loggedIn) {
-						// If user is logged in to Google, log them in to Fave100
-						final Request<AppUserProxy> loginWithGoogle = requestFactory.appUserRequest().loginWithGoogle();
+					if (loggedIn) {
+						// If user is logged in to Google, log them in to
+						// Fave100
+						final Request<AppUserProxy> loginWithGoogle = requestFactory
+								.appUserRequest().loginWithGoogle();
 						loginWithGoogle.fire(new Receiver<AppUserProxy>() {
 							@Override
 							public void onSuccess(final AppUserProxy user) {
-								eventBus.fireEvent(new CurrentUserChangedEvent(user));
-								if(user != null) {
+								eventBus.fireEvent(new CurrentUserChangedEvent(
+										user));
+								if (user != null) {
 									placeManager.revealDefaultPlace();
 								}
 								getProxy().manualReveal(RegisterPresenter.this);
@@ -121,28 +142,34 @@ public class RegisterPresenter extends
 				}
 			});
 
-		} else if(provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
-			// The user is being redirected back to the register page after signing in to
-			// their 3rd party account - prompt them for a username and create their account
+		} else if (provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
+			// The user is being redirected back to the register page after
+			// signing in to
+			// their 3rd party account - prompt them for a username and create
+			// their account
 
-			//TODO: Need to show some loading icon or something while waiting for the RF req
+			// TODO: Need to show some loading icon or something while waiting
+			// for the RF req
 			getView().showThirdPartyUsernamePrompt();
 			// Try to log the user in with Twitter
-			final String oauth_verifier = Window.Location.getParameter("oauth_verifier");
-			final Request<AppUserProxy> loginWithTwitter = requestFactory.appUserRequest().loginWithTwitter(oauth_verifier);
+			final String oauth_verifier = Window.Location
+					.getParameter("oauth_verifier");
+			final Request<AppUserProxy> loginWithTwitter = requestFactory
+					.appUserRequest().loginWithTwitter(oauth_verifier);
 			loginWithTwitter.fire(new Receiver<AppUserProxy>() {
 				@Override
 				public void onSuccess(final AppUserProxy user) {
 					eventBus.fireEvent(new CurrentUserChangedEvent(user));
-					if(user != null) {
+					if (user != null) {
 						goToMyFave100();
 					}
 					getProxy().manualReveal(RegisterPresenter.this);
 				}
 			});
 
-		} else if(Window.Location.getParameter("code") != null){
-
+		} else if (Window.Location.getParameter("code") != null) {
+			// FaceBook login
+			// TODO: Review if we can do this without hacky code parameter getting
 			getView().showThirdPartyUsernamePrompt();
 			getProxy().manualReveal(RegisterPresenter.this);
 
@@ -156,11 +183,14 @@ public class RegisterPresenter extends
 	protected void onBind() {
 		super.onBind();
 
-		// TODO: We should have 3rd party logins open in new window so as not to clutter up our URL
+		// TODO: We should have 3rd party logins open in new window so as not to
+		// clutter up our URL
 
 		// Get the login url for Google
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		final Request<String> loginUrlReq = appUserRequest.getGoogleLoginURL(Window.Location.getHref()+";provider="+RegisterPresenter.PROVIDER_GOOGLE);
+		final Request<String> loginUrlReq = appUserRequest
+				.getGoogleLoginURL(Window.Location.getHref() + ";provider="
+						+ RegisterPresenter.PROVIDER_GOOGLE);
 		loginUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
@@ -168,8 +198,10 @@ public class RegisterPresenter extends
 			}
 		});
 
-		facebookRedirect = Window.Location.getHref()+";provider="+RegisterPresenter.PROVIDER_FACEBOOK;
-		final Request<String> fbAuthUrlReq = requestFactory.appUserRequest().getFacebookAuthUrl(facebookRedirect);
+		facebookRedirect = Window.Location.getHref() + ";provider="
+				+ RegisterPresenter.PROVIDER_FACEBOOK;
+		final Request<String> fbAuthUrlReq = requestFactory.appUserRequest()
+				.getFacebookAuthUrl(facebookRedirect);
 		fbAuthUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
@@ -179,29 +211,32 @@ public class RegisterPresenter extends
 	}
 
 	@Override
-	public void register(final String username, final String email, final String password,
-			final String passwordRepeat) {
+	public void register(final String username, final String email,
+			final String password, final String passwordRepeat) {
 
-		if(validateFields(username, email, password, passwordRepeat)) {
-			final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		if (validateFields(username, email, password, passwordRepeat)) {
+			final AppUserRequest appUserRequest = requestFactory
+					.appUserRequest();
 			// Create a new user with the username and password entered
-			final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(username,
-					password, email);
+			final Request<AppUserProxy> createAppUserReq = appUserRequest
+					.createAppUser(username, password, email);
 			getView().clearFields();
 			createAppUserReq.fire(new Receiver<AppUserProxy>() {
 				@Override
 				public void onSuccess(final AppUserProxy createdUser) {
 					eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
-					if(createdUser != null) {
+					if (createdUser != null) {
 						appUserCreated();
 					} else {
 						getView().setPasswordError("An error occurred");
 					}
 				}
+
 				@Override
 				public void onFailure(final ServerFailure failure) {
 					String errorMsg = "An error occurred";
-					if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
+					if (failure.getExceptionType().equals(
+							UsernameAlreadyExistsException.class.getName())) {
 						errorMsg = "A user with that name already exists";
 					}
 					getView().setNativeUsernameError(errorMsg);
@@ -212,72 +247,94 @@ public class RegisterPresenter extends
 
 	@Override
 	public void registerThirdParty(final String username) {
-		if(validateThirdPartyFields(username)) {
-			final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-			if(provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
+		if (validateThirdPartyFields(username)) {
+			final AppUserRequest appUserRequest = requestFactory
+					.appUserRequest();
+			if (provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
 				// Create Google-linked account
-				final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromGoogleAccount(username);
+				final Request<AppUserProxy> createAppUserReq = appUserRequest
+						.createAppUserFromGoogleAccount(username);
 				createAppUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(final AppUserProxy createdUser) {
-						eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
+						eventBus.fireEvent(new CurrentUserChangedEvent(
+								createdUser));
 						appUserCreated();
 					}
+
 					@Override
 					public void onFailure(final ServerFailure failure) {
 						String errorMsg = "An error occurred";
-						if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
+						if (failure.getExceptionType().equals(
+								UsernameAlreadyExistsException.class.getName())) {
 							errorMsg = "A user with that name already exists";
-						} else if (failure.getExceptionType().equals(GoogleIdAlreadyExistsException.class.getName())) {
+						} else if (failure.getExceptionType().equals(
+								GoogleIdAlreadyExistsException.class.getName())) {
 							errorMsg = "A Fave100 account is already associated with that Google account";
 						}
 						getView().setThirdPartyUsernameError(errorMsg);
 					}
 				});
-			} else if(provider.equals(RegisterPresenter.PROVIDER_TWITTER)){
+			} else if (provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
 				// Create Twitter-linked account
-				final String oauth_verifier = Window.Location.getParameter("oauth_verifier");
-				final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromTwitterAccount(username, oauth_verifier);
+				final String oauth_verifier = Window.Location
+						.getParameter("oauth_verifier");
+				final Request<AppUserProxy> createAppUserReq = appUserRequest
+						.createAppUserFromTwitterAccount(username,
+								oauth_verifier);
 				createAppUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(final AppUserProxy createdUser) {
-						eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
+						eventBus.fireEvent(new CurrentUserChangedEvent(
+								createdUser));
 						appUserCreated();
 						goToMyFave100();
 					}
+
 					@Override
 					public void onFailure(final ServerFailure failure) {
 						String errorMsg = "An error occurred";
-						if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
+						if (failure.getExceptionType().equals(
+								UsernameAlreadyExistsException.class.getName())) {
 							errorMsg = "A user with that name already exists";
-						} else if (failure.getExceptionType().equals(TwitterIdAlreadyExistsException.class.getName())) {
+						} else if (failure.getExceptionType()
+								.equals(TwitterIdAlreadyExistsException.class
+										.getName())) {
 							errorMsg = "A Fave100 account is already associated with that Twitter account";
 						}
 						getView().setThirdPartyUsernameError(errorMsg);
 					}
 				});
-			//} else if (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
-			} else if(Window.Location.getParameter("code") != null) {
+				// } else if
+				// (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
+			} else if (Window.Location.getParameter("code") != null) {
 				// Create Facebook linked account
 				final String state = Window.Location.getParameter("state");
 				final String code = Window.Location.getParameter("code");
-				final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromFacebookAccount(username, state, code, facebookRedirect);
+				final Request<AppUserProxy> createAppUserReq = appUserRequest
+						.createAppUserFromFacebookAccount(username, state,
+								code, facebookRedirect);
 				createAppUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(final AppUserProxy createdUser) {
-						eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
-						if(createdUser != null) {
+						eventBus.fireEvent(new CurrentUserChangedEvent(
+								createdUser));
+						if (createdUser != null) {
 							appUserCreated();
 							goToMyFave100();
 						}
 
 					}
+
 					@Override
 					public void onFailure(final ServerFailure failure) {
 						String errorMsg = "An error occurred";
-						if(failure.getExceptionType().equals(UsernameAlreadyExistsException.class.getName())) {
+						if (failure.getExceptionType().equals(
+								UsernameAlreadyExistsException.class.getName())) {
 							errorMsg = "A user with that name already exists";
-						} else if (failure.getExceptionType().equals(FacebookIdAlreadyExistsException.class.getName())) {
+						} else if (failure.getExceptionType().equals(
+								FacebookIdAlreadyExistsException.class
+										.getName())) {
 							errorMsg = "A Fave100 account is already associated with that Facebook account";
 						}
 						getView().setThirdPartyUsernameError(errorMsg);
@@ -296,22 +353,22 @@ public class RegisterPresenter extends
 		// Check for validity
 
 		final String usernameError = Validator.validateUsername(username);
-		if(usernameError != null) {
+		if (usernameError != null) {
 			getView().setNativeUsernameError(usernameError);
 			valid = false;
 		}
 
 		final String emailError = Validator.validateEmail(email);
-		if(emailError != null) {
+		if (emailError != null) {
 			getView().setEmailError(emailError);
 			valid = false;
 		}
 
 		final String passwordError = Validator.validatePassword(password);
-		if(passwordError != null) {
+		if (passwordError != null) {
 			getView().setPasswordError(passwordError);
 			valid = false;
-		} else if(!password.equals(passwordRepeat)) {
+		} else if (!password.equals(passwordRepeat)) {
 			getView().setPasswordRepeatError("Passwords must match");
 			valid = false;
 		}
@@ -321,7 +378,7 @@ public class RegisterPresenter extends
 	private boolean validateThirdPartyFields(final String username) {
 		getView().clearThirdPartyErrors();
 		final String usernameError = Validator.validateUsername(username);
-		if(usernameError != null) {
+		if (usernameError != null) {
 			getView().setThirdPartyUsernameError(usernameError);
 			return false;
 		}
@@ -334,17 +391,19 @@ public class RegisterPresenter extends
 	}
 
 	private void goToMyFave100() {
-		// Need to strip out query params or they will stick around in URL forever
+		// Need to strip out query params or they will stick around in URL
+		// forever
 		String url = Window.Location.getHref();
-		if(Window.Location.getParameter("oauth_token") != null) {
+		if (Window.Location.getParameter("oauth_token") != null) {
 			url = url.replace(Window.Location.getParameter("oauth_token"), "");
 			url = url.replace("&oauth_token=", "");
 		}
-		if(Window.Location.getParameter("oauth_verifier") != null) {
-			url = url.replace(Window.Location.getParameter("oauth_verifier"), "");
+		if (Window.Location.getParameter("oauth_verifier") != null) {
+			url = url.replace(Window.Location.getParameter("oauth_verifier"),
+					"");
 			url = url.replace("&oauth_verifier=", "");
 		}
-		if(Window.Location.getParameter("code") != null) {
+		if (Window.Location.getParameter("code") != null) {
 			url = url.replace(Window.Location.getParameter("code"), "");
 			url = url.replace("&code=", "");
 		}
@@ -354,7 +413,10 @@ public class RegisterPresenter extends
 
 	@Override
 	public void goToTwitterAuth() {
-		final Request<String> authUrlReq = requestFactory.appUserRequest().getTwitterAuthUrl(Window.Location.getHref()+";provider="+RegisterPresenter.PROVIDER_TWITTER);
+		final Request<String> authUrlReq = requestFactory.appUserRequest()
+				.getTwitterAuthUrl(
+						Window.Location.getHref() + ";provider="
+								+ RegisterPresenter.PROVIDER_TWITTER);
 		authUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
@@ -366,8 +428,11 @@ public class RegisterPresenter extends
 }
 
 interface RegisterUiHandlers extends UiHandlers {
-	void register(String username, String email, String password, String passwordRepeat);
+	void register(String username, String email, String password,
+			String passwordRepeat);
+
 	void registerThirdParty(String username);
+
 	void goToTwitterAuth();
 
 }

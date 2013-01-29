@@ -71,11 +71,17 @@
 				</g:FormPanel>	
 				<div class="{style.orDivider}">or</div>				
 				<div class="registerContainer">			
-					<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton">Register with Google</g:Anchor>
+					<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton">
+						Register with Google
+					</g:Anchor>
 					<br/>
-					<g:Anchor styleName="zocial twitter" ui:field="registerWithTwitterButton">Register with Twitter</g:Anchor>
+					<g:Anchor styleName="zocial twitter" ui:field="registerWithTwitterButton">
+						Register with Twitter
+					</g:Anchor>
 					<br/>
-					<g:Anchor styleName="zocial facebook" ui:field="registerWithFacebookButton">Register with Facebook</g:Anchor>
+					<g:Anchor styleName="zocial facebook" ui:field="registerWithFacebookButton">
+						Register with Facebook
+					</g:Anchor>
 				</div>
 			</g:HTMLPanel>
 			

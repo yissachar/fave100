@@ -1,6 +1,6 @@
 package com.fave100.client.widgets.favelist;
 
-import com.fave100.client.pagefragments.topbar.Notification;
+import com.fave100.client.Notification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;

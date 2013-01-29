@@ -21,20 +21,27 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 /**
  * Shows the logged in user their profile
+ *
  * @author yissachar.radcliffe
  *
  */
 public class ProfilePresenter extends
 		BasePresenter<ProfilePresenter.MyView, ProfilePresenter.MyProxy>
-		implements ProfileUiHandlers{
+		implements ProfileUiHandlers {
 
 	public interface MyView extends BaseView, HasUiHandlers<ProfileUiHandlers> {
 		void createActionUrl(String url);
+
 		void setEmailValue(String val);
+
 		void setEmailError(String error);
+
 		void clearErrors();
+
 		void setFormStatusMessage(String message);
+
 		void setAvatarImg(String src);
+
 		void clearForm();
 	}
 
@@ -44,12 +51,13 @@ public class ProfilePresenter extends
 	public interface MyProxy extends ProxyPlace<ProfilePresenter> {
 	}
 
-	private ApplicationRequestFactory requestFactory;
-	private CurrentUser currentUser;
+	private ApplicationRequestFactory	requestFactory;
+	private CurrentUser					currentUser;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
+			final MyProxy proxy,
+			final ApplicationRequestFactory requestFactory,
 			final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
@@ -57,7 +65,8 @@ public class ProfilePresenter extends
 		getView().setUiHandlers(this);
 	}
 
-	// Should have a button to remove current avatar if they have uploaded a native avatar
+	// TODO: Should have a button to remove current avatar if they have uploaded a
+	// native avatar
 	@Override
 	public void onBind() {
 		super.onBind();
@@ -67,9 +76,10 @@ public class ProfilePresenter extends
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 
-		final String blobKey = placeRequest.getParameter("blob-key","");
-		if(!blobKey.isEmpty()) {
-			final Request<Void> avatarReq = requestFactory.appUserRequest().setAvatarForCurrentUser(blobKey);
+		final String blobKey = placeRequest.getParameter("blob-key", "");
+		if (!blobKey.isEmpty()) {
+			final Request<Void> avatarReq = requestFactory.appUserRequest()
+					.setAvatarForCurrentUser(blobKey);
 			avatarReq.fire();
 		}
 	}
@@ -97,8 +107,10 @@ public class ProfilePresenter extends
 
 	private void setUploadAction() {
 		// Create the blobstore URL that the avatar will be uploaded to
-		// Need to recreate each time because session expires after succesful upload
-		final Request<String> blobRequest = requestFactory.appUserRequest().createBlobstoreUrl("/avatarUpload");
+		// Need to recreate each time because session expires after succesful
+		// upload
+		final Request<String> blobRequest = requestFactory.appUserRequest()
+				.createBlobstoreUrl("/avatarUpload");
 		blobRequest.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
@@ -117,12 +129,13 @@ public class ProfilePresenter extends
 		getView().clearErrors();
 
 		final String emailError = Validator.validateEmail(email);
-		if(emailError == null) {
-			final Request<Boolean> setProfileDataReq = requestFactory.appUserRequest().setProfileData(email);
+		if (emailError == null) {
+			final Request<Boolean> setProfileDataReq = requestFactory
+					.appUserRequest().setProfileData(email);
 			setProfileDataReq.fire(new Receiver<Boolean>() {
 				@Override
 				public void onSuccess(final Boolean saved) {
-					if(saved == true) {
+					if (saved == true) {
 						setProfileData();
 						getView().setFormStatusMessage("Profile saved");
 					}
@@ -137,5 +150,6 @@ public class ProfilePresenter extends
 
 interface ProfileUiHandlers extends UiHandlers {
 	void setUserAvatarBlobKey(String blobKey);
+
 	void saveProfileData(String email);
 }
