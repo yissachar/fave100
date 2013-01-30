@@ -12,7 +12,6 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -24,41 +23,53 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements SearchPresenter.MyView {
+public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements
+		SearchPresenter.MyView {
 
-	private final Widget widget;
+	private final Widget	widget;
 
 	public interface Binder extends UiBinder<Widget, SearchView> {
 	}
 
-	@UiField HTMLPanel topBar;
-	@UiField FormPanel searchForm;
-	@UiField TextBox songSearchBox;
-	@UiField TextBox artistSearchBox;
-	@UiField Button searchButton;
-	@UiField Label searchStatus;
-	@UiField(provided = true) CellList<SongProxy> iTunesResults;
-	@UiField(provided = true) SimplePager pager;
+	@UiField
+	HTMLPanel				topBar;
+	@UiField
+	FormPanel				searchForm;
+	@UiField
+	TextBox					songSearchBox;
+	@UiField
+	TextBox					artistSearchBox;
+	@UiField
+	Button					searchButton;
+	@UiField
+	Label					searchStatus;
+	@UiField(provided = true)
+	SearchResultCellList	iTunesResults;
+	@UiField(provided = true)
+	SimplePager				pager;
 
 	@Inject
-	public SearchView(final Binder binder, final ApplicationRequestFactory requestFactory,
+	public SearchView(final Binder binder,
+			final ApplicationRequestFactory requestFactory,
 			final EventBus eventBus) {
-		final AdvancedSearchResultCell cell = new AdvancedSearchResultCell(requestFactory);
-		iTunesResults = new CellList<SongProxy>(cell);
+		final SearchResultCell cell = new SearchResultCell();
+		iTunesResults = new SearchResultCellList(cell);
 		pager = new SimplePager(eventBus);
 		widget = binder.createAndBindUi(this);
 
 		pager.setVisible(false);
 
-		ResultPageChangedEvent.register(eventBus, new ResultPageChangedEvent.Handler() {
+		// Handle page change events
+		ResultPageChangedEvent.register(eventBus,
+				new ResultPageChangedEvent.Handler() {
 
-			@Override
-			public void onPageChanged(final ResultPageChangedEvent event) {
-				Window.scrollTo(0, 0);
-				getUiHandlers().showResults(songSearchBox.getValue(),
-						artistSearchBox.getValue());
-			}
-		});
+					@Override
+					public void onPageChanged(final ResultPageChangedEvent event) {
+						Window.scrollTo(0, 0);
+						getUiHandlers().showResults(songSearchBox.getValue(),
+								artistSearchBox.getValue());
+					}
+				});
 	}
 
 	@Override
@@ -68,10 +79,10 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
-		if(slot == BasePresenter.TOP_BAR_SLOT) {
+		if (slot == BasePresenter.TOP_BAR_SLOT) {
 			topBar.clear();
 
-			if(content != null) {
+			if (content != null) {
 				topBar.add(content);
 			}
 		}
@@ -87,18 +98,20 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 
 	@Override
 	public void setResultCount(final int count) {
-		if(count == 0) {
+		if (count == 0) {
 			searchStatus.setText("No matches found");
 			pager.setMaxPageNumber(1);
 		} else {
-			searchStatus.setText(count+" matches found");
-			pager.setMaxPageNumber((int)Math.ceil( (double) count/SearchPresenter.RESULTS_PER_PAGE));
+			searchStatus.setText(count + " matches found");
+			pager.setMaxPageNumber((int) Math.ceil((double) count
+					/ SearchPresenter.RESULTS_PER_PAGE));
 		}
 	}
 
 	@Override
 	public void setResults(final List<SongProxy> resultList) {
 		iTunesResults.setRowData(resultList);
+		iTunesResults.setCellUiHandlers(getUiHandlers());
 		pager.setVisible(true);
 	}
 
