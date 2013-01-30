@@ -8,6 +8,8 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.SimplePager;
+import com.fave100.client.widgets.advancedsearch.SearchResultCell;
+import com.fave100.client.widgets.advancedsearch.SearchResultCellList;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
