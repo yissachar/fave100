@@ -1,6 +1,6 @@
 package com.fave100.client.pages.song;
 
-import com.fave100.client.pagefragments.topbar.Notification;
+import com.fave100.client.Notification;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
