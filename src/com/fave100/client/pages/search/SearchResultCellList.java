@@ -1,0 +1,17 @@
+package com.fave100.client.pages.search;
+
+import com.fave100.client.requestfactory.SongProxy;
+import com.google.gwt.user.cellview.client.CellList;
+
+public class SearchResultCellList extends CellList<SongProxy> {
+
+	public SearchResultCellList(final SearchResultCell cell) {
+		super(cell);
+	}
+
+	public void setCellUiHandlers(final SearchUiHandlers uiHandlers) {
+		((SearchResultCell) getCell()).setUiHandlers(uiHandlers);
+	}
+
+
+}
