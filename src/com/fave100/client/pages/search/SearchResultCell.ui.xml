@@ -3,6 +3,13 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:style>
+		.advancedSearchInfoContainer {
+			display: inline-block;
+			white-space: nowrap;
+			overflow: hidden;
+			max-width: 83%;
+		}
+		
 		.advancedSearchTrackName {			
 			font-size: 1.1em;
 			vertical-align: top;
