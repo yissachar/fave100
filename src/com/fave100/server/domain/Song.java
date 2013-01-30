@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.shared.SongInterface;
 import com.google.appengine.api.rdbms.AppEngineDriver;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
@@ -24,21 +25,19 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.OnLoad;
 
 @Entity
-public class Song extends DatastoreObject {
+public class Song extends DatastoreObject implements SongInterface {
 
+	// TODO: Any risks of using token in ID like this?
 	@IgnoreSave public static final String TOKEN_SEPARATOR = ":%:";
 	@IgnoreSave public static String YOUTUBE_API_KEY = "";
 
 	@Id private String id;
 	private long score = 0;
 	private String mbid;
-	private String artistName;
-	private String trackName;
-	private String youTubeId;
-	private String trackViewUrl;
+	private String artist;
+	private String title;
 	private String coverArtUrl;
 	private String releaseDate;
-	private String primaryGenreName;
 	@IgnoreSave private String whyline;
 	@IgnoreSave private int whylineScore;
 	@IgnoreSave private int resultCount;
@@ -48,11 +47,11 @@ public class Song extends DatastoreObject {
 	@SuppressWarnings("unused")
 	private Song(){}
 
-	public Song(final String songTitle, final String artist, final String mbid) {
-		this.trackName = songTitle;
-		this.artistName = artist;
+	public Song(final String title, final String artist, final String mbid) {
+		this.title = title;
+		this.artist = artist;
 		this.mbid = mbid;
-		this.id = songTitle + Song.TOKEN_SEPARATOR + artist;
+		this.id = title + Song.TOKEN_SEPARATOR + artist;
 	}
 
 	public static Song findSong(final String id) {
@@ -283,45 +282,31 @@ public class Song extends DatastoreObject {
 
 	/* Getters and setters */
 
-	public String getArtistName() {
-		return artistName;
+	@Override
+	public String getArtist() {
+		return artist;
 	}
 
-	public void setArtistName(final String artistName) {
-		this.artistName = artistName;
+	public void setArtist(final String artist) {
+		this.artist = artist;
 	}
 
-	public String getTrackName() {
-		return trackName;
+	@Override
+	public String getTitle() {
+		return this.title;
 	}
 
-	public void setTrackName(final String trackName) {
-		this.trackName = trackName;
+	public void setTitle(final String title) {
+		this.title = title;
 	}
 
-	public String getTrackViewUrl() {
-		return trackViewUrl;
-	}
-
-	public void setTrackViewUrl(final String trackViewUrl) {
-		this.trackViewUrl = trackViewUrl;
-	}
-
+	@Override
 	public String getReleaseDate() {
 		return releaseDate;
 	}
 
 	public void setReleaseDate(final String releaseDate) {
 		this.releaseDate = releaseDate;
-	}
-
-
-	public String getPrimaryGenreName() {
-		return primaryGenreName;
-	}
-
-	public void setPrimaryGenreName(final String primaryGenreName) {
-		this.primaryGenreName = primaryGenreName;
 	}
 
 	public long getScore() {
@@ -340,6 +325,7 @@ public class Song extends DatastoreObject {
 		this.id = id;
 	}
 
+	@Override
 	public String getCoverArtUrl() {
 		return coverArtUrl;
 	}
@@ -364,27 +350,13 @@ public class Song extends DatastoreObject {
 		this.whylineScore = whylineScore;
 	}
 
+	@Override
 	public String getMbid() {
 		return mbid;
 	}
 
 	public void setMbid(final String mbid) {
 		this.mbid = mbid;
-	}
-
-	public String getYouTubeId() {
-		return youTubeId;
-	}
-
-	public void setYouTubeId(final String youTubeId) {
-		this.youTubeId = youTubeId;
-	}
-
-	public String getYouTubeEmbedUrl() {
-		if(getYouTubeId() != null && !getYouTubeId().isEmpty()) {
-			return "http://www.youtube.com/embed/"+getYouTubeId();
-		}
-		return null;
 	}
 
 	public int getResultCount() {
