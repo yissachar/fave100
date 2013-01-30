@@ -1,7 +1,7 @@
 package com.fave100.client.requestfactory;
 
-import com.fave100.client.pages.search.SongInterface;
 import com.fave100.server.domain.Song;
+import com.fave100.shared.SongInterface;
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 import com.google.web.bindery.requestfactory.shared.ProxyFor;
 
