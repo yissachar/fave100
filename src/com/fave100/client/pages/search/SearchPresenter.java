@@ -18,7 +18,6 @@ import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
-import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
@@ -130,8 +129,3 @@ public class SearchPresenter extends
 	}
 }
 
-interface SearchUiHandlers extends UiHandlers {
-	void showResults(String songTerm, String artistTerm);
-
-	void addSong(SongProxy song);
-}

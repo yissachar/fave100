@@ -1,5 +1,6 @@
 package com.fave100.client.widgets.advancedsearch;
 
+import com.fave100.client.pages.search.SearchUiHandlers;
 import com.fave100.client.requestfactory.SongProxy;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
