@@ -76,7 +76,7 @@ public class FaveList extends DatastoreObject{
 
 		if(unique == false) throw new SongAlreadyInListException();;
 		// Create the new FaveItem
-		final String songArtistID = song.getTrackName()+Song.TOKEN_SEPARATOR+song.getArtistName();
+		final String songArtistID = song.getTitle()+Song.TOKEN_SEPARATOR+song.getArtist();
 		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songArtistID));
 		final FaveItem newFaveItem = new FaveItem(songArtistID);
 		faveList.getList().add(newFaveItem);

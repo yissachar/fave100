@@ -39,17 +39,17 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 	protected String getTrackName(final SongProxy object) {
 		String songUrl = Window.Location.getPath();
 		songUrl += Window.Location.getQueryString()+"#"+NameTokens.song+";song=";
-		songUrl += URL.encodeQueryString(object.getTrackName());
-		songUrl += ";artist="+URL.encodeQueryString(object.getArtistName());
+		songUrl += URL.encodeQueryString(object.getTitle());
+		songUrl += ";artist="+URL.encodeQueryString(object.getArtist());
 		songUrl = URL.encode(songUrl);
 
 		String trackName = "<a href='"+songUrl.replace("'", "%27")+"'";
-		trackName += "class='faveListTrackName'>"+object.getTrackName()+"</a>";
+		trackName += "class='faveListTrackName'>"+object.getTitle()+"</a>";
 		return(trackName);
 	}
 
 	protected String getArtistName(final SongProxy object) {
-		final String artistName = "<span class='faveListArtistName'>"+object.getArtistName()+"</span>";
+		final String artistName = "<span class='faveListArtistName'>"+object.getArtist()+"</span>";
 		return(artistName);
 	}
 

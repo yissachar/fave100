@@ -61,8 +61,8 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 
 	@Override
 	public void setSongInfo(final SongProxy song) {
-		setSongTitle(song.getTrackName());
-		setArtistName(song.getArtistName());
+		setSongTitle(song.getTitle());
+		setArtistName(song.getArtist());
 		whylineWaterfall.setWhylines(song);
 	}
 

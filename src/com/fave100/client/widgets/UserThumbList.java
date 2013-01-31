@@ -59,10 +59,10 @@ public class UserThumbList extends Composite {
 		final int random = (int) (Math.random() * songList.size());
 		final SongProxy song = songList.get(random);
 		songRank.setText(Integer.toString(random+1));
-		songTitle.setText(song.getTrackName());
+		songTitle.setText(song.getTitle());
 		final PlaceRequest placeRequest = new PlaceRequest(NameTokens.song)
-											.with("song", song.getTrackName())
-											.with("artist", song.getArtistName());
+											.with("song", song.getTitle())
+											.with("artist", song.getArtist());
 		songTitle.setTargetHistoryToken(placeManager.buildHistoryToken(placeRequest));
 	}
 
