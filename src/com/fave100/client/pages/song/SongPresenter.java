@@ -113,7 +113,7 @@ public class SongPresenter extends
 
 		// Add the song as a FaveItem
 		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
-				songProxy.getId(), songProxy.getTrackName(), songProxy.getArtistName());
+				songProxy.getId(), songProxy.getTitle(), songProxy.getArtist());
 
 		addReq.fire(new Receiver<Void>() {
 			@Override

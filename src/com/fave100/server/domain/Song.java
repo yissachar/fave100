@@ -169,8 +169,8 @@ public class Song extends DatastoreObject implements SongInterface {
 			final ResultSet results = stmt.executeQuery();
 			// Turn results into ArrayList
 			while(results.next()) {
-				final Song song = new Song(results.getString("song"), results.getString("artist"), results.getString("mbid"));
-				autocompleteList.add(song);
+			//	final Song song = new Song(results.getString("song"), results.getString("artist"), results.getString("mbid"));
+			//	autocompleteList.add(song);
 			}
 		} catch (final SQLException ignore) {
 		} finally {

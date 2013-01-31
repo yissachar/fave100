@@ -575,7 +575,7 @@ public class AppUser extends DatastoreObject{
 					int counter = 0;
 					final Activity activity = activityList.get(i);
 					// Begin constructing the message
-					final String songName = activity.getSong().get().getTrackName();
+					final String songName = activity.getSong().get().getTitle();
 					String message = "";
 					if(activity.getTransactionType().equals(transaction)) {
 						message += "<a href='#users;u="+activity.getUsername()+";tab="+UsersPresenter.ACTIVITY_TAB+"'>";
@@ -638,7 +638,7 @@ public class AppUser extends DatastoreObject{
 		for(final Activity activity : activityList) {
 			final Song song = activity.getSong().get();
 			if(song != null) {
-				final String songName = song.getTrackName();
+				final String songName = song.getTitle();
 				String message = "";
 				if(activity.getTransactionType().equals(Transaction.FAVE_ADDED)) {
 					message += " Added "+songName;

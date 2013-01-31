@@ -75,8 +75,8 @@ public class SongSuggestBox extends SuggestBox{
 	       				imageUrl = UriUtils.sanitizeUri(entry.getCoverArtUrl());;
 	       			}*/
 	    	    	final String suggestionEntry = "<img src='"+imageUrl+"'/>"+
-	    	    			entry.getTrackName()+"</br><span class='artistName'>"+entry.getArtistName()+"</span>";
-	    	    	String mapEntry = entry.getTrackName();
+	    	    			entry.getTitle()+"</br><span class='artistName'>"+entry.getArtist()+"</span>";
+	    	    	String mapEntry = entry.getTitle();
 	    	    	// Use white space to sneak in duplicate song titles into the hashmap
 	    	    	while(itemSuggestionMap.get(mapEntry) != null) {
 	    	    		mapEntry += " ";
