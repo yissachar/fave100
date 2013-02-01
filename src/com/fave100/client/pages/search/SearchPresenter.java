@@ -12,6 +12,7 @@ import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
+import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -20,6 +21,8 @@ import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 public class SearchPresenter extends
@@ -43,12 +46,15 @@ public class SearchPresenter extends
 
 	public static final int				RESULTS_PER_PAGE	= 25;
 	private ApplicationRequestFactory	requestFactory;
+	private PlaceManager				placeManager;
 
 	@Inject
 	public SearchPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory) {
+			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
+			final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
+		this.placeManager = placeManager;
 		getView().setUiHandlers(this);
 	}
 
@@ -115,7 +121,9 @@ public class SearchPresenter extends
 
 			@Override
 			public void onFailure(final ServerFailure failure) {
-				if (failure.getExceptionType().equals(
+				if(failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					placeManager.revealPlace(new PlaceRequest(NameTokens.login));
+				} else if (failure.getExceptionType().equals(
 						SongLimitReachedException.class.getName())) {
 					Notification
 							.show("You cannot have more than 100 songs in list");
