@@ -4,6 +4,7 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
 	xmlns:w='urn:import:com.fave100.client.widgets'
+	xmlns:wyt='urn:import:com.fave100.client.widgets.youtube'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -57,7 +58,7 @@
 					<g:Button ui:field="addToFave100Button" styleName="{style.addToFave100Button}">+Fave100</g:Button>
 				</div>
 				<div class="{style.songBody}">
-					<w:YouTubeWidget ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>
+					<wyt:YouTubeWidget ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>
 					<w:WhylineWaterfall ui:field="whylineWaterfall" styleName="{style.whylineWaterfall}"/>
 				</div>
 			</div>
