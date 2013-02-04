@@ -1,8 +1,7 @@
-package com.fave100.client.widgets;
+package com.fave100.client.widgets.youtube;
 
 import java.util.ArrayList;
 
-import com.fave100.client.pages.song.YouTubeJSONItem;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;

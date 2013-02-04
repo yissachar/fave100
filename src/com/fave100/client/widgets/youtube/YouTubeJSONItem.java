@@ -1,4 +1,4 @@
-package com.fave100.client.pages.song;
+package com.fave100.client.widgets.youtube;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
