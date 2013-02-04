@@ -27,8 +27,8 @@ public class NonpersonalFaveListCell extends FaveListCellBase{
 		if(object == null) return;
 
 		sb.appendHtmlConstant(getRank(context));
-		sb.appendHtmlConstant(getTrackName(object));
-		sb.appendHtmlConstant(getArtistName(object));
+		sb.appendHtmlConstant(getTitle(object));
+		sb.appendHtmlConstant(getArtist(object));
 		//sb.appendHtmlConstant(getReleaseDate(object));
 
 		final String addButton = "<button class='faveListAddButton'>+</button>";
