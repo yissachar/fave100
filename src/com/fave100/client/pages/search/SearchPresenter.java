@@ -14,6 +14,7 @@ import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -37,6 +38,8 @@ public class SearchPresenter extends
 		void setResultCount(int count);
 
 		void setResults(List<SongProxy> resultList);
+
+		void populateSearchFields(String song, String artist);
 	}
 
 	@ProxyCodeSplit
@@ -50,7 +53,8 @@ public class SearchPresenter extends
 
 	@Inject
 	public SearchPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
+			final MyProxy proxy,
+			final ApplicationRequestFactory requestFactory,
 			final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
@@ -65,40 +69,69 @@ public class SearchPresenter extends
 		getView().resetView();
 	}
 
-	// TODO: need a global "loading" indicator
 	@Override
-	public void showResults(final String songTerm, final String artistTerm) {
+	public boolean useManualReveal() {
+		return true;
+	}
 
+	@Override
+	public void prepareFromRequest(final PlaceRequest placeRequest) {
+		super.prepareFromRequest(placeRequest);
+
+		// Use parameters to determine what to search for
+		final String song = URL.decode(placeRequest.getParameter("song", ""));
+		final String artist = URL.decode(placeRequest
+				.getParameter("artist", ""));
+
+		// Populate the search field text
+		getView().populateSearchFields(song, artist);
+
+		// Show the page
+		getProxy().manualReveal(SearchPresenter.this);
+
+		// TODO: need a global "loading" indicator
+
+		// Build the search request
 		final int offset = RESULTS_PER_PAGE * (getView().getPageNum() - 1);
 		Request<List<SongProxy>> searchReq;
-		if (!songTerm.isEmpty()) {
-			if (!artistTerm.isEmpty()) {
-				searchReq = requestFactory.songRequest().search(songTerm,
-						artistTerm, offset);
+		if (!song.isEmpty()) {
+			if (!artist.isEmpty()) {
+				searchReq = requestFactory.songRequest().search(song, artist,
+						offset);
 			} else {
-				searchReq = requestFactory.songRequest().searchSong(songTerm,
+				searchReq = requestFactory.songRequest().searchSong(song,
 						offset);
 			}
-		} else if (!artistTerm.isEmpty()) {
-			searchReq = requestFactory.songRequest().searchArtist(artistTerm,
+		} else if (!artist.isEmpty()) {
+			searchReq = requestFactory.songRequest().searchArtist(artist,
 					offset);
 		} else {
 			return;
 		}
 
+		// Search for the song
 		searchReq.fire(new Receiver<List<SongProxy>>() {
 			@Override
 			public void onSuccess(final List<SongProxy> resultList) {
 				getView().setResults(resultList);
 				if (resultList.size() > 0) {
+					// Show song results
 					getView()
 							.setResultCount(resultList.get(0).getResultCount());
 				} else {
-					// No result, set to 0
+					// No result, set count to 0
 					getView().setResultCount(0);
 				}
 			}
 		});
+	}
+
+	@Override
+	public void showResults(final String songTerm, final String artistTerm) {
+		final PlaceRequest placeRequest = new PlaceRequest(NameTokens.search)
+			.with("song", songTerm)
+			.with("artist", artistTerm);
+		placeManager.revealPlace(placeRequest);
 	}
 
 	@Override
@@ -121,8 +154,10 @@ public class SearchPresenter extends
 
 			@Override
 			public void onFailure(final ServerFailure failure) {
-				if(failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					placeManager.revealPlace(new PlaceRequest(NameTokens.login));
+				if (failure.getExceptionType().equals(
+						NotLoggedInException.class.getName())) {
+					placeManager
+							.revealPlace(new PlaceRequest(NameTokens.login));
 				} else if (failure.getExceptionType().equals(
 						SongLimitReachedException.class.getName())) {
 					Notification
@@ -136,4 +171,3 @@ public class SearchPresenter extends
 		});
 	}
 }
-

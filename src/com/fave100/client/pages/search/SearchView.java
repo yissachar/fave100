@@ -129,4 +129,10 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements
 	public int getPageNum() {
 		return pager.getPageNumber();
 	}
+
+	@Override
+	public void populateSearchFields(final String song, final String artist) {
+		songSearchBox.setValue(song);
+		artistSearchBox.setValue(artist);
+	}
 }
