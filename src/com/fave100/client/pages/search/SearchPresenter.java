@@ -106,6 +106,9 @@ public class SearchPresenter extends
 			searchReq = requestFactory.songRequest().searchArtist(artist,
 					offset);
 		} else {
+			// Song and artist blank, clear results
+			getView().setResults(null);
+			getView().setResultCount(0);
 			return;
 		}
 
