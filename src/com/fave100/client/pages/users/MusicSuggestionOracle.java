@@ -9,14 +9,16 @@ import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 
 /**
  * Creates suggestions for SongSuggestBox to display.
+ *
  * @author yissachar.radcliffe
  *
  */
-public class MusicSuggestionOracle extends MultiWordSuggestOracle{
+public class MusicSuggestionOracle extends MultiWordSuggestOracle {
 
-	private Map<String, String> suggestionMap = new LinkedHashMap<String, String>();
+	private Map<String, String>	suggestionMap	= new LinkedHashMap<String, String>();
 
-	public void addSuggestion(final String replacementString, final String displayString) {
+	public void addSuggestion(final String replacementString,
+			final String displayString) {
 		suggestionMap.put(replacementString, displayString);
 		this.add(replacementString);
 	}
@@ -27,22 +29,26 @@ public class MusicSuggestionOracle extends MultiWordSuggestOracle{
 	}
 
 	@Override
-	protected MultiWordSuggestion createSuggestion(final String replacementString, final String displayString) {
-		return new MultiWordSuggestion(replacementString, suggestionMap.get(replacementString));
+	protected MultiWordSuggestion createSuggestion(
+			final String replacementString, final String displayString) {
+		return new MultiWordSuggestion(replacementString,
+				suggestionMap.get(replacementString));
 	}
 
 	// Override GWT SuggestBox and use all suggestions that were added
 	@Override
-	public void requestSuggestions(final Request request, final Callback callback) {
+	public void requestSuggestions(final Request request,
+			final Callback callback) {
 		final List<MultiWordSuggestion> suggestions = new ArrayList<MultiWordSuggestOracle.MultiWordSuggestion>();
 
-		for(final String suggestionKey : suggestionMap.keySet()) {
-			suggestions.add(new MultiWordSuggestion(suggestionKey, suggestionMap.get(suggestionKey)));
+		for (final String suggestionKey : suggestionMap.keySet()) {
+			suggestions.add(new MultiWordSuggestion(suggestionKey,
+					suggestionMap.get(suggestionKey)));
 		}
 
-	    final Response response = new Response(suggestions);
+		final Response response = new Response(suggestions);
 
-	    callback.onSuggestionsReady(request, response);
+		callback.onSuggestionsReady(request, response);
 	}
 
 }
