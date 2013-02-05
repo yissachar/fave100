@@ -25,8 +25,6 @@ import com.fave100.client.pages.search.SearchPresenter;
 import com.fave100.client.pages.search.SearchView;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.pages.song.SongView;
-import com.fave100.client.pages.userlist.UserlistPresenter;
-import com.fave100.client.pages.userlist.UserlistView;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.pages.users.UsersView;
 import com.fave100.client.place.ClientPlaceManager;
@@ -71,9 +69,6 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(LogoutPresenter.class, LogoutPresenter.MyView.class,
 				LogoutView.class, LogoutPresenter.MyProxy.class);
-
-		bindPresenter(UserlistPresenter.class, UserlistPresenter.MyView.class,
-				UserlistView.class, UserlistPresenter.MyProxy.class);
 
 		bindPresenterWidget(FaveFeedPresenter.class,
 				FaveFeedPresenter.MyView.class, FaveFeedView.class);
