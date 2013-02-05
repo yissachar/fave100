@@ -55,4 +55,9 @@ public class CurrentUser implements AppUserProxy {
 	public String getAvatarImage() {
 		return appUser.getAvatarImage();
 	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return appUser.equals(obj);
+	}
 }
