@@ -10,9 +10,7 @@ import com.google.web.bindery.requestfactory.shared.Service;
 @Service(AppUser.class)
 public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> findAppUser(String username);
-	Request<List<AppUserProxy>> getAppUsers();
 	Request<List<AppUserProxy>> getRandomUsers(int num);
-	Request<AppUserProxy> getLoggedInAppUser();
 
 	Request<AppUserProxy> login(String username, String password);
 	Request<Void> logout();
@@ -22,8 +20,6 @@ public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> loginWithGoogle();
 	Request<Boolean> isGoogleUserLoggedIn();
 	Request<String> getGoogleLoginURL(String destinationURL);
-	Request<String> getGoogleLogoutURL(String destinationURL);
-	Request<String> getGoogleLoginLogoutURL(String destinationURL);
 	Request<AppUserProxy> createAppUserFromGoogleAccount(String username);
 
 	Request<AppUserProxy> loginWithTwitter(String oauth_verifier);
@@ -36,11 +32,6 @@ public interface AppUserRequest extends RequestContext{
 	Request<AppUserProxy> createAppUserFromFacebookAccount(String username,
 			String state, String code, String redirectUrl);
 
-	Request<Void> followUser(String username);
-	Request<Boolean> checkFollowing(String username);
-
-	Request<List<String>> getFaveFeedForCurrentUser();
-	Request<List<String>> getActivityForUser(String username);
 	Request<String> createBlobstoreUrl(String url);
 	Request<Void> setAvatarForCurrentUser(String avatar);
 	Request<Boolean> setProfileData(String email);
