@@ -1,6 +1,7 @@
 package com.fave100.client.pages.users;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 /**
  * A SuggestBox that provides song suggestions
@@ -22,10 +24,11 @@ import com.google.web.bindery.requestfactory.shared.Request;
  */
 public class SongSuggestBox extends SuggestBox {
 
-	private MusicSuggestionOracle		suggestions;
-	private HashMap<String, SongProxy>	itemSuggestionMap;
-	private Timer						suggestionsTimer;
-	private ApplicationRequestFactory	requestFactory;
+	private MusicSuggestionOracle			suggestions;
+	private HashMap<String, SongProxy>		itemSuggestionMap;
+	private Timer							suggestionsTimer;
+	private ApplicationRequestFactory		requestFactory;
+	private List<Request<List<SongProxy>>>	requests;
 
 	public SongSuggestBox(final MusicSuggestionOracle suggestions,
 			final ApplicationRequestFactory requestFactory) {
@@ -33,6 +36,7 @@ public class SongSuggestBox extends SuggestBox {
 		this.suggestions = suggestions;
 		this.requestFactory = requestFactory;
 		itemSuggestionMap = new HashMap<String, SongProxy>();
+		requests = new LinkedList<Request<List<SongProxy>>>();
 
 		suggestionsTimer = new Timer() {
 			@Override
@@ -50,6 +54,7 @@ public class SongSuggestBox extends SuggestBox {
 				// Don't search if it was just an arrow key being pressed
 				if (!KeyCodeEvent.isArrow(event.getNativeKeyCode())
 						&& event.getNativeKeyCode() != KeyCodes.KEY_ENTER) {
+					event.preventDefault();
 					// Min delay 200ms, Max 1500
 					int delay = 200 + (20 * getText().length());
 					if (delay > 1500)
@@ -61,12 +66,25 @@ public class SongSuggestBox extends SuggestBox {
 	}
 
 	private void getAutocompleteList() {
+		if(this.getValue().isEmpty()) return;
+
 		final Request<List<SongProxy>> autocompleteReq = requestFactory
 				.songRequest().getAutocomplete(this.getValue());
+		// Add the request to the list of running requests
+		requests.add(autocompleteReq);
 		autocompleteReq.fire(new Receiver<List<SongProxy>>() {
 			@Override
 			public void onSuccess(final List<SongProxy> results) {
-				// Clear the current suggestions)
+				// If the completed request is not the latest request, ignore it
+				if(requests.indexOf(autocompleteReq) != requests.size()-1
+					|| requests.indexOf(autocompleteReq) == -1) {
+					requests.remove(autocompleteReq);
+					return;
+				}
+
+				requests.clear();
+
+				// Clear the current suggestions
 				suggestions.clearSuggestions();
 				itemSuggestionMap.clear();
 
@@ -90,12 +108,12 @@ public class SongSuggestBox extends SuggestBox {
 				}
 				showSuggestionList();
 			}
+
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				requests.remove(autocompleteReq);
+			}
 		});
-		// TODO: type "gr" then backspace twice and type "o", if "gr" request
-		// really long e.g. 6 seconds and "o" request very short, e.g. 100 ms, autocomplete
-		// will show results for  "gr" when it should really show for "o"
-		// solution: store requests in array, whenever request completes, clear
-		// it and any other requests with lower index
 	}
 
 	// Returns MusicbrainzResults mapped from the display string passed in
