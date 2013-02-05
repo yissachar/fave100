@@ -2,6 +2,7 @@ package com.fave100.client.pages.users;
 
 import java.util.List;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
 import com.fave100.client.events.SongSelectedEvent;
 import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
@@ -47,6 +48,14 @@ public class UsersPresenter extends
 		void showOtherPage();
 	}
 
+	@ProxyCodeSplit
+	@NameToken(NameTokens.users)
+	public interface MyProxy extends ProxyPlace<UsersPresenter> {
+	}
+
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> FAVE_FEED_SLOT = new Type<RevealContentHandler<?>>();
+
 	public static final String FAVE_100_TAB = "fave100";
 	public static final String ACTIVITY_TAB = "activity";
 	public static final String USER_PARAM = "u";
@@ -59,25 +68,19 @@ public class UsersPresenter extends
 	private boolean ownPage = false;
 	//private boolean following = false;
 	private String tab = UsersPresenter.FAVE_100_TAB;
-
-	@ProxyCodeSplit
-	@NameToken(NameTokens.users)
-	public interface MyProxy extends ProxyPlace<UsersPresenter> {
-	}
-
-	@ContentSlot
-	public static final Type<RevealContentHandler<?>> FAVE_FEED_SLOT = new Type<RevealContentHandler<?>>();
+	private CurrentUser currentUser;
 
 	@Inject FaveFeedPresenter faveFeed;
 
 	@Inject
 	public UsersPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager) {
+			final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
+		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 
 
@@ -146,18 +149,12 @@ public class UsersPresenter extends
 		    		if(user != null) {
 	    				getView().setUserProfile(user);
 	    				// Check if user is the currently logged in user
-	    				final Request<AppUserProxy> getLoggedInReq = requestFactory.appUserRequest().getLoggedInAppUser();
-	    				getLoggedInReq.fire(new Receiver<AppUserProxy>() {
-	    					@Override
-	    					public void onSuccess(final AppUserProxy loggedInUser) {
-	    						if(loggedInUser != null && loggedInUser.equals(user)) {
-	    							ownPage = true;
-	    						} else {
-	    							ownPage = false;
-	    						}
-	    						checkTotalRequestProgress();
-	    					}
-	    				});
+						if(currentUser.isLoggedIn() && currentUser.equals(user)) {
+							ownPage = true;
+						} else {
+							ownPage = false;
+						}
+
 	    				checkTotalRequestProgress();
 	    			} else {
 	    				placeManager.revealDefaultPlace();
@@ -183,7 +180,7 @@ public class UsersPresenter extends
 
 	private void checkTotalRequestProgress() {
 		currentRequestProgress++;
-		if(currentRequestProgress >= 3) {
+		if(currentRequestProgress >= 2) {
 			currentRequestProgress = 0;
 
 			/*if(following) {
