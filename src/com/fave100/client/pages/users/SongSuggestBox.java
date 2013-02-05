@@ -66,7 +66,7 @@ public class SongSuggestBox extends SuggestBox {
 	}
 
 	private void getAutocompleteList() {
-		if(this.getValue().isEmpty()) return;
+		if(this.getValue().isEmpty() || this.getValue().length() <= 2) return;
 
 		final Request<List<SongProxy>> autocompleteReq = requestFactory
 				.songRequest().getAutocomplete(this.getValue());
