@@ -3,8 +3,6 @@ package com.fave100.client.gin;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
-import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
-import com.fave100.client.pagefragments.favefeed.FaveFeedView;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pagefragments.login.LoginWidgetView;
 import com.fave100.client.pagefragments.topbar.TopBarPresenter;
@@ -69,9 +67,6 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(LogoutPresenter.class, LogoutPresenter.MyView.class,
 				LogoutView.class, LogoutPresenter.MyProxy.class);
-
-		bindPresenterWidget(FaveFeedPresenter.class,
-				FaveFeedPresenter.MyView.class, FaveFeedView.class);
 
 		bindPresenter(SearchPresenter.class, SearchPresenter.MyView.class,
 				SearchView.class, SearchPresenter.MyProxy.class);

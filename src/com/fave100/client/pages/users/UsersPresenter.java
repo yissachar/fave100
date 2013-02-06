@@ -5,7 +5,6 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
 import com.fave100.client.events.SongSelectedEvent;
-import com.fave100.client.pagefragments.favefeed.FaveFeedPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
@@ -69,8 +68,6 @@ public class UsersPresenter extends
 	//private boolean following = false;
 	private String tab = UsersPresenter.FAVE_100_TAB;
 	private CurrentUser currentUser;
-
-	@Inject FaveFeedPresenter faveFeed;
 
 	@Inject
 	public UsersPresenter(final EventBus eventBus, final MyView view,
