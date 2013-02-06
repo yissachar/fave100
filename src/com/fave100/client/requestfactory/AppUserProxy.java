@@ -9,9 +9,5 @@ public interface AppUserProxy extends EntityProxy{
 	Integer getVersion();
 
 	String getUsername();
-	// TODO: Having email here is a security risk
-	// Instead should be a RequestFactory method
-	// Since we will only call it for current user
-	String getEmail();
 	String getAvatarImage();
 }
