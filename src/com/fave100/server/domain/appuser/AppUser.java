@@ -721,6 +721,12 @@ public class AppUser extends DatastoreObject{
 		return avatar;
 	}
 
+	public static String getEmailForCurrentUser() throws NotLoggedInException {
+		final AppUser currentUser = getLoggedInAppUser();
+		if(currentUser == null) throw new NotLoggedInException();
+		return currentUser.getEmail();
+	}
+
 	public static Boolean setProfileData(final String email) {
 		final AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) return false;

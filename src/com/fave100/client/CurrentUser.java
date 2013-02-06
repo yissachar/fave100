@@ -47,11 +47,6 @@ public class CurrentUser implements AppUserProxy {
 	}
 
 	@Override
-	public String getEmail() {
-		return appUser.getEmail();
-	}
-
-	@Override
 	public String getAvatarImage() {
 		return appUser.getAvatarImage();
 	}

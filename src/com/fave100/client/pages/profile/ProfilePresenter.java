@@ -101,7 +101,13 @@ public class ProfilePresenter extends
 	private void setProfileData() {
 		getView().clearForm();
 		setUploadAction();
-		getView().setEmailValue(currentUser.getEmail());
+		final Request<String> getEmailReq = requestFactory.appUserRequest().getEmailForCurrentUser();
+		getEmailReq.fire(new Receiver<String>() {
+			@Override
+			public void onSuccess(final String email) {
+				getView().setEmailValue(email);
+			}
+		});
 		getView().setAvatarImg(currentUser.getAvatarImage());
 	}
 
