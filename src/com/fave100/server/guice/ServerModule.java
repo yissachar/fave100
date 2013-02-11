@@ -12,7 +12,6 @@ import com.fave100.server.domain.appuser.Follower;
 import com.fave100.server.domain.appuser.GoogleID;
 import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
-import com.fave100.server.domain.favelist.Fave100MasterList;
 import com.fave100.server.domain.favelist.FaveList;
 import com.googlecode.objectify.ObjectifyService;
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
@@ -32,7 +31,6 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(Whyline.class);
 		ObjectifyService.register(APIKey.class);
 		ObjectifyService.register(PwdResetToken.class);
-		ObjectifyService.register(Fave100MasterList.class);
 
 		// Set API keys
 		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").get();
