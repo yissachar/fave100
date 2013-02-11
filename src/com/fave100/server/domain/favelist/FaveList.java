@@ -3,7 +3,6 @@ package com.fave100.server.domain.favelist;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,8 +13,6 @@ import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
-import com.fave100.server.util.FixedSizePriorityQueue;
-import com.fave100.server.util.SongComparator;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -142,56 +139,6 @@ public class FaveList extends DatastoreObject{
 			currentWhyline.get().setWhyline(whyline);
 			ofy().save().entity(currentWhyline).now();
 		}
-	}
-
-
-	public static List<Song> getMasterFaveList() {
-		setMasterFaveList();
-
-		final List<Song> topSongs = new ArrayList<Song>();
-		final List<Ref<Song>> songRefs = ofy().load().type(Fave100MasterList.class)
-										.id(Fave100MasterList.CURRENT_MASTER).get().getSongList();
-		for(final Ref<Song> songRef : songRefs) {
-			topSongs.add(songRef.get());
-		}
-		return topSongs;
-	}
-
-	public static void setMasterFaveList() {
-		// TODO: Once fully on AppEngine, turn into background task
-		// TODO: Performance critical - optimize! This code is horrible performance-wise!
-		final List<Song> allSongs = ofy().load().type(Song.class).list();
-		for(final Song song : allSongs) {
-			song.setScore(0);
-			ofy().save().entity(song).now();
-		}
-
-		final FixedSizePriorityQueue<Song> songHeap = new FixedSizePriorityQueue<Song>(100, new SongComparator());
-
-		final List<FaveList> allFaveLists = ofy().load().type(FaveList.class).list();
-		for(final FaveList faveList : allFaveLists) {
-			for(int i = 0; i < faveList.getList().size(); i++) {
-				final Song song = faveList.getList().get(i).getSong().get();
-				if(song != null) {
-					song.addScore(FaveList.MAX_FAVES - i);
-					ofy().save().entity(song).now();
-					// Shift the 100 top scoring into songHeap
-					if(!songHeap.contains(song)) {
-						songHeap.add(song);
-					}
-				}
-			}
-		}
-
-		final Fave100MasterList newMasterList = new Fave100MasterList(Fave100MasterList.CURRENT_MASTER);
-		final List<Ref<Song>> songRefs = new ArrayList<Ref<Song>>();
-		for(final Song song : songHeap) {
-			songRefs.add(Ref.create(Key.create(Song.class, song.getId())));
-		}
-
-		Collections.reverse(songRefs);
-		newMasterList.setSongList(songRefs);
-		ofy().save().entity(newMasterList).now();
 	}
 
 	public static List<Song> getFaveItemsForCurrentUser(final String hashtag) {
