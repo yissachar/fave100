@@ -5,7 +5,7 @@ import java.util.List;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.widgets.favelist.NonpersonalFaveList;
 import com.fave100.client.widgets.favelist.PersonalFaveList;
 import com.google.gwt.dom.client.SpanElement;
@@ -101,7 +101,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@Override
-	public void setUserFaveList(final List<SongProxy> faveList) {
+	public void setUserFaveList(final List<FaveItemProxy> faveList) {
 		userFaveList.setRowData(faveList);
 	}
 

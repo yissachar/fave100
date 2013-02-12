@@ -6,7 +6,7 @@ import com.fave100.client.gin.ClientGinjector;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.server.domain.favelist.FaveList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -33,7 +33,7 @@ public class UserThumbList extends Composite {
 	@UiField Image userProfileImage;
 	@UiField Label songRank;
 	@UiField InlineHyperlink songTitle;
-	private List<SongProxy> songList;
+	private List<FaveItemProxy> songList;
 	private PlaceManager placeManager;
 
 	public UserThumbList(final ApplicationRequestFactory requestFactory, final AppUserProxy appUser) {
@@ -42,10 +42,10 @@ public class UserThumbList extends Composite {
 		final ClientGinjector ginjector = GWT.create(ClientGinjector.class);
 		placeManager = ginjector.getPlaceManager();
 
-		final Request<List<SongProxy>> faveListReq = requestFactory.faveListRequest().getFaveList(appUser.getUsername(), FaveList.DEFAULT_HASHTAG);
-		faveListReq.fire(new Receiver<List<SongProxy>>() {
+		final Request<List<FaveItemProxy>> faveListReq = requestFactory.faveListRequest().getFaveList(appUser.getUsername(), FaveList.DEFAULT_HASHTAG);
+		faveListReq.fire(new Receiver<List<FaveItemProxy>>() {
 			@Override
-			public void onSuccess(final List<SongProxy> songs) {
+			public void onSuccess(final List<FaveItemProxy> songs) {
 				songList = songs;
 				setRandomSong();
 			}
@@ -57,11 +57,11 @@ public class UserThumbList extends Composite {
 
 	private void setRandomSong() {
 		final int random = (int) (Math.random() * songList.size());
-		final SongProxy song = songList.get(random);
+		final FaveItemProxy song = songList.get(random);
 		songRank.setText(Integer.toString(random+1));
-		songTitle.setText(song.getTitle());
+		songTitle.setText(song.getSong());
 		final PlaceRequest placeRequest = new PlaceRequest(NameTokens.song)
-											.with("song", song.getTitle())
+											.with("song", song.getSong())
 											.with("artist", song.getArtist());
 		songTitle.setTargetHistoryToken(placeManager.buildHistoryToken(placeRequest));
 	}

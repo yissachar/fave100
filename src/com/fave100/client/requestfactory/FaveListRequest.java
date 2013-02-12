@@ -12,12 +12,12 @@ public interface FaveListRequest extends RequestContext {
 
 	Request<FaveListProxy> findFaveList(String id);
 
-	Request<List<SongProxy>> getFaveItemsForCurrentUser(String hashtag);
+	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser(String hashtag);
 	Request<Void> removeFaveItemForCurrentUser(String hashtag, int index);
 	Request<Void> rerankFaveItemForCurrentUser(String hashtag, int currentIndex, int newIndex);
 	Request<Void> editWhylineForCurrentUser(String hashtag, int index, String whyline);
 
-	Request<List<SongProxy>> getFaveList(String username, String hashtag);
+	Request<List<FaveItemProxy>> getFaveList(String username, String hashtag);
 
 	Request<Void> addFaveItemForCurrentUser(String hashtag, String id,
 			String songTitle, String artist);
