@@ -19,7 +19,6 @@ public interface FaveListRequest extends RequestContext {
 
 	Request<List<FaveItemProxy>> getFaveList(String username, String hashtag);
 
-	Request<Void> addFaveItemForCurrentUser(String hashtag, String id,
-			String songTitle, String artist);
+	Request<Void> addFaveItemForCurrentUser(String hashtag,	String songTitle, String artist);
 
 }

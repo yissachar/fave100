@@ -1,12 +1,19 @@
 package com.fave100.client.widgets.favelist;
 
+import com.fave100.client.Notification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveListRequest;
+import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
+import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 
 public class NonpersonalFaveListCell extends FaveListCellBase{
 
@@ -45,9 +52,8 @@ public class NonpersonalFaveListCell extends FaveListCellBase{
 			if(eventTarget.getClassName().contains("faveListAddButton")) {
 				// Favelist add button was clicked
 				final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-				// TODO: Add the song on the client side
-			/*	final Request<Void> addFaveReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
-						song.getId(), song.getTitle(), song.getArtist());
+				final Request<Void> addFaveReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
+						song.getSong(), song.getArtist());
 
 				addFaveReq.fire(new Receiver<Void>() {
 					@Override
@@ -63,7 +69,7 @@ public class NonpersonalFaveListCell extends FaveListCellBase{
 							Notification.show("The song is already in your list");
 						}
 					}
-				});*/
+				});
 
 			}
 		}
