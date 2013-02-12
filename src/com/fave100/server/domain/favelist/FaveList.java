@@ -45,8 +45,8 @@ public class FaveList extends DatastoreObject{
 	}
 
 	// TODO: Do FaveList activities need to be transactional? If so, need to set AppUser as parent
-	public static void addFaveItemForCurrentUser(final String hashtag, final String songID,
-			final String songTitle, final String artist)
+	public static void addFaveItemForCurrentUser(final String hashtag, final String songTitle,
+			final String artist)
 					throws NotLoggedInException, SongLimitReachedException, SongAlreadyInListException {
 
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
@@ -60,19 +60,24 @@ public class FaveList extends DatastoreObject{
 		final Song song = Song.findSongByTitleAndArtist(songTitle, artist);
 		if(song == null) return;
 
+		final String songArtistID = song.getTitle()+Song.TOKEN_SEPARATOR+song.getArtist();
+		final FaveItem newFaveItem = new FaveItem(song.getTitle(), song.getArtist(), songArtistID);
+
 		// Check if it is a unique song for this user
 		boolean unique = true;
 		for(final FaveItem faveItem : faveList.getList()) {
-			if(faveItem.getSong().equals(Ref.create(Key.create(Song.class, song.getId())))){
+			/*if(faveItem.getSong().equals(Ref.create(Key.create(Song.class, song.getId())))){
+				unique = false;
+			}*/
+			if(faveItem.getSong().equals(newFaveItem.getSong())
+					&& faveItem.getArtist().equals(newFaveItem.getArtist())) {
 				unique = false;
 			}
 		}
 
 		if(unique == false) throw new SongAlreadyInListException();;
 		// Create the new FaveItem
-		final String songArtistID = song.getTitle()+Song.TOKEN_SEPARATOR+song.getArtist();
 		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songArtistID));
-		final FaveItem newFaveItem = new FaveItem(song.getTitle(), song.getArtist(), songArtistID);
 		faveList.getList().add(newFaveItem);
 		final Activity activity = new Activity(currentUser.getUsername(), Transaction.FAVE_ADDED);
 		activity.setSong(songRef);

@@ -128,8 +128,8 @@ public class SongPresenter extends
 		final FaveListRequest faveListRequest = requestFactory
 				.faveListRequest();
 		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(
-				FaveList.DEFAULT_HASHTAG, songProxy.getId(),
-				songProxy.getTitle(), songProxy.getArtist());
+				FaveList.DEFAULT_HASHTAG, songProxy.getTitle(),
+				songProxy.getArtist());
 
 		addReq.fire(new Receiver<Void>() {
 			@Override
