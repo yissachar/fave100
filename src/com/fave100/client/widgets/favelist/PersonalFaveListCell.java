@@ -1,7 +1,7 @@
 package com.fave100.client.widgets.favelist;
 
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.client.requestfactory.FaveItemProxy;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 public class PersonalFaveListCell extends FaveListCellBase{
@@ -11,7 +11,7 @@ public class PersonalFaveListCell extends FaveListCellBase{
 	}
 
 	@Override
-	public void render(final Context context, final SongProxy object,
+	public void render(final Context context, final FaveItemProxy object,
 			final SafeHtmlBuilder sb) {
 		if(object == null) return;
 

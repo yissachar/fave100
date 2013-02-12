@@ -2,13 +2,13 @@ package com.fave100.client.widgets.favelist;
 
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.client.requestfactory.FaveItemProxy;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
 
-public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
+public abstract class FaveListCellBase extends AbstractCell<FaveItemProxy>{
 
 	protected ApplicationRequestFactory requestFactory;
 
@@ -18,7 +18,7 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 	}
 
 	@Override
-	public void render(final Context context, final SongProxy object,
+	public void render(final Context context, final FaveItemProxy object,
 			final SafeHtmlBuilder sb) {
 		if(object == null) return;
 
@@ -36,24 +36,24 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 		return rank;
 	}
 
-	protected String getTitle(final SongProxy object) {
+	protected String getTitle(final FaveItemProxy object) {
 		String songUrl = Window.Location.getPath();
 		songUrl += Window.Location.getQueryString()+"#"+NameTokens.song+";song=";
-		songUrl += URL.encodeQueryString(object.getTitle());
+		songUrl += URL.encodeQueryString(object.getSong());
 		songUrl += ";artist="+URL.encodeQueryString(object.getArtist());
 		songUrl = URL.encode(songUrl);
 
 		String trackName = "<a href='"+songUrl.replace("'", "%27")+"'";
-		trackName += "class='faveListTrackName'>"+object.getTitle()+"</a>";
+		trackName += "class='faveListTrackName'>"+object.getSong()+"</a>";
 		return(trackName);
 	}
 
-	protected String getArtist(final SongProxy object) {
+	protected String getArtist(final FaveItemProxy object) {
 		final String artistName = "<span class='faveListArtistName'>"+object.getArtist()+"</span>";
 		return(artistName);
 	}
 
-	protected String getReleaseDate(final SongProxy object) {
+	/*protected String getReleaseDate(final FaveItemProxy object) {
 		String releaseDate = "<span class='faveListReleaseDate'>";
 		final String dateVal = object.getReleaseDate();
 		if(dateVal != null && !dateVal.isEmpty()) {
@@ -61,7 +61,7 @@ public abstract class FaveListCellBase extends AbstractCell<SongProxy>{
 		}
 	    releaseDate += "</span>";
 	    return releaseDate;
-	}
+	}*/
 
 	/*protected String getImageThumb(final SongProxy object) {
 		String imageThumb = "<img class='faveListImageThumb'";

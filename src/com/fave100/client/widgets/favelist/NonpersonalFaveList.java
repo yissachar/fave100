@@ -1,7 +1,7 @@
 package com.fave100.client.widgets.favelist;
 
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.client.requestfactory.FaveItemProxy;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.HasCell;
@@ -9,28 +9,28 @@ import com.google.gwt.cell.client.HasCell;
 public class NonpersonalFaveList extends FaveListBase{
 
 	public NonpersonalFaveList(final ApplicationRequestFactory requestFactory) {
-		super(requestFactory);	
-		
-		
-		_cells.add(new HasCell<SongProxy, SongProxy>() {
+		super(requestFactory);
+
+
+		_cells.add(new HasCell<FaveItemProxy, FaveItemProxy>() {
 			private final NonpersonalFaveListCell cell = new NonpersonalFaveListCell(requestFactory);
 
             @Override
-            public Cell<SongProxy> getCell() {
+            public Cell<FaveItemProxy> getCell() {
                 return cell;
             }
 
 			@Override
-			public FieldUpdater<SongProxy, SongProxy> getFieldUpdater() {
+			public FieldUpdater<FaveItemProxy, FaveItemProxy> getFieldUpdater() {
 				return null;
 			}
 
 			@Override
-			public SongProxy getValue(final SongProxy object) {
+			public FaveItemProxy getValue(final FaveItemProxy object) {
 				return object;
 			}
 		});
-		
+
 		createCellList();
-	}	
+	}
 }

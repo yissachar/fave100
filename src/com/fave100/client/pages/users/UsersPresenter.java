@@ -10,6 +10,7 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.server.domain.favelist.FaveList;
@@ -41,7 +42,7 @@ public class UsersPresenter extends
 		//void setFollowed();
 		//void setUnfollowed();
 		void setUserProfile(AppUserProxy user);
-		void setUserFaveList(List<SongProxy> faveList);
+		void setUserFaveList(List<FaveItemProxy> faveList);
 		void refreshPersonalFaveList();
 		void showOwnPage();
 		void showOtherPage();
@@ -160,10 +161,10 @@ public class UsersPresenter extends
 		    });
 
 	    	// Update fave list
-			final Request<List<SongProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
-		    userFaveListReq.fire(new Receiver<List<SongProxy>>() {
+			final Request<List<FaveItemProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
+		    userFaveListReq.fire(new Receiver<List<FaveItemProxy>>() {
 		    	@Override
-		    	public void onSuccess(final List<SongProxy> faveList) {
+		    	public void onSuccess(final List<FaveItemProxy> faveList) {
 		    		if(faveList != null) {
 		    			getView().setUserFaveList(faveList);
 	    			} else {
