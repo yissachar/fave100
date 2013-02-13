@@ -3,7 +3,6 @@ package com.fave100.server.guice;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import com.fave100.server.domain.APIKey;
-import com.fave100.server.domain.Activity;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
@@ -26,7 +25,6 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(TwitterID.class);
 		ObjectifyService.register(FacebookID.class);
 		ObjectifyService.register(Follower.class);
-		ObjectifyService.register(Activity.class);
 		ObjectifyService.register(FaveList.class);
 		ObjectifyService.register(Whyline.class);
 		ObjectifyService.register(APIKey.class);

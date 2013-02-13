@@ -5,8 +5,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fave100.server.domain.Activity;
-import com.fave100.server.domain.Activity.Transaction;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.appuser.AppUser;
@@ -79,9 +77,7 @@ public class FaveList extends DatastoreObject{
 		// Create the new FaveItem
 		final Ref<Song> songRef = Ref.create(Key.create(Song.class, songArtistID));
 		faveList.getList().add(newFaveItem);
-		final Activity activity = new Activity(currentUser.getUsername(), Transaction.FAVE_ADDED);
-		activity.setSong(songRef);
-		ofy().save().entities(activity, faveList).now();
+		ofy().save().entities(faveList).now();
 	}
 
 	public static void removeFaveItemForCurrentUser(final String hashtag, final int index) {
@@ -89,15 +85,13 @@ public class FaveList extends DatastoreObject{
 		if(currentUser == null) return;
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList == null) return;
-		final Activity activity = new Activity(currentUser.getUsername(), Transaction.FAVE_REMOVED);
-		//activity.setSong(faveList.getList().get(index).getSong());
 		// We must also delete the whyline if it exists
 	//	final Ref<Whyline> currentWhyline = faveList.getList().get(index).getWhyline();
 	//	if(currentWhyline != null) {
 	//		ofy().delete().entity(currentWhyline).now();
 	//	}
 		faveList.getList().remove(index);
-		ofy().save().entities(activity, faveList).now();
+		ofy().save().entities(faveList).now();
 	}
 
 	public static void rerankFaveItemForCurrentUser(final String hashtag, final int currentIndex, final int newIndex) {
@@ -109,13 +103,9 @@ public class FaveList extends DatastoreObject{
 				if(currentUser == null) return;
 				final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 				if(faveList == null) return;
-				final Activity activity = new Activity(currentUser.getUsername(), Transaction.FAVE_POSITION_CHANGED);
-		//		activity.setSong(faveList.getList().get(currentIndex).getSong());
-				activity.setPreviousLocation(currentIndex+1);
-				activity.setNewLocation(newIndex+1);
 				final FaveItem faveAtCurrIndex = faveList.getList().remove(currentIndex);
 				faveList.getList().add(newIndex, faveAtCurrIndex);
-				ofy().save().entities(activity, faveList).now();
+				ofy().save().entities(faveList).now();
 //			}
 //		});
 	}
