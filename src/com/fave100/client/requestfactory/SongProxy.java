@@ -7,7 +7,6 @@ import com.google.web.bindery.requestfactory.shared.ProxyFor;
 
 @ProxyFor(Song.class)
 public interface SongProxy extends EntityProxy, SongInterface {
-	String getId();
 	Integer getVersion();
 
 	int getResultCount();
