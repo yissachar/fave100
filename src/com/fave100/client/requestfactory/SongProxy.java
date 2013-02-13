@@ -10,8 +10,5 @@ public interface SongProxy extends EntityProxy, SongInterface {
 	String getId();
 	Integer getVersion();
 
-	String getWhyline();
-	int getWhylineScore();
-
 	int getResultCount();
 }

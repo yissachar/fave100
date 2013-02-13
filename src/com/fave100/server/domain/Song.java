@@ -16,13 +16,9 @@ import java.util.List;
 
 import com.fave100.shared.SongInterface;
 import com.google.appengine.api.rdbms.AppEngineDriver;
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
-import com.googlecode.objectify.annotation.OnLoad;
 
 @Entity
 public class Song extends DatastoreObject implements SongInterface {
@@ -38,8 +34,6 @@ public class Song extends DatastoreObject implements SongInterface {
 	private String title;
 	private String coverArtUrl;
 	private String releaseDate;
-	@IgnoreSave private String whyline;
-	@IgnoreSave private int whylineScore;
 	@IgnoreSave private int resultCount;
 
 	//TODO: Need to periodically update cache?
@@ -104,22 +98,6 @@ public class Song extends DatastoreObject implements SongInterface {
 
 	public void addScore(final int score) {
 		this.score += score;
-	}
-
-	@OnLoad
-	@SuppressWarnings("unused")
-	private void onLoad(final Objectify ofy) {
-		final List<Whyline> list =  ofy.load().type(Whyline.class)
-										.filter("song", Ref.create(Key.create(Song.class, getId())))
-										.order("score")
-										.limit(1)
-										.list();
-		if(list.size() > 0) {
-			whyline = list.get(0).getWhyline();
-		} else {
-			whyline = "";
-		}
-
 	}
 
 	public static String getYouTubeResults(final String song, final String artist) {
@@ -332,22 +310,6 @@ public class Song extends DatastoreObject implements SongInterface {
 
 	public void setCoverArtUrl(final String coverArtUrl) {
 		this.coverArtUrl = coverArtUrl;
-	}
-
-	public String getWhyline() {
-		return whyline;
-	}
-
-	public void setWhyline(final String whyline) {
-		this.whyline = whyline;
-	}
-
-	public int getWhylineScore() {
-		return whylineScore;
-	}
-
-	public void setWhylineScore(final int whylineScore) {
-		this.whylineScore = whylineScore;
 	}
 
 	@Override
