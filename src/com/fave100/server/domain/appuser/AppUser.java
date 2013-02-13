@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -34,12 +33,8 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
-import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.server.bcrypt.BCrypt;
-import com.fave100.server.domain.Activity;
-import com.fave100.server.domain.Activity.Transaction;
 import com.fave100.server.domain.DatastoreObject;
-import com.fave100.server.domain.Song;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.following.AlreadyFollowingException;
@@ -61,8 +56,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -529,131 +522,6 @@ public class AppUser extends DatastoreObject{
 	public static List<AppUser> getRandomUsers(final int num) {
 		// TODO: Should be more random than this
 		return ofy().load().type(AppUser.class).limit(num).list();
-	}
-
-	public static List<String> getFaveFeedForCurrentUser() throws NotLoggedInException {
-		final AppUser user = AppUser.getLoggedInAppUser();
-		if(user == null) throw new NotLoggedInException();
-
-		// Get all the users that the current user is following
-		Ref.create(Key.create(AppUser.class, user.getUsername()));
-		final List<Follower> followingList = ofy().load().type(Follower.class)
-				.filter("follower", Ref.create(Key.create(AppUser.class, user.getUsername()))).list();
-		final List<List<Activity>> rawActivityList = new ArrayList<List<Activity>>();
-		final Date twoDaysAgo = new Date();
-		twoDaysAgo.setTime(twoDaysAgo.getTime()-(1000*60*60*24*2));
-		// For each user that the current user is following, get their activity for past 2 days
-		for(final Follower following : followingList) {
-			rawActivityList.add(
-				ofy().load()
-				.type(Activity.class)
-				.filter("username", following.getFollowing().get().getUsername())
-				.filter("timestamp >", twoDaysAgo)
-				.order("-timestamp")
-				.list()
-			);
-		}
-
-		final ArrayList<String> faveFeed = new ArrayList<String>();
-
-		// We will bunch all activities less than a day apart
-		final int buncherTimeLimit = 1000*60*60*24;
-
-		// TODO: This is probably horribly inefficient but is a start
-		// TODO: Decide if this how we want to bunch activity or a different way
-		for(final List<Activity> activityList : rawActivityList) {
-
-			final List<Transaction> transactions = new ArrayList<Activity.Transaction>();
-			transactions.add(Transaction.FAVE_ADDED);
-			transactions.add(Transaction.FAVE_REMOVED);
-			transactions.add(Transaction.FAVE_POSITION_CHANGED);
-
-			// For each transaction type
-			for(final Transaction transaction : transactions) {
-				// Go through all activities of that type and bunch them
-				for(int i = 0; i < activityList.size(); i++) {
-					int counter = 0;
-					final Activity activity = activityList.get(i);
-					// Begin constructing the message
-					final String songName = activity.getSong().get().getTitle();
-					String message = "";
-					if(activity.getTransactionType().equals(transaction)) {
-						message += "<a href='#users;u="+activity.getUsername()+";tab="+UsersPresenter.ACTIVITY_TAB+"'>";
-						if(transaction.equals(Transaction.FAVE_ADDED)) {
-							message += activity.getUsername() + " added " + songName;
-						} else if(transaction.equals(Transaction.FAVE_REMOVED)) {
-							message += activity.getUsername() + " removed " + songName;
-						} else if(transaction.equals(Transaction.FAVE_POSITION_CHANGED)) {
-							message += activity.getUsername() + " changed the position of " + songName;
-						}
-					}
-					// Check for songs of the same activity type and within the time limit, so we can bunch them
-					if(activity.getTransactionType().equals(transaction)) {
-						boolean checkNextSong = true;
-						while(checkNextSong && i+1 < activityList.size()) {
-							final Activity nextActivity = activityList.get(i+1);
-							i++;
-							if(activity.getTransactionType().equals(transaction)
-								&& nextActivity.getTransactionType().equals(transaction)) {
-								// The two activities are of the same transaction type, check the time difference
-								checkNextSong = false;
-								if(activity.getTimestamp().getTime()-buncherTimeLimit < nextActivity.getTimestamp().getTime()) {
-									// The two activities are close enough in time - bunch them
-									counter++;
-									checkNextSong = true;
-								}
-							}
-						}
-					}
-					if(counter == 1) {
-						message += " and 1 other song";
-					} else if(counter > 1) {
-						message += " and "+counter+" other songs";
-					}
-					if(counter == 0 && transaction.equals(Transaction.FAVE_POSITION_CHANGED)
-						&& message != "") {
-						// Edge case: Sing song changed position, not bunched with other songs
-						message += " from "+activity.getPreviousLocation();
-						message += " to "+activity.getNewLocation();
-					}
-					if(message != "") {
-						message += "</a>";
-						faveFeed.add(message);
-					}
-				}
-			}
-		}
-		return faveFeed;
-	}
-
-	public static List<String> getActivityForUser(final String username) {
-		final List<Activity> activityList = ofy()
-											.load()
-											.type(Activity.class)
-											.filter("username", username)
-											.order("-timestamp")
-											.limit(50)
-											.list();
-		final ArrayList<String> faveFeed = new ArrayList<String>();
-		for(final Activity activity : activityList) {
-			final Song song = activity.getSong().get();
-			if(song != null) {
-				final String songName = song.getTitle();
-				String message = "";
-				if(activity.getTransactionType().equals(Transaction.FAVE_ADDED)) {
-					message += " Added "+songName;
-				} else if (activity.getTransactionType().equals(Transaction.FAVE_REMOVED)) {
-					message += " Removed "+songName;
-				} else if (activity.getTransactionType().equals(Transaction.FAVE_POSITION_CHANGED)) {
-					message += " Changed the position of "+songName+" from "+activity.getPreviousLocation();
-					message += " To "+activity.getNewLocation();
-				}
-				if(message != "") {
-					faveFeed.add(message);
-				}
-			}
-		}
-		return faveFeed;
 	}
 
 	public static void followUser(final String username)
