@@ -6,6 +6,5 @@ import com.google.web.bindery.requestfactory.shared.ProxyFor;
 
 @ProxyFor(FaveList.class)
 public interface FaveListProxy extends EntityProxy {
-	String getId();
 	Integer getVersion();
 }
