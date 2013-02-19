@@ -141,13 +141,42 @@ public class Song extends DatastoreObject implements SongInterface {
 		final List<Song> autocompleteList = new ArrayList<Song>();
 		try {
 			// Make connection
+			// TODO: Switch to Amazon RDS
 			DriverManager.registerDriver(new AppEngineDriver());
 			connection = DriverManager.getConnection("jdbc:google:rdbms://caseware.com:fave100:fave100dev/testgoogle");
+
 			// Make SQL query
-			String statement = "SELECT song, artist, mbid FROM autocomplete_search WHERE searchable_song ";
-			statement += "LIKE LOWER(?) ORDER BY rank DESC LIMIT 5";
+			//String statement = "SELECT song, artist, mbid FROM autocomplete_search WHERE searchable_song ";
+			//statement += "LIKE LOWER(?) ORDER BY rank DESC LIMIT 5";
+			// TODO: Any need to pass MBID down?
+			String statement = "";
+			statement += "select song, artist, mbid from (";
+			statement += 	"select song, artist, rank, mbid, match(searchable_song, searchable_artist)";
+			statement += 	" against (? in boolean mode) as rel from autocomplete_search";
+			statement +=	" where match(searchable_song, searchable_artist)";
+			statement +=	"against (? in boolean mode) order by rel desc limit 5";
+			statement += ") as results order by rank*rel desc;";
+
 			final PreparedStatement stmt = connection.prepareStatement(statement);
-			stmt.setString(1, songTerm+"%");
+			//stmt.setString(1, songTerm+"%");
+			String searchString = "";
+			final String[] splitString = songTerm.split("\\s+");
+			for(int i = 0; i < splitString.length; i++) {
+				final String searchWord = splitString[i];
+				// Words < length 3 are not indexed in database
+				if(searchWord.length() >= 3) {
+					searchString += "+"+searchWord;
+					// Add wildcard to last search word
+					if(i == splitString.length-1) {
+						searchString += "*";
+					} else {
+						searchString += " ";
+					}
+				}
+			}
+			stmt.setString(1, searchString);
+			stmt.setString(2, searchString);
+
 			final ResultSet results = stmt.executeQuery();
 			// Turn results into ArrayList
 			while(results.next()) {
