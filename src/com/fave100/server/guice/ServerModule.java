@@ -7,7 +7,6 @@ import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.FacebookID;
-import com.fave100.server.domain.appuser.Follower;
 import com.fave100.server.domain.appuser.GoogleID;
 import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
@@ -24,7 +23,6 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(GoogleID.class);
 		ObjectifyService.register(TwitterID.class);
 		ObjectifyService.register(FacebookID.class);
-		ObjectifyService.register(Follower.class);
 		ObjectifyService.register(FaveList.class);
 		ObjectifyService.register(Whyline.class);
 		ObjectifyService.register(APIKey.class);
