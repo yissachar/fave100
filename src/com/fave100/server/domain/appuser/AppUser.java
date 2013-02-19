@@ -37,8 +37,6 @@ import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Validator;
-import com.fave100.shared.exceptions.following.AlreadyFollowingException;
-import com.fave100.shared.exceptions.following.CannotFollowYourselfException;
 import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.GoogleIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.IncorrectLoginException;
@@ -522,25 +520,6 @@ public class AppUser extends DatastoreObject{
 	public static List<AppUser> getRandomUsers(final int num) {
 		// TODO: Should be more random than this
 		return ofy().load().type(AppUser.class).limit(num).list();
-	}
-
-	public static void followUser(final String username)
-			throws NotLoggedInException, AlreadyFollowingException, CannotFollowYourselfException {
-
-		final AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) throw new NotLoggedInException();
-		if(currentUser.username.equals(username)) throw new CannotFollowYourselfException();
-		if(ofy().load().type(Follower.class).id(currentUser.username+Follower.ID_SEPARATOR+username).get() != null) {
-			throw new AlreadyFollowingException();
-		}
-		final Follower follower = new Follower(currentUser.username, username);
-		ofy().save().entity(follower).now();
-	}
-
-	public static boolean checkFollowing(final String username) {
-		final AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) return false;
-		return ofy().load().type(Follower.class).id(currentUser.username+Follower.ID_SEPARATOR+username).get() != null;
 	}
 
 	public static String createBlobstoreUrl(final String successPath) {
