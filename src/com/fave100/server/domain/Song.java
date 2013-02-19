@@ -52,6 +52,10 @@ public class Song extends DatastoreObject implements SongInterface {
 		return ofy().load().type(Song.class).id(id).get();
 	}
 
+	public static String createSongId(final String song, final String artist) {
+		return song + Song.TOKEN_SEPARATOR + artist;
+	}
+
 	public static Song findSongByTitleAndArtist(final String songTitle,
 		final String artist) {
 
