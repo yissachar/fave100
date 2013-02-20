@@ -1,0 +1,17 @@
+<project>
+  <property name="sdk.dir" location="C:\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5" />
+
+  <import file="${sdk.dir}\config\user\ant-macros.xml" />
+
+  <target name="copyjars"
+      description="Copies the App Engine JARs to the WAR.">
+    <copy
+        todir="war/WEB-INF/lib"
+        flatten="true">
+      <fileset dir="${sdk.dir}/lib">
+        <include name="**/*.jar" />
+      </fileset>
+    </copy>
+  </target>
+
+</project>
