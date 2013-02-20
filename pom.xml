@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<!-- GWT-Maven archetype generated POM -->
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.fave100</groupId>
+	<artifactId>fave100</artifactId>
+	<packaging>war</packaging>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>gwt-maven-archetype-project</name>
+
+	<properties>
+		<!-- convenience to define GWT version in one place -->
+		<gwt.version>2.5.0</gwt.version>
+		<gwt-maven-plugin.version>2.5.0</gwt-maven-plugin.version>
+		<gwtp.version>0.6</gwtp.version>
+		<!-- tell the compiler we can use 1.5 -->
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>lucene-appengine-snapshots</id>
+			<name>Lucene App Engine Snapshots</name>
+			<url>http://repo.lucene-appengine.googlecode.com/hg/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>lucene-appengine-releases</id>
+			<name>Lucene App Engine Releases</name>
+			<url>http://repo.lucene-appengine.googlecode.com/hg/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- GWT code server dependencies <dependency> <groupId>com.google.gwt</groupId> 
+			<artifactId>gwt-servlet</artifactId> <version>${gwt.version}</version> </dependency> 
+			<dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-user</artifactId> 
+			<version>${gwt.version}</version> </dependency> <dependency> <groupId>com.google.gwt</groupId> 
+			<artifactId>gwt-dev</artifactId> <version>${gwt.version}</version> </dependency> -->
+		<dependency>
+			<groupId>com.google.gwt.inject</groupId>
+			<artifactId>gin</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>aopalliance</groupId>
+			<artifactId>aopalliance</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<!-- GWTP -->
+		<!-- MVP component -->
+		<dependency>
+			<groupId>com.gwtplatform</groupId>
+			<artifactId>gwtp-mvp-client</artifactId>
+			<version>${gwtp.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Dispatch component -->
+		<dependency>
+			<groupId>com.gwtplatform</groupId>
+			<artifactId>gwtp-dispatch-client</artifactId>
+			<version>${gwtp.version}</version>
+			<scope>provided</scope> <!-- Remove for GWTP 0.5.1 and earlier -->
+		</dependency>
+
+		<dependency>
+			<groupId>com.gwtplatform</groupId>
+			<artifactId>gwtp-dispatch-server-guice</artifactId>
+			<!-- Or, if you use spring: <artifactId>gwtp-dispatch-server-spring</artifactId> -->
+			<!-- For GWTP 0.5.1 and earlier: <artifactId>gwtp-dispatch-server</artifactId> -->
+			<version>${gwtp.version}</version>
+		</dependency>
+
+		<!-- Crawler component -->
+		<dependency>
+			<groupId>com.gwtplatform</groupId>
+			<artifactId>gwtp-crawler</artifactId>
+			<version>${gwtp.version}</version>
+		</dependency>
+
+		<!-- Annotation component -->
+		<dependency>
+			<groupId>com.gwtplatform</groupId>
+			<artifactId>gwtp-processors</artifactId>
+			<version>${gwtp.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.objectify</groupId>
+			<artifactId>objectify</artifactId>
+			<version>4.0b1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jpa_3.0_spec</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.gwtquery</groupId>
+			<artifactId>gwtquery</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.3.1.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.scribe</groupId>
+			<artifactId>scribe</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-core</artifactId>
+			<version>2.2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.web.bindery</groupId>
+			<artifactId>requestfactory-server</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-servlet</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+
+		<!-- lucene -->
+		<!-- Declare dependencies in this order -->
+		<dependency>
+			<groupId>com.googlecode.lucene.appengine</groupId>
+			<artifactId>lucene-appengine</artifactId>
+			<version>4.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+
+	</dependencies>
+	
+	<build>
+    <pluginManagement>
+      <plugins>
+        <!-- Copy dependencies to war/WEB-INF/lib for GAE proj compliance. -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>default-cli</id>
+              <goals>
+                <goal>copy-dependencies</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${basedir}/war/WEB-INF/lib/</outputDirectory>
+                <overWriteReleases>false</overWriteReleases>
+                <overWriteSnapshots>false</overWriteSnapshots>
+                <overWriteIfNewer>true</overWriteIfNewer>
+                <excludeArtifactIds>gwt-user,gwt-dev</excludeArtifactIds>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+</project>
