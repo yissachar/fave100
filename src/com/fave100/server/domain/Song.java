@@ -28,12 +28,10 @@ public class Song extends DatastoreObject implements SongInterface {
 	@IgnoreSave public static String YOUTUBE_API_KEY = "";
 
 	@Id private String id;
-	private long score = 0;
 	private String mbid;
 	private String artist;
-	private String title;
+	private String name;
 	private String coverArtUrl;
-	private String releaseDate;
 	@IgnoreSave private int resultCount;
 
 	//TODO: Need to periodically update cache?
@@ -41,11 +39,11 @@ public class Song extends DatastoreObject implements SongInterface {
 	@SuppressWarnings("unused")
 	private Song(){}
 
-	public Song(final String title, final String artist, final String mbid) {
-		this.title = title;
+	public Song(final String name, final String artist, final String mbid) {
+		this.name = name;
 		this.artist = artist;
 		this.mbid = mbid;
-		this.id = title + Song.TOKEN_SEPARATOR + artist;
+		this.id = name + Song.TOKEN_SEPARATOR + artist;
 	}
 
 	public static Song findSong(final String id) {
@@ -98,10 +96,6 @@ public class Song extends DatastoreObject implements SongInterface {
 		}
 
 		return song;
-	}
-
-	public void addScore(final int score) {
-		this.score += score;
 	}
 
 	public static String getYouTubeResults(final String song, final String artist) {
@@ -303,29 +297,12 @@ public class Song extends DatastoreObject implements SongInterface {
 	}
 
 	@Override
-	public String getTitle() {
-		return this.title;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setTitle(final String title) {
-		this.title = title;
-	}
-
-	@Override
-	public String getReleaseDate() {
-		return releaseDate;
-	}
-
-	public void setReleaseDate(final String releaseDate) {
-		this.releaseDate = releaseDate;
-	}
-
-	public long getScore() {
-		return score;
-	}
-
-	public void setScore(final long score) {
-		this.score = score;
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	public String getId() {

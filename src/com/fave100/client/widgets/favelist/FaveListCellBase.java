@@ -23,7 +23,7 @@ public abstract class FaveListCellBase extends AbstractCell<FaveItemProxy>{
 		if(object == null) return;
 
 		sb.appendHtmlConstant(getRank(context));
-		sb.appendHtmlConstant(getTitle(object));
+		sb.appendHtmlConstant(getName(object));
 		sb.appendHtmlConstant(getArtist(object));
 		//sb.appendHtmlConstant(getReleaseDate(object));
 		//sb.appendHtmlConstant(getImageThumb(object));
@@ -36,7 +36,7 @@ public abstract class FaveListCellBase extends AbstractCell<FaveItemProxy>{
 		return rank;
 	}
 
-	protected String getTitle(final FaveItemProxy object) {
+	protected String getName(final FaveItemProxy object) {
 		String songUrl = Window.Location.getPath();
 		songUrl += Window.Location.getQueryString()+"#"+NameTokens.song+";song=";
 		songUrl += URL.encodeQueryString(object.getSong());

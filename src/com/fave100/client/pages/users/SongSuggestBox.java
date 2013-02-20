@@ -93,10 +93,10 @@ public class SongSuggestBox extends SuggestBox {
 					final SongProxy entry = results.get(i);
 
 					final String suggestionEntry = ""
-							+ entry.getTitle()
+							+ entry.getName()
 							+ "</br><span class='artistName'>"
 							+ entry.getArtist() + "</span>";
-					String mapEntry = entry.getTitle();
+					String mapEntry = entry.getName();
 					// Use white space to sneak in duplicate song titles into
 					// the hashmap
 					while (itemSuggestionMap.get(mapEntry) != null) {

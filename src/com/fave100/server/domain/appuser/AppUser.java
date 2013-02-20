@@ -97,7 +97,7 @@ public class AppUser extends DatastoreObject{
 	public static AppUser findAppUserByGoogleId(final String googleID) {
 		final GoogleID gId = ofy().load().type(GoogleID.class).id(googleID).get();
 		if(gId != null) {
-			return ofy().load().type(AppUser.class).id(gId.getUsername()).get();
+			return ofy().load().ref(gId.getUser()).get();
 		} else {
 			return null;
 		}
@@ -106,7 +106,7 @@ public class AppUser extends DatastoreObject{
 	public static AppUser findAppUserByTwitterId(final long twitterID) {
 		final TwitterID tId = ofy().load().type(TwitterID.class).id(twitterID).get();
 		if(tId != null) {
-			return ofy().load().type(AppUser.class).id(tId.getUsername()).get();
+			return ofy().load().ref(tId.getUser()).get();
 		} else {
 			return null;
 		}
@@ -115,7 +115,7 @@ public class AppUser extends DatastoreObject{
 	public static AppUser findAppUserByFacebookId(final long facebookID) {
 		final FacebookID fId = ofy().load().type(FacebookID.class).id(facebookID).get();
 		if(fId != null) {
-			return ofy().load().type(AppUser.class).id(fId.getUsername()).get();
+			return ofy().load().ref(fId.getUser()).get();
 		} else {
 			return null;
 		}
@@ -391,7 +391,7 @@ public class AppUser extends DatastoreObject{
 						// Create the user's list
 						final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
 						// Create the GoogleID lookup
-						final GoogleID googleID = new GoogleID(user.getUserId(), username);
+						final GoogleID googleID = new GoogleID(user.getUserId(), appUser);
 						ofy().save().entities(appUser, googleID, faveList).now();
 						return loginWithGoogle();
 					}
@@ -436,7 +436,7 @@ public class AppUser extends DatastoreObject{
 						// Create the user's list
 						final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
 						// Create the TwitterID lookup
-						final TwitterID twitterID = new TwitterID(user.getId(), username);
+						final TwitterID twitterID = new TwitterID(user.getId(), appUser);
 						// TODO: Store tokens in database?
 						ofy().save().entities(appUser, twitterID, faveList).now();
 						RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
@@ -490,7 +490,7 @@ public class AppUser extends DatastoreObject{
 							// Create the user's list
 							final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
 							// Create the Facebook lookup
-							final FacebookID facebookID = new FacebookID(userFacebookId, username);
+							final FacebookID facebookID = new FacebookID(userFacebookId, appUser);
 							// TODO: Store oAuth tokens in database?
 							ofy().save().entities(appUser, facebookID, faveList).now();
 							return loginWithFacebook(code);
