@@ -16,7 +16,7 @@ public class PersonalFaveListCell extends FaveListCellBase{
 		if(object == null) return;
 
 		sb.appendHtmlConstant(getRank(context));
-		sb.appendHtmlConstant(getTitle(object));
+		sb.appendHtmlConstant(getName(object));
 		sb.appendHtmlConstant(getArtist(object));
 		//sb.appendHtmlConstant(getReleaseDate(object));
 

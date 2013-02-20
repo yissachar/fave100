@@ -146,7 +146,7 @@ public class SearchPresenter extends
 		final String id = song.getMbid();
 
 		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(
-				hashtag, song.getTitle(), song.getArtist());
+				hashtag, song.getName(), song.getArtist());
 
 		addReq.fire(new Receiver<Void>() {
 

@@ -2,27 +2,29 @@ package com.fave100.server.domain.appuser;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
 @Entity
 public class FacebookID {
-	
-	@Id private Long facebookID;
-	private String username;
-	
+
+	@Id private long facebookID;
+	private Ref<AppUser> user;
+
 	@SuppressWarnings("unused")
 	private FacebookID() {}
-	
-	public FacebookID(final Long facebookID, final String username) {
+
+	public FacebookID(final Long facebookID, final AppUser user) {
 		this.setFacebookID(facebookID);
-		this.setUsername(username);
+		this.setUser(Ref.create(Key.create(AppUser.class, user.getUsername())));
 	}
-	
+
 	public static FacebookID findFacebookID(final Long id) {
 		return ofy().load().type(FacebookID.class).id(id).get();
 	}
-	
+
 
 	public Long getFacebookID() {
 		return facebookID;
@@ -32,12 +34,12 @@ public class FacebookID {
 		this.facebookID = facebookID;
 	}
 
-	public String getUsername() {
-		return username;
+	public Ref<AppUser> getUser() {
+		return user;
 	}
 
-	public void setUsername(final String username) {
-		this.username = username;
+	public void setUser(final Ref<AppUser> user) {
+		this.user = user;
 	}
 
 }

@@ -9,9 +9,10 @@ public class APIKey {
 	@Id private String id;
 	private String key;
 	private String secret;
-	
+
+	@SuppressWarnings("unused")
 	private APIKey(){};
-	
+
 	public APIKey(final String id, final String key, final String secret) {
 		this.id = id;
 		this.key = key;
