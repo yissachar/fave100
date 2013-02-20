@@ -8,3 +8,4 @@ war/WEB-INF/lib/
 .settings/
 .factorypath
 target/
+.gwt/
