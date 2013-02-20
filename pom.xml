@@ -12,6 +12,7 @@
 	<properties>
 		<!-- convenience to define GWT version in one place -->
 		<gwt.version>2.5.0</gwt.version>
+		<appengine.version>1.7.5</appengine.version>
 		<gwt-maven-plugin.version>2.5.0</gwt-maven-plugin.version>
 		<gwtp.version>0.6</gwtp.version>
 		<!-- tell the compiler we can use 1.5 -->
@@ -40,11 +41,32 @@
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-1.0-sdk</artifactId>
+			<version>${appengine.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-labs</artifactId>
+			<version>${appengine.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.web.bindery</groupId>
+			<artifactId>requestfactory-apt</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>${gwt.version}</version>
+		</dependency>
 		<!-- GWT code server dependencies <dependency> <groupId>com.google.gwt</groupId> 
-			<artifactId>gwt-servlet</artifactId> <version>${gwt.version}</version> </dependency> 
-			<dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-user</artifactId> 
-			<version>${gwt.version}</version> </dependency> <dependency> <groupId>com.google.gwt</groupId> 
-			<artifactId>gwt-dev</artifactId> <version>${gwt.version}</version> </dependency> -->
+			<artifactId>gwt-user</artifactId> <version>${gwt.version}</version> </dependency> 
+			<dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-dev</artifactId> 
+			<version>${gwt.version}</version> </dependency> -->
 		<dependency>
 			<groupId>com.google.gwt.inject</groupId>
 			<artifactId>gin</artifactId>
@@ -150,7 +172,6 @@
 			<version>3.0</version>
 		</dependency>
 
-
 		<!-- lucene -->
 		<!-- Declare dependencies in this order -->
 		<dependency>
@@ -170,32 +191,57 @@
 		</dependency>
 
 	</dependencies>
-	
+
 	<build>
-    <pluginManagement>
-      <plugins>
-        <!-- Copy dependencies to war/WEB-INF/lib for GAE proj compliance. -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>default-cli</id>
-              <goals>
-                <goal>copy-dependencies</goal>
-              </goals>
-              <configuration>
-                <outputDirectory>${basedir}/war/WEB-INF/lib/</outputDirectory>
-                <overWriteReleases>false</overWriteReleases>
-                <overWriteSnapshots>false</overWriteSnapshots>
-                <overWriteIfNewer>true</overWriteIfNewer>
-                <excludeArtifactIds>gwt-user,gwt-dev</excludeArtifactIds>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
+		<pluginManagement>
+
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<configuration>
+						<webXml>${project.basedir}\war\WEB-INF\web.xml</webXml>
+					</configuration>
+				</plugin>
+
+				<!-- Copy dependencies to war/WEB-INF/lib for GAE proj compliance. -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.4.1</version>
+					<configuration>
+						<filesets>
+							<fileset>
+								<directory>${basedir}/war/WEB-INF/lib</directory>
+								<includes>
+									<include>**/*</include>
+								</includes>
+								<followSymlinks>false</followSymlinks>
+							</fileset>
+						</filesets>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>default-cli</id>
+							<goals>
+								<goal>copy-dependencies</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${basedir}/war/WEB-INF/lib/</outputDirectory>
+								<overWriteReleases>false</overWriteReleases>
+								<overWriteSnapshots>false</overWriteSnapshots>
+								<overWriteIfNewer>true</overWriteIfNewer>
+								<excludeArtifactIds>gwt-user,gwt-dev</excludeArtifactIds>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 </project>
