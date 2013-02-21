@@ -4,7 +4,7 @@ import com.fave100.client.Notification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveListRequest;
-import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -52,7 +52,7 @@ public class NonpersonalFaveListCell extends FaveListCellBase{
 			if(eventTarget.getClassName().contains("faveListAddButton")) {
 				// Favelist add button was clicked
 				final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-				final Request<Void> addFaveReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
+				final Request<Void> addFaveReq = faveListRequest.addFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG,
 						song.getSong(), song.getArtist());
 
 				addFaveReq.fire(new Receiver<Void>() {

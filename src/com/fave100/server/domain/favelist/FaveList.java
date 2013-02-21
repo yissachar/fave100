@@ -22,7 +22,6 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 public class FaveList extends DatastoreObject{
 
 	@IgnoreSave public static final String SEPERATOR_TOKEN = ":";
-	@IgnoreSave public static final String DEFAULT_HASHTAG = "fave100";
 	@IgnoreSave public static final int MAX_FAVES = 100;
 
 	@Id private String id;

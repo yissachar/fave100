@@ -9,7 +9,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -142,7 +142,7 @@ public class SearchPresenter extends
 		final FaveListRequest faveListRequest = requestFactory
 				.faveListRequest();
 
-		final String hashtag = FaveList.DEFAULT_HASHTAG;
+		final String hashtag = Constants.DEFAULT_HASHTAG;
 		final String id = song.getMbid();
 
 		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(

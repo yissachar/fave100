@@ -36,6 +36,7 @@ import twitter4j.auth.RequestToken;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.GoogleIdAlreadyExistsException;
@@ -340,7 +341,7 @@ public class AppUser extends DatastoreObject{
 							// Everything passes validation, create the user
 							final AppUser appUser = new AppUser(username, password, email);
 							// Create the user's list
-							final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+							final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
 							ofy().save().entities(appUser, faveList).now();
 							//RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 							//return appUser;
@@ -389,7 +390,7 @@ public class AppUser extends DatastoreObject{
 						appUser.setUsername(username);
 						appUser.setEmail(user.getEmail());
 						// Create the user's list
-						final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+						final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
 						// Create the GoogleID lookup
 						final GoogleID googleID = new GoogleID(user.getUserId(), appUser);
 						ofy().save().entities(appUser, googleID, faveList).now();
@@ -434,7 +435,7 @@ public class AppUser extends DatastoreObject{
 						appUser.setUsername(username);
 						// TODO: Do we need an email for twitter users?
 						// Create the user's list
-						final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+						final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
 						// Create the TwitterID lookup
 						final TwitterID twitterID = new TwitterID(user.getId(), appUser);
 						// TODO: Store tokens in database?
@@ -488,7 +489,7 @@ public class AppUser extends DatastoreObject{
 							appUser.setUsername(username);
 							// TODO: Do we need an email for facebook users?
 							// Create the user's list
-							final FaveList faveList = new FaveList(username, FaveList.DEFAULT_HASHTAG);
+							final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
 							// Create the Facebook lookup
 							final FacebookID facebookID = new FacebookID(userFacebookId, appUser);
 							// TODO: Store oAuth tokens in database?
