@@ -9,7 +9,7 @@ import com.fave100.client.Notification;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveListRequest;
-import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.shared.Constants;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CompositeCell;
 import com.google.gwt.cell.client.EditTextCell;
@@ -82,7 +82,7 @@ public class PersonalFaveList extends FaveListBase {
 						//cell.clearViewData(_cellList.getKeyProvider().getKey(object));
 						//_cellList.redraw();
 					} else {
-						final Request<Void> editWhyline = requestFactory.faveListRequest().editWhylineForCurrentUser(FaveList.DEFAULT_HASHTAG, clientFaveList.indexOf(object), value);
+						final Request<Void> editWhyline = requestFactory.faveListRequest().editWhylineForCurrentUser(Constants.DEFAULT_HASHTAG, clientFaveList.indexOf(object), value);
 						editWhyline.fire();
 					}
 				}
@@ -124,7 +124,7 @@ public class PersonalFaveList extends FaveListBase {
 				if(currentIndex != newIndex) {
 					// Don't bother doing anything if the indices are the same
 					final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-		    	  	final Request<Void> rankReq = faveListRequest.rerankFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, currentIndex, newIndex);
+		    	  	final Request<Void> rankReq = faveListRequest.rerankFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, currentIndex, newIndex);
 		    	  	rankReq.fire(new Receiver<Void>() {
 		    	  		@Override
 		    	  		public void onSuccess(final Void response) {
@@ -164,7 +164,7 @@ public class PersonalFaveList extends FaveListBase {
 					if(event.getType().equals("click")) {
 						// Delete button was clicked
 				    	final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-				    	final Request<Void> deleteReq = faveListRequest.removeFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG, context.getIndex());
+				    	final Request<Void> deleteReq = faveListRequest.removeFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, context.getIndex());
 				    	deleteReq.fire(new Receiver<Void>() {
 				    		@Override
 				    		public void onSuccess(final Void response) {
@@ -253,7 +253,7 @@ public class PersonalFaveList extends FaveListBase {
 
 		// Get the data from the datastore
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-		final Request<List<FaveItemProxy>> currentUserReq = faveListRequest.getFaveItemsForCurrentUser(FaveList.DEFAULT_HASHTAG);
+		final Request<List<FaveItemProxy>> currentUserReq = faveListRequest.getFaveItemsForCurrentUser(Constants.DEFAULT_HASHTAG);
 		currentUserReq.fire(new Receiver<List<FaveItemProxy>>() {
 			@Override
 			public void onSuccess(final List<FaveItemProxy> faveItems) {

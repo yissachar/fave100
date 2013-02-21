@@ -7,7 +7,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.requestfactory.AppUserProxy;
 import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
-import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.shared.Constants;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -42,7 +42,7 @@ public class UserThumbList extends Composite {
 		final ClientGinjector ginjector = GWT.create(ClientGinjector.class);
 		placeManager = ginjector.getPlaceManager();
 
-		final Request<List<FaveItemProxy>> faveListReq = requestFactory.faveListRequest().getFaveList(appUser.getUsername(), FaveList.DEFAULT_HASHTAG);
+		final Request<List<FaveItemProxy>> faveListReq = requestFactory.faveListRequest().getFaveList(appUser.getUsername(), Constants.DEFAULT_HASHTAG);
 		faveListReq.fire(new Receiver<List<FaveItemProxy>>() {
 			@Override
 			public void onSuccess(final List<FaveItemProxy> songs) {

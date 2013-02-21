@@ -8,7 +8,7 @@ import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.youtube.YouTubeSearchListJSON;
-import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -128,7 +128,7 @@ public class SongPresenter extends
 		final FaveListRequest faveListRequest = requestFactory
 				.faveListRequest();
 		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(
-				FaveList.DEFAULT_HASHTAG, songProxy.getName(),
+				Constants.DEFAULT_HASHTAG, songProxy.getName(),
 				songProxy.getArtist());
 
 		addReq.fire(new Receiver<Void>() {

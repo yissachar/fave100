@@ -13,7 +13,7 @@ import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -161,7 +161,7 @@ public class UsersPresenter extends
 		    });
 
 	    	// Update fave list
-			final Request<List<FaveItemProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, FaveList.DEFAULT_HASHTAG);
+			final Request<List<FaveItemProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, Constants.DEFAULT_HASHTAG);
 		    userFaveListReq.fire(new Receiver<List<FaveItemProxy>>() {
 		    	@Override
 		    	public void onSuccess(final List<FaveItemProxy> faveList) {
@@ -221,7 +221,7 @@ public class UsersPresenter extends
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
 
 		// Add the song as a FaveItem
-		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(FaveList.DEFAULT_HASHTAG,
+		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG,
 				faveItemMap.getName(), faveItemMap.getArtist());
 
 		addReq.fire(new Receiver<Void>() {
