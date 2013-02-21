@@ -1,8 +1,8 @@
 package com.fave100.client.pages.home;
 
-import com.fave100.client.requestfactory.AppUserProxy;
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
 import com.fave100.client.widgets.UserThumbList;
+import com.fave100.shared.requestfactory.AppUserProxy;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;

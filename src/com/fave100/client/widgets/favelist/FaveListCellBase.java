@@ -1,8 +1,8 @@
 package com.fave100.client.widgets.favelist;
 
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.FaveItemProxy;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;

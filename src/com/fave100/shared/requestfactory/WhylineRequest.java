@@ -1,4 +1,4 @@
-package com.fave100.client.requestfactory;
+package com.fave100.shared.requestfactory;
 
 import java.util.List;
 

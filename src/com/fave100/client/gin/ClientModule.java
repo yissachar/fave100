@@ -28,7 +28,7 @@ import com.fave100.client.pages.users.UsersView;
 import com.fave100.client.place.ClientPlaceManager;
 import com.fave100.client.place.DefaultPlace;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Provides;

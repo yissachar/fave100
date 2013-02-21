@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.dom.client.KeyCodeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;

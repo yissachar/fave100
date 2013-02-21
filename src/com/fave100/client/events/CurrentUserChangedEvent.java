@@ -1,7 +1,7 @@
 package com.fave100.client.events;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.requestfactory.AppUserProxy;
+import com.fave100.shared.requestfactory.AppUserProxy;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;

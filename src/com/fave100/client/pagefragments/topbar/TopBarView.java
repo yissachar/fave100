@@ -5,7 +5,7 @@ import com.fave100.client.pages.users.MusicSuggestionOracle;
 import com.fave100.client.pages.users.SongSuggestBox;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;

@@ -2,9 +2,9 @@ package com.fave100.client.widgets;
 
 import java.util.List;
 
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.SongProxy;
-import com.fave100.client.requestfactory.WhylineProxy;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.SongProxy;
+import com.fave100.shared.requestfactory.WhylineProxy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;

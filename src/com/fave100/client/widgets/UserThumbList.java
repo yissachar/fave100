@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.fave100.client.gin.ClientGinjector;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.requestfactory.AppUserProxy;
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.FaveItemProxy;
 import com.fave100.shared.Constants;
+import com.fave100.shared.requestfactory.AppUserProxy;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
