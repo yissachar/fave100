@@ -1,17 +1,21 @@
 <project>
-  <property name="sdk.dir" location="C:\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5" />
+	<property name="ae-sdk.dir" location="C:\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.7.5\appengine-java-sdk-1.7.5" />
+	<property name="gwt-sdk.dir" location="C:\eclipse\plugins\com.google.gwt.eclipse.sdkbundle_2.5.0\gwt-2.5.0" />
 
-  <import file="${sdk.dir}\config\user\ant-macros.xml" />
+	<import file="${ae-sdk.dir}\config\user\ant-macros.xml" />
 
-  <target name="copyjars"
-      description="Copies the App Engine JARs to the WAR.">
-    <copy
-        todir="war/WEB-INF/lib"
-        flatten="true">
-      <fileset dir="${sdk.dir}/lib">
-        <include name="**/*.jar" />
-      </fileset>
-    </copy>
-  </target>
+	<target name="copyjars" description="Copies the App Engine and GWT JARs to the WAR.">
+		<copy todir="war/WEB-INF/lib" flatten="true">
+			<fileset dir="${ae-sdk.dir}/lib/user">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${ae-sdk.dir}/lib/opt/user">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${gwt-sdk.dir}">
+				<include name="gwt-servlet.jar" />
+			</fileset>
+		</copy>
+	</target>
 
 </project>
