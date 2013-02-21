@@ -1,6 +1,6 @@
 package com.fave100.client.events;
 
-import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.shared.requestfactory.SongProxy;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;

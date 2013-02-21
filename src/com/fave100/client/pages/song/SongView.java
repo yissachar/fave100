@@ -1,11 +1,11 @@
 package com.fave100.client.pages.song;
 
 import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.WhylineWaterfall;
 import com.fave100.client.widgets.youtube.YouTubeSearchListJSON;
 import com.fave100.client.widgets.youtube.YouTubeWidget;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;

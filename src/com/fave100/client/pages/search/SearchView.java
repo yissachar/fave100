@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.fave100.client.events.ResultPageChangedEvent;
 import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.SongProxy;
 import com.fave100.client.widgets.SimplePager;
 import com.fave100.client.widgets.advancedsearch.SearchResultCell;
 import com.fave100.client.widgets.advancedsearch.SearchResultCellList;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;

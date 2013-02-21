@@ -5,7 +5,7 @@ import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.events.SongSelectedEvent;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.requestfactory.SongProxy;
+import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;

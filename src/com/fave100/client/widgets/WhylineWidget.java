@@ -1,6 +1,6 @@
 package com.fave100.client.widgets;
 
-import com.fave100.client.requestfactory.WhylineProxy;
+import com.fave100.shared.requestfactory.WhylineProxy;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Label;

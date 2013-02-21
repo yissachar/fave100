@@ -1,12 +1,12 @@
 package com.fave100.client.widgets.favelist;
 
 import com.fave100.client.Notification;
-import com.fave100.client.requestfactory.ApplicationRequestFactory;
-import com.fave100.client.requestfactory.FaveItemProxy;
-import com.fave100.client.requestfactory.FaveListRequest;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.FaveItemProxy;
+import com.fave100.shared.requestfactory.FaveListRequest;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
