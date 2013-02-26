@@ -19,26 +19,7 @@
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
-	<repositories>
-		<repository>
-			<id>lucene-appengine-snapshots</id>
-			<name>Lucene App Engine Snapshots</name>
-			<url>http://repo.lucene-appengine.googlecode.com/hg/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>lucene-appengine-releases</id>
-			<name>Lucene App Engine Releases</name>
-			<url>http://repo.lucene-appengine.googlecode.com/hg/releases</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-	</repositories>
+	</properties>	
 
 	<dependencies>
 		<dependency>
@@ -171,25 +152,7 @@
 			<artifactId>guice-servlet</artifactId>
 			<version>3.0</version>
 		</dependency>
-
-		<!-- lucene -->
-		<!-- Declare dependencies in this order -->
-		<dependency>
-			<groupId>com.googlecode.lucene.appengine</groupId>
-			<artifactId>lucene-appengine</artifactId>
-			<version>4.1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-core</artifactId>
-			<version>4.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-analyzers-common</artifactId>
-			<version>4.1.0</version>
-		</dependency>
-
+				
 	</dependencies>
 
 	<build>
