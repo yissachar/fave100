@@ -7,6 +7,12 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
+/**
+ * Allows lookup of an AppUser by their Google ID
+ * @author yissachar.radcliffe
+ *
+ */
+
 @Entity
 public class GoogleID {
 	@Id private String googleID;
