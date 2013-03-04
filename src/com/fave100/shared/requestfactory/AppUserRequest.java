@@ -24,7 +24,6 @@ public interface AppUserRequest extends RequestContext{
 
 	Request<AppUserProxy> loginWithTwitter(String oauth_verifier);
 	Request<String> getTwitterAuthUrl(String redirectUrl);
-	Request<Boolean> isTwitterUserLoggedIn(String oauth_verifier);
 	Request<AppUserProxy> createAppUserFromTwitterAccount(String username,
 			String oauth_verifier);
 
