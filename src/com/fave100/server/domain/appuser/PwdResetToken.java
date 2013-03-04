@@ -11,6 +11,12 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Load;
 
+/**
+ * A token that is emailed to an AppUser to allow them to reset their password
+ * @author yissachar.radcliffe
+ *
+ */
+
 @Entity
 public class PwdResetToken {
 	@Id private String token;
@@ -33,7 +39,6 @@ public class PwdResetToken {
 	}
 
 
-
 	/* Getters and setters */
 
 	public String getToken() {
@@ -52,13 +57,9 @@ public class PwdResetToken {
 		this.expiry = expiry;
 	}
 
-
-
 	public Ref<AppUser> getAppUser() {
 		return appUser;
 	}
-
-
 
 	public void setAppUser(final Ref<AppUser> appUser) {
 		this.appUser = appUser;

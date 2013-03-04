@@ -7,6 +7,12 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
+/**
+ * Allows lookup of an AppUser by their TwitterID
+ * @author yissachar.radcliffe
+ *
+ */
+
 @Entity
 public class TwitterID {
 
@@ -25,7 +31,7 @@ public class TwitterID {
 	}
 
 
-	// Getters and Setters
+	/* Getters and Setters */
 
 	public long getId() {
 		return id;

@@ -7,6 +7,11 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
+/**
+ * Allows lookup of an AppUser by their FacebookID
+ * @author yissachar.radcliffe
+ *
+ */
 @Entity
 public class FacebookID {
 
@@ -25,6 +30,8 @@ public class FacebookID {
 		return ofy().load().type(FacebookID.class).id(id).get();
 	}
 
+
+	/* Getters and Setters */
 
 	public Long getFacebookID() {
 		return facebookID;
