@@ -89,7 +89,7 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	public void setFormStatusMessage(final String message) {
 		formStatusMessage.setText(message);
 		formStatusMessage.setVisible(true);
-		$(formStatusMessage).fadeOut(2500, null);
+		$(formStatusMessage).fadeOut(2500);
 	}
 
 	@Override

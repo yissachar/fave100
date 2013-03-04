@@ -66,8 +66,6 @@ public class UsersPresenter extends
 	private final PlaceManager placeManager;
 	private final EventBus eventBus;
 	private boolean ownPage = false;
-	//private boolean following = false;
-	private String tab = UsersPresenter.FAVE_100_TAB;
 	private CurrentUser currentUser;
 
 	@Inject

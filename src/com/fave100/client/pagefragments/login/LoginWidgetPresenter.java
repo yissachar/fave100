@@ -1,6 +1,5 @@
 package com.fave100.client.pagefragments.login;
 
-import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pages.register.RegisterPresenter;
@@ -52,17 +51,15 @@ public class LoginWidgetPresenter extends
 	private EventBus 					eventBus;
 	private ApplicationRequestFactory	requestFactory;
 	private PlaceManager				placeManager;
-	private CurrentUser					currentUser;
 
 	@Inject
 	public LoginWidgetPresenter(final EventBus eventBus, final MyView view,
 			final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager, final CurrentUser currentUser) {
+			final PlaceManager placeManager) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
-		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 	}
 
