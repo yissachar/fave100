@@ -34,7 +34,8 @@ public interface AppUserRequest extends RequestContext{
 	Request<String> createBlobstoreUrl(String url);
 	Request<Void> setAvatarForCurrentUser(String avatar);
 	Request<String> getEmailForCurrentUser();
-	Request<Boolean> setProfileData(String email);
+	// TODO: Add back in when have time (see AppUser domain class)
+	//Request<Boolean> setProfileData(String email);
 	Request<Boolean> emailPasswordResetToken(String username, String emailAddress);
 	Request<Boolean> changePassword(String password, String token);
 }
