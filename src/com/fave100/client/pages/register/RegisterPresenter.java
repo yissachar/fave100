@@ -7,6 +7,7 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
+import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.GoogleIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.TwitterIdAlreadyExistsException;
@@ -211,6 +212,12 @@ public class RegisterPresenter extends
 	}
 
 	@Override
+	public void onReveal() {
+		super.onReveal();
+		getView().clearFields();
+	}
+
+	@Override
 	public void register(final String username, final String email,
 			final String password, final String passwordRepeat) {
 
@@ -220,7 +227,7 @@ public class RegisterPresenter extends
 			// Create a new user with the username and password entered
 			final Request<AppUserProxy> createAppUserReq = appUserRequest
 					.createAppUser(username, password, email);
-			getView().clearFields();
+
 			createAppUserReq.fire(new Receiver<AppUserProxy>() {
 				@Override
 				public void onSuccess(final AppUserProxy createdUser) {
@@ -238,8 +245,14 @@ public class RegisterPresenter extends
 					if (failure.getExceptionType().equals(
 							UsernameAlreadyExistsException.class.getName())) {
 						errorMsg = "A user with that name already exists";
+						getView().setNativeUsernameError(errorMsg);
+					} else if(failure.getExceptionType().equals(
+							EmailIDAlreadyExistsException.class.getName())) {
+						errorMsg = "A user with that email address is already registered";
+						getView().setEmailError(errorMsg);
+					} else {
+						getView().setNativeUsernameError(errorMsg);
 					}
-					getView().setNativeUsernameError(errorMsg);
 				}
 			});
 		}

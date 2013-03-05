@@ -5,7 +5,6 @@ import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
@@ -134,7 +133,8 @@ public class ProfilePresenter extends
 	public void saveProfileData(final String email) {
 		getView().clearErrors();
 
-		final String emailError = Validator.validateEmail(email);
+		// TODO: Add back in when have time (see AppUser domain class)
+		/*final String emailError = Validator.validateEmail(email);
 		if (emailError == null) {
 			final Request<Boolean> setProfileDataReq = requestFactory
 					.appUserRequest().setProfileData(email);
@@ -149,7 +149,7 @@ public class ProfilePresenter extends
 			});
 		} else {
 			getView().setEmailError(emailError);
-		}
+		}*/
 	}
 
 }

@@ -6,6 +6,7 @@ import com.fave100.server.domain.APIKey;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.appuser.FacebookID;
 import com.fave100.server.domain.appuser.GoogleID;
 import com.fave100.server.domain.appuser.PwdResetToken;
@@ -20,6 +21,7 @@ public class ServerModule extends HandlerModule {
 		// Must manually register all datastore entities
 		ObjectifyService.register(AppUser.class);
 		ObjectifyService.register(Song.class);
+		ObjectifyService.register(EmailID.class);
 		ObjectifyService.register(GoogleID.class);
 		ObjectifyService.register(TwitterID.class);
 		ObjectifyService.register(FacebookID.class);

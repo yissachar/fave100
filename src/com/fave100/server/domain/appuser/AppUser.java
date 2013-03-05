@@ -38,6 +38,7 @@ import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
+import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.GoogleIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.IncorrectLoginException;
@@ -79,6 +80,8 @@ public class AppUser extends DatastoreObject{
 
 	@Id private String username;
 	private String password;
+	// An email address stored directly with user for easy access
+	// Must be manually kept in sync with EmailID
 	private String email;
 	private String avatar;
 
@@ -332,9 +335,11 @@ public class AppUser extends DatastoreObject{
 	}
 
 	// TODO: Merge account creations to avoid duplication
-	public static AppUser createAppUser(final String username, final String password, final String email) throws UsernameAlreadyExistsException {
+	public static AppUser createAppUser(final String username, final String password, final String email)
+			throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
-		final String userExistsMsg = "A user with that name already exists";
+		final String userExistsMsg = "A user with that name is already registered";
+		final String emailExistsMsg = "A user with that email is already registered";
 		AppUser newAppUser = null;
 
 		try {
@@ -344,6 +349,9 @@ public class AppUser extends DatastoreObject{
 					if(ofy().load().type(AppUser.class).id(username).get() != null) {
 						// Username already exists
 						throw new RuntimeException(userExistsMsg);
+					} else if(ofy().load().type(EmailID.class).id(email).get() != null) {
+						// Email address already exists
+						throw new RuntimeException(emailExistsMsg);
 					} else {
 						if(Validator.validateUsername(username) == null
 							&& Validator.validatePassword(password) == null
@@ -353,7 +361,9 @@ public class AppUser extends DatastoreObject{
 							final AppUser appUser = new AppUser(username, password, email);
 							// Create the user's list
 							final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
-							ofy().save().entities(appUser, faveList).now();
+							// Store email address
+							final EmailID emailID = new EmailID(email, appUser);
+							ofy().save().entities(appUser, faveList, emailID).now();
 							// Automatically log in user
 							try {
 								return login(username, password);
@@ -369,6 +379,8 @@ public class AppUser extends DatastoreObject{
 		} catch (final RuntimeException e) {
 			if(e.getMessage().equals(userExistsMsg)) {
 				throw new UsernameAlreadyExistsException();
+			} else if(e.getMessage().equals(emailExistsMsg)) {
+				throw new EmailIDAlreadyExistsException();
 			}
 		}
 
@@ -575,13 +587,14 @@ public class AppUser extends DatastoreObject{
 		return currentUser.getEmail();
 	}
 
-	public static Boolean setProfileData(final String email) {
+	// TODO: Allow users to change their email address (within transaction)
+	/*public static Boolean setProfileData(final String email) {
 		final AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) return false;
 		currentUser.setEmail(email);
 		ofy().save().entity(currentUser).now();
 		return true;
-	}
+	}*/
 
 	// Emails user a password reset token if they forget their password
 	public static Boolean emailPasswordResetToken(final String username, final String emailAddress) {
