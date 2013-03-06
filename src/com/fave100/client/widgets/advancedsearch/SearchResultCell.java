@@ -44,7 +44,7 @@ public class SearchResultCell extends AbstractCell<SongProxy> {
 	@Override
 	public void render(final Context context, final SongProxy song,
 			final SafeHtmlBuilder builder) {
-		uiRenderer.render(builder, song.getName(), song.getArtist());
+		uiRenderer.render(builder, song.getSong(), song.getArtist());
 	}
 
 	@Override

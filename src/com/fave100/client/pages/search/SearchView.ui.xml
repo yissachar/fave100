@@ -58,11 +58,8 @@
 		<div class="content">
 			 <g:FormPanel ui:field="searchForm">				
 				<g:HTMLPanel>
-					<g:Label>Song</g:Label>
+					<g:Label>Search</g:Label>
 					<g:TextBox ui:field="songSearchBox" ui:styleName="{style.searchBox}"/>
-					<br/>
-					<g:Label>Artist</g:Label>
-					<g:TextBox ui:field="artistSearchBox" ui:styleName="{style.searchBox}"/>
 					<br/>			
 					<g:SubmitButton ui:field="searchButton" ui:styleName="{style.searchButton}">Search</g:SubmitButton>				
 					<g:Label ui:field="searchStatus" ui:styleName="{style.searchStatus}"/>

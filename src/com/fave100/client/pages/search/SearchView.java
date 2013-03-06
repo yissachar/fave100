@@ -40,8 +40,6 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements
 	@UiField
 	TextBox					songSearchBox;
 	@UiField
-	TextBox					artistSearchBox;
-	@UiField
 	Button					searchButton;
 	@UiField
 	Label					searchStatus;
@@ -68,8 +66,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements
 					@Override
 					public void onPageChanged(final ResultPageChangedEvent event) {
 						Window.scrollTo(0, 0);
-						getUiHandlers().showResults(songSearchBox.getValue(),
-								artistSearchBox.getValue());
+						getUiHandlers().showResults(songSearchBox.getValue());
 					}
 				});
 	}
@@ -94,8 +91,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements
 	@UiHandler("searchForm")
 	void onSearchFormSubmit(final SubmitEvent event) {
 		pager.setPageNumber(1);
-		getUiHandlers().showResults(songSearchBox.getValue(),
-				artistSearchBox.getValue());
+		getUiHandlers().showResults(songSearchBox.getValue());
 	}
 
 	@Override
@@ -124,7 +120,6 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements
 	@Override
 	public void resetView() {
 		songSearchBox.setValue("");
-		artistSearchBox.setValue("");
 		setResults(new ArrayList<SongProxy>());
 		searchStatus.setText("");
 	}
@@ -135,8 +130,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements
 	}
 
 	@Override
-	public void populateSearchFields(final String song, final String artist) {
+	public void populateSearchFields(final String song) {
 		songSearchBox.setValue(song);
-		artistSearchBox.setValue(artist);
 	}
 }

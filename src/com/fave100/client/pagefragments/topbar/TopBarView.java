@@ -49,7 +49,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	public TopBarView(final Binder binder,
 			final ApplicationRequestFactory requestFactory) {
 		final MusicSuggestionOracle suggestions = new MusicSuggestionOracle();
-		songSuggestBox = new SongSuggestBox(suggestions, requestFactory);
+		songSuggestBox = new SongSuggestBox(suggestions);
 		songSuggestBox.getElement().setAttribute("placeholder",
 				"Search songs...");
 		widget = binder.createAndBindUi(this);
