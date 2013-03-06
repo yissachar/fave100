@@ -1,8 +1,8 @@
 package com.fave100.shared;
 
 public interface SongInterface {
-	String getMbid();
+	String getId();
 	String getArtist();
-	String getName();
+	String getSong();
 	String getCoverArtUrl();
 }

@@ -12,10 +12,19 @@ import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveListRequest;
+import com.fave100.shared.requestfactory.SearchResultProxy;
 import com.fave100.shared.requestfactory.SongProxy;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.jsonp.client.JsonpRequestBuilder;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
@@ -39,7 +48,7 @@ public class SearchPresenter extends
 
 		void setResults(List<SongProxy> resultList);
 
-		void populateSearchFields(String song, String artist);
+		void populateSearchFields(String song);
 	}
 
 	@ProxyCodeSplit
@@ -74,66 +83,57 @@ public class SearchPresenter extends
 		return true;
 	}
 
+	public interface SearchResultFactory extends AutoBeanFactory {
+		AutoBean<SearchResultProxy> response();
+	}
+
 	@Override
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 
 		// Use parameters to determine what to search for
-		final String song = URL.decode(placeRequest.getParameter("song", ""));
-		final String artist = URL.decode(placeRequest
-				.getParameter("artist", ""));
-
-		// Populate the search field text
-		getView().populateSearchFields(song, artist);
-
-		// Show the page
-		getProxy().manualReveal(SearchPresenter.this);
+		final String searchTerm = URL.decode(placeRequest.getParameter("searchTerm", ""));
 
 		// TODO: need a global "loading" indicator
-
 		// Build the search request
-		final int offset = RESULTS_PER_PAGE * (getView().getPageNum() - 1);
-		Request<List<SongProxy>> searchReq;
-		if (!song.isEmpty()) {
-			if (!artist.isEmpty()) {
-				searchReq = requestFactory.songRequest().search(song, artist,
-						offset);
-			} else {
-				searchReq = requestFactory.songRequest().searchSong(song,
-						offset);
-			}
-		} else if (!artist.isEmpty()) {
-			searchReq = requestFactory.songRequest().searchArtist(artist,
-					offset);
-		} else {
-			// Song and artist blank, clear results
-			getView().setResults(null);
-			getView().setResultCount(0);
-			return;
-		}
+		final String url = Constants.SEARCH_URL+"searchTerm="+searchTerm+"&limit=25&page="+(getView().getPageNum() - 1);
+
+		// Clear any old results
+		getView().setResults(null);
+		getView().setResultCount(0);
 
 		// Search for the song
-		searchReq.fire(new Receiver<List<SongProxy>>() {
+		final AsyncCallback<JavaScriptObject> autocompleteReq = new AsyncCallback<JavaScriptObject>() {
 			@Override
-			public void onSuccess(final List<SongProxy> resultList) {
-				getView().setResults(resultList);
-				if (resultList.size() > 0) {
-					// Show song results
-					getView()
-							.setResultCount(resultList.get(0).getResultCount());
-				} else {
-					// No result, set count to 0
-					getView().setResultCount(0);
-				}
+			public void onFailure(final Throwable caught) {
+				//TODO: error catching
 			}
-		});
+
+			@Override
+			public void onSuccess(final JavaScriptObject jsObject) {
+				// Turn the resulting JavaScriptObject into an AutoBean
+				final JSONObject obj = new JSONObject(jsObject);
+				final SearchResultFactory factory = GWT.create(SearchResultFactory.class);
+				final AutoBean<SearchResultProxy> autoBean = AutoBeanCodex.decode(factory, SearchResultProxy.class, obj.toString());
+
+				getView().setResults(autoBean.as().getResults());
+				getView().setResultCount(autoBean.as().getTotal());
+
+				getView().populateSearchFields(searchTerm);
+
+				// Show page
+				getProxy().manualReveal(SearchPresenter.this);
+			}
+		};
+
+		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+		jsonp.requestObject(url, autocompleteReq);
 	}
 
 	@Override
-	public void showResults(final String songTerm, final String artistTerm) {
+	public void showResults(final String searchTerm) {
 		final PlaceRequest placeRequest = new PlaceRequest(NameTokens.search)
-			.with("song", songTerm)
-			.with("artist", artistTerm);
+			.with("searchTerm", searchTerm);
 		placeManager.revealPlace(placeRequest);
 	}
 
@@ -145,7 +145,7 @@ public class SearchPresenter extends
 		final String hashtag = Constants.DEFAULT_HASHTAG;
 
 		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(
-				hashtag, song.getName(), song.getArtist());
+				hashtag, song.getSong(), song.getArtist());
 
 		addReq.fire(new Receiver<Void>() {
 

@@ -58,7 +58,7 @@ public class FaveList extends DatastoreObject{
 		final Song song = Song.findSongByTitleAndArtist(songTitle, artist);
 		if(song == null) return;
 
-		final FaveItem newFaveItem = new FaveItem(song.getName(), song.getArtist());
+		final FaveItem newFaveItem = new FaveItem(song.getSong(), song.getArtist());
 
 		// Check if it is a unique song for this user
 		boolean unique = true;
