@@ -69,7 +69,12 @@ public class SongSuggestBox extends SuggestBox {
 	}
 
 	private void getAutocompleteList() {
-		if(this.getValue().isEmpty() || this.getValue().length() <= 2) return;
+		// Not enough letters to try an autocomplete, show nothing
+		if(this.getValue().isEmpty() || this.getValue().length() <= 2) {
+			suggestions.clearSuggestions();
+			showSuggestionList();
+			return;
+		}
 
 		final String url = Constants.SEARCH_URL+"searchTerm="+this.getValue()+"&limit=5";
 		final AsyncCallback<JavaScriptObject> autocompleteReq = new AsyncCallback<JavaScriptObject>() {
