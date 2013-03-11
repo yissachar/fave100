@@ -32,7 +32,7 @@ public class SimplePager extends Composite {
 	public SimplePager(final EventBus eventBus) {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.eventBus = eventBus;
-		setPageNumber(1);
+		setPageNumber(1, false);
 	}
 
 	@UiHandler("previousLink")
@@ -49,6 +49,10 @@ public class SimplePager extends Composite {
 	}
 
 	public void setPageNumber(final int number) {
+		setPageNumber(number, true);
+	}
+
+	public void setPageNumber(final int number, final boolean dispatch) {
 
 		final int lastPageNum = pageNumber;
 
@@ -60,7 +64,7 @@ public class SimplePager extends Composite {
 			pageNumber = number;
 		}
 
-		if(lastPageNum != pageNumber) {
+		if(lastPageNum != pageNumber && dispatch == true) {
 			eventBus.fireEvent(new ResultPageChangedEvent(pageNumber));
 		}
 
@@ -108,8 +112,8 @@ public class SimplePager extends Composite {
 	public void setMaxPageNumber(final int number) {
 		if(number <= 0) return;
 		maxPageNumber = number;
-		// Recall set page number to trigger the proper showing of next/previous
-		setPageNumber(pageNumber);
+		// Re-call set page number to trigger the proper showing of next/previous
+		setPageNumber(pageNumber, false);
 	}
 
 	private void createPageLink(final String pageNum) {
@@ -117,7 +121,6 @@ public class SimplePager extends Composite {
 		pageLink.setText(pageNum);
 		pageLinks.add(pageLink);
 		pageLink.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(final ClickEvent event) {
 				setPageNumber(Integer.parseInt(pageLink.getText()));

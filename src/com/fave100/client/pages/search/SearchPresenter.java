@@ -91,16 +91,21 @@ public class SearchPresenter extends
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 
+		// Clear any old results
+		getView().setResults(null);
+		getView().setResultCount(0);
+
 		// Use parameters to determine what to search for
 		final String searchTerm = URL.decode(placeRequest.getParameter("searchTerm", ""));
+		showResults(searchTerm);
+	}
+
+	@Override
+	public void showResults(final String searchTerm) {
 
 		// TODO: need a global "loading" indicator
 		// Build the search request
 		final String url = Constants.SEARCH_URL+"searchTerm="+searchTerm+"&limit=25&page="+(getView().getPageNum() - 1);
-
-		// Clear any old results
-		getView().setResults(null);
-		getView().setResultCount(0);
 
 		// Search for the song
 		final AsyncCallback<JavaScriptObject> autocompleteReq = new AsyncCallback<JavaScriptObject>() {
@@ -128,13 +133,6 @@ public class SearchPresenter extends
 
 		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
 		jsonp.requestObject(url, autocompleteReq);
-	}
-
-	@Override
-	public void showResults(final String searchTerm) {
-		final PlaceRequest placeRequest = new PlaceRequest(NameTokens.search)
-			.with("searchTerm", searchTerm);
-		placeManager.revealPlace(placeRequest);
 	}
 
 	@Override
