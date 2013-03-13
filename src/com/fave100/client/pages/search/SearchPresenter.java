@@ -97,7 +97,13 @@ public class SearchPresenter extends
 
 		// Use parameters to determine what to search for
 		final String searchTerm = URL.decode(placeRequest.getParameter("searchTerm", ""));
-		showResults(searchTerm);
+		if(searchTerm != null && !searchTerm.isEmpty()) {
+			showResults(searchTerm);
+		} else {
+			getView().resetView();
+			getProxy().manualReveal(SearchPresenter.this);
+		}
+
 	}
 
 	@Override

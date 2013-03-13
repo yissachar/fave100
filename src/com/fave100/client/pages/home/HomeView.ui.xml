@@ -8,6 +8,11 @@
 	ui:generateLocales='default'>
 
 	<ui:style>
+		.homeContainer {
+			position: relative;
+			margin: 0 auto;	
+		}
+		
 		.topBackground {
 			width: 100%;
 			position: absolute;
@@ -56,7 +61,7 @@
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
-	<g:HTMLPanel ui:styleName="container">
+	<g:HTMLPanel ui:styleName="{style.homeContainer}">
 		<div class="{style.topBackground}" />
 		<div class="content">
 			<g:HorizontalPanel styleName="{style.homePageContainer}">

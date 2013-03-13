@@ -9,25 +9,30 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 	
-	<ui:style>
+	<ui:style>			
+		.searchForm {
+			margin: 35px auto;
+		}
+		
 		.searchBox {
 			padding: 8px;
-			height: 30px;
-			width: 450px;
-			font-size: 1.5em;
+			height: 40px;
+			width: 85%;
 			color: #444;
-			margin-bottom: 10px;
+			margin: -5px;
 		}
 		
 		.searchButton {
-			font-size: 1.3em;
-			margin-top: 10px;
+			margin: 0px;
+			height: 40px;
+			border-radius: 0px;
+			font-size: 0.8em;
+			width: 15%;
 		}
 		
 		.iTunesResults{
 			padding: 0;
 			margin-top: 30px;
-			width: 700px;
 		}
 		.iTunesResults > div > div {
 			background: #FFF;
@@ -48,26 +53,35 @@
 			padding: 8px;
 			color: #444;
 		}
+		
+		.searchResults {
+			margin: 15px auto;
+		}
+		
 		.searchStatus{
 			margin-top: 10px;
 		}
+		
 	</ui:style>
 
-	<g:HTMLPanel ui:styleName="container">
+	<g:HTMLPanel ui:styleName="pageWrap">
 		<g:HTMLPanel ui:field="topBar"/>
-		<div class="content">
-			 <g:FormPanel ui:field="searchForm">				
-				<g:HTMLPanel>
-					<g:Label>Search</g:Label>
-					<g:TextBox ui:field="songSearchBox" ui:styleName="{style.searchBox}"/>
-					<br/>			
-					<g:SubmitButton ui:field="searchButton" ui:styleName="{style.searchButton}">Search</g:SubmitButton>				
-					<g:Label ui:field="searchStatus" ui:styleName="{style.searchStatus}"/>
-					<br/>
-				</g:HTMLPanel>
-			</g:FormPanel>
-			<c:CellList ui:field="iTunesResults" ui:styleName="{style.iTunesResults}"/>
-			<w:SimplePager ui:field="pager"/>
+		<div class="container">
+			<div class="content">
+				<div class="row">
+					<g:FormPanel ui:field="searchForm" ui:styleName="{style.searchForm} span_6">									
+						<g:HTMLPanel ui:styleName="">
+							<g:TextBox ui:field="songSearchBox" ui:styleName="{style.searchBox}"/>
+							<g:SubmitButton ui:field="searchButton" ui:styleName="{style.searchButton}">Search</g:SubmitButton>
+						</g:HTMLPanel>					
+					</g:FormPanel>
+				</div>
+				<div class="{style.searchResults} span_9">
+					<g:Label ui:field="searchStatus" ui:styleName="{style.searchStatus} row"/>				
+					<c:CellList ui:field="iTunesResults" ui:styleName="{style.iTunesResults}"/>
+					<w:SimplePager ui:field="pager"/>
+				</div>
+			</div>
 		</div>	
 		<pf:Footer/>		
 	</g:HTMLPanel>

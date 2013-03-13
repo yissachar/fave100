@@ -10,18 +10,19 @@
 		.topNavSticky {
 			background-color: #5eaae5;			
 			height: 50px;
-			border-bottom: 1px solid #555;
 			margin-bottom: 25px;
+			width: 1px;
 		}
+		
 		.topNav{
 			background-color: #5eaae5;			
 			height: 50px;
 			border-bottom: 1px solid #555;
 			margin-bottom: 25px;
 			position: fixed;
-			width: 100%;
 			top: 0;
-			z-index: 99999;
+			width: 100%;
+			z-index: 99998;
 		}
 		
 		.topNav > ul{
@@ -35,7 +36,8 @@
 			display: inline-block;			
 			height: 100%;
 			vertical-align: top;
-			cursor: pointer
+			cursor: pointer;
+			float: right;
 		}	
 		
 		.topNav li:hover {
@@ -107,25 +109,27 @@
 			 -->
 			<div class="{style.topNavSticky}"/>
 			<div class="{style.topNav}">
-				<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
-					<img class="{style.faveLogo}" src="img/Logo.png" alt="Fave100 logo"/>
-				</g:InlineHyperlink>
-				<g:HTMLPanel ui:field="songSearchContainer" ui:styleName="{style.songSearchContainer}">					
-					<g:SuggestBox ui:field="songSuggestBox"/>
-					<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}" styleName="{style.advancedSearchLink}">
-						Advanced search
-					</g:InlineHyperlink>		
-				</g:HTMLPanel>
-				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
-				<ul>
-					<li><span ui:field="greeting"/></li>
-					<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
-					<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
-					<li>
-						<g:InlineHyperlink ui:field="logInLogOutLink">Log in</g:InlineHyperlink>
-						<g:HTMLPanel ui:field="loginBox" styleName="{style.loginDropdown}"/>
-					</li>
-				</ul>
+				<div class="container">
+					<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
+						<img class="{style.faveLogo}" src="img/Logo.png" alt="Fave100 logo"/>
+					</g:InlineHyperlink>
+					<g:HTMLPanel ui:field="songSearchContainer" ui:styleName="{style.songSearchContainer}">					
+						<g:SuggestBox ui:field="songSuggestBox"/>
+						<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}" styleName="{style.advancedSearchLink}">
+							Advanced search
+						</g:InlineHyperlink>		
+					</g:HTMLPanel>
+					<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
+					<ul>						
+						<li>
+							<g:InlineHyperlink ui:field="logInLogOutLink">Log in</g:InlineHyperlink>
+							<g:HTMLPanel ui:field="loginBox" styleName="{style.loginDropdown}"/>
+						</li>
+						<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
+						<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
+						<li><span ui:field="greeting"/></li>
+					</ul>
+				</div>
 			</div>			
 	</g:HTMLPanel>
 </ui:UiBinder>

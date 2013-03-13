@@ -108,13 +108,17 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements
 
 	@Override
 	public void setResults(final List<SongProxy> resultList) {
-		if(resultList == null) {
+		if(resultList == null || resultList.size() == 0) {
 			iTunesResults.setRowCount(0);
+			iTunesResults.setVisible(false);
+			pager.setVisible(false);
 		} else {
 			iTunesResults.setRowData(resultList);
+			iTunesResults.setVisible(true);
+			pager.setVisible(true);
 		}
 		iTunesResults.setCellUiHandlers(getUiHandlers());
-		pager.setVisible(true);
+
 	}
 
 	@Override
