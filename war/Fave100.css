@@ -10,7 +10,7 @@ html{
 }
 
 body{
-	background-color: #EFEFEF;
+	background-color: #F9F9F9;
 	font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 	color: #454;
 	height: 100%;
@@ -104,17 +104,19 @@ footer {
 	padding-bottom: 15px;
 }
 
-.container{
+.pageWrap {
 	position: relative;
 	margin: 0 auto;	
 	height: auto !important;
 	min-height: 100%;
 }
 
+.container{
+	width: 1020px;
+}
+
 .content {
 	position: relative;
-	width: 960px;
-	margin: 0 auto;
 	padding-bottom: 5em;
 	overflow-y: hidden;
 }
@@ -156,32 +158,37 @@ footer {
 
 .gwt-SuggestBox {
 	width: 400px;
-	height: 20px;
-	border: 1px solid #777;
+	height: 40px;
+	border: 1px solid #444;
 	padding: 7px;
 	color: #AAA;
-	margin: 0 10px;	
+	margin: 0 10px;			
 }
 
-.gwt-SuggestBox:focus {
+.gwt-SuggestBox:hover {
 	color: #555;
 	border: 1px solid #000;
 }
 
+.gwt-SuggestBoxPopup {
+	z-index: 99999;
+	border: 1px solid #999;
+}
+
 .gwt-SuggestBoxPopup table{
-	border: 1px solid #777;
 	border-collapse: collapse;
-	box-shadow: 1px 2px 2px #888;
+	z-index: 99999;		
+	
 }
 
 .item{
 	margin: 0px auto;
 	background-color: #FFF;
 	font-size: 1.3em;
-	width: 401px;
+	width: 398px;
 	white-space: normal !important;
 	overflow: hidden;
-	padding: 7px;
+	padding: 7px;	
 }
 
 .item img{
@@ -380,7 +387,7 @@ footer {
 
 .loginDropdown {
 	z-index: 99999;
-	background: #EFEFEF;
+	background: #FFF;
 	border: 1px solid #555;
 	border-top: 0px solid #555;
 	padding: 15px;
@@ -419,4 +426,8 @@ footer {
 }
 .errorInput:not(:focus){
 	border: 1px solid #D54545; 
+}
+
+.invisiSpan {
+	visibility: hidden;
 }

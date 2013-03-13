@@ -13,7 +13,7 @@
 			font-weight: bold;
 		}
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel ui:styleName="row">
 		<g:Anchor ui:field="previousLink" ui:styleName="{style.previousLink}">Previous</g:Anchor>
 		<g:HTMLPanel ui:field="pageLinks" ui:styleName="{style.pageLinks}"/>
 		<g:Anchor ui:field="nextLink" ui:styleName="{style.nextLink}">Next</g:Anchor>		

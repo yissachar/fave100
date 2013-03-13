@@ -3,11 +3,15 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:style>
+		.result {
+			width: 100%;
+			height: 100%;
+		}
+		
 		.advancedSearchInfoContainer {
 			display: inline-block;
 			white-space: nowrap;
 			overflow: hidden;
-			max-width: 83%;
 		}
 		
 		.advancedSearchTrackName {			
@@ -23,9 +27,8 @@
 		
 		.advancedSearchAddButton {
 			font-size: 1.3em;
-			height: 30px;
+			height: 100%;
 			float: right;
-			margin-top: 10px;
 		}
 	
 	</ui:style>
@@ -33,9 +36,8 @@
 	<ui:with type="java.lang.String" field="songTitle"/>
 	<ui:with type="java.lang.String" field="artist"></ui:with>
 	
-	<div>
+	<div class="{style.result} row">
 		<span class="{style.advancedSearchTrackName}"><ui:text from="{songTitle}" /></span>
-		<br/>
 		<span class="{style.advancedSearchArtistName}"><ui:text from="{artist}" /></span>
 		<button class="{style.advancedSearchAddButton}" ui:field="advancedSearchAddButton">+</button>
 	</div>
