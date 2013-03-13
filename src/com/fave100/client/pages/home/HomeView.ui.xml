@@ -20,7 +20,6 @@
 		.homePageContainer {
 			margin: 0 auto;	
 			margin-top: 107px;
-			width: 960px;
 		}
 		
 		.userThumbListPanel {
@@ -59,26 +58,28 @@
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
 	<g:HTMLPanel ui:styleName="pageWrap">
 		<div class="{style.topBackground}" />
-		<div class="content">
-			<g:HorizontalPanel styleName="{style.homePageContainer}">
-				<g:HTMLPanel styleName="{style.userThumbListPanel}"
-					ui:field="userThumbListPanel" />
-				<g:VerticalPanel styleName="{style.CTApanel}">
-					<g:Image styleName="{style.logo}" url="img/Logo.png" />
-					<g:Label styleName="{style.tagLine}">Get your list on.</g:Label>
-					<g:Label styleName="{style.registerCTA}">What are your top songs of all-time?</g:Label>
-					<g:HorizontalPanel styleName="{style.buttonContainer}">
-						<g:InlineHyperlink styleName="button"
-							targetHistoryToken="{nameTokens.getRegister}">Register</g:InlineHyperlink>
-						<g:InlineHyperlink styleName="button"
-							targetHistoryToken="{nameTokens.getLogin}">Login</g:InlineHyperlink>
-					</g:HorizontalPanel>
-				</g:VerticalPanel>
-			</g:HorizontalPanel>
-			<!-- <g:HTMLPanel ui:field="faveFeed"/> <div class="faveListContainer"> 
-				<h2 class="itemHeader">The Fave100</h2> <wf:NonpersonalFaveList ui:field="masterFaveList"/> 
-				</div> -->
+		<div class="container">
+			<div class="content">
+				<g:HorizontalPanel styleName="{style.homePageContainer} row">
+					<g:HTMLPanel styleName="{style.userThumbListPanel}"
+						ui:field="userThumbListPanel"/>
+					<g:VerticalPanel styleName="{style.CTApanel}">
+						<g:Image styleName="{style.logo}" url="img/Logo.png" />
+						<g:Label styleName="{style.tagLine}">Get your list on.</g:Label>
+						<g:Label styleName="{style.registerCTA}">What are your top songs of all-time?</g:Label>
+						<g:HorizontalPanel styleName="{style.buttonContainer}">
+							<g:InlineHyperlink styleName="button"
+								targetHistoryToken="{nameTokens.getRegister}">Register</g:InlineHyperlink>
+							<g:InlineHyperlink styleName="button"
+								targetHistoryToken="{nameTokens.getLogin}">Login</g:InlineHyperlink>
+						</g:HorizontalPanel>
+					</g:VerticalPanel>
+				</g:HorizontalPanel>
+				<!-- <g:HTMLPanel ui:field="faveFeed"/> <div class="faveListContainer"> 
+					<h2 class="itemHeader">The Fave100</h2> <wf:NonpersonalFaveList ui:field="masterFaveList"/> 
+					</div> -->
+			</div>
+			<pf:Footer />
 		</div>
-		<pf:Footer />
 	</g:HTMLPanel>
 </ui:UiBinder>
