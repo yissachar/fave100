@@ -7,12 +7,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>
-		.homeContainer {
-			position: relative;
-			margin: 0 auto;	
-		}
-		
+	<ui:style>		
 		.topBackground {
 			width: 100%;
 			position: absolute;
@@ -23,7 +18,9 @@
 		}
 		
 		.homePageContainer {
+			margin: 0 auto;	
 			margin-top: 107px;
+			width: 960px;
 		}
 		
 		.userThumbListPanel {
@@ -52,7 +49,6 @@
 		
 		.buttonContainer a {
 			width: 130px;
-			height: 20px;
 			margin-right: 10px;
 			display: inline-block;
 			text-align: center;
@@ -61,7 +57,7 @@
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
-	<g:HTMLPanel ui:styleName="{style.homeContainer}">
+	<g:HTMLPanel ui:styleName="pageWrap">
 		<div class="{style.topBackground}" />
 		<div class="content">
 			<g:HorizontalPanel styleName="{style.homePageContainer}">
