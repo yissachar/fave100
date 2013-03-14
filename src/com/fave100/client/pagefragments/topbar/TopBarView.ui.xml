@@ -114,10 +114,7 @@
 						<img class="{style.faveLogo}" src="img/Logo.png" alt="Fave100 logo"/>
 					</g:InlineHyperlink>
 					<g:HTMLPanel ui:field="songSearchContainer" ui:styleName="{style.songSearchContainer}">					
-						<g:SuggestBox ui:field="songSuggestBox"/>
-						<g:InlineHyperlink ui:field="advancedSearchLink" targetHistoryToken="{nameTokens.getSearch}" styleName="{style.advancedSearchLink}">
-							Advanced search
-						</g:InlineHyperlink>		
+						<g:SuggestBox ui:field="songSuggestBox"/>								
 					</g:HTMLPanel>
 					<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
 					<ul>						

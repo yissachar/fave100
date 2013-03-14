@@ -59,43 +59,35 @@
 	</ui:style>
 	
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
-	<g:HTMLPanel ui:styleName="container">
+	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
-		<div class="content">
-		
-			<g:HTMLPanel ui:field="userProfile" styleName="{style.userProfile}">
-				<g:Image styleName="{style.avatar}" ui:field="avatar"/>
-				<div class="{style.nameContainer}">
-					<span class="{style.username}" ui:field="username"/>
-					<br/>
-					<span class="{style.dndLabel}">Drag and drop to rank</span>
-				</div>
-				<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">
-					<g:Button ui:field="twitterButton">
-						Share list on Twitter
-					</g:Button>
-					<br/>
-					<div class="fb-like" data-width="150"></div>					
+		<div class="container">
+			<div class="content">		
+				<g:HTMLPanel ui:field="userProfile" styleName="{style.userProfile}">
+					<g:Image styleName="{style.avatar}" ui:field="avatar"/>
+					<div class="{style.nameContainer}">
+						<span class="{style.username}" ui:field="username"/>
+						<br/>
+						<span class="{style.dndLabel}">Drag and drop to rank</span>
+					</div>
+					<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">
+						<g:Button ui:field="twitterButton">
+							Share list on Twitter
+						</g:Button>
+						<br/>
+						<div class="fb-like" data-width="150"></div>					
+					</g:HTMLPanel>	
+					<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
+						Edit Profile
+					</g:InlineHyperlink>
 				</g:HTMLPanel>
-				<!-- <div class="{style.influenceContainer}">
-					<span>Following:</span>
-					<br/>
-					<span>Followers:</span>
-				</div>
 				
-				<g:Button ui:field="followButton" styleName="{style.followButton}">Follow</g:Button>
-				 -->			
-				<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
-					Edit Profile
-				</g:InlineHyperlink>
-			</g:HTMLPanel>
-			
-			<!-- <g:HTMLPanel ui:field="faveFeed"/> -->
-			<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">				
-				<w:PersonalFaveList ui:field="personalFaveList"/>
-				<w:NonpersonalFaveList ui:field="userFaveList"/>								
-			</g:HTMLPanel>						
-			
+				<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">				
+					<w:PersonalFaveList ui:field="personalFaveList"/>
+					<w:NonpersonalFaveList ui:field="userFaveList"/>								
+				</g:HTMLPanel>						
+				
+			</div>
 		</div>
 		<pf:Footer/>
 	</g:HTMLPanel>

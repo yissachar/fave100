@@ -56,7 +56,7 @@
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
-	<g:HTMLPanel ui:styleName="pageWrap">
+	<g:HTMLPanel>
 		<div class="{style.topBackground}" />
 		<div class="container">
 			<div class="content">
@@ -78,8 +78,8 @@
 				<!-- <g:HTMLPanel ui:field="faveFeed"/> <div class="faveListContainer"> 
 					<h2 class="itemHeader">The Fave100</h2> <wf:NonpersonalFaveList ui:field="masterFaveList"/> 
 					</div> -->
-			</div>
-			<pf:Footer />
+			</div>			
 		</div>
+		<pf:Footer />
 	</g:HTMLPanel>
 </ui:UiBinder>

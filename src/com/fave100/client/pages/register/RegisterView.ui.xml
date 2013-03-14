@@ -9,9 +9,7 @@
 	
 	<ui:style>
 		.registerContainer{
-			display: block;
 			margin: 0px auto;
-			width: 800px;
 		}
 
 		.registerContainer h1 {
@@ -24,7 +22,23 @@
 		
 		.registerContainer a {
 			margin: 5px 0;
-			width: 250px;
+		}
+		
+		.registerForm {
+			background-color: #EEE;
+			border: 1px solid #AAA;
+			padding: 20px;
+			border-radius: 5px;
+		}
+		
+		.registerForm input {
+			float: right;
+			min-width: 60%;
+		}
+		
+		.field {
+			width: 100%;
+			margin-bottom: 10px;
 		}
 		
 		.statusMessage{
@@ -32,8 +46,21 @@
 			font-size: 0.75em;
 			margin-bottom: 5px;
 		}
+		
+		.registerButton {
+			margin-top: 15px;
+			width: 100%;
+			font-size: 1.1em;
+		}
+		
+		.thirdPartyLinks, .thirdPartyLinks a {
+			width: 100%;
+		}
+		
 		.orDivider{
 			padding: 50px;			
+			font-size: 2em;
+			text-align: center;
 		}
 		
 		.thirdPartyUsernamePrompt {
@@ -49,56 +76,72 @@
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
-	<g:HTMLPanel ui:styleName="container">
-		<div class="content">		    	
-			<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
-			    <h1>Fave100 Registration</h1>
-			    <g:FormPanel ui:field="registerForm">				
-					<g:HTMLPanel styleName="registerContainer">					
-						<g:Label>Username</g:Label>					
-						<g:TextBox ui:field="usernameField"/>
-						<span class="{style.statusMessage} error" ui:field="usernameStatusMessage"/>
-						<g:Label>Email</g:Label>					
-						<g:TextBox ui:field="emailField"/>
-						<span class="{style.statusMessage} error" ui:field="emailStatusMessage"/>
-						<g:Label>Password</g:Label>
-						<g:PasswordTextBox ui:field="passwordField" />
-						<g:Label>Confirm password</g:Label>
-						<g:PasswordTextBox ui:field="passwordRepeatField" />
-						<span class="{style.statusMessage} error" ui:field="passwordStatusMessage"/>
-						<g:SubmitButton ui:field="registerButton">Register</g:SubmitButton>					
-					</g:HTMLPanel>
-				</g:FormPanel>	
-				<div class="{style.orDivider}">or</div>				
-				<div class="registerContainer">			
-					<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton">
-						Register with Google
-					</g:Anchor>
-					<br/>
-					<g:Anchor styleName="zocial twitter" ui:field="registerWithTwitterButton">
-						Register with Twitter
-					</g:Anchor>
-					<br/>
-					<g:Anchor styleName="zocial facebook" ui:field="registerWithFacebookButton">
-						Register with Facebook
-					</g:Anchor>
-				</div>
-			</g:HTMLPanel>
-			
-			<g:HTMLPanel ui:field="thirdPartyUsernamePrompt" styleName="{style.thirdPartyUsernamePrompt}">
-				<div class="registerContainer {style.thirdPartyUsernamePrompt}">
-					<span>Please enter a username to complete the registration process</span>
-					<g:TextBox ui:field="thirdPartyUsernameField"/>
-					<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					
-					<g:Button ui:field="thirdPartyUsernameSubmitButton">Submit</g:Button>
-				</div>
-			</g:HTMLPanel>
-			
-			<p id="alreadyHaveAccountPrompt">
-			    Already have an account?
-			    <g:InlineHyperlink targetHistoryToken="{nameTokens.getLogin}">Log in</g:InlineHyperlink>
-			</p>
-		</div>		
+	<g:HTMLPanel>
+		<div class="container">
+			<div class="content">		    	
+				<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
+				    <h1 class="row">Fave100 Registration</h1>
+				    <div class="row">
+					    <g:FormPanel ui:field="registerForm" ui:styleName="col span_5">				
+							<g:HTMLPanel styleName="{style.registerForm}">	
+								<div class="{style.field}">				
+									<g:Label>Username</g:Label>					
+									<g:TextBox ui:field="usernameField"/>
+									<span class="{style.statusMessage} error" ui:field="usernameStatusMessage"/>
+								</div>
+								<div class="{style.field}">
+									<g:Label>Email</g:Label>					
+									<g:TextBox ui:field="emailField"/>
+									<span class="{style.statusMessage} error" ui:field="emailStatusMessage"/>
+								</div>
+								<div class="{style.field}">
+									<g:Label>Password</g:Label>
+									<g:PasswordTextBox ui:field="passwordField" />
+								</div>
+								<div class="{style.field}">
+									<g:Label>Confirm password</g:Label>
+									<g:PasswordTextBox ui:field="passwordRepeatField" />
+									<span class="{style.statusMessage} error" ui:field="passwordStatusMessage"/>
+								</div>
+								<g:SubmitButton ui:field="registerButton" ui:styleName="{style.registerButton}">
+									Register
+								</g:SubmitButton>					
+							</g:HTMLPanel>
+						</g:FormPanel>	
+						<div class="{style.orDivider} col span_2">or</div>				
+						<div class="{style.registerForm} col span_5">		
+							<div class="{style.thirdPartyLinks}">	
+								<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton">
+									Register with Google
+								</g:Anchor>
+								<br/>
+								<g:Anchor styleName="zocial twitter" ui:field="registerWithTwitterButton">
+									Register with Twitter
+								</g:Anchor>
+								<br/>
+								<g:Anchor styleName="zocial facebook" ui:field="registerWithFacebookButton">
+									Register with Facebook
+								</g:Anchor>
+							</div>
+						</div>
+					</div>
+				</g:HTMLPanel>
+				
+				<g:HTMLPanel ui:field="thirdPartyUsernamePrompt" styleName="{style.thirdPartyUsernamePrompt}">
+					<div class="registerContainer {style.thirdPartyUsernamePrompt}">
+						<span>Please enter a username to complete the registration process</span>
+						<g:TextBox ui:field="thirdPartyUsernameField"/>
+						<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					
+						<g:Button ui:field="thirdPartyUsernameSubmitButton">Submit</g:Button>
+					</div>
+				</g:HTMLPanel>
+				
+				<p id="alreadyHaveAccountPrompt">
+				    Already have an account?
+				    <g:InlineHyperlink targetHistoryToken="{nameTokens.getLogin}">Log in</g:InlineHyperlink>
+				</p>
+			</div>	
+		</div>
 		<pf:Footer/>
 	</g:HTMLPanel>
 </ui:UiBinder>
