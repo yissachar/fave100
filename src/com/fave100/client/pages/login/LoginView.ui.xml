@@ -6,20 +6,10 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>
-		.registerContainer {
-			display: block;
-			margin: 0px auto;
-			width: 800px;
-		}
-		
-		.registerContainer h1 {
+	<ui:style>		
+		.loginContainer h1 {
 			text-align: center;
-		}
-		
-		.registerContainer div {
-			float: left;
-		}
+		}		
 		
 		.loginStatusMessage {
 			display: block;
@@ -37,11 +27,11 @@
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
 	<g:HTMLPanel ui:styleName="container">
 		<div class="content">
-			<g:HTMLPanel styleName="{style.registerContainer}">
-				<h1>Fave100 Sign In</h1>
-				<g:HTMLPanel ui:field="loginContainer" />
+			<g:HTMLPanel styleName="{style.loginContainer}">
+				<h1 class="row">Fave100 Sign In</h1>
+				<g:HTMLPanel ui:field="loginContainer" ui:styleName="row" />
 			</g:HTMLPanel>
-			<p id="noAccountPrompt">
+			<p id="noAccountPrompt" class="row">
 				<g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}">
 					Don't have an account? Register
 				</g:InlineHyperlink>

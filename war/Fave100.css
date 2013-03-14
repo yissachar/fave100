@@ -42,7 +42,6 @@ h1{
 
 input, select{
 	padding: 4px;	
-	font-size: 1em;
 	border: 1px solid #AAA;
 }
 
@@ -53,8 +52,7 @@ input:focus, select:focus{
 	border-color: #5A9DE8;
 }
 
-button, .button{		
-	height: 35px;
+button, .button{	
 	background: #5cb7f7; /* Old browsers */
 	background: -moz-linear-gradient(top,  #5cb7f7 0%, #4897d9 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5cb7f7), color-stop(100%,#4897d9)); /* Chrome,Safari4+ */
@@ -104,15 +102,17 @@ footer {
 	padding-bottom: 15px;
 }
 
-.pageWrap {
+.container {
 	position: relative;
 	margin: 0 auto;	
 	height: auto !important;
 	min-height: 100%;
 }
 
-.container{
-	width: 1020px;
+@media ( min-width : 1020px ) {
+	.container {
+		width: 1020px;
+	}
 }
 
 .content {
@@ -184,7 +184,7 @@ footer {
 .item{
 	margin: 0px auto;
 	background-color: #FFF;
-	font-size: 1.3em;
+	font-size: 1em;
 	width: 398px;
 	white-space: normal !important;
 	overflow: hidden;
@@ -198,10 +198,11 @@ footer {
 
 .item-selected{
 	background-color: #5A9DE8;
+	color: #fff;
 }
 
 .artistName{
-	font-size: 0.6em;
+	font-size: 0.9em;
 	font-style: italic;
 }
 
@@ -300,9 +301,6 @@ footer {
 .faveListArtistName{
 	width: 32%;
 }
-/*.faveListReleaseDate{
-	width: 6%;
-}*/
 
 .faveListWhyline, .faveList div>span:nth-child(2){
 	display: inline-block;
@@ -348,39 +346,32 @@ footer {
 
 /* Login container */
 
-.loginDivider{
-	float: left;
-	padding-left: 1px;
-	background: #999;
-	height: 100px;
-	margin: 50px;
+.loginDivider {
+	display: none;
 }
 
-.fullLoginPage > div {
-	width: 800px;
-	display: block;
+.fullLoginPage .loginDivider{
+	display: inline-block;
+	padding: 50px;
+	font-size: 2em;
+	text-align: center;
 }
 
-.fullLoginPage .nativeLoginBox, .fullLoginPage .thirdPartyLoginBox, .registerContainer {
-	width: 300px;
-	float: left;
+
+.fullLoginPage .nativeLoginBox {
+	width: 100%;
+}
+
+.fullLoginPage .nativeLoginBox, .fullLoginPage .thirdPartyLoginBox {
 	background-color: #EEE;
 	border: 1px solid #AAA;
 	padding: 20px;
-	box-shadow: 1px 1px 5px #FFF inset
 	border-radius: 5px;
 }
-
-.fullLoginPage .thirdPartyLoginBox a {
-	margin: 0 auto;
-	display: block;
-	width: 250px;
-}
 		
-.fullLoginPage .nativeLoginBox input, .fullLoginPage .thirdPartyLoginBox input, .registerContainer input{
-	height: 23px;
-	width: 290px;
-	margin: 13px 0;	
+.fullLoginPage .nativeLoginBox input {
+	float: right;
+	min-width: 60%;	
 }
 
 /* Login dropdown */
@@ -402,10 +393,15 @@ footer {
 
 .loginDropdown input {
 	margin: 7px 0;
+	width: 100%;
 }
 
-.loginDropdown .nativeLoginBox, .loginDropdown .thirdPartyLoginBox {
+.loginDropdown .nativeLoginBox {
 	float: left;
+}
+
+.loginDropdown .thirdPartyLoginBox {
+	float: right;
 }
 
 .profileForm {

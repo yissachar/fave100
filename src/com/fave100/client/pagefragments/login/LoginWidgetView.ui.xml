@@ -6,6 +6,10 @@
 	ui:generateLocales='default'>
 
 	<ui:style>
+		.loginForm div {
+			float: left;
+		}
+		
 		.forgotPasswordLink {
 			display: block;
 			font-size: 0.8em;
@@ -13,34 +17,53 @@
 			margin-top: 5px;
 			margin-left: 5px;
 		}
+		
+		.field {
+			width: 100%;
+			margin-bottom: 10px;
+		}
+		
+		.loginButton {
+			width: 100%;			
+			font-size: 1.1em;
+		}
+		
+		.thirdPartyLinks, .thirdPartyLinks a {
+			margin: 5px 0;
+			width: 100%;
+		}
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
-	<g:HTMLPanel>
-		<g:FormPanel ui:field="loginForm">
-			<g:VerticalPanel styleName="nativeLoginBox">
-				<g:Label>Username</g:Label>
-				<g:TextBox ui:field="usernameInput" />
-				<g:Label>Password</g:Label>
-				<g:PasswordTextBox ui:field="passwordInput" />
-				<g:Label styleName="error" ui:field="loginStatusMessage" />
-				<g:HorizontalPanel>
-					<g:SubmitButton ui:field="loginButton">Sign In</g:SubmitButton>
-					<g:InlineHyperlink styleName="{style.forgotPasswordLink}"
-						targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
-				</g:HorizontalPanel>
-			</g:VerticalPanel>
+	<g:HTMLPanel ui:styleName="row">
+		<g:FormPanel ui:field="loginForm" ui:styleName="{style.loginForm} col span_5">
+			<g:HTMLPanel styleName="nativeLoginBox">
+				<div class="{style.field}">
+					<g:Label>Username</g:Label>
+					<g:TextBox ui:field="usernameInput" />
+				</div>
+				<div class="{style.field}">
+					<g:Label>Password</g:Label>
+					<g:PasswordTextBox ui:field="passwordInput" />
+					<g:Label styleName="error" ui:field="loginStatusMessage" />
+				</div>
+				<g:SubmitButton ui:field="loginButton" ui:styleName="{style.loginButton}">Sign In</g:SubmitButton>
+				<g:InlineHyperlink styleName="{style.forgotPasswordLink}"
+					targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
+			</g:HTMLPanel>
 		</g:FormPanel>
-		<div class="loginDivider" />
-		<div class="thirdPartyLoginBox">
-			<g:Anchor styleName="zocial googleplus" ui:field="signInWithGoogleButton">Sign in
-				with Google</g:Anchor>
-			<br />
-			<g:Anchor styleName="zocial twitter" ui:field="signInWithTwitterButton">Sign in with
-				Twitter</g:Anchor>
-			<br />
-			<g:Anchor styleName="zocial facebook" ui:field="signInWithFacebookButton">Sign in with
-				Facebook</g:Anchor>
+		<div class="loginDivider col span_2" >or</div>
+		<div class="thirdPartyLoginBox col span_5">
+			<div class="{style.thirdPartyLinks}">
+				<g:Anchor styleName="zocial googleplus" ui:field="signInWithGoogleButton">Sign in
+					with Google</g:Anchor>
+				<br />
+				<g:Anchor styleName="zocial twitter" ui:field="signInWithTwitterButton">Sign in with
+					Twitter</g:Anchor>
+				<br />
+				<g:Anchor styleName="zocial facebook" ui:field="signInWithFacebookButton">Sign in with
+					Facebook</g:Anchor>
+			</div>
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>
