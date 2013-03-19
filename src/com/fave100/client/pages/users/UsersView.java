@@ -10,6 +10,7 @@ import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -17,6 +18,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
+import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -29,20 +32,25 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public interface Binder extends UiBinder<Widget, UsersView> {
 	}
 
-	@UiField(provided = true) NonpersonalFaveList userFaveList;
-	@UiField(provided = true) PersonalFaveList personalFaveList;
-	@UiField HTMLPanel faveListContainer;
-	@UiField Button twitterButton;
-	@UiField HTMLPanel socialContainer;
-	@UiField InlineHyperlink editProfileButton;
-	//@UiField Button followButton;
-	@UiField Image avatar;
-	@UiField SpanElement username;
+	@UiField(provided = true) SuggestBox			songSuggestBox;
+	@UiField(provided = true) NonpersonalFaveList 	userFaveList;
+	@UiField(provided = true) PersonalFaveList 		personalFaveList;
+	@UiField HTMLPanel 								faveListContainer;
+	@UiField Button 								twitterButton;
+	@UiField HTMLPanel 								socialContainer;
+	@UiField InlineHyperlink 						editProfileButton;
+	//@UiField Button 								followButton;
+	@UiField Image 									avatar;
+	@UiField SpanElement 							username;
 
 	@Inject
 	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
 		userFaveList = new NonpersonalFaveList(requestFactory);
 		personalFaveList = new PersonalFaveList(requestFactory);
+		final MusicSuggestionOracle suggestions = new MusicSuggestionOracle();
+		songSuggestBox = new SongSuggestBox(suggestions);
+		songSuggestBox.getElement().setAttribute("placeholder",
+				"Search songs...");
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -75,6 +83,15 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiHandler("twitterButton")
 	void onTwitterButtonClicked(final ClickEvent event) {
 		getUiHandlers().shareTwitter();
+	}
+
+	@UiHandler("songSuggestBox")
+	void onItemSelected(final SelectionEvent<Suggestion> event) {
+		// Look up the selected song in the song map and add it to user list
+		getUiHandlers().songSelected(
+				((SongSuggestBox) songSuggestBox).getFromSuggestionMap(event
+						.getSelectedItem().getReplacementString()));
+		songSuggestBox.setValue("");
 	}
 
 	/*@UiHandler("followButton")

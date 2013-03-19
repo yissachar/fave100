@@ -157,17 +157,11 @@ footer {
 /* Suggest Box */
 
 .gwt-SuggestBox {
+	display: block;
 	width: 400px;
 	height: 40px;
-	border: 1px solid #444;
 	padding: 7px;
-	color: #AAA;
-	margin: 0 10px;			
-}
-
-.gwt-SuggestBox:hover {
-	color: #555;
-	border: 1px solid #000;
+	margin: 0 auto;			
 }
 
 .gwt-SuggestBoxPopup {
@@ -209,7 +203,6 @@ footer {
 /* Fave List */
 
 .faveListContainer{
-	float: right;
 }
 
 .faveList{		
