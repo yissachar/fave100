@@ -86,18 +86,9 @@ public class UsersPresenter extends
 	protected void onBind() {
 		super.onBind();
 		SongSelectedEvent.register(eventBus, new SongSelectedEvent.Handler() {
-
 			@Override
 			public void onSongSelected(final SongSelectedEvent event) {
-				//Window.alert("Song selected from User page: "+event.getSong().getTrackName());
-				final SongProxy song = event.getSong();
-				// If we are on Users page add the song, otherwise go to song page
-				if(isVisible()) {
-					addSong(song);
-					// TODO: If the user is not logged in should be following:
-					//placeManager.revealPlace(new PlaceRequest(NameTokens.song)
-					//.with("song", song.getTrackName()).with("artist", song.getArtistName()));
-				}
+				addSong(event.getSong());
 			}
 		});
 	}
