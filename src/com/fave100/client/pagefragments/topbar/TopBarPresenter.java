@@ -3,13 +3,10 @@ package com.fave100.client.pagefragments.topbar;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
-import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -64,15 +61,6 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 						setTopBar();
 					}
 				});
-
-		// On first page load or page refresh, check for an existing logged in user
-		final Request<AppUserProxy> request = requestFactory.appUserRequest().getLoggedInAppUser();
-		request.fire(new Receiver<AppUserProxy>() {
-			@Override
-			public void onSuccess(final AppUserProxy appUser) {
-				eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
-			}
-		});
 	}
 
 	@Override
