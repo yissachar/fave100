@@ -43,28 +43,27 @@ public class FaveList extends DatastoreObject{
 	}
 
 	// TODO: Do FaveList activities need to be transactional? If so, need to set AppUser as parent
-	public static void addFaveItemForCurrentUser(final String hashtag, final String songTitle,
-			final String artist)
+	public static void addFaveItemForCurrentUser(final String hashtag, final String songID)
 					throws NotLoggedInException, SongLimitReachedException, SongAlreadyInListException {
 
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) {
 			throw new NotLoggedInException();
 		}
+
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new SongLimitReachedException();
 
-		// Get the song from datastore or create it
-		final Song song = Song.findSongByTitleAndArtist(songTitle, artist);
+		// Get the song from Lucene lookup
+		final Song song = Song.findSong(songID);
 		if(song == null) return;
 
-		final FaveItem newFaveItem = new FaveItem(song.getSong(), song.getArtist());
+		final FaveItem newFaveItem = new FaveItem(song.getSong(), song.getArtist(), song.getId());
 
 		// Check if it is a unique song for this user
 		boolean unique = true;
 		for(final FaveItem faveItem : faveList.getList()) {
-			if(faveItem.getSong().equals(newFaveItem.getSong())
-					&& faveItem.getArtist().equals(newFaveItem.getArtist())) {
+			if(faveItem.getSongID().equals(newFaveItem.getSongID())) {
 				unique = false;
 			}
 		}
@@ -121,8 +120,7 @@ public class FaveList extends DatastoreObject{
 		final Ref<Whyline> currentWhyline = faveItem.getWhylineRef();
 		if(currentWhyline == null) {
 			// Create a new Whyline entity
-			final String songId = Song.createSongId(faveItem.getSong(), faveItem.getArtist());
-			final Whyline whylineEntity = new Whyline(whyline, songId, currentUser.getUsername());
+			final Whyline whylineEntity = new Whyline(whyline, faveItem.getSongID(), currentUser.getUsername());
 			ofy().save().entity(whylineEntity).now();
 			faveItem.setWhylineRef(Ref.create(whylineEntity));
 		} else {

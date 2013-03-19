@@ -79,36 +79,36 @@ public class SongPresenter extends
 		super.prepareFromRequest(placeRequest);
 
 		// Use parameters to determine what to reveal on page
-		final String song = URL.decode(placeRequest.getParameter("song", ""));
-		final String artist = URL.decode(placeRequest
-				.getParameter("artist", ""));
-		if (song.isEmpty() || artist.isEmpty()) {
+		final String id = URL.decode(placeRequest.getParameter("id", ""));
+		if (id.isEmpty()) {
 			// Malformed request, send the user away
 			placeManager.revealDefaultPlace();
 		} else {
 			// Load the song from the datastore
 			final Request<SongProxy> getSongReq = requestFactory.songRequest()
-					.findSongByTitleAndArtist(song, artist);
+					.findSong(id);
 			getSongReq.fire(new Receiver<SongProxy>() {
 				@Override
 				public void onSuccess(final SongProxy song) {
 					songProxy = song;
 					getView().setSongInfo(song);
+
+					// Get any YouTube videos
+					final Request<String> getYoutubeReq = requestFactory.songRequest()
+							.getYouTubeResults(song.getSong(), song.getArtist());
+					getYoutubeReq.fire(new Receiver<String>() {
+						@Override
+						public void onSuccess(final String json) {
+							final YouTubeSearchListJSON youTubeResults = JsonUtils
+									.safeEval(json);
+							getView().setYouTubeVideos(youTubeResults);
+						}
+					});
+
 					getProxy().manualReveal(SongPresenter.this);
 				}
 			});
 
-			// Get any YouTube videos
-			final Request<String> getYoutubeReq = requestFactory.songRequest()
-					.getYouTubeResults(song, artist);
-			getYoutubeReq.fire(new Receiver<String>() {
-				@Override
-				public void onSuccess(final String json) {
-					final YouTubeSearchListJSON youTubeResults = JsonUtils
-							.safeEval(json);
-					getView().setYouTubeVideos(youTubeResults);
-				}
-			});
 		}
 	}
 
@@ -128,8 +128,7 @@ public class SongPresenter extends
 		final FaveListRequest faveListRequest = requestFactory
 				.faveListRequest();
 		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(
-				Constants.DEFAULT_HASHTAG, songProxy.getSong(),
-				songProxy.getArtist());
+				Constants.DEFAULT_HASHTAG, songProxy.getId());
 
 		addReq.fire(new Receiver<Void>() {
 			@Override

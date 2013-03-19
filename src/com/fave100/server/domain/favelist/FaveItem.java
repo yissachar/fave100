@@ -14,15 +14,18 @@ public class FaveItem {
 
 	private String song;
 	private String artist;
+	// Not used, but need it just in case we ever need the backlink
+	private String songID;
 	private String whyline = "";
 	private Ref<Whyline> whylineRef;
 
 	@SuppressWarnings("unused")
 	private FaveItem() {}
 
-	public FaveItem(final String song, final String artist) {
+	public FaveItem(final String song, final String artist, final String songID) {
 		this.setSong(song);
 		this.setArtist(artist);
+		this.setSongID(songID);
 	}
 
 	/* Getters and Setters */
@@ -57,6 +60,14 @@ public class FaveItem {
 
 	public void setWhylineRef(final Ref<Whyline> whylineRef) {
 		this.whylineRef = whylineRef;
+	}
+
+	public String getSongID() {
+		return songID;
+	}
+
+	public void setSongID(final String songID) {
+		this.songID = songID;
 	}
 
 }

@@ -53,7 +53,7 @@ public class NonpersonalFaveListCell extends FaveListCellBase{
 				// Favelist add button was clicked
 				final FaveListRequest faveListRequest = requestFactory.faveListRequest();
 				final Request<Void> addFaveReq = faveListRequest.addFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG,
-						song.getSong(), song.getArtist());
+						song.getSongID());
 
 				addFaveReq.fire(new Receiver<Void>() {
 					@Override

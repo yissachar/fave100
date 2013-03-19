@@ -91,8 +91,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		} else {
 			// Otherwise, redirect to the song page
 			placeManager.revealPlace(new PlaceRequest(NameTokens.song).with(
-					"song", song.getSong()).with("artist",
-					song.getArtist()));
+					"id", song.getId()));
 		}
 	}
 }
