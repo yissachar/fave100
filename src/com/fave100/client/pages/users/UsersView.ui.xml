@@ -46,18 +46,12 @@
 				
 		.followButton {
 			font-size: 1em;
-			float: right;
-			margin-top: 25px;
-			margin-right: 20px;
+			color: #FFF;
 		}
 		
 		.username {
 			font-size: 2.3em;
 			vertical-align: top;
-		}
-		
-		.dndLabel {
-			font-size: 0.8em;
 		}
 		
 		.faveListArea {
@@ -80,11 +74,10 @@
 						<div class="{style.nameContainer}">
 							<span class="{style.username}" ui:field="username"/>
 							<br/>
-							<span class="{style.dndLabel}">Drag and drop to rank</span>
-						</div>							
-						<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
-							Edit Profile
-						</g:InlineHyperlink>
+							<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
+								Edit Profile
+							</g:InlineHyperlink>
+						</div>				
 					</g:HTMLPanel>
 					
 					<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">
