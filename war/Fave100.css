@@ -209,7 +209,7 @@ footer {
 /* Fave List */
 
 .faveListContainer{
-	width: 700px;		
+	float: right;
 }
 
 .faveList{		
@@ -221,6 +221,10 @@ footer {
 	border-top: 0px;
 	background-color: #FFF;	
 	padding: 5px;
+}
+
+.faveList > div:first-child {	
+	border-top: 1px solid #555;
 }
 
 .faveList a{
