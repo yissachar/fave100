@@ -319,9 +319,16 @@ footer {
 
 .draggedFaveListItem{
 	position: absolute;
-	width: 74.5%;
+	width: 100%;
 	box-shadow: 1px 1px 3px 2px #999;
 }
+
+@media ( min-width : 768px ) {
+	.draggedFaveListItem {
+		width: 74.5%;
+	}	
+}
+
 .unselectable, .draggedFaveListItem{	
   	-moz-user-select: none;
   	-khtml-user-select: none;
