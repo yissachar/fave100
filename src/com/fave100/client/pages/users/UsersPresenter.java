@@ -246,10 +246,16 @@ public class UsersPresenter extends
 		final String url = "http://twitter.com/share?text=Check out my Fave100 songs: "+Window.Location.getHref();
 		Window.open(url, "_blank", "");
 	}
+
+	@Override
+	public void songSelected(final SongProxy song) {
+		eventBus.fireEvent(new SongSelectedEvent(song));
+	}
 }
 
 
 interface UsersUiHandlers extends UiHandlers{
 	//void follow();
 	void shareTwitter();
+	void songSelected(SongProxy song);
 }

@@ -56,8 +56,16 @@
 			vertical-align: top;
 		}
 		
-		.advancedSearchLink, .dndLabel {
+		.dndLabel {
 			font-size: 0.8em;
+		}
+		
+		.faveListArea {
+			float: right;
+		}
+		
+		.songSearchContainer {
+			margin-bottom: 20px;
 		}
 	</ui:style>
 	
@@ -88,10 +96,15 @@
 					</g:HTMLPanel>
 				</g:HTMLPanel>
 				
-				<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer col span_9">				
-					<w:PersonalFaveList ui:field="personalFaveList"/>
-					<w:NonpersonalFaveList ui:field="userFaveList"/>								
-				</g:HTMLPanel>						
+				<g:HTMLPanel ui:styleName="{style.faveListArea} col span_9">
+					<g:HTMLPanel ui:field="songSearchContainer" ui:styleName="{style.songSearchContainer}">					
+						<g:SuggestBox ui:field="songSuggestBox"/>								
+					</g:HTMLPanel>
+					<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">				
+						<w:PersonalFaveList ui:field="personalFaveList"/>
+						<w:NonpersonalFaveList ui:field="userFaveList"/>								
+					</g:HTMLPanel>						
+				</g:HTMLPanel>
 				
 			</div>
 		</div>

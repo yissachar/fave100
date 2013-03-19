@@ -86,15 +86,6 @@
 		
 		.faveLogo {		
 			float: left;	
-		}		
-		
-		.songSearchContainer {
-			float: left;
-			margin: 5px 50px;
-		}
-		
-		.advancedSearchLink {
-			font-size: 0.8em;
 		}
 		
 		@external loginDropdown;		
@@ -113,10 +104,7 @@
 				<div class="container">
 					<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
 						<img class="{style.faveLogo}" src="img/Logo.png" alt="Fave100 logo"/>
-					</g:InlineHyperlink>
-					<g:HTMLPanel ui:field="songSearchContainer" ui:styleName="{style.songSearchContainer}">					
-						<g:SuggestBox ui:field="songSuggestBox"/>								
-					</g:HTMLPanel>
+					</g:InlineHyperlink>					
 					<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
 					<ul>						
 						<li>
