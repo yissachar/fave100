@@ -4,7 +4,6 @@ import com.fave100.client.Notification;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -24,18 +23,11 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	public interface Binder extends UiBinder<Widget, TopBarView> {
 	}
 
-	@UiField
-	InlineHyperlink	logInLogOutLink;
-	@UiField
-	Label			notification;
-	@UiField
-	SpanElement		greeting;
-	@UiField
-	Anchor			myFave100Link;
-	@UiField
-	InlineHyperlink	registerLink;
-	@UiField
-	HTMLPanel		loginBox;
+	@UiField InlineHyperlink	logInLogOutLink;
+	@UiField Label				notification;
+	@UiField Anchor				greeting;
+	@UiField InlineHyperlink	registerLink;
+	@UiField HTMLPanel			loginBox;
 
 	@Inject
 	public TopBarView(final Binder binder,
@@ -64,9 +56,9 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 
 	@Override
 	public void setLoggedIn(final String username) {
-		greeting.setInnerHTML(username);
-		myFave100Link.setVisible(true);
-		myFave100Link.setHref(Window.Location.getPath()
+		greeting.setText(username);
+		greeting.setVisible(true);
+		greeting.setHref(Window.Location.getPath()
 				+ Window.Location.getQueryString() + "#"
 				+ NameTokens.getUsers() + ";" + UsersPresenter.USER_PARAM + "="
 				+ username);
@@ -78,8 +70,8 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 
 	@Override
 	public void setLoggedOut() {
-		greeting.setInnerHTML("");
-		myFave100Link.setVisible(false);
+		greeting.setText("");
+		greeting.setVisible(false);
 		registerLink.setVisible(true);
 		logInLogOutLink.setText("Log in");
 		logInLogOutLink.setTargetHistoryToken(NameTokens.login);

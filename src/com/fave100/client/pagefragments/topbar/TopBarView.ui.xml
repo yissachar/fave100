@@ -112,8 +112,7 @@
 							<g:HTMLPanel ui:field="loginBox" styleName="{style.loginDropdown}"/>
 						</li>
 						<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
-						<li><g:Anchor ui:field="myFave100Link">My Fave100</g:Anchor></li>
-						<li><span ui:field="greeting"/></li>
+						<li><g:Anchor ui:field="greeting"></g:Anchor></li>
 					</ul>
 				</div>
 			</div>			
