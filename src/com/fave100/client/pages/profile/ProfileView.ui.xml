@@ -24,22 +24,24 @@
 		}
 	</ui:style>
 	
-	<g:HTMLPanel ui:styleName="container">
+	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="topBar"/>
-		<div class="content">
-			<h2 class="{style.pageTitle}">Profile</h2>			
-			<g:FormPanel method="POST" encoding="multipart/form-data" ui:field="profileForm">
-				<g:HTMLPanel styleName="registerContainer profileForm">
-					<g:Label>Email</g:Label>					
-					<g:TextBox  ui:field="emailInput"/>
-					<g:Label styleName="error inputStatusMessage" ui:field="emailStatusMessage"/>
-					<g:Label>Avatar</g:Label>
-					<g:Image ui:field="avatarImg" ui:styleName="{style.avatarImg}"/>
-					<g:FileUpload name="avatar" />
-					<g:SubmitButton>Save</g:SubmitButton>
-					<g:Label ui:field="formStatusMessage" ui:styleName="{style.formStatusMessage}"/>
-				</g:HTMLPanel>
-			</g:FormPanel>
+		<div class="container">
+			<div class="content">
+				<h2 class="{style.pageTitle}">Profile</h2>			
+				<g:FormPanel method="POST" encoding="multipart/form-data" ui:field="profileForm">
+					<g:HTMLPanel styleName="registerContainer profileForm">
+						<g:Label>Email</g:Label>					
+						<g:TextBox  ui:field="emailInput"/>
+						<g:Label styleName="error inputStatusMessage" ui:field="emailStatusMessage"/>
+						<g:Label>Avatar</g:Label>
+						<g:Image ui:field="avatarImg" ui:styleName="{style.avatarImg}"/>
+						<g:FileUpload name="avatar" />
+						<g:SubmitButton>Save</g:SubmitButton>
+						<g:Label ui:field="formStatusMessage" ui:styleName="{style.formStatusMessage}"/>
+					</g:HTMLPanel>
+				</g:FormPanel>
+			</div>
 		</div>
 		<pf:Footer/>
 	</g:HTMLPanel>
