@@ -8,6 +8,6 @@ import com.google.web.bindery.requestfactory.shared.Service;
 @Service(Song.class)
 public interface SongRequest extends RequestContext {
 
-	Request<SongProxy> findSongByTitleAndArtist(String title, String artist);
+	Request<SongProxy> findSong(String id);
 	Request<String> getYouTubeResults(String song, String artist);
 }

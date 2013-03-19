@@ -220,7 +220,7 @@ public class UsersPresenter extends
 
 		// Add the song as a FaveItem
 		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG,
-				faveItemMap.getSong(), faveItemMap.getArtist());
+				faveItemMap.getId());
 
 		addReq.fire(new Receiver<Void>() {
 			@Override

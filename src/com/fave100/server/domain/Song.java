@@ -1,23 +1,27 @@
 package com.fave100.server.domain;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import com.fave100.shared.SongInterface;
-import com.google.appengine.api.rdbms.AppEngineDriver;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 
+/**
+ * Represents a Song that users can add to their lists. This Song will not
+ * actually be persisted directly in the datastore. Instead we will lookup a
+ * Song from Lucene API and then store a denormalized embedded FaveItem
+ * representing the Song.
+ *
+ * @author yissachar.radcliffe
+ *
+ */
 @Entity
 public class Song extends DatastoreObject implements SongInterface {
 
@@ -37,59 +41,34 @@ public class Song extends DatastoreObject implements SongInterface {
 	public Song(final String name, final String artist, final String id) {
 		this.song = name;
 		this.artist = artist;
-		this.id = name + Song.TOKEN_SEPARATOR + artist;
+		this.id = id;
 	}
 
 	public static Song findSong(final String id) {
-		return ofy().load().type(Song.class).id(id).get();
-	}
+		try {//TODO: Use real Jelastic URL
+			final String lookupUrl = "http://localhost:8080/fave100/lookup?id="+id;
+		    final URL url = new URL(lookupUrl);
+		    final URLConnection conn = url.openConnection();
+		    final BufferedReader in = new BufferedReader(new InputStreamReader(
+	    		conn.getInputStream(), "UTF-8"));
 
-	public static String createSongId(final String song, final String artist) {
-		return song + Song.TOKEN_SEPARATOR + artist;
-	}
+			String inputLine;
+			String content = "";
 
-	public static Song findSongByTitleAndArtist(final String songTitle,
-		final String artist) {
-
-		// Try to find the song
-		final String id = songTitle + Song.TOKEN_SEPARATOR + artist;
-		Song song = ofy().load().type(Song.class).id(id).get();
-		if(song != null) {
-			return song;
-		} else {
-			// Look up the song in the SQL database and add to AppEngine datastore
-			Connection connection = null;
-			try {
-				// Make connection
-				DriverManager.registerDriver(new AppEngineDriver());
-				connection = DriverManager.getConnection("jdbc:google:rdbms://caseware.com:fave100:fave100dev/testgoogle");
-				// Make SQL query
-				String statement = "SELECT song, artist, mbid, youtube_id FROM autocomplete_search WHERE ";
-				statement += "searchable_song = LOWER(?) AND song = (?) AND artist = (?) LIMIT 1";
-				final PreparedStatement stmt = connection.prepareStatement(statement);
-				stmt.setString(1, songTitle);
-				stmt.setString(2, songTitle);
-				stmt.setString(3, artist);
-				final ResultSet results = stmt.executeQuery();
-				// Turn results into Song and save
-				if(results.next()) {
-					song = new Song(results.getString("song"), results.getString("artist"), results.getString("mbid"));
-				    ofy().save().entity(song).now();
-				}
-				stmt.close();
-			} catch (final SQLException ignore) {
-			} finally {
-				if (connection != null) {
-					try {
-
-						connection.close();
-					} catch (final SQLException ignore) {
-					}
-				}
+			while ((inputLine = in.readLine()) != null) {
+			    content += inputLine;
 			}
-		}
+			in.close();
 
-		return song;
+			final JsonParser parser = new JsonParser();
+		    final JsonElement jsonElement = parser.parse(content);
+		    final JsonObject jsonSong = jsonElement.getAsJsonObject();
+		    final Song song = new Song(jsonSong.get("song").getAsString(), jsonSong.get("artist").getAsString(), id);
+		    return song;
+		} catch (final Exception e) {
+			// TODO: Catch error
+		}
+		return null;
 	}
 
 	public static String getYouTubeResults(final String song, final String artist) {

@@ -149,7 +149,7 @@ public class SearchPresenter extends
 		final String hashtag = Constants.DEFAULT_HASHTAG;
 
 		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(
-				hashtag, song.getSong(), song.getArtist());
+				hashtag, song.getId());
 
 		addReq.fire(new Receiver<Void>() {
 
