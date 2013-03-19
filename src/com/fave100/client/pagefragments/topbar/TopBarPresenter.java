@@ -3,15 +3,18 @@ package com.fave100.client.pagefragments.topbar;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
+import com.fave100.shared.requestfactory.AppUserProxy;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 /**
@@ -35,15 +38,16 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	@Inject
 	private LoginWidgetPresenter						loginBox;
 	private EventBus									eventBus;
-	private PlaceManager								placeManager;
+	private	ApplicationRequestFactory					requestFactory;
 	private CurrentUser									currentUser;
 
 	@Inject
 	public TopBarPresenter(final EventBus eventBus, final MyView view,
-			final PlaceManager placeManager, final CurrentUser currentUser) {
+			final ApplicationRequestFactory requestFactory,
+			final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
-		this.placeManager = placeManager;
+		this.requestFactory = requestFactory;
 		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 	}
@@ -60,6 +64,15 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 						setTopBar();
 					}
 				});
+
+		// On first page load or page refresh, check for an existing logged in user
+		final Request<AppUserProxy> request = requestFactory.appUserRequest().getLoggedInAppUser();
+		request.fire(new Receiver<AppUserProxy>() {
+			@Override
+			public void onSuccess(final AppUserProxy appUser) {
+				eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
+			}
+		});
 	}
 
 	@Override
