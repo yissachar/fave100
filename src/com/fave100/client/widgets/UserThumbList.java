@@ -61,8 +61,7 @@ public class UserThumbList extends Composite {
 		songRank.setText(Integer.toString(random+1));
 		songTitle.setText(song.getSong());
 		final PlaceRequest placeRequest = new PlaceRequest(NameTokens.song)
-											.with("song", song.getSong())
-											.with("artist", song.getArtist());
+											.with("id", song.getSongID());
 		songTitle.setTargetHistoryToken(placeManager.buildHistoryToken(placeRequest));
 	}
 
