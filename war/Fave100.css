@@ -61,12 +61,14 @@ button, .button{
 	background: -ms-linear-gradient(top,  #5cb7f7 0%,#4897d9 100%); /* IE10+ */
 	background: linear-gradient(to bottom,  #5cb7f7 0%,#4897d9 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5cb7f7', endColorstr='#4897d9',GradientType=0 ); /* IE6-9 */		
-	font-size: 1.2em;
+	font-size: 0.9em;
 	border-radius: 3px;
 	color: #FFF;
 	border: 1px solid #2575AE;
 	box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset;
 	padding: 6px;
+	text-transform: uppercase;
+	text-shadow: #777 0 1px 0;
 }
 
 button:hover, .button:hover{
