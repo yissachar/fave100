@@ -156,52 +156,6 @@ footer {
 	margin: 13px 0;
 }
 
-/* Suggest Box */
-
-.gwt-SuggestBox {
-	display: block;
-	width: 400px;
-	height: 40px;
-	padding: 7px;
-	margin: 0 auto;			
-}
-
-.gwt-SuggestBoxPopup {
-	z-index: 99999;
-	border: 1px solid #999;
-}
-
-.gwt-SuggestBoxPopup table{
-	border-collapse: collapse;
-	z-index: 99999;		
-	
-}
-
-.item{
-	margin: 0px auto;
-	background-color: #FFF;
-	font-size: 1em;
-	width: 398px;
-	white-space: normal !important;
-	overflow: hidden;
-	padding: 7px;	
-}
-
-.item img{
-	float: left;
-	margin-right: 9px;
-}
-
-.item-selected{
-	background-color: #5A9DE8;
-	color: #fff;
-}
-
-.artistName{
-	font-size: 0.9em;
-	font-style: italic;
-}
-
 /* Fave List */
 
 .faveListContainer{

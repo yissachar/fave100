@@ -90,8 +90,8 @@
 				</g:HTMLPanel>
 				
 				<g:HTMLPanel ui:styleName="{style.faveListArea} col span_9">
-					<g:HTMLPanel ui:field="songSearchContainer" ui:styleName="{style.songSearchContainer}">					
-						<g:SuggestBox ui:field="songSuggestBox"/>								
+					<g:HTMLPanel ui:field="songSearchContainer" ui:styleName="{style.songSearchContainer}">			
+						<g:HTMLPanel ui:field="songAutocomplete"/>								
 					</g:HTMLPanel>
 					<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">				
 						<w:PersonalFaveList ui:field="personalFaveList"/>
