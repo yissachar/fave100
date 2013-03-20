@@ -212,14 +212,14 @@ footer {
 }
 
 .faveList > div{
-	border: 1px solid #555;
+	border: 1px solid #888;
 	border-top: 0px;
 	background-color: #FFF;	
 	padding: 5px;
 }
 
 .faveList > div:first-child {	
-	border-top: 1px solid #555;
+	border-top: 1px solid #888;
 }
 
 .faveList a{
@@ -232,7 +232,7 @@ footer {
 }
 
 .faveList thead{
-	border: 1px solid #000;
+	border: 1px solid #888;
 }
 
 .faveList input{
