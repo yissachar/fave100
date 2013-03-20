@@ -35,6 +35,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
+import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
+import com.fave100.client.pagefragments.autocomplete.SongAutocompleteView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -83,6 +85,10 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(PasswordResetPresenter.class,
 				PasswordResetPresenter.MyView.class, PasswordResetView.class,
 				PasswordResetPresenter.MyProxy.class);
+
+		bindSingletonPresenterWidget(SongAutocompletePresenter.class,
+				SongAutocompletePresenter.MyView.class,
+				SongAutocompleteView.class);
 	}
 
 	@Provides

@@ -5,6 +5,7 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
 import com.fave100.client.events.SongSelectedEvent;
+import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
@@ -55,18 +56,21 @@ public class UsersPresenter extends
 
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> FAVE_FEED_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
 
 	public static final String FAVE_100_TAB = "fave100";
 	public static final String ACTIVITY_TAB = "activity";
 	public static final String USER_PARAM = "u";
 
-	private int currentRequestProgress = 0;
-	private String requestedUsername;
+	private int 							currentRequestProgress = 0;
+	private String 							requestedUsername;
 	private final ApplicationRequestFactory requestFactory;
-	private final PlaceManager placeManager;
-	private final EventBus eventBus;
-	private boolean ownPage = false;
-	private CurrentUser currentUser;
+	private final PlaceManager 				placeManager;
+	private final EventBus 					eventBus;
+	private boolean 						ownPage = false;
+	private CurrentUser 					currentUser;
+	@Inject SongAutocompletePresenter 		songAutocomplete;
 
 	@Inject
 	public UsersPresenter(final EventBus eventBus, final MyView view,
@@ -78,8 +82,6 @@ public class UsersPresenter extends
 		this.placeManager = placeManager;
 		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
-
-
 	}
 
 	@Override
@@ -96,7 +98,7 @@ public class UsersPresenter extends
 	@Override
 	protected void onReveal() {
 	    super.onReveal();
-	    //setInSlot(FAVE_FEED_SLOT, faveFeed);
+	    setInSlot(AUTOCOMPLETE_SLOT, songAutocomplete);
 	}
 
 	@Override
