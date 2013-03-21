@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.fave100.client.events.SongSelectedEvent;
-import com.fave100.client.pages.search.SearchPresenter.SearchResultFactory;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.SearchResultProxy;
 import com.fave100.shared.requestfactory.SongProxy;
@@ -17,6 +16,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -53,6 +53,10 @@ public class SongAutocompletePresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+	}
+
+	public interface SearchResultFactory extends AutoBeanFactory {
+		AutoBean<SearchResultProxy> response();
 	}
 
 	// Get a list of songs matching a search term
