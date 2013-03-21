@@ -3,6 +3,8 @@ package com.fave100.client.gin;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
+import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
+import com.fave100.client.pagefragments.autocomplete.SongAutocompleteView;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pagefragments.login.LoginWidgetView;
 import com.fave100.client.pagefragments.topbar.TopBarPresenter;
@@ -19,8 +21,6 @@ import com.fave100.client.pages.profile.ProfilePresenter;
 import com.fave100.client.pages.profile.ProfileView;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.register.RegisterView;
-import com.fave100.client.pages.search.SearchPresenter;
-import com.fave100.client.pages.search.SearchView;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.pages.song.SongView;
 import com.fave100.client.pages.users.UsersPresenter;
@@ -35,8 +35,6 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
-import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
-import com.fave100.client.pagefragments.autocomplete.SongAutocompleteView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -69,9 +67,6 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(LogoutPresenter.class, LogoutPresenter.MyView.class,
 				LogoutView.class, LogoutPresenter.MyProxy.class);
-
-		bindPresenter(SearchPresenter.class, SearchPresenter.MyView.class,
-				SearchView.class, SearchPresenter.MyProxy.class);
 
 		bindPresenter(ProfilePresenter.class, ProfilePresenter.MyView.class,
 				ProfileView.class, ProfilePresenter.MyProxy.class);
