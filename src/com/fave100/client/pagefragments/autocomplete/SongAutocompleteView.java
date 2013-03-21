@@ -11,6 +11,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -34,9 +35,12 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 
 	@UiField SongAutocompleteStyle	style;
 	@UiField TextBox 				searchBox;
-	@UiField FocusPanel				eventCatcher;
 	@UiField HTMLPanel				resultsArea;
+	@UiField FocusPanel				eventCatcher;
 	@UiField HTMLPanel 				resultsPanel;
+	@UiField Label					pageStats;
+	@UiField Button					previousButton;
+	@UiField Button					nextButton;
 
 	@Inject
 	public SongAutocompleteView(final Binder binder) {
@@ -66,7 +70,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 			getUiHandlers().songSelected();
 		} else {
 			// Otherwise search for song
-			getUiHandlers().getAutocompleteResults(searchBox.getText());
+			getUiHandlers().getAutocompleteResults(searchBox.getText(), true);
 		}
 	}
 
@@ -76,9 +80,9 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 			final Widget widget = resultsPanel.getWidget(i);
 			// If mouse move occurs over song suggestion, set it as selected
 			if(event.getClientX() >= widget.getAbsoluteLeft()
-				&& event.getClientX() <= widget.getAbsoluteLeft() + widget.getOffsetWidth()
-				&& event.getClientY() >= widget.getAbsoluteTop()
-				&& event.getClientY() <= widget.getAbsoluteTop() + widget.getOffsetHeight())
+					&& event.getClientX() <= widget.getAbsoluteLeft() + widget.getOffsetWidth()
+					&& event.getClientY() >= widget.getAbsoluteTop()
+					&& event.getClientY() <= widget.getAbsoluteTop() + widget.getOffsetHeight())
 			{
 				getUiHandlers().setSelection(i, false);
 			}
@@ -86,19 +90,32 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	}
 
 	@UiHandler("eventCatcher")
-	void onClick(final ClickEvent event) {
+	void onResultsClick(final ClickEvent event) {
 		getUiHandlers().songSelected();
 	}
 
+	@UiHandler("previousButton")
+	void onPreviousClick(final ClickEvent event) {
+		getUiHandlers().modifyPage(-1);
+	}
+
+	@UiHandler("nextButton")
+	void onNextClick(final ClickEvent event) {
+		getUiHandlers().modifyPage(1);
+	}
+
+
 	@Override
-	public void setSuggestions(final List<SongProxy> suggestions) {
+	public void setSuggestions(final List<SongProxy> suggestions, final int total) {
 		resultsPanel.clear();
 		if(suggestions == null || suggestions.size() == 0) {
 			resultsArea.setVisible(false);
 			return;
 		}
 
+		int numResults = 0;
 		for(final SongProxy suggestion : suggestions) {
+			numResults++;
 			final HTMLPanel songItem = new HTMLPanel("");
 			final Label songName = new Label(suggestion.getSong());
 			final Label artistName = new Label(suggestion.getArtist());
@@ -107,6 +124,14 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 			songItem.add(artistName);
 			resultsPanel.add(songItem);
 		}
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Results ");
+		sb.append(numResults*getUiHandlers().getPage()+1);
+		sb.append(" - ");
+		sb.append(numResults * getUiHandlers().getPage()+numResults);
+		sb.append(" of ");
+		sb.append(total);
+		pageStats.setText(sb.toString());
 		resultsArea.setVisible(true);
 
 	}
@@ -117,5 +142,20 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 			resultsPanel.getWidget(i).getElement().removeClassName(style.selected());
 		}
 		resultsPanel.getWidget(selection).getElement().addClassName(style.selected());
+	}
+
+	@Override
+	public String getSearchTerm() {
+		return searchBox.getText();
+	}
+
+	@Override
+	public void showPrevious(final boolean show) {
+		previousButton.setEnabled(show);
+	}
+
+	@Override
+	public void showNext(final boolean show) {
+		nextButton.setEnabled(show);
 	}
 }

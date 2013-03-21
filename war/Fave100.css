@@ -88,6 +88,7 @@ button:hover, .button:hover{
 button:disabled{
 	color: #999;
 	background: #e0e0e0; 
+	border: 1px solid #AAA;
 }
 
 button:disabled:hover{
