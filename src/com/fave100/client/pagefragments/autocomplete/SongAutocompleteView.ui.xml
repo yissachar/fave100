@@ -37,15 +37,47 @@
 			color: #FFF;
 			background-color: #5eaae5;
 		}
+		
+		.pagingButton {
+			font-size: 1.2em;
+			font-weight: bold;
+		}
+		
+		.navigator {
+			border-top: 1px solid #AAA;
+			text-align: center;
+			overflow: hidden;
+		}
+		
+		.navigator > * {
+			display: inline;
+		}
+		
+		.previousButton {
+			float: left;
+		}
+		
+		.nextButton { 
+			float: right;
+		}
+		
+		.pageStats {
+			display: inline-block;
+			margin-top: 9px;
+		}
 	</ui:style>
 	
 	<g:HTMLPanel ui:styleName="{style.songAutocomplete}">
-		<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
-		<g:FocusPanel ui:field="eventCatcher">
+		<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>		
 		<g:HTMLPanel ui:field="resultsArea" ui:styleName="{style.resultsArea}">
-			<g:HTMLPanel ui:field="resultsPanel" ui:styleName="{style.resultsPanel}"></g:HTMLPanel>
-			<g:HTMLPanel ui:field="navigator"></g:HTMLPanel> 
-		</g:HTMLPanel>
-		</g:FocusPanel>		
+			<g:FocusPanel ui:field="eventCatcher">
+				<g:HTMLPanel ui:field="resultsPanel" ui:styleName="{style.resultsPanel}"/>
+			</g:FocusPanel>
+			<g:HTMLPanel ui:field="navigator" ui:styleName="{style.navigator}">
+				<g:Button ui:field="previousButton" ui:styleName="{style.pagingButton} {style.previousButton}">&lt;</g:Button>
+				<g:Label ui:field="pageStats" ui:styleName="{style.pageStats}"/>
+				<g:Button ui:field="nextButton" ui:styleName="{style.pagingButton} {style.nextButton}">&gt;</g:Button>
+			</g:HTMLPanel>			 
+		</g:HTMLPanel>				
 	</g:HTMLPanel>
 </ui:UiBinder>
