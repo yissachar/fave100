@@ -35,7 +35,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField Button 								twitterButton;
 	@UiField HTMLPanel 								socialContainer;
 	@UiField InlineHyperlink 						editProfileButton;
-	//@UiField Button 								followButton;
 	@UiField Image 									avatar;
 	@UiField SpanElement 							username;
 	@UiField HTMLPanel 								topBar;
@@ -97,8 +96,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		userFaveList.setVisible(false);
 		socialContainer.setVisible(true);
 		editProfileButton.setVisible(true);
-		//faveFeed.setVisible(true);
-		//followButton.setVisible(false);
+		songAutocomplete.setVisible(true);
 		refreshPersonalFaveList();
 	}
 
@@ -108,8 +106,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		userFaveList.setVisible(true);
 		socialContainer.setVisible(false);
 		editProfileButton.setVisible(false);
-		//followButton.setVisible(true);
-		//faveFeed.setVisible(false);
+		songAutocomplete.setVisible(false);
 	}
 
 }

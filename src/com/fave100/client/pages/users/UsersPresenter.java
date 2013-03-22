@@ -116,20 +116,6 @@ public class UsersPresenter extends
 			// Malformed request, send the user away
 			placeManager.revealDefaultPlace();
 		} else {
-			// Update follow button
-			/*final Request<Boolean> checkFollowing = requestFactory.appUserRequest().checkFollowing(requestedUsername);
-			checkFollowing.fire(new Receiver<Boolean>() {
-				@Override
-				public void onSuccess(final Boolean followingUser) {
-					if(followingUser) {
-						following = true;
-					} else {
-						following = false;
-					}
-					checkTotalRequestProgress();
-				}
-			});*/
-
 			// Update user profile
 		    final Request<AppUserProxy> userReq = requestFactory.appUserRequest().findAppUser(requestedUsername);
 		    userReq.fire(new Receiver<AppUserProxy>() {
