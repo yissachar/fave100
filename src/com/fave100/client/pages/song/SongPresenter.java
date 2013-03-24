@@ -49,6 +49,8 @@ public class SongPresenter extends
 	public interface MyProxy extends ProxyPlace<SongPresenter> {
 	}
 
+	public static final String ID_PARAM = 	"id";
+
 	private final ApplicationRequestFactory	requestFactory;
 	private final PlaceManager				placeManager;
 	private SongProxy						songProxy;
@@ -79,7 +81,7 @@ public class SongPresenter extends
 		super.prepareFromRequest(placeRequest);
 
 		// Use parameters to determine what to reveal on page
-		final String id = URL.decode(placeRequest.getParameter("id", ""));
+		final String id = URL.decode(placeRequest.getParameter(ID_PARAM, ""));
 		if (id.isEmpty()) {
 			// Malformed request, send the user away
 			placeManager.revealDefaultPlace();
