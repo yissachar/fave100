@@ -74,17 +74,29 @@ public class FaveList extends DatastoreObject{
 		ofy().save().entities(faveList).now();
 	}
 
-	public static void removeFaveItemForCurrentUser(final String hashtag, final int index) {
+	public static void removeFaveItemForCurrentUser(final String hashtag, final String songID) {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList == null) return;
+		// Find the song to remove
+		FaveItem faveItemToRemove = null;
+		for(final FaveItem faveItem : faveList.getList()) {
+			if(faveItem.getSongID().equals(songID)) {
+				faveItemToRemove = faveItem;
+				break;
+			}
+		}
+
+		if(faveItemToRemove == null)
+			return;
+
 		// We must also delete the whyline if it exists
-		final Ref<Whyline> currentWhyline = faveList.getList().get(index).getWhylineRef();
+		final Ref<Whyline> currentWhyline = faveItemToRemove.getWhylineRef();
 		if(currentWhyline != null) {
 			ofy().delete().key(currentWhyline.getKey()).now();
 		}
-		faveList.getList().remove(index);
+		faveList.getList().remove(faveItemToRemove);
 		ofy().save().entities(faveList).now();
 	}
 
@@ -104,7 +116,7 @@ public class FaveList extends DatastoreObject{
 //		});
 	}
 
-	public static void editWhylineForCurrentUser(final String hashtag, final int index, final String whyline) {
+	public static void editWhylineForCurrentUser(final String hashtag, final String songID, final String whyline) {
 		//TODO: Sanitize the string
 		//TODO: Length restriction?
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
@@ -112,27 +124,39 @@ public class FaveList extends DatastoreObject{
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList == null) return;
 
+		// Find the song to edit whyline
+		FaveItem faveItemToEdit = null;
+		for(final FaveItem faveItem : faveList.getList()) {
+			if(faveItem.getSongID().equals(songID)) {
+				faveItemToEdit = faveItem;
+				break;
+			}
+		}
+
+		if(faveItemToEdit == null)
+			return;
+
 		// Set the denormalized whyline for the FaveItem
-		final FaveItem faveItem = faveList.getList().get(index);
-		faveItem.setWhyline(whyline);
+		faveItemToEdit.setWhyline(whyline);
 
 		// Set the external Whyline
-		final Ref<Whyline> currentWhyline = faveItem.getWhylineRef();
+		final Ref<Whyline> currentWhyline = faveItemToEdit.getWhylineRef();
 		if(currentWhyline == null) {
 			// Create a new Whyline entity
-			final Whyline whylineEntity = new Whyline(whyline, faveItem.getSongID(), currentUser.getUsername());
+			final Whyline whylineEntity = new Whyline(whyline, faveItemToEdit.getSongID(), currentUser.getUsername());
 			ofy().save().entity(whylineEntity).now();
-			faveItem.setWhylineRef(Ref.create(whylineEntity));
+			faveItemToEdit.setWhylineRef(Ref.create(whylineEntity));
 		} else {
 			// Just modify the existing Whyline entity
-			currentWhyline.get().setWhyline(whyline);
-			ofy().save().entity(ofy().load().value(currentWhyline).get()).now();
+			final Whyline whylineEntity = (Whyline) ofy().load().value(currentWhyline).get();
+			whylineEntity.setWhyline(whyline);
+			ofy().save().entity(whylineEntity).now();
 		}
 
 		ofy().save().entity(faveList).now();
 	}
 
-	public static List<FaveItem> getFaveItemsForCurrentUser(final String hashtag) {
+	public static List<FaveItem> getFaveListForCurrentUser(final String hashtag) {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return null;
 		return getFaveList(currentUser.getUsername(), hashtag);
