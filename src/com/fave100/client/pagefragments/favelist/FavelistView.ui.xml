@@ -20,10 +20,6 @@
 			float: right;
 		}
 		
-		.favelist input {
-			width: 100%;
-		}
-		
 		.favelist > div{
 			overflow: hidden;
 			padding: 6px;
@@ -42,9 +38,11 @@
 			width: 85%;
 		}
 		
-		.rank {
+		.rank, .rankEditor {
 			vertical-align: top;
 			font-size: 1.3em;
+			width: 6%;
+			float: left;
 		}
 		
 		.songLink {
