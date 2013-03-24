@@ -328,8 +328,8 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	private boolean isEventTarget(final MouseEvent<?> event, final Widget widget) {
 		if(event.getClientX() >= widget.getAbsoluteLeft()
 				&& event.getClientX() <= widget.getAbsoluteLeft() + widget.getOffsetWidth()
-				&& event.getClientY() >= widget.getAbsoluteTop()
-				&& event.getClientY() <= widget.getAbsoluteTop() + widget.getOffsetHeight())
+				&& event.getClientY() + Window.getScrollTop() >= widget.getAbsoluteTop()
+				&& event.getClientY() + Window.getScrollTop() <= widget.getAbsoluteTop() + widget.getOffsetHeight())
 		{
 			return true;
 		}
