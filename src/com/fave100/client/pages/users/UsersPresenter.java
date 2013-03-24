@@ -1,22 +1,14 @@
 package com.fave100.client.pages.users;
 
-import java.util.List;
-
 import com.fave100.client.CurrentUser;
-import com.fave100.client.Notification;
 import com.fave100.client.events.SongSelectedEvent;
 import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
+import com.fave100.client.pagefragments.favelist.FavelistPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.Constants;
-import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
-import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
-import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.FaveItemProxy;
-import com.fave100.shared.requestfactory.FaveListRequest;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -24,7 +16,6 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -40,11 +31,7 @@ public class UsersPresenter extends
 		implements UsersUiHandlers{
 
 	public interface MyView extends BaseView, HasUiHandlers<UsersUiHandlers> {
-		//void setFollowed();
-		//void setUnfollowed();
 		void setUserProfile(AppUserProxy user);
-		void setUserFaveList(List<FaveItemProxy> faveList);
-		void refreshPersonalFaveList();
 		void showOwnPage();
 		void showOtherPage();
 	}
@@ -55,22 +42,19 @@ public class UsersPresenter extends
 	}
 
 	@ContentSlot
-	public static final Type<RevealContentHandler<?>> FAVE_FEED_SLOT = new Type<RevealContentHandler<?>>();
-	@ContentSlot
 	public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> FAVELIST_SLOT = new Type<RevealContentHandler<?>>();
 
-	public static final String FAVE_100_TAB = "fave100";
-	public static final String ACTIVITY_TAB = "activity";
 	public static final String USER_PARAM = "u";
 
-	private int 							currentRequestProgress = 0;
 	private String 							requestedUsername;
 	private final ApplicationRequestFactory requestFactory;
 	private final PlaceManager 				placeManager;
 	private final EventBus 					eventBus;
-	private boolean 						ownPage = false;
 	private CurrentUser 					currentUser;
 	@Inject SongAutocompletePresenter 		songAutocomplete;
+	@Inject FavelistPresenter				favelist;
 
 	@Inject
 	public UsersPresenter(final EventBus eventBus, final MyView view,
@@ -90,7 +74,7 @@ public class UsersPresenter extends
 		SongSelectedEvent.register(eventBus, new SongSelectedEvent.Handler() {
 			@Override
 			public void onSongSelected(final SongSelectedEvent event) {
-				addSong(event.getSong());
+				favelist.addSong(event.getSong().getId());
 			}
 		});
 	}
@@ -99,6 +83,7 @@ public class UsersPresenter extends
 	protected void onReveal() {
 	    super.onReveal();
 	    setInSlot(AUTOCOMPLETE_SLOT, songAutocomplete);
+	    setInSlot(FAVELIST_SLOT, favelist);
 	}
 
 	@Override
@@ -125,99 +110,21 @@ public class UsersPresenter extends
 	    				getView().setUserProfile(user);
 	    				// Check if user is the currently logged in user
 						if(currentUser.isLoggedIn() && currentUser.equals(user)) {
-							ownPage = true;
+							getView().showOwnPage();
 						} else {
-							ownPage = false;
+							getView().showOtherPage();
 						}
 
-	    				checkTotalRequestProgress();
+						favelist.setUser(user);
+					    favelist.refreshFavelist();
+
+						getProxy().manualReveal(UsersPresenter.this);
 	    			} else {
 	    				placeManager.revealDefaultPlace();
 	    			}
 		    	}
 		    });
-
-	    	// Update fave list
-			final Request<List<FaveItemProxy>> userFaveListReq = requestFactory.faveListRequest().getFaveList(requestedUsername, Constants.DEFAULT_HASHTAG);
-		    userFaveListReq.fire(new Receiver<List<FaveItemProxy>>() {
-		    	@Override
-		    	public void onSuccess(final List<FaveItemProxy> faveList) {
-		    		if(faveList != null) {
-		    			getView().setUserFaveList(faveList);
-	    			} else {
-	    				placeManager.revealDefaultPlace();
-	    			}
-		    		checkTotalRequestProgress();
-		    	}
-		    });
 		}
-	}
-
-	private void checkTotalRequestProgress() {
-		currentRequestProgress++;
-		if(currentRequestProgress >= 2) {
-			currentRequestProgress = 0;
-
-			/*if(following) {
-				getView().setFollowed();
-			} else {
-				getView().setUnfollowed();
-			}*/
-
-			if(ownPage) {
-				getView().showOwnPage();
-			} else {
-				getView().showOtherPage();
-			}
-
-			getProxy().manualReveal(UsersPresenter.this);
-		}
-	}
-
-	/*@Override
-	public void follow() {
-		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		final Request<Void> followReq = appUserRequest.followUser(requestedUsername);
-		followReq.fire(new Receiver<Void>() {
-			@Override
-			public void onSuccess(final Void response) {
-				Notification.show("Following!");
-				getView().setFollowed();
-			}
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				if(failure.getExceptionType().equals(AlreadyFollowingException.class.getName())) {
-					SideNotification.show("You are already following this user", true);
-				}
-			}
-		});
-	}*/
-
-	public void addSong(final SongProxy faveItemMap) {
-
-		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-
-		// Add the song as a FaveItem
-		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG,
-				faveItemMap.getId());
-
-		addReq.fire(new Receiver<Void>() {
-			@Override
-			public void onSuccess(final Void response) {
-				Notification.show("Song added");
-				getView().refreshPersonalFaveList();
-			}
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				if(failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					placeManager.revealPlace(new PlaceRequest(NameTokens.login));
-				} else if(failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
-					Notification.show("You cannot have more than 100 songs in list");
-				} else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
-					Notification.show("The song is already in your list");
-				}
-			}
-		});
 	}
 
 	@Override

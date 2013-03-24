@@ -1,0 +1,50 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:c='urn:import:com.google.gwt.user.cellview.client'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<ui:style type="com.fave100.client.pagefragments.favelist.FavelistView.FavelistStyle">		
+		.favelist button {
+			float: right;
+		}
+		
+		.favelist > div{
+			overflow: hidden;
+			padding: 6px;
+		}
+		
+		.favelist > div > *, .detailsContainer > * {
+			display: inline-block;
+		}
+		
+		.detailsContainer {
+			margin: 0 15px;
+			width: 85%;
+		}
+		
+		.rank {
+			vertical-align: top;
+			font-size: 1.3em;
+		}
+		
+		.songLink {
+			margin-right: 10px;
+		}
+		
+		.whyline {
+			display: block;
+			width: 100%;				
+		}
+		
+		.personalListItem .whyline {
+			min-height: 20px;
+			cursor: pointer;
+		}
+	</ui:style>
+	
+	<g:HTMLPanel ui:field="favelist" ui:styleName="{style.favelist} faveList"/>
+</ui:UiBinder>
