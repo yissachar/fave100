@@ -159,117 +159,11 @@ footer {
 
 /* Fave List */
 
-.faveListContainer{
-}
-
-.faveList{		
-	font-size: 1.05em;
-}
-
-.faveList > div{
-	border: 1px solid #888;
-	border-top: 0px;
-	background-color: #FFF;	
-	padding: 5px;
-}
-
 .faveList > div:first-child {	
 	border-top: 1px solid #888;
 }
 
-.faveList a{
-	color: #5eaae5;	
-}
-
-.faveList table{
-	/*table-layout: auto !important;*/
-	border-collapse: collapse;
-}
-
-.faveList thead{
-	border: 1px solid #888;
-}
-
-.faveList input{
-	width: 100%;
-}
-
-.rankableFaveList div{
-	cursor: move;
-}
-
-.faveListAddButton, .faveListDeleteButton {
-	height: auto;
-	font-size: 1.1em;
-	vertical-align: top;
-	margin-left: 6px;
-	font-weight: bold;
-}
-
-.faveListDeleteButton{
-	color: #FFF;
-	background: #f25c5c; /* Old browsers */
-	background: -moz-linear-gradient(top,  #f25c5c 0%, #c13e26 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f25c5c), color-stop(100%,#c13e26)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #f25c5c 0%,#c13e26 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #f25c5c 0%,#c13e26 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #f25c5c 0%,#c13e26 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #f25c5c 0%,#c13e26 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f25c5c', endColorstr='#c13e26',GradientType=0 ); /* IE6-9 */
-}
-
-.faveListDeleteButton:hover{
-	background: #ed3636; /* Old browsers */
-	background: -moz-linear-gradient(top,  #ed3636 0%, #bc341c 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ed3636), color-stop(100%,#bc341c)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #ed3636 0%,#bc341c 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #ed3636 0%,#bc341c 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #ed3636 0%,#bc341c 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #ed3636 0%,#bc341c 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ed3636', endColorstr='#bc341c',GradientType=0 ); /* IE6-9 */	
-}
-
-.faveListImageThumb{
-	display: inline-block;
-	max-width: 80px;
-}
-
-.faveListRank {
-	display: inline-block;
-	width: 70px;	
-	padding-right: 5px;
-	vertical-align: top;
-	font-size: 3em;
-}
-
-.faveListTrackName, .faveListArtistName, .faveListReleaseDate{
-	display: inline-block;	
-	padding: 0 3px;
-	white-space: nowrap;
-	overflow: hidden;
-}
-
-.faveListTrackName {
-	width: 49%;
-}
-.faveListArtistName{
-	width: 32%;
-}
-
-.faveListWhyline, .faveList div>span:nth-child(2){
-	display: inline-block;
-	padding: 3px;
-	vertical-align: top;
-	margin-top: -30px;
-	margin-left: 75px;
-	width: 70%;
-}
-
-.faveList div>span:nth-child(2) {
-	cursor: pointer;	
-}
-
-.faveList > div:hover > span:nth-child(2):empty:before, .favelistWhyline:hover:empty:before {
+.favelistWhyline:hover:empty:before {
 	content: "Click here to enter a WhyLine";
 	text-decoration: italics;
 }

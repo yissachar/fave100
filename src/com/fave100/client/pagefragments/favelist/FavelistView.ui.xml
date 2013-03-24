@@ -7,14 +7,30 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style type="com.fave100.client.pagefragments.favelist.FavelistView.FavelistStyle">		
+	<ui:style type="com.fave100.client.pagefragments.favelist.FavelistView.FavelistStyle">
+		.faveList {		
+			font-size: 1.05em;
+		}
+		
+		.faveList a {
+			color: #5eaae5;	
+		}
+		
 		.favelist button {
 			float: right;
+		}
+		
+		.faveList input {
+			width: 100%;
 		}
 		
 		.favelist > div{
 			overflow: hidden;
 			padding: 6px;
+			border: 1px solid #888;
+			border-top: 0px;
+			background-color: #FFF;	
+			padding: 5px;
 		}
 		
 		.favelist > div > *, .detailsContainer > * {
