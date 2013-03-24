@@ -8,11 +8,11 @@
 	ui:generateLocales='default'>
 
 	<ui:style type="com.fave100.client.pagefragments.favelist.FavelistView.FavelistStyle">
-		.faveList {		
+		.favelist {		
 			font-size: 1.05em;
 		}
 		
-		.faveList a {
+		.favelist a {
 			color: #5eaae5;	
 		}
 		
@@ -20,7 +20,7 @@
 			float: right;
 		}
 		
-		.faveList input {
+		.favelist input {
 			width: 100%;
 		}
 		
