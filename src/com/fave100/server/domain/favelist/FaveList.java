@@ -100,7 +100,7 @@ public class FaveList extends DatastoreObject{
 		ofy().save().entities(faveList).now();
 	}
 
-	public static void rerankFaveItemForCurrentUser(final String hashtag, final int currentIndex, final int newIndex) {
+	public static void rerankFaveItemForCurrentUser(final String hashtag, final String songID, final int newIndex) {
 		// TODO: Use a transaction to ensure that the indices are correct
 		// For some reason this throws a illegal state exception about deregistering a transaction that is not registered
 //		ofy().transact(new VoidWork() {
@@ -109,8 +109,25 @@ public class FaveList extends DatastoreObject{
 				if(currentUser == null) return;
 				final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 				if(faveList == null) return;
-				final FaveItem faveAtCurrIndex = faveList.getList().remove(currentIndex);
-				faveList.getList().add(newIndex, faveAtCurrIndex);
+
+				// Make sure new index is valid
+				if(newIndex < 0 || newIndex >= faveList.getList().size())
+					throw new IllegalArgumentException("Index out of range");
+
+				// Find the song to change position
+				FaveItem faveItemToRerank = null;
+				for(final FaveItem faveItem : faveList.getList()) {
+					if(faveItem.getSongID().equals(songID)) {
+						faveItemToRerank = faveItem;
+						break;
+					}
+				}
+
+				if(faveItemToRerank == null)
+					return;
+
+				faveList.getList().remove(faveItemToRerank);
+				faveList.getList().add(newIndex, faveItemToRerank);
 				ofy().save().entities(faveList).now();
 //			}
 //		});

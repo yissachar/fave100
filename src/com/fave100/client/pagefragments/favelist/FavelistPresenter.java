@@ -37,7 +37,8 @@ public class FavelistPresenter extends
 	// The user whose favelist we are showing
 	private AppUserProxy				user;
 	// The currently logged in user
-	private CurrentUser				currentUser;
+	private CurrentUser					currentUser;
+	private List<FaveItemProxy> 		favelist;
 
 	@Inject
 	public FavelistPresenter(final EventBus eventBus, final MyView view,
@@ -60,6 +61,7 @@ public class FavelistPresenter extends
 		req.fire(new Receiver<List<FaveItemProxy>>() {
 			@Override
 			public void onSuccess(final List<FaveItemProxy> results) {
+				setFavelist(results);
 				final boolean personalList = (currentUser.isLoggedIn() && currentUser.equals(user));
 				getView().setList(results, personalList);
 
@@ -117,9 +119,21 @@ public class FavelistPresenter extends
 	}
 
 	@Override
-	public void changeSongPosition(final int oldIndex, final int newIndex) {
+	public void changeSongPosition(final int currentIndex, final int newIndex) {
+		changeSongPosition(favelist.get(currentIndex).getSongID(), newIndex);
+	}
+
+	@Override
+	public void changeSongPosition(final String songID, final int newIndex) {
+		// If index out of range, refresh list with correct values
+		if(newIndex < 0 || newIndex >= getFavelist().size()) {
+			final boolean personalList = (currentUser.isLoggedIn() && currentUser.equals(user));
+			getView().setList(getFavelist(), personalList);
+			return;
+		}
+
 		final Request<Void> changePosition = requestFactory.faveListRequest()
-				.rerankFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, oldIndex, newIndex);
+				.rerankFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID, newIndex);
 		// TODO: Should add everything client side so need for refresh every time
 		changePosition.fire(new Receiver<Void>() {
 			@Override
@@ -138,6 +152,14 @@ public class FavelistPresenter extends
 
 	public void setUser(final AppUserProxy user) {
 		this.user = user;
+	}
+
+	public List<FaveItemProxy> getFavelist() {
+		return favelist;
+	}
+
+	public void setFavelist(final List<FaveItemProxy> favelist) {
+		this.favelist = favelist;
 	}
 
 }
