@@ -35,6 +35,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
+import com.fave100.client.pagefragments.favelist.FavelistPresenter;
+import com.fave100.client.pagefragments.favelist.FavelistView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -84,6 +86,9 @@ public class ClientModule extends AbstractPresenterModule {
 		bindSingletonPresenterWidget(SongAutocompletePresenter.class,
 				SongAutocompletePresenter.MyView.class,
 				SongAutocompleteView.class);
+
+		bindSingletonPresenterWidget(FavelistPresenter.class,
+				FavelistPresenter.MyView.class, FavelistView.class);
 	}
 
 	@Provides

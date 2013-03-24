@@ -1,13 +1,8 @@
 package com.fave100.client.pages.users;
 
-import java.util.List;
-
 import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.widgets.favelist.NonpersonalFaveList;
-import com.fave100.client.widgets.favelist.PersonalFaveList;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -29,8 +24,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public interface Binder extends UiBinder<Widget, UsersView> {
 	}
 
-	@UiField(provided = true) NonpersonalFaveList 	userFaveList;
-	@UiField(provided = true) PersonalFaveList 		personalFaveList;
 	@UiField HTMLPanel 								faveListContainer;
 	@UiField Button 								twitterButton;
 	@UiField HTMLPanel 								socialContainer;
@@ -39,11 +32,10 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField SpanElement 							username;
 	@UiField HTMLPanel 								topBar;
 	@UiField HTMLPanel 								songAutocomplete;
+	@UiField HTMLPanel								favelist;
 
 	@Inject
-	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
-		userFaveList = new NonpersonalFaveList(requestFactory);
-		personalFaveList = new PersonalFaveList(requestFactory);
+	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {;
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -66,6 +58,12 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 				songAutocomplete.add(content);
 			}
 		}
+		if(slot == UsersPresenter.FAVELIST_SLOT) {
+			favelist.clear();
+			if(content != null) {
+				favelist.add(content);
+			}
+		}
 		super.setInSlot(slot, content);
 	}
 
@@ -81,29 +79,14 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@Override
-	public void setUserFaveList(final List<FaveItemProxy> faveList) {
-		userFaveList.setRowData(faveList);
-	}
-
-	@Override
-	public void refreshPersonalFaveList() {
-		personalFaveList.refreshList();
-	}
-
-	@Override
 	public void showOwnPage() {
-		personalFaveList.setVisible(true);
-		userFaveList.setVisible(false);
 		socialContainer.setVisible(true);
 		editProfileButton.setVisible(true);
 		songAutocomplete.setVisible(true);
-		refreshPersonalFaveList();
 	}
 
 	@Override
 	public void showOtherPage() {
-		personalFaveList.setVisible(false);
-		userFaveList.setVisible(true);
 		socialContainer.setVisible(false);
 		editProfileButton.setVisible(false);
 		songAutocomplete.setVisible(false);

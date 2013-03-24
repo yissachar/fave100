@@ -2,7 +2,6 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	xmlns:w="urn:import:com.fave100.client.widgets.favelist"
 	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
@@ -91,9 +90,8 @@
 				
 				<g:HTMLPanel ui:styleName="{style.faveListArea} col span_9">		
 						<g:HTMLPanel ui:field="songAutocomplete" ui:styleName="{style.songSearchContainer}"/>	
-					<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">				
-						<w:PersonalFaveList ui:field="personalFaveList"/>
-						<w:NonpersonalFaveList ui:field="userFaveList"/>								
+					<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">
+						<g:HTMLPanel ui:field="favelist"/>									
 					</g:HTMLPanel>						
 				</g:HTMLPanel>
 				
