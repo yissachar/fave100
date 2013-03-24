@@ -15,6 +15,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -50,6 +52,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	interface FavelistStyle extends CssResource {
 		String personalListItem();
 		String rank();
+		String rankEditor();
 		String detailsContainer();
 		String songLink();
 		String whyline();
@@ -104,18 +107,66 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 				// Special styles
 				listItem.getElement().addClassName(style.personalListItem());
 
+				// Editable rank, on click allows to change rank
+				final TextBox rankEditor = new TextBox();
+				rankEditor.setVisible(false);
+				rankEditor.getElement().addClassName(style.rankEditor());
+				listItem.add(rankEditor);
 
-
-				/*favelist.addDomHandler(new MouseMoveHandler() {
+				rank.addClickHandler(new ClickHandler() {
 					@Override
-					public void onMouseMove(final MouseMoveEvent event) {
-						if(draggedElement == null)
-							return;
-						DOM.setStyleAttribute(draggedElement.getElement(), "position", "absolute");
-						DOM.setStyleAttribute(draggedElement.getElement(), "top", String.valueOf(event.getY())+"px");
-						DOM.setStyleAttribute(draggedElement.getElement(), "width", "100%");
+					public void onClick(final ClickEvent event) {
+						rank.setVisible(false);
+						rankEditor.setValue(rank.getText().replace(".", ""));
+						rankEditor.setVisible(true);
+						rankEditor.setFocus(true);
 					}
-				}, MouseMoveEvent.getType());*/
+				});
+
+				// On blur, change rank
+				rankEditor.addBlurHandler(new BlurHandler() {
+					@Override
+					public void onBlur(final BlurEvent event) {
+						rank.setVisible(true);
+						rankEditor.setVisible(false);
+						rank.setText(rankEditor.getValue()+".");
+						getUiHandlers().changeSongPosition(faveItem.getSongID(), Integer.parseInt(rankEditor.getValue())-1);
+					}
+				});
+
+				// Treat enter, tab or escape as a lose focus event
+				rankEditor.addKeyUpHandler(new KeyUpHandler() {
+					@Override
+					public void onKeyUp(final KeyUpEvent event) {
+						if(KeyCodes.KEY_ENTER == event.getNativeKeyCode()
+							|| KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()
+							|| KeyCodes.KEY_TAB == event.getNativeKeyCode())
+						{
+							final NativeEvent blurEvent = Document.get().createBlurEvent();
+							DomEvent.fireNativeEvent(blurEvent, rankEditor);
+						}
+					}
+				});
+
+				// Only allow numbers in rankEditor
+				rankEditor.addKeyPressHandler(new KeyPressHandler() {
+					@Override
+					public void onKeyPress(final KeyPressEvent event){
+					    final TextBox sender = (TextBox)event.getSource();
+
+					    if (sender.isReadOnly() || !sender.isEnabled()) {
+					        return;
+					    }
+
+					    final Character charCode = event.getCharCode();
+					    final int unicodeCharCode = event.getUnicodeCharCode();
+
+					    // allow digits and non-characters
+					    if (!(Character.isDigit(charCode) || unicodeCharCode == 0)){
+					        sender.cancelKey();
+					    }
+					}
+				});
 
 				// Delete button
 				final Button deleteButton = new Button("X");
@@ -179,7 +230,8 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 							return;
 						// If songLink, button, or whyline is target, ignore
 						if(isEventTarget(event, song) || isEventTarget(event, whyline)
-							|| isEventTarget(event, whylineEditor) || isEventTarget(event, deleteButton))
+							|| isEventTarget(event, whylineEditor) || isEventTarget(event, deleteButton)
+							|| isEventTarget(event, rank))
 						{
 							return;
 						}
@@ -227,32 +279,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 					//}
 				}, MouseDownEvent.getType());
 
-				// Mouse up handler for change position
-				RootPanel.get().addDomHandler(new MouseUpHandler() {
-					@Override
-					public void onMouseUp(final MouseUpEvent event) {
-						if(draggedElement == null) return;
-						final GQuery $draggedItem = $(".draggedFaveListItem").first();
-						// Get the index of the row being dragged
-						final int currentIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedElement.getElement());
-						// Insert the dragged row back into the table at the correct position
-						$draggedItem.first().insertAfter($(".clonedHiddenRow"));
-						// Get the new index
-						final int newIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedElement.getElement());
-						// Rank on the server
-						if(currentIndex != newIndex) {
-							// Don't bother doing anything if the indices are the same
-							getUiHandlers().changeSongPosition(currentIndex, newIndex);
-						}
-						//remove all drag associated items now that we are done with the drag
-			    	  	$draggedItem.removeClass("draggedFaveListItem");
-						favelist.removeStyleName("unselectable");
-						$(".clonedHiddenRow").remove();
-						$("body").unbind("mousemove");
-						draggedElement = null;
-					}
 
-				}, MouseUpEvent.getType());
 			} else {
 				// Non-personal list, add an "Add" button
 				final Button addButton = new Button("+");
@@ -265,6 +292,36 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 				listItem.add(addButton);
 			}
 			favelist.add(listItem);
+		}
+
+		// Only add one mouse up listener for everything
+		if(personalList) {
+			// Mouse up handler for change position
+			RootPanel.get().addDomHandler(new MouseUpHandler() {
+				@Override
+				public void onMouseUp(final MouseUpEvent event) {
+					if(draggedElement == null) return;
+					final GQuery $draggedItem = $(".draggedFaveListItem").first();
+					// Get the index of the row being dragged
+					final int currentIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedElement.getElement());
+					// Insert the dragged row back into the table at the correct position
+					$draggedItem.first().insertAfter($(".clonedHiddenRow"));
+					// Get the new index
+					final int newIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedElement.getElement());
+					// Rank on the server
+					if(currentIndex != newIndex) {
+						// Don't bother doing anything if the indices are the same
+						getUiHandlers().changeSongPosition(currentIndex, newIndex);
+					}
+					//remove all drag associated items now that we are done with the drag
+		    	  	$draggedItem.removeClass("draggedFaveListItem");
+					favelist.removeStyleName("unselectable");
+					$(".clonedHiddenRow").remove();
+					$("body").unbind("mousemove");
+					draggedElement = null;
+				}
+
+			}, MouseUpEvent.getType());
 		}
 	}
 
