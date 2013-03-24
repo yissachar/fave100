@@ -10,11 +10,11 @@ import com.google.web.bindery.requestfactory.shared.Service;
 @Service(FaveList.class)
 public interface FaveListRequest extends RequestContext {
 
-	Request<List<FaveItemProxy>> getFaveItemsForCurrentUser(String hashtag);
+	Request<List<FaveItemProxy>> getFaveListForCurrentUser(String hashtag);
 	Request<Void> addFaveItemForCurrentUser(String hashtag,	String songID);
-	Request<Void> removeFaveItemForCurrentUser(String hashtag, int index);
+	Request<Void> removeFaveItemForCurrentUser(String hashtag, String songID);
 	Request<Void> rerankFaveItemForCurrentUser(String hashtag, int currentIndex, int newIndex);
-	Request<Void> editWhylineForCurrentUser(String hashtag, int index, String whyline);
+	Request<Void> editWhylineForCurrentUser(String hashtag, String songID, String whyline);
 
 	Request<List<FaveItemProxy>> getFaveList(String username, String hashtag);
 
