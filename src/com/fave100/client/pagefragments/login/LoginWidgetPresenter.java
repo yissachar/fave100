@@ -34,17 +34,11 @@ public class LoginWidgetPresenter extends
 
 	public interface MyView extends View, HasUiHandlers<LoginUiHandlers> {
 		String getUsername();
-
 		String getPassword();
-
 		void clearUsername();
-
 		void clearPassword();
-
 		void setError(String error);
-
 		void setGoogleLoginUrl(String url);
-
 		void setFacebookLoginUrl(String url);
 	}
 
@@ -99,6 +93,13 @@ public class LoginWidgetPresenter extends
 				getView().setFacebookLoginUrl(url);
 			}
 		});
+	}
+
+	@Override
+	public void onReveal() {
+		super.onReveal();
+		getView().clearUsername();
+		getView().clearPassword();
 	}
 
 	// Native login
