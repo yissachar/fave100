@@ -33,8 +33,8 @@ public class FaveList extends DatastoreObject{
 	private FaveList() {}
 
 	public FaveList(final String username, final String hashtag) {
-		this.id = username+FaveList.SEPERATOR_TOKEN+hashtag;
-		this.user = Ref.create(Key.create(AppUser.class, username));
+		this.id = username.toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag;
+		this.user = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
 		this.hashtag = hashtag;
 	}
 
