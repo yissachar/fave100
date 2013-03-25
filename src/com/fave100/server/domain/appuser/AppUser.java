@@ -84,12 +84,14 @@ public class AppUser extends DatastoreObject{
 	// Must be manually kept in sync with EmailID
 	private String email;
 	private String avatar;
+	private Date joinDate;
 
 	private AppUser() {}
 
 	public AppUser(final String username, final String password, final String email) {
 		this.username = username;
 		this.email = email;
+		this.joinDate = new Date();
 		setPassword(password);
 	}
 
@@ -729,5 +731,13 @@ public class AppUser extends DatastoreObject{
 
 	public void setAvatar(final String avatar) {
 		this.avatar = avatar;
+	}
+
+	public Date getJoinDate() {
+		return joinDate;
+	}
+
+	public void setJoinDate(final Date joinDate) {
+		this.joinDate = joinDate;
 	}
 }
