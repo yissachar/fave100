@@ -5,13 +5,16 @@
 	<ui:style>
 		.userThumbList {
 			border: 1px solid #555;
+			border-radius: 5px;
 			width: 200px;
 			height: 150px;
 			font-size: 1.2em;
 			background-color: #FFF;
 			margin: 30px 15px;
 			float: left;
-		}
+			overflow: hidden;
+			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+		}		
 		
 		.header {
 			width: 100%;
@@ -35,6 +38,7 @@
 		.songRank {			
 			font-weight: bold;
 			padding: 5px;
+			text-align: center;
 		}
 		
 		.songTitle {
