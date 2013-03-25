@@ -23,7 +23,7 @@ public class FacebookID {
 
 	public FacebookID(final Long facebookID, final AppUser user) {
 		this.setFacebookID(facebookID);
-		this.setUser(Ref.create(Key.create(AppUser.class, user.getUsername())));
+		this.setUser(Ref.create(Key.create(AppUser.class, user.getUsername().toLowerCase())));
 	}
 
 	public static FacebookID findFacebookID(final Long id) {

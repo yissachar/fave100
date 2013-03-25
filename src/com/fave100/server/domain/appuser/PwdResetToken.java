@@ -31,7 +31,7 @@ public class PwdResetToken {
 		// Expires one day from generation
 		final Date today = new Date();
 		expiry = new Date(today.getTime() + 1 * 24 * 60 * 60 * 1000);
-		setAppUser(Ref.create(Key.create(AppUser.class, username)));
+		setAppUser(Ref.create(Key.create(AppUser.class, username.toLowerCase())));
 	}
 
 	public static PwdResetToken findPwdResetToken(final String token) {

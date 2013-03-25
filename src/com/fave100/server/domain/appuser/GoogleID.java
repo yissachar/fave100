@@ -22,7 +22,7 @@ public class GoogleID {
 
 	public GoogleID(final String googleID, final AppUser user) {
 		this.googleID = googleID;
-		this.setUser(Ref.create(Key.create(AppUser.class, user.getUsername())));
+		this.setUser(Ref.create(Key.create(AppUser.class, user.getUsername().toLowerCase())));
 	}
 
 	public static GoogleID findGoogleID(final String id) {

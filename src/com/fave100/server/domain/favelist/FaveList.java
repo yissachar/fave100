@@ -51,7 +51,7 @@ public class FaveList extends DatastoreObject{
 			throw new NotLoggedInException();
 		}
 
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
+		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new SongLimitReachedException();
 
 		// Get the song from Lucene lookup
@@ -77,7 +77,7 @@ public class FaveList extends DatastoreObject{
 	public static void removeFaveItemForCurrentUser(final String hashtag, final String songID) {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
+		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList == null) return;
 		// Find the song to remove
 		FaveItem faveItemToRemove = null;
@@ -107,7 +107,7 @@ public class FaveList extends DatastoreObject{
 //			public void vrun() {
 				final AppUser currentUser = AppUser.getLoggedInAppUser();
 				if(currentUser == null) return;
-				final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
+				final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 				if(faveList == null) return;
 
 				// Make sure new index is valid
@@ -138,7 +138,7 @@ public class FaveList extends DatastoreObject{
 		//TODO: Length restriction?
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) return;
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername()+FaveList.SEPERATOR_TOKEN+hashtag).get();
+		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList == null) return;
 
 		// Find the song to edit whyline
@@ -181,7 +181,7 @@ public class FaveList extends DatastoreObject{
 	}
 
 	public static List<FaveItem> getFaveList(final String username, final String hashtag) {
-		final FaveList faveList = ofy().load().type(FaveList.class).id(username+FaveList.SEPERATOR_TOKEN+hashtag).get();
+		final FaveList faveList = ofy().load().type(FaveList.class).id(username.toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		if(faveList == null) return null;
 		return faveList.getList();
 	}

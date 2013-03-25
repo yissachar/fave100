@@ -22,12 +22,12 @@ public class EmailID {
 	private EmailID() {}
 
 	public EmailID(final String emailID, final AppUser user) {
-		this.setEmailID(emailID);
-		this.setUser(Ref.create(Key.create(AppUser.class, user.getUsername())));
+		this.setEmailID(emailID.toLowerCase());
+		this.setUser(Ref.create(Key.create(AppUser.class, user.getUsername().toLowerCase())));
 	}
 
 	public static EmailID findEmailID(final String id) {
-		return ofy().load().type(EmailID.class).id(id).get();
+		return ofy().load().type(EmailID.class).id(id.toLowerCase()).get();
 	}
 
 

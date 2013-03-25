@@ -23,7 +23,7 @@ public class TwitterID {
 
 	public TwitterID(final long id, final AppUser user) {
 		this.setId(id);
-		this.setUser(Ref.create(Key.create(AppUser.class, user.getUsername())));
+		this.setUser(Ref.create(Key.create(AppUser.class, user.getUsername().toLowerCase())));
 	}
 
 	public static TwitterID findTwitterID(final Long id) {
