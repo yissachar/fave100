@@ -78,9 +78,11 @@ public class AppUser extends DatastoreObject{
 	@IgnoreSave public static final String AUTH_USER = "loggedIn";
 	@IgnoreSave public static OAuthService facebookOAuthservice;
 
-	@Id private String username;
+	// Store a case-sensitive username field, as well as lowercase username lookup
+	@Id private String usernameID;
+	private String username;
 	private String password;
-	// An email address stored directly with user for easy access
+	// An cazse sensitive email address stored directly with user for easy access
 	// Must be manually kept in sync with EmailID
 	private String email;
 	private String avatar;
@@ -90,6 +92,7 @@ public class AppUser extends DatastoreObject{
 
 	public AppUser(final String username, final String password, final String email) {
 		this.username = username;
+		this.usernameID = username.toLowerCase();
 		this.email = email;
 		this.joinDate = new Date();
 		setPassword(password);
@@ -98,7 +101,7 @@ public class AppUser extends DatastoreObject{
 
 	// Finder methods
 	public static AppUser findAppUser(final String username) {
-		return ofy().load().type(AppUser.class).id(username).get();
+		return ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
 	}
 
 	public static AppUser findAppUserByGoogleId(final String googleID) {
@@ -330,7 +333,7 @@ public class AppUser extends DatastoreObject{
 	public static AppUser getLoggedInAppUser() {
 		final String username = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
 		if(username != null) {
-			return ofy().load().type(AppUser.class).id(username).get();
+			return findAppUser(username);
 		} else {
 			return null;
 		}
@@ -348,7 +351,7 @@ public class AppUser extends DatastoreObject{
 			newAppUser = ofy().transact(new Work<AppUser>() {
 				@Override
 				public AppUser run() {
-					if(ofy().load().type(AppUser.class).id(username).get() != null) {
+					if(findAppUser(username) != null) {
 						// Username already exists
 						throw new RuntimeException(userExistsMsg);
 					} else if(ofy().load().type(EmailID.class).id(email).get() != null) {
@@ -402,7 +405,7 @@ public class AppUser extends DatastoreObject{
 				public AppUser run() {
 					final UserService userService = UserServiceFactory.getUserService();
 					final User user = userService.getCurrentUser();
-					if(ofy().load().type(AppUser.class).id(username).get() != null) {
+					if(findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
 					if(ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
@@ -447,7 +450,7 @@ public class AppUser extends DatastoreObject{
 				@Override
 				public AppUser run() {
 					final twitter4j.User user = getTwitterUser(oauth_verifier);
-					if(ofy().load().type(AppUser.class).id(username).get() != null) {
+					if(findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
 					if(ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
@@ -496,7 +499,7 @@ public class AppUser extends DatastoreObject{
 				public AppUser run() {
 			    	final Long userFacebookId = getCurrentFacebookUserId(code);
 			    	if(userFacebookId != null) {
-				    	if(ofy().load().type(AppUser.class).id(username).get() != null) {
+				    	if(findAppUser(username) != null) {
 							throw new RuntimeException(userExistsMsg);
 						}
 						if(ofy().load().type(FacebookID.class).id(userFacebookId).get() != null) {
@@ -696,6 +699,14 @@ public class AppUser extends DatastoreObject{
 	}
 
     // Getters and setters
+
+	public String getUsernameID() {
+		return usernameID;
+	}
+
+	public void setUsernameID(final String usernameID) {
+		this.usernameID = usernameID;
+	}
 
 	public String getEmail() {
 		return email;
