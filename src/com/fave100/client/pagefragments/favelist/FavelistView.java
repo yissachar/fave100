@@ -339,13 +339,13 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	private void setPos(final GQuery element, final int mouseY) {
 		final int clonedHeight = $(".clonedHiddenRow").outerHeight(true);
 		final int elementHeight = element.outerHeight(true);
-		final int newPos = mouseY-(elementHeight);
+		final int newPos = mouseY-(elementHeight*2);
 		final int draggedBottom = newPos + elementHeight;
-		final int faveListTop = ($(".faveList").offset().top-(clonedHeight/2));
-		final int faveListBottom = faveListTop+$(".faveList").outerHeight(true);//-clonedHeight/2;
+		final int faveListTop = ($(".faveList").offset().top-elementHeight-clonedHeight);
+		final int faveListBottom = faveListTop+$(".faveList").outerHeight(true)+clonedHeight;
 
 		// If dragged row goes out of top or bottom bounds, stop it
-		if(newPos <  faveListTop) {
+		if(newPos < faveListTop) {
 			// Element is above the favelist, make it at the favelist height
 			element.css("top", faveListTop+"px");
 		} else if(draggedBottom > faveListBottom) {
