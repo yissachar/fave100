@@ -21,6 +21,7 @@
 		
 		.resultsArea {
 			border: 1px solid #999;
+			border-top: 0px;
 			background-color: #FFF;
 		}
 		
@@ -41,6 +42,7 @@
 		.pagingButton {
 			font-size: 1.2em;
 			font-weight: bold;
+			border-radius: 0px;
 		}
 		
 		.navigator {
