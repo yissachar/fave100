@@ -55,6 +55,12 @@ public class SongAutocompletePresenter extends
 		super.onBind();
 	}
 
+	@Override
+	protected void onReveal() {
+		super.onReveal();
+		getAutocompleteResults("", true);
+	}
+
 	public interface SearchResultFactory extends AutoBeanFactory {
 		AutoBean<SearchResultProxy> response();
 	}
