@@ -9,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-// TODO: Check if we really need this class
 public class EncodingFilter implements Filter {
 
 	private String encoding = "utf-8";
