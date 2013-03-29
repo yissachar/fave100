@@ -26,8 +26,6 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 @Entity
 public class Song extends DatastoreObject implements SongInterface {
 
-	// TODO: Any risks of using token in ID like this?
-	@IgnoreSave public static final String TOKEN_SEPARATOR = ":%:";
 	@IgnoreSave public static String YOUTUBE_API_KEY = "";
 
 	@Id private String id;
@@ -38,7 +36,6 @@ public class Song extends DatastoreObject implements SongInterface {
 	@SuppressWarnings("unused")
 	private Song(){}
 
-	// TODO: id should be passed in from SQL not generated from name + song
 	public Song(final String name, final String artist, final String id) {
 		this.song = name;
 		this.artist = artist;
