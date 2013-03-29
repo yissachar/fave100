@@ -42,7 +42,6 @@ public class FaveList extends DatastoreObject{
 		return ofy().load().type(FaveList.class).id(id).get();
 	}
 
-	// TODO: Do FaveList activities need to be transactional? If so, need to set AppUser as parent
 	public static void addFaveItemForCurrentUser(final String hashtag, final String songID)
 					throws NotLoggedInException, SongLimitReachedException, SongAlreadyInListException {
 
@@ -101,36 +100,30 @@ public class FaveList extends DatastoreObject{
 	}
 
 	public static void rerankFaveItemForCurrentUser(final String hashtag, final String songID, final int newIndex) {
-		// TODO: Use a transaction to ensure that the indices are correct
-		// For some reason this throws a illegal state exception about deregistering a transaction that is not registered
-//		ofy().transact(new VoidWork() {
-//			public void vrun() {
-				final AppUser currentUser = AppUser.getLoggedInAppUser();
-				if(currentUser == null) return;
-				final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
-				if(faveList == null) return;
+		final AppUser currentUser = AppUser.getLoggedInAppUser();
+		if(currentUser == null) return;
+		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
+		if(faveList == null) return;
 
-				// Make sure new index is valid
-				if(newIndex < 0 || newIndex >= faveList.getList().size())
-					throw new IllegalArgumentException("Index out of range");
+		// Make sure new index is valid
+		if(newIndex < 0 || newIndex >= faveList.getList().size())
+			throw new IllegalArgumentException("Index out of range");
 
-				// Find the song to change position
-				FaveItem faveItemToRerank = null;
-				for(final FaveItem faveItem : faveList.getList()) {
-					if(faveItem.getSongID().equals(songID)) {
-						faveItemToRerank = faveItem;
-						break;
-					}
-				}
+		// Find the song to change position
+		FaveItem faveItemToRerank = null;
+		for(final FaveItem faveItem : faveList.getList()) {
+			if(faveItem.getSongID().equals(songID)) {
+				faveItemToRerank = faveItem;
+				break;
+			}
+		}
 
-				if(faveItemToRerank == null)
-					return;
+		if(faveItemToRerank == null)
+			return;
 
-				faveList.getList().remove(faveItemToRerank);
-				faveList.getList().add(newIndex, faveItemToRerank);
-				ofy().save().entities(faveList).now();
-//			}
-//		});
+		faveList.getList().remove(faveItemToRerank);
+		faveList.getList().add(newIndex, faveItemToRerank);
+		ofy().save().entities(faveList).now();
 	}
 
 	public static void editWhylineForCurrentUser(final String hashtag, final String songID, final String whyline) {
