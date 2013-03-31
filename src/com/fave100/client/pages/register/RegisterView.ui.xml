@@ -44,7 +44,8 @@
 		.statusMessage{
 			display: block;
 			font-size: 0.75em;
-			margin-bottom: 5px;
+			margin: 5px 0;
+			float: left;
 		}
 		
 		.registerButton {
