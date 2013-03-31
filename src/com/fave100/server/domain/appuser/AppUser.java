@@ -133,7 +133,20 @@ public class AppUser extends DatastoreObject{
 
 	// Login methods
 	public static AppUser login(final String username, final String password) throws IncorrectLoginException {
-		final AppUser loggingInUser = findAppUser(username);
+		AppUser loggingInUser = null;
+		if(username.contains("@")) {
+			// User trying to login with email address
+			final EmailID emailID = EmailID.findEmailID(username);
+			// No email found
+			if(emailID == null)
+				throw new IncorrectLoginException();
+			// Email found, get corresponding user
+			loggingInUser = ofy().load().ref(emailID.getUser()).get();
+		} else {
+			// User trying to login with username
+			loggingInUser = findAppUser(username);
+		}
+
 		if(loggingInUser != null) {
 			if(password == null || password.isEmpty()
 				|| !BCrypt.checkpw(password, loggingInUser.getPassword())) {
