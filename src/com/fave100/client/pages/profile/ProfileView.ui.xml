@@ -24,7 +24,7 @@
 		}
 	</ui:style>
 	
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="wrap">
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="container">
 			<div class="content">

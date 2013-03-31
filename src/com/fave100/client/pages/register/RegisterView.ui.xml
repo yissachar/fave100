@@ -75,7 +75,7 @@
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="wrap">
 		<div class="container">
 			<div class="content">		    	
 				<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">

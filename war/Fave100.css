@@ -105,6 +105,12 @@ footer {
 	padding-bottom: 15px;
 }
 
+.wrap {
+	position: relative;		
+	height: auto !important;
+	min-height: 100%;	
+}
+
 .container {
 	position: relative;
 	margin: 0 auto;	
