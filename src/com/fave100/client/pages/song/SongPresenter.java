@@ -119,6 +119,7 @@ public class SongPresenter extends
 		super.onBind();
 	}
 
+	// TODO: Merge this method with FavelistPresenter.addSong()
 	@Override
 	public void addSong() {
 
@@ -152,6 +153,9 @@ public class SongPresenter extends
 				} else if (failure.getExceptionType().equals(
 						SongAlreadyInListException.class.getName())) {
 					Notification.show("The song is already in your list");
+				} else {
+					// Catch-all
+					Notification.show("Error: Could not add song");
 				}
 			}
 		});

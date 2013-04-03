@@ -42,7 +42,7 @@ public class Song extends DatastoreObject implements SongInterface {
 		this.id = id;
 	}
 
-	public static Song findSong(final String id) {
+	public static Song findSong(final String id) throws Exception {
 		try {
 			final String lookupUrl = Constants.LOOKUP_URL+"id="+id;
 		    final URL url = new URL(lookupUrl);
@@ -64,9 +64,8 @@ public class Song extends DatastoreObject implements SongInterface {
 		    final Song song = new Song(jsonSong.get("song").getAsString(), jsonSong.get("artist").getAsString(), id);
 		    return song;
 		} catch (final Exception e) {
-			// TODO: Catch error
+			throw(e);
 		}
-		return null;
 	}
 
 	public static String getYouTubeResults(final String song, final String artist) {

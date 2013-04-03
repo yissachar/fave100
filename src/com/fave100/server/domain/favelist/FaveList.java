@@ -43,7 +43,7 @@ public class FaveList extends DatastoreObject{
 	}
 
 	public static void addFaveItemForCurrentUser(final String hashtag, final String songID)
-					throws NotLoggedInException, SongLimitReachedException, SongAlreadyInListException {
+					throws Exception {
 
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null) {
