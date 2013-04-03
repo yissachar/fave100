@@ -5,11 +5,14 @@ import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.Validator;
+import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -133,8 +136,7 @@ public class ProfilePresenter extends
 	public void saveProfileData(final String email) {
 		getView().clearErrors();
 
-		// TODO: Add back in when have time (see AppUser domain class)
-		/*final String emailError = Validator.validateEmail(email);
+		final String emailError = Validator.validateEmail(email);
 		if (emailError == null) {
 			final Request<Boolean> setProfileDataReq = requestFactory
 					.appUserRequest().setProfileData(email);
@@ -146,10 +148,17 @@ public class ProfilePresenter extends
 						getView().setFormStatusMessage("Profile saved");
 					}
 				}
+
+				@Override
+				public void onFailure(final ServerFailure failure) {
+					if(failure.getExceptionType().equals(EmailIDAlreadyExistsException.class.getName())) {
+						getView().setEmailError("A user with that email already exists");
+					}
+				}
 			});
 		} else {
 			getView().setEmailError(emailError);
-		}*/
+		}
 	}
 
 }
