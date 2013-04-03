@@ -93,6 +93,9 @@ public class FavelistPresenter extends
 					Notification.show("You cannot have more than 100 songs in list");
 				} else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
 					Notification.show("The song is already in your list");
+				} else {
+					// Catch-all
+					Notification.show("Error: Could not add song");
 				}
 			}
 		});
