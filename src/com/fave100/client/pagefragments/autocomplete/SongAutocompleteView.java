@@ -11,6 +11,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -77,12 +78,12 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	@UiHandler("eventCatcher")
 	void onHover(final MouseMoveEvent event) {
 		for(int i = 0; i < resultsPanel.getWidgetCount(); i++) {
-			final Widget widget = resultsPanel.getWidget(i);
+			final Widget w = resultsPanel.getWidget(i);
 			// If mouse move occurs over song suggestion, set it as selected
-			if(event.getClientX() >= widget.getAbsoluteLeft()
-					&& event.getClientX() <= widget.getAbsoluteLeft() + widget.getOffsetWidth()
-					&& event.getClientY() >= widget.getAbsoluteTop()
-					&& event.getClientY() <= widget.getAbsoluteTop() + widget.getOffsetHeight())
+			if(event.getClientX() >= w.getAbsoluteLeft()
+					&& event.getClientX() <= w.getAbsoluteLeft() + w.getOffsetWidth()
+					&& event.getClientY() + Window.getScrollTop() >= w.getAbsoluteTop()
+					&& event.getClientY() + Window.getScrollTop() <= w.getAbsoluteTop() + w.getOffsetHeight())
 			{
 				getUiHandlers().setSelection(i, false);
 			}
