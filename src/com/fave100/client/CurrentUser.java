@@ -30,10 +30,10 @@ public class CurrentUser implements AppUserProxy {
 		this.appUser = appUser;
 	}
 
+	// Needed for RequestFactory
 	@Override
 	public EntityProxyId<?> stableId() {
-		// TODO Auto-generated method stub
-		return null;
+		return appUser.stableId();
 	}
 
 	@Override
