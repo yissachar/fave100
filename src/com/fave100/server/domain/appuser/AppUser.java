@@ -56,6 +56,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
+import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -82,7 +83,7 @@ public class AppUser extends DatastoreObject{
 	@Id private String usernameID;
 	private String username;
 	private String password;
-	// An cazse sensitive email address stored directly with user for easy access
+	// A case sensitive email address stored directly with user for easy access
 	// Must be manually kept in sync with EmailID
 	private String email;
 	private String avatar;
@@ -605,14 +606,40 @@ public class AppUser extends DatastoreObject{
 		return currentUser.getEmail();
 	}
 
-	// TODO: Allow users to change their email address (within transaction)
-	/*public static Boolean setProfileData(final String email) {
+	public static Boolean setProfileData(final String email) throws EmailIDAlreadyExistsException {
 		final AppUser currentUser = getLoggedInAppUser();
 		if(currentUser == null) return false;
-		currentUser.setEmail(email);
-		ofy().save().entity(currentUser).now();
+		try {
+			ofy().transact(new VoidWork() {
+				@Override
+				public void vrun() {
+					EmailID emailID = EmailID.findEmailID(email);
+					// Existing email for a different user, throw exception
+					if(emailID != null && !emailID.getEmailID().equals(currentUser.getEmail().toLowerCase())) {
+						throw new RuntimeException(new EmailIDAlreadyExistsException());
+					} else if(emailID == null) {
+						// No existing email, allow it to be changed
+
+						// First delete the old EmailID
+						emailID = EmailID.findEmailID(currentUser.getEmail());
+						ofy().delete().entity(emailID).now();
+						// Then create a new EmailID with the new email
+						emailID = new EmailID(email, currentUser);
+						// Manually keep local user email in sync
+						currentUser.setEmail(email);
+						// Save entities
+						ofy().save().entities(emailID, currentUser).now();
+					}
+				}
+			});
+		} catch (final RuntimeException re) {
+			if(re.getCause() instanceof EmailIDAlreadyExistsException) {
+				throw (EmailIDAlreadyExistsException) re.getCause();
+			}
+		}
+
 		return true;
-	}*/
+	}
 
 	// Emails user a password reset token if they forget their password
 	public static Boolean emailPasswordResetToken(final String username, final String emailAddress) {

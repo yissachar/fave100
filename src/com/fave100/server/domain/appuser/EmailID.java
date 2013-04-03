@@ -8,7 +8,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
 /**
- * Allows lookup of an AppUser by their Email address
+ * Allows lookup of an AppUser by their (lowercase) Email address
  * @author yissachar.radcliffe
  *
  */
@@ -38,7 +38,7 @@ public class EmailID {
 	}
 
 	public void setEmailID(final String emailID) {
-		this.emailID = emailID;
+		this.emailID = emailID.toLowerCase();
 	}
 
 	public Ref<AppUser> getUser() {
