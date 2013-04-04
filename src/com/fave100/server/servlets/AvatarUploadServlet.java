@@ -8,7 +8,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fave100.client.pages.profile.ProfilePresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.UrlBuilder;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -35,8 +37,8 @@ public class AvatarUploadServlet extends RequestFactoryServlet
             	// TODO: Figure out why this doesn't work and put back in
             	//res.setContentType("text/html");
             	//res.getWriter().println(blobKey.getKeyString());
-            	// TODO: Remove hard coded URL
-            	res.sendRedirect("http://yissachar:8888/Fave100.html?gwt.codesvr=127.0.0.1:9997"+"#"+NameTokens.profile+";blob-key=" + blobKey.getKeyString());
+        		final String url = new UrlBuilder(NameTokens.profile).with(ProfilePresenter.BLOBKEY_PARAM, blobKey.getKeyString()).getUrl();
+        		res.sendRedirect(url);
             }
         }
     }
