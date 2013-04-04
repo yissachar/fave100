@@ -53,6 +53,8 @@ public class ProfilePresenter extends
 	public interface MyProxy extends ProxyPlace<ProfilePresenter> {
 	}
 
+	public static final String BLOBKEY_PARAM = "blob-key";
+
 	private ApplicationRequestFactory	requestFactory;
 	private CurrentUser					currentUser;
 
@@ -78,7 +80,7 @@ public class ProfilePresenter extends
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 
-		final String blobKey = placeRequest.getParameter("blob-key", "");
+		final String blobKey = placeRequest.getParameter(BLOBKEY_PARAM, "");
 		if (!blobKey.isEmpty()) {
 			final Request<Void> avatarReq = requestFactory.appUserRequest()
 					.setAvatarForCurrentUser(blobKey);
