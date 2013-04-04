@@ -3,6 +3,7 @@ package com.fave100.client.pages.profile;
 import static com.google.gwt.query.client.GQuery.$;
 
 import com.fave100.client.pages.BasePresenter;
+import com.fave100.shared.Constants;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -65,7 +66,13 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 
 	@UiHandler("profileForm")
 	public void onSubmit(final SubmitCompleteEvent event) {
-		getUiHandlers().saveProfileData(emailInput.getValue());
+		// TODO: Is there any more robust way of checking for 413 error?
+		if(event.getResults().contains("Error 413")) {
+			// File too large for upload
+			setFormStatusMessage("File too large. Max size is "+Constants.MAX_AVATAR_SIZE / 1024 + " KB", 4000, true);
+		} else {
+			getUiHandlers().saveProfileData(emailInput.getValue());
+		}
 		// profileForm.reset();
 	}
 
@@ -87,9 +94,18 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 
 	@Override
 	public void setFormStatusMessage(final String message) {
+		setFormStatusMessage(message, 1000, false);
+	}
+
+	public void setFormStatusMessage(final String message, final int delay, final boolean error) {
+		if(error) {
+			formStatusMessage.addStyleName("error");
+		} else {
+			formStatusMessage.removeStyleName("error");
+		}
 		formStatusMessage.setText(message);
 		formStatusMessage.setVisible(true);
-		$(formStatusMessage).fadeOut(2500);
+		$(formStatusMessage).delay(delay).fadeOut(1500);
 	}
 
 	@Override
