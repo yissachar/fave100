@@ -25,6 +25,8 @@
 		.avatar {
 			float: left;
 			margin-right: 10px;
+			max-width: 80px;
+			max-height: 80px;
 		}
 		
 		.nameContainer {
