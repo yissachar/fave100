@@ -47,6 +47,7 @@ import com.fave100.shared.exceptions.user.TwitterIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.UploadOptions;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.users.User;
@@ -554,7 +555,8 @@ public class AppUser extends DatastoreObject{
 	}
 
 	public static String createBlobstoreUrl(final String successPath) {
-		return BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(successPath);
+		final UploadOptions options = UploadOptions.Builder.withMaxUploadSizeBytes(Constants.MAX_AVATAR_SIZE);
+		return BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(successPath, options);
 	}
 
 	public static void setAvatarForCurrentUser(final String avatar) {
