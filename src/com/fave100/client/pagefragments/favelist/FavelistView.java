@@ -123,6 +123,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 						rankEditor.setValue(rank.getText().replace(".", ""));
 						rankEditor.setVisible(true);
 						rankEditor.setFocus(true);
+						rankEditor.selectAll();
 					}
 				});
 
