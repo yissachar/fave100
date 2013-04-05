@@ -77,6 +77,9 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	public void setList(final List<FaveItemProxy> list, final boolean personalList) {
 		favelist.clear();
 
+		if(list == null)
+			return;
+
 		for(int i = 0; i < list.size(); i++) {
 			final FaveItemProxy faveItem = list.get(i);
 
