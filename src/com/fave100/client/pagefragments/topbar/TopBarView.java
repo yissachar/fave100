@@ -3,10 +3,10 @@ package com.fave100.client.pagefragments.topbar;
 import com.fave100.client.Notification;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -58,10 +58,10 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	public void setLoggedIn(final String username) {
 		greeting.setText(username);
 		greeting.setVisible(true);
-		greeting.setHref(Window.Location.getPath()
-				+ Window.Location.getQueryString() + "#"
-				+ NameTokens.getUsers() + ";" + UsersPresenter.USER_PARAM + "="
-				+ username);
+		final String userPlace = new UrlBuilder(NameTokens.users)
+			.with(UsersPresenter.USER_PARAM, username)
+			.getUrl();
+		greeting.setHref(userPlace);
 		registerLink.setVisible(false);
 		logInLogOutLink.setText("Log out");
 		logInLogOutLink.setTargetHistoryToken(NameTokens.logout);
