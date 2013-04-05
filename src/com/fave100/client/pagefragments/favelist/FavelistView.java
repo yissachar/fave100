@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
@@ -91,8 +92,10 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 
 			final InlineHyperlink song = new InlineHyperlink();
 			song.setText(faveItem.getSong());
-			// TODO: Need better way of building links in views
-			song.setTargetHistoryToken(NameTokens.song+";"+SongPresenter.ID_PARAM+"="+faveItem.getSongID());
+			final String songPlace = new UrlBuilder(NameTokens.song)
+				.with(SongPresenter.ID_PARAM, faveItem.getSongID())
+				.getPlaceToken();
+			song.setTargetHistoryToken(songPlace);
 			song.getElement().addClassName(style.songLink());
 			detailsContainer.add(song);
 
