@@ -2,6 +2,7 @@ package com.fave100.client;
 
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.gin.ClientGinjector;
+import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.core.client.EntryPoint;
@@ -23,6 +24,8 @@ public class Fave100 implements EntryPoint {
 
 		// This is required for Gwt-Platform proxy's generator
 		DelayedBindRegistry.bind(ginjector);
+
+		UrlBuilder.isDevMode = !GWT.isProdMode();
 
 		// On first page load or page refresh, check for an existing logged in user
 		final ApplicationRequestFactory requestFactory = GWT.create(ApplicationRequestFactory.class);
