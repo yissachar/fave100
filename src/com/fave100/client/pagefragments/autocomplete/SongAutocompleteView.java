@@ -159,4 +159,9 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	public void showNext(final boolean show) {
 		nextButton.setEnabled(show);
 	}
+
+	@Override
+	public void clearSearch() {
+		searchBox.setText("");
+	}
 }
