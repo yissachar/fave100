@@ -2,9 +2,10 @@ package com.fave100.client.widgets;
 
 import java.util.List;
 
-import com.fave100.client.gin.ClientGinjector;
+import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
+import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
@@ -18,8 +19,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class UserThumbList extends Composite {
 
@@ -34,13 +33,9 @@ public class UserThumbList extends Composite {
 	@UiField Label songRank;
 	@UiField InlineHyperlink songTitle;
 	private List<FaveItemProxy> songList;
-	private PlaceManager placeManager;
 
 	public UserThumbList(final ApplicationRequestFactory requestFactory, final AppUserProxy appUser) {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		final ClientGinjector ginjector = GWT.create(ClientGinjector.class);
-		placeManager = ginjector.getPlaceManager();
 
 		final Request<List<FaveItemProxy>> faveListReq = requestFactory.faveListRequest().getFaveList(appUser.getUsername(), Constants.DEFAULT_HASHTAG);
 		faveListReq.fire(new Receiver<List<FaveItemProxy>>() {
@@ -60,9 +55,11 @@ public class UserThumbList extends Composite {
 		final FaveItemProxy song = songList.get(random);
 		songRank.setText(Integer.toString(random+1));
 		songTitle.setText(song.getSong());
-		final PlaceRequest placeRequest = new PlaceRequest(NameTokens.song)
-											.with("id", song.getSongID());
-		songTitle.setTargetHistoryToken(placeManager.buildHistoryToken(placeRequest));
+
+		final String place = new UrlBuilder(NameTokens.song)
+			.with(SongPresenter.ID_PARAM, song.getSongID())
+			.getPlaceToken();
+		songTitle.setTargetHistoryToken(place);
 	}
 
 }
