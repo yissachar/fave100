@@ -12,6 +12,8 @@ import com.fave100.server.domain.appuser.GoogleID;
 import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
 import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.shared.UrlBuilder;
+import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.ObjectifyService;
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
 
@@ -41,6 +43,9 @@ public class ServerModule extends HandlerModule {
 
 		final APIKey youtubeApiKey =  ofy().load().type(APIKey.class).id("youtube").get();
 		Song.YOUTUBE_API_KEY = youtubeApiKey.getKey();
+
+		// Let the UrlBuilder know what URLs to build
+		UrlBuilder.isDevMode = (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development);
 
 	}
 

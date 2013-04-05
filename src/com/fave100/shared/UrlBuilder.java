@@ -1,17 +1,19 @@
 package com.fave100.shared;
 
-import com.google.gwt.core.shared.GWT;
 
 public class UrlBuilder {
+
+	// Up to the client to set this to true on init
+	public static boolean isDevMode = false;
 
 	private String url;
 
 	public UrlBuilder(final String placeToken) {
 		url = "";
-		if(GWT.isProdMode()) {
-			url += "http://fave-100.appspot.com/";
-		} else {
+		if(isDevMode) {
 			url += "http://yissachar:8888/Fave100.html?gwt.codesvr=127.0.0.1:9997";
+		} else {
+			url += "http://fave-100.appspot.com/";
 		}
 
 		url += "#";
