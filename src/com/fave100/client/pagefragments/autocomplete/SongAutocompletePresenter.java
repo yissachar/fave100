@@ -31,6 +31,7 @@ public class SongAutocompletePresenter extends
 		void 	setSelection(int selection);
 		void	showPrevious(boolean show);
 		void	showNext(boolean show);
+		void	clearSearch();
 		String 	getSearchTerm();
 	}
 
@@ -135,6 +136,7 @@ public class SongAutocompletePresenter extends
 	public void songSelected() {
 		eventBus.fireEvent(new SongSelectedEvent(currentSuggestions.get(getSelection())));
 		getAutocompleteResults("", true);
+		getView().clearSearch();
 	}
 
 	// Change the page number and show the results for the new page
