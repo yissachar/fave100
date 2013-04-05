@@ -56,6 +56,9 @@ public class UserThumbList extends Composite {
 	}
 
 	private void setRandomSong() {
+		if(songList.size() == 0)
+			return;
+
 		final int random = (int) (Math.random() * songList.size());
 		final FaveItemProxy song = songList.get(random);
 		songRank.setText(Integer.toString(random+1));
