@@ -87,6 +87,13 @@ public class UsersPresenter extends
 	}
 
 	@Override
+	protected void onHide() {
+		super.onHide();
+		// Clear the favelist
+		favelist.clearFavelist();
+	}
+
+	@Override
 	public boolean useManualReveal() {
 		return true;
 	}
