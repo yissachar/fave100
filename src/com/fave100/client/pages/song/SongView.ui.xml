@@ -20,6 +20,7 @@
 		
 		.songDetails {
 			float: left;
+			width: 85%;
 		}
 		
 		.songTitle {
