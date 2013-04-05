@@ -3,6 +3,7 @@ package com.fave100.client.widgets;
 import java.util.List;
 
 import com.fave100.client.pages.song.SongPresenter;
+import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.UrlBuilder;
@@ -28,7 +29,7 @@ public class UserThumbList extends Composite {
 	interface UserThumbListUiBinder extends UiBinder<Widget, UserThumbList> {
 	}
 
-	@UiField Label username;
+	@UiField InlineHyperlink username;
 	@UiField Image userProfileImage;
 	@UiField Label songRank;
 	@UiField InlineHyperlink songTitle;
@@ -47,6 +48,10 @@ public class UserThumbList extends Composite {
 		});
 
 		username.setText(appUser.getUsername());
+		final String userPlace = new UrlBuilder(NameTokens.users)
+			.with(UsersPresenter.USER_PARAM, appUser.getUsername())
+			.getPlaceToken();
+		username.setTargetHistoryToken(userPlace);
 		userProfileImage.setUrl(appUser.getAvatarImage());
 	}
 
@@ -56,10 +61,10 @@ public class UserThumbList extends Composite {
 		songRank.setText(Integer.toString(random+1));
 		songTitle.setText(song.getSong());
 
-		final String place = new UrlBuilder(NameTokens.song)
+		final String songPlace = new UrlBuilder(NameTokens.song)
 			.with(SongPresenter.ID_PARAM, song.getSongID())
 			.getPlaceToken();
-		songTitle.setTargetHistoryToken(place);
+		songTitle.setTargetHistoryToken(songPlace);
 	}
 
 }
