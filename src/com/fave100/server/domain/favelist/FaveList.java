@@ -4,6 +4,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.Song;
@@ -126,13 +127,19 @@ public class FaveList extends DatastoreObject{
 		ofy().save().entities(faveList).now();
 	}
 
-	public static void editWhylineForCurrentUser(final String hashtag, final String songID, final String whyline) {
+	public static void editWhylineForCurrentUser(final String hashtag, final String songID, final String whyline)
+			throws NotLoggedInException {
+		Objects.requireNonNull(hashtag);
+		Objects.requireNonNull(songID);
+		Objects.requireNonNull(whyline);
+
 		//TODO: Sanitize the string
 		//TODO: Length restriction?
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return;
+		if(currentUser == null)
+			throw new NotLoggedInException();
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
-		if(faveList == null) return;
+		Objects.requireNonNull(faveList);
 
 		// Find the song to edit whyline
 		FaveItem faveItemToEdit = null;
@@ -143,8 +150,7 @@ public class FaveList extends DatastoreObject{
 			}
 		}
 
-		if(faveItemToEdit == null)
-			return;
+		Objects.requireNonNull(faveItemToEdit);
 
 		// Set the denormalized whyline for the FaveItem
 		faveItemToEdit.setWhyline(whyline);
