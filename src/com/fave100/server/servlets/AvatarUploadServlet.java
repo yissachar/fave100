@@ -1,16 +1,17 @@
 package com.fave100.server.servlets;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fave100.client.pages.profile.ProfilePresenter;
-import com.fave100.client.place.NameTokens;
-import com.fave100.shared.UrlBuilder;
+import com.fave100.server.domain.appuser.AppUser;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -34,11 +35,11 @@ public class AvatarUploadServlet extends RequestFactoryServlet
         	final BlobKey blobKey =  bloblist.get(0);
 
         	if(blobKey != null) {
-            	// TODO: Figure out why this doesn't work and put back in
-            	//res.setContentType("text/html");
-            	//res.getWriter().println(blobKey.getKeyString());
-        		final String url = new UrlBuilder(NameTokens.profile).with(ProfilePresenter.BLOBKEY_PARAM, blobKey.getKeyString()).getUrl();
-        		res.sendRedirect(url);
+        		final String username = (String) req.getSession().getAttribute(AppUser.AUTH_USER);
+            	Objects.requireNonNull(username);
+            	final AppUser appUser = AppUser.findAppUser(username);
+            	appUser.setAvatar(blobKey.getKeyString());
+            	ofy().save().entity(appUser).now();
             }
         }
     }

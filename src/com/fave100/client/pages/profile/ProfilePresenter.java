@@ -18,7 +18,6 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 /**
@@ -53,8 +52,6 @@ public class ProfilePresenter extends
 	public interface MyProxy extends ProxyPlace<ProfilePresenter> {
 	}
 
-	public static final String BLOBKEY_PARAM = "blob-key";
-
 	private ApplicationRequestFactory	requestFactory;
 	private CurrentUser					currentUser;
 
@@ -74,18 +71,6 @@ public class ProfilePresenter extends
 	@Override
 	public void onBind() {
 		super.onBind();
-	}
-
-	@Override
-	public void prepareFromRequest(final PlaceRequest placeRequest) {
-		super.prepareFromRequest(placeRequest);
-
-		final String blobKey = placeRequest.getParameter(BLOBKEY_PARAM, "");
-		if (!blobKey.isEmpty()) {
-			final Request<Void> avatarReq = requestFactory.appUserRequest()
-					.setAvatarForCurrentUser(blobKey);
-			avatarReq.fire();
-		}
 	}
 
 	@Override
