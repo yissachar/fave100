@@ -27,8 +27,7 @@ public class Whyline extends DatastoreObject {
 	private String username;
 	@Index(WhylineCheck.class) private Ref<Song> song;
 
-	@SuppressWarnings("unused")
-	private Whyline() {}
+	public Whyline() {}
 
 	public Whyline(final String whyline, final String songID, final String username) {
 		this.whyline = whyline;
@@ -36,7 +35,7 @@ public class Whyline extends DatastoreObject {
 		this.username = username;
 	}
 
-	public static Whyline findWhyline(final String id) {
+	public static Whyline findWhyline(final Long id) {
 		return ofy().load().type(Whyline.class).id(id).get();
 	}
 

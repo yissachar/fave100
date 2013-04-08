@@ -33,8 +33,7 @@ public class Song extends DatastoreObject implements SongInterface {
 	private String song;
 	private String coverArtUrl;
 
-	@SuppressWarnings("unused")
-	private Song(){}
+	public Song(){}
 
 	public Song(final String name, final String artist, final String id) {
 		this.song = name;
