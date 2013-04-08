@@ -10,6 +10,8 @@ import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.shared.Validator;
+import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -128,17 +130,23 @@ public class FaveList extends DatastoreObject{
 	}
 
 	public static void editWhylineForCurrentUser(final String hashtag, final String songID, final String whyline)
-			throws NotLoggedInException {
+			throws NotLoggedInException, BadWhylineException {
 		Objects.requireNonNull(hashtag);
 		Objects.requireNonNull(songID);
 		Objects.requireNonNull(whyline);
 
-		//TODO: Sanitize the string
-		//TODO: Length restriction?
+		//TODO: Sanitize the whyline e.g. no < or >
+
+		// First check that the whyline is valid
+		final String whylineError = Validator.validateWhyline(whyline);
+		if(whylineError != null )
+			throw new BadWhylineException(whylineError);
+
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if(currentUser == null)
 			throw new NotLoggedInException();
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
+		final FaveList faveList = ofy().load().type(FaveList.class)
+				.id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
 		Objects.requireNonNull(faveList);
 
 		// Find the song to edit whyline

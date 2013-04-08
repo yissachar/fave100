@@ -6,6 +6,7 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
+import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -122,7 +123,19 @@ public class FavelistPresenter extends
 	public void editWhyline(final String songID, final String whyline) {
 		final Request<Void> editWhyline = requestFactory.faveListRequest()
 				.editWhylineForCurrentUser(Constants.DEFAULT_HASHTAG, songID, whyline);
-		editWhyline.fire();
+		editWhyline.fire(new Receiver<Void>() {
+			@Override
+			public void onSuccess(final Void result) {
+				// Do nothing
+			}
+
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				if(failure.getExceptionType().equals(BadWhylineException.class.getName())) {
+					Notification.show(failure.getMessage());
+				}
+			}
+		});
 	}
 
 	@Override
