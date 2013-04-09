@@ -5,7 +5,32 @@
 </head>
 <body>
 	<h1>Fave100 Documentation</h1>
+	<a href="#basicAppStructure">Basic app structure</a><br>
+	<a href="#upgradeAE-GWT">Upgrading AppEngine and GWT version</a><br>
+
+	<a name="basicAppStructure"/>
+	<h2>Basic App Structure</h2>
+	<p>
+		The app consists of 3 basic components:
+	</p>
+	<ul>
+		<li>GWTP Client</li>
+		<li>AppEngine Server</li>
+		<li>Lucene Song Server</li>
+	</ul>
+
+	<h4>GWTP Client</h4>
+	<p>Manages all client-side actions and display. Interfaces with AppEngine Server through RequestFactory and with Lucene Song Server through JSONP</p>
+
+	<h4>AppEngine Server</h4>
+	<p>AppEngine manages storage for all entities aside from Songs. For example, AppUser, Favelist, FaveItem, etc. are all AppEngine Datastore entities. Song entities are managed through references to their unique integer ID and retrieved through Lucene.</p>
+
+	<h4>Lucene Song Storage</h4>
+	<p>Lucene (Tomcat server hosted on Jelastic) manages storage of all Song entities. Lucene server provides search (autocomplete) and  lookup (by unique integer ID) APIs.</p>
+
+	<a name="upgradeAE-GWT"/>
 	<h2>Upgrading AppEngine and GWT version</h2>
+
 	<ol>
 		<li>Find the latest <a href="https://developers.google.com/eclipse/docs/download">Google Plugin for Eclipse</a></li>
 		<li>In Eclipse Help->Install new software, install the plugin</li>
