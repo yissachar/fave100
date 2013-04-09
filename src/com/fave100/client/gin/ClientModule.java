@@ -5,6 +5,8 @@ import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
 import com.fave100.client.pagefragments.autocomplete.SongAutocompleteView;
+import com.fave100.client.pagefragments.favelist.FavelistPresenter;
+import com.fave100.client.pagefragments.favelist.FavelistView;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pagefragments.login.LoginWidgetView;
 import com.fave100.client.pagefragments.topbar.TopBarPresenter;
@@ -33,16 +35,20 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.gwtplatform.mvp.client.annotations.GaAccount;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
-import com.fave100.client.pagefragments.favelist.FavelistPresenter;
-import com.fave100.client.pagefragments.favelist.FavelistView;
+import com.gwtplatform.mvp.client.googleanalytics.GoogleAnalyticsNavigationTracker;
 
 public class ClientModule extends AbstractPresenterModule {
 
 	@Override
 	protected void configure() {
 		install(new DefaultModule(ClientPlaceManager.class));
+
+		// Google Analytics
+		bindConstant().annotatedWith(GaAccount.class).to("UA-39911495-1");
+		bind(GoogleAnalyticsNavigationTracker.class).asEagerSingleton();
 
 		bind(CurrentUser.class).asEagerSingleton();
 
