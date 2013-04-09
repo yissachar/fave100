@@ -2,11 +2,51 @@
 <html>
 <head>
 	<title>Fave100 Documentation</title>
+	<style type="text/css">
+		body {
+			background-color: #FAFAFA;
+			color: #555;
+			font-size: 1.1em;
+			font-family: "calibri", sans-serif;
+		}
+
+		h2 {
+			text-decoration: underline;
+		}
+
+		#wrap {
+			display: block;
+			margin: 0 auto;
+			width: 960px;
+		}
+	</style>
 </head>
 <body>
+	<div id="wrap">
+
 	<h1>Fave100 Documentation</h1>
+	<a href="#musicbrainzSongs">Musizbrainz Songs</a><br>
 	<a href="#basicAppStructure">Basic app structure</a><br>
 	<a href="#upgradeAE-GWT">Upgrading AppEngine and GWT version</a><br>
+
+	<a name="musicbrainzSongs"/>
+	<h2>Musicbrainz Songs</h2>
+	<p>All the song data is obtained from Musicbrainz. A VM containing the Musicbrainz database (PostgreSQL) is set up on Yissachar's machine (on VirtualBox) and syncs with the main Musicbrainz database every night at midnight.</p>
+	<p>In addition to the standard Musicbrainz tables, there are 3 custom Fave100 tables:</p>
+	<ul>
+		<li>autocomplete_search</li>
+		<li>autocomplete_search_staging</li>
+		<li>autocomplete_search_bad_parens</li>
+	</ul>
+
+	<h4>autocomplete_search</h4>
+	<p>autocomplete_search represents the entirety of the Fave100 song collection. It includes a unique integer ID for every song stored.</p>
+
+	<h4>autocomplete_search_staging</h4>
+	<p>autocomplete_search_staging is a temporary table that is rebuilt from scratch every time we wish to update the Fave100 song collection. It runs the entire Musicbrainz data set through a variety of filters and checks (for instance, de-duplicating the data) to give us the best results. New results that are obtained through this build (e.g. songs added to the Musicbrainz database since the last time that we updated autocomplete_search_staging) are then added to to autocomplete_search.</p>
+
+	<h4>autocomplete_search_bad_parens</h4>
+	<p>autocomplete_search_bad_parens contains a variety of entries that Fave100 considers to be duplicate with a non-parenthesis version when surrounded by parethesis. For instance, "Stairway to Heaven" and "Stairway to Heaven (acoustic)" are considered by Fave100 to be the same song. autocomplete_search_bad_parens allows for entries to easily be added when they are noted</p>
 
 	<a name="basicAppStructure"/>
 	<h2>Basic App Structure</h2>
@@ -38,5 +78,6 @@
 		<li>In ANT build.xml update ae-sdk.dir and gwt-sdk.dir properties</li>
 		<li>Run build.xml</li>
 	</ol>
+	</div>
 </body>
 </html>
