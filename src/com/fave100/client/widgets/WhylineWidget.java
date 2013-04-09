@@ -1,5 +1,8 @@
 package com.fave100.client.widgets;
 
+import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.place.NameTokens;
+import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.WhylineProxy;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -16,11 +19,11 @@ public class WhylineWidget extends Composite {
 		container.add(whylineLabel);
 
 		final InlineHyperlink whylineAuthor = new InlineHyperlink();
-		// TODO: This throws errors about infinite loop
-/*		final ClientGinjector ginjector = GWT.create(ClientGinjector.class);
-		final String historyToken = ginjector.getPlaceManager().buildHistoryToken(new PlaceRequest(NameTokens.users).with("u", whyline.getUsername()));
-		whylineAuthor.setTargetHistoryToken(historyToken);
-	*/	whylineAuthor.setText("-"+whyline.getUsername());
+		final String userPlace = new UrlBuilder(NameTokens.users)
+			.with(UsersPresenter.USER_PARAM, whyline.getUsername())
+			.getPlaceToken();
+		whylineAuthor.setTargetHistoryToken(userPlace);
+		whylineAuthor.setText("-"+whyline.getUsername());
 		container.add(whylineAuthor);
 	}
 
