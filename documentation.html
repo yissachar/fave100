@@ -26,6 +26,7 @@
 
 	<h1>Fave100 Documentation</h1>
 	<a href="#musicbrainzSongs">Musizbrainz Songs</a><br>
+	<a href="#updatingSongs">Updating Song Database</a><br>
 	<a href="#basicAppStructure">Basic app structure</a><br>
 	<a href="#upgradeAE-GWT">Upgrading AppEngine and GWT version</a><br>
 
@@ -47,6 +48,17 @@
 
 	<h4>autocomplete_search_bad_parens</h4>
 	<p>autocomplete_search_bad_parens contains a variety of entries that Fave100 considers to be duplicate with a non-parenthesis version when surrounded by parethesis. For instance, "Stairway to Heaven" and "Stairway to Heaven (acoustic)" are considered by Fave100 to be the same song. autocomplete_search_bad_parens allows for entries to easily be added when they are noted</p>
+
+	<a name="updatingSongs"/>
+	<h2>Updating Song Database</h2>
+	<ol>
+		<li>Ensure that Musicbrainz VM database is in sync with Musicbrainz master (~/run_replication.sh - this should be running every night at midnight so there should be no need to run it manually)</li>
+		<li>Run <a href="https://github.com/yissachar/Fave100-Autocomplete">BuildAutocomplete.sql</a> on Musicbrainz VM (you can use PGAdmin 3 on Yissachar's machine to run the code). This should take around 10.5 hours to execute and will rebuild autocomplete_search_staging from scratch with all the latest song entries.</li>
+		<li>Run <a href="https://github.com/yissachar/Fave100-Autocomplete">UpdateAutocomplete.sql</a> on Musicbrainz VM. This should take around 6.5 hours to execute and will import all new entries from staging into the actual song database.</li>		
+		<li>Run the <a href="https://github.com/yissachar/fave100-lucene/blob/master/src/Index.java">Lucene Indexer</a> to build a Lucene index from the PostgreSQL autocomplete_search song database.</li>
+		<li>Copy resulting index into <a href="https://github.com/hellofornow/fave100-tomcat">Fave100 Tomcat</a> resources. Build Fave-100 Tomcat (clean tomcat:deploy).</li>
+		<li>Deploy the resulting WAR to Jelastic</li>
+	</ol>
 
 	<a name="basicAppStructure"/>
 	<h2>Basic App Structure</h2>
