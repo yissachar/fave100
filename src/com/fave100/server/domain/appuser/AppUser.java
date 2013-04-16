@@ -92,12 +92,10 @@ public class AppUser extends DatastoreObject{
 
 	private AppUser() {}
 
-	public AppUser(final String username, final String password, final String email) {
+	public AppUser(final String username) {
 		this.username = username;
 		this.usernameID = username.toLowerCase();
-		this.email = email;
 		this.joinDate = new Date();
-		setPassword(password);
 	}
 
 
@@ -378,7 +376,9 @@ public class AppUser extends DatastoreObject{
 							&& Validator.validateEmail(email) == null){
 
 							// Everything passes validation, create the user
-							final AppUser appUser = new AppUser(username, password, email);
+							final AppUser appUser = new AppUser(username);
+							appUser.setPassword(password);
+							appUser.setEmail(email);
 							// Create the user's list
 							final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
 							// Store email address
@@ -428,8 +428,7 @@ public class AppUser extends DatastoreObject{
 					}
 					if(Validator.validateUsername(username) == null) {
 						// Create the user
-						final AppUser appUser = new AppUser();
-						appUser.setUsername(username);
+						final AppUser appUser = new AppUser(username);
 						appUser.setEmail(user.getEmail());
 						// Create the user's list
 						final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
@@ -473,8 +472,7 @@ public class AppUser extends DatastoreObject{
 					}
 					if(Validator.validateUsername(username) == null) {
 						// Create the user
-						final AppUser appUser = new AppUser();
-						appUser.setUsername(username);
+						final AppUser appUser = new AppUser(username);
 						// TODO: Do we need an email for twitter users?
 						// Create the user's list
 						final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
