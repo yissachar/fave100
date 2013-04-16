@@ -10,6 +10,7 @@ import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -78,7 +79,7 @@ public class SongAutocompletePresenter extends
 			return;
 		}
 
-		final String url = Constants.SEARCH_URL+"searchTerm="+searchTerm+"&limit=5&page="+page;
+		final String url = Constants.SEARCH_URL+"searchTerm="+URL.encodeQueryString(searchTerm)+"&limit=5&page="+page;
 		final AsyncCallback<JavaScriptObject> autocompleteReq = new AsyncCallback<JavaScriptObject>() {
 			@Override
 			public void onFailure(final Throwable caught) {
