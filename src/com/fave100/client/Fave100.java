@@ -20,7 +20,6 @@ public class Fave100 implements EntryPoint {
 	public void onModuleLoad() {
 		// TODO: HTTPS
 		// TODO: import playlist from iTunes
-		// TODO: Backend cron job that cleans up expired password tokens
 
 		// This is required for Gwt-Platform proxy's generator
 		DelayedBindRegistry.bind(ginjector);

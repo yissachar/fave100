@@ -9,6 +9,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 
 /**
@@ -20,7 +21,7 @@ import com.googlecode.objectify.annotation.Load;
 @Entity
 public class PwdResetToken {
 	@Id private String token;
-	private Date expiry;
+	@Index private Date expiry;
 	@Load private Ref<AppUser> appUser;
 
 	@SuppressWarnings("unused")

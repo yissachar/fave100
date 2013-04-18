@@ -3,6 +3,7 @@ package com.fave100.server.guice;
 
 import com.fave100.server.filters.EncodingFilter;
 import com.fave100.server.servlets.CustomRequestFactoryServlet;
+import com.fave100.server.servlets.PasswordCleanupServlet;
 import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
@@ -19,9 +20,12 @@ public class DispatchServletModule extends ServletModule {
 
 		bind(CustomRequestFactoryServlet.class).in(Singleton.class);
 		serve("/gwtRequest").with(CustomRequestFactoryServlet.class);
-		
+
 		bind(RemoteApiServlet.class).in(Singleton.class);
 		serve("/remote_api").with(RemoteApiServlet.class);
+
+		bind(PasswordCleanupServlet.class).in(Singleton.class);
+		serve("/cron/pwdcleanup").with(PasswordCleanupServlet.class);
 
 		bind(ObjectifyFilter.class).in(Singleton.class);
 		filter("/*").through(ObjectifyFilter.class);
