@@ -7,13 +7,13 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A common footer will be displayed at the bottom of every page.
- *
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class Footer extends Composite {
 
-	private static FooterUiBinder	uiBinder	= GWT.create(FooterUiBinder.class);
+	private static FooterUiBinder uiBinder = GWT.create(FooterUiBinder.class);
 
 	interface FooterUiBinder extends UiBinder<Widget, Footer> {
 	}

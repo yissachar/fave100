@@ -16,24 +16,23 @@ import com.googlecode.objectify.cmd.QueryKeys;
 /**
  * This servlet deletes expired PwdResetTokens. It should be called as a cron
  * job only.
- *
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class PasswordCleanupServlet extends HttpServlet
 {
-    @Override
+	@Override
 	public void doGet(final HttpServletRequest req, final HttpServletResponse res)
-        throws ServletException, IOException {
+			throws ServletException, IOException {
 
-    	// Load up to 100 expired PwdResetToken entity keys and delete them
-    	final QueryKeys<PwdResetToken> keys = ofy().load()
-    			.type(PwdResetToken.class)
-    			.filter("expiry <", new Date())
-    			.limit(100)
-    			.keys();
-    	ofy().delete().keys(keys);
-    }
+		// Load up to 100 expired PwdResetToken entity keys and delete them
+		final QueryKeys<PwdResetToken> keys = ofy().load()
+				.type(PwdResetToken.class)
+				.filter("expiry <", new Date())
+				.limit(100)
+				.keys();
+		ofy().delete().keys(keys);
+	}
 }
-

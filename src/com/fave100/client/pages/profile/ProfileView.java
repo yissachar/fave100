@@ -20,23 +20,17 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 		implements ProfilePresenter.MyView {
 
-	private final Widget	widget;
+	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, ProfileView> {
 	}
 
-	@UiField
-	HTMLPanel	topBar;
-	@UiField
-	FormPanel	profileForm;
-	@UiField
-	TextBox		emailInput;
-	@UiField
-	Image		avatarImg;
-	@UiField
-	Label		emailStatusMessage;
-	@UiField
-	Label		formStatusMessage;
+	@UiField HTMLPanel topBar;
+	@UiField FormPanel profileForm;
+	@UiField TextBox emailInput;
+	@UiField Image avatarImg;
+	@UiField Label emailStatusMessage;
+	@UiField Label formStatusMessage;
 
 	@Inject
 	public ProfileView(final Binder binder) {
@@ -67,10 +61,11 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	@UiHandler("profileForm")
 	public void onSubmit(final SubmitCompleteEvent event) {
 		// TODO: Is there any more robust way of checking for 413 error?
-		if(event.getResults().contains("Error 413")) {
+		if (event.getResults().contains("Error 413")) {
 			// File too large for upload
-			setFormStatusMessage("File too large. Max size is "+Constants.MAX_AVATAR_SIZE / 1024 + " KB", 4000, true);
-		} else {
+			setFormStatusMessage("File too large. Max size is " + Constants.MAX_AVATAR_SIZE / 1024 + " KB", 4000, true);
+		}
+		else {
 			getUiHandlers().saveProfileData(emailInput.getValue());
 		}
 		// profileForm.reset();
@@ -98,9 +93,10 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	}
 
 	public void setFormStatusMessage(final String message, final int delay, final boolean error) {
-		if(error) {
+		if (error) {
 			formStatusMessage.addStyleName("error");
-		} else {
+		}
+		else {
 			formStatusMessage.removeStyleName("error");
 		}
 		formStatusMessage.setText(message);

@@ -6,15 +6,16 @@ import com.google.gwt.user.client.ui.Label;
 
 /**
  * A notification will alert the user to various events and errors.
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class Notification {
 
 	public Notification() {
 	}
 
-	public static Label	label;
+	public static Label label;
 
 	public static void init(final Label _label) {
 		label = _label;
@@ -35,7 +36,8 @@ public class Notification {
 		label.setVisible(true);
 		if (error) {
 			label.addStyleName("error");
-		} else {
+		}
+		else {
 			label.removeStyleName("error");
 		}
 		$(label).delay(delay).fadeOut(300);

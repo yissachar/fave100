@@ -30,9 +30,9 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 /**
  * A song page that will display details about the song
- *
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class SongPresenter extends
 		BasePresenter<SongPresenter.MyView, SongPresenter.MyProxy> implements
@@ -49,17 +49,17 @@ public class SongPresenter extends
 	public interface MyProxy extends ProxyPlace<SongPresenter> {
 	}
 
-	public static final String ID_PARAM = 	"id";
+	public static final String ID_PARAM = "id";
 
-	private final ApplicationRequestFactory	requestFactory;
-	private final PlaceManager				placeManager;
-	private SongProxy						songProxy;
+	private final ApplicationRequestFactory requestFactory;
+	private final PlaceManager placeManager;
+	private SongProxy songProxy;
 
 	@Inject
 	public SongPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy,
-			final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager) {
+							final MyProxy proxy,
+							final ApplicationRequestFactory requestFactory,
+							final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
@@ -85,7 +85,8 @@ public class SongPresenter extends
 		if (id.isEmpty()) {
 			// Malformed request, send the user away
 			placeManager.revealDefaultPlace();
-		} else {
+		}
+		else {
 			// Load the song from the datastore
 			final Request<SongProxy> getSongReq = requestFactory.songRequest()
 					.findSong(id);
@@ -146,14 +147,17 @@ public class SongPresenter extends
 						NotLoggedInException.class.getName())) {
 					placeManager
 							.revealPlace(new PlaceRequest(NameTokens.login));
-				} else if (failure.getExceptionType().equals(
+				}
+				else if (failure.getExceptionType().equals(
 						SongLimitReachedException.class.getName())) {
 					Notification
 							.show("You cannot have more than 100 songs in list");
-				} else if (failure.getExceptionType().equals(
+				}
+				else if (failure.getExceptionType().equals(
 						SongAlreadyInListException.class.getName())) {
 					Notification.show("The song is already in your list");
-				} else {
+				}
+				else {
 					// Catch-all
 					Notification.show("Error: Could not add song");
 				}

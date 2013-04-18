@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
 public class SongView extends ViewWithUiHandlers<SongUiHandlers>
-	implements SongPresenter.MyView {
+		implements SongPresenter.MyView {
 
 	private final Widget widget;
 
@@ -45,10 +45,10 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
-		if(slot == BasePresenter.TOP_BAR_SLOT) {
+		if (slot == BasePresenter.TOP_BAR_SLOT) {
 			topBar.clear();
 
-			if(content != null) {
+			if (content != null) {
 				topBar.add(content);
 			}
 		}

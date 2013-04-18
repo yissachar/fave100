@@ -21,9 +21,9 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 /**
  * Allows users to change their password or request a password reset token
- *
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class PasswordResetPresenter
 		extends
@@ -45,10 +45,10 @@ public class PasswordResetPresenter
 		void showCurrPwdError(String errorMsg);
 	}
 
-	private ApplicationRequestFactory	requestFactory;
-	private PlaceManager				placeManager;
-	private CurrentUser					currentUser;
-	private String						token;
+	private ApplicationRequestFactory requestFactory;
+	private PlaceManager placeManager;
+	private CurrentUser currentUser;
+	private String token;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.passwordreset)
@@ -57,9 +57,9 @@ public class PasswordResetPresenter
 
 	@Inject
 	public PasswordResetPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy,
-			final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager, final CurrentUser currentUser) {
+									final MyProxy proxy,
+									final ApplicationRequestFactory requestFactory,
+									final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
@@ -93,11 +93,13 @@ public class PasswordResetPresenter
 			// User is logged in, allow password change if they enter old
 			// password first
 			getView().showPwdChangeForm(true);
-		} else if (!token.isEmpty()) {
+		}
+		else if (!token.isEmpty()) {
 			// User is not logged in but has a password change token
 			// allow changing password without old password
 			getView().showPwdChangeForm(false);
-		} else {
+		}
+		else {
 			// User not logged in and does not have a password change token
 			// allow them to request a password change token
 			getView().showSendTokenForm();
@@ -115,7 +117,8 @@ public class PasswordResetPresenter
 				if (validInfo == false) {
 					// Warn user if invalid username or email
 					getView().showTokenError();
-				} else {
+				}
+				else {
 					// On success tell user email was sent
 					getView().showTokenSuccess();
 				}
@@ -133,7 +136,8 @@ public class PasswordResetPresenter
 		if (errorMsg != null) {
 			getView().showPwdError(errorMsg, true);
 			return;
-		} else if (!newPassword.equals(newPasswordRepeat)) {
+		}
+		else if (!newPassword.equals(newPasswordRepeat)) {
 			getView().showPwdError("Passwords must match", true);
 			return;
 		}
@@ -156,7 +160,8 @@ public class PasswordResetPresenter
 						errorMsg = "Token expired or doesn't exist";
 					}
 					getView().showPwdError(errorMsg, false);
-				} else {
+				}
+				else {
 					placeManager
 							.revealPlace(new PlaceRequest(NameTokens.login));
 				}

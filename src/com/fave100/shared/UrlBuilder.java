@@ -1,6 +1,5 @@
 package com.fave100.shared;
 
-
 public class UrlBuilder {
 
 	// Up to the client to set this to true on init
@@ -13,9 +12,10 @@ public class UrlBuilder {
 
 	public UrlBuilder(final String placeToken) {
 		url = "";
-		if(isDevMode) {
+		if (isDevMode) {
 			url += "http://yissachar:8888/Fave100.html?gwt.codesvr=127.0.0.1:9997";
-		} else {
+		}
+		else {
 			url += "http://fave-100.appspot.com/";
 		}
 

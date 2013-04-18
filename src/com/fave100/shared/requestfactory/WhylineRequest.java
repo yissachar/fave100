@@ -8,6 +8,6 @@ import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;
 
 @Service(Whyline.class)
-public interface WhylineRequest extends RequestContext{
+public interface WhylineRequest extends RequestContext {
 	Request<List<WhylineProxy>> getWhylinesForSong(SongProxy song);
 }

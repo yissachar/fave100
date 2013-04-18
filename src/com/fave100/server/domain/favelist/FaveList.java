@@ -22,7 +22,7 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 
 @Entity
-public class FaveList extends DatastoreObject{
+public class FaveList extends DatastoreObject {
 
 	@IgnoreSave public static final String SEPERATOR_TOKEN = ":";
 	@IgnoreSave public static final int MAX_FAVES = 100;
@@ -33,10 +33,11 @@ public class FaveList extends DatastoreObject{
 	private List<FaveItem> list = new ArrayList<FaveItem>();;
 
 	@SuppressWarnings("unused")
-	private FaveList() {}
+	private FaveList() {
+	}
 
 	public FaveList(final String username, final String hashtag) {
-		this.id = username.toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag;
+		this.id = username.toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag;
 		this.user = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
 		this.hashtag = hashtag;
 	}
@@ -46,31 +47,35 @@ public class FaveList extends DatastoreObject{
 	}
 
 	public static void addFaveItemForCurrentUser(final String hashtag, final String songID)
-					throws Exception {
+			throws Exception {
 
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) {
+		if (currentUser == null) {
 			throw new NotLoggedInException();
 		}
 
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
-		if(faveList.getList().size() >= FaveList.MAX_FAVES) throw new SongLimitReachedException();
+		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
+		if (faveList.getList().size() >= FaveList.MAX_FAVES)
+			throw new SongLimitReachedException();
 
 		// Get the song from Lucene lookup
 		final Song song = Song.findSong(songID);
-		if(song == null) return;
+		if (song == null)
+			return;
 
 		final FaveItem newFaveItem = new FaveItem(song.getSong(), song.getArtist(), song.getId());
 
 		// Check if it is a unique song for this user
 		boolean unique = true;
-		for(final FaveItem faveItem : faveList.getList()) {
-			if(faveItem.getSongID().equals(newFaveItem.getSongID())) {
+		for (final FaveItem faveItem : faveList.getList()) {
+			if (faveItem.getSongID().equals(newFaveItem.getSongID())) {
 				unique = false;
 			}
 		}
 
-		if(unique == false) throw new SongAlreadyInListException();;
+		if (unique == false)
+			throw new SongAlreadyInListException();
+		;
 		// Create the new FaveItem
 		faveList.getList().add(newFaveItem);
 		ofy().save().entities(faveList).now();
@@ -78,24 +83,26 @@ public class FaveList extends DatastoreObject{
 
 	public static void removeFaveItemForCurrentUser(final String hashtag, final String songID) {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return;
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
-		if(faveList == null) return;
+		if (currentUser == null)
+			return;
+		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
+		if (faveList == null)
+			return;
 		// Find the song to remove
 		FaveItem faveItemToRemove = null;
-		for(final FaveItem faveItem : faveList.getList()) {
-			if(faveItem.getSongID().equals(songID)) {
+		for (final FaveItem faveItem : faveList.getList()) {
+			if (faveItem.getSongID().equals(songID)) {
 				faveItemToRemove = faveItem;
 				break;
 			}
 		}
 
-		if(faveItemToRemove == null)
+		if (faveItemToRemove == null)
 			return;
 
 		// We must also delete the whyline if it exists
 		final Ref<Whyline> currentWhyline = faveItemToRemove.getWhylineRef();
-		if(currentWhyline != null) {
+		if (currentWhyline != null) {
 			ofy().delete().key(currentWhyline.getKey()).now();
 		}
 		faveList.getList().remove(faveItemToRemove);
@@ -104,24 +111,26 @@ public class FaveList extends DatastoreObject{
 
 	public static void rerankFaveItemForCurrentUser(final String hashtag, final String songID, final int newIndex) {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return;
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
-		if(faveList == null) return;
+		if (currentUser == null)
+			return;
+		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
+		if (faveList == null)
+			return;
 
 		// Make sure new index is valid
-		if(newIndex < 0 || newIndex >= faveList.getList().size())
+		if (newIndex < 0 || newIndex >= faveList.getList().size())
 			throw new IllegalArgumentException("Index out of range");
 
 		// Find the song to change position
 		FaveItem faveItemToRerank = null;
-		for(final FaveItem faveItem : faveList.getList()) {
-			if(faveItem.getSongID().equals(songID)) {
+		for (final FaveItem faveItem : faveList.getList()) {
+			if (faveItem.getSongID().equals(songID)) {
 				faveItemToRerank = faveItem;
 				break;
 			}
 		}
 
-		if(faveItemToRerank == null)
+		if (faveItemToRerank == null)
 			return;
 
 		faveList.getList().remove(faveItemToRerank);
@@ -139,20 +148,20 @@ public class FaveList extends DatastoreObject{
 
 		// First check that the whyline is valid
 		final String whylineError = Validator.validateWhyline(whyline);
-		if(whylineError != null )
+		if (whylineError != null)
 			throw new BadWhylineException(whylineError);
 
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null)
+		if (currentUser == null)
 			throw new NotLoggedInException();
 		final FaveList faveList = ofy().load().type(FaveList.class)
-				.id(currentUser.getUsername().toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
+				.id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
 		Objects.requireNonNull(faveList);
 
 		// Find the song to edit whyline
 		FaveItem faveItemToEdit = null;
-		for(final FaveItem faveItem : faveList.getList()) {
-			if(faveItem.getSongID().equals(songID)) {
+		for (final FaveItem faveItem : faveList.getList()) {
+			if (faveItem.getSongID().equals(songID)) {
 				faveItemToEdit = faveItem;
 				break;
 			}
@@ -165,14 +174,15 @@ public class FaveList extends DatastoreObject{
 
 		// Set the external Whyline
 		final Ref<Whyline> currentWhyline = faveItemToEdit.getWhylineRef();
-		if(currentWhyline == null) {
+		if (currentWhyline == null) {
 			// Create a new Whyline entity
 			final Whyline whylineEntity = new Whyline(whyline, faveItemToEdit.getSongID(), currentUser.getUsername());
 			ofy().save().entity(whylineEntity).now();
 			faveItemToEdit.setWhylineRef(Ref.create(whylineEntity));
-		} else {
+		}
+		else {
 			// Just modify the existing Whyline entity
-			final Whyline whylineEntity = (Whyline) ofy().load().value(currentWhyline).get();
+			final Whyline whylineEntity = (Whyline)ofy().load().value(currentWhyline).get();
 			whylineEntity.setWhyline(whyline);
 			ofy().save().entity(whylineEntity).now();
 		}
@@ -182,38 +192,45 @@ public class FaveList extends DatastoreObject{
 
 	public static List<FaveItem> getFaveListForCurrentUser(final String hashtag) {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if(currentUser == null) return null;
+		if (currentUser == null)
+			return null;
 		return getFaveList(currentUser.getUsername(), hashtag);
 
 	}
 
 	public static List<FaveItem> getFaveList(final String username, final String hashtag) {
-		final FaveList faveList = ofy().load().type(FaveList.class).id(username.toLowerCase()+FaveList.SEPERATOR_TOKEN+hashtag).get();
-		if(faveList == null) return null;
+		final FaveList faveList = ofy().load().type(FaveList.class).id(username.toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
+		if (faveList == null)
+			return null;
 		return faveList.getList();
 	}
-
 
 	/* Getters and Setters */
 
 	public String getId() {
 		return id;
 	}
+
 	public void setId(final String id) {
 		this.id = id;
 	}
+
 	public Ref<AppUser> getUser() {
 		return user;
 	}
+
 	public void setUser(final Ref<AppUser> user) {
 		this.user = user;
 	}
+
 	public String getHashtag() {
 		return hashtag;
 	}
+
 	public void setHashtag(final String hashtag) {
 		this.hashtag = hashtag;
 	}
+
 	public List<FaveItem> getList() {
 		return list;
 	}

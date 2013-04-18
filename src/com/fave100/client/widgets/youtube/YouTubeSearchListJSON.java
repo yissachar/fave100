@@ -5,18 +5,19 @@ import com.google.gwt.core.client.JsArray;
 
 /**
  * JavaScript Overlay
- *
+ * 
  */
 public class YouTubeSearchListJSON extends JavaScriptObject {
 
-	protected YouTubeSearchListJSON() {}
+	protected YouTubeSearchListJSON() {
+	}
 
 	public final native JsArray<YouTubeJSONItem> getItems() /*-{
-	   	return this.items;
-	}-*/;
+															return this.items;
+															}-*/;
 
 	public static final native JavaScriptObject searchListFromJson(String json) /*-{
-		return eval(json);
-	}-*/;
+																				return eval(json);
+																				}-*/;
 
 }

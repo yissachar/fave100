@@ -15,15 +15,15 @@ public class WhylineWidget extends Composite {
 		final VerticalPanel container = new VerticalPanel();
 		initWidget(container);
 
-		final Label whylineLabel = new Label('"'+whyline.getWhyline()+'"');
+		final Label whylineLabel = new Label('"' + whyline.getWhyline() + '"');
 		container.add(whylineLabel);
 
 		final InlineHyperlink whylineAuthor = new InlineHyperlink();
 		final String userPlace = new UrlBuilder(NameTokens.users)
-			.with(UsersPresenter.USER_PARAM, whyline.getUsername())
-			.getPlaceToken();
+				.with(UsersPresenter.USER_PARAM, whyline.getUsername())
+				.getPlaceToken();
 		whylineAuthor.setTargetHistoryToken(userPlace);
-		whylineAuthor.setText("-"+whyline.getUsername());
+		whylineAuthor.setText("-" + whyline.getUsername());
 		container.add(whylineAuthor);
 	}
 

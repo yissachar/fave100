@@ -9,5 +9,6 @@ import com.google.web.bindery.requestfactory.shared.Service;
 public interface SongRequest extends RequestContext {
 
 	Request<SongProxy> findSong(String id);
+
 	Request<String> getYouTubeResults(String song, String artist);
 }

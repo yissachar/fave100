@@ -16,9 +16,9 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 /**
  * Top navigation bar that will be included on every page.
- *
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		implements TopBarUiHandlers {
@@ -29,19 +29,17 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		void setLoggedOut();
 	}
 
-	@ContentSlot
-	public static final Type<RevealContentHandler<?>>	LOGIN_SLOT	= new Type<RevealContentHandler<?>>();
+	@ContentSlot public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
 
-	@Inject
-	private LoginWidgetPresenter						loginBox;
-	private EventBus									eventBus;
-	private	ApplicationRequestFactory					requestFactory;
-	private CurrentUser									currentUser;
+	@Inject private LoginWidgetPresenter loginBox;
+	private EventBus eventBus;
+	private ApplicationRequestFactory requestFactory;
+	private CurrentUser currentUser;
 
 	@Inject
 	public TopBarPresenter(final EventBus eventBus, final MyView view,
-			final ApplicationRequestFactory requestFactory,
-			final CurrentUser currentUser) {
+							final ApplicationRequestFactory requestFactory,
+							final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
@@ -74,7 +72,8 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	private void setTopBar() {
 		if (currentUser != null && currentUser.isLoggedIn()) {
 			getView().setLoggedIn(currentUser.getUsername());
-		} else {
+		}
+		else {
 			getView().setLoggedOut();
 		}
 	}

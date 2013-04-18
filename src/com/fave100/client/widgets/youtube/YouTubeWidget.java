@@ -31,24 +31,25 @@ public class YouTubeWidget extends Composite {
 	}
 
 	public void setVideoData(final JsArray<YouTubeJSONItem> videos) {
-		if(videos.length() == 0) {
+		if (videos.length() == 0) {
 			this.setVisible(false);
-		} else {
+		}
+		else {
 			this.setVisible(true);
-			youTubePlayer.setUrl("http://youtube.com/embed/"+videos.get(0).getVideoId());
+			youTubePlayer.setUrl("http://youtube.com/embed/" + videos.get(0).getVideoId());
 
 			thumbnailPanel.clear();
 			thumbList.clear();
-			for(int i = 1; i < videos.length(); i++) {
+			for (int i = 1; i < videos.length(); i++) {
 				final Image ytThumb = new Image();
 				ytThumb.setUrl(videos.get(i).getThumbnail());
 				ytThumb.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(final ClickEvent event) {
 						final YouTubeJSONItem currVideo = videos.get(0);
-						final YouTubeJSONItem clickedVideo = videos.get(thumbList.indexOf(ytThumb)+1);
+						final YouTubeJSONItem clickedVideo = videos.get(thumbList.indexOf(ytThumb) + 1);
 						videos.set(0, clickedVideo);
-						videos.set(thumbList.indexOf(ytThumb)+1,  currVideo);
+						videos.set(thumbList.indexOf(ytThumb) + 1, currVideo);
 						setVideoData(videos);
 					}
 				});

@@ -25,31 +25,37 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 /**
  * A {@link PresenterWidget} that displays native and third party login options.
  * The majority of the styling is left to the parent class.
- *
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class LoginWidgetPresenter extends
 		PresenterWidget<LoginWidgetPresenter.MyView> implements LoginUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<LoginUiHandlers> {
 		String getUsername();
+
 		String getPassword();
+
 		void clearUsername();
+
 		void clearPassword();
+
 		void setError(String error);
+
 		void setGoogleLoginUrl(String url);
+
 		void setFacebookLoginUrl(String url);
 	}
 
-	private EventBus 					eventBus;
-	private ApplicationRequestFactory	requestFactory;
-	private PlaceManager				placeManager;
+	private EventBus eventBus;
+	private ApplicationRequestFactory requestFactory;
+	private PlaceManager placeManager;
 
 	@Inject
 	public LoginWidgetPresenter(final EventBus eventBus, final MyView view,
-			final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager) {
+								final ApplicationRequestFactory requestFactory,
+								final PlaceManager placeManager) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;

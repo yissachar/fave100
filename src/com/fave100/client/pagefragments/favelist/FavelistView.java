@@ -43,19 +43,24 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
 public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
-	implements FavelistPresenter.MyView {
+		implements FavelistPresenter.MyView {
 
-	private final Widget	widget;
+	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, FavelistView> {
 	}
 
 	interface FavelistStyle extends CssResource {
 		String personalListItem();
+
 		String rank();
+
 		String rankEditor();
+
 		String detailsContainer();
+
 		String songLink();
+
 		String whyline();
 	}
 
@@ -77,15 +82,15 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	public void setList(final List<FaveItemProxy> list, final boolean personalList) {
 		favelist.clear();
 
-		if(list == null)
+		if (list == null)
 			return;
 
-		for(int i = 0; i < list.size(); i++) {
+		for (int i = 0; i < list.size(); i++) {
 			final FaveItemProxy faveItem = list.get(i);
 
 			final HTMLPanel listItem = new HTMLPanel("");
 
-			final Label rank = new Label(String.valueOf(i+1)+".");
+			final Label rank = new Label(String.valueOf(i + 1) + ".");
 			rank.getElement().addClassName(style.rank());
 			listItem.add(rank);
 
@@ -96,8 +101,8 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 			final InlineHyperlink song = new InlineHyperlink();
 			song.setText(faveItem.getSong());
 			final String songPlace = new UrlBuilder(NameTokens.song)
-				.with(SongPresenter.ID_PARAM, faveItem.getSongID())
-				.getPlaceToken();
+					.with(SongPresenter.ID_PARAM, faveItem.getSongID())
+					.getPlaceToken();
 			song.setTargetHistoryToken(songPlace);
 			song.getElement().addClassName(style.songLink());
 			detailsContainer.add(song);
@@ -109,7 +114,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 			whyline.getElement().addClassName(style.whyline());
 			detailsContainer.add(whyline);
 
-			if(personalList) {
+			if (personalList) {
 				// Special styles
 				listItem.getElement().addClassName(style.personalListItem());
 
@@ -136,8 +141,8 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 					public void onBlur(final BlurEvent event) {
 						rank.setVisible(true);
 						rankEditor.setVisible(false);
-						rank.setText(rankEditor.getValue()+".");
-						getUiHandlers().changeSongPosition(faveItem.getSongID(), Integer.parseInt(rankEditor.getValue())-1);
+						rank.setText(rankEditor.getValue() + ".");
+						getUiHandlers().changeSongPosition(faveItem.getSongID(), Integer.parseInt(rankEditor.getValue()) - 1);
 					}
 				});
 
@@ -145,9 +150,9 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 				rankEditor.addKeyUpHandler(new KeyUpHandler() {
 					@Override
 					public void onKeyUp(final KeyUpEvent event) {
-						if(KeyCodes.KEY_ENTER == event.getNativeKeyCode()
-							|| KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()
-							|| KeyCodes.KEY_TAB == event.getNativeKeyCode())
+						if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()
+								|| KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()
+								|| KeyCodes.KEY_TAB == event.getNativeKeyCode())
 						{
 							final NativeEvent blurEvent = Document.get().createBlurEvent();
 							DomEvent.fireNativeEvent(blurEvent, rankEditor);
@@ -158,20 +163,20 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 				// Only allow numbers in rankEditor
 				rankEditor.addKeyPressHandler(new KeyPressHandler() {
 					@Override
-					public void onKeyPress(final KeyPressEvent event){
-					    final TextBox sender = (TextBox)event.getSource();
+					public void onKeyPress(final KeyPressEvent event) {
+						final TextBox sender = (TextBox)event.getSource();
 
-					    if (sender.isReadOnly() || !sender.isEnabled()) {
-					        return;
-					    }
+						if (sender.isReadOnly() || !sender.isEnabled()) {
+							return;
+						}
 
-					    final Character charCode = event.getCharCode();
-					    final int unicodeCharCode = event.getUnicodeCharCode();
+						final Character charCode = event.getCharCode();
+						final int unicodeCharCode = event.getUnicodeCharCode();
 
-					    // allow digits and non-characters
-					    if (!(Character.isDigit(charCode) || unicodeCharCode == 0)){
-					        sender.cancelKey();
-					    }
+						// allow digits and non-characters
+						if (!(Character.isDigit(charCode) || unicodeCharCode == 0)) {
+							sender.cancelKey();
+						}
 					}
 				});
 
@@ -217,9 +222,9 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 				whylineEditor.addKeyUpHandler(new KeyUpHandler() {
 					@Override
 					public void onKeyUp(final KeyUpEvent event) {
-						if(KeyCodes.KEY_ENTER == event.getNativeKeyCode()
-							|| KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()
-							|| KeyCodes.KEY_TAB == event.getNativeKeyCode())
+						if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()
+								|| KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()
+								|| KeyCodes.KEY_TAB == event.getNativeKeyCode())
 						{
 							final NativeEvent blurEvent = Document.get().createBlurEvent();
 							DomEvent.fireNativeEvent(blurEvent, whylineEditor);
@@ -233,61 +238,64 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 					@Override
 					public void onMouseDown(final MouseDownEvent event) {
 						// Only listen for left button down
-						if(event.getNativeButton() != NativeEvent.BUTTON_LEFT)
+						if (event.getNativeButton() != NativeEvent.BUTTON_LEFT)
 							return;
 						// If songLink, button, or whyline is target, ignore
-						if(isEventTarget(event, song) || isEventTarget(event, whyline)
-							|| isEventTarget(event, whylineEditor) || isEventTarget(event, deleteButton)
-							|| isEventTarget(event, rank))
+						if (isEventTarget(event, song) || isEventTarget(event, whyline)
+								|| isEventTarget(event, whylineEditor) || isEventTarget(event, deleteButton)
+								|| isEventTarget(event, rank))
 						{
 							return;
 						}
 
 						// Drag the element
 						draggedElement = listItem;
-							final GQuery $row = $(draggedElement);
-							favelist.addStyleName("unselectable");
+						final GQuery $row = $(draggedElement);
+						favelist.addStyleName("unselectable");
 
-							// Add a hidden row to act as a placeholder while the real row is moved
-							$row.clone().css("visibility", "hidden").addClass("clonedHiddenRow").insertBefore($row);
-							$row.addClass("draggedFaveListItem");
+						// Add a hidden row to act as a placeholder while the real row is moved
+						$row.clone().css("visibility", "hidden").addClass("clonedHiddenRow").insertBefore($row);
+						$row.addClass("draggedFaveListItem");
 
-							setPos($row, event.getClientY()+Window.getScrollTop());
+						setPos($row, event.getClientY() + Window.getScrollTop());
 
-							$("body").mousemove(new Function() {
-								@Override
-								public boolean f(final Event event) {
-									// Set the dragged row position to be equal to mouseY
-									final GQuery $draggedFaveListItem = $(".draggedFaveListItem");
-									setPos($draggedFaveListItem, event.getClientY()+Window.getScrollTop());
+						$("body").mousemove(new Function() {
+							@Override
+							public boolean f(final Event event) {
+								// Set the dragged row position to be equal to mouseY
+								final GQuery $draggedFaveListItem = $(".draggedFaveListItem");
+								setPos($draggedFaveListItem, event.getClientY() + Window.getScrollTop());
 
-									final int draggedTop = $draggedFaveListItem.offset().top;
-									final int draggedBottom = draggedTop + $draggedFaveListItem.outerHeight(true);
-									// Check if dragged row collides with row above or row below
-									final GQuery $clonedHiddenRow = $(".clonedHiddenRow");
-									GQuery $previous = $clonedHiddenRow.prev();
-									GQuery $next = $clonedHiddenRow.next();
-									final int prevHeight = $previous.outerHeight(true);
-									final int nextHeight = $next.outerHeight(true);
-									// Make sure we are not checking against the dragged row itself
-									if($previous.hasClass("draggedFaveListItem")) $previous = $previous.prev();
-									if($next.hasClass("draggedFaveListItem")) $next = $next.next();
-									final int previousBottom = $previous.offset().top+$previous.outerHeight(true);
-									// Move the hidden row to the appropriate position
-									if(draggedTop < previousBottom-prevHeight/2) {
-										$(".clonedHiddenRow").insertBefore($previous);
-									} else if(draggedBottom > $next.offset().top+nextHeight/2){//$next.outerHeight(true)) {
-										$(".clonedHiddenRow").insertAfter($next);
-									}
-									return true;
+								final int draggedTop = $draggedFaveListItem.offset().top;
+								final int draggedBottom = draggedTop + $draggedFaveListItem.outerHeight(true);
+								// Check if dragged row collides with row above or row below
+								final GQuery $clonedHiddenRow = $(".clonedHiddenRow");
+								GQuery $previous = $clonedHiddenRow.prev();
+								GQuery $next = $clonedHiddenRow.next();
+								final int prevHeight = $previous.outerHeight(true);
+								final int nextHeight = $next.outerHeight(true);
+								// Make sure we are not checking against the dragged row itself
+								if ($previous.hasClass("draggedFaveListItem"))
+									$previous = $previous.prev();
+								if ($next.hasClass("draggedFaveListItem"))
+									$next = $next.next();
+								final int previousBottom = $previous.offset().top + $previous.outerHeight(true);
+								// Move the hidden row to the appropriate position
+								if (draggedTop < previousBottom - prevHeight / 2) {
+									$(".clonedHiddenRow").insertBefore($previous);
 								}
-							});
-						}
+								else if (draggedBottom > $next.offset().top + nextHeight / 2) {//$next.outerHeight(true)) {
+									$(".clonedHiddenRow").insertAfter($next);
+								}
+								return true;
+							}
+						});
+					}
 					//}
 				}, MouseDownEvent.getType());
 
-
-			} else {
+			}
+			else {
 				// Non-personal list, add an "Add" button
 				final Button addButton = new Button("+");
 				addButton.addClickHandler(new ClickHandler() {
@@ -302,12 +310,13 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 		}
 
 		// Only add one mouse up listener for everything
-		if(personalList) {
+		if (personalList) {
 			// Mouse up handler for change position
 			RootPanel.get().addDomHandler(new MouseUpHandler() {
 				@Override
 				public void onMouseUp(final MouseUpEvent event) {
-					if(draggedElement == null) return;
+					if (draggedElement == null)
+						return;
 					final GQuery $draggedItem = $(".draggedFaveListItem").first();
 					// Get the index of the row being dragged
 					final int currentIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedElement.getElement());
@@ -316,12 +325,12 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 					// Get the new index
 					final int newIndex = $draggedItem.parent().children().not(".clonedHiddenRow").index(draggedElement.getElement());
 					// Rank on the server
-					if(currentIndex != newIndex) {
+					if (currentIndex != newIndex) {
 						// Don't bother doing anything if the indices are the same
 						getUiHandlers().changeSongPosition(currentIndex, newIndex);
 					}
 					//remove all drag associated items now that we are done with the drag
-		    	  	$draggedItem.removeClass("draggedFaveListItem");
+					$draggedItem.removeClass("draggedFaveListItem");
 					favelist.removeStyleName("unselectable");
 					$(".clonedHiddenRow").remove();
 					$("body").unbind("mousemove");
@@ -333,7 +342,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	}
 
 	private boolean isEventTarget(final MouseEvent<?> event, final Widget widget) {
-		if(event.getClientX() >= widget.getAbsoluteLeft()
+		if (event.getClientX() >= widget.getAbsoluteLeft()
 				&& event.getClientX() <= widget.getAbsoluteLeft() + widget.getOffsetWidth()
 				&& event.getClientY() + Window.getScrollTop() >= widget.getAbsoluteTop()
 				&& event.getClientY() + Window.getScrollTop() <= widget.getAbsoluteTop() + widget.getOffsetHeight())
@@ -346,21 +355,23 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	private void setPos(final GQuery element, final int mouseY) {
 		final int clonedHeight = $(".clonedHiddenRow").outerHeight(true);
 		final int elementHeight = element.outerHeight(true);
-		final int newPos = mouseY-(elementHeight*2);
+		final int newPos = mouseY - (elementHeight * 2);
 		final int draggedBottom = newPos + elementHeight;
-		final int faveListTop = ($(".faveList").offset().top-elementHeight-clonedHeight);
-		final int faveListBottom = faveListTop+$(".faveList").outerHeight(true)+clonedHeight;
+		final int faveListTop = ($(".faveList").offset().top - elementHeight - clonedHeight);
+		final int faveListBottom = faveListTop + $(".faveList").outerHeight(true) + clonedHeight;
 
 		// If dragged row goes out of top or bottom bounds, stop it
-		if(newPos < faveListTop) {
+		if (newPos < faveListTop) {
 			// Element is above the favelist, make it at the favelist height
-			element.css("top", faveListTop+"px");
-		} else if(draggedBottom > faveListBottom) {
+			element.css("top", faveListTop + "px");
+		}
+		else if (draggedBottom > faveListBottom) {
 			// Element is below the favelist, set it at favelist bottom
-			element.css("top", faveListBottom-elementHeight+"px");
-		} else {
+			element.css("top", faveListBottom - elementHeight + "px");
+		}
+		else {
 			// Element is neither above or below faveList, position it correctly
-			element.css("top", newPos+"px");
+			element.css("top", newPos + "px");
 		}
 	}
 }

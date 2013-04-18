@@ -49,24 +49,24 @@ public class UserThumbList extends Composite {
 
 		username.setText(appUser.getUsername());
 		final String userPlace = new UrlBuilder(NameTokens.users)
-			.with(UsersPresenter.USER_PARAM, appUser.getUsername())
-			.getPlaceToken();
+				.with(UsersPresenter.USER_PARAM, appUser.getUsername())
+				.getPlaceToken();
 		username.setTargetHistoryToken(userPlace);
 		userProfileImage.setUrl(appUser.getAvatarImage());
 	}
 
 	private void setRandomSong() {
-		if(songList.size() == 0)
+		if (songList.size() == 0)
 			return;
 
-		final int random = (int) (Math.random() * songList.size());
+		final int random = (int)(Math.random() * songList.size());
 		final FaveItemProxy song = songList.get(random);
-		songRank.setText(Integer.toString(random+1));
+		songRank.setText(Integer.toString(random + 1));
 		songTitle.setText(song.getSong());
 
 		final String songPlace = new UrlBuilder(NameTokens.song)
-			.with(SongPresenter.ID_PARAM, song.getSongID())
-			.getPlaceToken();
+				.with(SongPresenter.ID_PARAM, song.getSongID())
+				.getPlaceToken();
 		songTitle.setTargetHistoryToken(songPlace);
 	}
 

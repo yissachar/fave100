@@ -13,8 +13,8 @@ public class ClientPlaceManager extends PlaceManagerImpl {
 
 	@Inject
 	public ClientPlaceManager(final EventBus eventBus,
-			final TokenFormatter tokenFormatter,
-			@DefaultPlace final String defaultPlaceNameToken) {
+								final TokenFormatter tokenFormatter,
+								@DefaultPlace final String defaultPlaceNameToken) {
 		super(eventBus, tokenFormatter);
 		this.defaultPlaceRequest = new PlaceRequest(defaultPlaceNameToken);
 	}

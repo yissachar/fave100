@@ -27,24 +27,24 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class FavelistPresenter extends
 		PresenterWidget<FavelistPresenter.MyView>
-	implements FavelistUiHandlers {
+		implements FavelistUiHandlers {
 
-	public interface MyView extends View, HasUiHandlers<FavelistUiHandlers>  {
+	public interface MyView extends View, HasUiHandlers<FavelistUiHandlers> {
 		void setList(List<FaveItemProxy> list, boolean personalList);
 	}
 
-	private ApplicationRequestFactory 	requestFactory;
-	private PlaceManager				placeManager;
+	private ApplicationRequestFactory requestFactory;
+	private PlaceManager placeManager;
 	// The user whose favelist we are showing
-	private AppUserProxy				user;
+	private AppUserProxy user;
 	// The currently logged in user
-	private CurrentUser					currentUser;
-	private List<FaveItemProxy> 		favelist;
+	private CurrentUser currentUser;
+	private List<FaveItemProxy> favelist;
 
 	@Inject
 	public FavelistPresenter(final EventBus eventBus, final MyView view,
-			final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager, final CurrentUser currentUser) {
+								final ApplicationRequestFactory requestFactory,
+								final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
@@ -74,7 +74,6 @@ public class FavelistPresenter extends
 		});
 	}
 
-
 	@Override
 	public void addSong(final String songID) {
 
@@ -90,15 +89,19 @@ public class FavelistPresenter extends
 				Notification.show("Song added");
 				refreshFavelist();
 			}
+
 			@Override
 			public void onFailure(final ServerFailure failure) {
-				if(failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
 					placeManager.revealPlace(new PlaceRequest(NameTokens.login));
-				} else if(failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
+				}
+				else if (failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
 					Notification.show("You cannot have more than 100 songs in list");
-				} else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
+				}
+				else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
 					Notification.show("The song is already in your list");
-				} else {
+				}
+				else {
 					// Catch-all
 					Notification.show("Error: Could not add song");
 				}
@@ -131,7 +134,7 @@ public class FavelistPresenter extends
 
 			@Override
 			public void onFailure(final ServerFailure failure) {
-				if(failure.getExceptionType().equals(BadWhylineException.class.getName())) {
+				if (failure.getExceptionType().equals(BadWhylineException.class.getName())) {
 					Notification.show(failure.getMessage());
 				}
 			}
@@ -146,7 +149,7 @@ public class FavelistPresenter extends
 	@Override
 	public void changeSongPosition(final String songID, final int newIndex) {
 		// If index out of range, refresh list with correct values
-		if(newIndex < 0 || newIndex >= getFavelist().size()) {
+		if (newIndex < 0 || newIndex >= getFavelist().size()) {
 			final boolean personalList = (currentUser.isLoggedIn() && currentUser.equals(user));
 			getView().setList(getFavelist(), personalList);
 			return;

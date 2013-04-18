@@ -1,6 +1,5 @@
 package com.fave100.server.guice;
 
-
 import com.fave100.server.filters.EncodingFilter;
 import com.fave100.server.servlets.CustomRequestFactoryServlet;
 import com.fave100.server.servlets.PasswordCleanupServlet;

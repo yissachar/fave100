@@ -8,40 +8,41 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
  * This event indicates that the {@link CurrentUser} has changed.
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class CurrentUserChangedEvent extends Event<CurrentUserChangedEvent.Handler> {
 
-    public interface Handler {
-        void onCurrentUserChanged(CurrentUserChangedEvent event);
-    }
+	public interface Handler {
+		void onCurrentUserChanged(CurrentUserChangedEvent event);
+	}
 
-    private static final Type<CurrentUserChangedEvent.Handler> TYPE =
-        new Type<CurrentUserChangedEvent.Handler>();
+	private static final Type<CurrentUserChangedEvent.Handler> TYPE =
+			new Type<CurrentUserChangedEvent.Handler>();
 
-    public static HandlerRegistration register(final EventBus eventBus,
-        final CurrentUserChangedEvent.Handler handler) {
-      return eventBus.addHandler(TYPE, handler);
-    }
+	public static HandlerRegistration register(final EventBus eventBus,
+			final CurrentUserChangedEvent.Handler handler) {
+		return eventBus.addHandler(TYPE, handler);
+	}
 
-    private final AppUserProxy user;
+	private final AppUserProxy user;
 
-    public CurrentUserChangedEvent(final AppUserProxy user) {
-        this.user = user;
-    }
+	public CurrentUserChangedEvent(final AppUserProxy user) {
+		this.user = user;
+	}
 
-    @Override
-    public Type<CurrentUserChangedEvent.Handler> getAssociatedType() {
-        return TYPE;
-    }
+	@Override
+	public Type<CurrentUserChangedEvent.Handler> getAssociatedType() {
+		return TYPE;
+	}
 
-    public AppUserProxy getUser() {
-        return user;
-    }
+	public AppUserProxy getUser() {
+		return user;
+	}
 
-    @Override
-    protected void dispatch(final Handler handler) {
-        handler.onCurrentUserChanged(this);
-    }
+	@Override
+	protected void dispatch(final Handler handler) {
+		handler.onCurrentUserChanged(this);
+	}
 }

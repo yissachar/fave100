@@ -17,25 +17,26 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
 public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
-	implements UsersPresenter.MyView {
+		implements UsersPresenter.MyView {
 
 	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, UsersView> {
 	}
 
-	@UiField HTMLPanel 								faveListContainer;
-	@UiField Button 								twitterButton;
-	@UiField HTMLPanel 								socialContainer;
-	@UiField InlineHyperlink 						editProfileButton;
-	@UiField Image 									avatar;
-	@UiField SpanElement 							username;
-	@UiField HTMLPanel 								topBar;
-	@UiField HTMLPanel 								songAutocomplete;
-	@UiField HTMLPanel								favelist;
+	@UiField HTMLPanel faveListContainer;
+	@UiField Button twitterButton;
+	@UiField HTMLPanel socialContainer;
+	@UiField InlineHyperlink editProfileButton;
+	@UiField Image avatar;
+	@UiField SpanElement username;
+	@UiField HTMLPanel topBar;
+	@UiField HTMLPanel songAutocomplete;
+	@UiField HTMLPanel favelist;
 
 	@Inject
-	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {;
+	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
+		;
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -46,21 +47,21 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
-		if(slot == BasePresenter.TOP_BAR_SLOT) {
+		if (slot == BasePresenter.TOP_BAR_SLOT) {
 			topBar.clear();
-			if(content != null) {
+			if (content != null) {
 				topBar.add(content);
 			}
 		}
-		if(slot == UsersPresenter.AUTOCOMPLETE_SLOT) {
+		if (slot == UsersPresenter.AUTOCOMPLETE_SLOT) {
 			songAutocomplete.clear();
-			if(content != null) {
+			if (content != null) {
 				songAutocomplete.add(content);
 			}
 		}
-		if(slot == UsersPresenter.FAVELIST_SLOT) {
+		if (slot == UsersPresenter.FAVELIST_SLOT) {
 			favelist.clear();
-			if(content != null) {
+			if (content != null) {
 				favelist.add(content);
 			}
 		}
