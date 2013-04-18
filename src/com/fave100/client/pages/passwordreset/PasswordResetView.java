@@ -124,8 +124,10 @@ public class PasswordResetView extends
 
 	@Override
 	public void showTokenSuccess() {
-		String msg = "An email has been sent to your email address.";
-		msg += "Please follow the instructions contained within.";
+		String msg = "An email has been sent to your email address. ";
+		msg += "Please follow the instructions contained within. ";
+		msg += "If you do not receive the email after several minutes ";
+		msg += "please check your spam folder.";
 		tokenStatusMessage.setText(msg);
 		tokenStatusMessage.removeStyleName("error");
 		sendTokenButton.setVisible(false);
