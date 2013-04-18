@@ -4,6 +4,7 @@ import static com.google.gwt.query.client.GQuery.$;
 
 import java.util.List;
 
+import com.fave100.client.pagefragments.favelist.widgets.FavePickWidget;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
@@ -79,7 +80,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	}
 
 	@Override
-	public void setList(final List<FaveItemProxy> list, final boolean personalList) {
+	public void setList(final List<FaveItemProxy> list, final boolean editable) {
 		favelist.clear();
 
 		if (list == null)
@@ -88,8 +89,18 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 		for (int i = 0; i < list.size(); i++) {
 			final FaveItemProxy faveItem = list.get(i);
 
-			final HTMLPanel listItem = new HTMLPanel("");
+			final FavePickWidget pick = new FavePickWidget(faveItem, i + 1, editable);
 
+			favelist.add(pick);
+
+		}
+	}
+
+	private void old(final List<FaveItemProxy> list, final boolean personalList) {
+		for (int i = 0; i < list.size(); i++) {
+			final FaveItemProxy faveItem = list.get(i);
+
+			final HTMLPanel listItem = new HTMLPanel("");
 			final Label rank = new Label(String.valueOf(i + 1) + ".");
 			rank.getElement().addClassName(style.rank());
 			listItem.add(rank);
