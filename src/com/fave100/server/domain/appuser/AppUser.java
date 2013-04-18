@@ -37,6 +37,7 @@ import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Constants;
+import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
@@ -665,8 +666,8 @@ public class AppUser extends DatastoreObject{
 			            msg.setSubject("Fave100 Password Change");
 			            // TODO: wording?
 				        String msgBody = "To change your Fave100 password, please visit the following URL and change your password within 24 hours.";
-				        // TODO: change hardcoded url
-				        msgBody += "http://fave100test.appspot.com/#passwordreset;token="+pwdResetToken.getToken();
+				        final String pwdResetPlace = new UrlBuilder("passwordreset").with("token", pwdResetToken.getToken()).getUrl();
+				        msgBody += pwdResetPlace;
 			            msg.setText(msgBody);
 
 			            Transport.send(msg);
