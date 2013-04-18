@@ -659,7 +659,7 @@ public class AppUser extends DatastoreObject{
 			        	ofy().save().entity(pwdResetToken).now();
 			            final Message msg = new MimeMessage(session);
 			            // TODO: Change email sender to proper one for launch
-			            msg.setFrom(new InternetAddress("fave100test@gmail.com", "Fave100"));
+			            msg.setFrom(new InternetAddress("yissachar.radcliffe@caseware.com", "Fave100"));
 			            msg.addRecipient(Message.RecipientType.TO,
 			                             new InternetAddress(emailAddress, username));
 			            msg.setSubject("Fave100 Password Change");
