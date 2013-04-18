@@ -6,7 +6,7 @@ import com.gwtplatform.mvp.client.proxy.Gatekeeper;
 
 public class LoggedInGatekeeper implements Gatekeeper {
 
-	private CurrentUser	currentUser;
+	private CurrentUser currentUser;
 
 	@Inject
 	public LoggedInGatekeeper(final CurrentUser currentUser) {

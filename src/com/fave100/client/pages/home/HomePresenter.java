@@ -20,9 +20,9 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 /**
  * Default page that the user will see.
- *
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class HomePresenter extends
 		BasePresenter<HomePresenter.MyView, HomePresenter.MyProxy> {
@@ -36,14 +36,14 @@ public class HomePresenter extends
 	public interface MyProxy extends ProxyPlace<HomePresenter> {
 	}
 
-	private ApplicationRequestFactory	requestFactory;
-	private PlaceManager				placeManager;
-	private CurrentUser					currentUser;
+	private ApplicationRequestFactory requestFactory;
+	private PlaceManager placeManager;
+	private CurrentUser currentUser;
 
 	@Inject
 	public HomePresenter(final ApplicationRequestFactory requestFactory,
-			final EventBus eventBus, final MyView view, final MyProxy proxy,
-			final PlaceManager placeManager, final CurrentUser currentUser) {
+							final EventBus eventBus, final MyView view, final MyProxy proxy,
+							final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;

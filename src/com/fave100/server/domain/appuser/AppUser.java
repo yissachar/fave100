@@ -66,13 +66,14 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 
 /**
  * A Fave100 user.
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 
 // TODO: Does this need to be a DatastoreObject?
 @Entity
-public class AppUser extends DatastoreObject{
+public class AppUser extends DatastoreObject {
 
 	@IgnoreSave public static String TWITTER_CONSUMER_KEY = "";
 	@IgnoreSave public static String TWITTER_CONSUMER_SECRET = "";
@@ -91,14 +92,14 @@ public class AppUser extends DatastoreObject{
 	private String avatar;
 	private Date joinDate;
 
-	private AppUser() {}
+	private AppUser() {
+	}
 
 	public AppUser(final String username) {
 		this.username = username;
 		this.usernameID = username.toLowerCase();
 		this.joinDate = new Date();
 	}
-
 
 	// Finder methods
 	public static AppUser findAppUser(final String username) {
@@ -107,27 +108,30 @@ public class AppUser extends DatastoreObject{
 
 	public static AppUser findAppUserByGoogleId(final String googleID) {
 		final GoogleID gId = ofy().load().type(GoogleID.class).id(googleID).get();
-		if(gId != null) {
+		if (gId != null) {
 			return ofy().load().ref(gId.getUser()).get();
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
 
 	public static AppUser findAppUserByTwitterId(final long twitterID) {
 		final TwitterID tId = ofy().load().type(TwitterID.class).id(twitterID).get();
-		if(tId != null) {
+		if (tId != null) {
 			return ofy().load().ref(tId.getUser()).get();
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
 
 	public static AppUser findAppUserByFacebookId(final long facebookID) {
 		final FacebookID fId = ofy().load().type(FacebookID.class).id(facebookID).get();
-		if(fId != null) {
+		if (fId != null) {
 			return ofy().load().ref(fId.getUser()).get();
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -135,28 +139,30 @@ public class AppUser extends DatastoreObject{
 	// Login methods
 	public static AppUser login(final String username, final String password) throws IncorrectLoginException {
 		AppUser loggingInUser = null;
-		if(username.contains("@")) {
+		if (username.contains("@")) {
 			// User trying to login with email address
 			final EmailID emailID = EmailID.findEmailID(username);
 			// No email found
-			if(emailID == null)
+			if (emailID == null)
 				throw new IncorrectLoginException();
 			// Email found, get corresponding user
 			loggingInUser = ofy().load().ref(emailID.getUser()).get();
-		} else {
+		}
+		else {
 			// User trying to login with username
 			loggingInUser = findAppUser(username);
 		}
 
-		if(loggingInUser != null) {
-			if(password == null || password.isEmpty()
-				|| !BCrypt.checkpw(password, loggingInUser.getPassword())) {
-					// Bad password
-					throw new IncorrectLoginException();
+		if (loggingInUser != null) {
+			if (password == null || password.isEmpty()
+					|| !BCrypt.checkpw(password, loggingInUser.getPassword())) {
+				// Bad password
+				throw new IncorrectLoginException();
 			}
 			// Successful login - store session
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
-		} else {
+		}
+		else {
 			// Bad username
 			throw new IncorrectLoginException();
 		}
@@ -168,10 +174,11 @@ public class AppUser extends DatastoreObject{
 		// Get the Google user
 		final UserService userService = UserServiceFactory.getUserService();
 		final User user = userService.getCurrentUser();
-		if(user == null) return null;
+		if (user == null)
+			return null;
 		// Find the corresponding Fave100 user
 		loggedInUser = findAppUserByGoogleId(user.getUserId());
-		if(loggedInUser != null) {
+		if (loggedInUser != null) {
 			// Successful login - store session
 			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
 		}
@@ -181,14 +188,14 @@ public class AppUser extends DatastoreObject{
 	public static AppUser loginWithTwitter(final String oauth_verifier) {
 		// Get the Twitter user
 		final twitter4j.User twitterUser = getTwitterUser(oauth_verifier);
-		if(twitterUser != null) {
+		if (twitterUser != null) {
 			// Find the corresponding Fave100 user
 			final AppUser loggedInUser = findAppUserByTwitterId(twitterUser.getId());
-			if(loggedInUser != null) {
+			if (loggedInUser != null) {
 				// Successful login - store session
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
-				final URL twitterAvatar =  twitterUser.getProfileImageURL();
-				if(loggedInUser.getAvatar() == null) {
+				final URL twitterAvatar = twitterUser.getProfileImageURL();
+				if (loggedInUser.getAvatar() == null) {
 					// Update the user's avatar from Twitter
 					// TODO: Verify that twitter avatars work properly
 					loggedInUser.setAvatar(twitterAvatar.toString());
@@ -203,19 +210,19 @@ public class AppUser extends DatastoreObject{
 	public static AppUser loginWithFacebook(final String code) {
 		// Get the Facebook user
 		final Long facebookUserId = getCurrentFacebookUserId(code);
-		if(facebookUserId != null) {
+		if (facebookUserId != null) {
 			// Find the corresponding Fave100 user
 			final AppUser loggedInUser = findAppUserByFacebookId(facebookUserId);
-			if(loggedInUser != null) {
+			if (loggedInUser != null) {
 				// Successful login - store session
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
 				// TODO: Handle Facebook avatars
-			/*	final URL twitterAvatar =  twitterUser.getProfileImageURL();
-				if(loggedInUser.getAvatar() == null || !loggedInUser.getAvatar().equals(twitterAvatar.toString())) {
-					// Update the user's avatar from Twitter
-					loggedInUser.setAvatar(twitterAvatar.toString());
-					ofy().save().entity(loggedInUser).now();
-				}*/
+				/*	final URL twitterAvatar =  twitterUser.getProfileImageURL();
+					if(loggedInUser.getAvatar() == null || !loggedInUser.getAvatar().equals(twitterAvatar.toString())) {
+						// Update the user's avatar from Twitter
+						loggedInUser.setAvatar(twitterAvatar.toString());
+						ofy().save().entity(loggedInUser).now();
+					}*/
 			}
 			return loggedInUser;
 		}
@@ -235,13 +242,14 @@ public class AppUser extends DatastoreObject{
 		twitter.setOAuthConsumer(AppUser.TWITTER_CONSUMER_KEY, AppUser.TWITTER_CONSUMER_SECRET);
 
 		try {
-			RequestToken requestToken = (RequestToken) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
-			if(requestToken == null) {
+			RequestToken requestToken = (RequestToken)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
+			if (requestToken == null) {
 				requestToken = twitter.getOAuthRequestToken(redirectUrl);
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("requestToken", requestToken);
 			}
 			return requestToken.getAuthenticationURL();
-		} catch (final TwitterException e) {
+		}
+		catch (final TwitterException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -249,12 +257,12 @@ public class AppUser extends DatastoreObject{
 
 	// Gets a Twitter user - not a Fave100 user
 	public static twitter4j.User getTwitterUser(final String oauth_verifier) {
-		final twitter4j.User user = (twitter4j.User) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("twitterUser");
-		if(user == null) {
+		final twitter4j.User user = (twitter4j.User)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("twitterUser");
+		if (user == null) {
 			final Twitter twitter = new TwitterFactory().getInstance();
 			twitter.setOAuthConsumer(AppUser.TWITTER_CONSUMER_KEY, AppUser.TWITTER_CONSUMER_SECRET);
 
-			final RequestToken requestToken = (RequestToken) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
+			final RequestToken requestToken = (RequestToken)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
 
 			try {
 				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
@@ -262,7 +270,8 @@ public class AppUser extends DatastoreObject{
 				final twitter4j.User twitterUser = twitter.verifyCredentials();
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("twitterUser", twitterUser);
 				return twitterUser;
-			} catch (final TwitterException e1) {
+			}
+			catch (final TwitterException e1) {
 				e1.printStackTrace();
 			}
 			return null;
@@ -275,13 +284,13 @@ public class AppUser extends DatastoreObject{
 	public static String getFacebookAuthUrl(final String redirectUrl) {
 		final Token emptyToken = null;
 
-		if(facebookOAuthservice == null) {
+		if (facebookOAuthservice == null) {
 			facebookOAuthservice = new ServiceBuilder()
-				.provider(FacebookApi.class)
-				.apiKey(FACEBOOK_APP_ID)
-				.apiSecret(FACEBOOK_APP_SECRET)
-				.callback(redirectUrl)
-				.build();
+					.provider(FacebookApi.class)
+					.apiKey(FACEBOOK_APP_ID)
+					.apiSecret(FACEBOOK_APP_SECRET)
+					.callback(redirectUrl)
+					.build();
 		}
 
 		final String authUrl = facebookOAuthservice.getAuthorizationUrl(emptyToken);
@@ -292,20 +301,19 @@ public class AppUser extends DatastoreObject{
 	// Gets the ID of a the current Facebook user - not a Fave100 user
 	public static Long getCurrentFacebookUserId(final String code) {
 		final Verifier verifier = new Verifier(code);
-		final Token requestToken = (Token) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("facebookToken");
+		final Token requestToken = (Token)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("facebookToken");
 		final Token accessToken = facebookOAuthservice.getAccessToken(requestToken, verifier);
 
 		final OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/me");
 		facebookOAuthservice.signRequest(accessToken, request);
-	    final Response response = request.send();
+		final Response response = request.send();
 
-	    final JsonParser parser = new JsonParser();
-	    final JsonElement graphElement = parser.parse(response.getBody());
-	    final JsonObject graphObject = graphElement.getAsJsonObject();
+		final JsonParser parser = new JsonParser();
+		final JsonElement graphElement = parser.parse(response.getBody());
+		final JsonObject graphObject = graphElement.getAsJsonObject();
 
-	    return graphObject.get("id").getAsLong();
+		return graphObject.get("id").getAsLong();
 	}
-
 
 	/*
 	 * Checks if the user is logged into Google (though not necessarily logged
@@ -314,7 +322,7 @@ public class AppUser extends DatastoreObject{
 	public static boolean isGoogleUserLoggedIn() {
 		final UserService userService = UserServiceFactory.getUserService();
 		final User user = userService.getCurrentUser();
-		if(user != null) {
+		if (user != null) {
 			return true;
 		}
 		return false;
@@ -337,7 +345,7 @@ public class AppUser extends DatastoreObject{
 	public static String getGoogleLoginLogoutURL(final String destinationURL) {
 		final UserService userService = UserServiceFactory.getUserService();
 		final User user = userService.getCurrentUser();
-		if(user == null) {
+		if (user == null) {
 			return userService.createLoginURL(destinationURL);
 		}
 		return userService.createLogoutURL(destinationURL);
@@ -345,10 +353,11 @@ public class AppUser extends DatastoreObject{
 
 	// Get the logged in Fave100 user
 	public static AppUser getLoggedInAppUser() {
-		final String username = (String) RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
-		if(username != null) {
+		final String username = (String)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
+		if (username != null) {
 			return findAppUser(username);
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -365,16 +374,18 @@ public class AppUser extends DatastoreObject{
 			newAppUser = ofy().transact(new Work<AppUser>() {
 				@Override
 				public AppUser run() {
-					if(findAppUser(username) != null) {
+					if (findAppUser(username) != null) {
 						// Username already exists
 						throw new RuntimeException(userExistsMsg);
-					} else if(ofy().load().type(EmailID.class).id(email).get() != null) {
+					}
+					else if (ofy().load().type(EmailID.class).id(email).get() != null) {
 						// Email address already exists
 						throw new RuntimeException(emailExistsMsg);
-					} else {
-						if(Validator.validateUsername(username) == null
-							&& Validator.validatePassword(password) == null
-							&& Validator.validateEmail(email) == null){
+					}
+					else {
+						if (Validator.validateUsername(username) == null
+								&& Validator.validatePassword(password) == null
+								&& Validator.validateEmail(email) == null) {
 
 							// Everything passes validation, create the user
 							final AppUser appUser = new AppUser(username);
@@ -388,7 +399,8 @@ public class AppUser extends DatastoreObject{
 							// Automatically log in user
 							try {
 								return login(username, password);
-							} catch (final IncorrectLoginException e) {
+							}
+							catch (final IncorrectLoginException e) {
 								return null;
 							}
 						}
@@ -397,10 +409,12 @@ public class AppUser extends DatastoreObject{
 				}
 			});
 
-		} catch (final RuntimeException e) {
-			if(e.getMessage().equals(userExistsMsg)) {
+		}
+		catch (final RuntimeException e) {
+			if (e.getMessage().equals(userExistsMsg)) {
 				throw new UsernameAlreadyExistsException();
-			} else if(e.getMessage().equals(emailExistsMsg)) {
+			}
+			else if (e.getMessage().equals(emailExistsMsg)) {
 				throw new EmailIDAlreadyExistsException();
 			}
 		}
@@ -421,13 +435,13 @@ public class AppUser extends DatastoreObject{
 				public AppUser run() {
 					final UserService userService = UserServiceFactory.getUserService();
 					final User user = userService.getCurrentUser();
-					if(findAppUser(username) != null) {
+					if (findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
-					if(ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
+					if (ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
 						throw new RuntimeException(googleIDMsg);
 					}
-					if(Validator.validateUsername(username) == null) {
+					if (Validator.validateUsername(username) == null) {
 						// Create the user
 						final AppUser appUser = new AppUser(username);
 						appUser.setEmail(user.getEmail());
@@ -442,10 +456,12 @@ public class AppUser extends DatastoreObject{
 
 				}
 			});
-		} catch (final RuntimeException e) {
-			if(e.getMessage().equals(userExistsMsg)) {
+		}
+		catch (final RuntimeException e) {
+			if (e.getMessage().equals(userExistsMsg)) {
 				throw new UsernameAlreadyExistsException();
-			} else if (e.getMessage().equals(googleIDMsg)) {
+			}
+			else if (e.getMessage().equals(googleIDMsg)) {
 				throw new GoogleIdAlreadyExistsException();
 			}
 		}
@@ -465,13 +481,13 @@ public class AppUser extends DatastoreObject{
 				@Override
 				public AppUser run() {
 					final twitter4j.User user = getTwitterUser(oauth_verifier);
-					if(findAppUser(username) != null) {
+					if (findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
-					if(ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
+					if (ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
 						throw new RuntimeException(twitterIDMsg);
 					}
-					if(Validator.validateUsername(username) == null) {
+					if (Validator.validateUsername(username) == null) {
 						// Create the user
 						final AppUser appUser = new AppUser(username);
 						// TODO: Do we need an email for twitter users?
@@ -487,10 +503,12 @@ public class AppUser extends DatastoreObject{
 					return null;
 				}
 			});
-		} catch (final RuntimeException e) {
+		}
+		catch (final RuntimeException e) {
 			if (e.getMessage().equals(userExistsMsg)) {
 				throw new UsernameAlreadyExistsException();
-			} else if (e.getMessage().equals(twitterIDMsg)) {
+			}
+			else if (e.getMessage().equals(twitterIDMsg)) {
 				throw new TwitterIdAlreadyExistsException();
 			}
 		}
@@ -500,7 +518,7 @@ public class AppUser extends DatastoreObject{
 
 	public static AppUser createAppUserFromFacebookAccount(final String username, final String state,
 			final String code, final String redirectUrl)
-					throws UsernameAlreadyExistsException, FacebookIdAlreadyExistsException {
+			throws UsernameAlreadyExistsException, FacebookIdAlreadyExistsException {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 
@@ -511,15 +529,15 @@ public class AppUser extends DatastoreObject{
 			newAppUser = ofy().transact(new Work<AppUser>() {
 				@Override
 				public AppUser run() {
-			    	final Long userFacebookId = getCurrentFacebookUserId(code);
-			    	if(userFacebookId != null) {
-				    	if(findAppUser(username) != null) {
+					final Long userFacebookId = getCurrentFacebookUserId(code);
+					if (userFacebookId != null) {
+						if (findAppUser(username) != null) {
 							throw new RuntimeException(userExistsMsg);
 						}
-						if(ofy().load().type(FacebookID.class).id(userFacebookId).get() != null) {
+						if (ofy().load().type(FacebookID.class).id(userFacebookId).get() != null) {
 							throw new RuntimeException(facebookIDMsg);
 						}
-						if(Validator.validateUsername(username) == null) {
+						if (Validator.validateUsername(username) == null) {
 							// Create the user
 							final AppUser appUser = new AppUser();
 							appUser.setUsername(username);
@@ -533,14 +551,16 @@ public class AppUser extends DatastoreObject{
 							return loginWithFacebook(code);
 						}
 						return null;
-			    	}
+					}
 					return null;
 				}
 			});
-		} catch (final RuntimeException e) {
+		}
+		catch (final RuntimeException e) {
 			if (e.getMessage().equals(userExistsMsg)) {
 				throw new UsernameAlreadyExistsException();
-			} else if (e.getMessage().equals(facebookIDMsg)) {
+			}
+			else if (e.getMessage().equals(facebookIDMsg)) {
 				throw new FacebookIdAlreadyExistsException();
 			}
 		}
@@ -560,10 +580,11 @@ public class AppUser extends DatastoreObject{
 
 	public static void setAvatarForCurrentUser(final String avatar) {
 		final AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) return;
+		if (currentUser == null)
+			return;
 		// TODO: Max upload size?
 		// TODO: Twitter user can't upload own avatar?
-		if(currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
+		if (currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
 			BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
 		}
 		currentUser.setAvatar(avatar);
@@ -571,16 +592,18 @@ public class AppUser extends DatastoreObject{
 	}
 
 	public String getAvatarImage() {
-		if(avatar == null) {
+		if (avatar == null) {
 			// If there is no avatar, serve a Gravatar
 			// TODO: Do we even want to show gravatars at all? some privacy issues
-			if(getEmail() == null) return "http://www.gravatar.com/avatar/?d=mm";
+			if (getEmail() == null)
+				return "http://www.gravatar.com/avatar/?d=mm";
 			try {
 				final byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");
-		        final BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
-		        final String hash = String.format("%1$032x", i);
-		        return "http://www.gravatar.com/avatar/"+hash+"?d=mm";
-			} catch (final Exception e) {
+				final BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
+				final String hash = String.format("%1$032x", i);
+				return "http://www.gravatar.com/avatar/" + hash + "?d=mm";
+			}
+			catch (final Exception e) {
 				// Don't care
 			}
 		}
@@ -590,11 +613,12 @@ public class AppUser extends DatastoreObject{
 			final BlobKey blobKey = new BlobKey(avatar);
 			final ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
 			final String servingUrl = ImagesServiceFactory.getImagesService().getServingUrl(options);
-			if(servingUrl != null) {
+			if (servingUrl != null) {
 				//TODO: This is bad hack, unfortunately needed for dev mode
 				return servingUrl.replace("http://0.0.0.0", "http://127.0.0.1");
 			}
-		} catch (final Exception e) {
+		}
+		catch (final Exception e) {
 			// Blobkey not valid, we'll just serve their avatar
 		}
 		// Otherwise serve the Twitter, FaceBook, or native avatar
@@ -603,22 +627,25 @@ public class AppUser extends DatastoreObject{
 
 	public static String getEmailForCurrentUser() throws NotLoggedInException {
 		final AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) throw new NotLoggedInException();
+		if (currentUser == null)
+			throw new NotLoggedInException();
 		return currentUser.getEmail();
 	}
 
 	public static Boolean setProfileData(final String email) throws EmailIDAlreadyExistsException {
 		final AppUser currentUser = getLoggedInAppUser();
-		if(currentUser == null) return false;
+		if (currentUser == null)
+			return false;
 		try {
 			ofy().transact(new VoidWork() {
 				@Override
 				public void vrun() {
 					EmailID emailID = EmailID.findEmailID(email);
 					// Existing email for a different user, throw exception
-					if(emailID != null && !emailID.getEmailID().equals(currentUser.getEmail().toLowerCase())) {
+					if (emailID != null && !emailID.getEmailID().equals(currentUser.getEmail().toLowerCase())) {
 						throw new RuntimeException(new EmailIDAlreadyExistsException());
-					} else if(emailID == null) {
+					}
+					else if (emailID == null) {
 						// No existing email, allow it to be changed
 
 						// First delete the old EmailID
@@ -633,9 +660,10 @@ public class AppUser extends DatastoreObject{
 					}
 				}
 			});
-		} catch (final RuntimeException re) {
-			if(re.getCause() instanceof EmailIDAlreadyExistsException) {
-				throw (EmailIDAlreadyExistsException) re.getCause();
+		}
+		catch (final RuntimeException re) {
+			if (re.getCause() instanceof EmailIDAlreadyExistsException) {
+				throw (EmailIDAlreadyExistsException)re.getCause();
 			}
 		}
 
@@ -644,39 +672,44 @@ public class AppUser extends DatastoreObject{
 
 	// Emails user a password reset token if they forget their password
 	public static Boolean emailPasswordResetToken(final String username, final String emailAddress) {
-		if(!username.isEmpty() && !emailAddress.isEmpty()) {
+		if (!username.isEmpty() && !emailAddress.isEmpty()) {
 			final AppUser appUser = findAppUser(username);
-			if(appUser != null) {
+			if (appUser != null) {
 				// Make sure that Google, Twitter, Facebook users can't "forget password"
-				if(appUser.getPassword() == null || appUser.getPassword().isEmpty()) return false;
-				if(appUser.getEmail() == null || appUser.getEmail().isEmpty()) return false;
+				if (appUser.getPassword() == null || appUser.getPassword().isEmpty())
+					return false;
+				if (appUser.getEmail() == null || appUser.getEmail().isEmpty())
+					return false;
 
-				if(appUser.getEmail().equals(emailAddress)) {
+				if (appUser.getEmail().equals(emailAddress)) {
 					final Properties props = new Properties();
-			        final Session session = Session.getDefaultInstance(props, null);
+					final Session session = Session.getDefaultInstance(props, null);
 
-			        try {
-			        	final PwdResetToken pwdResetToken = new PwdResetToken(appUser.getUsername());
-			        	ofy().save().entity(pwdResetToken).now();
-			            final Message msg = new MimeMessage(session);
-			            // TODO: Change email sender to proper one for launch
-			            msg.setFrom(new InternetAddress("yissachar.radcliffe@caseware.com", "Fave100"));
-			            msg.addRecipient(Message.RecipientType.TO,
-			                             new InternetAddress(emailAddress, username));
-			            msg.setSubject("Fave100 Password Change");
-			            // TODO: wording?
-				        String msgBody = "To change your Fave100 password, please visit the following URL and change your password within 24 hours.";
-				        final String pwdResetPlace = new UrlBuilder("passwordreset").with("token", pwdResetToken.getToken()).getUrl();
-				        msgBody += pwdResetPlace;
-			            msg.setText(msgBody);
+					try {
+						final PwdResetToken pwdResetToken = new PwdResetToken(appUser.getUsername());
+						ofy().save().entity(pwdResetToken).now();
+						final Message msg = new MimeMessage(session);
+						// TODO: Change email sender to proper one for launch
+						msg.setFrom(new InternetAddress("yissachar.radcliffe@caseware.com", "Fave100"));
+						msg.addRecipient(Message.RecipientType.TO,
+								new InternetAddress(emailAddress, username));
+						msg.setSubject("Fave100 Password Change");
+						// TODO: wording?
+						String msgBody = "To change your Fave100 password, please visit the following URL and change your password within 24 hours.";
+						final String pwdResetPlace = new UrlBuilder("passwordreset").with("token", pwdResetToken.getToken()).getUrl();
+						msgBody += pwdResetPlace;
+						msg.setText(msgBody);
 
-			            Transport.send(msg);
-			            return true;
-			        } catch (final AddressException e) {
-			            // ...
-			        } catch (final MessagingException e) {
-			            // ...
-			        } catch (final UnsupportedEncodingException e) {
+						Transport.send(msg);
+						return true;
+					}
+					catch (final AddressException e) {
+						// ...
+					}
+					catch (final MessagingException e) {
+						// ...
+					}
+					catch (final UnsupportedEncodingException e) {
 						// ...
 					}
 				}
@@ -689,8 +722,8 @@ public class AppUser extends DatastoreObject{
 	// reset token or the current password
 	public static Boolean changePassword(final String newPassword, final String tokenOrPassword) {
 
-		if(Validator.validatePassword(newPassword) != null
-			|| tokenOrPassword == null || tokenOrPassword.isEmpty()) {
+		if (Validator.validatePassword(newPassword) != null
+				|| tokenOrPassword == null || tokenOrPassword.isEmpty()) {
 
 			return false;
 		}
@@ -700,36 +733,38 @@ public class AppUser extends DatastoreObject{
 
 		// Check if the string is a password reset token
 		final PwdResetToken pwdResetToken = PwdResetToken.findPwdResetToken(tokenOrPassword);
-		if(pwdResetToken != null) {
+		if (pwdResetToken != null) {
 			// Check if reset token has expired
 			final Date now = new Date();
-			if(pwdResetToken.getExpiry().getTime() > now.getTime()) {
+			if (pwdResetToken.getExpiry().getTime() > now.getTime()) {
 				// Token hasn't expired yet, change password
 				appUser = pwdResetToken.getAppUser().get();
-				if(appUser != null) {
+				if (appUser != null) {
 					changePwd = true;
 				}
-			} else {
+			}
+			else {
 				// Token expired, delete it
 				ofy().delete().entity(pwdResetToken);
 			}
-		} else {
+		}
+		else {
 			// No password reset token, check for logged in user
 			appUser = getLoggedInAppUser();
-			if(appUser != null) {
+			if (appUser != null) {
 				// We have a logged in user, check if pwd matches
-				if(BCrypt.checkpw(tokenOrPassword, appUser.getPassword()) == true) {
+				if (BCrypt.checkpw(tokenOrPassword, appUser.getPassword()) == true) {
 					// Password matches, allow password change
 					changePwd = true;
 				}
 			}
 		}
 
-		if(appUser != null && changePwd == true) {
+		if (appUser != null && changePwd == true) {
 			// Change the password
 			appUser.setPassword(newPassword);
 			ofy().save().entity(appUser).now();
-			if(pwdResetToken != null) {
+			if (pwdResetToken != null) {
 				// Delete token now that we've used it
 				ofy().delete().entity(pwdResetToken);
 			}
@@ -739,7 +774,7 @@ public class AppUser extends DatastoreObject{
 		return false;
 	}
 
-    // Getters and setters
+	// Getters and setters
 
 	public String getUsernameID() {
 		return usernameID;

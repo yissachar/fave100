@@ -12,18 +12,17 @@ import com.gwtplatform.mvp.client.ViewImpl;
 
 public class HomeView extends ViewImpl implements HomePresenter.MyView {
 
-	private final Widget	widget;
+	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, HomeView> {
 	}
 
-	@UiField
-	HTMLPanel							userThumbListPanel;
-	private ApplicationRequestFactory	requestFactory;
+	@UiField HTMLPanel userThumbListPanel;
+	private ApplicationRequestFactory requestFactory;
 
 	@Inject
 	public HomeView(final Binder binder,
-			final ApplicationRequestFactory requestFactory) {
+					final ApplicationRequestFactory requestFactory) {
 		widget = binder.createAndBindUi(this);
 		this.requestFactory = requestFactory;
 	}

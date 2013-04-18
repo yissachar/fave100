@@ -10,6 +10,7 @@ import com.google.web.bindery.requestfactory.shared.ValueProxy;
 public interface SearchResultProxy extends ValueProxy {
 
 	List<SongProxy> getResults();
+
 	int getTotal();
 
 }

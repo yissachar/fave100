@@ -16,7 +16,7 @@ public class EncodingFilter implements Filter {
 	@Override
 	public void doFilter(final ServletRequest request,
 
-	final ServletResponse response, final FilterChain filterChain) throws IOException, ServletException {
+			final ServletResponse response, final FilterChain filterChain) throws IOException, ServletException {
 		request.setCharacterEncoding(encoding);
 		response.setCharacterEncoding(encoding);
 		filterChain.doFilter(request, response);
@@ -25,7 +25,7 @@ public class EncodingFilter implements Filter {
 	@Override
 	public void init(final FilterConfig filterConfig)
 
-	throws ServletException {
+			throws ServletException {
 		final String encodingParam = filterConfig.getInitParameter("encoding");
 		if (encodingParam != null) {
 			encoding = encodingParam;

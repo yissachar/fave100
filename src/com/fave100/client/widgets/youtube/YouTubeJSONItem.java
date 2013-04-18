@@ -4,18 +4,19 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * JavaScript Overlay
- *
+ * 
  */
-public class YouTubeJSONItem extends JavaScriptObject{
+public class YouTubeJSONItem extends JavaScriptObject {
 
-	protected YouTubeJSONItem() {}
+	protected YouTubeJSONItem() {
+	}
 
 	public final native String getVideoId() /*-{
-		return this.id.videoId;
-	}-*/;
+											return this.id.videoId;
+											}-*/;
 
 	public final native String getThumbnail() /*-{
-		return this.snippet.thumbnails['default'].url;
-	}-*/;
+												return this.snippet.thumbnails['default'].url;
+												}-*/;
 
 }

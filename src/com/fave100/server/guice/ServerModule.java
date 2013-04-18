@@ -19,7 +19,7 @@ import com.gwtplatform.dispatch.server.guice.HandlerModule;
 
 public class ServerModule extends HandlerModule {
 
-	static{
+	static {
 		// Must manually register all datastore entities
 		ObjectifyService.register(AppUser.class);
 		ObjectifyService.register(Song.class);
@@ -32,7 +32,6 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(APIKey.class);
 		ObjectifyService.register(PwdResetToken.class);
 
-		// Set API keys
 		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").get();
 		AppUser.FACEBOOK_APP_ID = facebookApiKey.getKey();
 		AppUser.FACEBOOK_APP_SECRET = facebookApiKey.getSecret();
@@ -41,7 +40,7 @@ public class ServerModule extends HandlerModule {
 		AppUser.TWITTER_CONSUMER_KEY = twitterApiKey.getKey();
 		AppUser.TWITTER_CONSUMER_SECRET = twitterApiKey.getSecret();
 
-		final APIKey youtubeApiKey =  ofy().load().type(APIKey.class).id("youtube").get();
+		final APIKey youtubeApiKey = ofy().load().type(APIKey.class).id("youtube").get();
 		Song.YOUTUBE_API_KEY = youtubeApiKey.getKey();
 
 		// Let the UrlBuilder know what URLs to build

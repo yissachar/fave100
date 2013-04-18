@@ -9,7 +9,8 @@ public class SearchResult {
 	private int total;
 
 	@SuppressWarnings("unused")
-	private SearchResult(){}
+	private SearchResult() {
+	}
 
 	public SearchResult(final List<Song> results, final int total) {
 		this.results = results;
@@ -26,11 +27,9 @@ public class SearchResult {
 		this.total = total;
 	}
 
-
 	public List<Song> getResults() {
 		return results;
 	}
-
 
 	public void setResults(final List<Song> results) {
 		this.results = results;

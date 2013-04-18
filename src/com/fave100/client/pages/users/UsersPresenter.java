@@ -28,11 +28,13 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class UsersPresenter extends
 		BasePresenter<UsersPresenter.MyView, UsersPresenter.MyProxy>
-		implements UsersUiHandlers{
+		implements UsersUiHandlers {
 
 	public interface MyView extends BaseView, HasUiHandlers<UsersUiHandlers> {
 		void setUserProfile(AppUserProxy user);
+
 		void showOwnPage();
+
 		void showOtherPage();
 	}
 
@@ -41,25 +43,23 @@ public class UsersPresenter extends
 	public interface MyProxy extends ProxyPlace<UsersPresenter> {
 	}
 
-	@ContentSlot
-	public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
-	@ContentSlot
-	public static final Type<RevealContentHandler<?>> FAVELIST_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot public static final Type<RevealContentHandler<?>> FAVELIST_SLOT = new Type<RevealContentHandler<?>>();
 
 	public static final String USER_PARAM = "u";
 
-	private String 							requestedUsername;
+	private String requestedUsername;
 	private final ApplicationRequestFactory requestFactory;
-	private final PlaceManager 				placeManager;
-	private final EventBus 					eventBus;
-	private CurrentUser 					currentUser;
-	@Inject SongAutocompletePresenter 		songAutocomplete;
-	@Inject FavelistPresenter				favelist;
+	private final PlaceManager placeManager;
+	private final EventBus eventBus;
+	private CurrentUser currentUser;
+	@Inject SongAutocompletePresenter songAutocomplete;
+	@Inject FavelistPresenter favelist;
 
 	@Inject
 	public UsersPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager, final CurrentUser currentUser) {
+							final MyProxy proxy, final ApplicationRequestFactory requestFactory,
+							final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
@@ -81,9 +81,9 @@ public class UsersPresenter extends
 
 	@Override
 	protected void onReveal() {
-	    super.onReveal();
-	    setInSlot(AUTOCOMPLETE_SLOT, songAutocomplete);
-	    setInSlot(FAVELIST_SLOT, favelist);
+		super.onReveal();
+		setInSlot(AUTOCOMPLETE_SLOT, songAutocomplete);
+		setInSlot(FAVELIST_SLOT, favelist);
 	}
 
 	@Override
@@ -104,39 +104,42 @@ public class UsersPresenter extends
 
 		// Use parameters to determine what to reveal on page
 		requestedUsername = placeRequest.getParameter("u", "");
-		if(requestedUsername.isEmpty()) {
+		if (requestedUsername.isEmpty()) {
 			// Malformed request, send the user away
 			placeManager.revealDefaultPlace();
-		} else {
+		}
+		else {
 			// Update user profile
-		    final Request<AppUserProxy> userReq = requestFactory.appUserRequest().findAppUser(requestedUsername);
-		    userReq.fire(new Receiver<AppUserProxy>() {
-		    	@Override
-		    	public void onSuccess(final AppUserProxy user) {
-		    		if(user != null) {
-	    				getView().setUserProfile(user);
-	    				// Check if user is the currently logged in user
-						if(currentUser.isLoggedIn() && currentUser.equals(user)) {
+			final Request<AppUserProxy> userReq = requestFactory.appUserRequest().findAppUser(requestedUsername);
+			userReq.fire(new Receiver<AppUserProxy>() {
+				@Override
+				public void onSuccess(final AppUserProxy user) {
+					if (user != null) {
+						getView().setUserProfile(user);
+						// Check if user is the currently logged in user
+						if (currentUser.isLoggedIn() && currentUser.equals(user)) {
 							getView().showOwnPage();
-						} else {
+						}
+						else {
 							getView().showOtherPage();
 						}
 
 						favelist.setUser(user);
-					    favelist.refreshFavelist();
+						favelist.refreshFavelist();
 
 						getProxy().manualReveal(UsersPresenter.this);
-	    			} else {
-	    				placeManager.revealDefaultPlace();
-	    			}
-		    	}
-		    });
+					}
+					else {
+						placeManager.revealDefaultPlace();
+					}
+				}
+			});
 		}
 	}
 
 	@Override
 	public void shareTwitter() {
-		final String url = "http://twitter.com/share?text=Check out my Fave100 songs: "+Window.Location.getHref();
+		final String url = "http://twitter.com/share?text=Check out my Fave100 songs: " + Window.Location.getHref();
 		Window.open(url, "_blank", "");
 	}
 
@@ -146,9 +149,9 @@ public class UsersPresenter extends
 	}
 }
 
-
-interface UsersUiHandlers extends UiHandlers{
+interface UsersUiHandlers extends UiHandlers {
 	//void follow();
 	void shareTwitter();
+
 	void songSelected(SongProxy song);
 }

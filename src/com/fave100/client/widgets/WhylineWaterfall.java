@@ -40,13 +40,14 @@ public class WhylineWaterfall extends Composite {
 			public void onSuccess(final List<WhylineProxy> whylineList) {
 				grid.clear();
 				header.setVisible(false);
-				if(whylineList.size() > 0) header.setVisible(true);
+				if (whylineList.size() > 0)
+					header.setVisible(true);
 				final int rows = (whylineList.size() / 3) + 1;
 				final int columns = (whylineList.size() < 3) ? whylineList.size() : 3;
 				grid.resize(rows, columns);
-				for(int i = 0; i < rows; i++)
+				for (int i = 0; i < rows; i++)
 				{
-					for(int j = 0; j < columns; j++)
+					for (int j = 0; j < columns; j++)
 					{
 						final int pos = (i == 0 || j == 0) ? i + j : i * j;
 						final WhylineProxy whyline = whylineList.get(pos);

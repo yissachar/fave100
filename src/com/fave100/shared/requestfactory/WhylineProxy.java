@@ -5,8 +5,9 @@ import com.google.web.bindery.requestfactory.shared.ProxyFor;
 import com.google.web.bindery.requestfactory.shared.ValueProxy;
 
 @ProxyFor(Whyline.class)
-public interface WhylineProxy extends ValueProxy{
+public interface WhylineProxy extends ValueProxy {
 
 	String getWhyline();
+
 	String getUsername();
 }

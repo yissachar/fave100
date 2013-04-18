@@ -28,21 +28,26 @@ public class SongAutocompletePresenter extends
 		implements SongAutocompleteUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<SongAutocompleteUiHandlers> {
-		void 	setSuggestions(List<SongProxy> suggestions, int total);
-		void 	setSelection(int selection);
-		void	showPrevious(boolean show);
-		void	showNext(boolean show);
-		void	clearSearch();
-		String 	getSearchTerm();
+		void setSuggestions(List<SongProxy> suggestions, int total);
+
+		void setSelection(int selection);
+
+		void showPrevious(boolean show);
+
+		void showNext(boolean show);
+
+		void clearSearch();
+
+		String getSearchTerm();
 	}
 
-	private EventBus								eventBus;
-	private List<AsyncCallback<JavaScriptObject>>	requests;
-	private int 									selection = 0;
-	private int										maxSelection = -1;
-	private int										resultsPerPage = 5;
-	private int										page = 0;
-	private List<SongProxy>							currentSuggestions;
+	private final EventBus eventBus;
+	private final List<AsyncCallback<JavaScriptObject>> requests;
+	private int selection = 0;
+	private int maxSelection = -1;
+	private int resultsPerPage = 5;
+	private int page = 0;
+	private List<SongProxy> currentSuggestions;
 
 	@Inject
 	public SongAutocompletePresenter(final EventBus eventBus, final MyView view) {
@@ -70,16 +75,16 @@ public class SongAutocompletePresenter extends
 	// Get a list of songs matching a search term
 	@Override
 	public void getAutocompleteResults(final String searchTerm, final boolean resetPage) {
-		if(resetPage)
+		if (resetPage)
 			setPage(0);
 
 		setSelection(-1);
-		if(searchTerm.isEmpty() || searchTerm.length() <= 2) {
+		if (searchTerm.isEmpty() || searchTerm.length() <= 2) {
 			getView().setSuggestions(null, 0);
 			return;
 		}
 
-		final String url = Constants.SEARCH_URL+"searchTerm="+URL.encodeQueryString(searchTerm)+"&limit=5&page="+page;
+		final String url = Constants.SEARCH_URL + "searchTerm=" + URL.encodeQueryString(searchTerm) + "&limit=5&page=" + page;
 		final AsyncCallback<JavaScriptObject> autocompleteReq = new AsyncCallback<JavaScriptObject>() {
 			@Override
 			public void onFailure(final Throwable caught) {
@@ -88,8 +93,8 @@ public class SongAutocompletePresenter extends
 
 			@Override
 			public void onSuccess(final JavaScriptObject jsObject) {
-				if(requests.indexOf(this) != requests.size()-1
-					|| requests.indexOf(this) == -1) {
+				if (requests.indexOf(this) != requests.size() - 1
+						|| requests.indexOf(this) == -1) {
 					requests.remove(this);
 					return;
 				}
@@ -103,14 +108,14 @@ public class SongAutocompletePresenter extends
 				currentSuggestions = results;
 				final int totalResults = Integer.parseInt(obj.get("total").toString());
 				getView().setSuggestions(results, totalResults);
-				setMaxSelection(results.size()-1);
+				setMaxSelection(results.size() - 1);
 
-				if(getPage() == 0)
+				if (getPage() == 0)
 					getView().showPrevious(false);
 				else
 					getView().showPrevious(true);
 
-				if(resultsPerPage*getPage()+results.size() >= totalResults)
+				if (resultsPerPage * getPage() + results.size() >= totalResults)
 					getView().showNext(false);
 				else
 					getView().showNext(true);
@@ -125,8 +130,8 @@ public class SongAutocompletePresenter extends
 	// Set the currently selected song
 	@Override
 	public void setSelection(final int position, final boolean relative) {
-		final int newSelection = relative ? getSelection()+position : position;
-		if(newSelection >= 0 && newSelection <= getMaxSelection()) {
+		final int newSelection = relative ? getSelection() + position : position;
+		if (newSelection >= 0 && newSelection <= getMaxSelection()) {
 			setSelection(newSelection);
 			getView().setSelection(selection);
 		}
@@ -144,7 +149,7 @@ public class SongAutocompletePresenter extends
 	@Override
 	public void modifyPage(final int pageModifier) {
 		final int newPage = getPage() + pageModifier;
-		if(newPage >= 0) {
+		if (newPage >= 0) {
 			setPage(newPage);
 			getAutocompleteResults(getView().getSearchTerm(), false);
 		}
@@ -189,8 +194,12 @@ public class SongAutocompletePresenter extends
 
 interface SongAutocompleteUiHandlers extends UiHandlers {
 	void getAutocompleteResults(String searchTerm, boolean resetPage);
+
 	void setSelection(int position, boolean relative);
+
 	void songSelected();
+
 	void modifyPage(int pageModifier);
-	int  getPage();
+
+	int getPage();
 }

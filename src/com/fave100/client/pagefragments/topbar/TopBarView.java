@@ -18,20 +18,20 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		TopBarPresenter.MyView {
 
-	private final Widget	widget;
+	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, TopBarView> {
 	}
 
-	@UiField InlineHyperlink	logInLogOutLink;
-	@UiField Label				notification;
-	@UiField Anchor				greeting;
-	@UiField InlineHyperlink	registerLink;
-	@UiField HTMLPanel			loginBox;
+	@UiField InlineHyperlink logInLogOutLink;
+	@UiField Label notification;
+	@UiField Anchor greeting;
+	@UiField InlineHyperlink registerLink;
+	@UiField HTMLPanel loginBox;
 
 	@Inject
 	public TopBarView(final Binder binder,
-			final ApplicationRequestFactory requestFactory) {
+						final ApplicationRequestFactory requestFactory) {
 
 		widget = binder.createAndBindUi(this);
 		Notification.init(notification);
@@ -59,8 +59,8 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		greeting.setText(username);
 		greeting.setVisible(true);
 		final String userPlace = new UrlBuilder(NameTokens.users)
-			.with(UsersPresenter.USER_PARAM, username)
-			.getUrl();
+				.with(UsersPresenter.USER_PARAM, username)
+				.getUrl();
 		greeting.setHref(userPlace);
 		registerLink.setVisible(false);
 		logInLogOutLink.setText("Log out");

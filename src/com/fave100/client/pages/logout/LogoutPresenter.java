@@ -22,8 +22,9 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 /**
  * A page to logout the current user.
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class LogoutPresenter extends
 		Presenter<LogoutPresenter.MyView, LogoutPresenter.MyProxy> {
@@ -37,14 +38,14 @@ public class LogoutPresenter extends
 	public interface MyProxy extends ProxyPlace<LogoutPresenter> {
 	}
 
-	private EventBus					eventBus;
-	private ApplicationRequestFactory	requestFactory;
-	private PlaceManager				placeManager;
+	private EventBus eventBus;
+	private ApplicationRequestFactory requestFactory;
+	private PlaceManager placeManager;
 
 	@Inject
 	public LogoutPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, final PlaceManager placeManager,
-			final ApplicationRequestFactory requestFactory) {
+							final MyProxy proxy, final PlaceManager placeManager,
+							final ApplicationRequestFactory requestFactory) {
 		super(eventBus, view, proxy);
 
 		this.eventBus = eventBus;

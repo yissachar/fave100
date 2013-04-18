@@ -19,33 +19,20 @@ public class PasswordResetView extends
 		ViewWithUiHandlers<PasswordResetUiHandlers> implements
 		PasswordResetPresenter.MyView {
 
-	private final Widget	widget;
-	@UiField
-	HTMLPanel				topBar;
-	@UiField
-	FormPanel				sendTokenForm;
-	@UiField
-	TextBox					usernameInput;
-	@UiField
-	TextBox					emailInput;
-	@UiField
-	Label					tokenStatusMessage;
-	@UiField
-	SubmitButton			sendTokenButton;
-	@UiField
-	FormPanel				changePasswordForm;
-	@UiField
-	Label					currPasswordLabel;
-	@UiField
-	PasswordTextBox			currPasswordInput;
-	@UiField
-	Label					currPwdStatusMsg;
-	@UiField
-	PasswordTextBox			passwordInput;
-	@UiField
-	PasswordTextBox			passwordRepeat;
-	@UiField
-	Label					pwdStatusMessage;
+	private final Widget widget;
+	@UiField HTMLPanel topBar;
+	@UiField FormPanel sendTokenForm;
+	@UiField TextBox usernameInput;
+	@UiField TextBox emailInput;
+	@UiField Label tokenStatusMessage;
+	@UiField SubmitButton sendTokenButton;
+	@UiField FormPanel changePasswordForm;
+	@UiField Label currPasswordLabel;
+	@UiField PasswordTextBox currPasswordInput;
+	@UiField Label currPwdStatusMsg;
+	@UiField PasswordTextBox passwordInput;
+	@UiField PasswordTextBox passwordRepeat;
+	@UiField Label pwdStatusMessage;
 
 	public interface Binder extends UiBinder<Widget, PasswordResetView> {
 	}
@@ -98,7 +85,8 @@ public class PasswordResetView extends
 			currPasswordLabel.setVisible(true);
 			currPasswordInput.setVisible(true);
 			currPwdStatusMsg.setVisible(false);
-		} else {
+		}
+		else {
 			currPasswordLabel.setVisible(false);
 			currPasswordInput.setVisible(false);
 			currPwdStatusMsg.setVisible(false);
@@ -139,7 +127,8 @@ public class PasswordResetView extends
 		pwdStatusMessage.addStyleName("error");
 		if (inputError) {
 			passwordInput.addStyleName("errorInput");
-		} else {
+		}
+		else {
 			passwordInput.removeStyleName("errorInput");
 		}
 	}

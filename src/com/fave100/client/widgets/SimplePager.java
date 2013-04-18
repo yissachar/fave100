@@ -44,6 +44,7 @@ public class SimplePager extends Composite {
 	void onNextClick(final ClickEvent event) {
 		setPageNumber(pageNumber + 1);
 	}
+
 	public int getPageNumber() {
 		return pageNumber;
 	}
@@ -56,41 +57,44 @@ public class SimplePager extends Composite {
 
 		final int lastPageNum = pageNumber;
 
-		if(number > maxPageNumber) {
+		if (number > maxPageNumber) {
 			pageNumber = maxPageNumber;
-		} else if (number < 1) {
+		}
+		else if (number < 1) {
 			pageNumber = 1;
-		} else {
+		}
+		else {
 			pageNumber = number;
 		}
 
-		if(lastPageNum != pageNumber && dispatch == true) {
+		if (lastPageNum != pageNumber && dispatch == true) {
 			eventBus.fireEvent(new ResultPageChangedEvent(pageNumber));
 		}
 
 		previousLink.setVisible(true);
 		nextLink.setVisible(true);
-		if(pageNumber == 1) {
+		if (pageNumber == 1) {
 			previousLink.setVisible(false);
 		}
 
-		if(pageNumber == maxPageNumber) {
+		if (pageNumber == maxPageNumber) {
 			nextLink.setVisible(false);
 		}
 
 		// Remove all pageLink children
-		for(int i = pageLinks.getWidgetCount(); i > 0; i--) {
-			pageLinks.remove(i-1);
+		for (int i = pageLinks.getWidgetCount(); i > 0; i--) {
+			pageLinks.remove(i - 1);
 		}
 
 		// How many page links will we show
 		final int maxPageLinks = 10;
 		final int numPageLinks = Math.min(maxPageNumber, maxPageLinks);
 		int pageLinksRemaining = numPageLinks;
-		final int pagesBeforeCurrent = (maxPageNumber > maxPageLinks) ? numPageLinks/2 : getPageNumber()-1;
+		final int pagesBeforeCurrent = (maxPageNumber > maxPageLinks) ? numPageLinks / 2 : getPageNumber() - 1;
 		// Create page links less than current page
-		for (int i = getPageNumber()-pagesBeforeCurrent; i < getPageNumber(); i++) {
-			if(i <= 0) continue;
+		for (int i = getPageNumber() - pagesBeforeCurrent; i < getPageNumber(); i++) {
+			if (i <= 0)
+				continue;
 			createPageLink(String.valueOf(i));
 			pageLinksRemaining--;
 		}
@@ -101,7 +105,7 @@ public class SimplePager extends Composite {
 		pageLinksRemaining--;
 		// Create page links after current page
 		for (int i = 1; i <= pageLinksRemaining; i++) {
-			createPageLink(String.valueOf(getPageNumber()+i));
+			createPageLink(String.valueOf(getPageNumber() + i));
 		}
 	}
 
@@ -110,7 +114,8 @@ public class SimplePager extends Composite {
 	}
 
 	public void setMaxPageNumber(final int number) {
-		if(number <= 0) return;
+		if (number <= 0)
+			return;
 		maxPageNumber = number;
 		// Re-call set page number to trigger the proper showing of next/previous
 		setPageNumber(pageNumber, false);

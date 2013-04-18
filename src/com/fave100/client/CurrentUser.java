@@ -8,7 +8,7 @@ import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 
 public class CurrentUser implements AppUserProxy {
 
-	private AppUserProxy	appUser;
+	private AppUserProxy appUser;
 
 	@Inject
 	public CurrentUser(final EventBus eventBus) {

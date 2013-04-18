@@ -20,28 +20,28 @@ import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
 
 @SuppressWarnings("serial")
 public class AvatarUploadServlet extends RequestFactoryServlet
- {
+{
 
-    private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
-    @Override @Inject
+	@Override
+	@Inject
 	public void doPost(final HttpServletRequest req, final HttpServletResponse res)
-        throws ServletException, IOException {
-        final Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
+			throws ServletException, IOException {
+		final Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
 
-        final List<BlobKey> bloblist = blobs.get("avatar");
-        if(bloblist != null && bloblist.size() > 0) {
+		final List<BlobKey> bloblist = blobs.get("avatar");
+		if (bloblist != null && bloblist.size() > 0) {
 
-        	final BlobKey blobKey =  bloblist.get(0);
+			final BlobKey blobKey = bloblist.get(0);
 
-        	if(blobKey != null) {
-        		final String username = (String) req.getSession().getAttribute(AppUser.AUTH_USER);
-            	Objects.requireNonNull(username);
-            	final AppUser appUser = AppUser.findAppUser(username);
-            	appUser.setAvatar(blobKey.getKeyString());
-            	ofy().save().entity(appUser).now();
-            }
-        }
-    }
+			if (blobKey != null) {
+				final String username = (String)req.getSession().getAttribute(AppUser.AUTH_USER);
+				Objects.requireNonNull(username);
+				final AppUser appUser = AppUser.findAppUser(username);
+				appUser.setAvatar(blobKey.getKeyString());
+				ofy().save().entity(appUser).now();
+			}
+		}
+	}
 }
-

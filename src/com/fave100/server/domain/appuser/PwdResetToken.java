@@ -14,8 +14,9 @@ import com.googlecode.objectify.annotation.Load;
 
 /**
  * A token that is emailed to an AppUser to allow them to reset their password
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 
 @Entity
@@ -25,7 +26,8 @@ public class PwdResetToken {
 	@Load private Ref<AppUser> appUser;
 
 	@SuppressWarnings("unused")
-	private PwdResetToken() {}
+	private PwdResetToken() {
+	}
 
 	public PwdResetToken(final String username) {
 		token = UUID.randomUUID().toString();
@@ -38,7 +40,6 @@ public class PwdResetToken {
 	public static PwdResetToken findPwdResetToken(final String token) {
 		return ofy().load().type(PwdResetToken.class).id(token).get();
 	}
-
 
 	/* Getters and setters */
 

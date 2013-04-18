@@ -6,8 +6,9 @@ import com.googlecode.objectify.annotation.Embed;
 
 /**
  * A song that a Fave100 user has added to their Fave100.
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 @Embed
 public class FaveItem {
@@ -20,7 +21,8 @@ public class FaveItem {
 	private Ref<Whyline> whylineRef;
 
 	@SuppressWarnings("unused")
-	private FaveItem() {}
+	private FaveItem() {
+	}
 
 	public FaveItem(final String song, final String artist, final String songID) {
 		this.setSong(song);

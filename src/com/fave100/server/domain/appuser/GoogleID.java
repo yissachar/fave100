@@ -9,8 +9,9 @@ import com.googlecode.objectify.annotation.Id;
 
 /**
  * Allows lookup of an AppUser by their Google ID
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 
 @Entity
@@ -18,7 +19,8 @@ public class GoogleID {
 	@Id private String googleID;
 	private Ref<AppUser> user;
 
-	public GoogleID() {}
+	public GoogleID() {
+	}
 
 	public GoogleID(final String googleID, final AppUser user) {
 		this.googleID = googleID;
@@ -28,7 +30,6 @@ public class GoogleID {
 	public static GoogleID findGoogleID(final String id) {
 		return ofy().load().type(GoogleID.class).id(id).get();
 	}
-
 
 	/* Getters and setters */
 

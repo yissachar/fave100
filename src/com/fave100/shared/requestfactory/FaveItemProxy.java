@@ -7,7 +7,10 @@ import com.google.web.bindery.requestfactory.shared.ValueProxy;
 @ProxyFor(FaveItem.class)
 public interface FaveItemProxy extends ValueProxy {
 	String getSong();
+
 	String getArtist();
+
 	String getSongID();
+
 	String getWhyline();
 }

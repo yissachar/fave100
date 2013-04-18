@@ -9,9 +9,8 @@ import com.gwtplatform.mvp.client.ViewImpl;
 
 public class LoginView extends ViewImpl implements LoginPresenter.MyView {
 
-	private final Widget	widget;
-	@UiField
-	HTMLPanel				loginContainer;
+	private final Widget widget;
+	@UiField HTMLPanel loginContainer;
 
 	public interface Binder extends UiBinder<Widget, LoginView> {
 	}

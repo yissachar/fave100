@@ -8,40 +8,41 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 /**
  * This event indicates that song was selected from
  * a {@link SongSuggestBox}.
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class SongSelectedEvent extends Event<SongSelectedEvent.Handler> {
 
-    public interface Handler {
-        void onSongSelected(SongSelectedEvent event);
-    }
+	public interface Handler {
+		void onSongSelected(SongSelectedEvent event);
+	}
 
-    private static final Type<SongSelectedEvent.Handler> TYPE =
-        new Type<SongSelectedEvent.Handler>();
+	private static final Type<SongSelectedEvent.Handler> TYPE =
+			new Type<SongSelectedEvent.Handler>();
 
-    public static HandlerRegistration register(final EventBus eventBus,
-        final SongSelectedEvent.Handler handler) {
-      return eventBus.addHandler(TYPE, handler);
-    }
+	public static HandlerRegistration register(final EventBus eventBus,
+			final SongSelectedEvent.Handler handler) {
+		return eventBus.addHandler(TYPE, handler);
+	}
 
-    private final SongProxy song;
+	private final SongProxy song;
 
-    public SongSelectedEvent(final SongProxy song) {
-        this.song = song;
-    }
+	public SongSelectedEvent(final SongProxy song) {
+		this.song = song;
+	}
 
-    @Override
-    public Type<SongSelectedEvent.Handler> getAssociatedType() {
-        return TYPE;
-    }
+	@Override
+	public Type<SongSelectedEvent.Handler> getAssociatedType() {
+		return TYPE;
+	}
 
-    public SongProxy getSong() {
-        return song;
-    }
+	public SongProxy getSong() {
+		return song;
+	}
 
-    @Override
-    protected void dispatch(final Handler handler) {
-        handler.onSongSelected(this);
-    }
+	@Override
+	protected void dispatch(final Handler handler) {
+		handler.onSongSelected(this);
+	}
 }

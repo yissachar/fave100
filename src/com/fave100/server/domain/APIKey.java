@@ -5,8 +5,9 @@ import com.googlecode.objectify.annotation.Id;
 
 /**
  * A key to access 3rd party services that is stored in the datastore
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 
 @Entity
@@ -17,14 +18,14 @@ public class APIKey {
 	private String secret;
 
 	@SuppressWarnings("unused")
-	private APIKey(){};
+	private APIKey() {
+	};
 
 	public APIKey(final String id, final String key, final String secret) {
 		this.id = id;
 		this.key = key;
 		this.secret = secret;
 	}
-
 
 	/* Getters and Setters */
 

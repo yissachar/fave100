@@ -19,45 +19,28 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
 		implements RegisterPresenter.MyView {
 
-	private final Widget	widget;
+	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, RegisterView> {
 	}
 
-	@UiField
-	HTMLPanel		registerContainer;
-	@UiField
-	FormPanel		registerForm;
-	@UiField
-	Button			registerButton;
-	@UiField
-	TextBox			usernameField;
-	@UiField
-	PasswordTextBox	passwordField;
-	@UiField
-	PasswordTextBox	passwordRepeatField;
-	@UiField
-	Anchor			registerWithGoogleButton;
-	@UiField
-	SpanElement		usernameStatusMessage;
-	@UiField
-	SpanElement		thirdPartyUsernameStatusMessage;
-	@UiField
-	TextBox			thirdPartyUsernameField;
-	@UiField
-	SpanElement		passwordStatusMessage;
-	@UiField
-	TextBox			emailField;
-	@UiField
-	SpanElement		emailStatusMessage;
-	@UiField
-	HTMLPanel		thirdPartyUsernamePrompt;
-	@UiField
-	Button			thirdPartyUsernameSubmitButton;
-	@UiField
-	Anchor			registerWithTwitterButton;
-	@UiField
-	Anchor			registerWithFacebookButton;
+	@UiField HTMLPanel registerContainer;
+	@UiField FormPanel registerForm;
+	@UiField Button registerButton;
+	@UiField TextBox usernameField;
+	@UiField PasswordTextBox passwordField;
+	@UiField PasswordTextBox passwordRepeatField;
+	@UiField Anchor registerWithGoogleButton;
+	@UiField SpanElement usernameStatusMessage;
+	@UiField SpanElement thirdPartyUsernameStatusMessage;
+	@UiField TextBox thirdPartyUsernameField;
+	@UiField SpanElement passwordStatusMessage;
+	@UiField TextBox emailField;
+	@UiField SpanElement emailStatusMessage;
+	@UiField HTMLPanel thirdPartyUsernamePrompt;
+	@UiField Button thirdPartyUsernameSubmitButton;
+	@UiField Anchor registerWithTwitterButton;
+	@UiField Anchor registerWithFacebookButton;
 
 	@Inject
 	public RegisterView(final Binder binder) {

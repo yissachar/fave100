@@ -9,8 +9,9 @@ import com.googlecode.objectify.annotation.Id;
 
 /**
  * Allows lookup of an AppUser by their TwitterID
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 
 @Entity
@@ -19,7 +20,8 @@ public class TwitterID {
 	@Id private long id;
 	private Ref<AppUser> user;
 
-	public TwitterID() {}
+	public TwitterID() {
+	}
 
 	public TwitterID(final long id, final AppUser user) {
 		this.setId(id);
@@ -29,7 +31,6 @@ public class TwitterID {
 	public static TwitterID findTwitterID(final Long id) {
 		return ofy().load().type(TwitterID.class).id(id).get();
 	}
-
 
 	/* Getters and Setters */
 

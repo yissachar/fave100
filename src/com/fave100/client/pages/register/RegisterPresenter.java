@@ -32,8 +32,9 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 /**
  * Registration page
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class RegisterPresenter extends
 		BasePresenter<RegisterPresenter.MyView, RegisterPresenter.MyProxy>
@@ -71,21 +72,21 @@ public class RegisterPresenter extends
 	public interface MyProxy extends ProxyPlace<RegisterPresenter> {
 	}
 
-	public static final String			PROVIDER_GOOGLE		= "google";
-	public static final String			PROVIDER_TWITTER	= "twitter";
-	public static final String			PROVIDER_FACEBOOK	= "facebook";
+	public static final String PROVIDER_GOOGLE = "google";
+	public static final String PROVIDER_TWITTER = "twitter";
+	public static final String PROVIDER_FACEBOOK = "facebook";
 
-	private EventBus					eventBus;
-	private ApplicationRequestFactory	requestFactory;
-	private PlaceManager				placeManager;
-	private String						provider;
-	private String						facebookRedirect;
+	private EventBus eventBus;
+	private ApplicationRequestFactory requestFactory;
+	private PlaceManager placeManager;
+	private String provider;
+	private String facebookRedirect;
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy,
-			final ApplicationRequestFactory requestFactory,
-			final PlaceManager placeManager) {
+								final MyProxy proxy,
+								final ApplicationRequestFactory requestFactory,
+								final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
@@ -136,14 +137,16 @@ public class RegisterPresenter extends
 							}
 						});
 						getView().showThirdPartyUsernamePrompt();
-					} else {
+					}
+					else {
 						getView().hideThirdPartyUsernamePrompt();
 						getProxy().manualReveal(RegisterPresenter.this);
 					}
 				}
 			});
 
-		} else if (provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
+		}
+		else if (provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
 			// The user is being redirected back to the register page after
 			// signing in to
 			// their 3rd party account - prompt them for a username and create
@@ -168,13 +171,15 @@ public class RegisterPresenter extends
 				}
 			});
 
-		} else if (Window.Location.getParameter("code") != null) {
+		}
+		else if (Window.Location.getParameter("code") != null) {
 			// FaceBook login
 			// TODO: Review if we can do this without hacky code parameter getting
 			getView().showThirdPartyUsernamePrompt();
 			getProxy().manualReveal(RegisterPresenter.this);
 
-		} else {
+		}
+		else {
 			getView().hideThirdPartyUsernamePrompt();
 			getProxy().manualReveal(RegisterPresenter.this);
 		}
@@ -222,11 +227,9 @@ public class RegisterPresenter extends
 			final String password, final String passwordRepeat) {
 
 		if (validateFields(username, email, password, passwordRepeat)) {
-			final AppUserRequest appUserRequest = requestFactory
-					.appUserRequest();
+			final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 			// Create a new user with the username and password entered
-			final Request<AppUserProxy> createAppUserReq = appUserRequest
-					.createAppUser(username, password, email);
+			final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(username, password, email);
 
 			createAppUserReq.fire(new Receiver<AppUserProxy>() {
 				@Override
@@ -234,7 +237,8 @@ public class RegisterPresenter extends
 					eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 					if (createdUser != null) {
 						appUserCreated();
-					} else {
+					}
+					else {
 						getView().setPasswordError("An error occurred");
 					}
 				}
@@ -246,11 +250,13 @@ public class RegisterPresenter extends
 							UsernameAlreadyExistsException.class.getName())) {
 						errorMsg = "A user with that name already exists";
 						getView().setNativeUsernameError(errorMsg);
-					} else if(failure.getExceptionType().equals(
+					}
+					else if (failure.getExceptionType().equals(
 							EmailIDAlreadyExistsException.class.getName())) {
 						errorMsg = "A user with that email address is already registered";
 						getView().setEmailError(errorMsg);
-					} else {
+					}
+					else {
 						getView().setNativeUsernameError(errorMsg);
 					}
 				}
@@ -265,8 +271,7 @@ public class RegisterPresenter extends
 					.appUserRequest();
 			if (provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
 				// Create Google-linked account
-				final Request<AppUserProxy> createAppUserReq = appUserRequest
-						.createAppUserFromGoogleAccount(username);
+				final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUserFromGoogleAccount(username);
 				createAppUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(final AppUserProxy createdUser) {
@@ -281,14 +286,16 @@ public class RegisterPresenter extends
 						if (failure.getExceptionType().equals(
 								UsernameAlreadyExistsException.class.getName())) {
 							errorMsg = "A user with that name already exists";
-						} else if (failure.getExceptionType().equals(
+						}
+						else if (failure.getExceptionType().equals(
 								GoogleIdAlreadyExistsException.class.getName())) {
 							errorMsg = "A Fave100 account is already associated with that Google account";
 						}
 						getView().setThirdPartyUsernameError(errorMsg);
 					}
 				});
-			} else if (provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
+			}
+			else if (provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
 				// Create Twitter-linked account
 				final String oauth_verifier = Window.Location
 						.getParameter("oauth_verifier");
@@ -310,7 +317,8 @@ public class RegisterPresenter extends
 						if (failure.getExceptionType().equals(
 								UsernameAlreadyExistsException.class.getName())) {
 							errorMsg = "A user with that name already exists";
-						} else if (failure.getExceptionType()
+						}
+						else if (failure.getExceptionType()
 								.equals(TwitterIdAlreadyExistsException.class
 										.getName())) {
 							errorMsg = "A Fave100 account is already associated with that Twitter account";
@@ -320,7 +328,8 @@ public class RegisterPresenter extends
 				});
 				// } else if
 				// (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
-			} else if (Window.Location.getParameter("code") != null) {
+			}
+			else if (Window.Location.getParameter("code") != null) {
 				// Create Facebook linked account
 				final String state = Window.Location.getParameter("state");
 				final String code = Window.Location.getParameter("code");
@@ -345,7 +354,8 @@ public class RegisterPresenter extends
 						if (failure.getExceptionType().equals(
 								UsernameAlreadyExistsException.class.getName())) {
 							errorMsg = "A user with that name already exists";
-						} else if (failure.getExceptionType().equals(
+						}
+						else if (failure.getExceptionType().equals(
 								FacebookIdAlreadyExistsException.class
 										.getName())) {
 							errorMsg = "A Fave100 account is already associated with that Facebook account";
@@ -381,7 +391,8 @@ public class RegisterPresenter extends
 		if (passwordError != null) {
 			getView().setPasswordError(passwordError);
 			valid = false;
-		} else if (!password.equals(passwordRepeat)) {
+		}
+		else if (!password.equals(passwordRepeat)) {
 			getView().setPasswordRepeatError("Passwords must match");
 			valid = false;
 		}

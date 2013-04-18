@@ -18,27 +18,19 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
 		implements LoginWidgetPresenter.MyView {
 
-	private final Widget	widget;
+	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, LoginWidgetView> {
 	}
 
-	@UiField
-	FormPanel		loginForm;
-	@UiField
-	TextBox			usernameInput;
-	@UiField
-	PasswordTextBox	passwordInput;
-	@UiField
-	Label			loginStatusMessage;
-	@UiField
-	Anchor			signInWithGoogleButton;
-	@UiField
-	Anchor			signInWithTwitterButton;
-	@UiField
-	Anchor			signInWithFacebookButton;
-	@UiField
-	Button			loginButton;
+	@UiField FormPanel loginForm;
+	@UiField TextBox usernameInput;
+	@UiField PasswordTextBox passwordInput;
+	@UiField Label loginStatusMessage;
+	@UiField Anchor signInWithGoogleButton;
+	@UiField Anchor signInWithTwitterButton;
+	@UiField Anchor signInWithFacebookButton;
+	@UiField Button loginButton;
 
 	@Inject
 	public LoginWidgetView(final Binder binder) {

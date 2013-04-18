@@ -22,9 +22,9 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 /**
  * Shows the logged in user their profile
- *
+ * 
  * @author yissachar.radcliffe
- *
+ * 
  */
 public class ProfilePresenter extends
 		BasePresenter<ProfilePresenter.MyView, ProfilePresenter.MyProxy>
@@ -52,14 +52,14 @@ public class ProfilePresenter extends
 	public interface MyProxy extends ProxyPlace<ProfilePresenter> {
 	}
 
-	private ApplicationRequestFactory	requestFactory;
-	private CurrentUser					currentUser;
+	private ApplicationRequestFactory requestFactory;
+	private CurrentUser currentUser;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy,
-			final ApplicationRequestFactory requestFactory,
-			final CurrentUser currentUser) {
+							final MyProxy proxy,
+							final ApplicationRequestFactory requestFactory,
+							final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
 		this.requestFactory = requestFactory;
 		this.currentUser = currentUser;
@@ -138,12 +138,13 @@ public class ProfilePresenter extends
 
 				@Override
 				public void onFailure(final ServerFailure failure) {
-					if(failure.getExceptionType().equals(EmailIDAlreadyExistsException.class.getName())) {
+					if (failure.getExceptionType().equals(EmailIDAlreadyExistsException.class.getName())) {
 						getView().setEmailError("A user with that email already exists");
 					}
 				}
 			});
-		} else {
+		}
+		else {
 			getView().setEmailError(emailError);
 		}
 	}
