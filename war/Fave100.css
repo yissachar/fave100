@@ -165,8 +165,9 @@ footer {
 
 /* Fave List */
 
+
 .faveList > div:first-child {	
-	border-top: 1px solid #888;
+	border-top: 2px solid #ddd;
 }
 
 .favelistWhyline:hover:empty:before {

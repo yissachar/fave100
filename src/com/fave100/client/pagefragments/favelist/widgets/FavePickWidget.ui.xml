@@ -13,7 +13,7 @@
 		}
 		
 		.mainPanel td {
-			padding: 0 10px 0 0;
+			padding: 0 28px 0 0;
 		}
 		
 		.rank {
@@ -36,23 +36,34 @@
 			height: 60px;
 			font-size: 45px;
 			text-align: center;
-			
+		}
+		
+		.song {
+			font-size: 30px;
+			font-weight: bold;
+		}
+		
+		.artist {
+			font-size: 20px;
+		}
+		
+		.whyLine {
+			font-weight: 11px;
+			font-style: italic;
+			font-color: #eee;
 		}
 	</ui:style>
 
 	<g:HTMLPanel>
-		<g:HorizontalPanel spacing="3" ui:styleName="{style.mainPanel}">
+		<g:HorizontalPanel spacing="3" ui:styleName="{style.mainPanel}" verticalAlignment="middle">
 			<g:SimplePanel ui:field="rankPanel" ui:styleName="{style.rank}"></g:SimplePanel>
-
 			<g:VerticalPanel>
-				<g:FlowPanel>
-					<g:Anchor ui:field="song"></g:Anchor>
-					<g:InlineLabel ui:field="artist"></g:InlineLabel>
-				</g:FlowPanel>
+				<g:Anchor ui:field="song" ui:styleName="{style.song}"></g:Anchor>
+				<g:InlineLabel ui:field="artist" ui:styleName="{style.artist}"></g:InlineLabel>
 
-				<g:SimplePanel ui:field="whyLinePanel"></g:SimplePanel>
-
+				<g:SimplePanel ui:field="whyLinePanel" ui:styleName="{style.whyLine}"></g:SimplePanel>
 			</g:VerticalPanel>
+
 
 		</g:HorizontalPanel>
 	</g:HTMLPanel>

@@ -52,7 +52,8 @@ public class FavePickWidget extends Composite {
 		artist.setText(_item.getArtist());
 
 		//TODO: editable
-		whyLinePanel.setWidget(new Label(_item.getWhyline()));
+		//		whyLinePanel.setWidget(new Label(_item.getWhyline()));
+		whyLinePanel.setWidget(new Label("my why line goes here...."));
 
 	}
 }
