@@ -1,6 +1,7 @@
 package com.fave100.client.pages.profile;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.LoadingIndicator;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
@@ -127,17 +128,24 @@ public class ProfilePresenter extends
 		if (emailError == null) {
 			final Request<Boolean> setProfileDataReq = requestFactory
 					.appUserRequest().setProfileData(email);
+			LoadingIndicator.show();
 			setProfileDataReq.fire(new Receiver<Boolean>() {
 				@Override
 				public void onSuccess(final Boolean saved) {
+					LoadingIndicator.hide();
 					if (saved == true) {
 						setProfileData();
 						getView().setFormStatusMessage("Profile saved");
+					}
+					else {
+						getView().setFormStatusMessage("Error: Profile not saved");
 					}
 				}
 
 				@Override
 				public void onFailure(final ServerFailure failure) {
+
+					LoadingIndicator.hide();
 					if (failure.getExceptionType().equals(EmailIDAlreadyExistsException.class.getName())) {
 						getView().setEmailError("A user with that email already exists");
 					}
