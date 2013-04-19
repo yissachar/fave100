@@ -3,7 +3,6 @@ package com.fave100.client.pagefragments.topbar;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
@@ -33,16 +32,13 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 
 	@Inject private LoginWidgetPresenter loginBox;
 	private EventBus eventBus;
-	private ApplicationRequestFactory requestFactory;
 	private CurrentUser currentUser;
 
 	@Inject
 	public TopBarPresenter(final EventBus eventBus, final MyView view,
-							final ApplicationRequestFactory requestFactory,
 							final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
-		this.requestFactory = requestFactory;
 		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 	}
