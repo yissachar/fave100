@@ -80,7 +80,12 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 
 	@UiHandler("loginButton")
 	void onlogInClick(final ClickEvent event) {
+		showLightbox();
+	}
+
+	private void showLightbox() {
 		loginLightBox.setVisible(true);
+		getUiHandlers().setLoginBoxFocus();
 	}
 
 	@Override

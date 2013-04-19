@@ -102,6 +102,11 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	}
 
 	@Override
+	public void setLoginBoxFocus() {
+		loginBox.setFocus();
+	}
+
+	@Override
 	public void clearLoginBox() {
 		loginBox.clearLoginDetails();
 
@@ -109,5 +114,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 }
 
 interface TopBarUiHandlers extends UiHandlers {
+	void setLoginBoxFocus();
+
 	void clearLoginBox();
 }

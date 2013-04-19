@@ -47,6 +47,8 @@ public class LoginWidgetPresenter extends
 		void setGoogleLoginUrl(String url);
 
 		void setFacebookLoginUrl(String url);
+
+		void setUsernameFocus();
 	}
 
 	private EventBus eventBus;
@@ -111,6 +113,10 @@ public class LoginWidgetPresenter extends
 	protected void onHide() {
 		super.onHide();
 		clearLoginDetails();
+	}
+
+	public void setFocus() {
+		getView().setUsernameFocus();
 	}
 
 	public void clearLoginDetails() {
