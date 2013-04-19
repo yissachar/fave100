@@ -6,6 +6,7 @@ import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -25,6 +26,12 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	public interface Binder extends UiBinder<Widget, TopBarView> {
 	}
 
+	public interface TopBarStyle extends CssResource {
+		String topBarDropShadow();
+	}
+
+	@UiField TopBarStyle style;
+	@UiField HTMLPanel topBar;
 	@UiField Image loadingIndicator;
 	@UiField InlineHyperlink logInLogOutLink;
 	@UiField Label notification;
@@ -80,5 +87,15 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		logInLogOutLink.setText("Log in");
 		logInLogOutLink.setTargetHistoryToken(NameTokens.login);
 		loginBox.setVisible(true);
+	}
+
+	@Override
+	public void setTopBarDropShadow(final boolean show) {
+		if (show) {
+			topBar.addStyleName(style.topBarDropShadow());
+		}
+		else {
+			topBar.removeStyleName(style.topBarDropShadow());
+		}
 	}
 }

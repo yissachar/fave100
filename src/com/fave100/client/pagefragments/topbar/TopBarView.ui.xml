@@ -6,7 +6,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>		
+	<ui:style type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">		
 		.topNavSticky {
 			background-color: #5eaae5;			
 			height: 50px;
@@ -55,6 +55,10 @@
 		
 		.topNav li:hover > a, .topNav li:hover > span {
 			color: #5eaae5;
+		}
+		
+		.topBarDropShadow {
+			box-shadow: 0px 1px 2px #444;
 		}
 		
 		.loadingIndicator {
@@ -109,7 +113,7 @@
 				 when the browser is at 0, 0.
 			 -->
 			<div class="{style.topNavSticky}"/>
-			<div class="{style.topNav}">
+			<g:HTMLPanel ui:styleName="{style.topNav}" ui:field="topBar">
 				<div class="container">
 					<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
 						<img class="{style.faveLogo}" src="img/Logo.png" alt="Fave100 logo"/>
@@ -125,6 +129,6 @@
 						<li><g:Anchor ui:field="greeting"></g:Anchor></li>
 					</ul>
 				</div>
-			</div>			
+			</g:HTMLPanel>			
 	</g:HTMLPanel>
 </ui:UiBinder>

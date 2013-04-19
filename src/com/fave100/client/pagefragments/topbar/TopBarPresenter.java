@@ -5,6 +5,9 @@ import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -26,6 +29,8 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		void setLoggedIn(String username);
 
 		void setLoggedOut();
+
+		void setTopBarDropShadow(boolean show);
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
@@ -41,6 +46,20 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		this.eventBus = eventBus;
 		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
+
+		Window.addWindowScrollHandler(new ScrollHandler() {
+			@Override
+			public void onWindowScroll(final ScrollEvent event) {
+				if (event.getScrollTop() == 0) {
+					// Window as at top of screen, no need for drop shadow
+					getView().setTopBarDropShadow(false);
+				}
+				else {
+					// Top bar is scrolling, show drop shadow to indicate perspective
+					getView().setTopBarDropShadow(true);
+				}
+			}
+		});
 	}
 
 	@Override
