@@ -89,4 +89,9 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
 
 	}
 
+	@Override
+	public void setUsernameFocus() {
+		usernameInput.setFocus(true);
+	}
+
 }
