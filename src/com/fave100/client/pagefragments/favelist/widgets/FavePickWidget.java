@@ -34,6 +34,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FavePickWidget extends Composite {
 
+	private static final String RANK_EDIT_PANEL = "rankEditPanel";
+	private static final String RANK_EDIT_TEXT_BOX = "rankEditTextBox";
 	private static final String CLICK_TO_ENTER_WHY_LINE = "Click to enter WhyLine";
 	private static final String WHY_LINE_EDIT_HOVER = "whyLinePanel";
 	private static Binder uiBinder = GWT.create(Binder.class);
@@ -49,7 +51,7 @@ public class FavePickWidget extends Composite {
 	@UiField SimplePanel hoverPanel;
 
 	private final FaveItemProxy _item;
-	private final int _rank;
+	private int _rank;
 	//TODO
 	private final boolean _editable;
 
@@ -69,6 +71,7 @@ public class FavePickWidget extends Composite {
 	};
 
 	private List<HandlerRegistration> _whyLineMouseHandlers;
+	private InlineLabel _songPick;
 
 	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable) {
 		_item = item;
@@ -98,8 +101,7 @@ public class FavePickWidget extends Composite {
 
 	private void fillWidget() {
 		//TODO: do editable
-		final InlineLabel songPick = new InlineLabel(Integer.toString(_rank));
-		rankPanel.setWidget(songPick);
+		setupRankPanel();
 
 		song.setText(_item.getSong());
 		song.setHref("#" + new UrlBuilder(NameTokens.song).with(SongPresenter.ID_PARAM, _item.getSongID()).getPlaceToken());
@@ -115,6 +117,61 @@ public class FavePickWidget extends Composite {
 		}
 		whyLinePanel.setWidget(whyLine);
 
+	}
+
+	private void setupRankPanel() {
+		rankPanel.clear();
+		_songPick = new InlineLabel(Integer.toString(_rank));
+		rankPanel.setWidget(_songPick);
+		if (_editable)
+			setupRankEdit();
+	}
+
+	private void setupRankEdit() {
+		rankPanel.addStyleName(RANK_EDIT_PANEL);
+		_songPick.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(final ClickEvent event) {
+				rankPanel.removeStyleName(RANK_EDIT_PANEL);
+				final TextBox rankText = new TextBox();
+				rankText.addStyleName(RANK_EDIT_TEXT_BOX);
+				rankText.setText(_songPick.getText());
+				rankText.addKeyDownHandler(new KeyDownHandler() {
+
+					@Override
+					public void onKeyDown(final KeyDownEvent event) {
+						if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
+							updateRank(rankText);
+					}
+				});
+				rankText.addBlurHandler(new BlurHandler() {
+
+					@Override
+					public void onBlur(final BlurEvent event) {
+						updateRank(rankText);
+					}
+				});
+				rankPanel.clear();
+				rankPanel.setWidget(rankText);
+				rankText.setFocus(true);
+				rankText.selectAll();
+			}
+
+			private void updateRank(final TextBox rankText) {
+				//TODO: save and move
+				try {
+					_rank = Integer.parseInt(rankText.getText());
+				}
+				catch (final NumberFormatException ex) {
+
+				}
+				finally {
+					setupRankPanel();
+				}
+			}
+
+		});
 	}
 
 	private void initEmptyWhyLine(final Label whyLine) {
