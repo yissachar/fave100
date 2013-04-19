@@ -1,5 +1,8 @@
 package com.fave100.client.pagefragments.favelist.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
@@ -12,10 +15,17 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -24,21 +34,41 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FavePickWidget extends Composite {
 
+	private static final String CLICK_TO_ENTER_WHY_LINE = "Click to enter WhyLine";
 	private static final String WHY_LINE_EDIT_HOVER = "whyLinePanel";
 	private static Binder uiBinder = GWT.create(Binder.class);
 
 	public interface Binder extends UiBinder<Widget, FavePickWidget> {
 	}
 
+	@UiField HorizontalPanel mainPanel;
 	@UiField SimplePanel rankPanel;
 	@UiField Anchor song;
 	@UiField InlineLabel artist;
 	@UiField SimplePanel whyLinePanel;
+	@UiField SimplePanel hoverPanel;
 
 	private final FaveItemProxy _item;
 	private final int _rank;
 	//TODO
 	private final boolean _editable;
+
+	private final MouseOverHandler _whyLineEmptyMouseOver = new MouseOverHandler() {
+
+		@Override
+		public void onMouseOver(final MouseOverEvent event) {
+			((HasText)event.getSource()).setText(CLICK_TO_ENTER_WHY_LINE);
+		}
+	};
+	private final MouseOutHandler _whyLineEmptyMouseOut = new MouseOutHandler() {
+
+		@Override
+		public void onMouseOut(final MouseOutEvent event) {
+			((HasText)event.getSource()).setText(" ");
+		}
+	};
+
+	private List<HandlerRegistration> _whyLineMouseHandlers;
 
 	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable) {
 		_item = item;
@@ -48,6 +78,22 @@ public class FavePickWidget extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		fillWidget();
+
+		mainPanel.addDomHandler(new MouseOverHandler() {
+
+			@Override
+			public void onMouseOver(final MouseOverEvent event) {
+				hoverPanel.removeStyleName("hide");
+			}
+		}, MouseOverEvent.getType());
+
+		mainPanel.addDomHandler(new MouseOutHandler() {
+
+			@Override
+			public void onMouseOut(final MouseOutEvent event) {
+				hoverPanel.addStyleName("hide");
+			}
+		}, MouseOutEvent.getType());
 	}
 
 	private void fillWidget() {
@@ -60,12 +106,22 @@ public class FavePickWidget extends Composite {
 
 		artist.setText(_item.getArtist());
 
-		final Label whyLine = new Label("my why line goes here....");
+		final Label whyLine = new Label(_item.getWhyline());
 		if (_editable) {
+			if (whyLine.getText().isEmpty()) {
+				initEmptyWhyLine(whyLine);
+			}
 			setupWhyLineEdit(whyLine);
 		}
 		whyLinePanel.setWidget(whyLine);
 
+	}
+
+	private void initEmptyWhyLine(final Label whyLine) {
+		whyLine.setText(" "); //setting this so white-space: pre will always have spacing for why line
+		_whyLineMouseHandlers = new ArrayList<HandlerRegistration>();
+		_whyLineMouseHandlers.add(whyLine.addMouseOverHandler(_whyLineEmptyMouseOver));
+		_whyLineMouseHandlers.add(whyLine.addMouseOutHandler(_whyLineEmptyMouseOut));
 	}
 
 	private void setupWhyLineEdit(final Label whyLine) {
@@ -74,10 +130,15 @@ public class FavePickWidget extends Composite {
 
 			@Override
 			public void onClick(final ClickEvent event) {
+				removeMouseHandlers();
+
 				whyLinePanel.removeStyleName(WHY_LINE_EDIT_HOVER);
 				final TextBox txtBox = new TextBox();
 				txtBox.addStyleName("whyLineTextBox");
-				txtBox.setValue(whyLine.getText());
+				if (whyLine.getText().equals(CLICK_TO_ENTER_WHY_LINE))
+					txtBox.setValue("");
+				else
+					txtBox.setValue(whyLine.getText().trim());
 				txtBox.setWidth("500px");
 				txtBox.addKeyDownHandler(new KeyDownHandler() {
 
@@ -102,9 +163,21 @@ public class FavePickWidget extends Composite {
 				txtBox.setFocus(true);
 			}
 
+			private void removeMouseHandlers() {
+				if (_whyLineMouseHandlers != null) {
+					for (final HandlerRegistration handler : _whyLineMouseHandlers)
+						handler.removeHandler();
+				}
+				_whyLineMouseHandlers.clear();
+			}
+
 			private void saveAndSwithToLabel(final TextBox txtBox) {
 				//TODO: save
-				whyLine.setText(txtBox.getValue());
+				if (txtBox.getValue().isEmpty()) {
+					initEmptyWhyLine(whyLine);
+				}
+				else
+					whyLine.setText(txtBox.getValue());
 				whyLinePanel.clear();
 				whyLinePanel.setWidget(whyLine);
 				whyLinePanel.addStyleName(WHY_LINE_EDIT_HOVER);
