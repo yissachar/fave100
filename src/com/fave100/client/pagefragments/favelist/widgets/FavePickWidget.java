@@ -5,6 +5,8 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -58,9 +60,6 @@ public class FavePickWidget extends Composite {
 
 		artist.setText(_item.getArtist());
 
-		//TODO: editable
-		//		whyLinePanel.setWidget(new Label(_item.getWhyline()));
-
 		final Label whyLine = new Label("my why line goes here....");
 		if (_editable) {
 			setupWhyLineEdit(whyLine);
@@ -70,7 +69,6 @@ public class FavePickWidget extends Composite {
 	}
 
 	private void setupWhyLineEdit(final Label whyLine) {
-		//		whyLinePanel.addStyleName(WHY_LINE_EDIT_HOVER);
 		whyLinePanel.addStyleName(WHY_LINE_EDIT_HOVER);
 		whyLine.addClickHandler(new ClickHandler() {
 
@@ -78,6 +76,7 @@ public class FavePickWidget extends Composite {
 			public void onClick(final ClickEvent event) {
 				whyLinePanel.removeStyleName(WHY_LINE_EDIT_HOVER);
 				final TextBox txtBox = new TextBox();
+				txtBox.addStyleName("whyLineTextBox");
 				txtBox.setValue(whyLine.getText());
 				txtBox.setWidth("500px");
 				txtBox.addKeyDownHandler(new KeyDownHandler() {
@@ -89,13 +88,13 @@ public class FavePickWidget extends Composite {
 						}
 					}
 				});
-				//				txtBox.addBlurHandler(new BlurHandler() {
-				//
-				//					@Override
-				//					public void onBlur(final BlurEvent event) {
-				//						saveAndSwithToLabel(txtBox);
-				//					}
-				//				});
+				txtBox.addBlurHandler(new BlurHandler() {
+
+					@Override
+					public void onBlur(final BlurEvent event) {
+						saveAndSwithToLabel(txtBox);
+					}
+				});
 
 				whyLinePanel.clear();
 				whyLinePanel.setWidget(txtBox);
