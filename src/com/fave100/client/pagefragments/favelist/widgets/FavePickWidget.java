@@ -5,6 +5,11 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -12,10 +17,12 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FavePickWidget extends Composite {
 
+	private static final String WHY_LINE_EDIT_HOVER = "whyLinePanel";
 	private static Binder uiBinder = GWT.create(Binder.class);
 
 	public interface Binder extends UiBinder<Widget, FavePickWidget> {
@@ -53,7 +60,57 @@ public class FavePickWidget extends Composite {
 
 		//TODO: editable
 		//		whyLinePanel.setWidget(new Label(_item.getWhyline()));
-		whyLinePanel.setWidget(new Label("my why line goes here...."));
 
+		final Label whyLine = new Label("my why line goes here....");
+		if (_editable) {
+			setupWhyLineEdit(whyLine);
+		}
+		whyLinePanel.setWidget(whyLine);
+
+	}
+
+	private void setupWhyLineEdit(final Label whyLine) {
+		//		whyLinePanel.addStyleName(WHY_LINE_EDIT_HOVER);
+		whyLinePanel.addStyleName(WHY_LINE_EDIT_HOVER);
+		whyLine.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(final ClickEvent event) {
+				whyLinePanel.removeStyleName(WHY_LINE_EDIT_HOVER);
+				final TextBox txtBox = new TextBox();
+				txtBox.setValue(whyLine.getText());
+				txtBox.setWidth("500px");
+				txtBox.addKeyDownHandler(new KeyDownHandler() {
+
+					@Override
+					public void onKeyDown(final KeyDownEvent event) {
+						if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+							saveAndSwithToLabel(txtBox);
+						}
+					}
+				});
+				//				txtBox.addBlurHandler(new BlurHandler() {
+				//
+				//					@Override
+				//					public void onBlur(final BlurEvent event) {
+				//						saveAndSwithToLabel(txtBox);
+				//					}
+				//				});
+
+				whyLinePanel.clear();
+				whyLinePanel.setWidget(txtBox);
+				txtBox.selectAll();
+				txtBox.setFocus(true);
+			}
+
+			private void saveAndSwithToLabel(final TextBox txtBox) {
+				//TODO: save
+				whyLine.setText(txtBox.getValue());
+				whyLinePanel.clear();
+				whyLinePanel.setWidget(whyLine);
+				whyLinePanel.addStyleName(WHY_LINE_EDIT_HOVER);
+			}
+
+		});
 	}
 }
