@@ -148,7 +148,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 						rank.setVisible(true);
 						rankEditor.setVisible(false);
 						rank.setText(rankEditor.getValue() + ".");
-						getUiHandlers().changeSongPosition(faveItem.getSongID(), Integer.parseInt(rankEditor.getValue()) - 1);
+						//getUiHandlers().changeSongPosition(faveItem.getSongID(), Integer.parseInt(rankEditor.getValue()) - 1);
 					}
 				});
 
@@ -333,7 +333,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 					// Rank on the server
 					if (currentIndex != newIndex) {
 						// Don't bother doing anything if the indices are the same
-						getUiHandlers().changeSongPosition(currentIndex, newIndex);
+						//	getUiHandlers().changeSongPosition(currentIndex, newIndex);
 					}
 					//remove all drag associated items now that we are done with the drag
 					$draggedItem.removeClass("draggedFaveListItem");
