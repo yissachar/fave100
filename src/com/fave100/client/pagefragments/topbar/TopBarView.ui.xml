@@ -6,7 +6,41 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">		
+	<ui:style type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">
+		.lightBoxBackground {
+			position: fixed;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			opacity: .40;
+			background-color: #000;
+			z-index: 99999;
+		}
+		
+		.loginLightBox { 
+			position: fixed;
+			top: 20%;
+			left: 25%;
+			width: 50%;
+			z-index: 100000;
+		}
+		
+		.lightBoxHeader {
+			display: block;
+			background-color: #5eaae5;
+			padding: 6px 0;
+			border-bottom: 1px solid #555;
+		}
+		
+		.lightBoxHeader img {
+			display: block;
+			margin: 0 auto;
+		}
+		
+		.innerLoginBox {	
+			padding: 15px;
+		}
+		
 		.topNavSticky {
 			background-color: #5eaae5;			
 			height: 50px;
@@ -14,7 +48,7 @@
 			width: 1px;
 		}
 		
-		.topNav{
+		.topNav {
 			background-color: #5eaae5;			
 			height: 50px;
 			border-bottom: 1px solid #555;
@@ -67,21 +101,6 @@
 			display: block;
 
 		}
-
-		.loginDropdown {
-			width: 510px;
-		}
-		
-		.topNav li .loginDropdown {
-			position: absolute;
-			right: 0;
-			display:none;
-			float: left;
-		}
-		
-		.topNav li:hover .loginDropdown {
-			display: block;			
-		}	
 		
 		.subTopContainer{
 			display: block;
@@ -101,34 +120,44 @@
 			float: left;	
 		}
 		
-		@external loginDropdown;		
+		@external loginLightBox;		
 		
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	<g:HTMLPanel>
-			<!-- We will hide the topNavSticky element behind the real top nav in order to get a sticky header effect
-				 without using any JavaScript. topNav is the actual element with position:fixed ensuring it stays at 
-				 top of screen. topNavSticky is a normally positioned blank element that provides the proper buffer 
-				 when the browser is at 0, 0.
-			 -->
-			<div class="{style.topNavSticky}"/>
-			<g:HTMLPanel ui:styleName="{style.topNav}" ui:field="topBar">
-				<div class="container">
-					<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
-						<img class="{style.faveLogo}" src="img/Logo.png" alt="Fave100 logo"/>
-					</g:InlineHyperlink>		
-					<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" url="img/loading-indicator.gif"/>			
-					<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
-					<ul>						
-						<li>
-							<g:InlineHyperlink ui:field="logInLogOutLink">Log in</g:InlineHyperlink>
-							<g:HTMLPanel ui:field="loginBox" styleName="{style.loginDropdown}"/>
-						</li>
-						<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
-						<li><g:Anchor ui:field="greeting"></g:Anchor></li>
-					</ul>
+		<!-- A login lightbox  -->
+		<g:HTMLPanel ui:field="loginLightBox">
+			<g:FocusPanel ui:field="lightBoxBackground" styleName="{style.lightBoxBackground}"/>			
+			<g:HTMLPanel styleName="{style.loginLightBox}">
+				<div class="{style.lightBoxHeader}">
+					<g:Image url="img/logo.png"/>
 				</div>
-			</g:HTMLPanel>			
+				<g:HTMLPanel ui:field="loginBox" ui:styleName="{style.innerLoginBox}"/>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+		<!-- We will hide the topNavSticky element behind the real top nav in order to get a sticky header effect
+			 without using any JavaScript. topNav is the actual element with position:fixed ensuring it stays at 
+			 top of screen. topNavSticky is a normally positioned blank element that provides the proper buffer 
+			 when the browser is at 0, 0.
+		 -->
+		<div class="{style.topNavSticky}"/>
+		<g:HTMLPanel ui:styleName="{style.topNav}" ui:field="topBar">
+			<div class="container">
+				<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
+					<img class="{style.faveLogo}" src="img/Logo.png" alt="Fave100 logo"/>
+				</g:InlineHyperlink>		
+				<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" url="img/loading-indicator.gif"/>			
+				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
+				<ul>						
+					<li>
+						<g:InlineHyperlink ui:field="logOutLink">Log out</g:InlineHyperlink>
+						<g:InlineLabel ui:field="loginButton">Log in</g:InlineLabel>
+					</li>
+					<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:field="registerLink">Register</g:InlineHyperlink></li>
+					<li><g:Anchor ui:field="greeting"></g:Anchor></li>
+				</ul>
+			</div>
+		</g:HTMLPanel>			
 	</g:HTMLPanel>
 </ui:UiBinder>
