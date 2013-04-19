@@ -86,8 +86,11 @@
 		}
 		
 		.notification {
-			float: left;
+			position: absolute;
+			margin-left: 510px;
 			margin-top: 10px;
+			text-align: center;
+			color: #FFF;
 		}
 		
 		.faveLogo {		
