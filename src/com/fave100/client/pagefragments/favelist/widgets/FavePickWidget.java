@@ -227,8 +227,10 @@ public class FavePickWidget extends Composite {
 				if (_whyLineMouseHandlers != null) {
 					for (final HandlerRegistration handler : _whyLineMouseHandlers)
 						handler.removeHandler();
+
+					_whyLineMouseHandlers.clear();
 				}
-				_whyLineMouseHandlers.clear();
+
 			}
 
 			private void saveAndSwithToLabel(final TextBox txtBox) {
