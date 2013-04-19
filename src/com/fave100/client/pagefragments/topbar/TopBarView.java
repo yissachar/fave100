@@ -105,6 +105,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		registerLink.setVisible(false);
 		loginButton.setVisible(false);
 		logOutLink.setVisible(true);
+		logOutLink.setText("Log out");
 		logOutLink.setTargetHistoryToken(NameTokens.logout);
 		loginBox.setVisible(false);
 		hideLightbox();
@@ -117,7 +118,6 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		registerLink.setVisible(true);
 		loginButton.setVisible(true);
 		logOutLink.setVisible(false);
-		logOutLink.setText("Log in");
 		loginBox.setVisible(true);
 	}
 
