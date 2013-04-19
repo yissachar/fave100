@@ -6,7 +6,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>
+	<ui:style>		
 		.topNavSticky {
 			background-color: #5eaae5;			
 			height: 50px;
@@ -56,6 +56,13 @@
 		.topNav li:hover > a, .topNav li:hover > span {
 			color: #5eaae5;
 		}
+		
+		.loadingIndicator {
+			position: absolute;
+			margin-left: 486px;
+			display: block;
+
+		}
 
 		.loginDropdown {
 			width: 510px;
@@ -103,7 +110,8 @@
 				<div class="container">
 					<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
 						<img class="{style.faveLogo}" src="img/Logo.png" alt="Fave100 logo"/>
-					</g:InlineHyperlink>					
+					</g:InlineHyperlink>		
+					<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" url="img/loading-indicator.gif"/>			
 					<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
 					<ul>						
 						<li>

@@ -1,5 +1,6 @@
 package com.fave100.client.pagefragments.topbar;
 
+import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
@@ -9,6 +10,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,6 +25,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	public interface Binder extends UiBinder<Widget, TopBarView> {
 	}
 
+	@UiField Image loadingIndicator;
 	@UiField InlineHyperlink logInLogOutLink;
 	@UiField Label notification;
 	@UiField Anchor greeting;
@@ -35,6 +38,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 
 		widget = binder.createAndBindUi(this);
 		Notification.init(notification);
+		LoadingIndicator.init(loadingIndicator);
 	}
 
 	@Override

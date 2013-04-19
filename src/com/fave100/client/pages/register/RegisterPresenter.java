@@ -1,5 +1,6 @@
 package com.fave100.client.pages.register;
 
+import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
@@ -231,9 +232,11 @@ public class RegisterPresenter extends
 			// Create a new user with the username and password entered
 			final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(username, password, email);
 
+			LoadingIndicator.show();
 			createAppUserReq.fire(new Receiver<AppUserProxy>() {
 				@Override
 				public void onSuccess(final AppUserProxy createdUser) {
+					LoadingIndicator.hide();
 					eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 					if (createdUser != null) {
 						appUserCreated();
@@ -245,6 +248,7 @@ public class RegisterPresenter extends
 
 				@Override
 				public void onFailure(final ServerFailure failure) {
+					LoadingIndicator.hide();
 					String errorMsg = "An error occurred";
 					if (failure.getExceptionType().equals(
 							UsernameAlreadyExistsException.class.getName())) {

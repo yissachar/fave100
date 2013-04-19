@@ -1,5 +1,6 @@
 package com.fave100.client.pagefragments.login;
 
+import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pages.register.RegisterPresenter;
@@ -111,6 +112,7 @@ public class LoginWidgetPresenter extends
 	// Native login
 	@Override
 	public void login() {
+		LoadingIndicator.show();
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		final Request<AppUserProxy> loginReq = appUserRequest.login(getView()
 				.getUsername(), getView().getPassword());
@@ -121,6 +123,7 @@ public class LoginWidgetPresenter extends
 		loginReq.fire(new Receiver<AppUserProxy>() {
 			@Override
 			public void onSuccess(final AppUserProxy appUser) {
+				LoadingIndicator.hide();
 				getView().clearUsername();
 				eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 				Notification.show("Logged in successfully");
@@ -130,6 +133,7 @@ public class LoginWidgetPresenter extends
 
 			@Override
 			public void onFailure(final ServerFailure failure) {
+				LoadingIndicator.hide();
 				String errorMsg = "An error occurred";
 				if (failure.getExceptionType().equals(
 						IncorrectLoginException.class.getName())) {
