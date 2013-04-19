@@ -71,7 +71,7 @@ public class FavePickWidget extends Composite {
 	};
 
 	private List<HandlerRegistration> _whyLineMouseHandlers;
-	private InlineLabel _songPick;
+	private Label _songPick;
 
 	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable) {
 		_item = item;
@@ -100,7 +100,6 @@ public class FavePickWidget extends Composite {
 	}
 
 	private void fillWidget() {
-		//TODO: do editable
 		setupRankPanel();
 
 		song.setText(_item.getSong());
@@ -121,7 +120,7 @@ public class FavePickWidget extends Composite {
 
 	private void setupRankPanel() {
 		rankPanel.clear();
-		_songPick = new InlineLabel(Integer.toString(_rank));
+		_songPick = new Label(Integer.toString(_rank));
 		rankPanel.setWidget(_songPick);
 		if (_editable)
 			setupRankEdit();
@@ -129,6 +128,7 @@ public class FavePickWidget extends Composite {
 
 	private void setupRankEdit() {
 		rankPanel.addStyleName(RANK_EDIT_PANEL);
+		_songPick.setTitle("Click to change rank");
 		_songPick.addClickHandler(new ClickHandler() {
 
 			@Override
