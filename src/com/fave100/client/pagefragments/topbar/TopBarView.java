@@ -6,13 +6,17 @@ import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -33,17 +37,21 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField TopBarStyle style;
 	@UiField HTMLPanel topBar;
 	@UiField Image loadingIndicator;
-	@UiField InlineHyperlink logInLogOutLink;
+	@UiField InlineHyperlink logOutLink;
+	@UiField InlineLabel loginButton;
 	@UiField Label notification;
 	@UiField Anchor greeting;
 	@UiField InlineHyperlink registerLink;
 	@UiField HTMLPanel loginBox;
+	@UiField HTMLPanel loginLightBox;
+	@UiField FocusPanel lightBoxBackground;
 
 	@Inject
 	public TopBarView(final Binder binder,
 						final ApplicationRequestFactory requestFactory) {
 
 		widget = binder.createAndBindUi(this);
+		loginLightBox.setVisible(false);
 		Notification.init(notification);
 		LoadingIndicator.init(loadingIndicator);
 	}
@@ -65,6 +73,21 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		}
 	}
 
+	@UiHandler("lightBoxBackground")
+	void onLightBoxClick(final ClickEvent event) {
+		loginLightBox.setVisible(false);
+	}
+
+	@UiHandler("loginButton")
+	void onlogInClick(final ClickEvent event) {
+		loginLightBox.setVisible(true);
+	}
+
+	@Override
+	public void hideLightbox() {
+		loginLightBox.setVisible(false);
+	}
+
 	@Override
 	public void setLoggedIn(final String username) {
 		greeting.setText(username);
@@ -74,9 +97,11 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 				.getUrl();
 		greeting.setHref(userPlace);
 		registerLink.setVisible(false);
-		logInLogOutLink.setText("Log out");
-		logInLogOutLink.setTargetHistoryToken(NameTokens.logout);
+		loginButton.setVisible(false);
+		logOutLink.setVisible(true);
+		logOutLink.setTargetHistoryToken(NameTokens.logout);
 		loginBox.setVisible(false);
+		loginLightBox.setVisible(false);
 	}
 
 	@Override
@@ -84,8 +109,9 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		greeting.setText("");
 		greeting.setVisible(false);
 		registerLink.setVisible(true);
-		logInLogOutLink.setText("Log in");
-		logInLogOutLink.setTargetHistoryToken(NameTokens.login);
+		loginButton.setVisible(true);
+		logOutLink.setVisible(false);
+		logOutLink.setText("Log in");
 		loginBox.setVisible(true);
 	}
 

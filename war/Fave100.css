@@ -280,33 +280,28 @@ footer {
 	min-width: 60%;	
 }
 
-/* Login dropdown */
+/* Login light box */
 
-.loginDropdown {
-	z-index: 99999;
+.loginLightBox {
 	background: #FFF;
 	border: 1px solid #555;
-	border-top: 0px solid #555;
-	padding: 15px;
-	min-width: 450px;
 }
 
-.loginDropdown .thirdPartyLoginBox a {
+.loginLightBox .thirdPartyLoginBox a {
 	margin: 5px 0;
-	width: 175px;
 	font-size: 80%;
 }
 
-.loginDropdown input {
+.loginLightBox input {
 	margin: 7px 0;
 	width: 100%;
 }
 
-.loginDropdown .nativeLoginBox {
+.loginLightBox .nativeLoginBox {
 	float: left;
 }
 
-.loginDropdown .thirdPartyLoginBox {
+.loginLightBox .thirdPartyLoginBox {
 	float: right;
 }
 

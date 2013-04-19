@@ -31,6 +31,8 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		void setLoggedOut();
 
 		void setTopBarDropShadow(boolean show);
+
+		void hideLightbox();
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
@@ -82,6 +84,12 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 
 		setInSlot(LOGIN_SLOT, loginBox);
 		setTopBar();
+	}
+
+	@Override
+	protected void onHide() {
+		super.onHide();
+		getView().hideLightbox();
 	}
 
 	private void setTopBar() {
