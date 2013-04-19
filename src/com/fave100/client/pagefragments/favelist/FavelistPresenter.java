@@ -64,19 +64,27 @@ public class FavelistPresenter extends
 	}
 
 	public interface WhyLineChanged {
-		void onChange(String songId, String whyLine);
+		void onChange(String songID, String whyLine);
+	}
 
+	public interface RankChanged {
+		void onChange(String songID, int newIndex);
 	}
 
 	public void refreshFavelist() {
 		final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), Constants.DEFAULT_HASHTAG);
 		req.fire(new Receiver<List<FaveItemProxy>>() {
 			private WhyLineChanged _whyLineChanged = new WhyLineChanged() {
-
 				@Override
-				public void onChange(final String songId, final String whyLine) {
-					//todo save
-					editWhyline(songId, whyLine);
+				public void onChange(final String songID, final String whyLine) {
+					editWhyline(songID, whyLine);
+				}
+			};
+
+			private RankChanged _rankChanged = new RankChanged() {
+				@Override
+				public void onChange(final String songID, final int newIndex) {
+					changeSongPosition(songID, newIndex);
 				}
 			};
 
@@ -88,7 +96,7 @@ public class FavelistPresenter extends
 				final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 				int i = 1;
 				for (final FaveItemProxy item : results) {
-					final FavePickWidget widget = new FavePickWidget(item, i, editable, _whyLineChanged);
+					final FavePickWidget widget = new FavePickWidget(item, i, editable, _whyLineChanged, _rankChanged);
 					pickWidgets.add(widget);
 					i++;
 				}

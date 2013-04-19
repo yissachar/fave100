@@ -3,6 +3,7 @@ package com.fave100.client.pagefragments.favelist.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.client.pagefragments.favelist.FavelistPresenter.RankChanged;
 import com.fave100.client.pagefragments.favelist.FavelistPresenter.WhyLineChanged;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
@@ -56,6 +57,7 @@ public class FavePickWidget extends Composite {
 	//TODO
 	private final boolean _editable;
 	private WhyLineChanged _whyLineCallback;
+	private RankChanged _rankCallback;
 
 	private final MouseOverHandler _whyLineEmptyMouseOver = new MouseOverHandler() {
 
@@ -75,11 +77,12 @@ public class FavePickWidget extends Composite {
 	private List<HandlerRegistration> _whyLineMouseHandlers;
 	private Label _songPick;
 
-	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged) {
+	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged) {
 		_item = item;
 		_rank = rank;
 		_editable = editable;
 		_whyLineCallback = whyLineChanged;
+		_rankCallback = rankChanged;
 
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -162,9 +165,9 @@ public class FavePickWidget extends Composite {
 			}
 
 			private void updateRank(final TextBox rankText) {
-				//TODO: save and move
 				try {
 					_rank = Integer.parseInt(rankText.getText());
+					_rankCallback.onChange(_item.getSongID(), _rank - 1);
 				}
 				catch (final NumberFormatException ex) {
 
@@ -205,7 +208,7 @@ public class FavePickWidget extends Composite {
 					@Override
 					public void onKeyDown(final KeyDownEvent event) {
 						if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-							saveAndSwithToLabel(txtBox);
+							saveAndSwitchToLabel(txtBox);
 						}
 					}
 				});
@@ -213,7 +216,7 @@ public class FavePickWidget extends Composite {
 
 					@Override
 					public void onBlur(final BlurEvent event) {
-						saveAndSwithToLabel(txtBox);
+						saveAndSwitchToLabel(txtBox);
 					}
 				});
 
@@ -233,7 +236,7 @@ public class FavePickWidget extends Composite {
 
 			}
 
-			private void saveAndSwithToLabel(final TextBox txtBox) {
+			private void saveAndSwitchToLabel(final TextBox txtBox) {
 				if (!txtBox.getValue().trim().equals(_item.getWhyline())) {
 					_whyLineCallback.onChange(_item.getSongID(), txtBox.getValue());
 				}
