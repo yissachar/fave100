@@ -80,19 +80,14 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	}
 
 	@Override
-	public void setList(final List<FaveItemProxy> list, final boolean editable) {
+	public void setList(final List<FavePickWidget> widgets) {
 		favelist.clear();
 
-		if (list == null)
+		if (widgets == null)
 			return;
 
-		for (int i = 0; i < list.size(); i++) {
-			final FaveItemProxy faveItem = list.get(i);
-
-			final FavePickWidget pick = new FavePickWidget(faveItem, i + 1, editable);
-
-			favelist.add(pick);
-
+		for (final FavePickWidget widget : widgets) {
+			favelist.add(widget);
 		}
 	}
 

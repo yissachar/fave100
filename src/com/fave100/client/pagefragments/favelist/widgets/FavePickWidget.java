@@ -3,6 +3,7 @@ package com.fave100.client.pagefragments.favelist.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.client.pagefragments.favelist.FavelistPresenter.WhyLineChanged;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
@@ -54,6 +55,7 @@ public class FavePickWidget extends Composite {
 	private int _rank;
 	//TODO
 	private final boolean _editable;
+	private WhyLineChanged _whyLineCallback;
 
 	private final MouseOverHandler _whyLineEmptyMouseOver = new MouseOverHandler() {
 
@@ -73,10 +75,11 @@ public class FavePickWidget extends Composite {
 	private List<HandlerRegistration> _whyLineMouseHandlers;
 	private Label _songPick;
 
-	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable) {
+	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged) {
 		_item = item;
 		_rank = rank;
 		_editable = editable;
+		_whyLineCallback = whyLineChanged;
 
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -229,12 +232,16 @@ public class FavePickWidget extends Composite {
 			}
 
 			private void saveAndSwithToLabel(final TextBox txtBox) {
-				//TODO: save
+				if (!txtBox.getValue().trim().equals(_item.getWhyline())) {
+					_whyLineCallback.onChange(_item.getSongID(), txtBox.getValue());
+				}
+
 				if (txtBox.getValue().isEmpty()) {
 					initEmptyWhyLine(whyLine);
 				}
-				else
+				else {
 					whyLine.setText(txtBox.getValue());
+				}
 				whyLinePanel.clear();
 				whyLinePanel.setWidget(whyLine);
 				whyLinePanel.addStyleName(WHY_LINE_EDIT_HOVER);

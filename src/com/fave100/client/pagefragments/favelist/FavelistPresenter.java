@@ -1,9 +1,11 @@
 package com.fave100.client.pagefragments.favelist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
+import com.fave100.client.pagefragments.favelist.widgets.FavePickWidget;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
@@ -30,7 +32,7 @@ public class FavelistPresenter extends
 		implements FavelistUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<FavelistUiHandlers> {
-		void setList(List<FaveItemProxy> list, boolean personalList);
+		void setList(List<FavePickWidget> pickWidgets);
 	}
 
 	private ApplicationRequestFactory requestFactory;
@@ -58,17 +60,40 @@ public class FavelistPresenter extends
 	}
 
 	public void clearFavelist() {
-		getView().setList(null, false);
+		getView().setList(null);
+	}
+
+	public interface WhyLineChanged {
+		void onChange(String songId, String whyLine);
+
 	}
 
 	public void refreshFavelist() {
 		final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), Constants.DEFAULT_HASHTAG);
 		req.fire(new Receiver<List<FaveItemProxy>>() {
+			private WhyLineChanged _whyLineChanged = new WhyLineChanged() {
+
+				@Override
+				public void onChange(final String songId, final String whyLine) {
+					//todo save
+					editWhyline(songId, whyLine);
+				}
+			};
+
 			@Override
 			public void onSuccess(final List<FaveItemProxy> results) {
 				setFavelist(results);
-				final boolean personalList = (currentUser.isLoggedIn() && currentUser.equals(user));
-				getView().setList(results, personalList);
+				final boolean editable = (currentUser.isLoggedIn() && currentUser.equals(user));
+
+				final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
+				int i = 1;
+				for (final FaveItemProxy item : results) {
+					final FavePickWidget widget = new FavePickWidget(item, i, editable, _whyLineChanged);
+					pickWidgets.add(widget);
+					i++;
+				}
+
+				getView().setList(pickWidgets);
 
 			}
 		});
@@ -151,7 +176,8 @@ public class FavelistPresenter extends
 		// If index out of range, refresh list with correct values
 		if (newIndex < 0 || newIndex >= getFavelist().size()) {
 			final boolean personalList = (currentUser.isLoggedIn() && currentUser.equals(user));
-			getView().setList(getFavelist(), personalList);
+			// TODO:
+			//	getView().setList(getFavelist());
 			return;
 		}
 
