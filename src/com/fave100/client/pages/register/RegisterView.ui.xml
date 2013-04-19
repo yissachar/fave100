@@ -138,9 +138,8 @@
 						</div>
 					</g:HTMLPanel>
 					
-					<p id="alreadyHaveAccountPrompt">
-					    Already have an account?
-					    <g:InlineHyperlink targetHistoryToken="{nameTokens.getLogin}">Log in</g:InlineHyperlink>
+					<p id="alreadyHaveAccountPrompt">					   
+					    <g:InlineHyperlink targetHistoryToken="{nameTokens.getLogin}">Already have an account? Log in</g:InlineHyperlink>
 					</p>
 				</div>	
 			</div>
