@@ -62,6 +62,10 @@
 		.songSearchContainer {
 			margin-bottom: 20px;
 		}
+		
+		.faveListContainer {
+			min-height: 300px;
+		}
 	</ui:style>
 	
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
@@ -92,7 +96,7 @@
 				
 				<g:HTMLPanel ui:styleName="{style.faveListArea} col span_9">		
 						<g:HTMLPanel ui:field="songAutocomplete" ui:styleName="{style.songSearchContainer}"/>	
-					<g:HTMLPanel ui:field="faveListContainer" styleName="faveListContainer">
+					<g:HTMLPanel ui:field="faveListContainer" styleName="{style.faveListContainer}">
 						<g:HTMLPanel ui:field="favelist"/>									
 					</g:HTMLPanel>						
 				</g:HTMLPanel>
