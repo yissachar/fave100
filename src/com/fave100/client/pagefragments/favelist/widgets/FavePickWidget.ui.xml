@@ -32,14 +32,14 @@
 			padding: 2px 2 px 2 px 2 px;
 			margin: 3px;
 			font-family: arial;
-			width: 64px;
+			width: 62px;
 			height: 60px;
 			font-size: 45px;
 			text-align: center;
 		}
 		
 		.song {
-			font-size: 30px;
+			font-size: 25px;
 			font-weight: bold;
 		}
 		
