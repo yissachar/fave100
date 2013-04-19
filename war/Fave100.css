@@ -194,6 +194,18 @@ footer {
   	user-select: none;
 }
 
+
+.whyLinePanel:hover {
+	border: 3px #ddd dotted;
+	width: 500px;
+	cursor: pointer;
+	margin: -3px;
+}
+
+.whyLinePanel input[type=text] {
+	margin: -3px;
+}
+
 /* Side notification */
 .sideNotification{
 	position: absolute;

@@ -55,15 +55,20 @@
 	</ui:style>
 
 	<g:HTMLPanel>
-		<g:HorizontalPanel spacing="3" ui:styleName="{style.mainPanel}" verticalAlignment="middle">
-			<g:SimplePanel ui:field="rankPanel" ui:styleName="{style.rank}"></g:SimplePanel>
-			<g:VerticalPanel>
-				<g:Anchor ui:field="song" ui:styleName="{style.song}"></g:Anchor>
-				<g:InlineLabel ui:field="artist" ui:styleName="{style.artist}"></g:InlineLabel>
+		<g:HorizontalPanel spacing="0" ui:styleName="{style.mainPanel}"
+			verticalAlignment="middle">
+			<g:cell width="10%">
+				<g:SimplePanel ui:field="rankPanel" ui:styleName="{style.rank}"></g:SimplePanel>
+			</g:cell>
 
-				<g:SimplePanel ui:field="whyLinePanel" ui:styleName="{style.whyLine}"></g:SimplePanel>
-			</g:VerticalPanel>
+			<g:cell width="90%">
+				<g:VerticalPanel width="630px">
+					<g:Anchor ui:field="song" ui:styleName="{style.song}"></g:Anchor>
+					<g:InlineLabel ui:field="artist" ui:styleName="{style.artist}"></g:InlineLabel>
+					<g:SimplePanel ui:field="whyLinePanel" ui:styleName="{style.whyLine}"></g:SimplePanel>
+				</g:VerticalPanel>
 
+			</g:cell>
 
 		</g:HorizontalPanel>
 	</g:HTMLPanel>
