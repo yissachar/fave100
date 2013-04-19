@@ -75,7 +75,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 
 	@UiHandler("lightBoxBackground")
 	void onLightBoxClick(final ClickEvent event) {
-		loginLightBox.setVisible(false);
+		hideLightbox();
 	}
 
 	@UiHandler("loginButton")
@@ -86,6 +86,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@Override
 	public void hideLightbox() {
 		loginLightBox.setVisible(false);
+		getUiHandlers().clearLoginBox();
 	}
 
 	@Override
@@ -101,7 +102,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		logOutLink.setVisible(true);
 		logOutLink.setTargetHistoryToken(NameTokens.logout);
 		loginBox.setVisible(false);
-		loginLightBox.setVisible(false);
+		hideLightbox();
 	}
 
 	@Override

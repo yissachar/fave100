@@ -105,6 +105,15 @@ public class LoginWidgetPresenter extends
 	@Override
 	public void onReveal() {
 		super.onReveal();
+	}
+
+	@Override
+	protected void onHide() {
+		super.onHide();
+		clearLoginDetails();
+	}
+
+	public void clearLoginDetails() {
 		getView().clearUsername();
 		getView().clearPassword();
 	}
@@ -117,14 +126,11 @@ public class LoginWidgetPresenter extends
 		final Request<AppUserProxy> loginReq = appUserRequest.login(getView()
 				.getUsername(), getView().getPassword());
 
-		// Clear the password immediately
-		getView().clearPassword();
 		// Attempt to log the user in
 		loginReq.fire(new Receiver<AppUserProxy>() {
 			@Override
 			public void onSuccess(final AppUserProxy appUser) {
 				LoadingIndicator.hide();
-				getView().clearUsername();
 				eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 				Notification.show("Logged in successfully");
 				placeManager.revealPlace(new PlaceRequest(NameTokens.users)
