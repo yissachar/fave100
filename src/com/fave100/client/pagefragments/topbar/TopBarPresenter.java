@@ -100,8 +100,14 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 			getView().setLoggedOut();
 		}
 	}
+
+	@Override
+	public void clearLoginBox() {
+		loginBox.clearLoginDetails();
+
+	}
 }
 
 interface TopBarUiHandlers extends UiHandlers {
-
+	void clearLoginBox();
 }
