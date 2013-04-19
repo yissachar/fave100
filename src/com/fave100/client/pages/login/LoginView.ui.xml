@@ -26,17 +26,20 @@
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
-	<g:HTMLPanel ui:styleName="container">
-		<div class="content">
-			<g:HTMLPanel styleName="{style.loginContainer}">
-				<h1 class="row">Fave100 Sign In</h1>
-				<g:HTMLPanel ui:field="loginContainer" ui:styleName="row" />
-			</g:HTMLPanel>
-			<p id="noAccountPrompt" class="row">
-				<g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}">
-					Don't have an account? Register
-				</g:InlineHyperlink>
-			</p>
+	<g:HTMLPanel ui:styleName="wrap">
+		<g:HTMLPanel ui:field="topBar"/>
+		<div class="container">
+			<div class="content">
+				<g:HTMLPanel styleName="{style.loginContainer}">
+					<h1 class="row">Fave100 Sign In</h1>
+					<g:HTMLPanel ui:field="loginContainer" ui:styleName="row" />
+				</g:HTMLPanel>
+				<p id="noAccountPrompt" class="row">
+					<g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}">
+						Don't have an account? Register
+					</g:InlineHyperlink>
+				</p>
+			</div>
 		</div>
 		<pf:Footer />
 	</g:HTMLPanel>
