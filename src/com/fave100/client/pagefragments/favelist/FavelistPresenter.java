@@ -42,6 +42,7 @@ public class FavelistPresenter extends
 	// The currently logged in user
 	private CurrentUser currentUser;
 	private List<FaveItemProxy> favelist;
+	private List<FavePickWidget> widgets;
 
 	@Inject
 	public FavelistPresenter(final EventBus eventBus, final MyView view,
@@ -68,7 +69,7 @@ public class FavelistPresenter extends
 	}
 
 	public interface RankChanged {
-		void onChange(String songID, int newIndex);
+		void onChange(String songID, int currentIndex, int newIndex);
 	}
 
 	public void refreshFavelist() {
@@ -83,8 +84,8 @@ public class FavelistPresenter extends
 
 			private RankChanged _rankChanged = new RankChanged() {
 				@Override
-				public void onChange(final String songID, final int newIndex) {
-					changeSongPosition(songID, newIndex);
+				public void onChange(final String songID, final int currentIndex, final int newIndex) {
+					changeSongPosition(songID, currentIndex, newIndex);
 				}
 			};
 
@@ -100,6 +101,7 @@ public class FavelistPresenter extends
 					pickWidgets.add(widget);
 					i++;
 				}
+				widgets = pickWidgets;
 
 				getView().setList(pickWidgets);
 
@@ -175,12 +177,7 @@ public class FavelistPresenter extends
 	}
 
 	@Override
-	public void changeSongPosition(final int currentIndex, final int newIndex) {
-		changeSongPosition(favelist.get(currentIndex).getSongID(), newIndex);
-	}
-
-	@Override
-	public void changeSongPosition(final String songID, final int newIndex) {
+	public void changeSongPosition(final String songID, final int currentIndex, final int newIndex) {
 		// If index out of range, refresh list with correct values
 		if (newIndex < 0 || newIndex >= getFavelist().size()) {
 			final boolean personalList = (currentUser.isLoggedIn() && currentUser.equals(user));
@@ -189,13 +186,27 @@ public class FavelistPresenter extends
 			return;
 		}
 
+		// Save on server
 		final Request<Void> changePosition = requestFactory.faveListRequest()
 				.rerankFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID, newIndex);
-		// TODO: Should add everything client side so need for refresh every time
 		changePosition.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
-				refreshFavelist();
+				// If successfully saved on server, manually set client to match
+				final FavePickWidget pickToRank = widgets.get(currentIndex);
+				widgets.remove(pickToRank);
+				widgets.add(newIndex, pickToRank);
+				int i = 1;
+				for (final FavePickWidget widget : widgets) {
+					widget.setRank(i);
+					i++;
+				}
+				getView().setList(widgets);
+			}
+
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				// TODO: server fail, should do something
 			}
 		});
 

@@ -166,8 +166,9 @@ public class FavePickWidget extends Composite {
 
 			private void updateRank(final TextBox rankText) {
 				try {
+					final int _currentRank = _rank;
 					_rank = Integer.parseInt(rankText.getText());
-					_rankCallback.onChange(_item.getSongID(), _rank - 1);
+					_rankCallback.onChange(_item.getSongID(), _currentRank - 1, _rank - 1);
 				}
 				catch (final NumberFormatException ex) {
 
@@ -253,5 +254,10 @@ public class FavePickWidget extends Composite {
 			}
 
 		});
+	}
+
+	public void setRank(final int rank) {
+		_rank = rank;
+		setupRankPanel();
 	}
 }
