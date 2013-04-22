@@ -73,7 +73,7 @@ public class FavelistPresenter extends
 	}
 
 	public interface ItemDeleted {
-		void onDeleted(String songID);
+		void onDeleted(String songID, int index);
 	}
 
 	public void refreshFavelist() {
@@ -95,8 +95,8 @@ public class FavelistPresenter extends
 
 			private ItemDeleted _itemDeleted = new ItemDeleted() {
 				@Override
-				public void onDeleted(final String songID) {
-					removeSong(songID);
+				public void onDeleted(final String songID, final int index) {
+					removeSong(songID, index);
 				}
 			};
 
@@ -156,7 +156,12 @@ public class FavelistPresenter extends
 	}
 
 	@Override
-	public void removeSong(final String songID) {
+	public void removeSong(final String songID, final int index) {
+		// Re-rank on client
+		for (int i = index + 1; i < widgets.size(); i++) {
+			widgets.get(i).setRank(i);
+		}
+		widgets.remove(index);
 		// Send request for server to remove it
 		final Request<Void> req = requestFactory.faveListRequest()
 				.removeFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID);

@@ -191,7 +191,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 				deleteButton.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(final ClickEvent event) {
-						getUiHandlers().removeSong(faveItem.getSongID());
+						//getUiHandlers().removeSong(faveItem.getSongID();
 					}
 				});
 				listItem.add(deleteButton);
