@@ -288,6 +288,15 @@ public class FavePickWidget extends Composite {
 	private void setupHoverPanel() {
 		hoverPanel.clear();
 		if (_editable) {
+			final Image upButton = new Image("img/up-arrow.png");
+			upButton.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(final ClickEvent event) {
+					_rankCallback.onChange(_item.getSongID(), _rank - 1, _rank - 2);
+				}
+			});
+			hoverPanel.add(upButton);
+
 			final Image deleteButton = new Image("img/delete.png");
 			deleteButton.setTitle("Delete song");
 			final FavePickWidget _this = this;
@@ -305,9 +314,14 @@ public class FavePickWidget extends Composite {
 			});
 			hoverPanel.add(deleteButton);
 
-			final Image dragButton = new Image("img/drag-icon.png");
-			dragButton.setTitle("Drag to rerank");
-			hoverPanel.add(dragButton);
+			final Image downButton = new Image("img/down-arrow.png");
+			downButton.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(final ClickEvent event) {
+					_rankCallback.onChange(_item.getSongID(), _rank - 1, _rank);
+				}
+			});
+			hoverPanel.add(downButton);
 		}
 		else {
 			final Image addButton = new Image("img/add.png");
