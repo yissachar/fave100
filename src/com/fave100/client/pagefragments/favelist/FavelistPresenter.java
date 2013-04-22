@@ -178,6 +178,10 @@ public class FavelistPresenter extends
 
 	@Override
 	public void changeSongPosition(final String songID, final int currentIndex, final int newIndex) {
+		// If it is the same position, ignore
+		if (currentIndex == newIndex)
+			return;
+
 		// If index out of range, refresh list with correct values
 		if (newIndex < 0 || newIndex >= getFavelist().size()) {
 			widgets.get(currentIndex).setRank(currentIndex + 1);
