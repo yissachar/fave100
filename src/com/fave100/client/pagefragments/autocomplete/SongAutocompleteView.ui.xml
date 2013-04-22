@@ -6,13 +6,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style type="com.fave100.client.pagefragments.autocomplete.SongAutocompleteView.SongAutocompleteStyle">
-		.songAutocomplete {
-			display: block;
-			margin: 0 auto;
-			width: 80%;
-		}
-		
+	<ui:style type="com.fave100.client.pagefragments.autocomplete.SongAutocompleteView.SongAutocompleteStyle">		
 		.searchBox {		
 			width: 100%;
 			height: 40px;

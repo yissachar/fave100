@@ -5,6 +5,7 @@ import com.fave100.client.pages.users.widgets.ShareButton;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -22,6 +23,11 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public interface Binder extends UiBinder<Widget, UsersView> {
 	}
 
+	interface UsersStyle extends CssResource {
+		String fixedSearch();
+	}
+
+	@UiField UsersStyle style;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel socialContainer;
 	@UiField ShareButton shareButton;
@@ -86,4 +92,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		songAutocomplete.setVisible(false);
 	}
 
+	@Override
+	public String getFixedSearchStyle() {
+		return style.fixedSearch();
+	}
 }
