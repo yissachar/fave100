@@ -180,9 +180,8 @@ public class FavelistPresenter extends
 	public void changeSongPosition(final String songID, final int currentIndex, final int newIndex) {
 		// If index out of range, refresh list with correct values
 		if (newIndex < 0 || newIndex >= getFavelist().size()) {
-			final boolean personalList = (currentUser.isLoggedIn() && currentUser.equals(user));
-			// TODO:
-			//	getView().setList(getFavelist());
+			widgets.get(currentIndex).setRank(currentIndex + 1);
+			getView().setList(widgets);
 			return;
 		}
 
