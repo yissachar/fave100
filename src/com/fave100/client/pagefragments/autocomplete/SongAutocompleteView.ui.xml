@@ -65,7 +65,7 @@
 		}
 	</ui:style>
 	
-	<g:HTMLPanel ui:styleName="{style.songAutocomplete}">
+	<g:HTMLPanel>
 		<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>		
 		<g:HTMLPanel ui:field="resultsArea" ui:styleName="{style.resultsArea}">
 			<g:FocusPanel ui:field="eventCatcher">
