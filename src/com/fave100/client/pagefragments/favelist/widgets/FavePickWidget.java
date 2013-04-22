@@ -309,7 +309,7 @@ public class FavePickWidget extends Composite {
 							removeFromParent();
 						}
 					});
-					_deletedCallback.onDeleted(_item.getSongID());
+					_deletedCallback.onDeleted(_item.getSongID(), _rank - 1);
 				}
 			});
 			hoverPanel.add(deleteButton);
