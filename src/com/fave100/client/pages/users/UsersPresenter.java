@@ -12,7 +12,6 @@ import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -138,20 +137,11 @@ public class UsersPresenter extends
 	}
 
 	@Override
-	public void shareTwitter() {
-		final String url = "http://twitter.com/share?text=Check out my Fave100 songs: " + Window.Location.getHref();
-		Window.open(url, "_blank", "");
-	}
-
-	@Override
 	public void songSelected(final SongProxy song) {
 		eventBus.fireEvent(new SongSelectedEvent(song));
 	}
 }
 
 interface UsersUiHandlers extends UiHandlers {
-	//void follow();
-	void shareTwitter();
-
 	void songSelected(SongProxy song);
 }

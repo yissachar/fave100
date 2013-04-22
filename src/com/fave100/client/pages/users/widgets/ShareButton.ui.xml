@@ -1,0 +1,32 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:style>
+		.socialDropdown {
+			background-color: #FFF;
+			border: 1px solid #999;
+			border-top: 0px;
+			height: 65px;
+		}
+		
+		.twitterShare {
+			cursor: pointer;
+		}
+		
+		.fbLike { 
+			margin-top: 2px;
+		}
+	</ui:style>
+	
+	
+	<g:FocusPanel ui:field="shareArea">
+		<g:HTMLPanel>			
+			<g:Button>Share</g:Button>			
+			<g:HTMLPanel ui:field="socialDropdown" ui:styleName="{style.socialDropdown}">				
+				<g:Image url="img/twitter-bird-light-bgs.png" title="Share on Twitter" ui:field="twitterShare" ui:styleName="{style.twitterShare}"/>
+				<div ui:field="fbLike" class="fb-like {style.fbLike}" data-send="false" data-layout="box_count" data-width="50" data-show-faces="false"></div>				
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+	</g:FocusPanel>
+</ui:UiBinder> 

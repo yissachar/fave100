@@ -1,14 +1,12 @@
 package com.fave100.client.pages.users;
 
 import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.users.widgets.ShareButton;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -25,8 +23,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@UiField HTMLPanel faveListContainer;
-	@UiField Button twitterButton;
 	@UiField HTMLPanel socialContainer;
+	@UiField ShareButton shareButton;
 	@UiField InlineHyperlink editProfileButton;
 	@UiField Image avatar;
 	@UiField SpanElement username;
@@ -66,11 +64,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 			}
 		}
 		super.setInSlot(slot, content);
-	}
-
-	@UiHandler("twitterButton")
-	void onTwitterButtonClicked(final ClickEvent event) {
-		getUiHandlers().shareTwitter();
 	}
 
 	@Override
