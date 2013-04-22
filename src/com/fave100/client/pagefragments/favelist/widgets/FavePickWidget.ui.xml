@@ -69,9 +69,7 @@
 
 			</g:cell>
 
-			<g:SimplePanel ui:field="hoverPanel" ui:styleName="hide">
-				<g:Label>test</g:Label>
-			</g:SimplePanel>
+			<g:VerticalPanel ui:field="hoverPanel" ui:styleName="hide"/>
 		</g:HorizontalPanel>
 	</g:HTMLPanel>
 

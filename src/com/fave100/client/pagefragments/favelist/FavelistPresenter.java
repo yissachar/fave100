@@ -72,6 +72,10 @@ public class FavelistPresenter extends
 		void onChange(String songID, int currentIndex, int newIndex);
 	}
 
+	public interface ItemDeleted {
+		void onDeleted(String songID);
+	}
+
 	public void refreshFavelist() {
 		final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), Constants.DEFAULT_HASHTAG);
 		req.fire(new Receiver<List<FaveItemProxy>>() {
@@ -89,6 +93,13 @@ public class FavelistPresenter extends
 				}
 			};
 
+			private ItemDeleted _itemDeleted = new ItemDeleted() {
+				@Override
+				public void onDeleted(final String songID) {
+					removeSong(songID);
+				}
+			};
+
 			@Override
 			public void onSuccess(final List<FaveItemProxy> results) {
 				setFavelist(results);
@@ -97,7 +108,7 @@ public class FavelistPresenter extends
 				final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 				int i = 1;
 				for (final FaveItemProxy item : results) {
-					final FavePickWidget widget = new FavePickWidget(item, i, editable, _whyLineChanged, _rankChanged);
+					final FavePickWidget widget = new FavePickWidget(item, i, editable, _whyLineChanged, _rankChanged, _itemDeleted);
 					pickWidgets.add(widget);
 					i++;
 				}
@@ -146,15 +157,10 @@ public class FavelistPresenter extends
 
 	@Override
 	public void removeSong(final String songID) {
+		// Send request for server to remove it
 		final Request<Void> req = requestFactory.faveListRequest()
 				.removeFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID);
-		// TODO: Should add everything client side so need for refresh every time
-		req.fire(new Receiver<Void>() {
-			@Override
-			public void onSuccess(final Void response) {
-				refreshFavelist();
-			}
-		});
+		req.fire();
 	}
 
 	@Override

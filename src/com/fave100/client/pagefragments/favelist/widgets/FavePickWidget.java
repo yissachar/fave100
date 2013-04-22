@@ -1,8 +1,11 @@
 package com.fave100.client.pagefragments.favelist.widgets;
 
+import static com.google.gwt.query.client.GQuery.$;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.client.pagefragments.favelist.FavelistPresenter.ItemDeleted;
 import com.fave100.client.pagefragments.favelist.FavelistPresenter.RankChanged;
 import com.fave100.client.pagefragments.favelist.FavelistPresenter.WhyLineChanged;
 import com.fave100.client.pages.song.SongPresenter;
@@ -24,16 +27,19 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.query.client.Function;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class FavePickWidget extends Composite {
@@ -52,14 +58,14 @@ public class FavePickWidget extends Composite {
 	@UiField Anchor song;
 	@UiField InlineLabel artist;
 	@UiField SimplePanel whyLinePanel;
-	@UiField SimplePanel hoverPanel;
+	@UiField VerticalPanel hoverPanel;
 
 	private final FaveItemProxy _item;
 	private int _rank;
-	//TODO
 	private final boolean _editable;
 	private WhyLineChanged _whyLineCallback;
 	private RankChanged _rankCallback;
+	private ItemDeleted _deletedCallback;
 
 	private final MouseOverHandler _whyLineEmptyMouseOver = new MouseOverHandler() {
 
@@ -79,12 +85,13 @@ public class FavePickWidget extends Composite {
 	private List<HandlerRegistration> _whyLineMouseHandlers;
 	private Label _songPick;
 
-	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged) {
+	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged, final ItemDeleted itemDeleted) {
 		_item = item;
 		_rank = rank;
 		_editable = editable;
 		_whyLineCallback = whyLineChanged;
 		_rankCallback = rankChanged;
+		_deletedCallback = itemDeleted;
 
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -123,6 +130,8 @@ public class FavePickWidget extends Composite {
 			setupWhyLineEdit(whyLine);
 		}
 		whyLinePanel.setWidget(whyLine);
+
+		setupHoverPanel();
 
 	}
 
@@ -274,6 +283,37 @@ public class FavePickWidget extends Composite {
 			}
 
 		});
+	}
+
+	private void setupHoverPanel() {
+		hoverPanel.clear();
+		if (_editable) {
+			final Image deleteButton = new Image("img/delete.png");
+			deleteButton.setTitle("Delete song");
+			final FavePickWidget _this = this;
+			deleteButton.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(final ClickEvent event) {
+					$(_this).slideUp(new Function() {
+						@Override
+						public void f() {
+							removeFromParent();
+						}
+					});
+					_deletedCallback.onDeleted(_item.getSongID());
+				}
+			});
+			hoverPanel.add(deleteButton);
+
+			final Image dragButton = new Image("img/drag-icon.png");
+			dragButton.setTitle("Drag to rerank");
+			hoverPanel.add(dragButton);
+		}
+		else {
+			final Image addButton = new Image("img/add.png");
+			addButton.setTitle("Add to your Fave100");
+			hoverPanel.add(addButton);
+		}
 	}
 
 	public void setRank(final int rank) {
