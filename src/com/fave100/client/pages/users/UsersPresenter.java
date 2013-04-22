@@ -12,6 +12,10 @@ import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.Window.ScrollHandler;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -35,6 +39,8 @@ public class UsersPresenter extends
 		void showOwnPage();
 
 		void showOtherPage();
+
+		String getFixedSearchStyle();
 	}
 
 	@ProxyCodeSplit
@@ -65,6 +71,19 @@ public class UsersPresenter extends
 		this.placeManager = placeManager;
 		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
+
+		Window.addWindowScrollHandler(new ScrollHandler() {
+			@Override
+			public void onWindowScroll(final ScrollEvent event) {
+				final Widget widget = songAutocomplete.getWidget();
+				if (event.getScrollTop() >= 26) {
+					widget.addStyleName(getView().getFixedSearchStyle());
+				}
+				else {
+					widget.removeStyleName(getView().getFixedSearchStyle());
+				}
+			}
+		});
 	}
 
 	@Override

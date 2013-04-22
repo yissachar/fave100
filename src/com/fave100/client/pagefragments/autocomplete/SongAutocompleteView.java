@@ -48,7 +48,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	public SongAutocompleteView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		searchBox.getElement().setAttribute("placeholder",
-				"Search songs...");
+				"Add songs...");
 		resultsArea.setVisible(false);
 	}
 

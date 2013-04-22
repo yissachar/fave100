@@ -8,9 +8,11 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>
+	<ui:style type="com.fave100.client.pages.users.UsersView.UsersStyle">
 		.sideContainer {
 			float: left;
+			position: fixed;
+			width: 20%;
 		}
 		
 		.userProfile{
@@ -59,8 +61,17 @@
 			float: right;
 		}
 		
-		.songSearchContainer {
+		.songSearchContainer {			
+			display: block;
+			margin: 0 auto;
 			margin-bottom: 20px;
+			width: 80%;
+		}
+		
+		.fixedSearch {
+			position: fixed;
+			width: 608px;
+			margin-top: -26px;
 		}
 		
 		.faveListContainer {
@@ -73,7 +84,7 @@
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="container">
 			<div class="content row">
-				<g:HTMLPanel styleName="{style.sideContainer} col span_3">		
+				<g:HTMLPanel styleName="{style.sideContainer} col">		
 					<g:HTMLPanel ui:field="userProfile" styleName="{style.userProfile}">
 						<g:Image styleName="{style.avatar}" ui:field="avatar"/>
 						<div class="{style.nameContainer}">
