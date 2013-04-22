@@ -1,12 +1,8 @@
 package com.fave100.client.pages.users.widgets;
 
-import static com.google.gwt.query.client.GQuery.$;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -24,7 +20,6 @@ public class ShareButton extends Composite {
 	interface ShareButtonUiBinder extends UiBinder<Widget, ShareButton> {
 	}
 
-	boolean _renderedFB;
 	boolean _ownList;
 
 	@UiField FocusPanel shareArea;
@@ -34,28 +29,9 @@ public class ShareButton extends Composite {
 
 	public ShareButton() {
 		initWidget(uiBinder.createAndBindUi(this));
-		$(socialDropdown).hide();
 		// Set Facebook like URL
 		fbLike.setAttribute("data-href", Window.Location.getHref());
 
-	}
-
-	@UiHandler("shareArea")
-	void onMouseOver(final MouseOverEvent event) {
-		if (!_renderedFB) {
-			renderFacebookButton();
-			_renderedFB = true;
-		}
-		$(socialDropdown).slideDown();
-	}
-
-	public static native void renderFacebookButton() /*-{
-		$wnd.FB.XFBML.parse();
-	}-*/;
-
-	@UiHandler("shareArea")
-	void onMouseOut(final MouseOutEvent event) {
-		$(socialDropdown).slideUp();
 	}
 
 	@UiHandler("twitterShare")
