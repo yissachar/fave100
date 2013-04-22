@@ -17,6 +17,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -156,6 +158,24 @@ public class FavePickWidget extends Composite {
 					@Override
 					public void onBlur(final BlurEvent event) {
 						updateRank(rankText);
+					}
+				});
+				// Only allow numbers in rankText
+				rankText.addKeyPressHandler(new KeyPressHandler() {
+					@Override
+					public void onKeyPress(final KeyPressEvent event) {
+						final TextBox sender = (TextBox)event.getSource();
+
+						if (sender.isReadOnly() || !sender.isEnabled()) {
+							return;
+						}
+
+						final Character charCode = event.getCharCode();
+
+						// allow digits
+						if (!Character.isDigit(charCode)) {
+							sender.cancelKey();
+						}
 					}
 				});
 				rankPanel.clear();
