@@ -4,7 +4,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.util.Date;
 import java.util.List;
@@ -194,11 +193,11 @@ public class AppUser extends DatastoreObject {
 			if (loggedInUser != null) {
 				// Successful login - store session
 				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, loggedInUser.getUsername());
-				final URL twitterAvatar = twitterUser.getProfileImageURL();
+				final String twitterAvatar = twitterUser.getProfileImageURL();
 				if (loggedInUser.getAvatar() == null) {
 					// Update the user's avatar from Twitter
 					// TODO: Verify that twitter avatars work properly
-					loggedInUser.setAvatar(twitterAvatar.toString());
+					loggedInUser.setAvatar(twitterAvatar);
 					ofy().save().entity(loggedInUser).now();
 				}
 			}
