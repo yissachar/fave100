@@ -144,7 +144,7 @@
 		<g:HTMLPanel ui:styleName="{style.topNav}" ui:field="topBar">
 			<div class="container">
 				<g:InlineHyperlink targetHistoryToken="{nameTokens.getHome}">	
-					<img class="{style.faveLogo}" src="img/Logo.png" alt="Fave100 logo"/>
+					<img class="{style.faveLogo}" src="img/logo.png" alt="Fave100 logo"/>
 				</g:InlineHyperlink>		
 				<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" url="img/loading-indicator.gif"/>			
 				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
