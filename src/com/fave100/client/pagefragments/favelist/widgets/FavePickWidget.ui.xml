@@ -34,8 +34,12 @@
 			font-family: arial;
 			width: 62px;
 			height: 60px;
-			font-size: 45px;
+			font-size: 40px;
 			text-align: center;
+		}
+		
+		.rank > * {
+			margin-top: 3px;
 		}
 		
 		.song {
