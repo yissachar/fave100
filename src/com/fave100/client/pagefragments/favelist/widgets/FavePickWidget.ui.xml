@@ -3,7 +3,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateLocales='default'>
 
-	<ui:style>
+	<ui:style type="com.fave100.client.pagefragments.favelist.widgets.FavePickWidget.FavePickWidgetStyle">
 		.mainPanel {
 			
 		}
@@ -56,6 +56,14 @@
 			font-style: italic;
 			font-color: #eee;
 		}
+		
+		.hoverPanel td {
+			padding: 0px;
+		}
+		
+		.hoverPanel img {
+			cursor: pointer;
+		}	
 	</ui:style>
 
 	<g:HTMLPanel>
@@ -73,7 +81,7 @@
 
 			</g:cell>
 
-			<g:VerticalPanel ui:field="hoverPanel" ui:styleName="hide"/>
+			<g:HorizontalPanel ui:field="hoverPanel" ui:styleName="hide {style.hoverPanel}" verticalAlignment="middle"/>
 		</g:HorizontalPanel>
 	</g:HTMLPanel>
 
