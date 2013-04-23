@@ -7,11 +7,11 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -28,7 +28,7 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
 	@UiField HTMLPanel topBar;
 	@UiField HTMLPanel registerContainer;
 	@UiField FormPanel registerForm;
-	@UiField Button registerButton;
+	@UiField SubmitButton registerButton;
 	@UiField TextBox usernameField;
 	@UiField PasswordTextBox passwordField;
 	@UiField PasswordTextBox passwordRepeatField;
@@ -40,7 +40,7 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
 	@UiField TextBox emailField;
 	@UiField SpanElement emailStatusMessage;
 	@UiField HTMLPanel thirdPartyUsernamePrompt;
-	@UiField Button thirdPartyUsernameSubmitButton;
+	@UiField SubmitButton thirdPartyUsernameSubmitButton;
 	@UiField Anchor registerWithTwitterButton;
 	@UiField Anchor registerWithFacebookButton;
 
@@ -73,14 +73,14 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
 				passwordRepeatField.getValue());
 	}
 
+	@UiHandler("thirdPartyRegisterForm")
+	void onThirdPartyRegisterFormSubmit(final SubmitEvent event) {
+		getUiHandlers().registerThirdParty(thirdPartyUsernameField.getValue());
+	}
+
 	@UiHandler("registerWithTwitterButton")
 	void onRegisterWithTwitterButtonClick(final ClickEvent event) {
 		getUiHandlers().goToTwitterAuth();
-	}
-
-	@UiHandler("thirdPartyUsernameSubmitButton")
-	void onThirdPartyRegisterClick(final ClickEvent event) {
-		getUiHandlers().registerThirdParty(thirdPartyUsernameField.getValue());
 	}
 
 	@Override

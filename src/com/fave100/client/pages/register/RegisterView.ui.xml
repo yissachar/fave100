@@ -130,12 +130,14 @@
 					</g:HTMLPanel>
 					
 					<g:HTMLPanel ui:field="thirdPartyUsernamePrompt" styleName="{style.thirdPartyUsernamePrompt}">
-						<div class="registerContainer {style.thirdPartyUsernamePrompt}">
-							<span>Please enter a username to complete the registration process</span>
-							<g:TextBox ui:field="thirdPartyUsernameField"/>
-							<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					
-							<g:Button ui:field="thirdPartyUsernameSubmitButton">Submit</g:Button>
-						</div>
+						<g:FormPanel ui:field="thirdPartyRegisterForm">
+							<g:HTMLPanel ui:styleName="registerContainer {style.thirdPartyUsernamePrompt}">
+								<span>Please enter a username to complete the registration process</span>
+								<g:TextBox ui:field="thirdPartyUsernameField"/>
+								<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					
+								<g:SubmitButton ui:field="thirdPartyUsernameSubmitButton">Submit</g:SubmitButton>
+							</g:HTMLPanel>
+						</g:FormPanel>
 					</g:HTMLPanel>
 					
 					<p id="alreadyHaveAccountPrompt">					   
