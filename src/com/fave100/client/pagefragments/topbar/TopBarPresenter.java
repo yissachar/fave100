@@ -56,12 +56,9 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		Window.addWindowScrollHandler(new ScrollHandler() {
 			@Override
 			public void onWindowScroll(final ScrollEvent event) {
-				// Don't add the effect on users page
-				if (placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.users))
-					return;
-
-				if (event.getScrollTop() == 0) {
-					// Window as at top of screen, no need for drop shadow
+				// Window as at top of screen or on users page, no need for drop shadow
+				if (event.getScrollTop() == 0
+						|| placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.users)) {
 					getView().setTopBarDropShadow(false);
 				}
 				else {
