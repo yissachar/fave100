@@ -58,7 +58,7 @@
 			<div class="content">
 				<g:HorizontalPanel styleName="{style.homePageContainer} row">					
 					<g:VerticalPanel styleName="{style.CTApanel}">
-						<g:Image styleName="{style.logo}" url="img/Logo.png" />
+						<g:Image styleName="{style.logo}" url="img/logo.png" />
 						<g:Label styleName="{style.tagLine}">Get your list on.</g:Label>
 						<g:Label styleName="{style.registerCTA}">What are your top songs of all-time?</g:Label>
 						<g:HorizontalPanel styleName="{style.buttonContainer}">
