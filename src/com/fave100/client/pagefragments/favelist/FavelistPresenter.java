@@ -33,6 +33,24 @@ public class FavelistPresenter extends
 
 	public interface MyView extends View, HasUiHandlers<FavelistUiHandlers> {
 		void setList(List<FavePickWidget> pickWidgets);
+
+		void addPick(FavePickWidget widget);
+	}
+
+	public interface WhyLineChanged {
+		void onChange(String songID, String whyLine);
+	}
+
+	public interface RankChanged {
+		void onChange(String songID, int currentIndex, int newIndex);
+	}
+
+	public interface ItemDeleted {
+		void onDeleted(String songID, int index);
+	}
+
+	public interface ItemAdded {
+		void onAdded(String songID, String song, String artist);
 	}
 
 	private ApplicationRequestFactory requestFactory;
@@ -43,6 +61,34 @@ public class FavelistPresenter extends
 	private CurrentUser currentUser;
 	private List<FaveItemProxy> favelist;
 	private List<FavePickWidget> widgets;
+
+	private WhyLineChanged _whyLineChanged = new WhyLineChanged() {
+		@Override
+		public void onChange(final String songID, final String whyLine) {
+			editWhyline(songID, whyLine);
+		}
+	};
+
+	private RankChanged _rankChanged = new RankChanged() {
+		@Override
+		public void onChange(final String songID, final int currentIndex, final int newIndex) {
+			changeSongPosition(songID, currentIndex, newIndex);
+		}
+	};
+
+	private ItemDeleted _itemDeleted = new ItemDeleted() {
+		@Override
+		public void onDeleted(final String songID, final int index) {
+			removeSong(songID, index);
+		}
+	};
+
+	private ItemAdded _itemAdded = new ItemAdded() {
+		@Override
+		public void onAdded(final String songID, final String song, final String artist) {
+			addSong(songID, song, artist);
+		}
+	};
 
 	@Inject
 	public FavelistPresenter(final EventBus eventBus, final MyView view,
@@ -64,51 +110,18 @@ public class FavelistPresenter extends
 		getView().setList(null);
 	}
 
-	public interface WhyLineChanged {
-		void onChange(String songID, String whyLine);
-	}
-
-	public interface RankChanged {
-		void onChange(String songID, int currentIndex, int newIndex);
-	}
-
-	public interface ItemDeleted {
-		void onDeleted(String songID, int index);
-	}
-
 	public void refreshFavelist() {
 		final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), Constants.DEFAULT_HASHTAG);
 		req.fire(new Receiver<List<FaveItemProxy>>() {
-			private WhyLineChanged _whyLineChanged = new WhyLineChanged() {
-				@Override
-				public void onChange(final String songID, final String whyLine) {
-					editWhyline(songID, whyLine);
-				}
-			};
-
-			private RankChanged _rankChanged = new RankChanged() {
-				@Override
-				public void onChange(final String songID, final int currentIndex, final int newIndex) {
-					changeSongPosition(songID, currentIndex, newIndex);
-				}
-			};
-
-			private ItemDeleted _itemDeleted = new ItemDeleted() {
-				@Override
-				public void onDeleted(final String songID, final int index) {
-					removeSong(songID, index);
-				}
-			};
 
 			@Override
 			public void onSuccess(final List<FaveItemProxy> results) {
 				setFavelist(results);
-				final boolean editable = (currentUser.isLoggedIn() && currentUser.equals(user));
 
 				final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 				int i = 1;
 				for (final FaveItemProxy item : results) {
-					final FavePickWidget widget = new FavePickWidget(item, i, editable, _whyLineChanged, _rankChanged, _itemDeleted);
+					final FavePickWidget widget = new FavePickWidget(item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded);
 					pickWidgets.add(widget);
 					i++;
 				}
@@ -121,7 +134,7 @@ public class FavelistPresenter extends
 	}
 
 	@Override
-	public void addSong(final String songID) {
+	public void addSong(final String songID, final String song, final String artist) {
 
 		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
 
@@ -133,7 +146,35 @@ public class FavelistPresenter extends
 			@Override
 			public void onSuccess(final Void response) {
 				Notification.show("Song added");
-				refreshFavelist();
+				// Only bother with updating list if we are on the user's page 
+				if (isEditable()) {
+					// Pretty meh to do it this way, but quickest way for now
+					final FaveItemProxy item = new FaveItemProxy() {
+
+						@Override
+						public String getWhyline() {
+							return null;
+						}
+
+						@Override
+						public String getSongID() {
+							return songID;
+						}
+
+						@Override
+						public String getSong() {
+							return song;
+						}
+
+						@Override
+						public String getArtist() {
+							return artist;
+						}
+					};
+					final FavePickWidget widget = new FavePickWidget(item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded);
+					getView().addPick(widget);
+					widgets.add(widget);
+				}
 			}
 
 			@Override
@@ -157,6 +198,11 @@ public class FavelistPresenter extends
 
 	@Override
 	public void removeSong(final String songID, final int index) {
+		// Only bother with updating list if we are on the user's page 
+		if (isEditable()) {
+			return;
+		}
+
 		// Re-rank on client
 		for (int i = index + 1; i < widgets.size(); i++) {
 			widgets.get(i).setRank(i);
@@ -189,6 +235,11 @@ public class FavelistPresenter extends
 
 	@Override
 	public void changeSongPosition(final String songID, final int currentIndex, final int newIndex) {
+		// Only bother with updating list if we are on the user's page 
+		if (isEditable()) {
+			return;
+		}
+
 		// If it is the same position, ignore
 		if (currentIndex == newIndex)
 			return;
@@ -223,7 +274,10 @@ public class FavelistPresenter extends
 				// TODO: server fail, should do something
 			}
 		});
+	}
 
+	private boolean isEditable() {
+		return currentUser.isLoggedIn() && currentUser.equals(user);
 	}
 
 	/* Getters and Setters */

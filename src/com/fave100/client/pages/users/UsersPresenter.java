@@ -92,7 +92,8 @@ public class UsersPresenter extends
 		SongSelectedEvent.register(eventBus, new SongSelectedEvent.Handler() {
 			@Override
 			public void onSongSelected(final SongSelectedEvent event) {
-				favelist.addSong(event.getSong().getId());
+				final SongProxy song = event.getSong();
+				favelist.addSong(song.getId(), song.getSong(), song.getArtist());
 			}
 		});
 	}

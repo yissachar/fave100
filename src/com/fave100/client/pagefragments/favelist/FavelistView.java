@@ -91,6 +91,11 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 		}
 	}
 
+	@Override
+	public void addPick(final FavePickWidget widget) {
+		favelist.add(widget);
+	}
+
 	private void old(final List<FaveItemProxy> list, final boolean personalList) {
 		for (int i = 0; i < list.size(); i++) {
 			final FaveItemProxy faveItem = list.get(i);
@@ -307,7 +312,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 				addButton.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(final ClickEvent event) {
-						getUiHandlers().addSong(faveItem.getSongID());
+						getUiHandlers().addSong(faveItem.getSongID(), faveItem.getSong(), faveItem.getArtist());
 					}
 				});
 				listItem.add(addButton);
