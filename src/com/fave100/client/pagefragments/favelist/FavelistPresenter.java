@@ -199,7 +199,7 @@ public class FavelistPresenter extends
 	@Override
 	public void removeSong(final String songID, final int index) {
 		// Only bother with updating list if we are on the user's page 
-		if (isEditable()) {
+		if (!isEditable()) {
 			return;
 		}
 
@@ -236,7 +236,7 @@ public class FavelistPresenter extends
 	@Override
 	public void changeSongPosition(final String songID, final int currentIndex, final int newIndex) {
 		// Only bother with updating list if we are on the user's page 
-		if (isEditable()) {
+		if (!isEditable()) {
 			return;
 		}
 
