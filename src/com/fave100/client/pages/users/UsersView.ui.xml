@@ -72,6 +72,7 @@
 			position: fixed;
 			width: 608px;
 			margin-top: -26px;
+			box-shadow: 0 0 8px #666;
 		}
 		
 		.faveListContainer {
