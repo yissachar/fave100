@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.query.client.Function;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -54,12 +55,17 @@ public class FavePickWidget extends Composite {
 	public interface Binder extends UiBinder<Widget, FavePickWidget> {
 	}
 
+	public interface FavePickWidgetStyle extends CssResource {
+		String hoverPanel();
+	}
+
+	@UiField FavePickWidgetStyle style;
 	@UiField HorizontalPanel mainPanel;
 	@UiField SimplePanel rankPanel;
 	@UiField Anchor song;
 	@UiField InlineLabel artist;
 	@UiField SimplePanel whyLinePanel;
-	@UiField VerticalPanel hoverPanel;
+	@UiField HorizontalPanel hoverPanel;
 
 	private final FaveItemProxy _item;
 	private int _rank;
@@ -136,6 +142,7 @@ public class FavePickWidget extends Composite {
 		whyLinePanel.setWidget(whyLine);
 
 		setupHoverPanel();
+		hoverPanel.addStyleName(style.hoverPanel());
 
 	}
 
@@ -292,6 +299,9 @@ public class FavePickWidget extends Composite {
 	private void setupHoverPanel() {
 		hoverPanel.clear();
 		if (_editable) {
+			final VerticalPanel arrowPanel = new VerticalPanel();
+			hoverPanel.add(arrowPanel);
+
 			final Image upButton = new Image("img/up-arrow.png");
 			upButton.addClickHandler(new ClickHandler() {
 				@Override
@@ -299,7 +309,16 @@ public class FavePickWidget extends Composite {
 					_rankCallback.onChange(_item.getSongID(), _rank - 1, _rank - 2);
 				}
 			});
-			hoverPanel.add(upButton);
+			arrowPanel.add(upButton);
+
+			final Image downButton = new Image("img/down-arrow.png");
+			downButton.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(final ClickEvent event) {
+					_rankCallback.onChange(_item.getSongID(), _rank - 1, _rank);
+				}
+			});
+			arrowPanel.add(downButton);
 
 			final Image deleteButton = new Image("img/delete.png");
 			deleteButton.setTitle("Delete song");
@@ -317,15 +336,6 @@ public class FavePickWidget extends Composite {
 				}
 			});
 			hoverPanel.add(deleteButton);
-
-			final Image downButton = new Image("img/down-arrow.png");
-			downButton.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(final ClickEvent event) {
-					_rankCallback.onChange(_item.getSongID(), _rank - 1, _rank);
-				}
-			});
-			hoverPanel.add(downButton);
 		}
 		else {
 			final Image addButton = new Image("img/add.png");
