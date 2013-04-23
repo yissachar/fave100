@@ -21,8 +21,8 @@
 			-moz-border-radius: 99px;
 			-webkit-border-radius: 99px;
 			background: red;
-			color: #000;
-			border: 3px #000 solid;
+			color: #444;
+			border: 3px #444 solid;
 			background-color: #fff;
 			-webkit-box-shadow: 0 px 2 px 4 px #000000; /* Saf3-4 */
 			-moz-box-shadow: 0 px 2 px 4 px #000000; /* FF3.5 - 3.6 */
