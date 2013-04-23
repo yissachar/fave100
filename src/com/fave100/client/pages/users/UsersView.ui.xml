@@ -23,17 +23,13 @@
 			background-color: #5eaae5;
 			padding: 5px;
 			color: #FFF;
-		}		
+		}
 		
 		.avatar {
 			float: left;
 			margin-right: 10px;
 			max-width: 80px;
 			max-height: 80px;
-		}
-		
-		.nameContainer {
-			float: left;
 		}
 		
 		.socialContainer {
@@ -52,9 +48,12 @@
 			color: #FFF;
 		}
 		
-		.username {
-			font-size: 2.3em;
+		.username {	
+			display: block;
+			width: 140px;
+			font-size: 1.5em;
 			vertical-align: top;
+			word-wrap: break-word;
 		}
 		
 		.faveListArea {
@@ -86,16 +85,15 @@
 		<div class="container">
 			<div class="content row">
 				<g:HTMLPanel styleName="{style.sideContainer} col">		
-					<g:HTMLPanel ui:field="userProfile" styleName="{style.userProfile}">
+					<g:HorizontalPanel ui:field="userProfile" styleName="{style.userProfile}">
 						<g:Image styleName="{style.avatar}" ui:field="avatar"/>
-						<div class="{style.nameContainer}">
-							<span class="{style.username}" ui:field="username"/>
-							<br/>
+						<g:VerticalPanel>
+							<g:InlineLabel ui:styleName="{style.username}" ui:field="username"/>
 							<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
 								Edit Profile
 							</g:InlineHyperlink>
-						</div>				
-					</g:HTMLPanel>
+						</g:VerticalPanel>				
+					</g:HorizontalPanel>
 					
 					<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">															
 						<uw:ShareButton ui:field="shareButton"/>
