@@ -1,17 +1,12 @@
 package com.fave100.client.pages.home;
 
-import java.util.List;
-
 import com.fave100.client.CurrentUser;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
@@ -28,7 +23,6 @@ public class HomePresenter extends
 		BasePresenter<HomePresenter.MyView, HomePresenter.MyProxy> {
 
 	public interface MyView extends BaseView {
-		void addUserThumb(AppUserProxy appUser);
 	}
 
 	@ProxyCodeSplit
@@ -53,19 +47,6 @@ public class HomePresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
-
-		// Get a list of 4 random users
-		final Request<List<AppUserProxy>> randomUsers = requestFactory
-				.appUserRequest().getRandomUsers(4);
-		randomUsers.fire(new Receiver<List<AppUserProxy>>() {
-			@Override
-			public void onSuccess(final List<AppUserProxy> userList) {
-				for (final AppUserProxy appUser : userList) {
-					// Create thumbs to display songs from the user's lists
-					getView().addUserThumb(appUser);
-				}
-			}
-		});
 	}
 
 	@Override

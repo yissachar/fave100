@@ -22,10 +22,6 @@
 			margin-top: 107px;
 		}
 		
-		.userThumbListPanel {
-			width: 500px;
-		}
-		
 		.CTApanel {
 			margin-top: 90px;
 			width: 320px;
@@ -60,9 +56,7 @@
 		<div class="{style.topBackground}" />
 		<div class="container">
 			<div class="content">
-				<g:HorizontalPanel styleName="{style.homePageContainer} row">
-					<g:HTMLPanel styleName="{style.userThumbListPanel}"
-						ui:field="userThumbListPanel"/>
+				<g:HorizontalPanel styleName="{style.homePageContainer} row">					
 					<g:VerticalPanel styleName="{style.CTApanel}">
 						<g:Image styleName="{style.logo}" url="img/Logo.png" />
 						<g:Label styleName="{style.tagLine}">Get your list on.</g:Label>
