@@ -38,10 +38,6 @@
 			text-align: center;
 		}
 		
-		.rank > * {
-			margin-top: 3px;
-		}
-		
 		.song {
 			font-size: 25px;
 			font-weight: bold;

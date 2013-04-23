@@ -199,6 +199,27 @@ footer {
 	cursor: pointer;
 }
 
+.rankEditTextBox {
+	border-radius: 0px;
+	background: red;
+	color: #444;
+	border: 3px #444 solid;
+	background-color: #fff;
+	-webkit-box-shadow: 0 px 2 px 4 px #000000; /* Saf3-4 */
+	-moz-box-shadow: 0 px 2 px 4 px #000000; /* FF3.5 - 3.6 */
+	box-shadow: 0 px 2 px 4 px #000000;
+	/* Opera 10.5, IE9, FF4+, Chrome 10+ */
+	display: inline-block;
+	padding: 2px 2 px 2 px 2 px;
+	margin: -3px;
+	font-family: arial;
+	width: 62px;
+	height: 60px;
+	font-size: 40px;
+	text-align: center;
+	
+}
+
 .whyLinePanel {
 	white-space: pre;
 }
