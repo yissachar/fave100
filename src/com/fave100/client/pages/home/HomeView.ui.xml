@@ -19,7 +19,7 @@
 		
 		.homePageContainer {
 			margin: 0 auto;	
-			margin-top: 107px;
+			margin-top: 77px;
 		}
 		
 		.CTApanel {
@@ -30,24 +30,36 @@
 		.logo {
 			width: 182px;
 			height: 65px;
+			display: block;
+			margin: 0 auto;
+			margin-bottom: 30px;
 		}
 		
 		.tagLine {
 			font-size: 1.8em;
 			color: #FFF;
+			text-align: center;
 		}
 		
 		.registerCTA {
 			font-size: 1.8em;
 			margin: 35px 0;
+			text-align: center;
+		}
+		
+		.buttonContainer {
+			width: 100%;
 		}
 		
 		.buttonContainer a {
 			width: 130px;
-			margin-right: 10px;
 			display: inline-block;
 			text-align: center;
 			line-height: 18px;
+		}
+		
+		.loginButton {
+			float: right;
 		}
 	</ui:style>
 
@@ -64,7 +76,7 @@
 						<g:HorizontalPanel styleName="{style.buttonContainer}">
 							<g:InlineHyperlink styleName="button"
 								targetHistoryToken="{nameTokens.getRegister}">Register</g:InlineHyperlink>
-							<g:InlineHyperlink styleName="button"
+							<g:InlineHyperlink styleName="button {style.loginButton}"
 								targetHistoryToken="{nameTokens.getLogin}">Login</g:InlineHyperlink>
 						</g:HorizontalPanel>
 					</g:VerticalPanel>
