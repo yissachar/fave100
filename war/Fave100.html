@@ -44,7 +44,12 @@
  			js = d.createElement(s); js.id = id;
   			js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
   			fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));		
+		}(document, 'script', 'facebook-jssdk'));	
+		window.fbAsyncInit = function () {
+    		FB.init({
+        		xfbml:false  // Will stop the fb like button from rendering automatically
+    		});
+		};	
 		</script>
 
 		<!-- OPTIONAL: include this if you want history support -->
