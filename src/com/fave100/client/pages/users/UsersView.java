@@ -37,6 +37,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField HTMLPanel topBar;
 	@UiField HTMLPanel songAutocomplete;
 	@UiField HTMLPanel favelist;
+	private boolean renderedFB;
 
 	@Inject
 	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
@@ -71,6 +72,18 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		}
 		super.setInSlot(slot, content);
 	}
+
+	@Override
+	public void renderFB() {
+		if (!renderedFB) {
+			renderedFB = true;
+			nativeRenderFB();
+		}
+	}
+
+	public native void nativeRenderFB() /*-{
+		$wnd.FB.XFBML.parse();
+	}-*/;
 
 	@Override
 	public void setUserProfile(final AppUserProxy user) {
