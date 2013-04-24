@@ -149,11 +149,9 @@ public class RegisterPresenter extends
 		}
 		else if (provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
 			// The user is being redirected back to the register page after
-			// signing in to
-			// their 3rd party account - prompt them for a username and create
-			// their account
+			// signing in to their 3rd party account - prompt them for a username and create their account
 
-			// TODO: Need to show some loading icon or something while waiting
+			LoadingIndicator.show();
 			// for the RF req
 			getView().showThirdPartyUsernamePrompt();
 			// Try to log the user in with Twitter
@@ -164,11 +162,17 @@ public class RegisterPresenter extends
 			loginWithTwitter.fire(new Receiver<AppUserProxy>() {
 				@Override
 				public void onSuccess(final AppUserProxy user) {
+					LoadingIndicator.hide();
 					eventBus.fireEvent(new CurrentUserChangedEvent(user));
 					if (user != null) {
 						goToMyFave100();
 					}
 					getProxy().manualReveal(RegisterPresenter.this);
+				}
+
+				@Override
+				public void onFailure(final ServerFailure failure) {
+					LoadingIndicator.hide();
 				}
 			});
 

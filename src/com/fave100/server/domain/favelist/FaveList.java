@@ -144,8 +144,6 @@ public class FaveList extends DatastoreObject {
 		Objects.requireNonNull(songID);
 		Objects.requireNonNull(whyline);
 
-		//TODO: Sanitize the whyline e.g. no < or >
-
 		// First check that the whyline is valid
 		final String whylineError = Validator.validateWhyline(whyline);
 		if (whylineError != null)

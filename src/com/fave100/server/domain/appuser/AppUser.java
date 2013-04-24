@@ -52,6 +52,7 @@ import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.api.utils.SystemProperty.Environment;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -69,7 +70,6 @@ import com.googlecode.objectify.annotation.IgnoreSave;
  * 
  */
 
-// TODO: Does this need to be a DatastoreObject?
 @Entity
 public class AppUser extends DatastoreObject {
 
@@ -360,7 +360,6 @@ public class AppUser extends DatastoreObject {
 		}
 	}
 
-	// TODO: Merge account creations to avoid duplication
 	public static AppUser createAppUser(final String username, final String password, final String email)
 			throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
@@ -493,7 +492,6 @@ public class AppUser extends DatastoreObject {
 						final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
 						// Create the TwitterID lookup
 						final TwitterID twitterID = new TwitterID(user.getId(), appUser);
-						// TODO: Store tokens in database?
 						ofy().save().entities(appUser, twitterID, faveList).now();
 						RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 						return appUser;
@@ -544,7 +542,6 @@ public class AppUser extends DatastoreObject {
 							final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
 							// Create the Facebook lookup
 							final FacebookID facebookID = new FacebookID(userFacebookId, appUser);
-							// TODO: Store oAuth tokens in database?
 							ofy().save().entities(appUser, facebookID, faveList).now();
 							return loginWithFacebook(code);
 						}
@@ -606,8 +603,8 @@ public class AppUser extends DatastoreObject {
 			final BlobKey blobKey = new BlobKey(avatar);
 			final ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
 			final String servingUrl = ImagesServiceFactory.getImagesService().getServingUrl(options);
-			if (servingUrl != null) {
-				//TODO: This is bad hack, unfortunately needed for dev mode
+			// Dev server hack to avoid errors
+			if (Environment.environment.equals(Environment.Value.Development) && servingUrl != null) {
 				return servingUrl.replace("http://0.0.0.0", "http://127.0.0.1");
 			}
 		}
