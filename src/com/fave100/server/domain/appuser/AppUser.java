@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -565,11 +564,6 @@ public class AppUser extends DatastoreObject {
 		}
 
 		return newAppUser;
-	}
-
-	public static List<AppUser> getRandomUsers(final int num) {
-		// TODO: Should be more random than this
-		return ofy().load().type(AppUser.class).limit(num).list();
 	}
 
 	public static String createBlobstoreUrl(final String successPath) {
