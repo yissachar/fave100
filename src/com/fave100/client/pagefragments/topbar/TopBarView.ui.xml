@@ -109,8 +109,7 @@
 						<g:InlineHyperlink ui:field="logOutLink">Log out</g:InlineHyperlink>
 						<g:InlineLabel ui:field="loginButton">Log in</g:InlineLabel>
 					</li>
-					<li><g:InlineLabel ui:field="registerButton">Register</g:InlineLabel></li>
-					<li><g:Anchor ui:field="greeting"></g:Anchor></li>
+					<li><g:InlineLabel ui:field="registerButton">Register</g:InlineLabel></li>					
 				</ul>
 			</div>
 		</g:HTMLPanel>			

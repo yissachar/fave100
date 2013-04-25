@@ -2,16 +2,13 @@ package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
-import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -39,7 +36,6 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField InlineHyperlink logOutLink;
 	@UiField InlineLabel loginButton;
 	@UiField Label notification;
-	@UiField Anchor greeting;
 	@UiField InlineLabel registerButton;
 
 	@Inject
@@ -68,12 +64,6 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 
 	@Override
 	public void setLoggedIn(final String username) {
-		greeting.setText(username);
-		greeting.setVisible(true);
-		final String userPlace = new UrlBuilder(NameTokens.users)
-				.with(UsersPresenter.USER_PARAM, username)
-				.getUrl();
-		greeting.setHref(userPlace);
 		registerButton.setVisible(false);
 		loginButton.setVisible(false);
 		logOutLink.setVisible(true);
@@ -83,8 +73,6 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 
 	@Override
 	public void setLoggedOut() {
-		greeting.setText("");
-		greeting.setVisible(false);
 		registerButton.setVisible(true);
 		loginButton.setVisible(true);
 		logOutLink.setVisible(false);
