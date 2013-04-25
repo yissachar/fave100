@@ -17,13 +17,18 @@
 			height: 320px;
 		}
 		
+		.homeBody { 
+			z-index: 1;
+			padding-bottom: 25em;
+		}
+		
 		.homePageContainer {
 			margin: 0 auto;	
 			margin-top: 77px;
 		}
 		
 		.CTApanel {
-			margin-top: 90px;
+			margin-top: 120px;
 			width: 320px;
 		}
 		
@@ -32,7 +37,6 @@
 			height: 65px;
 			display: block;
 			margin: 0 auto;
-			margin-bottom: 30px;
 		}
 		
 		.tagLine {
@@ -61,12 +65,29 @@
 		.loginButton {
 			float: right;
 		}
+		
+		.hideFooter {
+			overflow: hidden;
+		}
+		
+		.footerImage {	
+			position: absolute;
+			left: 50%;
+			bottom: -200px;			
+			display: block;
+			margin: 0 auto;
+			margin-left: -369px;
+			overflow: hidden;
+			z-index: 0;
+			position: absolute;	
+			bottom: 0;
+		}
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
-	<g:HTMLPanel styleName="wrap">
+	<g:HTMLPanel styleName="wrap {style.hideFooter}">
 		<div class="{style.topBackground}" />
-		<div class="container">
+		<div class="container {style.homeBody}">
 			<div class="content">
 				<g:HorizontalPanel styleName="{style.homePageContainer} row">					
 					<g:VerticalPanel styleName="{style.CTApanel}">
@@ -81,6 +102,6 @@
 				</g:HorizontalPanel>
 			</div>			
 		</div>
-		<pf:Footer />
+		<g:Image url="img/home-page-tablet.png" ui:styleName="{style.footerImage}"/>
 	</g:HTMLPanel>
 </ui:UiBinder>
