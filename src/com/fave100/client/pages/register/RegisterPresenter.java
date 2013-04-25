@@ -1,14 +1,13 @@
 package com.fave100.client.pages.register;
 
 import com.fave100.client.LoadingIndicator;
-import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
+import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
-import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.GoogleIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.TwitterIdAlreadyExistsException;
@@ -17,6 +16,7 @@ import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -24,12 +24,14 @@ import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 /**
  * Registration page
@@ -42,30 +44,20 @@ public class RegisterPresenter extends
 		implements RegisterUiHandlers {
 
 	public interface MyView extends BaseView, HasUiHandlers<RegisterUiHandlers> {
-		void setGoogleUrl(String url);
-
-		void setFacebookUrl(String url);
-
 		void clearFields();
 
 		void showThirdPartyUsernamePrompt();
 
 		void hideThirdPartyUsernamePrompt();
 
-		void setNativeUsernameError(String error);
-
 		void setThirdPartyUsernameError(String error);
-
-		void setEmailError(String error);
-
-		void setPasswordError(String error);
-
-		void setPasswordRepeatError(String error);
-
-		void clearNativeErrors();
 
 		void clearThirdPartyErrors();
 	}
+
+	@ContentSlot public static final Type<RevealContentHandler<?>> REGISTER_SLOT = new Type<RevealContentHandler<?>>();
+
+	@Inject private RegisterWidgetPresenter registerContainer;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.register)
@@ -165,7 +157,7 @@ public class RegisterPresenter extends
 					LoadingIndicator.hide();
 					eventBus.fireEvent(new CurrentUserChangedEvent(user));
 					if (user != null) {
-						goToMyFave100();
+						registerContainer.goToMyFave100();
 					}
 					getProxy().manualReveal(RegisterPresenter.this);
 				}
@@ -193,83 +185,13 @@ public class RegisterPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
-
-		// TODO: We should have 3rd party logins open in new window so as not to
-		// clutter up our URL
-
-		// Get the login url for Google
-		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		final Request<String> loginUrlReq = appUserRequest
-				.getGoogleLoginURL(Window.Location.getHref() + ";provider="
-						+ RegisterPresenter.PROVIDER_GOOGLE);
-		loginUrlReq.fire(new Receiver<String>() {
-			@Override
-			public void onSuccess(final String url) {
-				getView().setGoogleUrl(url);
-			}
-		});
-
-		facebookRedirect = Window.Location.getHref() + ";provider="
-				+ RegisterPresenter.PROVIDER_FACEBOOK;
-		final Request<String> fbAuthUrlReq = requestFactory.appUserRequest()
-				.getFacebookAuthUrl(facebookRedirect);
-		fbAuthUrlReq.fire(new Receiver<String>() {
-			@Override
-			public void onSuccess(final String url) {
-				getView().setFacebookUrl(url);
-			}
-		});
 	}
 
 	@Override
 	public void onReveal() {
 		super.onReveal();
 		getView().clearFields();
-	}
-
-	@Override
-	public void register(final String username, final String email,
-			final String password, final String passwordRepeat) {
-
-		if (validateFields(username, email, password, passwordRepeat)) {
-			final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-			// Create a new user with the username and password entered
-			final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(username, password, email);
-
-			LoadingIndicator.show();
-			createAppUserReq.fire(new Receiver<AppUserProxy>() {
-				@Override
-				public void onSuccess(final AppUserProxy createdUser) {
-					LoadingIndicator.hide();
-					eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
-					if (createdUser != null) {
-						appUserCreated();
-					}
-					else {
-						getView().setPasswordError("An error occurred");
-					}
-				}
-
-				@Override
-				public void onFailure(final ServerFailure failure) {
-					LoadingIndicator.hide();
-					String errorMsg = "An error occurred";
-					if (failure.getExceptionType().equals(
-							UsernameAlreadyExistsException.class.getName())) {
-						errorMsg = "A user with that name already exists";
-						getView().setNativeUsernameError(errorMsg);
-					}
-					else if (failure.getExceptionType().equals(
-							EmailIDAlreadyExistsException.class.getName())) {
-						errorMsg = "A user with that email address is already registered";
-						getView().setEmailError(errorMsg);
-					}
-					else {
-						getView().setNativeUsernameError(errorMsg);
-					}
-				}
-			});
-		}
+		setInSlot(REGISTER_SLOT, registerContainer);
 	}
 
 	@Override
@@ -285,7 +207,7 @@ public class RegisterPresenter extends
 					public void onSuccess(final AppUserProxy createdUser) {
 						eventBus.fireEvent(new CurrentUserChangedEvent(
 								createdUser));
-						appUserCreated();
+						registerContainer.appUserCreated();
 					}
 
 					@Override
@@ -315,8 +237,8 @@ public class RegisterPresenter extends
 					public void onSuccess(final AppUserProxy createdUser) {
 						eventBus.fireEvent(new CurrentUserChangedEvent(
 								createdUser));
-						appUserCreated();
-						goToMyFave100();
+						registerContainer.appUserCreated();
+						registerContainer.goToMyFave100();
 					}
 
 					@Override
@@ -350,8 +272,8 @@ public class RegisterPresenter extends
 						eventBus.fireEvent(new CurrentUserChangedEvent(
 								createdUser));
 						if (createdUser != null) {
-							appUserCreated();
-							goToMyFave100();
+							registerContainer.appUserCreated();
+							registerContainer.goToMyFave100();
 						}
 
 					}
@@ -375,38 +297,6 @@ public class RegisterPresenter extends
 		}
 	}
 
-	private boolean validateFields(final String username, final String email,
-			final String password, final String passwordRepeat) {
-		// Assume all valid
-		getView().clearNativeErrors();
-		boolean valid = true;
-
-		// Check for validity
-
-		final String usernameError = Validator.validateUsername(username);
-		if (usernameError != null) {
-			getView().setNativeUsernameError(usernameError);
-			valid = false;
-		}
-
-		final String emailError = Validator.validateEmail(email);
-		if (emailError != null) {
-			getView().setEmailError(emailError);
-			valid = false;
-		}
-
-		final String passwordError = Validator.validatePassword(password);
-		if (passwordError != null) {
-			getView().setPasswordError(passwordError);
-			valid = false;
-		}
-		else if (!password.equals(passwordRepeat)) {
-			getView().setPasswordRepeatError("Passwords must match");
-			valid = false;
-		}
-		return valid;
-	}
-
 	private boolean validateThirdPartyFields(final String username) {
 		getView().clearThirdPartyErrors();
 		final String usernameError = Validator.validateUsername(username);
@@ -416,55 +306,8 @@ public class RegisterPresenter extends
 		}
 		return true;
 	}
-
-	private void appUserCreated() {
-		placeManager.revealPlace(new PlaceRequest(NameTokens.home));
-		Notification.show("Thanks for registering!");
-	}
-
-	private void goToMyFave100() {
-		// Need to strip out query params or they will stick around in URL
-		// forever
-		String url = Window.Location.getHref();
-		if (Window.Location.getParameter("oauth_token") != null) {
-			url = url.replace(Window.Location.getParameter("oauth_token"), "");
-			url = url.replace("&oauth_token=", "");
-		}
-		if (Window.Location.getParameter("oauth_verifier") != null) {
-			url = url.replace(Window.Location.getParameter("oauth_verifier"),
-					"");
-			url = url.replace("&oauth_verifier=", "");
-		}
-		if (Window.Location.getParameter("code") != null) {
-			url = url.replace(Window.Location.getParameter("code"), "");
-			url = url.replace("&code=", "");
-		}
-		url = url.replace(Window.Location.getHash(), "#myfave100");
-		Window.Location.assign(url);
-	}
-
-	@Override
-	public void goToTwitterAuth() {
-		final Request<String> authUrlReq = requestFactory.appUserRequest()
-				.getTwitterAuthUrl(
-						Window.Location.getHref() + ";provider="
-								+ RegisterPresenter.PROVIDER_TWITTER);
-		authUrlReq.fire(new Receiver<String>() {
-			@Override
-			public void onSuccess(final String url) {
-				Window.Location.assign(url);
-			}
-		});
-	}
-
 }
 
 interface RegisterUiHandlers extends UiHandlers {
-	void register(String username, String email, String password,
-			String passwordRepeat);
-
 	void registerThirdParty(String username);
-
-	void goToTwitterAuth();
-
 }

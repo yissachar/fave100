@@ -1,12 +1,15 @@
 package com.fave100.client.pages.home;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
+import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.gwtplatform.mvp.client.HasUiHandlers;
+import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
@@ -20,9 +23,10 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
  * 
  */
 public class HomePresenter extends
-		BasePresenter<HomePresenter.MyView, HomePresenter.MyProxy> {
+		BasePresenter<HomePresenter.MyView, HomePresenter.MyProxy>
+		implements HomeUiHandlers {
 
-	public interface MyView extends BaseView {
+	public interface MyView extends BaseView, HasUiHandlers<HomeUiHandlers> {
 	}
 
 	@ProxyCodeSplit
@@ -30,18 +34,17 @@ public class HomePresenter extends
 	public interface MyProxy extends ProxyPlace<HomePresenter> {
 	}
 
-	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
 	private CurrentUser currentUser;
+	@Inject RegisterPopupPresenter registerPopup;
+	@Inject LoginPopupPresenter loginPopup;
 
 	@Inject
-	public HomePresenter(final ApplicationRequestFactory requestFactory,
-							final EventBus eventBus, final MyView view, final MyProxy proxy,
-							final PlaceManager placeManager, final CurrentUser currentUser) {
+	public HomePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
-		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
 		this.currentUser = currentUser;
+		getView().setUiHandlers(HomePresenter.this);
 	}
 
 	@Override
@@ -70,4 +73,25 @@ public class HomePresenter extends
 	protected void onReveal() {
 		super.onReveal();
 	}
+
+	@Override
+	public void onHide() {
+		super.onHide();
+	}
+
+	@Override
+	public void showRegister() {
+		addToPopupSlot(registerPopup);
+	}
+
+	@Override
+	public void showLogin() {
+		addToPopupSlot(loginPopup);
+	}
+}
+
+interface HomeUiHandlers extends UiHandlers {
+	void showRegister();
+
+	void showLogin();
 }

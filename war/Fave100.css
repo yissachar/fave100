@@ -258,7 +258,7 @@ footer {
 
 .fullLoginPage .loginDivider{
 	display: inline-block;
-	padding: 50px;
+	padding: 35px;
 	font-size: 2em;
 	text-align: center;
 }
@@ -304,6 +304,45 @@ footer {
 .loginLightBox .thirdPartyLoginBox {
 	float: right;
 }
+
+.lightBoxBackground { 
+	position: fixed;
+	top: 0;
+	left: -25%;
+	width: 125%;
+	height: 100%;
+	opacity: .40;
+	background-color: #000;
+	z-index: 99999; 
+}
+
+.loginLightBox { 
+	position: fixed;
+	top: 20%;
+	left: 25%;
+	width: 50%;
+	z-index: 100000;
+}
+
+.lightBoxHeader {
+	display: block;
+	background-color: #5eaae5;
+	padding: 6px 0;
+	border-bottom: 1px solid #555;
+}
+
+.lightBoxHeader img {
+	display: block;
+	margin: 0 auto;
+}
+
+.innerLoginBox {	
+	padding: 15px;
+}
+
+
+
+
 
 .profileForm {
 	width: 300px;

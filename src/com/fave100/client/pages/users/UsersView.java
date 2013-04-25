@@ -41,7 +41,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Inject
 	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
-		;
 		widget = binder.createAndBindUi(this);
 	}
 

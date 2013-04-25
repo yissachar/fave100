@@ -51,7 +51,7 @@
 			width: 100%;
 		}
 		
-		.buttonContainer a {
+		.buttonContainer a, .buttonContainer button {
 			width: 130px;
 			display: inline-block;
 			text-align: center;
@@ -74,10 +74,8 @@
 						<g:Label styleName="{style.tagLine}">Get your list on.</g:Label>
 						<g:Label styleName="{style.registerCTA}">What are your top songs of all-time?</g:Label>
 						<g:HorizontalPanel styleName="{style.buttonContainer}">
-							<g:InlineHyperlink styleName="button"
-								targetHistoryToken="{nameTokens.getRegister}">Register</g:InlineHyperlink>
-							<g:InlineHyperlink styleName="button {style.loginButton}"
-								targetHistoryToken="{nameTokens.getLogin}">Login</g:InlineHyperlink>
+							<g:Button ui:field="registerButton">Register</g:Button>
+							<g:Button styleName="{style.loginButton}" ui:field="loginButton">Login</g:Button>
 						</g:HorizontalPanel>
 					</g:VerticalPanel>
 				</g:HorizontalPanel>

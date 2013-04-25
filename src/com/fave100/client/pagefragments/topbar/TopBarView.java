@@ -12,7 +12,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -41,17 +40,13 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField InlineLabel loginButton;
 	@UiField Label notification;
 	@UiField Anchor greeting;
-	@UiField InlineHyperlink registerLink;
-	@UiField HTMLPanel loginBox;
-	@UiField HTMLPanel loginLightBox;
-	@UiField FocusPanel lightBoxBackground;
+	@UiField InlineLabel registerButton;
 
 	@Inject
 	public TopBarView(final Binder binder,
 						final ApplicationRequestFactory requestFactory) {
 
 		widget = binder.createAndBindUi(this);
-		loginLightBox.setVisible(false);
 		Notification.init(notification);
 		LoadingIndicator.init(loadingIndicator);
 	}
@@ -61,37 +56,14 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		return widget;
 	}
 
-	@Override
-	public void setInSlot(final Object slot, final Widget content) {
-		super.setInSlot(slot, content);
-
-		if (slot == TopBarPresenter.LOGIN_SLOT) {
-			loginBox.clear();
-			if (content != null) {
-				loginBox.add(content);
-			}
-		}
-	}
-
-	@UiHandler("lightBoxBackground")
-	void onLightBoxClick(final ClickEvent event) {
-		hideLightbox();
-	}
-
 	@UiHandler("loginButton")
-	void onlogInClick(final ClickEvent event) {
-		showLightbox();
+	void onLoginClick(final ClickEvent event) {
+		getUiHandlers().showLoginBox();
 	}
 
-	private void showLightbox() {
-		loginLightBox.setVisible(true);
-		getUiHandlers().setLoginBoxFocus();
-	}
-
-	@Override
-	public void hideLightbox() {
-		loginLightBox.setVisible(false);
-		getUiHandlers().clearLoginBox();
+	@UiHandler("registerButton")
+	void onRegisterClick(final ClickEvent event) {
+		getUiHandlers().showRegisterBox();
 	}
 
 	@Override
@@ -102,23 +74,20 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 				.with(UsersPresenter.USER_PARAM, username)
 				.getUrl();
 		greeting.setHref(userPlace);
-		registerLink.setVisible(false);
+		registerButton.setVisible(false);
 		loginButton.setVisible(false);
 		logOutLink.setVisible(true);
 		logOutLink.setText("Log out");
 		logOutLink.setTargetHistoryToken(NameTokens.logout);
-		loginBox.setVisible(false);
-		hideLightbox();
 	}
 
 	@Override
 	public void setLoggedOut() {
 		greeting.setText("");
 		greeting.setVisible(false);
-		registerLink.setVisible(true);
+		registerButton.setVisible(true);
 		loginButton.setVisible(true);
 		logOutLink.setVisible(false);
-		loginBox.setVisible(true);
 	}
 
 	@Override
