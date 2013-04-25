@@ -4,9 +4,10 @@
 	<ui:style>
 		
 	</ui:style>
+	
 	<g:HTMLPanel>
 		<footer>
-			Copyright 2012 Fave100 Inc.
+			Copyright 2013 Fave100 Inc.
 		</footer> 
 	</g:HTMLPanel>
 </ui:UiBinder> 
