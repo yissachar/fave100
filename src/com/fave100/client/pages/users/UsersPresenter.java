@@ -149,10 +149,9 @@ public class UsersPresenter extends
 						favelist.refreshFavelist();
 
 						getProxy().manualReveal(UsersPresenter.this);
-						// If user logged in, now is time to render FB like button
-						if (currentUser.isLoggedIn() && currentUser.equals(user)) {
-							getView().renderFB();
-						}
+
+						// Now that page is visible, render FB like button						
+						getView().renderFB();
 					}
 					else {
 						placeManager.revealDefaultPlace();
