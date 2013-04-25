@@ -112,4 +112,9 @@ public class RegisterWidgetView extends ViewWithUiHandlers<RegisterWidgetUiHandl
 	public void setFacebookUrl(final String url) {
 		registerWithFacebookButton.setHref(url);
 	}
+
+	@Override
+	public void setUsernameFocus() {
+		usernameField.setFocus(true);
+	}
 }

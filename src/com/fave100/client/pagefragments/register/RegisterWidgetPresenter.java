@@ -43,6 +43,8 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		void setPasswordRepeatError(String error);
 
 		void clearNativeErrors();
+
+		void setUsernameFocus();
 	}
 
 	private EventBus eventBus;
@@ -85,6 +87,12 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 				getView().setFacebookUrl(url);
 			}
 		});
+	}
+
+	@Override
+	protected void onReveal() {
+		super.onReveal();
+		getView().setUsernameFocus();
 	}
 
 	@Override
