@@ -26,6 +26,7 @@ public class ShareButton extends Composite {
 	@UiField HTMLPanel socialDropdown;
 	@UiField Image twitterShare;
 	@UiField DivElement fbLike;
+	private String twitterMessage;
 
 	public ShareButton() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -36,12 +37,16 @@ public class ShareButton extends Composite {
 
 	@UiHandler("twitterShare")
 	void onTwitterClick(final ClickEvent event) {
-		final String url = "http://twitter.com/share?text=Check out my Fave100 songs: " + Window.Location.getHref();
+		final String url = "http://twitter.com/share?text=" + twitterMessage + Window.Location.getHref();
 		Window.open(url, "_blank", "width=600, height=300");
 	}
 
 	public void setOwnList(final boolean ownList) {
 		_ownList = ownList;
+	}
+
+	public void setTwitterMessage(final String message) {
+		twitterMessage = message;
 	}
 
 }

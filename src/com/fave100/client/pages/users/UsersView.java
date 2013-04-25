@@ -92,16 +92,16 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Override
 	public void showOwnPage() {
-		socialContainer.setVisible(true);
 		editProfileButton.setVisible(true);
 		songAutocomplete.setVisible(true);
+		shareButton.setTwitterMessage("Check out my Fave100 songs: ");
 	}
 
 	@Override
 	public void showOtherPage() {
-		socialContainer.setVisible(false);
 		editProfileButton.setVisible(false);
 		songAutocomplete.setVisible(false);
+		shareButton.setTwitterMessage("Check out " + username.getText() + "'s Fave100 songs: ");
 	}
 
 	@Override
