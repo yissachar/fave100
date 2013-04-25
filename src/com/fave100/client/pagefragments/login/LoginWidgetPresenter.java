@@ -107,16 +107,13 @@ public class LoginWidgetPresenter extends
 	@Override
 	public void onReveal() {
 		super.onReveal();
+		getView().setUsernameFocus();
 	}
 
 	@Override
 	protected void onHide() {
 		super.onHide();
 		clearLoginDetails();
-	}
-
-	public void setFocus() {
-		getView().setUsernameFocus();
 	}
 
 	public void clearLoginDetails() {
