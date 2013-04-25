@@ -83,50 +83,7 @@
 				<div class="content">		    	
 					<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
 					    <h1 class="row">Fave100 Registration</h1>
-					    <div class="row">
-						    <g:FormPanel ui:field="registerForm" ui:styleName="col span_5">				
-								<g:HTMLPanel styleName="{style.registerForm}">	
-									<div class="{style.field}">				
-										<g:Label>Username</g:Label>					
-										<g:TextBox ui:field="usernameField"/>
-										<span class="{style.statusMessage} error" ui:field="usernameStatusMessage"/>
-									</div>
-									<div class="{style.field}">
-										<g:Label>Email</g:Label>					
-										<g:TextBox ui:field="emailField"/>
-										<span class="{style.statusMessage} error" ui:field="emailStatusMessage"/>
-									</div>
-									<div class="{style.field}">
-										<g:Label>Password</g:Label>
-										<g:PasswordTextBox ui:field="passwordField" />
-									</div>
-									<div class="{style.field}">
-										<g:Label>Confirm password</g:Label>
-										<g:PasswordTextBox ui:field="passwordRepeatField" />
-										<span class="{style.statusMessage} error" ui:field="passwordStatusMessage"/>
-									</div>
-									<g:SubmitButton ui:field="registerButton" ui:styleName="{style.registerButton}">
-										Register
-									</g:SubmitButton>					
-								</g:HTMLPanel>
-							</g:FormPanel>	
-							<div class="{style.orDivider} col span_2">or</div>				
-							<div class="{style.registerForm} col span_5">		
-								<div class="{style.thirdPartyLinks}">	
-									<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton">
-										Register with Google
-									</g:Anchor>
-									<br/>
-									<g:Anchor styleName="zocial twitter" ui:field="registerWithTwitterButton">
-										Register with Twitter
-									</g:Anchor>
-									<br/>
-									<g:Anchor styleName="zocial facebook" ui:field="registerWithFacebookButton">
-										Register with Facebook
-									</g:Anchor>
-								</div>
-							</div>
-						</div>
+					    <g:HTMLPanel ui:field="registerWidget"></g:HTMLPanel>
 					</g:HTMLPanel>
 					
 					<g:HTMLPanel ui:field="thirdPartyUsernamePrompt" styleName="{style.thirdPartyUsernamePrompt}">

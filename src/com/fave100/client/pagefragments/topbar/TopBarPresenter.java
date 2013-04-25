@@ -2,7 +2,8 @@ package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.CurrentUserChangedEvent;
-import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
+import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
+import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.place.NameTokens;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -33,23 +34,19 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		void setLoggedOut();
 
 		void setTopBarDropShadow(boolean show);
-
-		void hideLightbox();
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
 
-	@Inject private LoginWidgetPresenter loginBox;
+	@Inject private LoginPopupPresenter loginBox;
+	@Inject private RegisterPopupPresenter registerBox;
 	private EventBus eventBus;
-	private PlaceManager placeManager;
 	private CurrentUser currentUser;
 
 	@Inject
-	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager,
-							final CurrentUser currentUser) {
+	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
-		this.placeManager = placeManager;
 		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 
@@ -86,19 +83,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-
-		setInSlot(LOGIN_SLOT, loginBox);
 		setTopBar();
-
-		if (placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.users)) {
-
-		}
-	}
-
-	@Override
-	protected void onHide() {
-		super.onHide();
-		getView().hideLightbox();
 	}
 
 	private void setTopBar() {
@@ -111,19 +96,18 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	}
 
 	@Override
-	public void setLoginBoxFocus() {
-		loginBox.setFocus();
+	public void showLoginBox() {
+		addToPopupSlot(loginBox);
 	}
 
 	@Override
-	public void clearLoginBox() {
-		loginBox.clearLoginDetails();
-
+	public void showRegisterBox() {
+		addToPopupSlot(registerBox);
 	}
 }
 
 interface TopBarUiHandlers extends UiHandlers {
-	void setLoginBoxFocus();
+	void showLoginBox();
 
-	void clearLoginBox();
+	void showRegisterBox();
 }
