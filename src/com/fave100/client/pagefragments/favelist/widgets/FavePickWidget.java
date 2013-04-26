@@ -69,8 +69,11 @@ public class FavePickWidget extends Composite {
 	@UiField SimplePanel whyLinePanel;
 	@UiField HorizontalPanel hoverPanel;
 
-	private final FaveItemProxy _item;
+	private String _song;
+	private String _artist;
+	private String _whyline;
 	private int _rank;
+	private String _songID;
 	private final boolean _editable;
 	private WhyLineChanged _whyLineCallback;
 	private RankChanged _rankCallback;
@@ -97,8 +100,11 @@ public class FavePickWidget extends Composite {
 
 	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged, final ItemDeleted itemDeleted,
 							final ItemAdded itemAdded) {
-		_item = item;
+		_song = item.getSong();
+		_artist = item.getArtist();
+		_whyline = item.getWhyline();
 		_rank = rank;
+		_songID = item.getSongID();
 		_editable = editable;
 		_whyLineCallback = whyLineChanged;
 		_rankCallback = rankChanged;
@@ -129,12 +135,12 @@ public class FavePickWidget extends Composite {
 	private void fillWidget() {
 		setupRankPanel();
 
-		song.setText(_item.getSong());
-		song.setHref("#" + new UrlBuilder(NameTokens.song).with(SongPresenter.ID_PARAM, _item.getSongID()).getPlaceToken());
+		song.setText(getSong());
+		song.setHref("#" + new UrlBuilder(NameTokens.song).with(SongPresenter.ID_PARAM, getSongID()).getPlaceToken());
 
-		artist.setText(_item.getArtist());
+		artist.setText(getArtist());
 
-		final Label whyLine = new Label(_item.getWhyline());
+		final Label whyLine = new Label(getWhyline());
 		if (_editable) {
 			if (whyLine.getText().isEmpty()) {
 				initEmptyWhyLine(whyLine);
@@ -210,7 +216,7 @@ public class FavePickWidget extends Composite {
 				try {
 					final int _currentRank = _rank;
 					_rank = Integer.parseInt(rankText.getText());
-					_rankCallback.onChange(_item.getSongID(), _currentRank - 1, _rank - 1);
+					_rankCallback.onChange(getSongID(), _currentRank - 1, _rank - 1);
 				}
 				catch (final NumberFormatException ex) {
 
@@ -286,8 +292,9 @@ public class FavePickWidget extends Composite {
 					Notification.show(error, true);
 				}
 				else {
-					if (!txtBox.getValue().trim().equals(_item.getWhyline())) {
-						_whyLineCallback.onChange(_item.getSongID(), txtBox.getValue());
+					if (!txtBox.getValue().trim().equals(getWhyline())) {
+						_whyLineCallback.onChange(getSongID(), txtBox.getValue());
+						setWhyline(txtBox.getValue());
 					}
 
 					if (txtBox.getValue().isEmpty()) {
@@ -315,7 +322,7 @@ public class FavePickWidget extends Composite {
 			upButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
-					_rankCallback.onChange(_item.getSongID(), _rank - 1, _rank - 2);
+					_rankCallback.onChange(getSongID(), _rank - 1, _rank - 2);
 				}
 			});
 			arrowPanel.add(upButton);
@@ -324,7 +331,7 @@ public class FavePickWidget extends Composite {
 			downButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
-					_rankCallback.onChange(_item.getSongID(), _rank - 1, _rank);
+					_rankCallback.onChange(getSongID(), _rank - 1, _rank);
 				}
 			});
 			arrowPanel.add(downButton);
@@ -341,7 +348,7 @@ public class FavePickWidget extends Composite {
 							removeFromParent();
 						}
 					});
-					_deletedCallback.onDeleted(_item.getSongID(), _rank - 1);
+					_deletedCallback.onDeleted(getSongID(), _rank - 1);
 				}
 			});
 			hoverPanel.add(deleteButton);
@@ -352,15 +359,41 @@ public class FavePickWidget extends Composite {
 			addButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
-					_addedCallback.onAdded(_item.getSongID(), _item.getSong(), _item.getArtist());
+					_addedCallback.onAdded(getSongID(), getSong(), getArtist());
 				}
 			});
 			hoverPanel.add(addButton);
 		}
 	}
 
+	/* Getters and Setters */
+
 	public void setRank(final int rank) {
 		_rank = rank;
 		setupRankPanel();
+	}
+
+	public String getSong() {
+		return _song;
+	}
+
+	public String getArtist() {
+		return _artist;
+	}
+
+	public String getWhyline() {
+		return _whyline;
+	}
+
+	public void setWhyline(final String _whyline) {
+		this._whyline = _whyline;
+	}
+
+	public String getSongID() {
+		return _songID;
+	}
+
+	public void set_songID(final String _songID) {
+		this._songID = _songID;
 	}
 }
