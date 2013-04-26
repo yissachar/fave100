@@ -1,5 +1,7 @@
 package com.fave100.client.pages.home;
 
+import static com.google.gwt.query.client.GQuery.$;
+
 import com.fave100.client.CurrentUser;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
@@ -72,11 +74,13 @@ public class HomePresenter extends
 	@Override
 	protected void onReveal() {
 		super.onReveal();
+		$("body").css("overflow", "hidden");
 	}
 
 	@Override
 	public void onHide() {
 		super.onHide();
+		$("body").css("overflow", "auto");
 	}
 
 	@Override
