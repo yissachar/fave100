@@ -46,7 +46,6 @@
 		
 		.registerCTA {
 			font-size: 1.8em;
-			margin: 35px 0;
 			text-align: center;
 		}
 		
