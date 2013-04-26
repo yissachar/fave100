@@ -22,7 +22,6 @@ public class Notification {
 	}
 
 	public static void show(final String message) {
-		label.setText(message);
 		Notification.show(message, false, 3000);
 	}
 
@@ -33,6 +32,7 @@ public class Notification {
 
 	public static void show(final String message, final boolean error,
 			final int delay) {
+		label.setText(message);
 		label.setVisible(true);
 		if (error) {
 			label.addStyleName("error");
