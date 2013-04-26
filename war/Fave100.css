@@ -326,8 +326,15 @@ footer {
 
 @media ( min-width : 1025px ) {
 	.loginLightBox {
-		left: 15%;
-		width: 70%;
+		left: 20%;
+		width: 60%;
+	}
+}
+
+@media ( min-width : 1280px ) {
+	.loginLightBox {
+		left: 25%;
+		width: 50%;
 	}
 }
 
