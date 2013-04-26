@@ -319,9 +319,16 @@ footer {
 .loginLightBox { 
 	position: fixed;
 	top: 20%;
-	left: 25%;
-	width: 50%;
+	left: 3%;
+	width: 94%;
 	z-index: 100000;
+}
+
+@media ( min-width : 1025px ) {
+	.loginLightBox {
+		left: 15%;
+		width: 70%;
+	}
 }
 
 .lightBoxHeader {
