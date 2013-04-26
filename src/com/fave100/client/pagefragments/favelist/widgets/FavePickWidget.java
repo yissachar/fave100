@@ -5,6 +5,7 @@ import static com.google.gwt.query.client.GQuery.$;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.client.Notification;
 import com.fave100.client.pagefragments.favelist.FavelistPresenter.ItemAdded;
 import com.fave100.client.pagefragments.favelist.FavelistPresenter.ItemDeleted;
 import com.fave100.client.pagefragments.favelist.FavelistPresenter.RankChanged;
@@ -12,6 +13,7 @@ import com.fave100.client.pagefragments.favelist.FavelistPresenter.WhyLineChange
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
+import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -278,15 +280,22 @@ public class FavePickWidget extends Composite {
 			}
 
 			private void saveAndSwitchToLabel(final TextBox txtBox) {
-				if (!txtBox.getValue().trim().equals(_item.getWhyline())) {
-					_whyLineCallback.onChange(_item.getSongID(), txtBox.getValue());
-				}
-
-				if (txtBox.getValue().isEmpty()) {
-					initEmptyWhyLine(whyLine);
+				// Errors with whyline, show them
+				final String error = Validator.validateWhyline(txtBox.getValue());
+				if (error != null) {
+					Notification.show(error, true);
 				}
 				else {
-					whyLine.setText(txtBox.getValue());
+					if (!txtBox.getValue().trim().equals(_item.getWhyline())) {
+						_whyLineCallback.onChange(_item.getSongID(), txtBox.getValue());
+					}
+
+					if (txtBox.getValue().isEmpty()) {
+						initEmptyWhyLine(whyLine);
+					}
+					else {
+						whyLine.setText(txtBox.getValue());
+					}
 				}
 				whyLinePanel.clear();
 				whyLinePanel.setWidget(whyLine);
