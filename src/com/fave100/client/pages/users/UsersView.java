@@ -37,7 +37,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField HTMLPanel topBar;
 	@UiField HTMLPanel songAutocomplete;
 	@UiField HTMLPanel favelist;
-	private boolean renderedFB;
+	private boolean renderedSharing;
 
 	@Inject
 	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
@@ -74,14 +74,15 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Override
 	public void renderFB() {
-		if (!renderedFB) {
-			renderedFB = true;
-			nativeRenderFB();
+		if (!renderedSharing) {
+			renderedSharing = true;
+			nativeRenderShare();
 		}
 	}
 
-	public native void nativeRenderFB() /*-{
+	public native void nativeRenderShare() /*-{
 		$wnd.FB.XFBML.parse();
+		$wnd.twttr.widgets.load();
 	}-*/;
 
 	@Override
