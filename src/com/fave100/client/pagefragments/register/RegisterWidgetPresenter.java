@@ -77,8 +77,8 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			}
 		});
 
-		facebookRedirect = Window.Location.getHref() + "#" + NameTokens.register + ";provider="
-				+ RegisterPresenter.PROVIDER_FACEBOOK;
+		facebookRedirect = Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + Window.Location.getQueryString()
+				+ "#" + NameTokens.register + ";provider=" + RegisterPresenter.PROVIDER_FACEBOOK;
 		final Request<String> fbAuthUrlReq = requestFactory.appUserRequest()
 				.getFacebookAuthUrl(facebookRedirect);
 		fbAuthUrlReq.fire(new Receiver<String>() {

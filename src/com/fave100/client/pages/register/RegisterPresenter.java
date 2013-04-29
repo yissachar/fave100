@@ -126,7 +126,9 @@ public class RegisterPresenter extends
 								if (user != null) {
 									placeManager.revealDefaultPlace();
 								}
-								getProxy().manualReveal(RegisterPresenter.this);
+								else {
+									getProxy().manualReveal(RegisterPresenter.this);
+								}
 							}
 						});
 						getView().showThirdPartyUsernamePrompt();
@@ -144,9 +146,7 @@ public class RegisterPresenter extends
 			// signing in to their 3rd party account - prompt them for a username and create their account
 
 			LoadingIndicator.show();
-			// for the RF req
-			getView().showThirdPartyUsernamePrompt();
-			// Try to log the user in with Twitter
+			// First see if they are already logged in
 			final String oauth_verifier = Window.Location
 					.getParameter("oauth_verifier");
 			final Request<AppUserProxy> loginWithTwitter = requestFactory
@@ -159,12 +159,14 @@ public class RegisterPresenter extends
 					if (user != null) {
 						registerContainer.goToMyFave100();
 					}
-					getProxy().manualReveal(RegisterPresenter.this);
 				}
 
 				@Override
 				public void onFailure(final ServerFailure failure) {
+					// If they are not logged in, prompt for a username
 					LoadingIndicator.hide();
+					getView().showThirdPartyUsernamePrompt();
+					getProxy().manualReveal(RegisterPresenter.this);
 				}
 			});
 
@@ -172,9 +174,29 @@ public class RegisterPresenter extends
 		else if (Window.Location.getParameter("code") != null) {
 			// FaceBook login
 			// TODO: Review if we can do this without hacky code parameter getting
-			getView().showThirdPartyUsernamePrompt();
-			getProxy().manualReveal(RegisterPresenter.this);
 
+			// Check if user alaready logged in through Facebook
+			LoadingIndicator.show();
+			final Request<AppUserProxy> loginWithFacebook = requestFactory
+					.appUserRequest().loginWithFacebook(Window.Location.getParameter("code"));
+			loginWithFacebook.fire(new Receiver<AppUserProxy>() {
+				@Override
+				public void onSuccess(final AppUserProxy user) {
+					LoadingIndicator.hide();
+					eventBus.fireEvent(new CurrentUserChangedEvent(user));
+					if (user != null) {
+						registerContainer.goToMyFave100();
+					}
+				}
+
+				@Override
+				public void onFailure(final ServerFailure failure) {
+					// If they are not logged in, prompt for a username
+					LoadingIndicator.hide();
+					getView().showThirdPartyUsernamePrompt();
+					getProxy().manualReveal(RegisterPresenter.this);
+				}
+			});
 		}
 		else {
 			getView().hideThirdPartyUsernamePrompt();
