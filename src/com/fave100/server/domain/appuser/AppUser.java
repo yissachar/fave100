@@ -72,12 +72,13 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 @Entity
 public class AppUser extends DatastoreObject {
 
-	@IgnoreSave public static String TWITTER_CONSUMER_KEY = "";
-	@IgnoreSave public static String TWITTER_CONSUMER_SECRET = "";
-	@IgnoreSave public static String FACEBOOK_APP_ID = "";
-	@IgnoreSave public static String FACEBOOK_APP_SECRET = "";
+	@IgnoreSave private static String TWITTER_CONSUMER_KEY = "";
+	@IgnoreSave private static String TWITTER_CONSUMER_SECRET = "";
+	@IgnoreSave private static String FACEBOOK_APP_ID = "";
+	@IgnoreSave private static String FACEBOOK_APP_SECRET = "";
 	@IgnoreSave public static final String AUTH_USER = "loggedIn";
-	@IgnoreSave public static OAuthService facebookOAuthservice;
+	@IgnoreSave private static OAuthService facebookOAuthservice;
+	@IgnoreSave private static TwitterFactory twitterFactory;
 
 	// Store a case-sensitive username field, as well as lowercase username lookup
 	@Id private String usernameID;
@@ -233,17 +234,21 @@ public class AppUser extends DatastoreObject {
 		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("twitterUser", null);
 	}
 
+	public static Twitter getTwitterInstance() {
+		if (twitterFactory == null) {
+			twitterFactory = new TwitterFactory();
+		}
+		return twitterFactory.getInstance();
+	}
+
 	// Builds a Twitter login URL that the client can use
 	public static String getTwitterAuthUrl(final String redirectUrl) {
-		final Twitter twitter = new TwitterFactory().getInstance();
-		twitter.setOAuthConsumer(AppUser.TWITTER_CONSUMER_KEY, AppUser.TWITTER_CONSUMER_SECRET);
+		final Twitter twitter = getTwitterInstance();
+		twitter.setOAuthConsumer(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
 
 		try {
-			RequestToken requestToken = (RequestToken)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
-			if (requestToken == null) {
-				requestToken = twitter.getOAuthRequestToken(redirectUrl);
-				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("requestToken", requestToken);
-			}
+			final RequestToken requestToken = twitter.getOAuthRequestToken(redirectUrl);
+			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("requestToken", requestToken);
 			return requestToken.getAuthenticationURL();
 		}
 		catch (final TwitterException e) {
@@ -256,11 +261,10 @@ public class AppUser extends DatastoreObject {
 	public static twitter4j.User getTwitterUser(final String oauth_verifier) {
 		final twitter4j.User user = (twitter4j.User)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("twitterUser");
 		if (user == null) {
-			final Twitter twitter = new TwitterFactory().getInstance();
-			twitter.setOAuthConsumer(AppUser.TWITTER_CONSUMER_KEY, AppUser.TWITTER_CONSUMER_SECRET);
+			final Twitter twitter = getTwitterInstance();
+			twitter.setOAuthConsumer(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
 
 			final RequestToken requestToken = (RequestToken)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("requestToken");
-
 			try {
 				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
 				twitter.setOAuthAccessToken(accessToken);
@@ -270,6 +274,9 @@ public class AppUser extends DatastoreObject {
 			}
 			catch (final TwitterException e1) {
 				e1.printStackTrace();
+			}
+			catch (final Exception e) {
+				e.printStackTrace();
 			}
 			return null;
 		}
@@ -815,5 +822,21 @@ public class AppUser extends DatastoreObject {
 
 	public void setJoinDate(final Date joinDate) {
 		this.joinDate = joinDate;
+	}
+
+	public static void setTwitterConsumerKey(final String key) {
+		TWITTER_CONSUMER_KEY = key;
+	}
+
+	public static void setTwitterConsumerSecret(final String secret) {
+		TWITTER_CONSUMER_SECRET = secret;
+	}
+
+	public static void setFacebookApiKey(final String key) {
+		FACEBOOK_APP_ID = key;
+	}
+
+	public static void setFacebookApiSecret(final String secret) {
+		FACEBOOK_APP_SECRET = secret;
 	}
 }

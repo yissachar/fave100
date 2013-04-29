@@ -33,15 +33,15 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(PwdResetToken.class);
 
 		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").get();
-		AppUser.FACEBOOK_APP_ID = facebookApiKey.getKey();
-		AppUser.FACEBOOK_APP_SECRET = facebookApiKey.getSecret();
+		AppUser.setFacebookApiKey(facebookApiKey.getKey().trim());
+		AppUser.setFacebookApiSecret(facebookApiKey.getSecret().trim());
 
 		final APIKey twitterApiKey = ofy().load().type(APIKey.class).id("twitter").get();
-		AppUser.TWITTER_CONSUMER_KEY = twitterApiKey.getKey();
-		AppUser.TWITTER_CONSUMER_SECRET = twitterApiKey.getSecret();
+		AppUser.setTwitterConsumerKey(twitterApiKey.getKey().trim());
+		AppUser.setTwitterConsumerSecret(twitterApiKey.getSecret().trim());
 
 		final APIKey youtubeApiKey = ofy().load().type(APIKey.class).id("youtube").get();
-		Song.YOUTUBE_API_KEY = youtubeApiKey.getKey();
+		Song.setYoutubeApiKey(youtubeApiKey.getKey().trim());
 
 		// Let the UrlBuilder know what URLs to build
 		UrlBuilder.isDevMode = (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development);
