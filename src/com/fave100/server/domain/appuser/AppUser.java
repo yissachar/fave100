@@ -2,8 +2,13 @@ package com.fave100.server.domain.appuser;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.Date;
 import java.util.Properties;
@@ -16,13 +21,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.scribe.builder.ServiceBuilder;
-import org.scribe.builder.api.FacebookApi;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.Token;
-import org.scribe.model.Verb;
-import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
 import twitter4j.Twitter;
@@ -31,6 +29,8 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
+import com.fave100.client.pages.register.RegisterPresenter;
+import com.fave100.client.place.NameTokens;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.favelist.FaveList;
@@ -285,38 +285,69 @@ public class AppUser extends DatastoreObject {
 	}
 
 	// Builds a Facebook login URL that the client can use
-	public static String getFacebookAuthUrl(final String redirectUrl) {
-		final Token emptyToken = null;
-
-		if (facebookOAuthservice == null) {
-			facebookOAuthservice = new ServiceBuilder()
-					.provider(FacebookApi.class)
-					.apiKey(FACEBOOK_APP_ID)
-					.apiSecret(FACEBOOK_APP_SECRET)
-					.callback(redirectUrl)
-					.build();
-		}
-
-		final String authUrl = facebookOAuthservice.getAuthorizationUrl(emptyToken);
-		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("facebookToken", emptyToken);
-		return authUrl;
+	public static String getFacebookAuthUrl(final String redirectUrl) throws UnsupportedEncodingException {
+		RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("facebookRedirect", redirectUrl);
+		return "https://www.facebook.com/dialog/oauth?client_id=" + FACEBOOK_APP_ID + "&display=page&redirect_uri=" + URLEncoder.encode(redirectUrl, "UTF-8");
 	}
 
 	// Gets the ID of a the current Facebook user - not a Fave100 user
 	public static Long getCurrentFacebookUserId(final String code) {
-		final Verifier verifier = new Verifier(code);
-		final Token requestToken = (Token)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("facebookToken");
-		final Token accessToken = facebookOAuthservice.getAccessToken(requestToken, verifier);
+		Long userID = (Long)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("facebookID");
+		if (userID == null) {
+			String redirectUrl = (String)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute("facebookRedirect");
+			if (redirectUrl == null) {
+				redirectUrl = new UrlBuilder(NameTokens.register).with("register", RegisterPresenter.PROVIDER_FACEBOOK).getUrl().replace("yissachar", "localhost");
+			}
+			try {
+				final String authURL = "https://graph.facebook.com/oauth/access_token?client_id=" + FACEBOOK_APP_ID + "&redirect_uri=" + URLEncoder.encode(redirectUrl, "UTF-8") + "&client_secret=" + FACEBOOK_APP_SECRET + "&code=" + code;
+				final URL url = new URL(authURL);
+				final String result = readURL(url);
+				String accessToken = null;
+				Integer expires = null;
+				final String[] pairs = result.split("&");
+				for (final String pair : pairs) {
+					final String[] kv = pair.split("=");
+					if (kv.length != 2) {
+						throw new RuntimeException("Unexpected auth response");
+					}
+					else {
+						if (kv[0].equals("access_token")) {
+							accessToken = kv[1];
+						}
+						if (kv[0].equals("expires")) {
+							expires = Integer.valueOf(kv[1]);
+						}
+					}
+				}
+				if (accessToken != null && expires != null) {
+					// Successfully retrieved access token, get user id
+					final String response = readURL(new URL("https://graph.facebook.com/me?access_token=" + accessToken));
+					final JsonParser parser = new JsonParser();
+					final JsonElement graphElement = parser.parse(response);
+					final JsonObject graphObject = graphElement.getAsJsonObject();
+					userID = graphObject.get("id").getAsLong();
+					RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute("facebookID", userID);
+				}
+				else {
+					throw new RuntimeException("Access token and expires not found");
+				}
+			}
+			catch (final IOException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		}
+		return userID;
+	}
 
-		final OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/me");
-		facebookOAuthservice.signRequest(accessToken, request);
-		final Response response = request.send();
-
-		final JsonParser parser = new JsonParser();
-		final JsonElement graphElement = parser.parse(response.getBody());
-		final JsonObject graphObject = graphElement.getAsJsonObject();
-
-		return graphObject.get("id").getAsLong();
+	private static String readURL(final URL url) throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final InputStream is = url.openStream();
+		int r;
+		while ((r = is.read()) != -1) {
+			baos.write(r);
+		}
+		return new String(baos.toByteArray());
 	}
 
 	/*
@@ -541,8 +572,7 @@ public class AppUser extends DatastoreObject {
 						}
 						if (Validator.validateUsername(username) == null) {
 							// Create the user
-							final AppUser appUser = new AppUser();
-							appUser.setUsername(username);
+							final AppUser appUser = new AppUser(username);
 							// TODO: Do we need an email for facebook users?
 							// Create the user's list
 							final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
