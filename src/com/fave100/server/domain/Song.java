@@ -26,7 +26,7 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 @Entity
 public class Song extends DatastoreObject implements SongInterface {
 
-	@IgnoreSave public static String YOUTUBE_API_KEY = "";
+	@IgnoreSave private static String YOUTUBE_API_KEY = "";
 
 	@Id private String id;
 	private String artist;
@@ -150,6 +150,10 @@ public class Song extends DatastoreObject implements SongInterface {
 
 	public void setCoverArtUrl(final String coverArtUrl) {
 		this.coverArtUrl = coverArtUrl;
+	}
+
+	public static void setYoutubeApiKey(final String key) {
+		YOUTUBE_API_KEY = key;
 	}
 
 }
