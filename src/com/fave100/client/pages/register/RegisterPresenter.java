@@ -159,11 +159,15 @@ public class RegisterPresenter extends
 					if (user != null) {
 						registerContainer.goToMyFave100();
 					}
+					else {
+						// If they are not logged in, prompt for a username
+						getView().showThirdPartyUsernamePrompt();
+						getProxy().manualReveal(RegisterPresenter.this);
+					}
 				}
 
 				@Override
 				public void onFailure(final ServerFailure failure) {
-					// If they are not logged in, prompt for a username
 					LoadingIndicator.hide();
 					getView().showThirdPartyUsernamePrompt();
 					getProxy().manualReveal(RegisterPresenter.this);
@@ -187,11 +191,15 @@ public class RegisterPresenter extends
 					if (user != null) {
 						registerContainer.goToMyFave100();
 					}
+					else {
+						// If they are not logged in, prompt for a username
+						getView().showThirdPartyUsernamePrompt();
+						getProxy().manualReveal(RegisterPresenter.this);
+					}
 				}
 
 				@Override
 				public void onFailure(final ServerFailure failure) {
-					// If they are not logged in, prompt for a username
 					LoadingIndicator.hide();
 					getView().showThirdPartyUsernamePrompt();
 					getProxy().manualReveal(RegisterPresenter.this);
