@@ -53,8 +53,9 @@
 	<h2>Updating Song Database</h2>
 	<ol>
 		<li>Ensure that Musicbrainz VM database is in sync with Musicbrainz master (~/run_replication.sh - this should be running every night at midnight so there should be no need to run it manually)</li>
-		<li>Run <a href="https://github.com/yissachar/Fave100-Autocomplete">BuildAutocomplete.sql</a> on Musicbrainz VM (you can use PGAdmin 3 on Yissachar's machine to run the code). This should take around 10.5 hours to execute and will rebuild autocomplete_search_staging from scratch with all the latest song entries.</li>
-		<li>Run <a href="https://github.com/yissachar/Fave100-Autocomplete">UpdateAutocomplete.sql</a> on Musicbrainz VM. This should take around 6.5 hours to execute and will import all new entries from staging into the actual song database.</li>		
+		<li>Run <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src">BuildAutocomplete.sql</a> on Musicbrainz VM (you can use PGAdmin 3 on Yissachar's machine to run the code). This should take around 10.5 hours to execute and will rebuild autocomplete_search_staging from scratch with all the latest song entries.</li>
+		<li>Run <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src">UpdateAutocomplete.sql</a> on Musicbrainz VM. This should take around 6.5 hours to execute and will import all new entries from staging into the actual song database.</li>		
+		<li>Run <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src">UpdateRank.sql</a>. This will recalculate the ranks for all songs and should take around 18.5 hours to complete.</li>
 		<li>Run the <a href="https://github.com/yissachar/fave100-lucene/blob/master/src/Index.java">Lucene Indexer</a> to build a Lucene index from the PostgreSQL autocomplete_search song database.</li>
 		<li>Copy resulting index into <a href="https://github.com/hellofornow/fave100-tomcat">Fave100 Tomcat</a> resources. Build Fave-100 Tomcat (clean tomcat:deploy).</li>
 		<li>Deploy the resulting WAR to Jelastic</li>
