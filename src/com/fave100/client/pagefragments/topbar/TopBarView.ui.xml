@@ -84,7 +84,8 @@
 		}
 		
 		.faveLogo {		
-			float: left;	
+			float: left;
+			border: none;
 		}		
 		
 	</ui:style>
