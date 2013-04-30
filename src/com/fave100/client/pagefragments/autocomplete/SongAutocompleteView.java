@@ -3,7 +3,11 @@ package com.fave100.client.pagefragments.autocomplete;
 import java.util.List;
 
 import com.fave100.shared.requestfactory.SongProxy;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -33,6 +37,8 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 		String selected();
 
 		String artistName();
+
+		String placeholder();
 	}
 
 	@UiField SongAutocompleteStyle style;
@@ -43,18 +49,35 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	@UiField Label pageStats;
 	@UiField Button previousButton;
 	@UiField Button nextButton;
+	final private String placeholder = "To add a song, start typing here";
 
 	@Inject
 	public SongAutocompleteView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		searchBox.getElement().setAttribute("placeholder",
-				"To add a song, start typing here");
 		resultsArea.setVisible(false);
+		// Set a placeholder text
+		DomEvent.fireNativeEvent(Document.get().createBlurEvent(), searchBox);
 	}
 
 	@Override
 	public Widget asWidget() {
 		return widget;
+	}
+
+	@UiHandler("searchBox")
+	void onFocus(final FocusEvent event) {
+		if (searchBox.getText().equals(placeholder)) {
+			searchBox.setText("");
+			searchBox.removeStyleName(style.placeholder());
+		}
+	}
+
+	@UiHandler("searchBox")
+	void onBlur(final BlurEvent event) {
+		if (searchBox.getText().isEmpty() || searchBox.getText().equals(placeholder)) {
+			searchBox.setText(placeholder);
+			searchBox.addStyleName(style.placeholder());
+		}
 	}
 
 	@UiHandler("searchBox")
