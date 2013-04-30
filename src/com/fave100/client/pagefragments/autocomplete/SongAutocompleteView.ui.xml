@@ -63,6 +63,10 @@
 			display: inline-block;
 			margin-top: 9px;
 		}
+		
+		.placeholder {
+			color: #aaa;
+		}
 	</ui:style>
 	
 	<g:HTMLPanel>
