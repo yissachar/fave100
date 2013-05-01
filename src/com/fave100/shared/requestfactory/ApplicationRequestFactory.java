@@ -11,4 +11,6 @@ public interface ApplicationRequestFactory extends RequestFactory {
 	FaveListRequest faveListRequest();
 
 	WhylineRequest whylineRequest();
+
+	ExploreResultRequest exploreRequest();
 }

@@ -18,6 +18,7 @@ public class HomeView extends ViewWithUiHandlers<HomeUiHandlers> implements Home
 
 	@UiField Button registerButton;
 	@UiField Button loginButton;
+	@UiField Button exploreButton;
 
 	@Inject
 	public HomeView(final Binder binder) {
@@ -42,5 +43,10 @@ public class HomeView extends ViewWithUiHandlers<HomeUiHandlers> implements Home
 	@UiHandler("loginButton")
 	void onRegisterClick(final ClickEvent event) {
 		getUiHandlers().showLogin();
+	}
+
+	@UiHandler("exploreButton")
+	void onExploreClick(final ClickEvent event) {
+		getUiHandlers().explore();
 	}
 }
