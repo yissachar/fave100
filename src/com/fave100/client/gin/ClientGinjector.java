@@ -3,6 +3,7 @@ package com.fave100.client.gin;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
+import com.fave100.client.pages.explore.ExplorePresenter;
 import com.fave100.client.pages.home.HomePresenter;
 import com.fave100.client.pages.login.LoginPresenter;
 import com.fave100.client.pages.logout.LogoutPresenter;
@@ -47,4 +48,6 @@ public interface ClientGinjector extends Ginjector {
 	AsyncProvider<SongPresenter> getSongPresenter();
 
 	AsyncProvider<PasswordResetPresenter> getPasswordResetPresenter();
+
+	AsyncProvider<ExplorePresenter> getExplorePresenter();
 }

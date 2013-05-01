@@ -1,0 +1,29 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+	
+	<ui:style>
+		.wrap {
+			max-height: 768px;
+			overflow: hidden;
+		}
+		
+		.exploreContainer {
+			margin: 0 auto;
+		}
+		
+		
+	</ui:style>
+
+	<g:HTMLPanel styleName="wrap {style.wrap}">
+		<g:HTMLPanel ui:field="topBar"/>
+		<div ui:field="exploreContainer" styleName="{style.exploreContainer}"/>
+		
+	<pf:Footer/>
+	</g:HTMLPanel>
+</ui:UiBinder>

@@ -106,11 +106,12 @@
 				<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" url="img/loading-indicator.gif"/>			
 				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
 				<ul>						
-					<li>
+					<li>						
 						<g:InlineHyperlink ui:field="logOutLink">Log out</g:InlineHyperlink>
-						<g:InlineLabel ui:field="loginButton">Log in</g:InlineLabel>
+						<g:InlineLabel ui:field="loginButton">Log in</g:InlineLabel>						
 					</li>
-					<li><g:InlineLabel ui:field="registerButton">Register</g:InlineLabel></li>					
+					<li><g:InlineLabel ui:field="registerButton">Register</g:InlineLabel></li>
+					<li><g:InlineHyperlink targetHistoryToken="{nameTokens.getExplore}">Explore</g:InlineHyperlink></li>					
 				</ul>
 			</div>
 		</g:HTMLPanel>			
