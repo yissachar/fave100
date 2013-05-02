@@ -3,15 +3,14 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
-	xmlns:w='urn:import:com.fave100.client.widgets'
-	xmlns:wyt='urn:import:com.fave100.client.widgets.youtube'
+	xmlns:w='urn:import:com.fave100.client.pages.song.widgets.whyline'
+	xmlns:wyt='urn:import:com.fave100.client.pages.song.widgets.youtube'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
 	<ui:style>	
 		.songContainer {			
-			width: 700px;
 		}
 		
 		.songHeader {
@@ -31,6 +30,8 @@
 			background-color: #FFF;
 			border: 1px solid #555;
 			padding: 20px;
+			width: 700px;
+			float: left;
 		}
 		
 		.addToFave100Button {
@@ -44,6 +45,11 @@
 		
 		.whylineWaterfall {
 			margin: 0 auto;
+			width: 320px;
+			float: left;
+			border: 1px solid #555;
+			border-left: 0px;
+			height: 508px;
 		}
 	</ui:style>
 	
@@ -60,10 +66,10 @@
 						<g:Button ui:field="addToFave100Button" styleName="{style.addToFave100Button}">+Fave100</g:Button>
 					</div>
 					<div class="{style.songBody}">
-						<wyt:YouTubeWidget ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>
-						<w:WhylineWaterfall ui:field="whylineWaterfall" styleName="{style.whylineWaterfall}"/>
+						<wyt:YouTubeWidget ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>						
 					</div>
-				</div>
+					<w:WhylineWaterfall ui:field="whylineWaterfall" styleName="{style.whylineWaterfall}"/>					
+				</div>				
 			</div>	
 		</div>
 		<pf:Footer/>
