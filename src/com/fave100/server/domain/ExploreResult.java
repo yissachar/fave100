@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheException;
@@ -92,20 +94,12 @@ public class ExploreResult implements FaveItemProxy, WhylineProxy, Serializable 
 		List<ExploreResult> list = (List<ExploreResult>)cache.get(EXPLORE_LIST_KEY);
 
 		if (list == null) {
-			list = new ArrayList<>();
-			final Integer count = (Integer)cache.get(COUNT_KEY);
-			if (count != null) {
-				for (int i = 0; i <= count; i++) {
-					final ExploreResult exploreResult = (ExploreResult)cache.get(i);
-					if (exploreResult != null) {
-						list.add(exploreResult);
-					}
-				}
-			}
-			// If there was nothing in the memcache, populate from backing datastore
-			if (list.size() == 0) {
-				list = ofy().load().type(ExploreResultList.class).id(ExploreResultList.CURRENT_LIST).get().getList();
-			}
+			Logger.getAnonymousLogger().log(Level.SEVERE, "We are pulling from datastore");
+			list = ofy().load().type(ExploreResultList.class).id(ExploreResultList.CURRENT_LIST).get().getList();
+			cache.put(EXPLORE_LIST_KEY, list);
+		}
+		else {
+			Logger.getAnonymousLogger().log(Level.SEVERE, "We are pulling from memcache");
 		}
 		return list;
 	}
