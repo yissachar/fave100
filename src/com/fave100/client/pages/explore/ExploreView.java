@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.explore.widgets.ExploreItem;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.query.client.Function;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -68,8 +67,6 @@ public class ExploreView extends ViewWithUiHandlers<ExploreUiHandlers> implement
 		}
 
 		// Then, in reverse order float them down screen
-		GWT.log("Container with: " + $(exploreContainer).outerHeight(true));
-		GWT.log("Container without: " + $(exploreContainer).outerHeight());
 		dropPosition = 1000 - $(exploreContainer).outerHeight(true);
 		Collections.reverse(results);
 		int delay = 0;
@@ -84,7 +81,6 @@ public class ExploreView extends ViewWithUiHandlers<ExploreUiHandlers> implement
 					visibleItems.add(item);
 					// Scroll new item to list and then scroll everything down
 					dropPosition += $(item).outerHeight(true);
-					GWT.log("Dropposition: " + dropPosition);
 					$(item).animate("top: '" + dropPosition + "px', opacity: 1", 1000, new Function() {
 						@Override
 						public void f() {
