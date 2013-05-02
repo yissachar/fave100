@@ -2,7 +2,9 @@ package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
+import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
@@ -33,6 +35,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField TopBarStyle style;
 	@UiField HTMLPanel topBar;
 	@UiField Image loadingIndicator;
+	@UiField InlineHyperlink logoLink;
 	@UiField InlineHyperlink logOutLink;
 	@UiField InlineLabel loginButton;
 	@UiField Label notification;
@@ -69,6 +72,8 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		logOutLink.setVisible(true);
 		logOutLink.setText("Log out");
 		logOutLink.setTargetHistoryToken(NameTokens.logout);
+		final String userPlace = new UrlBuilder(NameTokens.users).with(UsersPresenter.USER_PARAM, username).getPlaceToken();
+		logoLink.setTargetHistoryToken(userPlace);
 	}
 
 	@Override
@@ -76,6 +81,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		registerButton.setVisible(true);
 		loginButton.setVisible(true);
 		logOutLink.setVisible(false);
+		logoLink.setTargetHistoryToken(NameTokens.home);
 	}
 
 	@Override
