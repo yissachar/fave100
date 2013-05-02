@@ -1,13 +1,13 @@
 <project>
-	<property name="ae-sdk.dir" location="C:\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.7.6\appengine-java-sdk-1.7.6" />
-	<property name="gwt-sdk.dir" location="C:\eclipse\plugins\com.google.gwt.eclipse.sdkbundle_2.5.1\gwt-2.5.1" />
+	<property name="ae-sdk.dir" location="${AppEngineDir}" />
+	<property name="gwt-sdk.dir" location="${GwtDir}" />
 
 	<import file="${ae-sdk.dir}\config\user\ant-macros.xml" />
 	
 	<target name="copyMavenJars" description="Runs the Maven command to copy JARS to WAR">
 	    <exec executable="cmd">
 	    	<arg value="/c"/>
-	        <arg value="C:\Program Files (x86)\apache-maven-3.0.4\bin\mvn.bat"/>	    	
+	        <arg value="${MvnDir}"/>	    	
 	        <arg line="clean dependency:copy-dependencies" />
 		</exec>
 	</target>
