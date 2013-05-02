@@ -96,6 +96,10 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 			// Enter key pressed, add currently selected song to favelist
 			getUiHandlers().songSelected();
 		}
+		else if (KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()) {
+			// Escape key, cancel search
+			getUiHandlers().getAutocompleteResults("", true);
+		}
 		else {
 			// Otherwise search for song
 			getUiHandlers().getAutocompleteResults(searchBox.getText(), true);
