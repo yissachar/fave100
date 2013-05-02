@@ -10,12 +10,12 @@
 		}
 		
 		.userProfile {
-			width: 20%;
+			max-width: 20%;
 			padding: 2px;
 			margin-right: 10px;
 		}
 		
-		.avatar {
+		.userProfile img {
 			max-width: 80px;
 			max-height: 80px;
 		}

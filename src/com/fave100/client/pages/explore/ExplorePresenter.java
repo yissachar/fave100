@@ -66,8 +66,10 @@ public class ExplorePresenter extends BasePresenter<ExplorePresenter.MyView, Exp
 				if (response != null && response.size() > 0) {
 					final List<ExploreItem> items = new ArrayList<ExploreItem>();
 					for (final ExploreResultProxy result : response) {
-						final ExploreItem item = new ExploreItem(result);
-						items.add(item);
+						if (result != null) {
+							final ExploreItem item = new ExploreItem(result);
+							items.add(item);
+						}
 					}
 					getView().setExploreList(items);
 				}
