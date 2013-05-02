@@ -1,0 +1,27 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:style>		
+		.thumbnailPanel img {
+			margin-top: 5px;
+			margin-right: 50px;
+			cursor: pointer;
+			border: 1px solid #999;
+			width: 120px;
+		}
+		
+		.thumbnailPanel img:last-child {
+			margin-right: 0;
+		}
+		
+		.thumbnailPanel img:hover{
+			border: 1px solid #555;
+		}
+	</ui:style>
+	
+	<g:HTMLPanel>
+		<g:Frame width="640px" height="360px" ui:field="youTubePlayer"/>
+		<g:HTMLPanel ui:field="thumbnailPanel" ui:styleName="{style.thumbnailPanel}"/>
+	</g:HTMLPanel>
+</ui:UiBinder> 
