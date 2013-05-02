@@ -36,7 +36,7 @@ public class YouTubeWidget extends Composite {
 		}
 		else {
 			this.setVisible(true);
-			youTubePlayer.setUrl("http://youtube.com/embed/" + videos.get(0).getVideoId());
+			youTubePlayer.setUrl("http://youtube.com/embed/" + videos.get(0).getVideoId() + "?wmode=transparent");
 
 			thumbnailPanel.clear();
 			thumbList.clear();
