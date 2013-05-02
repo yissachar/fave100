@@ -40,7 +40,7 @@
 		}
 		
 	</ui:style>
-	<g:HorizontalPanel ui:styleName="{style.item} row span_6">
+	<g:HorizontalPanel ui:styleName="{style.item} row span_12">
 			<g:VerticalPanel ui:styleName="{style.userProfile}">
 				<g:Image ui:field="avatar"/>
 				<g:Hyperlink ui:field="username"/>
