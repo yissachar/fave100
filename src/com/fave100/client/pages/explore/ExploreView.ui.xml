@@ -22,8 +22,11 @@
 
 	<g:HTMLPanel styleName="wrap {style.wrap}">
 		<g:HTMLPanel ui:field="topBar"/>
-		<div ui:field="exploreContainer" styleName="{style.exploreContainer}"/>
-		
+		<g:FocusPanel ui:field="focusPanel" styleName="{style.exploreContainer} span_6">
+			<g:HTMLPanel>
+				<div ui:field="exploreContainer" styleName="{style.exploreContainer}"/>
+			</g:HTMLPanel>
+		</g:FocusPanel>
 	<pf:Footer/>
 	</g:HTMLPanel>
 </ui:UiBinder>
