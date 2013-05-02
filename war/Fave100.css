@@ -194,6 +194,18 @@ footer {
   	user-select: none;
 }
 
+.rank {
+	font-size: 40px;
+}
+
+.rankThreeDigit {
+	font-size: 30px;
+}
+
+.rankThreeDigit > div {
+	margin-top: 5px;
+}
+
 .rankEditPanel:hover {
 	border-radius: 0px;
 	cursor: pointer;
@@ -215,7 +227,6 @@ footer {
 	font-family: arial;
 	width: 62px;
 	height: 60px;
-	font-size: 40px;
 	text-align: center;
 	
 }
@@ -319,8 +330,8 @@ footer {
 .loginLightBox { 
 	position: fixed;
 	top: 20%;
-	left: 3%;
-	width: 94%;
+	left: 25%;
+	width: 50%;
 	z-index: 100000;
 }
 

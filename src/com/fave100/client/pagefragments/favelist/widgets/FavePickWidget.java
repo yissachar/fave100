@@ -48,6 +48,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FavePickWidget extends Composite {
 
+	private static final String RANK = "rank";
+	private static final String RANK_THREE_DIGIT = "rankThreeDigit";
 	private static final String RANK_EDIT_PANEL = "rankEditPanel";
 	private static final String RANK_EDIT_TEXT_BOX = "rankEditTextBox";
 	private static final String CLICK_TO_ENTER_WHY_LINE = "Click to enter WhyLine";
@@ -156,6 +158,9 @@ public class FavePickWidget extends Composite {
 
 	private void setupRankPanel() {
 		rankPanel.clear();
+		rankPanel.addStyleName(RANK);
+		if (_rank >= 100)
+			rankPanel.addStyleName(RANK_THREE_DIGIT);
 		_songPick = new Label(Integer.toString(_rank));
 		rankPanel.setWidget(_songPick);
 		if (_editable)
@@ -172,6 +177,9 @@ public class FavePickWidget extends Composite {
 				rankPanel.removeStyleName(RANK_EDIT_PANEL);
 				final TextBox rankText = new TextBox();
 				rankText.addStyleName(RANK_EDIT_TEXT_BOX);
+				rankText.addStyleName(RANK);
+				if (_rank >= 100)
+					rankText.addStyleName(RANK_THREE_DIGIT);
 				rankText.setText(_songPick.getText());
 				rankText.addKeyDownHandler(new KeyDownHandler() {
 
