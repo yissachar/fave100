@@ -1,5 +1,7 @@
 package com.fave100.server.domain;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +16,9 @@ import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.fave100.shared.requestfactory.WhylineProxy;
+import com.googlecode.objectify.annotation.Embed;
 
+@Embed
 public class ExploreResult implements FaveItemProxy, WhylineProxy, Serializable {
 
 	private static final long serialVersionUID = 4513875685034993004L;
@@ -66,12 +70,15 @@ public class ExploreResult implements FaveItemProxy, WhylineProxy, Serializable 
 		else {
 			count++;
 			if (count == 100 || count % 1000 == 0) {
-				// Once cache hits 100 for first time, or every 1000 song picks, populate a List with all the cache results
+				// Once cache hits 100 for first time, or every 1000 song picks, populate a List with all the cache results and back with datastore
 				final List<ExploreResult> exploreResults = new ArrayList<>();
 				for (int i = 0; i < 100; i++) {
 					exploreResults.add((ExploreResult)cache.get(i));
 				}
 				cache.put(EXPLORE_LIST_KEY, exploreResults);
+				final ExploreResultList exploreResultList = new ExploreResultList(ExploreResultList.CURRENT_LIST);
+				exploreResultList.setList(exploreResults);
+				ofy().save().entity(exploreResultList).now();
 			}
 			cache.put(COUNT_KEY, count);
 		}
@@ -94,6 +101,10 @@ public class ExploreResult implements FaveItemProxy, WhylineProxy, Serializable 
 						list.add(exploreResult);
 					}
 				}
+			}
+			// If there was nothing in the memcache, populate from backing datastore
+			if (list.size() == 0) {
+				list = ofy().load().type(ExploreResultList.class).id(ExploreResultList.CURRENT_LIST).get().getList();
 			}
 		}
 		return list;
