@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class YouTubeWidget extends Composite {
@@ -22,7 +23,7 @@ public class YouTubeWidget extends Composite {
 	interface YouTubeWidgetUiBinder extends UiBinder<Widget, YouTubeWidget> {
 	}
 
-	@UiField Frame youTubePlayer;
+	@UiField SimplePanel framePanel;
 	@UiField HTMLPanel thumbnailPanel;
 	private ArrayList<Image> thumbList = new ArrayList<Image>();
 
@@ -36,10 +37,13 @@ public class YouTubeWidget extends Composite {
 		}
 		else {
 			this.setVisible(true);
-			youTubePlayer.setUrl("http://youtube.com/embed/" + videos.get(0).getVideoId() + "?wmode=transparent");
-
+			final Frame youTubePlayer = new Frame("http://youtube.com/embed/" + videos.get(0).getVideoId() + "?wmode=transparent");
+			youTubePlayer.setWidth("640px");
+			youTubePlayer.setHeight("360px");
+			framePanel.clear();
 			thumbnailPanel.clear();
 			thumbList.clear();
+			framePanel.add(youTubePlayer.asWidget());
 			for (int i = 1; i < videos.length(); i++) {
 				final Image ytThumb = new Image();
 				ytThumb.setUrl(videos.get(i).getThumbnail());
@@ -58,5 +62,4 @@ public class YouTubeWidget extends Composite {
 			}
 		}
 	}
-
 }
