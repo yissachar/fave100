@@ -76,9 +76,9 @@
 				<g:HTMLPanel ui:field="resultsPanel" ui:styleName="{style.resultsPanel}"/>
 			</g:FocusPanel>
 			<g:HTMLPanel ui:field="navigator" ui:styleName="{style.navigator}">
-				<g:Button ui:field="previousButton" ui:styleName="{style.pagingButton} {style.previousButton}">&lt;</g:Button>
+				<g:Button ui:field="previousButton" ui:styleName="{style.pagingButton} {style.previousButton}">&#9664;</g:Button>
 				<g:Label ui:field="pageStats" ui:styleName="{style.pageStats}"/>
-				<g:Button ui:field="nextButton" ui:styleName="{style.pagingButton} {style.nextButton}">&gt;</g:Button>
+				<g:Button ui:field="nextButton" ui:styleName="{style.pagingButton} {style.nextButton}">&#9654;</g:Button>
 			</g:HTMLPanel>			 
 		</g:HTMLPanel>				
 	</g:HTMLPanel>
