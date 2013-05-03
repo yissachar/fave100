@@ -21,7 +21,7 @@
 	</ui:style>
 	
 	<g:HTMLPanel>
-		<g:Frame width="640px" height="360px" ui:field="youTubePlayer"/>
+		<g:SimplePanel ui:field="framePanel"></g:SimplePanel>
 		<g:HTMLPanel ui:field="thumbnailPanel" ui:styleName="{style.thumbnailPanel}"/>
 	</g:HTMLPanel>
 </ui:UiBinder> 
