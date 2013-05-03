@@ -10,7 +10,8 @@
 	ui:generateLocales='default'>
 
 	<ui:style>	
-		.songContainer {			
+		.songContainer {	
+			height: 577px;
 		}
 		
 		.songHeader {
@@ -42,15 +43,6 @@
 			margin: 0 auto;
 			width: 640px;
 		}
-		
-		.whylineWaterfall {
-			margin: 0 auto;
-			width: 320px;
-			float: left;
-			border: 1px solid #555;
-			border-left: 0px;
-			height: 508px;
-		}
 	</ui:style>
 	
 	<g:HTMLPanel styleName="wrap">
@@ -68,7 +60,7 @@
 					<div class="{style.songBody}">
 						<wyt:YouTubeWidget ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>						
 					</div>
-					<w:WhylineWaterfall ui:field="whylineWaterfall" styleName="{style.whylineWaterfall}"/>					
+					<w:WhylineWaterfall ui:field="whylineWaterfall" />					
 				</div>				
 			</div>	
 		</div>
