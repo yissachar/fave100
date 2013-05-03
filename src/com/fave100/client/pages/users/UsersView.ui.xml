@@ -84,29 +84,31 @@
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="container">
 			<div class="content row">
-				<g:HTMLPanel styleName="{style.sideContainer} col">		
-					<g:HorizontalPanel ui:field="userProfile" styleName="{style.userProfile}">
-						<g:Image styleName="{style.avatar}" ui:field="avatar"/>
-						<g:VerticalPanel>
-							<g:InlineLabel ui:styleName="{style.username}" ui:field="username"/>
-							<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
-								Edit Profile
-							</g:InlineHyperlink>
-						</g:VerticalPanel>				
-					</g:HorizontalPanel>
+				<g:HTMLPanel ui:field="userContainer">
+					<g:HTMLPanel styleName="{style.sideContainer} col">		
+						<g:HorizontalPanel ui:field="userProfile" styleName="{style.userProfile}">
+							<g:Image styleName="{style.avatar}" ui:field="avatar"/>
+							<g:VerticalPanel>
+								<g:InlineLabel ui:styleName="{style.username}" ui:field="username"/>
+								<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
+									Edit Profile
+								</g:InlineHyperlink>
+							</g:VerticalPanel>				
+						</g:HorizontalPanel>
+						
+						<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">															
+							<uw:ShareButton ui:field="shareButton"/>
+						</g:HTMLPanel>
+					</g:HTMLPanel>
 					
-					<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">															
-						<uw:ShareButton ui:field="shareButton"/>
+					<g:HTMLPanel ui:styleName="{style.faveListArea} col span_9">		
+							<g:HTMLPanel ui:field="songAutocomplete" ui:styleName="{style.songSearchContainer}"/>	
+						<g:HTMLPanel ui:field="faveListContainer" styleName="{style.faveListContainer}">
+							<g:HTMLPanel ui:field="favelist"/>									
+						</g:HTMLPanel>						
 					</g:HTMLPanel>
 				</g:HTMLPanel>
-				
-				<g:HTMLPanel ui:styleName="{style.faveListArea} col span_9">		
-						<g:HTMLPanel ui:field="songAutocomplete" ui:styleName="{style.songSearchContainer}"/>	
-					<g:HTMLPanel ui:field="faveListContainer" styleName="{style.faveListContainer}">
-						<g:HTMLPanel ui:field="favelist"/>									
-					</g:HTMLPanel>						
-				</g:HTMLPanel>
-				
+				<g:Label ui:field="userNotFound">That user does not exist.</g:Label>
 			</div>
 		</div>
 		<pf:Footer/>
