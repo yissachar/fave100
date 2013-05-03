@@ -1,10 +1,13 @@
 package com.fave100.client.pagefragments.register;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pages.register.RegisterPresenter;
+import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
@@ -50,14 +53,16 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	private EventBus eventBus;
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
+	private CurrentUser currentUser;
 	private String facebookRedirect;
 
 	@Inject
-	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager) {
+	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
+		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 	}
 
@@ -168,7 +173,8 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			url = url.replace(Window.Location.getParameter("code"), "");
 			url = url.replace("&code=", "");
 		}
-		url = url.replace(Window.Location.getHash(), "#myfave100");
+		final String currentUserPlace = new UrlBuilder(NameTokens.users).with(UsersPresenter.USER_PARAM, currentUser.getUsername()).getPlaceToken();
+		url = url.replace(Window.Location.getHash(), currentUserPlace);
 		Window.Location.assign(url);
 	}
 

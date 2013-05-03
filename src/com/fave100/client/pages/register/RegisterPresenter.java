@@ -124,7 +124,7 @@ public class RegisterPresenter extends
 								eventBus.fireEvent(new CurrentUserChangedEvent(
 										user));
 								if (user != null) {
-									placeManager.revealDefaultPlace();
+									registerContainer.goToMyFave100();
 								}
 								else {
 									getProxy().manualReveal(RegisterPresenter.this);
