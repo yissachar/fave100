@@ -44,6 +44,7 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
 
 	@UiHandler("loginForm")
 	public void onSubmit(final SubmitEvent event) {
+		event.cancel();
 		getUiHandlers().login();
 	}
 

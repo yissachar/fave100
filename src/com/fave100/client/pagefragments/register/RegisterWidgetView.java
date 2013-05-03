@@ -47,6 +47,7 @@ public class RegisterWidgetView extends ViewWithUiHandlers<RegisterWidgetUiHandl
 
 	@UiHandler("registerForm")
 	void onRegisterFormSubmit(final SubmitEvent event) {
+		event.cancel();
 		getUiHandlers().register(usernameField.getValue(),
 				emailField.getValue(), passwordField.getValue(),
 				passwordRepeatField.getValue());
