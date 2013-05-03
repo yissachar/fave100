@@ -43,6 +43,8 @@ public class UsersPresenter extends
 		String getFixedSearchStyle();
 
 		void renderFB();
+
+		void showUserNotFound();
 	}
 
 	@ProxyCodeSplit
@@ -154,7 +156,9 @@ public class UsersPresenter extends
 						getView().renderFB();
 					}
 					else {
-						placeManager.revealDefaultPlace();
+						//						placeManager.revealDefaultPlace();
+						getView().showUserNotFound();
+						getProxy().manualReveal(UsersPresenter.this);
 					}
 				}
 			});

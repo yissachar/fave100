@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -28,6 +29,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@UiField UsersStyle style;
+	@UiField HTMLPanel userContainer;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel socialContainer;
 	@UiField ShareButton shareButton;
@@ -37,6 +39,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField HTMLPanel topBar;
 	@UiField HTMLPanel songAutocomplete;
 	@UiField HTMLPanel favelist;
+	@UiField Label userNotFound;
 	private boolean renderedSharing;
 
 	@Inject
@@ -93,6 +96,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Override
 	public void showOwnPage() {
+		userContainer.setVisible(true);
+		userNotFound.setVisible(false);
 		editProfileButton.setVisible(true);
 		songAutocomplete.setVisible(true);
 		shareButton.setTwitterMessage("Check out my Fave100 songs: ");
@@ -100,6 +105,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Override
 	public void showOtherPage() {
+		userContainer.setVisible(true);
+		userNotFound.setVisible(false);
 		editProfileButton.setVisible(false);
 		songAutocomplete.setVisible(false);
 		shareButton.setTwitterMessage("Check out " + username.getText() + "'s Fave100 songs: ");
@@ -108,5 +115,11 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@Override
 	public String getFixedSearchStyle() {
 		return style.fixedSearch();
+	}
+
+	@Override
+	public void showUserNotFound() {
+		userContainer.setVisible(false);
+		userNotFound.setVisible(true);
 	}
 }
