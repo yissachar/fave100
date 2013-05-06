@@ -17,7 +17,6 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
@@ -25,6 +24,8 @@ public class ExplorePresenter extends BasePresenter<ExplorePresenter.MyView, Exp
 
 	public interface MyView extends BaseView, HasUiHandlers<ExploreUiHandlers> {
 		void setExploreList(List<ExploreItem> list);
+
+		void clearList();
 	}
 
 	@ProxyCodeSplit
@@ -52,13 +53,8 @@ public class ExplorePresenter extends BasePresenter<ExplorePresenter.MyView, Exp
 	}
 
 	@Override
-	public boolean useManualReveal() {
-		return true;
-	}
-
-	@Override
-	public void prepareFromRequest(final PlaceRequest request) {
-		super.prepareFromRequest(request);
+	protected void onReveal() {
+		super.onReveal();
 		final Request<List<ExploreResultProxy>> exploreReq = requestFactory.exploreRequest().getExploreFeed();
 		exploreReq.fire(new Receiver<List<ExploreResultProxy>>() {
 			@Override
@@ -76,6 +72,12 @@ public class ExplorePresenter extends BasePresenter<ExplorePresenter.MyView, Exp
 				getProxy().manualReveal(ExplorePresenter.this);
 			}
 		});
+	}
+
+	@Override
+	protected void onHide() {
+		super.onHide();
+		getView().clearList();
 	}
 }
 
