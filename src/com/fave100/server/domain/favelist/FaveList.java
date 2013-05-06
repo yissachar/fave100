@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fave100.server.domain.DatastoreObject;
-import com.fave100.server.domain.ExploreResult;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
@@ -80,9 +79,6 @@ public class FaveList extends DatastoreObject {
 		// Create the new FaveItem
 		faveList.getList().add(newFaveItem);
 		ofy().save().entities(faveList).now();
-
-		// Add it to the memcache for explore
-		ExploreResult.addToExploreCache(newFaveItem, currentUser);
 	}
 
 	public static void removeFaveItemForCurrentUser(final String hashtag, final String songID) {
