@@ -28,7 +28,7 @@
 		}
 		
 		.CTApanel {
-			margin-top: 120px;
+			margin-top: 145px;
 		}
 		
 		.logo {
@@ -50,7 +50,9 @@
 		}
 		
 		.buttonContainer {
-			width: 100%;
+			width: 320px;
+			display: block; 
+			margin: 0 auto;
 		}
 		
 		.buttonContainer button {
@@ -60,8 +62,12 @@
 			line-height: 18px;
 		}		
 		
+		.registerButton {
+			float: left;
+		}
+		
 		.loginButton {
-			margin: 0 12px;
+			float: right;
 		}
 		
 		.hideFooter {
@@ -87,18 +93,17 @@
 		<div class="{style.topBackground}" />
 		<div class="container {style.homeBody}">
 			<div class="content">
-				<g:HorizontalPanel styleName="{style.homePageContainer}">					
-					<g:VerticalPanel styleName="{style.CTApanel}">
+				<div class="{style.homePageContainer}">					
+					<div class="{style.CTApanel}">
 						<g:Image styleName="{style.logo} row" url="img/logo.png" />
 						<g:Label styleName="{style.tagLine} row">Get your list on.</g:Label>
 						<g:Label styleName="{style.registerCTA} row">What are your top songs of all-time?</g:Label>
-						<g:HorizontalPanel styleName="{style.buttonContainer} row">
-							<g:Button  ui:field="registerButton">Register</g:Button>
+						<div class="{style.buttonContainer} row">
+							<g:Button ui:styleName="{style.registerButton}" ui:field="registerButton">Register</g:Button>
 							<g:Button ui:styleName="{style.loginButton}" ui:field="loginButton">Login</g:Button>
-							<g:Button  ui:field="exploreButton">Explore</g:Button>
-						</g:HorizontalPanel>
-					</g:VerticalPanel>
-				</g:HorizontalPanel>
+						</div>
+					</div>
+				</div>
 			</div>			
 		</div>
 		<g:Image url="img/home-page-tablet.png" ui:styleName="{style.footerImage} row"/>

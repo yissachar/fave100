@@ -92,18 +92,10 @@ public class HomePresenter extends
 	public void showLogin() {
 		addToPopupSlot(loginPopup);
 	}
-
-	@Override
-	public void explore() {
-		final PlaceRequest request = new PlaceRequest(NameTokens.explore);
-		placeManager.revealPlace(request);
-	}
 }
 
 interface HomeUiHandlers extends UiHandlers {
 	void showRegister();
 
 	void showLogin();
-
-	void explore();
 }
