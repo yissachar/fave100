@@ -16,6 +16,7 @@
 		
 		.songHeader {
 			overflow: hidden;
+			border-bottom: 0px;
 		}
 		
 		.songDetails {
