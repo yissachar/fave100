@@ -5,20 +5,39 @@
 	<ui:style>
 		.container {
 			padding: 6px;
+			display: block;
+			overflow: hidden;
 		}
 		
 		.whyline {
-			font-size: 1.3em;
 			font-style: italic;
+			font-size: 1.1em;
+		}
+		
+		.avatar {
+			max-width: 35px;
+			max-height: 35px;
+			float: left;
+			margin-right: 6px;
 		}
 		
 		.userLink {
+			font-size: 1.2em;
+			color: #5eaae5;
+		}
+		
+		.whylineDetails {
+			float: left;
+			width: 80%;
 		}
 			
 	</ui:style>
 	
-	<g:VerticalPanel ui:styleName="{style.container}">
-		<g:Label ui:field="whyline" ui:styleName="{style.whyline}"/>
-		<g:InlineHyperlink ui:field="userLink" ui:styleName="{style.userLink}"/>
-	</g:VerticalPanel>
+	<g:HTMLPanel ui:styleName="{style.container}">
+		<g:Image ui:field="avatar" ui:styleName="{style.avatar}"/>
+		<div class="{style.whylineDetails}">
+			<g:InlineHyperlink ui:field="userLink" ui:styleName="{style.userLink}"/>
+			<g:Label ui:field="whyline" ui:styleName="{style.whyline}"/>
+		</div>		
+	</g:HTMLPanel>
 </ui:UiBinder> 
