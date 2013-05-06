@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.explore.widgets.ExploreItem;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -32,6 +33,7 @@ public class ExploreView extends ViewWithUiHandlers<ExploreUiHandlers> implement
 
 	@UiField HTMLPanel topBar;
 	@UiField FocusPanel focusPanel;
+	@UiField HTMLPanel subPanel;
 	@UiField DivElement exploreContainer;
 	private LinkedList<ExploreItem> animationQueue = new LinkedList<ExploreItem>();
 	private List<ExploreItem> visibleItems = new ArrayList<ExploreItem>();
@@ -42,6 +44,7 @@ public class ExploreView extends ViewWithUiHandlers<ExploreUiHandlers> implement
 	@Inject
 	public ExploreView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+		exploreContainer.removeFromParent();
 	}
 
 	@Override
@@ -72,11 +75,18 @@ public class ExploreView extends ViewWithUiHandlers<ExploreUiHandlers> implement
 	}
 
 	@Override
-	public void setExploreList(final List<ExploreItem> results) {
+	public void clearList() {
 		while (exploreContainer.hasChildNodes()) {
 			exploreContainer.removeChild(exploreContainer.getLastChild());
 		}
 		visibleItems.clear();
+		exploreContainer.removeFromParent();
+		animationQueue.clear();
+		timer.cancel();
+	}
+
+	@Override
+	public void setExploreList(final List<ExploreItem> results) {
 
 		// First add all items to container
 		int index = 2;// Start from index 2 to make sure not visible
@@ -85,8 +95,10 @@ public class ExploreView extends ViewWithUiHandlers<ExploreUiHandlers> implement
 			$(item).css("top", "-" + String.valueOf(index * $(item).outerHeight(true)) + "px");
 			index++;
 		}
+		subPanel.getElement().appendChild(exploreContainer);
 
 		// Then, in reverse order float them down screen
+		GWT.log("Height is: " + $(exploreContainer).outerHeight(true));
 		dropPosition = 1000 - $(exploreContainer).outerHeight(true);
 		Collections.reverse(results);
 		for (final ExploreItem item : results) {
