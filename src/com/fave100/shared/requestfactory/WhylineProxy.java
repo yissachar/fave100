@@ -10,4 +10,6 @@ public interface WhylineProxy extends ValueProxy {
 	String getWhyline();
 
 	String getUsername();
+
+	String getAvatar();
 }

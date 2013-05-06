@@ -4,10 +4,12 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.List;
 
+import com.fave100.server.domain.appuser.AppUser;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.PojoIf;
 
@@ -26,6 +28,7 @@ public class Whyline extends DatastoreObject {
 	private String whyline;
 	private String username;
 	@Index(WhylineCheck.class) private Ref<Song> song;
+	@Ignore String avatar;
 
 	public Whyline() {
 	}
@@ -42,6 +45,13 @@ public class Whyline extends DatastoreObject {
 
 	public static List<Whyline> getWhylinesForSong(final Song song) {
 		final List<Whyline> whylines = ofy().load().type(Whyline.class).filter("song", Ref.create(song)).limit(15).list();
+		// Get the users avatars 
+		// TODO: Should be a bulk query for efficiency
+		for (final Whyline whyline : whylines) {
+			final AppUser user = ofy().load().type(AppUser.class).id(whyline.getUsername()).get();
+			if (user != null)
+				whyline.setAvatar(user.getAvatarImage());
+		}
 		return whylines;
 	}
 
@@ -77,6 +87,14 @@ public class Whyline extends DatastoreObject {
 
 	public void setUsername(final String username) {
 		this.username = username;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(final String avatar) {
+		this.avatar = avatar;
 	}
 
 }
