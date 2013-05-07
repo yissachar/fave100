@@ -317,6 +317,7 @@ public class FavePickWidget extends Composite {
 					_rankCallback.onChange(getSongID(), _rank - 1, _rank - 2);
 				}
 			});
+			upButton.addStyleName("rankUpArrow");
 			arrowPanel.add(upButton);
 
 			final Image downButton = new Image("img/down-arrow.png");
@@ -326,6 +327,7 @@ public class FavePickWidget extends Composite {
 					_rankCallback.onChange(getSongID(), _rank - 1, _rank);
 				}
 			});
+			downButton.addStyleName("rankDownArrow");
 			arrowPanel.add(downButton);
 
 			final Image deleteButton = new Image("img/delete.png");

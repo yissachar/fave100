@@ -253,6 +253,14 @@ footer {
 	display: block;
 }
 
+.faveList > div:first-child .rankUpArrow {
+	display: none;
+}
+
+.faveList > div:last-child .rankDownArrow {
+	display: none;
+}
+
 /* Side notification */
 .sideNotification{
 	position: absolute;
