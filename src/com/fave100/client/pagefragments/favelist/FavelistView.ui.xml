@@ -60,5 +60,5 @@
 		}
 	</ui:style>
 	
-	<g:HTMLPanel ui:field="favelist" ui:styleName="{style.favelist} faveList"/>
+	<g:FlowPanel ui:field="favelist" ui:styleName="{style.favelist} faveList"/>
 </ui:UiBinder>

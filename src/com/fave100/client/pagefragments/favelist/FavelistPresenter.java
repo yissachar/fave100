@@ -1,5 +1,7 @@
 package com.fave100.client.pagefragments.favelist;
 
+import static com.google.gwt.query.client.GQuery.$;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,8 @@ public class FavelistPresenter extends
 		void setList(List<FavePickWidget> pickWidgets);
 
 		void addPick(FavePickWidget widget);
+
+		void swapPicks(int indexA, int indexB);
 	}
 
 	public interface WhyLineChanged {
@@ -174,6 +178,8 @@ public class FavelistPresenter extends
 					final FavePickWidget widget = new FavePickWidget(item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded);
 					getView().addPick(widget);
 					widgets.add(widget);
+					$(widget).scrollIntoView();
+					widget.focusRank();
 				}
 			}
 
@@ -244,10 +250,9 @@ public class FavelistPresenter extends
 		if (currentIndex == newIndex)
 			return;
 
-		// If index out of range, refresh list with correct values
+		// If index out of range, refresh with correct values
 		if (newIndex < 0 || newIndex >= getFavelist().size()) {
 			widgets.get(currentIndex).setRank(currentIndex + 1);
-			getView().setList(widgets);
 			return;
 		}
 
@@ -266,7 +271,7 @@ public class FavelistPresenter extends
 					widget.setRank(i);
 					i++;
 				}
-				getView().setList(widgets);
+				getView().swapPicks(currentIndex, newIndex);
 			}
 
 			@Override

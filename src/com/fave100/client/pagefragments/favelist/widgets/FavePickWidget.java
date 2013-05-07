@@ -23,8 +23,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -169,7 +167,21 @@ public class FavePickWidget extends Composite {
 
 					@Override
 					public void onKeyDown(final KeyDownEvent event) {
-						if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
+						final int keyCode = event.getNativeKeyCode();
+						// Only allow numbers and special keys
+						if ((!((keyCode > 46 && keyCode < 58)) && !((keyCode > 96 && keyCode < 108))) && (keyCode != (char)KeyCodes.KEY_TAB)
+								&& (keyCode != (char)KeyCodes.KEY_BACKSPACE)
+								&& (keyCode != (char)KeyCodes.KEY_ESCAPE)
+								&& (keyCode != (char)KeyCodes.KEY_DELETE) && (keyCode != (char)KeyCodes.KEY_ENTER)
+								&& (keyCode != (char)KeyCodes.KEY_HOME) && (keyCode != (char)KeyCodes.KEY_END)
+								&& (keyCode != (char)KeyCodes.KEY_LEFT) && (keyCode != (char)KeyCodes.KEY_UP)
+								&& (keyCode != (char)KeyCodes.KEY_RIGHT) && (keyCode != (char)KeyCodes.KEY_DOWN)) {
+
+							event.preventDefault();
+							event.stopPropagation();
+						}
+
+						if (keyCode == KeyCodes.KEY_ENTER)
 							updateRank(rankText);
 					}
 				});
@@ -180,24 +192,7 @@ public class FavePickWidget extends Composite {
 						updateRank(rankText);
 					}
 				});
-				// Only allow numbers in rankText
-				rankText.addKeyPressHandler(new KeyPressHandler() {
-					@Override
-					public void onKeyPress(final KeyPressEvent event) {
-						final TextBox sender = (TextBox)event.getSource();
 
-						if (sender.isReadOnly() || !sender.isEnabled()) {
-							return;
-						}
-
-						final Character charCode = event.getCharCode();
-
-						// allow digits
-						if (!Character.isDigit(charCode)) {
-							sender.cancelKey();
-						}
-					}
-				});
 				rankPanel.clear();
 				rankPanel.setWidget(rankText);
 				rankText.setFocus(true);
@@ -358,6 +353,11 @@ public class FavePickWidget extends Composite {
 			});
 			hoverPanel.add(addButton);
 		}
+	}
+
+	public void focusRank() {
+		_songPick.fireEvent(new ClickEvent() {
+		});
 	}
 
 	/* Getters and Setters */
