@@ -30,21 +30,28 @@ public class ShareButton extends Composite {
 	@UiField TextBox shareLink;
 	@UiField AnchorElement twitterShare;
 	@UiField DivElement fbLike;
+	HTML gplus;
 
 	public ShareButton() {
 		initWidget(uiBinder.createAndBindUi(this));
-		// Set Facebook like URL
-		fbLike.setAttribute("data-href", Window.Location.getHref());
-		// Set share link
-		shareLink.setText(Window.Location.getHref());
 		final String s = "<g:plusone href='" + Window.Location.getHref() + "'></g:plusone>";
-		final HTML h = new HTML(s);
-		gplusPlaceholder.add(h);
+		gplus = new HTML(s);
+		gplusPlaceholder.add(gplus);
 	}
 
 	@UiHandler("shareLink")
 	void onClick(final ClickEvent event) {
 		shareLink.setSelectionRange(0, shareLink.getText().length());
+	}
+
+	public void setSharingUrls() {
+		// Set Facebook like URL
+		fbLike.setAttribute("data-href", Window.Location.getHref());
+		// Set Google+ URL
+		gplus.getElement().setAttribute("href", Window.Location.getHref());
+		// Set share link
+		shareLink.setText(Window.Location.getHref());
+
 	}
 
 	public void setOwnList(final boolean ownList) {
