@@ -608,7 +608,6 @@ public class AppUser extends DatastoreObject {
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
 			return;
-		// TODO: Max upload size?
 		// TODO: Twitter user can't upload own avatar?
 		if (currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
 			BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
@@ -620,7 +619,6 @@ public class AppUser extends DatastoreObject {
 	public String getAvatarImage() {
 		if (avatar == null) {
 			// If there is no avatar, serve a Gravatar
-			// TODO: Do we even want to show gravatars at all? some privacy issues
 			if (getEmail() == null)
 				return "http://www.gravatar.com/avatar/?d=mm";
 			try {

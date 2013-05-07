@@ -96,9 +96,6 @@ public class RegisterPresenter extends
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 
-		// TODO: Captcha/recaptcha? Other spam filtering to prevent
-		// registration?
-
 		provider = placeRequest.getParameter("provider", "");
 		if (provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
 			// The user is being redirected back to the register page after
@@ -177,7 +174,6 @@ public class RegisterPresenter extends
 		}
 		else if (Window.Location.getParameter("code") != null) {
 			// FaceBook login
-			// TODO: Review if we can do this without hacky code parameter getting
 
 			// Check if user alaready logged in through Facebook
 			LoadingIndicator.show();
