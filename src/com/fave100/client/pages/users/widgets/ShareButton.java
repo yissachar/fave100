@@ -10,6 +10,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -23,6 +25,8 @@ public class ShareButton extends Composite {
 	boolean _ownList;
 
 	@UiField FocusPanel shareArea;
+	@UiField HTMLPanel shareContainer;
+	@UiField HTMLPanel gplusPlaceholder;
 	@UiField TextBox shareLink;
 	@UiField AnchorElement twitterShare;
 	@UiField DivElement fbLike;
@@ -33,6 +37,9 @@ public class ShareButton extends Composite {
 		fbLike.setAttribute("data-href", Window.Location.getHref());
 		// Set share link
 		shareLink.setText(Window.Location.getHref());
+		final String s = "<g:plusone href='" + Window.Location.getHref() + "'></g:plusone>";
+		final HTML h = new HTML(s);
+		gplusPlaceholder.add(h);
 	}
 
 	@UiHandler("shareLink")
