@@ -116,22 +116,6 @@ public class FavePickWidget extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		fillWidget();
-
-		mainPanel.addDomHandler(new MouseOverHandler() {
-
-			@Override
-			public void onMouseOver(final MouseOverEvent event) {
-				hoverPanel.removeStyleName("hide");
-			}
-		}, MouseOverEvent.getType());
-
-		mainPanel.addDomHandler(new MouseOutHandler() {
-
-			@Override
-			public void onMouseOut(final MouseOutEvent event) {
-				hoverPanel.addStyleName("hide");
-			}
-		}, MouseOutEvent.getType());
 	}
 
 	private void fillWidget() {

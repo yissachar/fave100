@@ -249,6 +249,10 @@ footer {
 	display: none;
 }
 
+.faveList > div:hover .hide {
+	display: block;
+}
+
 /* Side notification */
 .sideNotification{
 	position: absolute;
