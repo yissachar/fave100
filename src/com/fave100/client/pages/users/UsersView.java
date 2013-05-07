@@ -86,6 +86,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public native void nativeRenderShare() /*-{
 		$wnd.FB.XFBML.parse();
 		$wnd.twttr.widgets.load();
+		$wnd.gapi.plusone.go();
 	}-*/;
 
 	@Override
