@@ -81,6 +81,7 @@ public class UsersPresenter extends
 			public void onWindowScroll(final ScrollEvent event) {
 				final Widget widget = songAutocomplete.getWidget();
 				if (event.getScrollTop() >= 26) {
+					songAutocomplete.getView().hideHelp();
 					widget.addStyleName(getView().getFixedSearchStyle());
 				}
 				else {

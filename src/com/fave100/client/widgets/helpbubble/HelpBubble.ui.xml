@@ -1,0 +1,54 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:style>
+		.arrow {
+			display: block;
+			margin: 0 auto;
+			width: 10px;
+			margin-top: 3px;
+		}
+		
+		.container {
+			border: 1px solid #AAA;
+			border-radius: 4px;			
+			background-color: #FFF;
+			padding: 3px;
+			box-shadow: 0px 0px 3px #AAA;
+			margin-top: -1px;
+			overflow: none;
+		}
+		
+		.helpTitle {
+			float: left;
+			font-weight: bold;
+		}
+		
+		.closeButton {
+			float: right;
+			padding: 2px;
+			font-size: 1.4em;
+			line-height: 0.7;
+		}
+		
+		.closeButton:hover {
+			cursor: pointer;
+		}
+		
+		.helpText {		
+			margin-top: 3px;
+			clear: both;
+		}
+	</ui:style>
+	
+	<g:HTMLPanel>
+		<g:Image ui:field="arrow" ui:styleName="{style.arrow}" url="img/help-bubble-arrow.png"/>
+		<g:FlowPanel ui:styleName="{style.container}">						
+			<g:InlineLabel ui:field="helpTitle" ui:styleName="{style.helpTitle}"/>
+			<g:InlineLabel ui:field="closeButton" ui:styleName="{style.closeButton}">x</g:InlineLabel>
+			<g:Label ui:field="helpText" ui:styleName="{style.helpText}"/>
+		</g:FlowPanel>
+	</g:HTMLPanel>
+	
+</ui:UiBinder> 
