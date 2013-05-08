@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
+import com.fave100.client.events.FaveListSizeChangedEvent;
 import com.fave100.client.pagefragments.favelist.widgets.FavePickWidget;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
@@ -57,6 +58,7 @@ public class FavelistPresenter extends
 		void onAdded(String songID, String song, String artist);
 	}
 
+	private EventBus eventBus;
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
 	// The user whose favelist we are showing
@@ -99,6 +101,7 @@ public class FavelistPresenter extends
 								final ApplicationRequestFactory requestFactory,
 								final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
+		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
 		this.currentUser = currentUser;
@@ -132,6 +135,7 @@ public class FavelistPresenter extends
 				widgets = pickWidgets;
 
 				getView().setList(pickWidgets);
+				eventBus.fireEvent(new FaveListSizeChangedEvent(getFavelist().size()));
 
 			}
 		});
@@ -180,6 +184,7 @@ public class FavelistPresenter extends
 					widgets.add(widget);
 					$(widget).scrollIntoView();
 					widget.focusRank();
+					eventBus.fireEvent(new FaveListSizeChangedEvent(getFavelist().size()));
 				}
 			}
 
@@ -218,6 +223,7 @@ public class FavelistPresenter extends
 		final Request<Void> req = requestFactory.faveListRequest()
 				.removeFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID);
 		req.fire();
+		eventBus.fireEvent(new FaveListSizeChangedEvent(getFavelist().size()));
 	}
 
 	@Override

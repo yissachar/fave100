@@ -3,6 +3,7 @@ package com.fave100.client.pagefragments.autocomplete;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fave100.client.events.FaveListSizeChangedEvent;
 import com.fave100.client.events.SongSelectedEvent;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.SearchResultProxy;
@@ -38,6 +39,10 @@ public class SongAutocompletePresenter extends
 
 		void clearSearch();
 
+		void showHelp();
+
+		void hideHelp();
+
 		String getSearchTerm();
 	}
 
@@ -60,6 +65,17 @@ public class SongAutocompletePresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+		FaveListSizeChangedEvent.register(eventBus, new FaveListSizeChangedEvent.Handler() {
+			@Override
+			public void onFaveListLoaded(final FaveListSizeChangedEvent event) {
+				if (event.getSize() == 0) {
+					getView().showHelp();
+				}
+				else {
+					getView().hideHelp();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -108,6 +124,7 @@ public class SongAutocompletePresenter extends
 				currentSuggestions = results;
 				final int totalResults = Integer.parseInt(obj.get("total").toString());
 				getView().setSuggestions(results, totalResults);
+				getView().hideHelp();
 				setMaxSelection(results.size() - 1);
 
 				if (getPage() == 0)

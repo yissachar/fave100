@@ -2,6 +2,7 @@ package com.fave100.client.pagefragments.autocomplete;
 
 import java.util.List;
 
+import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -43,6 +44,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 
 	@UiField SongAutocompleteStyle style;
 	@UiField TextBox searchBox;
+	@UiField(provided = true) HelpBubble helpBubble;
 	@UiField HTMLPanel resultsArea;
 	@UiField FocusPanel eventCatcher;
 	@UiField HTMLPanel resultsPanel;
@@ -53,6 +55,9 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 
 	@Inject
 	public SongAutocompleteView(final Binder binder) {
+		final String helpText = "Use the search box to search for your favorite songs and add them to your list";
+		helpBubble = new HelpBubble("Song search", helpText, 200, HelpBubble.Direction.LEFT);
+		helpBubble.setVisible(false);
 		widget = binder.createAndBindUi(this);
 		resultsArea.setVisible(false);
 		// Set a placeholder text
@@ -193,5 +198,15 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	@Override
 	public void clearSearch() {
 		searchBox.setText("");
+	}
+
+	@Override
+	public void showHelp() {
+		helpBubble.setVisible(true);
+	}
+
+	@Override
+	public void hideHelp() {
+		helpBubble.setVisible(false);
 	}
 }
