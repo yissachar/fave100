@@ -5,7 +5,6 @@
 
 	<ui:style type="com.fave100.client.pagefragments.favelist.widgets.FavePickWidget.FavePickWidgetStyle">
 		.mainPanel {
-			
 		}
 		
 		.mainPanel tr {
@@ -61,7 +60,7 @@
 		}	
 	</ui:style>
 
-	<g:HTMLPanel>
+	<g:HTMLPanel ui:field="container">
 		<g:HorizontalPanel spacing="0" ui:styleName="{style.mainPanel}" verticalAlignment="middle" ui:field="mainPanel">
 			<g:cell width="10%">
 				<g:SimplePanel ui:field="rankPanel" ui:styleName="{style.rank}"></g:SimplePanel>
