@@ -2,7 +2,12 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
-	<ui:style>
+	<ui:style>	
+		.shareTitle {
+			font-weight: bold;
+			margin-bottom: 10px;
+		}
+		
 		.shareCTA {
 			text-align: center;
 		}
@@ -30,6 +35,7 @@
 	
 	<g:FocusPanel ui:field="shareArea">
 		<g:HTMLPanel ui:field="shareContainer">
+			<g:Label ui:styleName="{style.shareTitle}">Share this:</g:Label>
 			<a ui:field="twitterShare" href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-size="medium" data-count="horizontal">Tweet</a>
 			<br/>
 			<div ui:field="fbLike" class="fb-like {style.fbLike}" data-send="false" data-layout="button_count" data-width="150" data-show-faces="false"></div>
