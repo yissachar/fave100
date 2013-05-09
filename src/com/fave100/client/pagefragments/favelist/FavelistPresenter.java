@@ -183,8 +183,15 @@ public class FavelistPresenter extends
 					getView().addPick(widget);
 					widgets.add(widget);
 					$(widget).scrollIntoView();
-					widget.focusRank();
-					eventBus.fireEvent(new FaveListSizeChangedEvent(getFavelist().size()));
+					favelist.add(item);
+					if (favelist.size() == 1) {
+						// Only one song in list, show help bubble for whyline and focus
+						widget.focusWhyline();
+						widget.showWhylineHelpBubble();
+					}
+					else {
+						widget.focusRank();
+					}
 				}
 			}
 
@@ -219,11 +226,11 @@ public class FavelistPresenter extends
 			widgets.get(i).setRank(i);
 		}
 		widgets.remove(index);
+		favelist.remove(index);
 		// Send request for server to remove it
 		final Request<Void> req = requestFactory.faveListRequest()
 				.removeFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID);
 		req.fire();
-		eventBus.fireEvent(new FaveListSizeChangedEvent(getFavelist().size()));
 	}
 
 	@Override

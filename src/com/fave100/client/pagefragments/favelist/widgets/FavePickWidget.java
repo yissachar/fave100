@@ -12,6 +12,7 @@ import com.fave100.client.pagefragments.favelist.FavelistPresenter.RankChanged;
 import com.fave100.client.pagefragments.favelist.FavelistPresenter.WhyLineChanged;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.FaveItemProxy;
@@ -34,6 +35,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -61,6 +63,7 @@ public class FavePickWidget extends Composite {
 		String hoverPanel();
 	}
 
+	@UiField HTMLPanel container;
 	@UiField FavePickWidgetStyle style;
 	@UiField HorizontalPanel mainPanel;
 	@UiField SimplePanel rankPanel;
@@ -79,6 +82,8 @@ public class FavePickWidget extends Composite {
 	private RankChanged _rankCallback;
 	private ItemDeleted _deletedCallback;
 	private ItemAdded _addedCallback;
+	private Label whyLineLabel;
+	private HelpBubble whylineHelpBubble;
 
 	private final MouseOverHandler _whyLineEmptyMouseOver = new MouseOverHandler() {
 
@@ -124,14 +129,14 @@ public class FavePickWidget extends Composite {
 
 		artist.setText(getArtist());
 
-		final Label whyLine = new Label(getWhyline());
+		whyLineLabel = new Label(getWhyline());
 		if (_editable) {
-			if (whyLine.getText().isEmpty()) {
-				initEmptyWhyLine(whyLine);
+			if (whyLineLabel.getText().isEmpty()) {
+				initEmptyWhyLine(whyLineLabel);
 			}
-			setupWhyLineEdit(whyLine);
+			setupWhyLineEdit(whyLineLabel);
 		}
-		whyLinePanel.setWidget(whyLine);
+		whyLinePanel.setWidget(whyLineLabel);
 
 		setupHoverPanel();
 		hoverPanel.addStyleName(style.hoverPanel());
@@ -244,6 +249,7 @@ public class FavePickWidget extends Composite {
 					@Override
 					public void onKeyDown(final KeyDownEvent event) {
 						if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+							whylineHelpBubble.setVisible(false);
 							saveAndSwitchToLabel(txtBox);
 						}
 					}
@@ -252,6 +258,7 @@ public class FavePickWidget extends Composite {
 
 					@Override
 					public void onBlur(final BlurEvent event) {
+						whylineHelpBubble.setVisible(false);
 						saveAndSwitchToLabel(txtBox);
 					}
 				});
@@ -353,6 +360,22 @@ public class FavePickWidget extends Composite {
 			});
 			hoverPanel.add(addButton);
 		}
+	}
+
+	public void showWhylineHelpBubble() {
+		final String whylineText = "You can add an 80 character Why-Line here, explaining why this song is in your Fave100";
+		whylineHelpBubble = new HelpBubble("Why-Line", whylineText, 400, HelpBubble.Direction.UP);
+		container.add(whylineHelpBubble);
+	}
+
+	public void showRankWhylineHelpBubble() {
+		final String rankText = "You can change the rank ";
+		final HelpBubble rankHelpBubble = new HelpBubble("Rank", rankText, 600, HelpBubble.Direction.LEFT);
+	}
+
+	public void focusWhyline() {
+		whyLineLabel.fireEvent(new ClickEvent() {
+		});
 	}
 
 	public void focusRank() {
