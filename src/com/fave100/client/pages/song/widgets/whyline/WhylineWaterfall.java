@@ -25,7 +25,7 @@ public class WhylineWaterfall extends Composite {
 	}
 
 	@UiField WhylineWaterfallStyle style;
-	@UiField VerticalPanel container;
+	@UiField VerticalPanel whylines;
 	private ApplicationRequestFactory requestFactory;
 
 	interface WhylineWaterfallStyle extends CssResource {
@@ -43,14 +43,14 @@ public class WhylineWaterfall extends Composite {
 		whylineReq.fire(new Receiver<List<WhylineProxy>>() {
 			@Override
 			public void onSuccess(final List<WhylineProxy> whylineList) {
-				container.clear();
+				whylines.clear();
 				for (final WhylineProxy whyline : whylineList) {
-					container.add(new WhylineWidget(whyline));
+					whylines.add(new WhylineWidget(whyline));
 				}
 				if (whylineList.size() == 0) {
 					final Label label = new Label("No whylines yet");
 					label.addStyleName(style.noWhyline());
-					container.add(label);
+					whylines.add(label);
 				}
 			}
 		});
