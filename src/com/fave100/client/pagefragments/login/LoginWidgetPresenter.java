@@ -3,7 +3,6 @@ package com.fave100.client.pagefragments.login;
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
-import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.exceptions.user.IncorrectLoginException;
@@ -54,6 +53,7 @@ public class LoginWidgetPresenter extends
 	private EventBus eventBus;
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
+	private String redirect;
 
 	@Inject
 	public LoginWidgetPresenter(final EventBus eventBus, final MyView view,
@@ -69,21 +69,13 @@ public class LoginWidgetPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
-		// As soon as the LoginWidget is constructed, st the Google and Facebook
-		// auth URL's
 
-		// Construct a redirect URL that third party logins will use to send
-		// users back to our site
-		String redirectUrl = "http://" + Window.Location.getHost()
-				+ Window.Location.getPath();
-		redirectUrl += Window.Location.getQueryString() + "#"
-				+ NameTokens.register + ";provider=";
+		redirect = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/oauthcallback.html";
 
 		// Get the login url for Google
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		final Request<String> loginUrlReq = appUserRequest
-				.getGoogleLoginURL(redirectUrl
-						+ RegisterPresenter.PROVIDER_GOOGLE);
+				.getGoogleLoginURL(redirect);
 
 		loginUrlReq.fire(new Receiver<String>() {
 			@Override
@@ -94,8 +86,7 @@ public class LoginWidgetPresenter extends
 
 		// Get the login url for Facebook
 		final Request<String> facebookLoginUrlReq = requestFactory
-				.appUserRequest().getFacebookAuthUrl(
-						redirectUrl + RegisterPresenter.PROVIDER_FACEBOOK);
+				.appUserRequest().getFacebookAuthUrl(redirect);
 		facebookLoginUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
@@ -158,21 +149,13 @@ public class LoginWidgetPresenter extends
 	// user clicks on the Twitter button.
 	@Override
 	public void goToTwitterAuth() {
-		// Construct a redirect URL that Twitter will use to send users back to
-		// our site
-		String redirect = "http://" + Window.Location.getHost()
-				+ Window.Location.getPath();
-		redirect += Window.Location.getQueryString() + "#"
-				+ NameTokens.register + ";provider="
-				+ RegisterPresenter.PROVIDER_TWITTER;
-
 		// Authenticate the user with Twitter
 		final Request<String> authUrlReq = requestFactory.appUserRequest()
 				.getTwitterAuthUrl(redirect);
 		authUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
-				Window.Location.assign(url);
+				Window.open(url, "", "");
 			}
 		});
 	}

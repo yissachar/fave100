@@ -4,10 +4,7 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
-import com.fave100.client.pages.register.RegisterPresenter;
-import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
@@ -54,7 +51,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
 	private CurrentUser currentUser;
-	private String facebookRedirect;
+	private String redirect;
 
 	@Inject
 	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager, final CurrentUser currentUser) {
@@ -70,11 +67,12 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	protected void onBind() {
 		super.onBind();
 
+		redirect = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/oauthcallback.html";
+
 		// Get the login url for Google
 		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
 		final Request<String> loginUrlReq = appUserRequest
-				.getGoogleLoginURL(Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + Window.Location.getQueryString()
-						+ "#" + NameTokens.register + ";provider=" + RegisterPresenter.PROVIDER_GOOGLE);
+				.getGoogleLoginURL(redirect);
 		loginUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
@@ -82,10 +80,8 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			}
 		});
 
-		facebookRedirect = Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + Window.Location.getQueryString()
-				+ "#" + NameTokens.register + ";provider=" + RegisterPresenter.PROVIDER_FACEBOOK;
 		final Request<String> fbAuthUrlReq = requestFactory.appUserRequest()
-				.getFacebookAuthUrl(facebookRedirect);
+				.getFacebookAuthUrl(redirect);
 		fbAuthUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
@@ -156,38 +152,14 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		Notification.show("Thanks for registering!");
 	}
 
-	public void goToMyFave100() {
-		// Need to strip out query params or they will stick around in URL
-		// forever
-		String url = Window.Location.getHref();
-		if (Window.Location.getParameter("oauth_token") != null) {
-			url = url.replace(Window.Location.getParameter("oauth_token"), "");
-			url = url.replace("&oauth_token=", "");
-		}
-		if (Window.Location.getParameter("oauth_verifier") != null) {
-			url = url.replace(Window.Location.getParameter("oauth_verifier"),
-					"");
-			url = url.replace("&oauth_verifier=", "");
-		}
-		if (Window.Location.getParameter("code") != null) {
-			url = url.replace(Window.Location.getParameter("code"), "");
-			url = url.replace("&code=", "");
-		}
-		final String currentUserPlace = new UrlBuilder(NameTokens.users).with(UsersPresenter.USER_PARAM, currentUser.getUsername()).getPlaceToken();
-		url = url.replace(Window.Location.getHash(), currentUserPlace);
-		Window.Location.assign(url);
-	}
-
 	@Override
 	public void goToTwitterAuth() {
 		final Request<String> authUrlReq = requestFactory.appUserRequest()
-				.getTwitterAuthUrl(
-						Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + Window.Location.getQueryString()
-								+ "#" + NameTokens.register + ";provider=" + RegisterPresenter.PROVIDER_TWITTER);
+				.getTwitterAuthUrl(redirect);
 		authUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
-				Window.Location.assign(url);
+				Window.open(url, "", "");
 			}
 		});
 	}

@@ -4,7 +4,9 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
+import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
@@ -17,6 +19,7 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 /**
@@ -42,12 +45,14 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	@Inject private RegisterPopupPresenter registerBox;
 	private EventBus eventBus;
 	private CurrentUser currentUser;
+	private PlaceManager placeManager;
 
 	@Inject
 	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.currentUser = currentUser;
+		this.placeManager = placeManager;
 		getView().setUiHandlers(this);
 
 		Window.addWindowScrollHandler(new ScrollHandler() {
@@ -69,6 +74,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	@Override
 	protected void onBind() {
 		super.onBind();
+		registerCallbacks();
 
 		CurrentUserChangedEvent.register(eventBus,
 				new CurrentUserChangedEvent.Handler() {
@@ -103,6 +109,37 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	@Override
 	public void showRegisterBox() {
 		addToPopupSlot(registerBox);
+	}
+
+	public native void registerCallbacks()/*-{
+		$wnd.googleCallback = (function(obj) {
+			return function() {
+				$entry(obj.@com.fave100.client.pagefragments.topbar.TopBarPresenter::googleCallback()).call(obj);
+			};
+		})(this);
+		$wnd.twitterCallback = (function(obj) {
+			return function(verifier) {
+				$entry(obj.@com.fave100.client.pagefragments.topbar.TopBarPresenter::twitterCallback(Ljava/lang/String;)).call(obj, verifier);
+			};
+		})(this);
+		$wnd.facebookCallback = (function(obj) {
+			return function(code) {
+				$entry(obj.@com.fave100.client.pagefragments.topbar.TopBarPresenter::facebookCallback(Ljava/lang/String;)).call(obj, code);
+			};
+		})(this);
+	}-*/;
+
+	public void googleCallback() {
+		placeManager.revealPlace(new PlaceRequest(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_GOOGLE));
+	}
+
+	public void twitterCallback(final String verifier) {
+		GWT.log("Oauth from top bar: " + verifier);
+		placeManager.revealPlace(new PlaceRequest(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_TWITTER).with("oauth_verifier", verifier));
+	}
+
+	public void facebookCallback(final String code) {
+		placeManager.revealPlace(new PlaceRequest(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_FACEBOOK).with("code", code));
 	}
 }
 

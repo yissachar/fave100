@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<script type="text/javascript">
+if(!window.opener || !window.opener.twitterCallback || !window.opener.facebookCallback || !window.opener.googleCallback) {	
+	document.write("Error: unable to access parent window.");
+	setTimeout("self.close()", 2000);
+}
+else {
+	var getQueryString = function() {
+		var result = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
+		while (m = re.exec(queryString)) {
+			  result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+		}
+		return result;
+	};
+	
+	var response = getQueryString();
+	
+	if(response.oauth_verifier) {	
+    	window.opener.twitterCallback(response.oauth_verifier);
+    } else if(response.code) {    	
+    	window.opener.facebookCallback(response.code);
+    } else {
+    	window.opener.googleCallback();
+    }
+    
+    document.write("Success! Please close this window.");
+    window.open("","_self");
+	window.close();
+}
+</script>
+</head>
+<body>
+</body>
+</html>

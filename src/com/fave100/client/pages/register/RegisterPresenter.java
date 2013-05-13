@@ -16,6 +16,7 @@ import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
@@ -122,9 +123,7 @@ public class RegisterPresenter extends
 								eventBus.fireEvent(new CurrentUserChangedEvent(
 										user));
 								if (user != null) {
-									getProxy().manualRevealFailed();
-									final PlaceRequest place = new PlaceRequest(NameTokens.users).with(UsersPresenter.USER_PARAM, user.getUsername());
-									placeManager.revealPlace(place);
+									goToUserPage(user.getUsername());
 								}
 								else {
 									getProxy().manualReveal(RegisterPresenter.this);
@@ -147,8 +146,9 @@ public class RegisterPresenter extends
 
 			LoadingIndicator.show();
 			// First see if they are already logged in
-			final String oauth_verifier = Window.Location
-					.getParameter("oauth_verifier");
+			final String oauth_verifier = placeRequest.getParameter("oauth_verifier", "");//Window.Location
+			//					.getParameter("oauth_verifier");
+			GWT.log("Oauth verifier:" + oauth_verifier);
 			final Request<AppUserProxy> loginWithTwitter = requestFactory
 					.appUserRequest().loginWithTwitter(oauth_verifier);
 			loginWithTwitter.fire(new Receiver<AppUserProxy>() {
@@ -157,7 +157,7 @@ public class RegisterPresenter extends
 					LoadingIndicator.hide();
 					eventBus.fireEvent(new CurrentUserChangedEvent(user));
 					if (user != null) {
-						registerContainer.goToMyFave100();
+						goToUserPage(user.getUsername());
 					}
 					else {
 						// If they are not logged in, prompt for a username
@@ -175,20 +175,18 @@ public class RegisterPresenter extends
 			});
 
 		}
-		else if (Window.Location.getParameter("code") != null) {
-			// FaceBook login
-
+		else if (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 			// Check if user alaready logged in through Facebook
 			LoadingIndicator.show();
 			final Request<AppUserProxy> loginWithFacebook = requestFactory
-					.appUserRequest().loginWithFacebook(Window.Location.getParameter("code"));
+					.appUserRequest().loginWithFacebook(placeRequest.getParameter("code", ""));
 			loginWithFacebook.fire(new Receiver<AppUserProxy>() {
 				@Override
 				public void onSuccess(final AppUserProxy user) {
 					LoadingIndicator.hide();
 					eventBus.fireEvent(new CurrentUserChangedEvent(user));
 					if (user != null) {
-						registerContainer.goToMyFave100();
+						goToUserPage(user.getUsername());
 					}
 					else {
 						// If they are not logged in, prompt for a username
@@ -267,7 +265,7 @@ public class RegisterPresenter extends
 						eventBus.fireEvent(new CurrentUserChangedEvent(
 								createdUser));
 						registerContainer.appUserCreated();
-						registerContainer.goToMyFave100();
+						goToUserPage(createdUser.getUsername());
 					}
 
 					@Override
@@ -288,7 +286,7 @@ public class RegisterPresenter extends
 				// } else if
 				// (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 			}
-			else if (Window.Location.getParameter("code") != null) {
+			else if (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 				// Create Facebook linked account
 				final String state = Window.Location.getParameter("state");
 				final String code = Window.Location.getParameter("code");
@@ -302,7 +300,7 @@ public class RegisterPresenter extends
 								createdUser));
 						if (createdUser != null) {
 							registerContainer.appUserCreated();
-							registerContainer.goToMyFave100();
+							goToUserPage(createdUser.getUsername());
 						}
 
 					}
@@ -334,6 +332,12 @@ public class RegisterPresenter extends
 			return false;
 		}
 		return true;
+	}
+
+	private void goToUserPage(final String username) {
+		getProxy().manualRevealFailed();
+		final PlaceRequest place = new PlaceRequest(NameTokens.users).with(UsersPresenter.USER_PARAM, username);
+		placeManager.revealPlace(place);
 	}
 }
 

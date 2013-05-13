@@ -92,7 +92,7 @@
 		<div class="loginDivider col span_2">or</div>				
 		<div class="{style.registerForm} col span_5">		
 			<div class="{style.thirdPartyLinks}">	
-				<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton">
+				<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton" target="_blank">
 					Register with Google
 				</g:Anchor>
 				<br/>
@@ -100,7 +100,7 @@
 					Register with Twitter
 				</g:Anchor>
 				<br/>
-				<g:Anchor styleName="zocial facebook" ui:field="registerWithFacebookButton">
+				<g:Anchor styleName="zocial facebook" ui:field="registerWithFacebookButton" target="_blank">
 					Register with Facebook
 				</g:Anchor>
 			</div>
