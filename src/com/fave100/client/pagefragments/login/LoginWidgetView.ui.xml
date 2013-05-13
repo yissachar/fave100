@@ -53,13 +53,13 @@
 		<div class="loginDivider col span_2" >or</div>
 		<div class="thirdPartyLoginBox col span_5">
 			<div class="{style.thirdPartyLinks}">
-				<g:Anchor styleName="zocial googleplus" ui:field="signInWithGoogleButton">Sign in
+				<g:Anchor styleName="zocial googleplus" ui:field="signInWithGoogleButton" target="_blank">Sign in
 					with Google</g:Anchor>
 				<br />
 				<g:Anchor styleName="zocial twitter" ui:field="signInWithTwitterButton">Sign in with
 					Twitter</g:Anchor>
 				<br />
-				<g:Anchor styleName="zocial facebook" ui:field="signInWithFacebookButton">Sign in with
+				<g:Anchor styleName="zocial facebook" ui:field="signInWithFacebookButton" target="_blank">Sign in with
 					Facebook</g:Anchor>
 			</div>
 		</div>
