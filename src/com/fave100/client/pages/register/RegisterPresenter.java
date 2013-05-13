@@ -6,6 +6,7 @@ import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
+import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
@@ -121,7 +122,9 @@ public class RegisterPresenter extends
 								eventBus.fireEvent(new CurrentUserChangedEvent(
 										user));
 								if (user != null) {
-									registerContainer.goToMyFave100();
+									getProxy().manualRevealFailed();
+									final PlaceRequest place = new PlaceRequest(NameTokens.users).with(UsersPresenter.USER_PARAM, user.getUsername());
+									placeManager.revealPlace(place);
 								}
 								else {
 									getProxy().manualReveal(RegisterPresenter.this);
