@@ -3,6 +3,11 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:style>
+		.container {
+			position: absolute;
+			width: inherit;
+		}
+		
 		.arrow {
 			display: block;
 			margin: 0 auto;
@@ -10,7 +15,7 @@
 			margin-top: 3px;
 		}
 		
-		.container {
+		.helpContainer {
 			border: 1px solid #AAA;
 			border-radius: 4px;			
 			background-color: #FFF;
@@ -43,11 +48,13 @@
 	</ui:style>
 	
 	<g:HTMLPanel>
-		<g:Image ui:field="arrow" ui:styleName="{style.arrow}" url="img/help-bubble-arrow.png"/>
-		<g:FlowPanel ui:styleName="{style.container}">						
-			<g:InlineLabel ui:field="helpTitle" ui:styleName="{style.helpTitle}"/>
-			<g:InlineLabel ui:field="closeButton" ui:styleName="{style.closeButton}">x</g:InlineLabel>
-			<g:Label ui:field="helpText" ui:styleName="{style.helpText}"/>
+		<g:FlowPanel ui:styleName="{style.container}">
+			<g:Image ui:field="arrow" ui:styleName="{style.arrow}" url="img/help-bubble-arrow.png"/>
+			<g:FlowPanel ui:styleName="{style.helpContainer}">						
+				<g:InlineLabel ui:field="helpTitle" ui:styleName="{style.helpTitle}"/>
+				<g:InlineLabel ui:field="closeButton" ui:styleName="{style.closeButton}">x</g:InlineLabel>
+				<g:Label ui:field="helpText" ui:styleName="{style.helpText}"/>
+			</g:FlowPanel>
 		</g:FlowPanel>
 	</g:HTMLPanel>
 	

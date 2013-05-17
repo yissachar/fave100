@@ -190,6 +190,9 @@ public class FavelistPresenter extends
 						widget.showWhylineHelpBubble();
 					}
 					else {
+						if (favelist.size() == 2) {
+							widget.showRankWhylineHelpBubble();
+						}
 						widget.focusRank();
 					}
 				}
