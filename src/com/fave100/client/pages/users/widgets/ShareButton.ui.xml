@@ -36,8 +36,7 @@
 	<g:FocusPanel ui:field="shareArea">
 		<g:HTMLPanel ui:field="shareContainer">
 			<g:Label ui:styleName="{style.shareTitle}">Share</g:Label>
-			<a ui:field="twitterShare" href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-size="medium" data-count="horizontal">Tweet</a>
-			<br/>
+			<g:HTMLPanel ui:field="twitterContainer"/>
 			<div ui:field="fbLike" class="fb-like {style.fbLike}" data-send="false" data-layout="button_count" data-width="150" data-show-faces="false"></div>
 			<g:HTMLPanel ui:field="gplusPlaceholder"/>
 			<div ui:styleName="{style.linkContainer}">	
