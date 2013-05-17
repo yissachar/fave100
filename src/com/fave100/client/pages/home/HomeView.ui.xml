@@ -28,7 +28,7 @@
 		}
 		
 		.CTApanel {
-			margin-top: 145px;
+			margin-top: 125px;
 		}
 		
 		.logo {
@@ -36,6 +36,7 @@
 			height: 65px;
 			display: block;
 			margin: 0 auto;
+			margin-bottom: 20px;
 		}
 		
 		.tagLine {
@@ -47,12 +48,13 @@
 		.registerCTA {
 			font-size: 1.8em;
 			text-align: center;
+			margin-top: 75px;
 		}
 		
 		.buttonContainer {
 			width: 320px;
 			display: block; 
-			margin: 0 auto;
+			margin: 0 auto 60px;
 		}
 		
 		.buttonContainer button {
