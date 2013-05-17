@@ -249,7 +249,9 @@ public class FavePickWidget extends Composite {
 					@Override
 					public void onKeyDown(final KeyDownEvent event) {
 						if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-							whylineHelpBubble.setVisible(false);
+							if (whylineHelpBubble != null) {
+								whylineHelpBubble.setVisible(false);
+							}
 							saveAndSwitchToLabel(txtBox);
 						}
 					}
@@ -258,7 +260,9 @@ public class FavePickWidget extends Composite {
 
 					@Override
 					public void onBlur(final BlurEvent event) {
-						whylineHelpBubble.setVisible(false);
+						if (whylineHelpBubble != null) {
+							whylineHelpBubble.setVisible(false);
+						}
 						saveAndSwitchToLabel(txtBox);
 					}
 				});
@@ -369,8 +373,10 @@ public class FavePickWidget extends Composite {
 	}
 
 	public void showRankWhylineHelpBubble() {
-		final String rankText = "You can change the rank ";
-		final HelpBubble rankHelpBubble = new HelpBubble("Rank", rankText, 600, HelpBubble.Direction.LEFT);
+		final String rankText = "You can change the rank of your songs here";
+		final HelpBubble rankHelpBubble = new HelpBubble("Rank", rankText, 300, HelpBubble.Direction.LEFT);
+		container.add(rankHelpBubble);
+		rankHelpBubble.setArrowPos(30);
 	}
 
 	public void focusWhyline() {
