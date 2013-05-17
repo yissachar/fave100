@@ -37,7 +37,6 @@ public class HelpBubble extends Composite {
 		helpTitle.setText(title);
 		helpText.setText(text);
 		setWidth(width + "px");
-		GWT.log("width is: " + getOffsetWidth() + " should be: " + width);
 		switch (direction) {
 			case LEFT:
 				$(arrow).css("transform:", "rotate(270deg)");

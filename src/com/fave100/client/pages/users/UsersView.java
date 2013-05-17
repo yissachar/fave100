@@ -40,7 +40,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField HTMLPanel songAutocomplete;
 	@UiField HTMLPanel favelist;
 	@UiField Label userNotFound;
-	private boolean renderedSharing;
 
 	@Inject
 	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
@@ -76,12 +75,9 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@Override
-	public void renderFB() {
-		if (!renderedSharing) {
-			renderedSharing = true;
-			nativeRenderShare();
-		}
+	public void renderSharing() {
 		shareButton.setSharingUrls();
+		nativeRenderShare();
 	}
 
 	public native void nativeRenderShare() /*-{

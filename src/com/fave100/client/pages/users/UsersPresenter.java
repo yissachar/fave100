@@ -42,7 +42,7 @@ public class UsersPresenter extends
 
 		String getFixedSearchStyle();
 
-		void renderFB();
+		void renderSharing();
 
 		void showUserNotFound();
 	}
@@ -154,10 +154,9 @@ public class UsersPresenter extends
 						getProxy().manualReveal(UsersPresenter.this);
 
 						// Now that page is visible, render FB like button						
-						getView().renderFB();
+						getView().renderSharing();
 					}
 					else {
-						//						placeManager.revealDefaultPlace();
 						getView().showUserNotFound();
 						getProxy().manualReveal(UsersPresenter.this);
 					}
