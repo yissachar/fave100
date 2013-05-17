@@ -80,8 +80,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		if (!renderedSharing) {
 			renderedSharing = true;
 			nativeRenderShare();
-			shareButton.setSharingUrls();
 		}
+		shareButton.setSharingUrls();
 	}
 
 	public native void nativeRenderShare() /*-{
