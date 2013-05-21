@@ -14,7 +14,7 @@
 			top: 0;
 			background-color: #5eaae5;
 			display: block;
-			height: 283px;
+			height: 212px;
 		}
 		
 		.homeBody { 
@@ -24,11 +24,11 @@
 		
 		.homePageContainer {
 			margin: 0 auto;	
-			margin-top: 40px;
+			margin-top: 30px;
 		}
 		
 		.CTApanel {
-			margin-top: 125px;
+			margin-top: 63px;
 		}
 		
 		.logo {
@@ -48,7 +48,7 @@
 		.registerCTA {
 			font-size: 1.8em;
 			text-align: center;
-			margin-top: 75px;
+			margin-top: 55px;
 		}
 		
 		.buttonContainer {
