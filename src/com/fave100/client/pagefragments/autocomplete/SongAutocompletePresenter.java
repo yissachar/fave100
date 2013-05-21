@@ -90,11 +90,12 @@ public class SongAutocompletePresenter extends
 
 	// Get a list of songs matching a search term
 	@Override
-	public void getAutocompleteResults(final String searchTerm, final boolean resetPage) {
+	public void getAutocompleteResults(String searchTerm, final boolean resetPage) {
 		if (resetPage)
 			setPage(0);
 
 		setSelection(-1);
+		searchTerm = searchTerm.trim();
 		if (searchTerm.isEmpty() || searchTerm.length() <= 2) {
 			getView().setSuggestions(null, 0);
 			return;
