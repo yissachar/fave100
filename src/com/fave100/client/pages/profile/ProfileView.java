@@ -61,7 +61,7 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	@UiHandler("profileForm")
 	public void onSubmit(final SubmitCompleteEvent event) {
 		// TODO: Is there any more robust way of checking for 413 error?
-		if (event.getResults().contains("Error 413")) {
+		if (event.getResults() != null && event.getResults().contains("Error 413")) {
 			// File too large for upload
 			setFormStatusMessage("File too large. Max size is " + Constants.MAX_AVATAR_SIZE / 1024 + " KB", 4000, true);
 		}

@@ -84,7 +84,7 @@ public class ProfilePresenter extends
 	@Override
 	public void onHide() {
 		super.onHide();
-
+		getView().clearErrors();
 		getView().clearForm();
 	}
 
