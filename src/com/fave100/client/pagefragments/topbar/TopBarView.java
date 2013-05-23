@@ -39,7 +39,8 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField InlineHyperlink logOutLink;
 	@UiField InlineLabel loginButton;
 	@UiField Label notification;
-	@UiField InlineLabel registerButton;
+
+	//	@UiField InlineLabel registerButton;
 
 	@Inject
 	public TopBarView(final Binder binder,
@@ -60,17 +61,18 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		getUiHandlers().showLoginBox();
 	}
 
-	@UiHandler("registerButton")
-	void onRegisterClick(final ClickEvent event) {
-		getUiHandlers().showRegisterBox();
-	}
+	/*
+		@UiHandler("registerButton")
+		void onRegisterClick(final ClickEvent event) {
+			getUiHandlers().showRegisterBox();
+		}*/
 
 	@Override
 	public void setLoggedIn(final String username) {
-		registerButton.setVisible(false);
+		//		registerButton.setVisible(false);
 		loginButton.setVisible(false);
 		logOutLink.setVisible(true);
-		logOutLink.setText("Log out");
+		logOutLink.setText("Sign out");
 		logOutLink.setTargetHistoryToken(NameTokens.logout);
 		final String userPlace = new UrlBuilder(NameTokens.users).with(UsersPresenter.USER_PARAM, username).getPlaceToken();
 		logoLink.setTargetHistoryToken(userPlace);
@@ -78,7 +80,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 
 	@Override
 	public void setLoggedOut() {
-		registerButton.setVisible(true);
+		//		registerButton.setVisible(true);
 		loginButton.setVisible(true);
 		logOutLink.setVisible(false);
 		logoLink.setTargetHistoryToken(NameTokens.home);
