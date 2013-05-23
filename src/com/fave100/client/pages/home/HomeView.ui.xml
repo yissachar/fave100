@@ -104,7 +104,7 @@
 						<g:Label styleName="{style.registerCTA} row">What are your top songs of all-time?</g:Label>
 						<div class="{style.buttonContainer} row">
 							<!-- <g:Button ui:styleName="{style.registerButton}" ui:field="registerButton">Register</g:Button> -->
-							<g:Button ui:styleName="{style.loginButton}" ui:field="loginButton">Login</g:Button>
+							<g:Button ui:styleName="{style.loginButton}" ui:field="loginButton">Sign In</g:Button>
 						</div>
 					</div>
 				</div>

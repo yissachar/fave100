@@ -107,10 +107,10 @@
 				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
 				<ul>						
 					<li>						
-						<g:InlineHyperlink ui:field="logOutLink">Log out</g:InlineHyperlink>
-						<g:InlineLabel ui:field="loginButton">Log in</g:InlineLabel>						
+						<g:InlineHyperlink ui:field="logOutLink">Sign out</g:InlineHyperlink>
+						<g:InlineLabel ui:field="loginButton">Sign in</g:InlineLabel>						
 					</li>
-					<li><g:InlineLabel ui:field="registerButton">Register</g:InlineLabel></li>					
+					<li><!-- <g:InlineLabel ui:field="registerButton">Register</g:InlineLabel> --></li>					
 				</ul>
 			</div>
 		</g:HTMLPanel>			
