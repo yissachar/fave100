@@ -41,7 +41,7 @@ public interface AppUserRequest extends RequestContext {
 
 	Request<String> createBlobstoreUrl(String url);
 
-	Request<Void> setAvatarForCurrentUser(String avatar);
+	Request<String> setAvatarForCurrentUser(String avatar);
 
 	Request<String> getEmailForCurrentUser();
 

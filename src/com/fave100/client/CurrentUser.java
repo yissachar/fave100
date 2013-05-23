@@ -9,6 +9,7 @@ import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 public class CurrentUser implements AppUserProxy {
 
 	private AppUserProxy appUser;
+	private String avatar = "";
 
 	@Inject
 	public CurrentUser(final EventBus eventBus) {
@@ -18,6 +19,9 @@ public class CurrentUser implements AppUserProxy {
 					public void onCurrentUserChanged(
 							final CurrentUserChangedEvent event) {
 						setAppUser(event.getUser());
+						if (appUser != null) {
+							avatar = appUser.getAvatarImage();
+						}
 					}
 				});
 	}
@@ -28,6 +32,10 @@ public class CurrentUser implements AppUserProxy {
 
 	public void setAppUser(final AppUserProxy appUser) {
 		this.appUser = appUser;
+	}
+
+	public void setAvatar(final String url) {
+		avatar = url;
 	}
 
 	// Needed for RequestFactory
@@ -48,7 +56,7 @@ public class CurrentUser implements AppUserProxy {
 
 	@Override
 	public String getAvatarImage() {
-		return appUser.getAvatarImage();
+		return avatar;
 	}
 
 	@Override
