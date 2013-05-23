@@ -16,11 +16,13 @@ public class HomeView extends ViewWithUiHandlers<HomeUiHandlers> implements Home
 	public interface Binder extends UiBinder<Widget, HomeView> {
 	}
 
+	@UiField Button registerButton;
 	@UiField Button loginButton;
 
 	@Inject
 	public HomeView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+		registerButton.setEnabled(false);
 	}
 
 	@Override
@@ -31,6 +33,11 @@ public class HomeView extends ViewWithUiHandlers<HomeUiHandlers> implements Home
 	@Override
 	public void setInSlot(final Object slot, final Widget content) {
 		super.setInSlot(slot, content);
+	}
+
+	@UiHandler("registerButton")
+	void onLoginClick(final ClickEvent event) {
+		//	getUiHandlers().showRegister();
 	}
 
 	@UiHandler("loginButton")
