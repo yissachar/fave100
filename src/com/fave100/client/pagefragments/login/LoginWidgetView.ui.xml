@@ -50,6 +50,7 @@
 					targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
 			</g:HTMLPanel>
 		</g:FormPanel>
+		<!-- 
 		<div class="loginDivider col span_2" >or</div>
 		<div class="thirdPartyLoginBox col span_5">
 			<div class="{style.thirdPartyLinks}">
@@ -63,5 +64,6 @@
 					Facebook</g:Anchor>
 			</div>
 		</div>
+		 -->
 	</g:HTMLPanel>
 </ui:UiBinder>
