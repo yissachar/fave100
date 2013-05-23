@@ -40,8 +40,7 @@ public abstract class Validator {
 	}
 
 	public static String validateWhyline(final String whyline) {
-		final int maxLength = 80;
-		if (whyline.length() > maxLength) {
+		if (whyline.length() > Constants.MAX_WHYLINE_LENGTH) {
 			return "Whyline must be 80 characters or less";
 		}
 		return null;
