@@ -13,6 +13,7 @@ import com.fave100.client.pagefragments.favelist.FavelistPresenter.WhyLineChange
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
+import com.fave100.shared.Constants;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.FaveItemProxy;
@@ -238,6 +239,7 @@ public class FavePickWidget extends Composite {
 
 				whyLinePanel.removeStyleName(WHY_LINE_EDIT_HOVER);
 				final TextBox txtBox = new TextBox();
+				txtBox.setMaxLength(Constants.MAX_WHYLINE_LENGTH);
 				txtBox.addStyleName("whyLineTextBox");
 				if (whyLine.getText().equals(CLICK_TO_ENTER_WHY_LINE))
 					txtBox.setValue("");
