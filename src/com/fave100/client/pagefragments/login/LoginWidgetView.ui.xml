@@ -34,7 +34,7 @@
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
 	<g:HTMLPanel ui:styleName="row">
-		<g:FormPanel ui:field="loginForm" ui:styleName="{style.loginForm} col span_5">
+		<g:FormPanel ui:field="loginForm" ui:styleName="{style.loginForm} col /*span_5*/">
 			<g:HTMLPanel styleName="nativeLoginBox">
 				<div class="{style.field}">
 					<g:Label>Username</g:Label>

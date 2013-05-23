@@ -59,7 +59,9 @@
 		
 		.buttonContainer button {
 			width: 130px;
-			display: inline-block;
+			/*display: inline-block;*/
+			margin: 0 auto;
+			display: block;
 			text-align: center;
 			line-height: 18px;
 		}		
@@ -69,7 +71,7 @@
 		}
 		
 		.loginButton {
-			float: right;
+			/*float: right;*/
 		}
 		
 		.hideFooter {
@@ -101,7 +103,7 @@
 						<g:Label styleName="{style.tagLine} row">Get your list on.</g:Label>
 						<g:Label styleName="{style.registerCTA} row">What are your top songs of all-time?</g:Label>
 						<div class="{style.buttonContainer} row">
-							<g:Button ui:styleName="{style.registerButton}" ui:field="registerButton">Register</g:Button>
+							<!-- <g:Button ui:styleName="{style.registerButton}" ui:field="registerButton">Register</g:Button> -->
 							<g:Button ui:styleName="{style.loginButton}" ui:field="loginButton">Login</g:Button>
 						</div>
 					</div>
