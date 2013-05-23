@@ -41,6 +41,7 @@ public class AvatarUploadServlet extends RequestFactoryServlet
 				final AppUser appUser = AppUser.findAppUser(username);
 				appUser.setAvatar(blobKey.getKeyString());
 				ofy().save().entity(appUser).now();
+				res.getWriter().write(appUser.getAvatarImage());
 			}
 		}
 	}

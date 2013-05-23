@@ -116,8 +116,8 @@ public class ProfilePresenter extends
 	}
 
 	@Override
-	public void setUserAvatarBlobKey(final String blobKey) {
-		requestFactory.appUserRequest().setAvatarForCurrentUser(blobKey).fire();
+	public void setUserAvatar(final String url) {
+		currentUser.setAvatar(url);
 	}
 
 	@Override
@@ -160,7 +160,7 @@ public class ProfilePresenter extends
 }
 
 interface ProfileUiHandlers extends UiHandlers {
-	void setUserAvatarBlobKey(String blobKey);
+	void setUserAvatar(String avatar);
 
 	void saveProfileData(String email);
 }

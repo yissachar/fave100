@@ -604,16 +604,17 @@ public class AppUser extends DatastoreObject {
 		return BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(successPath, options);
 	}
 
-	public static void setAvatarForCurrentUser(final String avatar) {
+	public static String setAvatarForCurrentUser(final String avatar) {
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
-			return;
+			return null;
 		// TODO: Twitter user can't upload own avatar?
 		if (currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
 			BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
 		}
 		currentUser.setAvatar(avatar);
 		ofy().save().entity(currentUser).now();
+		return currentUser.getAvatar();
 	}
 
 	public String getAvatarImage() {

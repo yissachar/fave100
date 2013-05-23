@@ -4,6 +4,7 @@ import static com.google.gwt.query.client.GQuery.$;
 
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.shared.Constants;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -61,14 +62,23 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	@UiHandler("profileForm")
 	public void onSubmit(final SubmitCompleteEvent event) {
 		// TODO: Is there any more robust way of checking for 413 error?
-		if (event.getResults() != null && event.getResults().contains("Error 413")) {
-			// File too large for upload
-			setFormStatusMessage("File too large. Max size is " + Constants.MAX_AVATAR_SIZE / 1024 + " KB", 4000, true);
+		String results = event.getResults();
+		if (results != null) {
+			if (results.contains("Error 413")) {
+				// File too large for upload
+				setFormStatusMessage("File too large. Max size is " + Constants.MAX_AVATAR_SIZE / 1024 + " KB", 4000, true);
+			}
+			else {
+				results = results.replace("<pre>", "").replace("</pre>", "");
+				// Set the users avatar on client	
+				final RegExp urlValidator = RegExp.compile("^((ftp|http|https)://[\\w@.\\-\\_]+(:\\d{1,5})?(/[\\w#!:.?+=&%@!\\_\\-/]+)*){1}$");
+				if (urlValidator.exec(results) != null) {
+					getUiHandlers().setUserAvatar(results);
+				}
+
+				getUiHandlers().saveProfileData(emailInput.getValue());
+			}
 		}
-		else {
-			getUiHandlers().saveProfileData(emailInput.getValue());
-		}
-		// profileForm.reset();
 	}
 
 	@Override
