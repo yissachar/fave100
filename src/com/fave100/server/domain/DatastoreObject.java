@@ -1,8 +1,7 @@
 package com.fave100.server.domain;
 
-import javax.persistence.PrePersist;
-
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.OnSave;
 
 /**
  * A base entity that contains required version property and incrementor for
@@ -20,7 +19,7 @@ public class DatastoreObject
 	/**
 	 * Auto-increment version # whenever persisted
 	 */
-	@PrePersist
+	@OnSave
 	void onPersist()
 	{
 		this.version++;
