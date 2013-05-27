@@ -4,15 +4,20 @@ import static com.google.gwt.query.client.GQuery.$;
 
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.shared.Constants;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -29,13 +34,17 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	@UiField HTMLPanel topBar;
 	@UiField FormPanel profileForm;
 	@UiField TextBox emailInput;
+	@UiField Button profileSaveButton;
 	@UiField Image avatarImg;
+	@UiField FileUpload avatarUpload;
 	@UiField Label emailStatusMessage;
 	@UiField Label formStatusMessage;
+	@UiField SubmitButton avatarSubmitButton;
 
 	@Inject
 	public ProfileView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+		avatarSubmitButton.setEnabled(false);
 	}
 
 	@Override
@@ -59,8 +68,41 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 		profileForm.setAction(url);
 	}
 
+	@UiHandler("profileSaveButton")
+	public void onProfileSaveClick(final ClickEvent event) {
+		getUiHandlers().saveProfileData(emailInput.getValue());
+	}
+
+	@UiHandler("avatarUpload")
+	public void onFileChange(final ChangeEvent event) {
+		final String filename = avatarUpload.getFilename();
+		if (filename == null || filename.isEmpty() || filename.equals("Unknown")) {
+			avatarSubmitButton.setEnabled(false);
+		}
+		else {
+			avatarSubmitButton.setEnabled(true);
+		}
+	}
+
+	/*
+		@UiHandler("profileForm")
+		public void onSubmit(final SubmitEvent event) {
+			GWT.log(avatarUpload.getFilename());
+			GWT.log("Unknown" + avatarUpload.getFilename().length());
+			for (int i = 0; i < avatarUpload.getFilename().length(); i++) {
+				final char l = avatarUpload.getFilename().charAt(i);
+				final char l2 = "Unknown".charAt(i);
+				GWT.log(l + ":" + l2);
+			}
+			GWT.log(avatarUpload.getFilename().trim().equalsIgnoreCase("Unknown") + ":");
+			if (avatarUpload.getFilename() == null || avatarUpload.getFilename().isEmpty() || avatarUpload.getFilename().equals("Unknown")) {
+				event.cancel();
+				GWT.log("canceling");
+			}
+		}*/
+
 	@UiHandler("profileForm")
-	public void onSubmit(final SubmitCompleteEvent event) {
+	public void onSubmitComplete(final SubmitCompleteEvent event) {
 		// TODO: Is there any more robust way of checking for 413 error?
 		String results = event.getResults();
 		if (results != null) {
@@ -75,10 +117,13 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 				if (urlValidator.exec(results) != null) {
 					getUiHandlers().setUserAvatar(results);
 				}
-
-				getUiHandlers().saveProfileData(emailInput.getValue());
 			}
 		}
+	}
+
+	@Override
+	public void clearEmail() {
+		emailInput.setValue("");
 	}
 
 	@Override
@@ -122,7 +167,8 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	}
 
 	@Override
-	public void clearForm() {
+	public void clearAvatarForm() {
 		profileForm.reset();
+		avatarSubmitButton.setEnabled(false);
 	}
 }
