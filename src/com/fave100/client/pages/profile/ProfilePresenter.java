@@ -44,7 +44,9 @@ public class ProfilePresenter extends
 
 		void setAvatarImg(String src);
 
-		void clearForm();
+		void clearAvatarForm();
+
+		void clearEmail();
 	}
 
 	@ProxyCodeSplit
@@ -55,6 +57,7 @@ public class ProfilePresenter extends
 
 	private ApplicationRequestFactory requestFactory;
 	private CurrentUser currentUser;
+	private String oldEmail = "";
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view,
@@ -77,28 +80,28 @@ public class ProfilePresenter extends
 	@Override
 	public void onReveal() {
 		super.onReveal();
-
-		setProfileData();
+		setEmail();
+		setUserAvatar(currentUser.getAvatarImage());
 	}
 
 	@Override
 	public void onHide() {
 		super.onHide();
 		getView().clearErrors();
-		getView().clearForm();
+		getView().clearEmail();
+		oldEmail = "";
+		getView().clearAvatarForm();
 	}
 
-	private void setProfileData() {
-		getView().clearForm();
-		setUploadAction();
-		final Request<String> getEmailReq = requestFactory.appUserRequest().getEmailForCurrentUser();
-		getEmailReq.fire(new Receiver<String>() {
+	private void setEmail() {
+		final Request<String> emailReq = requestFactory.appUserRequest().getEmailForCurrentUser();
+		emailReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String email) {
 				getView().setEmailValue(email);
+				oldEmail = email;
 			}
 		});
-		getView().setAvatarImg(currentUser.getAvatarImage());
 	}
 
 	private void setUploadAction() {
@@ -117,12 +120,18 @@ public class ProfilePresenter extends
 
 	@Override
 	public void setUserAvatar(final String url) {
+		getView().clearAvatarForm();
+		setUploadAction();
 		currentUser.setAvatar(url);
+		getView().setAvatarImg(url);
 	}
 
 	@Override
 	public void saveProfileData(final String email) {
 		getView().clearErrors();
+
+		if (email.equals(oldEmail))
+			return;
 
 		final String emailError = Validator.validateEmail(email);
 		if (emailError == null) {
@@ -134,12 +143,14 @@ public class ProfilePresenter extends
 				public void onSuccess(final Boolean saved) {
 					LoadingIndicator.hide();
 					if (saved == true) {
-						setProfileData();
+						oldEmail = email;
+						getView().setEmailValue(email);
 						getView().setFormStatusMessage("Profile saved");
 					}
 					else {
 						getView().setFormStatusMessage("Error: Profile not saved");
 					}
+
 				}
 
 				@Override
@@ -156,7 +167,6 @@ public class ProfilePresenter extends
 			getView().setEmailError(emailError);
 		}
 	}
-
 }
 
 interface ProfileUiHandlers extends UiHandlers {
