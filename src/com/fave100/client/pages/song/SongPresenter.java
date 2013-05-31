@@ -42,6 +42,8 @@ public class SongPresenter extends
 		void setSongInfo(SongProxy song);
 
 		void setYouTubeVideos(YouTubeSearchListJSON videos);
+
+		void clearVideo();
 	}
 
 	@ProxyCodeSplit
@@ -118,6 +120,13 @@ public class SongPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+	}
+
+	@Override
+	protected void onHide() {
+		super.onHide();
+		getView().clearVideo();
+
 	}
 
 	// TODO: Merge this method with FavelistPresenter.addSong()

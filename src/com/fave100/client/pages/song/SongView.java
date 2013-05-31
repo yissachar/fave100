@@ -72,6 +72,11 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 		youTubeWidget.setVideoData(videos.getItems());
 	}
 
+	@Override
+	public void clearVideo() {
+		youTubeWidget.clearVideo();
+	}
+
 	private void setSongTitle(final String title) {
 		songTitle.setText(title);
 	}

@@ -26,6 +26,7 @@ public class YouTubeWidget extends Composite {
 	@UiField SimplePanel framePanel;
 	@UiField HTMLPanel thumbnailPanel;
 	private ArrayList<Image> thumbList = new ArrayList<Image>();
+	private Frame youTubePlayer;
 
 	public YouTubeWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -37,7 +38,8 @@ public class YouTubeWidget extends Composite {
 		}
 		else {
 			this.setVisible(true);
-			final Frame youTubePlayer = new Frame("http://youtube.com/embed/" + videos.get(0).getVideoId() + "?wmode=transparent");
+			// TODO: wmode transparent breaks some IE but needed to ensure embed respects z-index
+			youTubePlayer = new Frame("http://youtube.com/embed/" + videos.get(0).getVideoId() + "?wmode=transparent");
 			youTubePlayer.setWidth("640px");
 			youTubePlayer.setHeight("360px");
 			framePanel.clear();
@@ -61,5 +63,10 @@ public class YouTubeWidget extends Composite {
 				thumbnailPanel.add(ytThumb);
 			}
 		}
+	}
+
+	// Needed because IE will continue playing the video even if the frame is removed
+	public void clearVideo() {
+		youTubePlayer.setUrl("");
 	}
 }
