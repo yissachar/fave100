@@ -1,9 +1,10 @@
 package com.fave100.client.pages.song;
 
+import java.util.List;
+
 import com.fave100.client.Notification;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
-import com.fave100.client.pages.song.widgets.youtube.YouTubeSearchListJSON;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
@@ -12,7 +13,7 @@ import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveListRequest;
 import com.fave100.shared.requestfactory.SongProxy;
-import com.google.gwt.core.client.JsonUtils;
+import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
@@ -41,7 +42,7 @@ public class SongPresenter extends
 	public interface MyView extends BaseView, HasUiHandlers<SongUiHandlers> {
 		void setSongInfo(SongProxy song);
 
-		void setYouTubeVideos(YouTubeSearchListJSON videos);
+		void setYouTubeVideos(List<YouTubeSearchResultProxy> videos);
 
 		void clearVideo();
 	}
@@ -99,14 +100,12 @@ public class SongPresenter extends
 					getView().setSongInfo(song);
 
 					// Get any YouTube videos
-					final Request<String> getYoutubeReq = requestFactory.songRequest()
+					final Request<List<YouTubeSearchResultProxy>> getYoutubeReq = requestFactory.songRequest()
 							.getYouTubeResults(song.getSong(), song.getArtist());
-					getYoutubeReq.fire(new Receiver<String>() {
+					getYoutubeReq.fire(new Receiver<List<YouTubeSearchResultProxy>>() {
 						@Override
-						public void onSuccess(final String json) {
-							final YouTubeSearchListJSON youTubeResults = JsonUtils
-									.safeEval(json);
-							getView().setYouTubeVideos(youTubeResults);
+						public void onSuccess(final List<YouTubeSearchResultProxy> results) {
+							getView().setYouTubeVideos(results);
 						}
 					});
 
