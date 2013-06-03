@@ -1,11 +1,13 @@
 package com.fave100.client.pages.song;
 
+import java.util.List;
+
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.song.widgets.whyline.WhylineWaterfall;
-import com.fave100.client.pages.song.widgets.youtube.YouTubeSearchListJSON;
 import com.fave100.client.pages.song.widgets.youtube.YouTubeWidget;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.SongProxy;
+import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -68,8 +70,8 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	}
 
 	@Override
-	public void setYouTubeVideos(final YouTubeSearchListJSON videos) {
-		youTubeWidget.setVideoData(videos.getItems());
+	public void setYouTubeVideos(final List<YouTubeSearchResultProxy> videos) {
+		youTubeWidget.setVideoData(videos);
 	}
 
 	@Override

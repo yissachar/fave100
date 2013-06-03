@@ -1,9 +1,10 @@
 package com.fave100.client.pages.song.widgets.youtube;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -32,8 +33,8 @@ public class YouTubeWidget extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public void setVideoData(final JsArray<YouTubeJSONItem> videos) {
-		if (videos.length() == 0) {
+	public void setVideoData(final List<YouTubeSearchResultProxy> videos) {
+		if (videos.size() == 0) {
 			this.setVisible(false);
 		}
 		else {
@@ -46,14 +47,14 @@ public class YouTubeWidget extends Composite {
 			thumbnailPanel.clear();
 			thumbList.clear();
 			framePanel.add(youTubePlayer.asWidget());
-			for (int i = 1; i < videos.length(); i++) {
+			for (int i = 1; i < videos.size(); i++) {
 				final Image ytThumb = new Image();
 				ytThumb.setUrl(videos.get(i).getThumbnail());
 				ytThumb.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(final ClickEvent event) {
-						final YouTubeJSONItem currVideo = videos.get(0);
-						final YouTubeJSONItem clickedVideo = videos.get(thumbList.indexOf(ytThumb) + 1);
+						final YouTubeSearchResultProxy currVideo = videos.get(0);
+						final YouTubeSearchResultProxy clickedVideo = videos.get(thumbList.indexOf(ytThumb) + 1);
 						videos.set(0, clickedVideo);
 						videos.set(thumbList.indexOf(ytThumb) + 1, currVideo);
 						setVideoData(videos);

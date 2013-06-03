@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fave100.shared.Constants;
 import com.fave100.shared.SongInterface;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -69,7 +72,7 @@ public class Song extends DatastoreObject implements SongInterface {
 		}
 	}
 
-	public static String getYouTubeResults(final String song, final String artist) {
+	public static List<YouTubeSearchResult> getYouTubeResults(final String song, final String artist) {
 		try {
 			String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&maxResults=5&type=video";
 			searchUrl += "&q=" + song.replace(" ", "+") + "+" + artist.replace(" ", "+");
@@ -87,7 +90,23 @@ public class Song extends DatastoreObject implements SongInterface {
 			}
 			in.close();
 
-			return content;
+			final List<YouTubeSearchResult> youtubeResults = new ArrayList<YouTubeSearchResult>();
+			final JsonParser parser = new JsonParser();
+			final JsonElement resultsElement = parser.parse(content);
+			final JsonObject resultsObject = resultsElement.getAsJsonObject();
+			final JsonArray items = resultsObject.get("items").getAsJsonArray();
+			for (int i = 0; i < items.size(); i++) {
+				final JsonObject item = items.get(i).getAsJsonObject();
+
+				final String videoId = item.get("id").getAsJsonObject().get("videoId").getAsString();
+				final String thumbnail = item.get("snippet").getAsJsonObject()
+						.get("thumbnails").getAsJsonObject()
+						.get("default").getAsJsonObject()
+						.get("url").getAsString();
+				youtubeResults.add(new YouTubeSearchResult(videoId, thumbnail));
+
+			}
+			return youtubeResults;
 		}
 		catch (final Exception e) {
 
