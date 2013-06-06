@@ -36,8 +36,12 @@
 			width: 77%;
 		}
 		
-		.song, .artist {
+		.song {
 			font-size: 1.1em;
+		}
+		
+		.artist {
+			font-size: 1em;
 		}
 		
 		.whyline {
