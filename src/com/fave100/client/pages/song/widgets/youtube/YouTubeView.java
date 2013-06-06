@@ -91,8 +91,7 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 					width : '640',
 					videoId : videoID,
 					playerVars : {
-						//TODO:!!@!#!@#
-						//wmode : 'transparent',
+						wmode : 'transparent',
 						autoplay : 1
 					},
 					events : {
