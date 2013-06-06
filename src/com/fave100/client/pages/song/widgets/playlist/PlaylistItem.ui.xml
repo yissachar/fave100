@@ -1,0 +1,58 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:style type="com.fave100.client.pages.song.widgets.playlist.PlaylistItem.PlaylistStyle">	
+		.container {
+			border-top: 1px solid #AAA;
+			padding: 5px;
+			overflow: hidden;
+		}
+				
+		.container:hover {
+			cursor: pointer;
+			background-color: #FFF;
+			color: #5eaae5;
+		}
+		
+		.playing, .playing:hover {
+			background-color: #5eaae5;
+			color: #FFF;
+		}
+		
+		.rank {
+			float: left;
+			font-size: 2em;
+			padding: 4px;
+			width: 50px;
+		}
+		
+		.oneHundredth {
+			font-size: 1.7em;
+		}
+		
+		.detailContainer {
+			float: left;			
+			width: 77%;
+		}
+		
+		.song, .artist {
+			font-size: 1.1em;
+		}
+		
+		.whyline {
+			font-style: italic;
+		}
+	</ui:style>
+	
+	<g:FocusPanel ui:field="focusPanel">
+		<g:HTMLPanel ui:field="container" ui:styleName="{style.container}">
+			<g:Label ui:field="_rank" ui:styleName="{style.rank}"/>
+			<g:HTMLPanel ui:styleName="{style.detailContainer}">
+				<g:Label ui:field="_song" ui:styleName="{style.song}"/>
+				<g:Label ui:field="_artist" ui:styleName="{style.artist}"/>
+				<g:Label ui:field="_whyline" ui:styleName="{style.whyline}"/>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+	</g:FocusPanel>
+</ui:UiBinder> 

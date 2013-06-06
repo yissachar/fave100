@@ -4,24 +4,7 @@
 	
 	<ui:style type="com.fave100.client.pages.song.widgets.whyline.WhylineWaterfall.WhylineWaterfallStyle">
 		.container {
-			display: block;
-			margin: 0 auto;
-			width: 320px;
-			float: left;
-			border: 1px solid #AAA;
-			border-left: 0px;
-			height: 508px;
-			overflow-y: auto;			
-		}
-		
-		.whylineTitle {
-			font-weight: bold;
-			font-size: 1.2em;
-			padding: 7px;
-			text-align: center;
-			width: 90%;
-			margin: 0 auto 10px;
-			border-bottom: 1px solid #888;
+				
 		}
 		
 		.noWhyline {
@@ -31,7 +14,6 @@
 	</ui:style>
 	
 	<g:FlowPanel ui:field="container" ui:styleName="{style.container}">
-		<g:Label ui:styleName="{style.whylineTitle}">Why-Lines</g:Label>
 		<g:VerticalPanel ui:field="whylines"/>
 	</g:FlowPanel>
 	

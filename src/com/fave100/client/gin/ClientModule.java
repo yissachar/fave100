@@ -31,6 +31,10 @@ import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.register.RegisterView;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.pages.song.SongView;
+import com.fave100.client.pages.song.widgets.playlist.PlaylistPresenter;
+import com.fave100.client.pages.song.widgets.playlist.PlaylistView;
+import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
+import com.fave100.client.pages.song.widgets.youtube.YouTubeView;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.pages.users.UsersView;
 import com.fave100.client.place.ClientPlaceManager;
@@ -107,6 +111,10 @@ public class ClientModule extends AbstractPresenterModule {
 		bindSingletonPresenterWidget(LoginPopupPresenter.class, LoginPopupPresenter.MyView.class, LoginPopupView.class);
 
 		bindSingletonPresenterWidget(RegisterWidgetPresenter.class, RegisterWidgetPresenter.MyView.class, RegisterWidgetView.class);
+
+		bindSingletonPresenterWidget(PlaylistPresenter.class, PlaylistPresenter.MyView.class, PlaylistView.class);
+
+		bindSingletonPresenterWidget(YouTubePresenter.class, YouTubePresenter.MyView.class, YouTubeView.class);
 	}
 
 	@Provides

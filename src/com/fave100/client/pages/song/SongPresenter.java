@@ -3,18 +3,24 @@ package com.fave100.client.pages.song;
 import java.util.List;
 
 import com.fave100.client.Notification;
+import com.fave100.client.events.PlaylistSongChangedEvent;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
+import com.fave100.client.pages.song.widgets.playlist.PlaylistPresenter;
+import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
+import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.fave100.shared.requestfactory.FaveListRequest;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -22,11 +28,13 @@ import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
 /**
@@ -42,9 +50,11 @@ public class SongPresenter extends
 	public interface MyView extends BaseView, HasUiHandlers<SongUiHandlers> {
 		void setSongInfo(SongProxy song);
 
-		void setYouTubeVideos(List<YouTubeSearchResultProxy> videos);
+		void setPlaylist(Boolean visible);
 
-		void clearVideo();
+		void showPlaylist();
+
+		void showWhylines();
 	}
 
 	@ProxyCodeSplit
@@ -52,11 +62,18 @@ public class SongPresenter extends
 	public interface MyProxy extends ProxyPlace<SongPresenter> {
 	}
 
+	@ContentSlot public static final Type<RevealContentHandler<?>> YOUTUBE_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot public static final Type<RevealContentHandler<?>> PLAYLIST_SLOT = new Type<RevealContentHandler<?>>();
+
 	public static final String ID_PARAM = "id";
+	public static final String USER_PARAM = "user";
 
 	private final ApplicationRequestFactory requestFactory;
 	private final PlaceManager placeManager;
+	private final EventBus _eventBus;
 	private SongProxy songProxy;
+	@Inject YouTubePresenter youtubePresenter;
+	@Inject PlaylistPresenter playlistPresenter;
 
 	@Inject
 	public SongPresenter(final EventBus eventBus, final MyView view,
@@ -64,6 +81,7 @@ public class SongPresenter extends
 							final ApplicationRequestFactory requestFactory,
 							final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
+		_eventBus = eventBus;
 		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
 		getView().setUiHandlers(this);
@@ -85,6 +103,7 @@ public class SongPresenter extends
 
 		// Use parameters to determine what to reveal on page
 		final String id = URL.decode(placeRequest.getParameter(ID_PARAM, ""));
+		final String username = URL.decode(placeRequest.getParameter(USER_PARAM, ""));
 		if (id.isEmpty()) {
 			// Malformed request, send the user away
 			placeManager.revealDefaultPlace();
@@ -97,21 +116,43 @@ public class SongPresenter extends
 				@Override
 				public void onSuccess(final SongProxy song) {
 					songProxy = song;
-					getView().setSongInfo(song);
-
-					// Get any YouTube videos
-					final Request<List<YouTubeSearchResultProxy>> getYoutubeReq = requestFactory.songRequest()
-							.getYouTubeResults(song.getSong(), song.getArtist());
-					getYoutubeReq.fire(new Receiver<List<YouTubeSearchResultProxy>>() {
-						@Override
-						public void onSuccess(final List<YouTubeSearchResultProxy> results) {
-							getView().setYouTubeVideos(results);
-						}
-					});
+					updateYouTube();
 
 					getProxy().manualReveal(SongPresenter.this);
 				}
 			});
+
+			// If there is a user, get their info and their playlist
+			if (!username.isEmpty()) {
+				// Get username and avatar
+				final Request<AppUserProxy> getUserReq = requestFactory.appUserRequest().findAppUser(username);
+				getUserReq.fire(new Receiver<AppUserProxy>() {
+					@Override
+					public void onSuccess(final AppUserProxy user) {
+						if (user != null) {
+							playlistPresenter.setUserInfo(user.getUsername(), user.getAvatarImage());
+						}
+					}
+				});
+
+				// Get playlist
+				final Request<List<FaveItemProxy>> getFavelistReq = requestFactory.faveListRequest().getFaveList(username, Constants.DEFAULT_HASHTAG);
+				getFavelistReq.fire(new Receiver<List<FaveItemProxy>>() {
+					@Override
+					public void onSuccess(final List<FaveItemProxy> favelist) {
+						// Only show playlist if good username
+						if (favelist != null) {
+							getView().setPlaylist(true);
+							playlistPresenter.setPlaylist(favelist, id);
+							getView().showPlaylist();
+						}
+						else {
+							getView().setPlaylist(false);
+							getView().showWhylines();
+						}
+					}
+				});
+			}
 
 		}
 	}
@@ -119,13 +160,52 @@ public class SongPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+
+		PlaylistSongChangedEvent.register(_eventBus, new PlaylistSongChangedEvent.Handler() {
+			@Override
+			public void onPlaylistSongChanged(final PlaylistSongChangedEvent event) {
+				// Load the song from the datastore
+				final Request<SongProxy> getSongReq = requestFactory.songRequest()
+						.findSong(event.songID());
+				getSongReq.fire(new Receiver<SongProxy>() {
+					@Override
+					public void onSuccess(final SongProxy song) {
+						songProxy = song;
+						updateYouTube();
+
+						getProxy().manualReveal(SongPresenter.this);
+					}
+				});
+			}
+		});
+	}
+
+	@Override
+	protected void onReveal() {
+		super.onReveal();
+		setInSlot(YOUTUBE_SLOT, youtubePresenter);
+		setInSlot(PLAYLIST_SLOT, playlistPresenter);
 	}
 
 	@Override
 	protected void onHide() {
 		super.onHide();
-		getView().clearVideo();
+		youtubePresenter.clearVideo();
 
+	}
+
+	private void updateYouTube() {
+		getView().setSongInfo(songProxy);
+
+		// Get any YouTube videos
+		final Request<List<YouTubeSearchResultProxy>> getYoutubeReq = requestFactory.songRequest()
+				.getYouTubeResults(songProxy.getSong(), songProxy.getArtist());
+		getYoutubeReq.fire(new Receiver<List<YouTubeSearchResultProxy>>() {
+			@Override
+			public void onSuccess(final List<YouTubeSearchResultProxy> results) {
+				youtubePresenter.setYouTubeVideos(results);
+			}
+		});
 	}
 
 	// TODO: Merge this method with FavelistPresenter.addSong()
