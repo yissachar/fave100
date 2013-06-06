@@ -128,7 +128,7 @@ public class FavelistPresenter extends
 				final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 				int i = 1;
 				for (final FaveItemProxy item : results) {
-					final FavePickWidget widget = new FavePickWidget(item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded);
+					final FavePickWidget widget = new FavePickWidget(item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
 					pickWidgets.add(widget);
 					i++;
 				}
@@ -179,7 +179,7 @@ public class FavelistPresenter extends
 							return artist;
 						}
 					};
-					final FavePickWidget widget = new FavePickWidget(item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded);
+					final FavePickWidget widget = new FavePickWidget(item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
 					getView().addPick(widget);
 					widgets.add(widget);
 					$(widget).scrollIntoView();

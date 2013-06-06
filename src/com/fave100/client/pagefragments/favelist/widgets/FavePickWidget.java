@@ -78,6 +78,7 @@ public class FavePickWidget extends Composite {
 	private String _whyline;
 	private int _rank;
 	private String _songID;
+	private String _username;
 	private final boolean _editable;
 	private WhyLineChanged _whyLineCallback;
 	private RankChanged _rankCallback;
@@ -105,7 +106,7 @@ public class FavePickWidget extends Composite {
 	private Label _songPick;
 
 	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged, final ItemDeleted itemDeleted,
-							final ItemAdded itemAdded) {
+							final ItemAdded itemAdded, final String username) {
 		_song = item.getSong();
 		_artist = item.getArtist();
 		_whyline = item.getWhyline();
@@ -116,6 +117,7 @@ public class FavePickWidget extends Composite {
 		_rankCallback = rankChanged;
 		_deletedCallback = itemDeleted;
 		_addedCallback = itemAdded;
+		_username = username;
 
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -126,7 +128,7 @@ public class FavePickWidget extends Composite {
 		setupRankPanel();
 
 		song.setText(getSong());
-		song.setHref("#" + new UrlBuilder(NameTokens.song).with(SongPresenter.ID_PARAM, getSongID()).getPlaceToken());
+		song.setHref("#" + new UrlBuilder(NameTokens.song).with(SongPresenter.ID_PARAM, getSongID()).with(SongPresenter.USER_PARAM, getUsername()).getPlaceToken());
 
 		artist.setText(getArtist());
 
@@ -420,5 +422,13 @@ public class FavePickWidget extends Composite {
 
 	public void set_songID(final String _songID) {
 		this._songID = _songID;
+	}
+
+	public String getUsername() {
+		return _username;
+	}
+
+	public void setUsername(final String _username) {
+		this._username = _username;
 	}
 }

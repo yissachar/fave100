@@ -1,0 +1,51 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<ui:style>
+		.playlistHeader {
+			background-color: #FFF;
+			width: 319px;
+			border-bottom: 1px solid #999;
+		}
+		
+		.userInfo {
+			margin: 5px 0;			
+			overflow: hidden;
+		}
+		
+		.username {
+			float: left;
+			font-size: 1.3em;
+			font-weight: bold;			
+		}
+		
+		.avatar {
+			float: left;
+			width: 40px;
+			height: 40px;		
+			margin: 0 5px;	
+		}	
+		
+		.playlist {
+			clear: both;
+			height: 420px;
+			overflow-y: auto;	
+		}
+	</ui:style>
+	
+	<g:HTMLPanel>
+		<g:FlowPanel ui:styleName="{style.playlistHeader}">
+			<g:FlowPanel ui:styleName="{style.userInfo}">
+				<g:Image ui:field="_avatar" ui:styleName="{style.avatar}"/>
+				<g:Anchor ui:field="_username" ui:styleName="{style.username}"/>			
+			</g:FlowPanel>
+		</g:FlowPanel>
+		<g:FlowPanel ui:field="playlistContainer" ui:styleName="{style.playlist}"/>
+	</g:HTMLPanel>
+	
+</ui:UiBinder>
