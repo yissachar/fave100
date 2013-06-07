@@ -31,9 +31,7 @@
 			margin-top: 63px;
 		}
 		
-		.logo {
-			width: 182px;
-			height: 65px;
+		.logo {			
 			display: block;
 			margin: 0 auto;
 			margin-bottom: 20px;
@@ -93,13 +91,15 @@
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
+	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
+	
 	<g:HTMLPanel styleName="wrap {style.hideFooter}">
 		<div class="{style.topBackground}" />
 		<div class="container {style.homeBody}">
 			<div class="content">
 				<div class="{style.homePageContainer}">					
 					<div class="{style.CTApanel}">
-						<g:Image styleName="{style.logo} row" url="img/logo.png" />
+						<g:Image ui:field="logoImg" styleName="{style.logo} row" resource="{img.logoLarge}" />
 						<g:Label styleName="{style.tagLine} row">Get your list on.</g:Label>
 						<g:Label styleName="{style.registerCTA} row">What are your top songs of all-time?</g:Label>
 						<div class="{style.buttonContainer} row">
@@ -110,6 +110,6 @@
 				</div>
 			</div>			
 		</div>
-		<g:Image url="img/home-page-tablet.png" ui:styleName="{style.footerImage} row"/>
+		<g:Image resource="{img.homePageTablet}" ui:styleName="{style.footerImage} row"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

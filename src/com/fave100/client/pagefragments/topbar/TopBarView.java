@@ -4,6 +4,7 @@ import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.widgets.ImageHyperlink;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,7 +36,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField TopBarStyle style;
 	@UiField HTMLPanel topBar;
 	@UiField Image loadingIndicator;
-	@UiField InlineHyperlink logoLink;
+	@UiField ImageHyperlink logoLink;
 	@UiField InlineHyperlink logOutLink;
 	@UiField InlineLabel loginButton;
 	@UiField Label notification;

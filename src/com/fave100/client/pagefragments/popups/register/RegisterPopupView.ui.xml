@@ -6,12 +6,14 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
+	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
+	
 	<g:PopupPanel>
 		<g:HTMLPanel ui:field="loginLightBox">
 			<g:FocusPanel ui:field="lightBoxBackground" styleName="lightBoxBackground"/>			
 			<g:HTMLPanel styleName="loginLightBox">
 				<div class="lightBoxHeader">
-					<g:Image url="img/logo.png"/>
+					<g:Image resource="{img.logo}"/>
 				</div>
 				<g:HTMLPanel ui:field="registerContainer" ui:styleName="innerLoginBox"/>
 			</g:HTMLPanel>
