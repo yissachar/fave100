@@ -47,6 +47,7 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 
 		if (videos.size() == 0) {
 			errorMessage.setVisible(true);
+			getUiHandlers().dispatchEndedEvent();
 		}
 		else {
 			errorMessage.setVisible(false);
