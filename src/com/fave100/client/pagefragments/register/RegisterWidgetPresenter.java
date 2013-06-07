@@ -1,8 +1,8 @@
 package com.fave100.client.pagefragments.register;
 
-import com.fave100.client.CurrentUser;
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
+import com.fave100.client.RequestCache;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
@@ -13,6 +13,7 @@ import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -47,19 +48,20 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		void setUsernameFocus();
 	}
 
-	private EventBus eventBus;
-	private ApplicationRequestFactory requestFactory;
-	private PlaceManager placeManager;
-	private CurrentUser currentUser;
+	private EventBus _eventBus;
+	private ApplicationRequestFactory _requestFactory;
+	private PlaceManager _placeManager;
+	private RequestCache _requestCache;
 	private String redirect;
 
 	@Inject
-	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager, final CurrentUser currentUser) {
+	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager,
+									final RequestCache requestCache) {
 		super(eventBus, view);
-		this.eventBus = eventBus;
-		this.requestFactory = requestFactory;
-		this.placeManager = placeManager;
-		this.currentUser = currentUser;
+		_eventBus = eventBus;
+		_requestFactory = requestFactory;
+		_placeManager = placeManager;
+		_requestCache = requestCache;
 		getView().setUiHandlers(this);
 	}
 
@@ -70,22 +72,28 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		redirect = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/oauthcallback.html";
 
 		// Get the login url for Google
-		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		final Request<String> loginUrlReq = appUserRequest
-				.getGoogleLoginURL(redirect);
-		loginUrlReq.fire(new Receiver<String>() {
+		_requestCache.getGoogleUrl(redirect, new AsyncCallback<String>() {
 			@Override
 			public void onSuccess(final String url) {
 				getView().setGoogleUrl(url);
 			}
+
+			@Override
+			public void onFailure(final Throwable caught) {
+
+			}
 		});
 
-		final Request<String> fbAuthUrlReq = requestFactory.appUserRequest()
-				.getFacebookAuthUrl(redirect);
-		fbAuthUrlReq.fire(new Receiver<String>() {
+		// And for facebook
+		_requestCache.getFacebookUrl(redirect, new AsyncCallback<String>() {
 			@Override
 			public void onSuccess(final String url) {
 				getView().setFacebookUrl(url);
+			}
+
+			@Override
+			public void onFailure(final Throwable caught) {
+
 			}
 		});
 	}
@@ -107,7 +115,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			final String password, final String passwordRepeat) {
 
 		if (validateFields(username, email, password, passwordRepeat)) {
-			final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+			final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
 			// Create a new user with the username and password entered
 			final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(username, password, email);
 
@@ -116,7 +124,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 				@Override
 				public void onSuccess(final AppUserProxy createdUser) {
 					LoadingIndicator.hide();
-					eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
+					_eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 					if (createdUser != null) {
 						appUserCreated();
 					}
@@ -148,13 +156,13 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	}
 
 	public void appUserCreated() {
-		placeManager.revealPlace(new PlaceRequest(NameTokens.home));
+		_placeManager.revealPlace(new PlaceRequest(NameTokens.home));
 		Notification.show("Thanks for registering!");
 	}
 
 	@Override
 	public void goToTwitterAuth() {
-		final Request<String> authUrlReq = requestFactory.appUserRequest()
+		final Request<String> authUrlReq = _requestFactory.appUserRequest()
 				.getTwitterAuthUrl(redirect);
 		authUrlReq.fire(new Receiver<String>() {
 			@Override

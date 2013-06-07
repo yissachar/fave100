@@ -1,6 +1,7 @@
 package com.fave100.client.gin;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.RequestCache;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pages.home.HomePresenter;
@@ -27,6 +28,8 @@ public interface ClientGinjector extends Ginjector {
 	PlaceManager getPlaceManager();
 
 	CurrentUser getCurrentUser();
+
+	RequestCache getRequestCache();
 
 	LoggedInGatekeeper getLoggedInGatekeeper();
 

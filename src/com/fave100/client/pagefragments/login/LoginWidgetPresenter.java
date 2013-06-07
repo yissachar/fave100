@@ -2,6 +2,7 @@ package com.fave100.client.pagefragments.login;
 
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
+import com.fave100.client.RequestCache;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
@@ -11,6 +12,7 @@ import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -50,19 +52,21 @@ public class LoginWidgetPresenter extends
 		void setUsernameFocus();
 	}
 
-	private EventBus eventBus;
-	private ApplicationRequestFactory requestFactory;
-	private PlaceManager placeManager;
+	private EventBus _eventBus;
+	private ApplicationRequestFactory _requestFactory;
+	private PlaceManager _placeManager;
+	private RequestCache _requestCache;
 	private String redirect;
 
 	@Inject
 	public LoginWidgetPresenter(final EventBus eventBus, final MyView view,
 								final ApplicationRequestFactory requestFactory,
-								final PlaceManager placeManager) {
+								final PlaceManager placeManager, final RequestCache requestCache) {
 		super(eventBus, view);
-		this.eventBus = eventBus;
-		this.requestFactory = requestFactory;
-		this.placeManager = placeManager;
+		_eventBus = eventBus;
+		_requestFactory = requestFactory;
+		_placeManager = placeManager;
+		_requestCache = requestCache;
 		getView().setUiHandlers(this);
 	}
 
@@ -73,26 +77,39 @@ public class LoginWidgetPresenter extends
 		redirect = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/oauthcallback.html";
 
 		// Get the login url for Google
-		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
-		final Request<String> loginUrlReq = appUserRequest
-				.getGoogleLoginURL(redirect);
-
-		loginUrlReq.fire(new Receiver<String>() {
+		_requestCache.getGoogleUrl(redirect, new AsyncCallback<String>() {
 			@Override
 			public void onSuccess(final String url) {
 				getView().setGoogleLoginUrl(url);
 			}
+
+			@Override
+			public void onFailure(final Throwable caught) {
+
+			}
 		});
 
 		// Get the login url for Facebook
-		final Request<String> facebookLoginUrlReq = requestFactory
+		_requestCache.getFacebookUrl(redirect, new AsyncCallback<String>() {
+			@Override
+			public void onSuccess(final String url) {
+				getView().setFacebookLoginUrl(url);
+			}
+
+			@Override
+			public void onFailure(final Throwable caught) {
+
+			}
+		});
+		/*final Request<String> facebookLoginUrlReq = requestFactory
 				.appUserRequest().getFacebookAuthUrl(redirect);
 		facebookLoginUrlReq.fire(new Receiver<String>() {
 			@Override
 			public void onSuccess(final String url) {
 				getView().setFacebookLoginUrl(url);
 			}
-		});
+		});*/
+
 	}
 
 	@Override
@@ -116,7 +133,7 @@ public class LoginWidgetPresenter extends
 	@Override
 	public void login() {
 		LoadingIndicator.show();
-		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
 		final Request<AppUserProxy> loginReq = appUserRequest.login(getView()
 				.getUsername(), getView().getPassword());
 
@@ -125,9 +142,9 @@ public class LoginWidgetPresenter extends
 			@Override
 			public void onSuccess(final AppUserProxy appUser) {
 				LoadingIndicator.hide();
-				eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
+				_eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 				Notification.show("Logged in successfully");
-				placeManager.revealPlace(new PlaceRequest(NameTokens.users)
+				_placeManager.revealPlace(new PlaceRequest(NameTokens.users)
 						.with(UsersPresenter.USER_PARAM, appUser.getUsername()));
 			}
 
@@ -150,7 +167,7 @@ public class LoginWidgetPresenter extends
 	@Override
 	public void goToTwitterAuth() {
 		// Authenticate the user with Twitter
-		final Request<String> authUrlReq = requestFactory.appUserRequest()
+		final Request<String> authUrlReq = _requestFactory.appUserRequest()
 				.getTwitterAuthUrl(redirect);
 		authUrlReq.fire(new Receiver<String>() {
 			@Override
