@@ -1,6 +1,7 @@
 package com.fave100.client.gin;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.RequestCache;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
@@ -59,6 +60,8 @@ public class ClientModule extends AbstractPresenterModule {
 		// Google Analytics
 		bindConstant().annotatedWith(GaAccount.class).to("UA-39911495-1");
 		bind(GoogleAnalyticsNavigationTracker.class).asEagerSingleton();
+
+		bind(RequestCache.class).asEagerSingleton();
 
 		bind(CurrentUser.class).asEagerSingleton();
 

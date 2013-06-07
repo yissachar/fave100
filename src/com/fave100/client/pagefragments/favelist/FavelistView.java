@@ -36,7 +36,6 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 
 	@UiField FavelistStyle style;
 	@UiField FlowPanel favelist;
-	private HTMLPanel draggedElement;
 
 	@Inject
 	public FavelistView(final Binder binder) {
