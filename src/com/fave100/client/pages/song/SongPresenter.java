@@ -122,6 +122,10 @@ public class SongPresenter extends
 				}
 			});
 
+			// By default, hide playlist
+			getView().setPlaylist(false);
+			getView().showWhylines();
+
 			// If there is a user, get their info and their playlist
 			if (!username.isEmpty()) {
 				// Get username and avatar
@@ -145,10 +149,6 @@ public class SongPresenter extends
 							getView().setPlaylist(true);
 							playlistPresenter.setPlaylist(favelist, id);
 							getView().showPlaylist();
-						}
-						else {
-							getView().setPlaylist(false);
-							getView().showWhylines();
 						}
 					}
 				});
@@ -191,7 +191,6 @@ public class SongPresenter extends
 	protected void onHide() {
 		super.onHide();
 		youtubePresenter.clearVideo();
-
 	}
 
 	private void updateYouTube() {
