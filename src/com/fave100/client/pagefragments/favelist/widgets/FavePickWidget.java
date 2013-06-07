@@ -12,6 +12,7 @@ import com.fave100.client.pagefragments.favelist.FavelistPresenter.RankChanged;
 import com.fave100.client.pagefragments.favelist.FavelistPresenter.WhyLineChanged;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.resources.img.ImageResources;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.fave100.shared.Constants;
 import com.fave100.shared.UrlBuilder;
@@ -86,6 +87,7 @@ public class FavePickWidget extends Composite {
 	private ItemAdded _addedCallback;
 	private Label whyLineLabel;
 	private HelpBubble whylineHelpBubble;
+	private ImageResources resources = GWT.create(ImageResources.class);
 
 	private final MouseOverHandler _whyLineEmptyMouseOver = new MouseOverHandler() {
 
@@ -320,7 +322,7 @@ public class FavePickWidget extends Composite {
 			final VerticalPanel arrowPanel = new VerticalPanel();
 			hoverPanel.add(arrowPanel);
 
-			final Image upButton = new Image("img/up-arrow.png");
+			final Image upButton = new Image(resources.upArrow());
 			upButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
@@ -330,7 +332,7 @@ public class FavePickWidget extends Composite {
 			upButton.addStyleName("rankUpArrow");
 			arrowPanel.add(upButton);
 
-			final Image downButton = new Image("img/down-arrow.png");
+			final Image downButton = new Image(resources.downArrow());
 			downButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
@@ -340,7 +342,7 @@ public class FavePickWidget extends Composite {
 			downButton.addStyleName("rankDownArrow");
 			arrowPanel.add(downButton);
 
-			final Image deleteButton = new Image("img/delete.png");
+			final Image deleteButton = new Image(resources.delete());
 			deleteButton.setTitle("Delete song");
 			final FavePickWidget _this = this;
 			deleteButton.addClickHandler(new ClickHandler() {
@@ -358,7 +360,7 @@ public class FavePickWidget extends Composite {
 			hoverPanel.add(deleteButton);
 		}
 		else {
-			final Image addButton = new Image("img/add.png");
+			final Image addButton = new Image(resources.add());
 			addButton.setTitle("Add to your Fave100");
 			addButton.addClickHandler(new ClickHandler() {
 				@Override

@@ -2,6 +2,7 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:w='urn:import:com.fave100.client.widgets'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -88,9 +89,15 @@
 			border: none;
 		}		
 		
+		.faveLogo:hover {
+			cursor: pointer;
+		}
+		
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
+	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
+	
 	<g:HTMLPanel>		
 		<!-- We will hide the topNavSticky element behind the real top nav in order to get a sticky header effect
 			 without using any JavaScript. topNav is the actual element with position:fixed ensuring it stays at 
@@ -100,10 +107,8 @@
 		<div class="{style.topNavSticky}"/>
 		<g:HTMLPanel ui:styleName="{style.topNav}" ui:field="topBar">
 			<div class="container">
-				<g:InlineHyperlink ui:field="logoLink" targetHistoryToken="{nameTokens.getHome}">	
-					<img class="{style.faveLogo}" src="img/logo.png" alt="Fave100 logo"/>
-				</g:InlineHyperlink>		
-				<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" url="img/loading-indicator.gif"/>			
+				<w:ImageHyperlink ui:field="logoLink" targetHistoryToken="{nameTokens.getHome}" styleName="{style.faveLogo}" resource="{img.logo}"/>		
+				<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" resource="{img.loadingIndicator}"/>			
 				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
 				<ul>						
 					<li>						

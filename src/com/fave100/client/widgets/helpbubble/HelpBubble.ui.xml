@@ -47,9 +47,11 @@
 		}
 	</ui:style>
 	
+	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
+	
 	<g:HTMLPanel>
 		<g:FlowPanel ui:styleName="{style.container}">
-			<g:Image ui:field="arrow" ui:styleName="{style.arrow}" url="img/help-bubble-arrow.png"/>
+			<g:Image ui:field="arrow" ui:styleName="{style.arrow}" resource="{img.helpBubbleArrow}"/>
 			<g:FlowPanel ui:styleName="{style.helpContainer}">						
 				<g:InlineLabel ui:field="helpTitle" ui:styleName="{style.helpTitle}"/>
 				<g:InlineLabel ui:field="closeButton" ui:styleName="{style.closeButton}">x</g:InlineLabel>
