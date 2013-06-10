@@ -45,7 +45,7 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 		thumbnailPanel.clear();
 		thumbList.clear();
 
-		if (videos.size() == 0) {
+		if (videos == null || videos.size() == 0) {
 			errorMessage.setVisible(true);
 			getUiHandlers().dispatchEndedEvent();
 		}
@@ -79,6 +79,8 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 			var src = $wnd.player.getIframe().src;
 			$wnd.player.getIframe().src = "";
 			$wnd.player.getIframe().src = src;
+			$wnd.player.destroy();
+			$wnd.videoCleared = true;
 		}
 	}-*/;
 
@@ -87,23 +89,42 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 		var player;
 		if (!$wnd.player) {
 			$wnd.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
-				$wnd.player = new $wnd.YT.Player('ytplayer', {
-					height : '360',
-					width : '640',
-					videoId : videoID,
-					playerVars : {
-						wmode : 'transparent',
-						autoplay : 1
-					},
-					events : {
-						'onStateChange' : $wnd.onPlayerStateChange
-					}
-				});
+				$wnd.createPlayer(videoID);
 			}
 		} else {
-			$wnd.player.loadVideoById({
-				videoId : videoID
+			if (!$wnd.videoCleared) {
+				$wnd.player.loadVideoById({
+					videoId : videoID
+				});
+			} else {
+				// Need to recreate the YouTube iframe player from scratch
+				$wnd.container = $doc.getElementById('ytcontainer');
+				$wnd.ytplayer = $doc.getElementById('ytplayer');
+				if (!$wnd.ytplayer) {
+					$wnd.ytplayer = $doc.createElement('div');
+					$wnd.ytplayer.id = 'ytplayer';
+				}
+
+				$wnd.container.appendChild($wnd.ytplayer);
+				$wnd.createPlayer(videoID);
+				$wnd.videoCleared = false;
+			}
+		}
+
+		$wnd.createPlayer = function createPlayer(videoID) {
+			$wnd.player = new $wnd.YT.Player('ytplayer', {
+				height : '360',
+				width : '640',
+				videoId : videoID,
+				playerVars : {
+					wmode : 'transparent',
+					autoplay : 1
+				},
+				events : {
+					'onStateChange' : $wnd.onPlayerStateChange
+				}
 			});
+			$wnd.videoCleared = false;
 		}
 
 		$wnd.onPlayerStateChange = function onPlayerStateChange(event) {

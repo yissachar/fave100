@@ -6,7 +6,11 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>		
+	<ui:style>	
+		.ytcontainer {
+			height: 375px;
+		}
+		
 		.thumbnailPanel img {
 			margin-top: 5px;
 			margin-right: 53px;
@@ -26,7 +30,9 @@
 	</ui:style>
 	
 	<g:HTMLPanel>
-		<div id="ytplayer">Loading...</div>
+		<div id="ytcontainer" class="{style.ytcontainer}">
+			<div id="ytplayer">Loading...</div>
+		</div>
 		<g:Label ui:field="errorMessage">Error: Could not load video</g:Label>
 		<g:SimplePanel ui:field="framePanel"></g:SimplePanel>
 		<g:HTMLPanel ui:field="thumbnailPanel" ui:styleName="{style.thumbnailPanel}"/>
