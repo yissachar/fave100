@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -52,7 +53,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@Override
-	public void setInSlot(final Object slot, final Widget content) {
+	public void setInSlot(final Object slot, final IsWidget content) {
 		if (slot == BasePresenter.TOP_BAR_SLOT) {
 			topBar.clear();
 			if (content != null) {

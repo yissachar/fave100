@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,7 +41,7 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
 	}
 
 	@Override
-	public void setInSlot(final Object slot, final Widget content) {
+	public void setInSlot(final Object slot, final IsWidget content) {
 		super.setInSlot(slot, content);
 
 		if (slot == BasePresenter.TOP_BAR_SLOT) {

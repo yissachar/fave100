@@ -12,7 +12,7 @@ import com.fave100.client.pages.profile.ProfilePresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.pages.users.UsersPresenter;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;

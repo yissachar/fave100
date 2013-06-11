@@ -19,7 +19,7 @@ import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.fave100.shared.requestfactory.FaveListRequest;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -201,7 +201,7 @@ public class FavelistPresenter extends
 			@Override
 			public void onFailure(final ServerFailure failure) {
 				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					placeManager.revealPlace(new PlaceRequest(NameTokens.login));
+					placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 				}
 				else if (failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
 					Notification.show("You cannot have more than 100 songs in list");

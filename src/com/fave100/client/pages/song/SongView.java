@@ -12,6 +12,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -55,7 +56,7 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	}
 
 	@Override
-	public void setInSlot(final Object slot, final Widget content) {
+	public void setInSlot(final Object slot, final IsWidget content) {
 		if (slot == BasePresenter.TOP_BAR_SLOT) {
 			topBar.clear();
 

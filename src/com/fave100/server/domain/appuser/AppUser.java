@@ -90,6 +90,7 @@ public class AppUser extends DatastoreObject {
 	private String avatar;
 	private Date joinDate;
 
+	@SuppressWarnings("unused")
 	private AppUser() {
 	}
 

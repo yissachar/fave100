@@ -3,7 +3,7 @@ package com.fave100.client.pages.song.widgets.playlist;
 import com.fave100.client.events.PlaylistSongChangedEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -35,7 +35,6 @@ public class PlaylistItem extends Composite {
 	@UiField Label _whyline;
 	@UiField PlaylistStyle style;
 	private String _songID;
-	private String _username;
 	private EventBus eventBus;
 	private boolean _currentlyPlaying;
 
@@ -75,10 +74,6 @@ public class PlaylistItem extends Composite {
 
 	public String getSongID() {
 		return _songID;
-	}
-
-	public void setUsername(final String username) {
-		_username = username;
 	}
 
 	public void setCurrentlyPlaying(final boolean playing) {

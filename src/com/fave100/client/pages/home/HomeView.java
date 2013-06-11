@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -32,7 +33,7 @@ public class HomeView extends ViewWithUiHandlers<HomeUiHandlers> implements Home
 	}
 
 	@Override
-	public void setInSlot(final Object slot, final Widget content) {
+	public void setInSlot(final Object slot, final IsWidget content) {
 		super.setInSlot(slot, content);
 	}
 

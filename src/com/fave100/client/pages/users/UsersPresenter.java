@@ -10,7 +10,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.SongProxy;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
@@ -79,7 +79,7 @@ public class UsersPresenter extends
 		Window.addWindowScrollHandler(new ScrollHandler() {
 			@Override
 			public void onWindowScroll(final ScrollEvent event) {
-				final Widget widget = songAutocomplete.getWidget();
+				final Widget widget = songAutocomplete.asWidget();
 				if (event.getScrollTop() >= 26) {
 					songAutocomplete.getView().hideHelp();
 					widget.addStyleName(getView().getFixedSearchStyle());

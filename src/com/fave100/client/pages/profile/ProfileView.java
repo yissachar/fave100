@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextBox;
@@ -53,7 +54,7 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	}
 
 	@Override
-	public void setInSlot(final Object slot, final Widget content) {
+	public void setInSlot(final Object slot, final IsWidget content) {
 		if (slot == BasePresenter.TOP_BAR_SLOT) {
 			topBar.clear();
 			if (content != null) {

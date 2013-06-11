@@ -17,7 +17,7 @@ import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -336,7 +336,7 @@ public class RegisterPresenter extends
 
 	private void goToUserPage(final String username) {
 		getProxy().manualRevealFailed();
-		final PlaceRequest place = new PlaceRequest(NameTokens.users).with(UsersPresenter.USER_PARAM, username);
+		final PlaceRequest place = new PlaceRequest.Builder().nameToken(NameTokens.users).with(UsersPresenter.USER_PARAM, username).build();
 		placeManager.revealPlace(place);
 	}
 }

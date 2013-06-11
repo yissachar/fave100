@@ -2,7 +2,7 @@ package com.fave100.client;
 
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.shared.requestfactory.AppUserProxy;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 

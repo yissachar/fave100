@@ -19,7 +19,7 @@ import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.fave100.shared.requestfactory.FaveListRequest;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
@@ -233,7 +233,7 @@ public class SongPresenter extends
 				if (failure.getExceptionType().equals(
 						NotLoggedInException.class.getName())) {
 					placeManager
-							.revealPlace(new PlaceRequest(NameTokens.login));
+							.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 				}
 				else if (failure.getExceptionType().equals(
 						SongLimitReachedException.class.getName())) {

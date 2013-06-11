@@ -7,7 +7,7 @@ import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
@@ -130,16 +130,16 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	}-*/;
 
 	public void googleCallback() {
-		placeManager.revealPlace(new PlaceRequest(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_GOOGLE));
+		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_GOOGLE).build());
 	}
 
 	public void twitterCallback(final String verifier) {
 		GWT.log("Oauth from top bar: " + verifier);
-		placeManager.revealPlace(new PlaceRequest(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_TWITTER).with("oauth_verifier", verifier));
+		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_TWITTER).with("oauth_verifier", verifier).build());
 	}
 
 	public void facebookCallback(final String code) {
-		placeManager.revealPlace(new PlaceRequest(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_FACEBOOK).with("code", code));
+		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_FACEBOOK).with("code", code).build());
 	}
 }
 
