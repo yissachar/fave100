@@ -20,6 +20,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,6 +45,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 
 	@UiField SongAutocompleteStyle style;
 	@UiField TextBox searchBox;
+	@UiField InlineLabel clearSearchButton;
 	@UiField(provided = true) HelpBubble helpBubble;
 	@UiField HTMLPanel resultsArea;
 	@UiField FocusPanel eventCatcher;
@@ -109,6 +111,11 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 			// Otherwise search for song
 			getUiHandlers().getAutocompleteResults(searchBox.getText(), true);
 		}
+	}
+
+	@UiHandler("clearSearchButton")
+	void onClearSearchButtonClick(final ClickEvent event) {
+		getUiHandlers().getAutocompleteResults("", true);
 	}
 
 	@UiHandler("eventCatcher")
