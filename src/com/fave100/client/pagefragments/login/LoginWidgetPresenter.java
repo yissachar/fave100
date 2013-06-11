@@ -10,7 +10,7 @@ import com.fave100.shared.exceptions.user.IncorrectLoginException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -144,8 +144,7 @@ public class LoginWidgetPresenter extends
 				LoadingIndicator.hide();
 				_eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 				Notification.show("Logged in successfully");
-				_placeManager.revealPlace(new PlaceRequest(NameTokens.users)
-						.with(UsersPresenter.USER_PARAM, appUser.getUsername()));
+				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.users).with(UsersPresenter.USER_PARAM, appUser.getUsername()).build());
 			}
 
 			@Override

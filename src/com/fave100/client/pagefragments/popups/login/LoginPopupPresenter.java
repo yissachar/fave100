@@ -1,7 +1,7 @@
 package com.fave100.client.pagefragments.popups.login;
 
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.PopupView;

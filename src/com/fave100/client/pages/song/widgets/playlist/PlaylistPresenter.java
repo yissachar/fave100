@@ -6,7 +6,7 @@ import java.util.List;
 import com.fave100.client.events.PlaylistSongChangedEvent;
 import com.fave100.client.events.YouTubePlayerEndedEvent;
 import com.fave100.shared.requestfactory.FaveItemProxy;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
@@ -22,7 +22,6 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	}
 
 	private EventBus _eventBus;
-	private String _username;
 	private List<PlaylistItem> playlistItems = new ArrayList<PlaylistItem>(100);;
 	private int playingSongIndex = 0;
 
@@ -57,7 +56,6 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	}
 
 	public void setUserInfo(final String username, final String avatar) {
-		_username = username;
 		getView().setUsername(username);
 		getView().setUrl(avatar);
 	}
@@ -72,7 +70,6 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 			playlistItem.setArtist(faveItem.getArtist());
 			playlistItem.setWhyline(faveItem.getWhyline());
 			playlistItem.setSongID(faveItem.getSongID());
-			playlistItem.setUsername(_username);
 			playlistItems.add(playlistItem);
 			i++;
 		}

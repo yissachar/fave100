@@ -8,7 +8,7 @@ import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -64,8 +64,7 @@ public class HomePresenter extends
 		super.prepareFromRequest(request);
 
 		if (currentUser.isLoggedIn()) {
-			final PlaceRequest placeRequest = new PlaceRequest(NameTokens.users)
-					.with("u", currentUser.getUsername());
+			final PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.users).with("u", currentUser.getUsername()).build();
 			placeManager.revealPlace(placeRequest);
 		}
 		getProxy().manualReveal(HomePresenter.this);

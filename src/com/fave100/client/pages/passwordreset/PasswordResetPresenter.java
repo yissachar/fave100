@@ -6,7 +6,7 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -163,7 +163,7 @@ public class PasswordResetPresenter
 				}
 				else {
 					placeManager
-							.revealPlace(new PlaceRequest(NameTokens.login));
+							.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 				}
 			}
 		});

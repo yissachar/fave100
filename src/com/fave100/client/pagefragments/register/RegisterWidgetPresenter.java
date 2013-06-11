@@ -11,7 +11,7 @@ import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -156,7 +156,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	}
 
 	public void appUserCreated() {
-		_placeManager.revealPlace(new PlaceRequest(NameTokens.home));
+		_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.home).build());
 		Notification.show("Thanks for registering!");
 	}
 

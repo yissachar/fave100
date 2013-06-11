@@ -6,7 +6,7 @@ import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
@@ -75,7 +75,7 @@ public class LogoutPresenter extends
 			public void onSuccess(final Void response) {
 				eventBus.fireEvent(new CurrentUserChangedEvent(null));
 				Notification.show("Logged out successfully");
-				placeManager.revealPlace(new PlaceRequest(NameTokens.home));
+				placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.home).build());
 			}
 		});
 	}

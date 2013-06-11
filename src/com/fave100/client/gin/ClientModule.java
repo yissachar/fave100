@@ -43,10 +43,12 @@ import com.fave100.client.place.DefaultPlace;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.GaAccount;
+import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.gwtplatform.mvp.client.googleanalytics.GoogleAnalyticsNavigationTracker;
@@ -70,6 +72,8 @@ public class ClientModule extends AbstractPresenterModule {
 		bind(NotLoggedInGatekeeper.class).asEagerSingleton();
 
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
+		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.home);
+		bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.home);
 
 		bindPresenter(HomePresenter.class, HomePresenter.MyView.class,
 				HomeView.class, HomePresenter.MyProxy.class);

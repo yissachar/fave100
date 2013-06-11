@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fave100.client.events.YouTubePlayerEndedEvent;
 import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
-import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;

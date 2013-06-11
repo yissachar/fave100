@@ -1,48 +1,18 @@
 package com.fave100.client;
 
-import com.fave100.client.events.CurrentUserChangedEvent;
-import com.fave100.client.gin.ClientGinjector;
-import com.fave100.shared.UrlBuilder;
-import com.fave100.shared.requestfactory.AppUserProxy;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
-import com.gwtplatform.mvp.client.DelayedBindRegistry;
+import com.google.gwt.inject.client.Ginjector;
+import com.gwtplatform.mvp.client.ApplicationController;
 
 public class Fave100 implements EntryPoint {
 
-	private final ClientGinjector ginjector = GWT.create(ClientGinjector.class);
+	private static final ApplicationController controller = GWT.create(ApplicationController.class);
 
 	@Override
 	public void onModuleLoad() {
+		controller.init();
 		// TODO: HTTPS
 		// TODO: import playlist from iTunes
-
-		// This is required for Gwt-Platform proxy's generator
-		DelayedBindRegistry.bind(ginjector);
-
-		UrlBuilder.isDevMode = !GWT.isProdMode();
-
-		// On first page load or page refresh, check for an existing logged in user
-		final ApplicationRequestFactory requestFactory = GWT.create(ApplicationRequestFactory.class);
-		requestFactory.initialize(ginjector.getEventBus());
-		final Request<AppUserProxy> request = requestFactory.appUserRequest().getLoggedInAppUser();
-		request.fire(new Receiver<AppUserProxy>() {
-			@Override
-			public void onSuccess(final AppUserProxy appUser) {
-				ginjector.getEventBus().fireEvent(new CurrentUserChangedEvent(appUser));
-				ginjector.getPlaceManager().revealCurrentPlace();
-
-			}
-
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				ginjector.getPlaceManager().revealCurrentPlace();
-			}
-		});
-
 	}
 }
