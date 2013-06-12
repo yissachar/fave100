@@ -12,7 +12,7 @@
 	<properties>
 		<!-- convenience to define GWT version in one place -->
 		<gwt.version>2.5.1</gwt.version>
-		<appengine.version>1.7.7.1</appengine.version>
+		<appengine.version>1.8.1</appengine.version>
 		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
 		<gwtp.version>1.0</gwtp.version>
 		<!-- tell the compiler we can use 1.7 -->
@@ -32,6 +32,7 @@
 			<artifactId>appengine-api-labs</artifactId>
 			<version>${appengine.version}</version>
 		</dependency>	
+		 
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-stubs</artifactId>
@@ -43,6 +44,7 @@
 			<version>${appengine.version}</version>
 			<scope>test</scope>
 		</dependency>
+		 
 
 		<dependency>
 			<groupId>com.google.web.bindery</groupId>
