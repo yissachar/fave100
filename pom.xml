@@ -27,6 +27,7 @@
 			<artifactId>appengine-api-1.0-sdk</artifactId>
 			<version>${appengine.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-labs</artifactId>
@@ -63,10 +64,7 @@
 			<artifactId>gwt-servlet</artifactId>
 			<version>${gwt.version}</version>
 		</dependency>
-		<!-- GWT code server dependencies <dependency> <groupId>com.google.gwt</groupId> 
-			<artifactId>gwt-user</artifactId> <version>${gwt.version}</version> </dependency> 
-			<dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-dev</artifactId> 
-			<version>${gwt.version}</version> </dependency> -->
+		
 		<dependency>
 			<groupId>com.google.gwt.inject</groupId>
 			<artifactId>gin</artifactId>
@@ -103,13 +101,6 @@
 			<version>${gwtp.version}</version>
 		</dependency>
 
-		<!-- Crawler component -->
-		<dependency>
-			<groupId>com.gwtplatform</groupId>
-			<artifactId>gwtp-crawler</artifactId>
-			<version>${gwtp.version}</version>
-		</dependency>
-
 		<!-- Annotation component -->
 		<dependency>
 			<groupId>com.gwtplatform</groupId>
@@ -121,13 +112,7 @@
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
 			<artifactId>objectify</artifactId>
-			<version>4.0b1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jpa_3.0_spec</artifactId>
-			<version>1.1.1</version>
+			<version>4.0b2</version>
 		</dependency>
 
 		<dependency>

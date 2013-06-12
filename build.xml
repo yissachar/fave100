@@ -1,8 +1,6 @@
 <project>
 	<property name="ae-sdk.dir" location="${AppEngineDir}" />
 	<property name="gwt-sdk.dir" location="${GwtDir}" />
-
-	<import file="${ae-sdk.dir}\config\user\ant-macros.xml" />
 	
 	<target name="copyMavenJars" description="Runs the Maven command to copy JARS to WAR">
 	    <exec executable="cmd">
@@ -11,19 +9,29 @@
 	        <arg line="clean dependency:copy-dependencies" />
 		</exec>
 	</target>
+	
+	<target name="deleteExtraJars" description="Delete unneeded jars that were added">
+		<delete file="war/WEB-INF/lib/appengine-api-labs-${AeVersion}.jar"/>
+		<delete file="war/WEB-INF/lib/appengine-api-stubs-${AeVersion}.jar"/>
+		<delete file="war/WEB-INF/lib/appengine-testing-${AeVersion}.jar"/>
+		<delete file="war/WEB-INF/lib/gwt-servlet-${GwtVersion}.jar"/>
+	</target>
 
 	<target name="copyjars" description="Copies the App Engine and GWT JARs to the WAR.">
 		<copy todir="war/WEB-INF/lib" flatten="true">
 			<fileset dir="${ae-sdk.dir}/lib/user">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${ae-sdk.dir}/lib/opt/user/appengine-api-labs">
 				<include name="**/*.jar" />
 			</fileset>
-			<fileset dir="${ae-sdk.dir}/lib/opt/user">
+			<fileset dir="${ae-sdk.dir}/lib/opt/user/appengine-endpoints">
 				<include name="**/*.jar" />
 			</fileset>
 			<fileset dir="${gwt-sdk.dir}">
 				<include name="gwt-servlet.jar" />
 			</fileset>
-		</copy>
+		</copy>	
 	</target>
 
 </project>
