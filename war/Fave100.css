@@ -195,7 +195,11 @@ footer {
 }
 
 .rank {
-	font-size: 40px;
+	font-size: 40px;	
+}
+
+.rank > div {
+	margin-top: 2px;
 }
 
 .rankThreeDigit {
