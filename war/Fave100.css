@@ -348,6 +348,8 @@ footer {
 	top: 20%;
 	left: 25%;
 	width: 50%;
+	min-width: 250px;
+	max-width: 800px;
 	z-index: 100000;
 }
 
