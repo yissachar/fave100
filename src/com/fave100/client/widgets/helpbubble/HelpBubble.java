@@ -39,7 +39,7 @@ public class HelpBubble extends Composite {
 		setWidth(width + "px");
 		switch (direction) {
 			case LEFT:
-				$(arrow).css("transform:", "rotate(270deg)");
+				//$(arrow).css("transform:", "rotate(270deg)");
 				break;
 
 			default:
@@ -55,7 +55,6 @@ public class HelpBubble extends Composite {
 	public void setArrowPos(final int x) {
 		final GQuery $arrow = $(arrow);
 		$arrow.css("position", "absolute");
-		$arrow.css("top", "-13px");
 		$arrow.css("left", String.valueOf(x) + "px");
 	}
 

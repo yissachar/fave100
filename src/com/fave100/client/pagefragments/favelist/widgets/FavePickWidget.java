@@ -87,6 +87,7 @@ public class FavePickWidget extends Composite {
 	private ItemAdded _addedCallback;
 	private Label whyLineLabel;
 	private HelpBubble whylineHelpBubble;
+	private HelpBubble rankHelpBubble;
 	private ImageResources resources = GWT.create(ImageResources.class);
 
 	private final MouseOverHandler _whyLineEmptyMouseOver = new MouseOverHandler() {
@@ -214,6 +215,9 @@ public class FavePickWidget extends Composite {
 					final int _currentRank = _rank;
 					_rank = Integer.parseInt(rankText.getText());
 					_rankCallback.onChange(getSongID(), _currentRank - 1, _rank - 1);
+					if (rankHelpBubble != null) {
+						rankHelpBubble.setVisible(false);
+					}
 				}
 				catch (final NumberFormatException ex) {
 
@@ -380,7 +384,7 @@ public class FavePickWidget extends Composite {
 
 	public void showRankWhylineHelpBubble() {
 		final String rankText = "You can change the rank of your songs here";
-		final HelpBubble rankHelpBubble = new HelpBubble("Rank", rankText, 300, HelpBubble.Direction.LEFT);
+		rankHelpBubble = new HelpBubble("Rank", rankText, 300, HelpBubble.Direction.LEFT);
 		container.add(rankHelpBubble);
 		rankHelpBubble.setArrowPos(30);
 	}
