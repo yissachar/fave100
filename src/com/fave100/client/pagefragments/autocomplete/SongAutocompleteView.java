@@ -11,7 +11,6 @@ import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -86,9 +85,6 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 			searchBox.setText(placeholder);
 			searchBox.addStyleName(style.placeholder());
 		}
-		else {
-			getUiHandlers().getAutocompleteResults("", true);
-		}
 	}
 
 	@UiHandler("searchBox")
@@ -119,6 +115,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 
 	@UiHandler("clearSearchButton")
 	void onClearSearchButtonClick(final ClickEvent event) {
+		searchBox.setText("");
 		getUiHandlers().getAutocompleteResults("", true);
 	}
 
@@ -137,9 +134,8 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 		}
 	}
 
-	// Use mouse down instead of click because otherwise blur event from search box will prevent us from ever getting to click
 	@UiHandler("eventCatcher")
-	void onResultsClick(final MouseDownEvent event) {
+	void onResultsClick(final ClickEvent event) {
 		getUiHandlers().songSelected();
 	}
 
