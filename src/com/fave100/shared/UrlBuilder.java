@@ -16,7 +16,7 @@ public class UrlBuilder {
 			url += "http://yissachar:8888/Fave100.html?gwt.codesvr=127.0.0.1:9997";
 		}
 		else {
-			url += "http://fave-100.appspot.com/";
+			url += "http://www.fave100.com/";
 		}
 
 		this.placeToken = placeToken;
