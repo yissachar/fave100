@@ -52,6 +52,8 @@ import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.gwtplatform.mvp.client.googleanalytics.GoogleAnalyticsNavigationTracker;
+import com.fave100.client.pages.users.widgets.starredlists.StarredListsPresenter;
+import com.fave100.client.pages.users.widgets.starredlists.StarredListsView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -122,6 +124,8 @@ public class ClientModule extends AbstractPresenterModule {
 		bindSingletonPresenterWidget(PlaylistPresenter.class, PlaylistPresenter.MyView.class, PlaylistView.class);
 
 		bindSingletonPresenterWidget(YouTubePresenter.class, YouTubePresenter.MyView.class, YouTubeView.class);
+
+		bindPresenterWidget(StarredListsPresenter.class, StarredListsPresenter.MyView.class, StarredListsView.class);
 	}
 
 	@Provides

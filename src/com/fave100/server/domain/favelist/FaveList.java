@@ -30,7 +30,7 @@ public class FaveList extends DatastoreObject {
 	@Id private String id;
 	private Ref<AppUser> user;
 	private String hashtag;
-	private List<FaveItem> list = new ArrayList<FaveItem>();;
+	private List<FaveItem> list = new ArrayList<FaveItem>();
 
 	@SuppressWarnings("unused")
 	private FaveList() {

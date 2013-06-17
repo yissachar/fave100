@@ -10,8 +10,12 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -34,9 +38,11 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.server.domain.favelist.FaveListID;
 import com.fave100.shared.Constants;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Validator;
+import com.fave100.shared.exceptions.favelist.TooManyStarredListsException;
 import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.GoogleIdAlreadyExistsException;
@@ -89,6 +95,7 @@ public class AppUser extends DatastoreObject {
 	private String email;
 	private String avatar;
 	private Date joinDate;
+	private Set<FaveListID> starredLists = new HashSet<FaveListID>();
 
 	@SuppressWarnings("unused")
 	private AppUser() {
@@ -696,6 +703,35 @@ public class AppUser extends DatastoreObject {
 		return true;
 	}
 
+	public static void starList(final String username, final String hashtag) throws NotLoggedInException, TooManyStarredListsException {
+		final AppUser currentUser = getLoggedInAppUser();
+		if (currentUser == null)
+			throw new NotLoggedInException();
+
+		if (currentUser.starredLists.size() >= Constants.MAX_STARRED_LISTS)
+			throw new TooManyStarredListsException();
+
+		currentUser.starredLists.add(new FaveListID(username, hashtag));
+		ofy().save().entity(currentUser).now();
+	}
+
+	public static void unstarList(final String username, final String hashtag) throws NotLoggedInException {
+		final AppUser currentUser = getLoggedInAppUser();
+		if (currentUser == null)
+			throw new NotLoggedInException();
+		currentUser.starredLists.remove(new FaveListID(username, hashtag));
+		ofy().save().entity(currentUser).now();
+	}
+
+	public static List<FaveListID> getStarredListsForCurrentUser() throws NotLoggedInException {
+		final AppUser currentUser = getLoggedInAppUser();
+		if (currentUser == null)
+			throw new NotLoggedInException();
+
+		// Dumb workaround because GWT cannot handle Sets properly when passing to and from server
+		return new ArrayList<FaveListID>(currentUser.getStarredLists());
+	}
+
 	// Emails user a password reset token if they forget their password
 	public static Boolean emailPasswordResetToken(final String username, final String emailAddress) {
 		if (!username.isEmpty() && !emailAddress.isEmpty()) {
@@ -868,5 +904,13 @@ public class AppUser extends DatastoreObject {
 
 	public static void setFacebookApiSecret(final String secret) {
 		FACEBOOK_APP_SECRET = secret;
+	}
+
+	public Set<FaveListID> getStarredLists() {
+		return starredLists;
+	}
+
+	public void setStarredLists(final Set<FaveListID> starredLists) {
+		this.starredLists = starredLists;
 	}
 }

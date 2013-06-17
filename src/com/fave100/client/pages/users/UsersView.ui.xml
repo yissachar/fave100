@@ -3,7 +3,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
-	xmlns:uw='urn:import:com.fave100.client.pages.users.widgets'
+	xmlns:uw='urn:import:com.fave100.client.pages.users.widgets.sharebutton'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -56,6 +56,14 @@
 			word-wrap: break-word;
 		}
 		
+		.starCTAcontainer {
+			margin-top: 20px;
+		}
+		
+		.starError {
+			margin-top: 10px;
+		}
+		
 		.faveListArea {
 			margin-left: 260px;
 		}
@@ -80,7 +88,9 @@
 		}
 	</ui:style>
 	
+	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
+	
 	<g:HTMLPanel styleName="wrap">
 		<g:HTMLPanel ui:field="topBar"/>
 		<div class="container">
@@ -97,8 +107,19 @@
 							</g:VerticalPanel>				
 						</g:HorizontalPanel>
 						
+						<!--  Star button to star other people's favelists -->
+						<g:FocusPanel ui:field="starCTAcontainer" ui:styleName="{style.starCTAcontainer}">
+							<g:FlowPanel>
+								<g:InlineLabel ui:field="starCTA" ui:styleName="button"/>
+								<g:Label ui:field="starError" ui:styleName="{style.starError} error"/>
+							</g:FlowPanel>
+						</g:FocusPanel>
+						
+						<!--  Lists that user has already starred -->
+						<g:HTMLPanel ui:field="starredLists"/>
+						
 						<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">															
-							<uw:ShareButton ui:field="shareButton"/>
+							<uw:ShareButton ui:field="shareButton"/>							
 						</g:HTMLPanel>
 					</g:HTMLPanel>
 					

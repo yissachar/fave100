@@ -1,0 +1,45 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	
+	<ui:style type="com.fave100.client.pages.users.widgets.starredlists.StarredListsView.StarredListsStyle">
+		.container {
+			margin-top: 15px;
+			width: 100%;
+		}
+		
+		.title {
+			font-weight: bold;
+		}
+		
+		.listLink {
+			display: block;
+			width: 100%;
+			border: 1px solid #999;
+			border-bottom: 0px;
+			background-color: #FFF;
+			padding: 3px;
+		}
+		
+		.listLink:last-child {
+			border-bottom: 1px solid #999;
+		}
+		
+		.listLink:hover {
+			text-decoration: none;
+			background-color: #5eaae5;
+			color: #FFF;
+		}
+	</ui:style>
+	
+	<g:FlowPanel ui:styleName="{style.container}">
+		<g:Label ui:styleName="{style.title}">Starred Lists:</g:Label>
+		<g:FlowPanel ui:field="listContainer"/>
+	</g:FlowPanel>
+	
+</ui:UiBinder>

@@ -1,4 +1,4 @@
-package com.fave100.client.pages.users.widgets;
+package com.fave100.client.pages.users.widgets.sharebutton;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
