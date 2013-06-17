@@ -1,12 +1,15 @@
 package com.fave100.client.pages.users;
 
 import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.users.widgets.ShareButton;
+import com.fave100.client.pages.users.widgets.sharebutton.ShareButton;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -33,6 +36,10 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField HTMLPanel userContainer;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel socialContainer;
+	@UiField FocusPanel starCTAcontainer;
+	@UiField Label starCTA;
+	@UiField Label starError;
+	@UiField HTMLPanel starredLists;
 	@UiField ShareButton shareButton;
 	@UiField InlineHyperlink editProfileButton;
 	@UiField Image avatar;
@@ -72,7 +79,19 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 				favelist.add(content);
 			}
 		}
+
+		if (slot == UsersPresenter.STARRED_LISTS_SLOT) {
+			starredLists.clear();
+			if (content != null) {
+				starredLists.add(content);
+			}
+		}
 		super.setInSlot(slot, content);
+	}
+
+	@UiHandler("starCTAcontainer")
+	void onStarClick(final ClickEvent event) {
+		getUiHandlers().starList();
 	}
 
 	@Override
@@ -99,6 +118,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		userNotFound.setVisible(false);
 		editProfileButton.setVisible(true);
 		songAutocomplete.setVisible(true);
+		starredLists.setVisible(true);
 		shareButton.setTwitterMessage("Check out my Fave100 songs: ");
 	}
 
@@ -108,6 +128,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		userNotFound.setVisible(false);
 		editProfileButton.setVisible(false);
 		songAutocomplete.setVisible(false);
+		starredLists.setVisible(false);
+
 		shareButton.setTwitterMessage("Check out " + username.getText() + "'s Fave100 songs: ");
 	}
 
@@ -120,5 +142,27 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public void showUserNotFound() {
 		userContainer.setVisible(false);
 		userNotFound.setVisible(true);
+	}
+
+	@Override
+	public void setStarCTA(final boolean show, final boolean starred) {
+		if (show) {
+			starCTAcontainer.setVisible(true);
+		}
+		else {
+			starCTAcontainer.setVisible(false);
+		}
+
+		if (starred) {
+			starCTA.setText("Unstar " + username.getText() + "'s FaveList");
+		}
+		else {
+			starCTA.setText("Star " + username.getText() + "'s FaveList");
+		}
+	}
+
+	@Override
+	public void setStarError(final String error) {
+		starError.setText(error);
 	}
 }

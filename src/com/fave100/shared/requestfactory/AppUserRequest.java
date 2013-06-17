@@ -1,5 +1,7 @@
 package com.fave100.shared.requestfactory;
 
+import java.util.List;
+
 import com.fave100.server.domain.appuser.AppUser;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
@@ -44,6 +46,12 @@ public interface AppUserRequest extends RequestContext {
 	Request<String> setAvatarForCurrentUser(String avatar);
 
 	Request<String> getEmailForCurrentUser();
+
+	Request<Void> starList(String username, String favelist);
+
+	Request<Void> unstarList(String username, String favelist);
+
+	Request<List<FavelistIDProxy>> getStarredListsForCurrentUser();
 
 	Request<Boolean> setProfileData(String email);
 

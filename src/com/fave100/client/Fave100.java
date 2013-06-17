@@ -2,7 +2,6 @@ package com.fave100.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.inject.client.Ginjector;
 import com.gwtplatform.mvp.client.ApplicationController;
 
 public class Fave100 implements EntryPoint {
