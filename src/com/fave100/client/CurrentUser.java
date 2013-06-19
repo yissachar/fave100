@@ -3,13 +3,11 @@ package com.fave100.client;
 import java.util.List;
 
 import com.fave100.client.events.CurrentUserChangedEvent;
-import com.fave100.client.events.ListStarredEvent;
-import com.fave100.client.events.ListUnstarredEvent;
-import com.fave100.shared.Constants;
-import com.fave100.shared.exceptions.favelist.TooManyStarredListsException;
+import com.fave100.client.events.UserFollowedEvent;
+import com.fave100.client.events.UserUnfollowedEvent;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.FavelistIDProxy;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.EntityProxyId;
@@ -23,10 +21,10 @@ public class CurrentUser implements AppUserProxy {
 	private ApplicationRequestFactory _requestFactory;
 	private AppUserProxy appUser;
 	private String avatar = "";
-	private List<FavelistIDProxy> starredLists;
+	private List<AppUserProxy> following;
 
 	@Inject
-	public CurrentUser(final EventBus eventBus, final ApplicationRequestFactory requestFactory) {
+	public CurrentUser(final EventBus eventBus, final ApplicationRequestFactory requestFactory, final RequestCache requestCache) {
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 
@@ -39,13 +37,19 @@ public class CurrentUser implements AppUserProxy {
 						if (appUser != null) {
 							avatar = appUser.getAvatarImage();
 
-							final Request<List<FavelistIDProxy>> starredListReq = requestFactory.appUserRequest().getStarredListsForCurrentUser();
-							starredListReq.fire(new Receiver<List<FavelistIDProxy>>() {
+							final AsyncCallback<List<AppUserProxy>> followingReq = new AsyncCallback<List<AppUserProxy>>() {
 								@Override
-								public void onSuccess(final List<FavelistIDProxy> results) {
-									starredLists = results;
+								public void onFailure(final Throwable caught) {
+									// Don't care
 								}
-							});
+
+								@Override
+								public void onSuccess(final List<AppUserProxy> result) {
+									following = result;
+								}
+
+							};
+							requestCache.getFollowingUsers(followingReq);
 						}
 					}
 				});
@@ -63,76 +67,54 @@ public class CurrentUser implements AppUserProxy {
 		avatar = url;
 	}
 
-	public List<FavelistIDProxy> getStarredLists() {
-		return starredLists;
+	public List<AppUserProxy> getFollowing() {
+		return following;
 	}
 
-	public boolean isStarredList(final String username, final String hashtag) {
-		if (!isLoggedIn() || getStarredLists() == null)
+	public boolean isFollowingUser(final AppUserProxy user) {
+		if (!isLoggedIn() || getFollowing() == null)
 			return false;
 
-		return indexOfStarredList(username, hashtag) != -1;
+		return getFollowing().contains(user);
 	}
 
-	public int indexOfStarredList(final String username, final String hashtag) {
-		for (int i = 0; i < starredLists.size(); i++) {
-			final FavelistIDProxy starredList = starredLists.get(i);
-			if (starredList.getUsername().equals(username) && starredList.getHashtag().equals(hashtag)) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	public void starList(final String username, final String hashtag) {
-		if (isStarredList(username, hashtag))
+	public void followUser(final AppUserProxy user) {
+		if (isFollowingUser(user))
 			return;
 
 		// Add to client
-		getStarredLists().add(new FavelistIDProxy() {
-			@Override
-			public String getUsername() {
-				return username;
-			}
-
-			@Override
-			public String getHashtag() {
-				return hashtag;
-			}
-		});
+		getFollowing().add(user);
 
 		// Add to server
-		final Request<Void> starReq = _requestFactory.appUserRequest().starList(username, hashtag);
+		final Request<Void> starReq = _requestFactory.appUserRequest().followUser(user.getUsername());
 		starReq.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
-				_eventBus.fireEvent(new ListStarredEvent());
+				_eventBus.fireEvent(new UserFollowedEvent(user));
 			}
 
 			@Override
 			public void onFailure(final ServerFailure failure) {
 				// Roll back
-				getStarredLists().remove(indexOfStarredList(username, hashtag));
-				String errorMsg = failure.getMessage();
-				if (failure.getExceptionType().equals(TooManyStarredListsException.class.getName()))
-					errorMsg = "You can only have " + Constants.MAX_STARRED_LISTS + " starred lists";
-				_eventBus.fireEvent(new ListUnstarredEvent(errorMsg));
+				getFollowing().remove(user);
+				final String errorMsg = failure.getMessage();
+				_eventBus.fireEvent(new UserUnfollowedEvent(user, errorMsg));
 			}
 		});
 	}
 
-	public void unstarList(final String username, final String hashtag) {
-		if (!isStarredList(username, hashtag))
+	public void unfollowUser(final AppUserProxy user) {
+		if (!isFollowingUser(user))
 			return;
 
 		// Remove from client
-		getStarredLists().remove(indexOfStarredList(username, hashtag));
+		getFollowing().remove(user);
 
-		_eventBus.fireEvent(new ListUnstarredEvent());
+		_eventBus.fireEvent(new UserUnfollowedEvent(user));
 
 		// Remove from server
-		final Request<Void> unstarReq = _requestFactory.appUserRequest().unstarList(username, hashtag);
-		unstarReq.fire();
+		final Request<Void> unfollowReq = _requestFactory.appUserRequest().unfollowUser(user.getUsername());
+		unfollowReq.fire();
 	}
 
 	// Needed for RequestFactory

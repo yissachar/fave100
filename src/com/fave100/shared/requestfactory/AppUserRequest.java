@@ -47,11 +47,11 @@ public interface AppUserRequest extends RequestContext {
 
 	Request<String> getEmailForCurrentUser();
 
-	Request<Void> starList(String username, String favelist);
+	Request<Void> followUser(String username);
 
-	Request<Void> unstarList(String username, String favelist);
+	Request<Void> unfollowUser(String username);
 
-	Request<List<FavelistIDProxy>> getStarredListsForCurrentUser();
+	Request<List<AppUserProxy>> getFollowingForCurrentUser();
 
 	Request<Boolean> setProfileData(String email);
 

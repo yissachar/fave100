@@ -38,11 +38,11 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.favelist.FaveList;
-import com.fave100.server.domain.favelist.FaveListID;
 import com.fave100.shared.Constants;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Validator;
-import com.fave100.shared.exceptions.favelist.TooManyStarredListsException;
+import com.fave100.shared.exceptions.following.AlreadyFollowingException;
+import com.fave100.shared.exceptions.following.CannotFollowYourselfException;
 import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.GoogleIdAlreadyExistsException;
@@ -62,11 +62,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  * A Fave100 user.
@@ -95,7 +98,7 @@ public class AppUser extends DatastoreObject {
 	private String email;
 	private String avatar;
 	private Date joinDate;
-	private Set<FaveListID> starredLists = new HashSet<FaveListID>();
+	@Index private Set<Ref<AppUser>> following = new HashSet<Ref<AppUser>>();
 
 	@SuppressWarnings("unused")
 	private AppUser() {
@@ -703,33 +706,39 @@ public class AppUser extends DatastoreObject {
 		return true;
 	}
 
-	public static void starList(final String username, final String hashtag) throws NotLoggedInException, TooManyStarredListsException {
+	public static void followUser(final String username) throws NotLoggedInException, CannotFollowYourselfException, AlreadyFollowingException {
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
-		if (currentUser.starredLists.size() >= Constants.MAX_STARRED_LISTS)
-			throw new TooManyStarredListsException();
+		if (currentUser.getUsername().equals(username))
+			throw new CannotFollowYourselfException();
 
-		currentUser.starredLists.add(new FaveListID(username, hashtag));
+		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username));
+		if (currentUser.following.contains(userRef))
+			throw new AlreadyFollowingException();
+
+		currentUser.following.add(userRef);
 		ofy().save().entity(currentUser).now();
 	}
 
-	public static void unstarList(final String username, final String hashtag) throws NotLoggedInException {
+	public static void unfollowUser(final String username) throws NotLoggedInException {
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
-		currentUser.starredLists.remove(new FaveListID(username, hashtag));
+
+		currentUser.following.remove(Ref.create(Key.create(AppUser.class, username)));
 		ofy().save().entity(currentUser).now();
 	}
 
-	public static List<FaveListID> getStarredListsForCurrentUser() throws NotLoggedInException {
+	public static List<AppUser> getFollowingForCurrentUser() throws NotLoggedInException {
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
-		// Dumb workaround because GWT cannot handle Sets properly when passing to and from server
-		return new ArrayList<FaveListID>(currentUser.getStarredLists());
+		// TODO: Need to restrict how many items are returned. Currently can do a full 5000... but when change need to keep in mind how to detect if following etc.
+		// Have to convert to list because GWT is dumb and won't pass Sets properly
+		return new ArrayList<AppUser>(ofy().load().refs(currentUser.following).values());
 	}
 
 	// Emails user a password reset token if they forget their password
@@ -906,11 +915,4 @@ public class AppUser extends DatastoreObject {
 		FACEBOOK_APP_SECRET = secret;
 	}
 
-	public Set<FaveListID> getStarredLists() {
-		return starredLists;
-	}
-
-	public void setStarredLists(final Set<FaveListID> starredLists) {
-		this.starredLists = starredLists;
-	}
 }

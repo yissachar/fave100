@@ -1,4 +1,4 @@
-package com.fave100.client.pages.users.widgets.starredlists;
+package com.fave100.client.pages.users.widgets.usersfollowing;
 
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -8,22 +8,24 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 
-public class StarredListsView extends ViewImpl implements StarredListsPresenter.MyView {
+public class UsersFollowingView extends ViewImpl implements UsersFollowingPresenter.MyView {
 
 	private final Widget widget;
 
-	public interface Binder extends UiBinder<Widget, StarredListsView> {
+	public interface Binder extends UiBinder<Widget, UsersFollowingView> {
 	}
 
-	public interface StarredListsStyle extends CssResource {
+	public interface UsersFollowingStyle extends CssResource {
 		String listLink();
+
+		String deleteButton();
 	}
 
-	@UiField StarredListsStyle style;
+	@UiField UsersFollowingStyle style;
 	@UiField FlowPanel listContainer;
 
 	@Inject
-	public StarredListsView(final Binder binder) {
+	public UsersFollowingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -39,7 +41,7 @@ public class StarredListsView extends ViewImpl implements StarredListsPresenter.
 	}
 
 	@Override
-	public StarredListsStyle getStyle() {
+	public UsersFollowingStyle getStyle() {
 		return style;
 	}
 }
