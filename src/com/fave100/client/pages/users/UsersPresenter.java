@@ -10,7 +10,6 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.SongProxy;
@@ -66,7 +65,6 @@ public class UsersPresenter extends
 
 	private String requestedUsername;
 	// For now just hardcode, only one possible hashtag
-	private String requestedHashtag = Constants.DEFAULT_HASHTAG;
 	private AppUserProxy requestedUser;
 	private final ApplicationRequestFactory requestFactory;
 	private final PlaceManager placeManager;

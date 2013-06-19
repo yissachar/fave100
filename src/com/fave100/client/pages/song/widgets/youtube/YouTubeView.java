@@ -133,11 +133,14 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 			}
 		}
 
-		// TODO: Make sure not adding tag multiple times
-		var tag = $doc.createElement('script');
-		tag.src = "https://www.youtube.com/iframe_api";
-		var firstScriptTag = $doc.getElementsByTagName('script')[0];
-		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+		var tag = $doc.getElementById("yt_iframe_api");
+		if (!tag) {
+			tag = $doc.createElement('script');
+			tag.id = "yt_iframe_api";
+			tag.src = "https://www.youtube.com/iframe_api";
+			var firstScriptTag = $doc.getElementsByTagName('script')[0];
+			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+		}
 
 	}-*/;
 
