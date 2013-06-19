@@ -1,5 +1,7 @@
 package com.fave100.client.pages.users.widgets.usersfollowing;
 
+import java.util.List;
+
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -35,9 +37,11 @@ public class UsersFollowingView extends ViewImpl implements UsersFollowingPresen
 	}
 
 	@Override
-	public void setStarredLists(final FlowPanel flowPanel) {
+	public void setStarredLists(final List<FlowPanel> flowPanels) {
 		listContainer.clear();
-		listContainer.add(flowPanel);
+		for (final FlowPanel flowPanel : flowPanels) {
+			listContainer.add(flowPanel);
+		}
 	}
 
 	@Override

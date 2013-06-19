@@ -2,6 +2,7 @@ package com.fave100.client;
 
 import java.util.List;
 
+import com.fave100.client.RequestCache.RequestType;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.events.UserFollowedEvent;
 import com.fave100.client.events.UserUnfollowedEvent;
@@ -50,6 +51,10 @@ public class CurrentUser implements AppUserProxy {
 
 							};
 							requestCache.getFollowingUsers(followingReq);
+						}
+						else {
+							// User not logged in, clear stale user request cache
+							requestCache.clearRequestCache(RequestType.FOLLOWING_USERS);
 						}
 					}
 				});
