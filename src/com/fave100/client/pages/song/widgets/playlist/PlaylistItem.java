@@ -3,7 +3,6 @@ package com.fave100.client.pages.song.widgets.playlist;
 import com.fave100.client.events.PlaylistSongChangedEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -13,6 +12,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 public class PlaylistItem extends Composite {
 
@@ -45,7 +45,6 @@ public class PlaylistItem extends Composite {
 
 	@UiHandler("focusPanel")
 	void onClick(final ClickEvent event) {
-		//placeManager.revealPlace(new PlaceRequest(NameTokens.song).with(SongPresenter.ID_PARAM, _songID).with(SongPresenter.USER_PARAM, _username));
 		eventBus.fireEvent(new PlaylistSongChangedEvent(_songID));
 	}
 

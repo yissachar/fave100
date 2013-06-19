@@ -6,8 +6,9 @@ import java.util.List;
 import com.fave100.client.events.PlaylistSongChangedEvent;
 import com.fave100.client.events.YouTubePlayerEndedEvent;
 import com.fave100.shared.requestfactory.FaveItemProxy;
-import com.google.web.bindery.event.shared.EventBus;
+import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 
@@ -74,7 +75,14 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 			i++;
 		}
 		getView().setPlaylist(playlistItems);
-		setPlayingSong(songPageID);
+		// Need to run in a timer because there is slight delay until items are added to DOM
+		final Timer timer = new Timer() {
+			@Override
+			public void run() {
+				setPlayingSong(songPageID);
+			}
+		};
+		timer.schedule(500);
 	}
 
 	public void setPlayingSong(final String songID) {
@@ -100,6 +108,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 				toScroll = playlistItems.get(furtherIndex);
 			i--;
 		}
+
 		if (toScroll != null) {
 			toScroll.getElement().scrollIntoView();
 			currentPlayingItem.getElement().scrollIntoView();
