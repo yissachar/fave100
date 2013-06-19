@@ -38,6 +38,15 @@ public class RequestCache {
 		_requestFactory = requestFactory;
 	}
 
+	/**
+	 * Allows manually clearing of results when it is known that they are stale
+	 * 
+	 * @param request
+	 */
+	public void clearRequestCache(final RequestType request) {
+		_results.remove(request);
+	}
+
 	public void getGoogleUrl(final String redirect, final AsyncCallback<String> callback) {
 		getLoginUrl(RequestType.GOOGLE_LOGIN, redirect, callback);
 	}
@@ -46,7 +55,6 @@ public class RequestCache {
 		getLoginUrl(RequestType.FACEBOOK_LOGIN, redirect, callback);
 	}
 
-	// TODO: Clean results when user log out or session expire
 	public void getFollowingUsers(final AsyncCallback<List<AppUserProxy>> callback) {
 		final RequestType request = RequestType.FOLLOWING_USERS;
 		@SuppressWarnings("unchecked")

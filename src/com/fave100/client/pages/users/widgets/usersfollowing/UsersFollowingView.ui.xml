@@ -20,14 +20,24 @@
 		
 		.listContainer {
 			width: 100%;
-			display: block;
-			background-color: #eee;
-			overflow: hidden;
-			padding-right: 7px;
+			display: block;			
+			overflow: hidden;			
 		}
 		
 		.listContainer > div {
 			clear: both;
+			background-color: #eee;
+			overflow: hidden;
+			padding-right: 7px;
+			border-bottom: 1px solid #ccc;
+		}
+		
+		.listContainer > div:first-child {
+			border-top: 1px solid #ccc;
+		}
+		
+		.listContainer > div:hover {
+			background-color: #fff;
 		}
 				
 		.listContainer img {
@@ -41,7 +51,13 @@
 			padding: 3px;
 			float: left;
 			font-size: 1.1em;
+			width: 75%;
 		}		
+		
+		.listLink:hover {
+			color: #5eaae5;
+			text-decoration: none;
+		}
 		
 		.deleteButton {
 			float: right;

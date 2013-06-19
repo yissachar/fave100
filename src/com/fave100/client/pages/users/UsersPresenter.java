@@ -1,9 +1,9 @@
 package com.fave100.client.pages.users;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.events.SongSelectedEvent;
 import com.fave100.client.events.UserFollowedEvent;
 import com.fave100.client.events.UserUnfollowedEvent;
-import com.fave100.client.events.SongSelectedEvent;
 import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
 import com.fave100.client.pagefragments.favelist.FavelistPresenter;
 import com.fave100.client.pages.BasePresenter;
@@ -142,6 +142,7 @@ public class UsersPresenter extends
 		super.onHide();
 		// Clear the favelist
 		favelist.clearFavelist();
+		starredLists.refreshLists();
 	}
 
 	@Override
