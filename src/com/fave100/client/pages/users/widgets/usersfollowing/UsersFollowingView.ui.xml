@@ -1,0 +1,62 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	
+	<ui:style type="com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle">
+		.container {
+			margin-top: 15px;
+			width: 100%;
+		}
+		
+		.title {
+			font-weight: bold;
+			margin-bottom: 5px;
+		}
+		
+		.listContainer {
+			width: 100%;
+			display: block;
+			background-color: #eee;
+			overflow: hidden;
+			padding-right: 7px;
+		}
+		
+		.listContainer > div {
+			clear: both;
+		}
+				
+		.listContainer img {
+			width: 30px;
+			height: 30px;
+			margin-right: 10px;
+			float: left;
+		}
+		
+		.listLink {
+			padding: 3px;
+			float: left;
+			font-size: 1.1em;
+		}		
+		
+		.deleteButton {
+			float: right;
+			font-size: 1.4em;
+		}
+		
+		.deleteButton:hover {
+			cursor: pointer;
+			color: #000;
+		}
+	</ui:style>
+	
+	<g:FlowPanel ui:styleName="{style.container}">
+		<g:Label ui:styleName="{style.title}">Following:</g:Label>
+		<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
+	</g:FlowPanel>
+	
+</ui:UiBinder>

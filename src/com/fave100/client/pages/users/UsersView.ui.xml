@@ -19,10 +19,10 @@
 			display: block;
 			width: 100%;			
 			overflow: hidden;
-			border: 1px solid #555;			
-			background-color: #5eaae5;
+			border: 1px solid #999;			
+			background-color: #fff;
 			padding: 5px;
-			color: #FFF;
+			color: #5eaae5;
 		}
 		
 		.avatar {
@@ -42,11 +42,6 @@
 		.socialContainer button {
 			width: 100%;			
 		}
-				
-		.followButton {
-			font-size: 1em;
-			color: #FFF;
-		}
 		
 		.username {	
 			display: block;
@@ -56,12 +51,14 @@
 			word-wrap: break-word;
 		}
 		
-		.starCTAcontainer {
-			margin-top: 20px;
+		.followCTAcontainer {
+			margin-top: 20px;			
 		}
 		
-		.starError {
-			margin-top: 10px;
+		.followButton {
+			width: 95%;
+			display: block;
+			text-align: center;
 		}
 		
 		.faveListArea {
@@ -101,26 +98,25 @@
 							<g:Image styleName="{style.avatar}" ui:field="avatar"/>
 							<g:VerticalPanel>
 								<g:InlineLabel ui:styleName="{style.username}" ui:field="username"/>
-								<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton" styleName="{style.followButton}">
+								<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton">
 									Edit Profile
 								</g:InlineHyperlink>
+								<!--  Follow button -->
+								<g:FocusPanel ui:field="followCTAcontainer" ui:styleName="{style.followCTAcontainer}">									
+									<g:InlineLabel ui:field="followCTA" ui:styleName="button {style.followButton}"/>
+								</g:FocusPanel>
 							</g:VerticalPanel>				
 						</g:HorizontalPanel>
-						
-						<!--  Star button to star other people's favelists -->
-						<g:FocusPanel ui:field="starCTAcontainer" ui:styleName="{style.starCTAcontainer}">
-							<g:FlowPanel>
-								<g:InlineLabel ui:field="starCTA" ui:styleName="button"/>
-								<g:Label ui:field="starError" ui:styleName="{style.starError} error"/>
-							</g:FlowPanel>
-						</g:FocusPanel>
-						
-						<!--  Lists that user has already starred -->
-						<g:HTMLPanel ui:field="starredLists"/>
 						
 						<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">															
 							<uw:ShareButton ui:field="shareButton"/>							
 						</g:HTMLPanel>
+						
+						
+						
+						<!--  Users following -->
+						<g:HTMLPanel ui:field="following"/>
+						
 					</g:HTMLPanel>
 					
 					<g:HTMLPanel ui:styleName="{style.faveListArea} col span_9">		

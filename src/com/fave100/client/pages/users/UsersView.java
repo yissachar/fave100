@@ -36,10 +36,9 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField HTMLPanel userContainer;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel socialContainer;
-	@UiField FocusPanel starCTAcontainer;
-	@UiField Label starCTA;
-	@UiField Label starError;
-	@UiField HTMLPanel starredLists;
+	@UiField FocusPanel followCTAcontainer;
+	@UiField Label followCTA;
+	@UiField HTMLPanel following;
 	@UiField ShareButton shareButton;
 	@UiField InlineHyperlink editProfileButton;
 	@UiField Image avatar;
@@ -81,15 +80,15 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		}
 
 		if (slot == UsersPresenter.STARRED_LISTS_SLOT) {
-			starredLists.clear();
+			following.clear();
 			if (content != null) {
-				starredLists.add(content);
+				following.add(content);
 			}
 		}
 		super.setInSlot(slot, content);
 	}
 
-	@UiHandler("starCTAcontainer")
+	@UiHandler("followCTAcontainer")
 	void onStarClick(final ClickEvent event) {
 		getUiHandlers().starList();
 	}
@@ -118,7 +117,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		userNotFound.setVisible(false);
 		editProfileButton.setVisible(true);
 		songAutocomplete.setVisible(true);
-		starredLists.setVisible(true);
+		following.setVisible(true);
 		shareButton.setTwitterMessage("Check out my Fave100 songs: ");
 	}
 
@@ -128,7 +127,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		userNotFound.setVisible(false);
 		editProfileButton.setVisible(false);
 		songAutocomplete.setVisible(false);
-		starredLists.setVisible(false);
+		following.setVisible(false);
 
 		shareButton.setTwitterMessage("Check out " + username.getText() + "'s Fave100 songs: ");
 	}
@@ -145,24 +144,19 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@Override
-	public void setStarCTA(final boolean show, final boolean starred) {
+	public void setFollowCTA(final boolean show, final boolean following) {
 		if (show) {
-			starCTAcontainer.setVisible(true);
+			followCTAcontainer.setVisible(true);
 		}
 		else {
-			starCTAcontainer.setVisible(false);
+			followCTAcontainer.setVisible(false);
 		}
 
-		if (starred) {
-			starCTA.setText("Unstar " + username.getText() + "'s FaveList");
+		if (following) {
+			followCTA.setText("Unfollow");
 		}
 		else {
-			starCTA.setText("Star " + username.getText() + "'s FaveList");
+			followCTA.setText("Follow");
 		}
-	}
-
-	@Override
-	public void setStarError(final String error) {
-		starError.setText(error);
 	}
 }

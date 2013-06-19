@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -22,7 +23,8 @@ public class RequestCache {
 
 	enum RequestType {
 		GOOGLE_LOGIN,
-		FACEBOOK_LOGIN
+		FACEBOOK_LOGIN,
+		FOLLOWING_USERS
 	}
 
 	private ApplicationRequestFactory _requestFactory;
@@ -42,6 +44,54 @@ public class RequestCache {
 
 	public void getFacebookUrl(final String redirect, final AsyncCallback<String> callback) {
 		getLoginUrl(RequestType.FACEBOOK_LOGIN, redirect, callback);
+	}
+
+	// TODO: Clean results when user log out or session expire
+	public void getFollowingUsers(final AsyncCallback<List<AppUserProxy>> callback) {
+		final RequestType request = RequestType.FOLLOWING_USERS;
+		@SuppressWarnings("unchecked")
+		final List<AppUserProxy> followingUsers = (List<AppUserProxy>)_results.get(request);
+		final List<AsyncCallback<List<AppUserProxy>>> callbacks = getOrCreateCallbacks(request);
+		final boolean reqRunning = (_runningRequests.get(request) != null) ? _runningRequests.get(request) : false;
+		// Add the callback to list of callbacks to notify		
+		callbacks.add(callback);
+		// If we already have the following users, return		
+		if (followingUsers != null) {
+			for (final AsyncCallback<List<AppUserProxy>> gCallback : callbacks) {
+				gCallback.onSuccess(followingUsers);
+			}
+			callbacks.clear();
+			return;
+		}
+
+		// If there is no existing request, create one
+		if (reqRunning == false) {
+			_runningRequests.put(request, true);
+			final Request<List<AppUserProxy>> followingUserReq = _requestFactory.appUserRequest().getFollowingForCurrentUser();
+			// If there is no existing request, create one
+			if (reqRunning == false) {
+				_runningRequests.put(request, true);
+
+				followingUserReq.fire(new Receiver<List<AppUserProxy>>() {
+					@Override
+					public void onSuccess(final List<AppUserProxy> users) {
+						_runningRequests.put(request, false);
+						_results.put(request, users);
+						for (final AsyncCallback<List<AppUserProxy>> gCallback : callbacks) {
+							gCallback.onSuccess(users);
+						}
+						callbacks.clear();
+					}
+
+					@Override
+					public void onFailure(final ServerFailure failure) {
+						_runningRequests.put(request, false);
+						// Clean all callbacks
+						callbacks.clear();
+					}
+				});
+			}
+		}
 	}
 
 	private void getLoginUrl(final RequestType request, final String redirect, final AsyncCallback<String> callback) {
@@ -78,20 +128,21 @@ public class RequestCache {
 			loginUrlReq.fire(new Receiver<String>() {
 				@Override
 				public void onSuccess(final String url) {
+					_runningRequests.put(request, false);
+					_results.put(request, url);
 					for (final AsyncCallback<String> gCallback : callbacks) {
 						gCallback.onSuccess(url);
 						callbacks.remove(gCallback);
 					}
-					_runningRequests.put(request, false);
 				}
 
 				@Override
 				public void onFailure(final ServerFailure failure) {
+					_runningRequests.put(request, false);
 					// Clean all callbacks
 					for (final AsyncCallback<String> gCallback : callbacks) {
 						callbacks.remove(gCallback);
 					}
-					_runningRequests.put(request, false);
 				}
 			});
 		}

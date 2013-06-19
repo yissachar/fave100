@@ -1,14 +1,14 @@
 package com.fave100.client.pages.users;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.events.ListStarredEvent;
-import com.fave100.client.events.ListUnstarredEvent;
+import com.fave100.client.events.UserFollowedEvent;
+import com.fave100.client.events.UserUnfollowedEvent;
 import com.fave100.client.events.SongSelectedEvent;
 import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
 import com.fave100.client.pagefragments.favelist.FavelistPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
-import com.fave100.client.pages.users.widgets.starredlists.StarredListsPresenter;
+import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.AppUserProxy;
@@ -50,9 +50,7 @@ public class UsersPresenter extends
 
 		void showUserNotFound();
 
-		void setStarCTA(boolean show, boolean starred);
-
-		void setStarError(String error);
+		void setFollowCTA(boolean show, boolean starred);
 	}
 
 	@ProxyCodeSplit
@@ -69,13 +67,14 @@ public class UsersPresenter extends
 	private String requestedUsername;
 	// For now just hardcode, only one possible hashtag
 	private String requestedHashtag = Constants.DEFAULT_HASHTAG;
+	private AppUserProxy requestedUser;
 	private final ApplicationRequestFactory requestFactory;
 	private final PlaceManager placeManager;
 	private final EventBus eventBus;
 	private CurrentUser currentUser;
 	@Inject SongAutocompletePresenter songAutocomplete;
 	@Inject FavelistPresenter favelist;
-	@Inject StarredListsPresenter starredLists;
+	@Inject UsersFollowingPresenter starredLists;
 
 	@Inject
 	public UsersPresenter(final EventBus eventBus, final MyView view,
@@ -115,20 +114,17 @@ public class UsersPresenter extends
 			}
 		});
 
-		ListStarredEvent.register(eventBus, new ListStarredEvent.Handler() {
+		UserFollowedEvent.register(eventBus, new UserFollowedEvent.Handler() {
 			@Override
-			public void onListStarred(final ListStarredEvent event) {
-				getView().setStarCTA(true, true);
+			public void onUserFollowed(final UserFollowedEvent event) {
+				getView().setFollowCTA(!currentUser.equals(requestedUser), true);
 			}
 		});
 
-		ListUnstarredEvent.register(eventBus, new ListUnstarredEvent.Handler() {
+		UserUnfollowedEvent.register(eventBus, new UserUnfollowedEvent.Handler() {
 			@Override
-			public void onListStarred(final ListUnstarredEvent event) {
-				getView().setStarCTA(true, false);
-				if (event.getException() != null && !event.getException().isEmpty()) {
-					getView().setStarError(event.getException());
-				}
+			public void onUserUnfollowed(final UserUnfollowedEvent event) {
+				getView().setFollowCTA(!currentUser.equals(requestedUser), false);
 			}
 		});
 	}
@@ -157,8 +153,7 @@ public class UsersPresenter extends
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 
-		getView().setStarError("");
-
+		requestedUser = null;
 		// Use parameters to determine what to reveal on page
 		requestedUsername = placeRequest.getParameter("u", "");
 		if (requestedUsername.isEmpty()) {
@@ -172,17 +167,18 @@ public class UsersPresenter extends
 				@Override
 				public void onSuccess(final AppUserProxy user) {
 					if (user != null) {
-						final boolean starred = currentUser.isStarredList(requestedUsername, requestedHashtag);
+						requestedUser = user;
+						final boolean starred = currentUser.isFollowingUser(user);
 
 						getView().setUserProfile(user);
 						// Check if user is the currently logged in user
 						if (currentUser.isLoggedIn() && currentUser.equals(user)) {
 							getView().showOwnPage();
-							getView().setStarCTA(false, starred);
+							getView().setFollowCTA(false, starred);
 						}
 						else {
 							getView().showOtherPage();
-							getView().setStarCTA(currentUser.isLoggedIn(), starred);
+							getView().setFollowCTA(currentUser.isLoggedIn(), starred);
 						}
 
 						favelist.setUser(user);
@@ -210,11 +206,11 @@ public class UsersPresenter extends
 
 	@Override
 	public void starList() {
-		if (!currentUser.isStarredList(requestedUsername, requestedHashtag)) {
-			currentUser.starList(requestedUsername, requestedHashtag);
+		if (!currentUser.isFollowingUser(requestedUser)) {
+			currentUser.followUser(requestedUser);
 		}
 		else {
-			currentUser.unstarList(requestedUsername, requestedHashtag);
+			currentUser.unfollowUser(requestedUser);
 		}
 	}
 }
