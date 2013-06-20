@@ -50,11 +50,11 @@ public class CurrentUser implements AppUserProxy {
 								}
 
 							};
-							requestCache.getFollowingUsers(followingReq);
+							requestCache.getFollowingForCurrentUser(getUsername(), followingReq);
 						}
 						else {
 							// User not logged in, clear stale user request cache
-							requestCache.clearRequestCache(RequestType.FOLLOWING_USERS);
+							requestCache.clearRequestCache(RequestType.FOLLOWING_CURRENT_USER);
 						}
 					}
 				});

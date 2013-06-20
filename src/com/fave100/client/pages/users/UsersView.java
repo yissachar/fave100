@@ -141,7 +141,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		username.setVisible(false);
 		profileLink.setVisible(true);
 		songAutocomplete.setVisible(true);
-		followingContainer.setVisible(true);
 		shareButton.setTwitterMessage("Check out my Fave100 songs: ");
 	}
 
@@ -152,7 +151,6 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		username.setVisible(true);
 		profileLink.setVisible(false);
 		songAutocomplete.setVisible(false);
-		followingContainer.setVisible(false);
 
 		shareButton.setTwitterMessage("Check out " + username.getText() + "'s Fave100 songs: ");
 	}

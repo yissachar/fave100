@@ -70,7 +70,7 @@
 	</ui:style>
 	
 	<g:FlowPanel ui:styleName="{style.container}">
-		<g:Label ui:styleName="{style.title}">Following:</g:Label>
+		<g:Label ui:field="followingTitle" ui:styleName="{style.title}">Following:</g:Label>
 		<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
 	</g:FlowPanel>
 	

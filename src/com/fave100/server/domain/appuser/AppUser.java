@@ -49,6 +49,7 @@ import com.fave100.shared.exceptions.user.GoogleIdAlreadyExistsException;
 import com.fave100.shared.exceptions.user.IncorrectLoginException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.exceptions.user.TwitterIdAlreadyExistsException;
+import com.fave100.shared.exceptions.user.UserNotFoundException;
 import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -731,14 +732,18 @@ public class AppUser extends DatastoreObject {
 		ofy().save().entity(currentUser).now();
 	}
 
-	public static List<AppUser> getFollowingForCurrentUser() throws NotLoggedInException {
+	public static List<AppUser> getFollowing(final String username) throws NotLoggedInException, UserNotFoundException {
+		// Only logged in users can see following
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
 		// TODO: Need to restrict how many items are returned. Currently can do a full 5000... but when change need to keep in mind how to detect if following etc.
 		// Have to convert to list because GWT is dumb and won't pass Sets properly
-		return new ArrayList<AppUser>(ofy().load().refs(currentUser.following).values());
+		final AppUser user = findAppUser(username);
+		if (user == null)
+			throw new UserNotFoundException();
+		return new ArrayList<AppUser>(ofy().load().refs(user.following).values());
 	}
 
 	// Emails user a password reset token if they forget their password
