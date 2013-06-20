@@ -90,6 +90,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 						final Label deleteButton = new Label("x");
 						listItem.add(deleteButton);
 						deleteButton.addStyleName(getView().getStyle().deleteButton());
+						deleteButton.addStyleName("hoverHidden");
 						deleteButton.addClickHandler(new ClickHandler() {
 							@Override
 							public void onClick(final ClickEvent event) {

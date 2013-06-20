@@ -5,6 +5,8 @@ import com.fave100.client.pages.users.widgets.sharebutton.ShareButton;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -38,15 +40,16 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField HTMLPanel socialContainer;
 	@UiField FocusPanel followCTAcontainer;
 	@UiField Label followCTA;
-	@UiField HTMLPanel following;
+	@UiField HTMLPanel followingContainer;
 	@UiField ShareButton shareButton;
-	@UiField InlineHyperlink editProfileButton;
+	@UiField InlineHyperlink profileLink;
 	@UiField Image avatar;
 	@UiField InlineLabel username;
 	@UiField HTMLPanel topBar;
 	@UiField HTMLPanel songAutocomplete;
 	@UiField HTMLPanel favelist;
 	@UiField Label userNotFound;
+	private boolean following;
 
 	@Inject
 	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
@@ -80,9 +83,9 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		}
 
 		if (slot == UsersPresenter.STARRED_LISTS_SLOT) {
-			following.clear();
+			followingContainer.clear();
 			if (content != null) {
-				following.add(content);
+				followingContainer.add(content);
 			}
 		}
 		super.setInSlot(slot, content);
@@ -90,7 +93,26 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@UiHandler("followCTAcontainer")
 	void onStarClick(final ClickEvent event) {
-		getUiHandlers().starList();
+		getUiHandlers().followUser();
+		if (!following) {
+			followCTA.removeStyleName("button-warning");
+		}
+	}
+
+	@UiHandler("followCTA")
+	void onFollowOver(final MouseOverEvent event) {
+		if (following) {
+			followCTA.addStyleName("button-warning");
+			followCTA.setText("Unfollow");
+		}
+	}
+
+	@UiHandler("followCTA")
+	void onFollowOut(final MouseOutEvent event) {
+		followCTA.removeStyleName("button-warning");
+		if (following) {
+			followCTA.setText("Following");
+		}
 	}
 
 	@Override
@@ -109,15 +131,17 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public void setUserProfile(final AppUserProxy user) {
 		avatar.setUrl(user.getAvatarImage());
 		username.setText(user.getUsername());
+		profileLink.setText(user.getUsername());
 	}
 
 	@Override
 	public void showOwnPage() {
 		userContainer.setVisible(true);
 		userNotFound.setVisible(false);
-		editProfileButton.setVisible(true);
+		username.setVisible(false);
+		profileLink.setVisible(true);
 		songAutocomplete.setVisible(true);
-		following.setVisible(true);
+		followingContainer.setVisible(true);
 		shareButton.setTwitterMessage("Check out my Fave100 songs: ");
 	}
 
@@ -125,9 +149,10 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public void showOtherPage() {
 		userContainer.setVisible(true);
 		userNotFound.setVisible(false);
-		editProfileButton.setVisible(false);
+		username.setVisible(true);
+		profileLink.setVisible(false);
 		songAutocomplete.setVisible(false);
-		following.setVisible(false);
+		followingContainer.setVisible(false);
 
 		shareButton.setTwitterMessage("Check out " + username.getText() + "'s Fave100 songs: ");
 	}
@@ -145,6 +170,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Override
 	public void setFollowCTA(final boolean show, final boolean following) {
+		this.following = following;
+
 		if (show) {
 			followCTAcontainer.setVisible(true);
 		}
@@ -153,7 +180,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		}
 
 		if (following) {
-			followCTA.setText("Unfollow");
+			followCTA.setText("Following");
 		}
 		else {
 			followCTA.setText("Follow");
