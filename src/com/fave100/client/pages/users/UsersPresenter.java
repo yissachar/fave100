@@ -204,7 +204,7 @@ public class UsersPresenter extends
 	}
 
 	@Override
-	public void starList() {
+	public void followUser() {
 		if (!currentUser.isFollowingUser(requestedUser)) {
 			currentUser.followUser(requestedUser);
 		}
@@ -217,5 +217,5 @@ public class UsersPresenter extends
 interface UsersUiHandlers extends UiHandlers {
 	void songSelected(SongProxy song);
 
-	void starList();
+	void followUser();
 }

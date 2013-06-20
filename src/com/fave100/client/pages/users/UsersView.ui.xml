@@ -44,6 +44,7 @@
 		}
 		
 		.username {	
+			color: #5eaae5;
 			display: block;
 			width: 140px;
 			font-size: 1.5em;
@@ -56,8 +57,9 @@
 		}
 		
 		.followButton {
-			width: 95%;
+			width: 65%;
 			display: block;
+			margin: 0 auto;
 			text-align: center;
 		}
 		
@@ -98,9 +100,7 @@
 							<g:Image styleName="{style.avatar}" ui:field="avatar"/>
 							<g:VerticalPanel>
 								<g:InlineLabel ui:styleName="{style.username}" ui:field="username"/>
-								<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}" ui:field="editProfileButton">
-									Edit Profile
-								</g:InlineHyperlink>
+								<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}"  ui:styleName="{style.username}"  ui:field="profileLink"/>
 								<!--  Follow button -->
 								<g:FocusPanel ui:field="followCTAcontainer" ui:styleName="{style.followCTAcontainer}">									
 									<g:InlineLabel ui:field="followCTA" ui:styleName="button {style.followButton}"/>
@@ -115,7 +115,7 @@
 						
 						
 						<!--  Users following -->
-						<g:HTMLPanel ui:field="following"/>
+						<g:HTMLPanel ui:field="followingContainer"/>
 						
 					</g:HTMLPanel>
 					

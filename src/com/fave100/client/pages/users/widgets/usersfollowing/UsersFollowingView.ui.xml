@@ -29,20 +29,19 @@
 			background-color: #eee;
 			overflow: hidden;
 			padding-right: 7px;
-			border-bottom: 1px solid #ccc;
-		}
-		
-		.listContainer > div:first-child {
-			border-top: 1px solid #ccc;
 		}
 		
 		.listContainer > div:hover {
 			background-color: #fff;
 		}
+		
+		.listContainer > div:hover .deleteButton {
+			display: inline-block;
+		}
 				
 		.listContainer img {
-			width: 30px;
-			height: 30px;
+			width: 35px;
+			height: 35px;
 			margin-right: 10px;
 			float: left;
 		}
@@ -50,7 +49,7 @@
 		.listLink {
 			padding: 3px;
 			float: left;
-			font-size: 1.1em;
+			font-size: 1.2em;
 			width: 75%;
 		}		
 		
