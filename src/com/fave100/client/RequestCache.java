@@ -24,7 +24,7 @@ public class RequestCache {
 	enum RequestType {
 		GOOGLE_LOGIN,
 		FACEBOOK_LOGIN,
-		FOLLOWING_USERS
+		FOLLOWING_CURRENT_USER
 	}
 
 	private ApplicationRequestFactory _requestFactory;
@@ -55,8 +55,8 @@ public class RequestCache {
 		getLoginUrl(RequestType.FACEBOOK_LOGIN, redirect, callback);
 	}
 
-	public void getFollowingUsers(final AsyncCallback<List<AppUserProxy>> callback) {
-		final RequestType request = RequestType.FOLLOWING_USERS;
+	public void getFollowingForCurrentUser(final String username, final AsyncCallback<List<AppUserProxy>> callback) {
+		final RequestType request = RequestType.FOLLOWING_CURRENT_USER;
 		@SuppressWarnings("unchecked")
 		final List<AppUserProxy> followingUsers = (List<AppUserProxy>)_results.get(request);
 		final List<AsyncCallback<List<AppUserProxy>>> callbacks = getOrCreateCallbacks(request);
@@ -75,7 +75,7 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (reqRunning == false) {
 			_runningRequests.put(request, true);
-			final Request<List<AppUserProxy>> followingUserReq = _requestFactory.appUserRequest().getFollowingForCurrentUser();
+			final Request<List<AppUserProxy>> followingUserReq = _requestFactory.appUserRequest().getFollowing(username);
 			// If there is no existing request, create one
 			if (reqRunning == false) {
 				_runningRequests.put(request, true);

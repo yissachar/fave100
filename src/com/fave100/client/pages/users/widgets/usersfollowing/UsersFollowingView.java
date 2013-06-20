@@ -6,6 +6,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -24,6 +25,7 @@ public class UsersFollowingView extends ViewImpl implements UsersFollowingPresen
 	}
 
 	@UiField UsersFollowingStyle style;
+	@UiField Label followingTitle;
 	@UiField FlowPanel listContainer;
 
 	@Inject
@@ -37,10 +39,16 @@ public class UsersFollowingView extends ViewImpl implements UsersFollowingPresen
 	}
 
 	@Override
-	public void setStarredLists(final List<FlowPanel> flowPanels) {
+	public void setFollowing(final List<FlowPanel> flowPanels) {
 		listContainer.clear();
-		for (final FlowPanel flowPanel : flowPanels) {
-			listContainer.add(flowPanel);
+		if (flowPanels == null || flowPanels.size() == 0) {
+			followingTitle.setVisible(false);
+		}
+		else {
+			followingTitle.setVisible(true);
+			for (final FlowPanel flowPanel : flowPanels) {
+				listContainer.add(flowPanel);
+			}
 		}
 	}
 

@@ -51,7 +51,7 @@ public interface AppUserRequest extends RequestContext {
 
 	Request<Void> unfollowUser(String username);
 
-	Request<List<AppUserProxy>> getFollowingForCurrentUser();
+	Request<List<AppUserProxy>> getFollowing(String username);
 
 	Request<Boolean> setProfileData(String email);
 

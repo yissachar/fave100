@@ -72,7 +72,7 @@ public class UsersPresenter extends
 	private CurrentUser currentUser;
 	@Inject SongAutocompletePresenter songAutocomplete;
 	@Inject FavelistPresenter favelist;
-	@Inject UsersFollowingPresenter starredLists;
+	@Inject UsersFollowingPresenter usersFollowing;
 
 	@Inject
 	public UsersPresenter(final EventBus eventBus, final MyView view,
@@ -132,7 +132,7 @@ public class UsersPresenter extends
 		super.onReveal();
 		setInSlot(AUTOCOMPLETE_SLOT, songAutocomplete);
 		setInSlot(FAVELIST_SLOT, favelist);
-		setInSlot(STARRED_LISTS_SLOT, starredLists);
+		setInSlot(STARRED_LISTS_SLOT, usersFollowing);
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class UsersPresenter extends
 		super.onHide();
 		// Clear the favelist
 		favelist.clearFavelist();
-		starredLists.refreshLists();
+		usersFollowing.refreshLists();
 	}
 
 	@Override
@@ -182,7 +182,8 @@ public class UsersPresenter extends
 
 						favelist.setUser(user);
 						favelist.refreshFavelist();
-						starredLists.refreshLists();
+						usersFollowing.setUser(user);
+						usersFollowing.refreshLists();
 
 						getProxy().manualReveal(UsersPresenter.this);
 
