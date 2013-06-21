@@ -99,6 +99,8 @@ public class AppUser extends DatastoreObject {
 	private String email;
 	private String avatar;
 	private Date joinDate;
+	private boolean followingPrivate = false;
+	private boolean followersPrivate = false;
 	@Index private Set<Ref<AppUser>> following = new HashSet<Ref<AppUser>>();
 
 	@SuppressWarnings("unused")
@@ -662,14 +664,15 @@ public class AppUser extends DatastoreObject {
 		return avatar;
 	}
 
-	public static String getEmailForCurrentUser() throws NotLoggedInException {
+	public static UserInfo getCurrentUserSettings() throws NotLoggedInException {
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
-		return currentUser.getEmail();
+
+		return new UserInfo(currentUser);
 	}
 
-	public static Boolean setProfileData(final String email) throws EmailIDAlreadyExistsException {
+	public static Boolean setUserInfo(final UserInfo userInfo) throws EmailIDAlreadyExistsException {
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
 			return false;
@@ -677,23 +680,33 @@ public class AppUser extends DatastoreObject {
 			ofy().transact(new VoidWork() {
 				@Override
 				public void vrun() {
-					EmailID emailID = EmailID.findEmailID(email);
-					// Existing email for a different user, throw exception
-					if (emailID != null && !emailID.getEmailID().equals(currentUser.getEmail().toLowerCase())) {
-						throw new RuntimeException(new EmailIDAlreadyExistsException());
+					final String email = userInfo.getEmail();
+					// Change info
+					currentUser.setFollowingPrivate(userInfo.isFollowingPrivate());
+					// If email wasn't changed, just save the user
+					if (email.equals(currentUser.getEmail())) {
+						ofy().save().entity(currentUser).now();
 					}
-					else if (emailID == null) {
-						// No existing email, allow it to be changed
+					// Otherwise handle email special case
+					else {
+						EmailID emailID = EmailID.findEmailID(email);
+						// Existing email for a different user, throw exception
+						if (emailID != null && !emailID.getEmailID().equals(currentUser.getEmail().toLowerCase())) {
+							throw new RuntimeException(new EmailIDAlreadyExistsException());
+						}
+						else if (emailID == null) {
+							// No existing email, allow it to be changed
 
-						// First delete the old EmailID
-						emailID = EmailID.findEmailID(currentUser.getEmail());
-						ofy().delete().entity(emailID).now();
-						// Then create a new EmailID with the new email
-						emailID = new EmailID(email, currentUser);
-						// Manually keep local user email in sync
-						currentUser.setEmail(email);
-						// Save entities
-						ofy().save().entities(emailID, currentUser).now();
+							// First delete the old EmailID
+							emailID = EmailID.findEmailID(currentUser.getEmail());
+							ofy().delete().entity(emailID).now();
+							// Then create a new EmailID with the new email
+							emailID = new EmailID(email, currentUser);
+							// Manually keep local user email in sync
+							currentUser.setEmail(email);
+							// Save entities
+							ofy().save().entities(emailID, currentUser).now();
+						}
 					}
 				}
 			});
@@ -743,6 +756,10 @@ public class AppUser extends DatastoreObject {
 		final AppUser user = findAppUser(username);
 		if (user == null)
 			throw new UserNotFoundException();
+
+		if (user.isFollowingPrivate())
+			return null;
+
 		return new ArrayList<AppUser>(ofy().load().refs(user.following).values());
 	}
 
@@ -918,6 +935,22 @@ public class AppUser extends DatastoreObject {
 
 	public static void setFacebookApiSecret(final String secret) {
 		FACEBOOK_APP_SECRET = secret;
+	}
+
+	public boolean isFollowingPrivate() {
+		return followingPrivate;
+	}
+
+	public void setFollowingPrivate(final boolean followingPrivate) {
+		this.followingPrivate = followingPrivate;
+	}
+
+	public boolean isFollowersPrivate() {
+		return followersPrivate;
+	}
+
+	public void setFollowersPrivate(final boolean followersPrivate) {
+		this.followersPrivate = followersPrivate;
 	}
 
 }

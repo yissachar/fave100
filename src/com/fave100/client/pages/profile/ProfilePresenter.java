@@ -8,9 +8,11 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
+import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.web.bindery.event.shared.EventBus;
+import com.fave100.shared.requestfactory.UserInfoProxy;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
@@ -36,6 +38,8 @@ public class ProfilePresenter extends
 
 		void setEmailValue(String val);
 
+		void setFollowingPrivate(boolean checked);
+
 		void setEmailError(String error);
 
 		void clearErrors();
@@ -57,7 +61,7 @@ public class ProfilePresenter extends
 
 	private ApplicationRequestFactory requestFactory;
 	private CurrentUser currentUser;
-	private String oldEmail = "";
+	private UserInfoProxy oldUserInfo = null;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view,
@@ -89,19 +93,24 @@ public class ProfilePresenter extends
 		super.onHide();
 		getView().clearErrors();
 		getView().clearEmail();
-		oldEmail = "";
+		oldUserInfo = null;
 		getView().clearAvatarForm();
 	}
 
 	private void setEmail() {
-		final Request<String> emailReq = requestFactory.appUserRequest().getEmailForCurrentUser();
-		emailReq.fire(new Receiver<String>() {
+		final Request<UserInfoProxy> emailReq = requestFactory.appUserRequest().getCurrentUserSettings();
+		emailReq.fire(new Receiver<UserInfoProxy>() {
 			@Override
-			public void onSuccess(final String email) {
-				getView().setEmailValue(email);
-				oldEmail = email;
+			public void onSuccess(final UserInfoProxy userInfo) {
+				populateFields(userInfo);
+				oldUserInfo = userInfo;
 			}
 		});
+	}
+
+	private void populateFields(final UserInfoProxy userInfo) {
+		getView().setEmailValue(userInfo.getEmail());
+		getView().setFollowingPrivate(userInfo.isFollowingPrivate());
 	}
 
 	private void setUploadAction() {
@@ -127,30 +136,35 @@ public class ProfilePresenter extends
 	}
 
 	@Override
-	public void saveProfileData(final String email) {
+	public void saveUserInfo(final String email, final boolean followingPrivate) {
 		getView().clearErrors();
 
-		if (email.equals(oldEmail))
+		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+
+		// Clone user info because request factory is silly
+		final UserInfoProxy userInfo = appUserRequest.create(UserInfoProxy.class);
+		userInfo.setEmail(email);
+		userInfo.setFollowingPrivate(followingPrivate);
+
+		if (userInfo.equals(oldUserInfo))
 			return;
 
-		final String emailError = Validator.validateEmail(email);
+		final String emailError = Validator.validateEmail(userInfo.getEmail());
 		if (emailError == null) {
-			final Request<Boolean> setProfileDataReq = requestFactory
-					.appUserRequest().setProfileData(email);
+
 			LoadingIndicator.show();
-			setProfileDataReq.fire(new Receiver<Boolean>() {
+			appUserRequest.setUserInfo(userInfo).fire(new Receiver<Boolean>() {
 				@Override
 				public void onSuccess(final Boolean saved) {
 					LoadingIndicator.hide();
 					if (saved == true) {
-						oldEmail = email;
-						getView().setEmailValue(email);
+						oldUserInfo = userInfo;
+						populateFields(userInfo);
 						getView().setFormStatusMessage("Profile saved");
 					}
 					else {
 						getView().setFormStatusMessage("Error: Profile not saved");
 					}
-
 				}
 
 				@Override
@@ -172,5 +186,5 @@ public class ProfilePresenter extends
 interface ProfileUiHandlers extends UiHandlers {
 	void setUserAvatar(String avatar);
 
-	void saveProfileData(String email);
+	void saveUserInfo(String email, boolean followingPrivate);
 }

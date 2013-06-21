@@ -45,7 +45,7 @@ public interface AppUserRequest extends RequestContext {
 
 	Request<String> setAvatarForCurrentUser(String avatar);
 
-	Request<String> getEmailForCurrentUser();
+	Request<UserInfoProxy> getCurrentUserSettings();
 
 	Request<Void> followUser(String username);
 
@@ -53,7 +53,7 @@ public interface AppUserRequest extends RequestContext {
 
 	Request<List<AppUserProxy>> getFollowing(String username);
 
-	Request<Boolean> setProfileData(String email);
+	Request<Boolean> setUserInfo(UserInfoProxy userInfo);
 
 	Request<Boolean> emailPasswordResetToken(String username, String emailAddress);
 

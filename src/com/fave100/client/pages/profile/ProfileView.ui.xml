@@ -33,7 +33,13 @@
 					<g:Label>Email</g:Label>					
 					<g:TextBox  ui:field="emailInput"/>
 					<g:Label styleName="error inputStatusMessage" ui:field="emailStatusMessage"/>
+					<h4>Privacy</h4>
+					<g:InlineLabel>Hide users that you are following:</g:InlineLabel>
+					<g:CheckBox ui:field="followingPrivate"/>
+					<br/>
+					
 					<g:Button ui:field="profileSaveButton">Save</g:Button>
+					
 					<g:FormPanel method="POST" encoding="multipart/form-data" ui:field="profileForm">
 						<g:HTMLPanel>						
 							<g:Label>Avatar</g:Label>
