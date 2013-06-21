@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -35,6 +36,7 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	@UiField HTMLPanel topBar;
 	@UiField FormPanel profileForm;
 	@UiField TextBox emailInput;
+	@UiField CheckBox followingPrivate;
 	@UiField Button profileSaveButton;
 	@UiField Image avatarImg;
 	@UiField FileUpload avatarUpload;
@@ -71,7 +73,7 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 
 	@UiHandler("profileSaveButton")
 	public void onProfileSaveClick(final ClickEvent event) {
-		getUiHandlers().saveProfileData(emailInput.getValue());
+		getUiHandlers().saveUserInfo(emailInput.getValue(), followingPrivate.getValue());
 	}
 
 	@UiHandler("avatarUpload")
@@ -84,23 +86,6 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 			avatarSubmitButton.setEnabled(true);
 		}
 	}
-
-	/*
-		@UiHandler("profileForm")
-		public void onSubmit(final SubmitEvent event) {
-			GWT.log(avatarUpload.getFilename());
-			GWT.log("Unknown" + avatarUpload.getFilename().length());
-			for (int i = 0; i < avatarUpload.getFilename().length(); i++) {
-				final char l = avatarUpload.getFilename().charAt(i);
-				final char l2 = "Unknown".charAt(i);
-				GWT.log(l + ":" + l2);
-			}
-			GWT.log(avatarUpload.getFilename().trim().equalsIgnoreCase("Unknown") + ":");
-			if (avatarUpload.getFilename() == null || avatarUpload.getFilename().isEmpty() || avatarUpload.getFilename().equals("Unknown")) {
-				event.cancel();
-				GWT.log("canceling");
-			}
-		}*/
 
 	@UiHandler("profileForm")
 	public void onSubmitComplete(final SubmitCompleteEvent event) {
@@ -130,6 +115,11 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	@Override
 	public void setEmailValue(final String val) {
 		emailInput.setValue(val);
+	}
+
+	@Override
+	public void setFollowingPrivate(final boolean checked) {
+		followingPrivate.setValue(checked);
 	}
 
 	@Override

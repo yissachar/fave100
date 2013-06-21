@@ -188,6 +188,7 @@ public class FaveList extends DatastoreObject {
 		ofy().save().entity(faveList).now();
 	}
 
+	// TODO: June 20, 2013 Check why this is a separate method
 	public static List<FaveItem> getFaveListForCurrentUser(final String hashtag) {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if (currentUser == null)
