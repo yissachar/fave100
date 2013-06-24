@@ -757,7 +757,7 @@ public class AppUser extends DatastoreObject {
 		if (user == null)
 			throw new UserNotFoundException();
 
-		if (user.isFollowingPrivate())
+		if (user.isFollowingPrivate() && !user.getUsername().equals(currentUser.getUsername()))
 			return null;
 
 		return new ArrayList<AppUser>(ofy().load().refs(user.following).values());
