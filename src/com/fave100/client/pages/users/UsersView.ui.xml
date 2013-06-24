@@ -50,6 +50,7 @@
 			font-size: 1.5em;
 			vertical-align: top;
 			word-wrap: break-word;
+			font-weight: bold;
 		}
 		
 		.followCTAcontainer {
