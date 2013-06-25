@@ -217,4 +217,9 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	public void hideHelp() {
 		helpBubble.setVisible(false);
 	}
+
+	@Override
+	public void resizeSearch() {
+		resultsArea.setWidth(searchBox.getOffsetWidth() + "px");
+	}
 }

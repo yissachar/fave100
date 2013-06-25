@@ -20,6 +20,8 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		void setUrl(String avatar);
 
 		void setPlaylist(List<PlaylistItem> playlistItems);
+
+		void setPlaylistHeight(int px);
 	}
 
 	private EventBus _eventBus;
@@ -113,6 +115,10 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 			toScroll.getElement().scrollIntoView();
 			currentPlayingItem.getElement().scrollIntoView();
 		}
+	}
+
+	public void setHeight(final int px) {
+		getView().setPlaylistHeight(px);
 	}
 
 }

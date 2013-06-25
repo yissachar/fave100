@@ -21,6 +21,7 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 	public interface Binder extends UiBinder<Widget, PlaylistView> {
 	}
 
+	@UiField FlowPanel playlistHeader;
 	@UiField Anchor _username;
 	@UiField Image _avatar;
 	@UiField FlowPanel playlistContainer;
@@ -54,5 +55,11 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 	@Override
 	public void setUrl(final String avatar) {
 		_avatar.setUrl(avatar);
+	}
+
+	@Override
+	public void setPlaylistHeight(final int px) {
+		final int newHeight = px - playlistHeader.getOffsetHeight();
+		playlistContainer.setHeight(newHeight + "px");
 	}
 }

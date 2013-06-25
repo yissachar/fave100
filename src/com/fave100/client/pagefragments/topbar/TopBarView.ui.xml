@@ -87,6 +87,7 @@
 		.faveLogo {		
 			float: left;
 			border: none;
+			padding-left: 3px;
 		}		
 		
 		.faveLogo:hover {

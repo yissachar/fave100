@@ -208,18 +208,6 @@ footer {
 	text-decoration: italics;
 }
 
-.draggedFaveListItem{
-	position: absolute;
-	width: 100%;
-	box-shadow: 1px 1px 3px 2px #999;
-}
-
-@media ( min-width : 768px ) {
-	.draggedFaveListItem {
-		width: 74.5%;
-	}	
-}
-
 .unselectable, .draggedFaveListItem{	
   	-moz-user-select: none;
   	-khtml-user-select: none;
@@ -273,7 +261,6 @@ footer {
 }
 .whyLinePanel:hover {
 	border: 3px #ddd dotted;
-	width: 500px;
 	cursor: pointer;
 	margin: -3px;
 }
@@ -282,11 +269,7 @@ footer {
 	margin: -3px;
 }
 
-.hide {
-	display: none;
-}
-
-.faveList > div:hover .hide {
+.faveList > div:hover .hoverHidden {
 	display: block;
 }
 
@@ -336,8 +319,7 @@ footer {
 }
 		
 .fullLoginPage .nativeLoginBox input {
-	float: right;
-	min-width: 60%;	
+	width: 100%;	
 }
 
 /* Login light box */
@@ -422,6 +404,31 @@ footer {
 	width: 300px;
 	margin: 0 auto;
 	float: none;
+}
+
+@media ( min-width : 768px ) {
+	.songSidebar {
+		width: 34%;
+	}
+	
+	.userPageSideBar {
+		width: 240px;
+		position: fixed;
+	}	
+	
+	.userPageFaveList {
+		margin-left: 260px;
+	}
+}
+
+@media ( max-width : 767px ) {	
+	.userPageSideBar {
+		position: relative;
+	}	
+	
+	.userPageFaveList {
+		margin-left: 0;
+	}
 }
 
 .selected{

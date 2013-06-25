@@ -19,10 +19,13 @@ import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.fave100.shared.requestfactory.FaveListRequest;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
-import com.google.web.bindery.event.shared.EventBus;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
@@ -55,6 +58,10 @@ public class SongPresenter extends
 		void showPlaylist();
 
 		void showWhylines();
+
+		void setWhylineHeight(int px);
+
+		void scrollYouTubeIntoView();
 	}
 
 	@ProxyCodeSplit
@@ -172,12 +179,23 @@ public class SongPresenter extends
 					public void onSuccess(final SongProxy song) {
 						songProxy = song;
 						updateYouTube();
-
-						getProxy().manualReveal(SongPresenter.this);
 					}
 				});
 			}
 		});
+
+		Window.addResizeHandler(new ResizeHandler() {
+			@Override
+			public void onResize(final ResizeEvent event) {
+				resizePlaylist();
+			}
+		});
+	}
+
+	private void resizePlaylist() {
+		final int newHeight = youtubePresenter.asWidget().getOffsetHeight() + 7;
+		playlistPresenter.setHeight(newHeight);
+		getView().setWhylineHeight(newHeight);
 	}
 
 	@Override
@@ -203,6 +221,8 @@ public class SongPresenter extends
 			@Override
 			public void onSuccess(final List<YouTubeSearchResultProxy> results) {
 				youtubePresenter.setYouTubeVideos(results);
+				resizePlaylist();
+				getView().scrollYouTubeIntoView();
 			}
 		});
 	}

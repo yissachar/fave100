@@ -24,7 +24,7 @@
 		
 		.songDetails {
 			float: left;
-			width: 85%;
+			max-width: 85%;
 		}
 		
 		.songTitle {
@@ -35,9 +35,6 @@
 			background-color: #FFF;
 			border: 1px solid #AAA;
 			padding: 20px;
-			width: 700px;
-			float: left;
-			height: 508px;
 		}
 		
 		.addToFave100Button {
@@ -46,16 +43,14 @@
 		
 		.youtubeWidget {
 			margin: 0 auto;
-			width: 640px;
 		}
 		
 		.playlistVisible{}
 		
-		.sideBar {
-			float: left;
-			width: 320px;			
+		.sideBar {	
 			border: 1px solid #AAA;
 			border-left: 0px;
+			margin-left: 0%;
 		}
 		
 		.tabHeaderContainer > div {
@@ -87,8 +82,8 @@
 		
 		.tabContainer {			
 			clear: both;
-			height: 473px;
 			overflow-y: auto;		
+			overflow-x: hidden;	
 		}
 		
 	</ui:style>
@@ -105,19 +100,21 @@
 						</div>
 						<g:Button ui:field="addToFave100Button" styleName="{style.addToFave100Button}">+Fave100</g:Button>
 					</div>
-					<div class="{style.songBody}">
-						<g:HTMLPanel ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>						
-					</div>
-					<g:HTMLPanel ui:styleName="{style.sideBar}">
-						<g:FlowPanel ui:styleName="{style.tabHeaderContainer}" ui:field="tabHeaderContainer">
-							<g:Label ui:styleName="{style.playlistTabHeader}" ui:field="playlistTabHeader">Playlist</g:Label>
-							<g:Label ui:field="whylineTabHeader">Why-Lines</g:Label>
-						</g:FlowPanel>
-						<g:FlowPanel ui:styleName="{style.tabContainer}">
-							<g:HTMLPanel ui:field="playlistPane"/>
-							<w:WhylineWaterfall ui:field="whylineWaterfall" />
-						</g:FlowPanel>
-					</g:HTMLPanel>										
+					<div class="row">
+						<div class="{style.songBody} col span_8">
+							<g:HTMLPanel ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>						
+						</div>
+						<g:HTMLPanel ui:styleName="{style.sideBar} col songSidebar">
+							<g:FlowPanel ui:styleName="{style.tabHeaderContainer}" ui:field="tabHeaderContainer">
+								<g:Label ui:styleName="{style.playlistTabHeader}" ui:field="playlistTabHeader">Playlist</g:Label>
+								<g:Label ui:field="whylineTabHeader">Why-Lines</g:Label>
+							</g:FlowPanel>
+							<g:FlowPanel ui:styleName="{style.tabContainer}">
+								<g:HTMLPanel ui:field="playlistPane"/>
+								<w:WhylineWaterfall ui:field="whylineWaterfall" />
+							</g:FlowPanel>
+						</g:HTMLPanel>	
+					</div>									
 				</div>				
 			</div>	
 		</div>

@@ -6,13 +6,14 @@ import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.Utils;
 import com.google.gwt.core.shared.GWT;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -103,12 +104,18 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 
 	@Override
 	public void showLoginBox() {
-		addToPopupSlot(loginBox);
+		if (Utils.isTouchDevice())
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+		else
+			addToPopupSlot(loginBox);
 	}
 
 	@Override
 	public void showRegisterBox() {
-		addToPopupSlot(registerBox);
+		if (Utils.isTouchDevice())
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).build());
+		else
+			addToPopupSlot(registerBox);
 	}
 
 	public native void registerCallbacks()/*-{

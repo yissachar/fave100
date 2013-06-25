@@ -122,6 +122,11 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	}
 
 	@Override
+	public void setWhylineHeight(final int px) {
+		whylineWaterfall.setHeight(px + "px");
+	}
+
+	@Override
 	public void showWhylines() {
 		playlistPane.setVisible(false);
 		whylineWaterfall.setVisible(true);
@@ -133,6 +138,11 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 
 	private void setArtistName(final String name) {
 		artistName.setText(name);
+	}
+
+	@Override
+	public void scrollYouTubeIntoView() {
+		songTitle.getElement().scrollIntoView();
 	}
 
 }

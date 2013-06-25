@@ -9,12 +9,11 @@
 	<ui:style>
 		.playlistHeader {
 			background-color: #FFF;
-			width: 319px;
-			border-bottom: 1px solid #999;
+			border-bottom: 1px solid #ccc;
 		}
 		
 		.userInfo {
-			margin: 5px 0;			
+			padding: 5px 0;			
 			overflow: hidden;
 		}
 		
@@ -33,13 +32,14 @@
 		
 		.playlist {
 			clear: both;
+			/* This is just an inital height, will be recalculated at runtime */
 			height: 420px;
-			overflow-y: auto;	
+			overflow-y: auto;
 		}
 	</ui:style>
 	
 	<g:HTMLPanel>
-		<g:FlowPanel ui:styleName="{style.playlistHeader}">
+		<g:FlowPanel ui:field="playlistHeader" ui:styleName="{style.playlistHeader}">
 			<g:FlowPanel ui:styleName="{style.userInfo}">
 				<g:Image ui:field="_avatar" ui:styleName="{style.avatar}"/>
 				<g:Anchor ui:field="_username" ui:styleName="{style.username}"/>			
