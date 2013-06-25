@@ -11,10 +11,14 @@
 			padding: 6px;
 			font-size: 1.2em;
 		}
+		
+		.whylines {
+			width: 100%;
+		}
 	</ui:style>
 	
 	<g:FlowPanel ui:field="container" ui:styleName="{style.container}">
-		<g:VerticalPanel ui:field="whylines"/>
+		<g:VerticalPanel ui:field="whylines" ui:styleName="{style.whylines}"/>
 	</g:FlowPanel>
 	
 </ui:UiBinder> 

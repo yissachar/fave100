@@ -5,6 +5,7 @@
 
 	<ui:style type="com.fave100.client.pagefragments.favelist.widgets.FavePickWidget.FavePickWidgetStyle">
 		.mainPanel {
+			width:100%;
 		}
 		
 		.mainPanel tr {
@@ -12,7 +13,7 @@
 		}
 		
 		.mainPanel td {
-			padding: 0 28px 0 0;
+			padding: 0 20px 0 0;
 		}
 		
 		.rank {
@@ -67,7 +68,7 @@
 			</g:cell>
 
 			<g:cell width="80%">
-				<g:VerticalPanel width="575px">
+				<g:VerticalPanel >
 					<g:Anchor ui:field="song" ui:styleName="{style.song}"></g:Anchor>
 					<g:InlineLabel ui:field="artist" ui:styleName="{style.artist}"></g:InlineLabel>
 					<g:SimplePanel ui:field="whyLinePanel" ui:styleName="{style.whyLine}"></g:SimplePanel>
@@ -75,7 +76,7 @@
 
 			</g:cell>
 
-			<g:HorizontalPanel ui:field="hoverPanel" ui:styleName="hide {style.hoverPanel}" verticalAlignment="middle"/>
+			<g:HorizontalPanel ui:field="hoverPanel" ui:styleName="hoverHidden {style.hoverPanel}" verticalAlignment="middle"/>
 		</g:HorizontalPanel>
 	</g:HTMLPanel>
 

@@ -253,7 +253,6 @@ public class FavePickWidget extends Composite {
 					txtBox.setValue("");
 				else
 					txtBox.setValue(whyLine.getText().trim());
-				txtBox.setWidth("500px");
 				txtBox.addKeyDownHandler(new KeyDownHandler() {
 
 					@Override

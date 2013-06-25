@@ -89,7 +89,7 @@ public class UsersPresenter extends
 			@Override
 			public void onWindowScroll(final ScrollEvent event) {
 				final Widget widget = songAutocomplete.asWidget();
-				if (event.getScrollTop() >= 26) {
+				if (event.getScrollTop() >= 26 && Window.getClientWidth() >= 768) {
 					songAutocomplete.getView().hideHelp();
 					widget.addStyleName(getView().getFixedSearchStyle());
 				}

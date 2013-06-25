@@ -8,8 +8,9 @@ import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.google.web.bindery.event.shared.EventBus;
+import com.fave100.shared.Utils;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -84,12 +85,18 @@ public class HomePresenter extends
 
 	@Override
 	public void showRegister() {
-		addToPopupSlot(registerPopup);
+		if (Utils.isTouchDevice())
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).build());
+		else
+			addToPopupSlot(registerPopup);
 	}
 
 	@Override
 	public void showLogin() {
-		addToPopupSlot(loginPopup);
+		if (Utils.isTouchDevice())
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+		else
+			addToPopupSlot(loginPopup);
 	}
 }
 

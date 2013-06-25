@@ -1,0 +1,4 @@
+@external hoverHidden;
+.hoverHidden {
+	display: inline-block;
+}

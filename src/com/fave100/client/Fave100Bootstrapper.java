@@ -1,7 +1,9 @@
 package com.fave100.client;
 
 import com.fave100.client.events.CurrentUserChangedEvent;
+import com.fave100.client.resources.mobile.MobileResources;
 import com.fave100.shared.UrlBuilder;
+import com.fave100.shared.Utils;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.core.client.GWT;
@@ -45,5 +47,8 @@ public class Fave100Bootstrapper implements Bootstrapper {
 				_placeManager.revealCurrentPlace();
 			}
 		});
+
+		if (Utils.isTouchDevice())
+			MobileResources.INSTANCE.css().ensureInjected();
 	}
 }
