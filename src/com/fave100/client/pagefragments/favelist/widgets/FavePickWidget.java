@@ -231,6 +231,7 @@ public class FavePickWidget extends Composite {
 	}
 
 	private void initEmptyWhyLine(final Label whyLine) {
+		whyLine.addStyleName("whyLinePanelEmpty");
 		whyLine.setText(" "); //setting this so white-space: pre will always have spacing for why line
 		_whyLineMouseHandlers = new ArrayList<HandlerRegistration>();
 		_whyLineMouseHandlers.add(whyLine.addMouseOverHandler(_whyLineEmptyMouseOver));
@@ -302,6 +303,7 @@ public class FavePickWidget extends Composite {
 					if (!txtBox.getValue().trim().equals(getWhyline())) {
 						_whyLineCallback.onChange(getSongID(), txtBox.getValue());
 						setWhyline(txtBox.getValue());
+						whyLine.removeStyleName("whyLinePanelEmpty");
 					}
 
 					if (txtBox.getValue().isEmpty()) {
