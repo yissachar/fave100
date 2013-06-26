@@ -31,7 +31,7 @@
 		<div class="container">
 			<div class="content">
 				<g:HTMLPanel styleName="{style.loginContainer}">
-					<h1 class="row">Fave100 Sign In</h1>
+					<h1 class="row">Sign In</h1>
 					<g:HTMLPanel ui:field="loginContainer" ui:styleName="row" />
 				</g:HTMLPanel>
 				<p id="noAccountPrompt" class="row">

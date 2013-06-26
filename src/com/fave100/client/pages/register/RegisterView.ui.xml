@@ -82,7 +82,7 @@
 			<div class="container">
 				<div class="content">		    	
 					<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
-					    <h1 class="row">Fave100 Registration</h1>
+					    <h1 class="row">Registration</h1>
 					    <g:HTMLPanel ui:field="registerWidget"></g:HTMLPanel>
 					</g:HTMLPanel>
 					
