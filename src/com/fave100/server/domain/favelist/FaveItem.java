@@ -3,6 +3,7 @@ package com.fave100.server.domain.favelist;
 import com.fave100.server.domain.Whyline;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Embed;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  * A song that a Fave100 user has added to their Fave100.
@@ -15,8 +16,7 @@ public class FaveItem {
 
 	private String song;
 	private String artist;
-	// Not used, but need it just in case we ever need the backlink
-	private String songID;
+	@Index private String songID;
 	private String whyline = "";
 	private Ref<Whyline> whylineRef;
 
