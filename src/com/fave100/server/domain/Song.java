@@ -74,7 +74,7 @@ public class Song extends DatastoreObject implements SongInterface {
 
 	public static List<YouTubeSearchResult> getYouTubeResults(final String song, final String artist) {
 		try {
-			String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&maxResults=5&type=video";
+			String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&maxResults=5&type=video&videoEmbeddable=true";
 			searchUrl += "&q=" + song.replace(" ", "+") + "+" + artist.replace(" ", "+");
 			searchUrl += "&key=" + Song.YOUTUBE_API_KEY;
 			final URL url = new URL(searchUrl);
