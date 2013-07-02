@@ -151,6 +151,8 @@ public class SongAutocompletePresenter extends
 				else
 					getView().showNext(true);
 
+				getView().resizeSearch();
+
 			}
 		};
 		requests.add(autocompleteReq);
