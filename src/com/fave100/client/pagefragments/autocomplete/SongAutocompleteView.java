@@ -16,6 +16,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -54,6 +55,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	@UiField Button previousButton;
 	@UiField Button nextButton;
 	final private String placeholder = "To add a song, start typing here";
+	Timer searchTimer;
 
 	@Inject
 	public SongAutocompleteView(final Binder binder) {
@@ -109,7 +111,16 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 		}
 		else {
 			// Otherwise search for song
-			getUiHandlers().getAutocompleteResults(searchBox.getText(), true);
+			if (searchTimer != null)
+				searchTimer.cancel();
+			searchTimer = new Timer() {
+				@Override
+				public void run() {
+					getUiHandlers().getAutocompleteResults(searchBox.getText(), true);
+				}
+			};
+			searchTimer.schedule(50);
+
 		}
 	}
 
