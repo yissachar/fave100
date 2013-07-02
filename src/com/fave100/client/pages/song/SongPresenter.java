@@ -23,6 +23,7 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -193,9 +194,16 @@ public class SongPresenter extends
 	}
 
 	private void resizePlaylist() {
-		final int newHeight = youtubePresenter.asWidget().getOffsetHeight() + 7;
-		playlistPresenter.setHeight(newHeight);
-		getView().setWhylineHeight(newHeight);
+		final Timer timer = new Timer() {
+			@Override
+			public void run() {
+				final int newHeight = youtubePresenter.asWidget().getOffsetHeight() + 7;
+				playlistPresenter.setHeight(newHeight);
+				getView().setWhylineHeight(newHeight);
+			}
+		};
+		timer.schedule(500);
+
 	}
 
 	@Override
