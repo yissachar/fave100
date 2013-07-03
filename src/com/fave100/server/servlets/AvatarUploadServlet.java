@@ -1,7 +1,5 @@
 package com.fave100.server.servlets;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -38,10 +37,14 @@ public class AvatarUploadServlet extends RequestFactoryServlet
 			if (blobKey != null) {
 				final String username = (String)req.getSession().getAttribute(AppUser.AUTH_USER);
 				Objects.requireNonNull(username);
-				final AppUser appUser = AppUser.findAppUser(username);
-				appUser.setAvatar(blobKey.getKeyString());
-				ofy().save().entity(appUser).now();
-				res.getWriter().write(appUser.getAvatarImage());
+				String avatar = "";
+				try {
+					avatar = AppUser.setAvatarForCurrentUser(blobKey.getKeyString());
+				}
+				catch (final NotLoggedInException e) {
+					// Couldn't save avatar, send back blank
+				}
+				res.getWriter().write(avatar);
 			}
 		}
 	}
