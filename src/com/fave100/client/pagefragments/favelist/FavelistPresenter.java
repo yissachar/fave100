@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
+import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.events.FaveListSizeChangedEvent;
 import com.fave100.client.pagefragments.favelist.widgets.FavePickWidget;
 import com.fave100.client.place.NameTokens;
@@ -19,8 +20,8 @@ import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.fave100.shared.requestfactory.FaveListRequest;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
@@ -201,6 +202,7 @@ public class FavelistPresenter extends
 			@Override
 			public void onFailure(final ServerFailure failure) {
 				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					eventBus.fireEvent(new CurrentUserChangedEvent(null));
 					placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 				}
 				else if (failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
@@ -233,7 +235,19 @@ public class FavelistPresenter extends
 		// Send request for server to remove it
 		final Request<Void> req = requestFactory.faveListRequest()
 				.removeFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID);
-		req.fire();
+		req.fire(new Receiver<Void>() {
+			@Override
+			public void onSuccess(final Void response) {
+				// Don't care about success, already did what we need to
+			}
+
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					eventBus.fireEvent(new CurrentUserChangedEvent(null));
+				}
+			}
+		});
 	}
 
 	@Override
@@ -250,6 +264,9 @@ public class FavelistPresenter extends
 			public void onFailure(final ServerFailure failure) {
 				if (failure.getExceptionType().equals(BadWhylineException.class.getName())) {
 					Notification.show(failure.getMessage());
+				}
+				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					eventBus.fireEvent(new CurrentUserChangedEvent(null));
 				}
 			}
 		});
@@ -292,7 +309,9 @@ public class FavelistPresenter extends
 
 			@Override
 			public void onFailure(final ServerFailure failure) {
-				// TODO: server fail, should do something
+				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					eventBus.fireEvent(new CurrentUserChangedEvent(null));
+				}
 			}
 		});
 	}
