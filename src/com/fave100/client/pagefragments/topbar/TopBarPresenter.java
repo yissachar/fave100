@@ -7,13 +7,17 @@ import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Utils;
+import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -47,13 +51,15 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	private EventBus eventBus;
 	private CurrentUser currentUser;
 	private PlaceManager placeManager;
+	private ApplicationRequestFactory _requestFactory;
 
 	@Inject
-	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser) {
+	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser, final ApplicationRequestFactory requestFactory) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.currentUser = currentUser;
 		this.placeManager = placeManager;
+		_requestFactory = requestFactory;
 		getView().setUiHandlers(this);
 
 		Window.addWindowScrollHandler(new ScrollHandler() {
@@ -85,6 +91,25 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 						setTopBar();
 					}
 				});
+
+		// Every 30 minutes check to see if user session expired and refresh UI
+		final Timer timer = new Timer() {
+			@Override
+			public void run() {
+				if (!currentUser.isLoggedIn())
+					return;
+
+				final Request<Boolean> loggedInReq = _requestFactory.appUserRequest().isAppUserLoggedIn();
+				loggedInReq.fire(new Receiver<Boolean>() {
+					@Override
+					public void onSuccess(final Boolean loggedIn) {
+						if (!loggedIn)
+							eventBus.fireEvent(new CurrentUserChangedEvent(null));
+					}
+				});
+			}
+		};
+		timer.scheduleRepeating(30 * 60 * 1000);
 	}
 
 	@Override
