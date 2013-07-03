@@ -400,6 +400,12 @@ public class AppUser extends DatastoreObject {
 		return userService.createLogoutURL(destinationURL);
 	}
 
+	// Check if Fave100 user is logged in 
+	public static Boolean isAppUserLoggedIn() {
+		final String username = (String)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
+		return username != null;
+	}
+
 	// Get the logged in Fave100 user
 	public static AppUser getLoggedInAppUser() {
 		final String username = (String)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);

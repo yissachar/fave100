@@ -19,6 +19,8 @@ public interface AppUserRequest extends RequestContext {
 
 	Request<AppUserProxy> getLoggedInAppUser();
 
+	Request<Boolean> isAppUserLoggedIn();
+
 	Request<AppUserProxy> loginWithGoogle();
 
 	Request<Boolean> isGoogleUserLoggedIn();
