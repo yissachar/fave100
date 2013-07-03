@@ -3,6 +3,7 @@ package com.fave100.client.pages.song;
 import java.util.List;
 
 import com.fave100.client.Notification;
+import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.events.PlaylistSongChangedEvent;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
@@ -76,8 +77,8 @@ public class SongPresenter extends
 	public static final String ID_PARAM = "id";
 	public static final String USER_PARAM = "user";
 
-	private final ApplicationRequestFactory requestFactory;
-	private final PlaceManager placeManager;
+	private final ApplicationRequestFactory _requestFactory;
+	private final PlaceManager _placeManager;
 	private final EventBus _eventBus;
 	private SongProxy songProxy;
 	@Inject YouTubePresenter youtubePresenter;
@@ -90,8 +91,8 @@ public class SongPresenter extends
 							final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
-		this.requestFactory = requestFactory;
-		this.placeManager = placeManager;
+		_requestFactory = requestFactory;
+		_placeManager = placeManager;
 		getView().setUiHandlers(this);
 	}
 
@@ -114,11 +115,11 @@ public class SongPresenter extends
 		final String username = URL.decode(placeRequest.getParameter(USER_PARAM, ""));
 		if (id.isEmpty()) {
 			// Malformed request, send the user away
-			placeManager.revealDefaultPlace();
+			_placeManager.revealDefaultPlace();
 		}
 		else {
 			// Load the song from the datastore
-			final Request<SongProxy> getSongReq = requestFactory.songRequest()
+			final Request<SongProxy> getSongReq = _requestFactory.songRequest()
 					.findSong(id);
 			getSongReq.fire(new Receiver<SongProxy>() {
 				@Override
@@ -137,7 +138,7 @@ public class SongPresenter extends
 			// If there is a user, get their info and their playlist
 			if (!username.isEmpty()) {
 				// Get username and avatar
-				final Request<AppUserProxy> getUserReq = requestFactory.appUserRequest().findAppUser(username);
+				final Request<AppUserProxy> getUserReq = _requestFactory.appUserRequest().findAppUser(username);
 				getUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
 					public void onSuccess(final AppUserProxy user) {
@@ -148,7 +149,7 @@ public class SongPresenter extends
 				});
 
 				// Get playlist
-				final Request<List<FaveItemProxy>> getFavelistReq = requestFactory.faveListRequest().getFaveList(username, Constants.DEFAULT_HASHTAG);
+				final Request<List<FaveItemProxy>> getFavelistReq = _requestFactory.faveListRequest().getFaveList(username, Constants.DEFAULT_HASHTAG);
 				getFavelistReq.fire(new Receiver<List<FaveItemProxy>>() {
 					@Override
 					public void onSuccess(final List<FaveItemProxy> favelist) {
@@ -173,7 +174,7 @@ public class SongPresenter extends
 			@Override
 			public void onPlaylistSongChanged(final PlaylistSongChangedEvent event) {
 				// Load the song from the datastore
-				final Request<SongProxy> getSongReq = requestFactory.songRequest()
+				final Request<SongProxy> getSongReq = _requestFactory.songRequest()
 						.findSong(event.songID());
 				getSongReq.fire(new Receiver<SongProxy>() {
 					@Override
@@ -223,7 +224,7 @@ public class SongPresenter extends
 		getView().setSongInfo(songProxy);
 
 		// Get any YouTube videos
-		final Request<List<YouTubeSearchResultProxy>> getYoutubeReq = requestFactory.songRequest()
+		final Request<List<YouTubeSearchResultProxy>> getYoutubeReq = _requestFactory.songRequest()
 				.getYouTubeResults(songProxy.getSong(), songProxy.getArtist());
 		getYoutubeReq.fire(new Receiver<List<YouTubeSearchResultProxy>>() {
 			@Override
@@ -244,7 +245,7 @@ public class SongPresenter extends
 			return;
 
 		// Add the song as a FaveItem
-		final FaveListRequest faveListRequest = requestFactory
+		final FaveListRequest faveListRequest = _requestFactory
 				.faveListRequest();
 		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(
 				Constants.DEFAULT_HASHTAG, songProxy.getId());
@@ -258,10 +259,9 @@ public class SongPresenter extends
 			@Override
 			public void onFailure(final ServerFailure failure) {
 				// Alert the user if adding the song fails for any reason
-				if (failure.getExceptionType().equals(
-						NotLoggedInException.class.getName())) {
-					placeManager
-							.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
+					_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 				}
 				else if (failure.getExceptionType().equals(
 						SongLimitReachedException.class.getName())) {

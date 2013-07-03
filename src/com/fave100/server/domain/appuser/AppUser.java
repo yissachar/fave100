@@ -819,7 +819,7 @@ public class AppUser extends DatastoreObject {
 
 	// Allows a user to change their password provided they have a password
 	// reset token or the current password
-	public static Boolean changePassword(final String newPassword, final String tokenOrPassword) {
+	public static Boolean changePassword(final String newPassword, final String tokenOrPassword) throws NotLoggedInException {
 
 		if (Validator.validatePassword(newPassword) != null
 				|| tokenOrPassword == null || tokenOrPassword.isEmpty()) {
@@ -856,6 +856,9 @@ public class AppUser extends DatastoreObject {
 					// Password matches, allow password change
 					changePwd = true;
 				}
+			}
+			else {
+				throw new NotLoggedInException();
 			}
 		}
 

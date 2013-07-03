@@ -1,15 +1,18 @@
 package com.fave100.client.pages.passwordreset;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
+import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -45,9 +48,10 @@ public class PasswordResetPresenter
 		void showCurrPwdError(String errorMsg);
 	}
 
-	private ApplicationRequestFactory requestFactory;
-	private PlaceManager placeManager;
-	private CurrentUser currentUser;
+	private ApplicationRequestFactory _requestFactory;
+	private PlaceManager _placeManager;
+	private CurrentUser _currentUser;
+	private EventBus _eventBus;
 	private String token;
 
 	@ProxyCodeSplit
@@ -61,9 +65,10 @@ public class PasswordResetPresenter
 									final ApplicationRequestFactory requestFactory,
 									final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
-		this.requestFactory = requestFactory;
-		this.placeManager = placeManager;
-		this.currentUser = currentUser;
+		_requestFactory = requestFactory;
+		_placeManager = placeManager;
+		_currentUser = currentUser;
+		_eventBus = eventBus;
 		getView().setUiHandlers(this);
 	}
 
@@ -89,7 +94,7 @@ public class PasswordResetPresenter
 		// Use parameters to determine what to reveal on page
 		token = placeRequest.getParameter("token", "");
 
-		if (currentUser.isLoggedIn()) {
+		if (_currentUser.isLoggedIn()) {
 			// User is logged in, allow password change if they enter old
 			// password first
 			getView().showPwdChangeForm(true);
@@ -109,7 +114,7 @@ public class PasswordResetPresenter
 
 	@Override
 	public void sendEmail(final String username, final String emailAddress) {
-		final Request<Boolean> sendEmailReq = requestFactory.appUserRequest()
+		final Request<Boolean> sendEmailReq = _requestFactory.appUserRequest()
 				.emailPasswordResetToken(username, emailAddress);
 		sendEmailReq.fire(new Receiver<Boolean>() {
 			@Override
@@ -149,7 +154,7 @@ public class PasswordResetPresenter
 			passwordOrToken = currPassword;
 		}
 
-		final Request<Boolean> changePasswordReq = requestFactory
+		final Request<Boolean> changePasswordReq = _requestFactory
 				.appUserRequest().changePassword(newPassword, passwordOrToken);
 		changePasswordReq.fire(new Receiver<Boolean>() {
 			@Override
@@ -162,9 +167,19 @@ public class PasswordResetPresenter
 					getView().showPwdError(errorMsg, false);
 				}
 				else {
-					placeManager
+					_placeManager
 							.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 				}
+			}
+
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				String errorMsg = "An unknown error occured. Please try again later.";
+				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
+					errorMsg = "Could not complete the action because you are not logged in. Please log in and try again.";
+				}
+				getView().showPwdError(errorMsg, false);
 			}
 		});
 	}

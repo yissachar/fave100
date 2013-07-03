@@ -62,6 +62,7 @@ public class PasswordResetView extends
 	@UiHandler("sendTokenForm")
 	public void onTokenSubmit(final SubmitEvent event) {
 		// Clear error text
+		event.cancel();
 		tokenStatusMessage.setText("");
 		getUiHandlers().sendEmail(usernameInput.getValue(),
 				emailInput.getValue());
@@ -69,6 +70,7 @@ public class PasswordResetView extends
 
 	@UiHandler("changePasswordForm")
 	public void onPasswordSubmit(final SubmitEvent event) {
+		event.cancel();
 		getUiHandlers().changePassword(passwordInput.getValue(),
 				passwordRepeat.getValue(), currPasswordInput.getValue());
 	}

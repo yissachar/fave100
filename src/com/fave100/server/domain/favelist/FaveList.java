@@ -50,9 +50,8 @@ public class FaveList extends DatastoreObject {
 			throws Exception {
 
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if (currentUser == null) {
+		if (currentUser == null)
 			throw new NotLoggedInException();
-		}
 
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
 		if (faveList.getList().size() >= FaveList.MAX_FAVES)
@@ -81,10 +80,10 @@ public class FaveList extends DatastoreObject {
 		ofy().save().entities(faveList).now();
 	}
 
-	public static void removeFaveItemForCurrentUser(final String hashtag, final String songID) {
+	public static void removeFaveItemForCurrentUser(final String hashtag, final String songID) throws NotLoggedInException {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if (currentUser == null)
-			return;
+			throw new NotLoggedInException();
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
 		if (faveList == null)
 			return;
@@ -109,10 +108,10 @@ public class FaveList extends DatastoreObject {
 		ofy().save().entities(faveList).now();
 	}
 
-	public static void rerankFaveItemForCurrentUser(final String hashtag, final String songID, final int newIndex) {
+	public static void rerankFaveItemForCurrentUser(final String hashtag, final String songID, final int newIndex) throws NotLoggedInException {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if (currentUser == null)
-			return;
+			throw new NotLoggedInException();
 		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
 		if (faveList == null)
 			return;
@@ -186,15 +185,6 @@ public class FaveList extends DatastoreObject {
 		}
 
 		ofy().save().entity(faveList).now();
-	}
-
-	// TODO: June 20, 2013 Check why this is a separate method
-	public static List<FaveItem> getFaveListForCurrentUser(final String hashtag) {
-		final AppUser currentUser = AppUser.getLoggedInAppUser();
-		if (currentUser == null)
-			return null;
-		return getFaveList(currentUser.getUsername(), hashtag);
-
 	}
 
 	public static List<FaveItem> getFaveList(final String username, final String hashtag) {

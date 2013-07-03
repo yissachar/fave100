@@ -2,12 +2,14 @@ package com.fave100.client.pages.profile;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.LoadingIndicator;
+import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
+import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.UserInfoProxy;
@@ -21,6 +23,8 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 /**
@@ -59,18 +63,23 @@ public class ProfilePresenter extends
 	public interface MyProxy extends ProxyPlace<ProfilePresenter> {
 	}
 
-	private ApplicationRequestFactory requestFactory;
-	private CurrentUser currentUser;
+	private EventBus _eventBus;
+	private ApplicationRequestFactory _requestFactory;
+	private CurrentUser _currentUser;
+	private PlaceManager _placeManager;
 	private UserInfoProxy oldUserInfo = null;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view,
 							final MyProxy proxy,
 							final ApplicationRequestFactory requestFactory,
-							final CurrentUser currentUser) {
+							final CurrentUser currentUser,
+							final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
-		this.requestFactory = requestFactory;
-		this.currentUser = currentUser;
+		_eventBus = eventBus;
+		_requestFactory = requestFactory;
+		_currentUser = currentUser;
+		_placeManager = placeManager;
 		getView().setUiHandlers(this);
 	}
 
@@ -85,7 +94,7 @@ public class ProfilePresenter extends
 	public void onReveal() {
 		super.onReveal();
 		setEmail();
-		setUserAvatar(currentUser.getAvatarImage());
+		setUserAvatar(_currentUser.getAvatarImage());
 	}
 
 	@Override
@@ -98,12 +107,20 @@ public class ProfilePresenter extends
 	}
 
 	private void setEmail() {
-		final Request<UserInfoProxy> emailReq = requestFactory.appUserRequest().getCurrentUserSettings();
+		final Request<UserInfoProxy> emailReq = _requestFactory.appUserRequest().getCurrentUserSettings();
 		emailReq.fire(new Receiver<UserInfoProxy>() {
 			@Override
 			public void onSuccess(final UserInfoProxy userInfo) {
 				populateFields(userInfo);
 				oldUserInfo = userInfo;
+			}
+
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
+					_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+				}
 			}
 		});
 	}
@@ -117,7 +134,7 @@ public class ProfilePresenter extends
 		// Create the blobstore URL that the avatar will be uploaded to
 		// Need to recreate each time because session expires after succesful
 		// upload
-		final Request<String> blobRequest = requestFactory.appUserRequest()
+		final Request<String> blobRequest = _requestFactory.appUserRequest()
 				.createBlobstoreUrl("/avatarUpload");
 		blobRequest.fire(new Receiver<String>() {
 			@Override
@@ -131,7 +148,7 @@ public class ProfilePresenter extends
 	public void setUserAvatar(final String url) {
 		getView().clearAvatarForm();
 		setUploadAction();
-		currentUser.setAvatar(url);
+		_currentUser.setAvatar(url);
 		getView().setAvatarImg(url);
 	}
 
@@ -139,7 +156,7 @@ public class ProfilePresenter extends
 	public void saveUserInfo(final String email, final boolean followingPrivate) {
 		getView().clearErrors();
 
-		final AppUserRequest appUserRequest = requestFactory.appUserRequest();
+		final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
 
 		// Clone user info because request factory is silly
 		final UserInfoProxy userInfo = appUserRequest.create(UserInfoProxy.class);

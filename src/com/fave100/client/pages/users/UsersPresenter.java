@@ -1,6 +1,7 @@
 package com.fave100.client.pages.users;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.events.SongSelectedEvent;
 import com.fave100.client.events.UserFollowedEvent;
 import com.fave100.client.events.UserUnfollowedEvent;
@@ -125,6 +126,15 @@ public class UsersPresenter extends
 				getView().setFollowCTA(!currentUser.equals(requestedUser), false);
 			}
 		});
+
+		CurrentUserChangedEvent.register(eventBus,
+				new CurrentUserChangedEvent.Handler() {
+					@Override
+					public void onCurrentUserChanged(
+							final CurrentUserChangedEvent event) {
+						showPage();
+					}
+				});
 	}
 
 	@Override
@@ -167,28 +177,7 @@ public class UsersPresenter extends
 				public void onSuccess(final AppUserProxy user) {
 					if (user != null) {
 						requestedUser = user;
-						final boolean starred = currentUser.isFollowingUser(user);
-
-						getView().setUserProfile(user);
-						// Check if user is the currently logged in user
-						if (currentUser.isLoggedIn() && currentUser.equals(user)) {
-							getView().showOwnPage();
-							getView().setFollowCTA(false, starred);
-						}
-						else {
-							getView().showOtherPage();
-							getView().setFollowCTA(currentUser.isLoggedIn(), starred);
-						}
-
-						favelist.setUser(user);
-						favelist.refreshFavelist();
-						usersFollowing.setUser(user);
-						usersFollowing.refreshLists();
-
-						getProxy().manualReveal(UsersPresenter.this);
-
-						// Now that page is visible, render FB like button						
-						getView().renderSharing();
+						showPage();
 					}
 					else {
 						getView().showUserNotFound();
@@ -197,6 +186,31 @@ public class UsersPresenter extends
 				}
 			});
 		}
+	}
+
+	private void showPage() {
+		final boolean starred = currentUser.isFollowingUser(requestedUser);
+
+		getView().setUserProfile(requestedUser);
+		// Check if user is the currently logged in user
+		if (currentUser.isLoggedIn() && currentUser.equals(requestedUser)) {
+			getView().showOwnPage();
+			getView().setFollowCTA(false, starred);
+		}
+		else {
+			getView().showOtherPage();
+			getView().setFollowCTA(currentUser.isLoggedIn(), starred);
+		}
+
+		favelist.setUser(requestedUser);
+		favelist.refreshFavelist();
+		usersFollowing.setUser(requestedUser);
+		usersFollowing.refreshLists();
+
+		getProxy().manualReveal(UsersPresenter.this);
+
+		// Now that page is visible, render FB like button						
+		getView().renderSharing();
 	}
 
 	@Override

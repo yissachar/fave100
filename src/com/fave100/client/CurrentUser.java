@@ -6,6 +6,7 @@ import com.fave100.client.RequestCache.RequestType;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.events.UserFollowedEvent;
 import com.fave100.client.events.UserUnfollowedEvent;
+import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -104,6 +105,9 @@ public class CurrentUser implements AppUserProxy {
 				getFollowing().remove(user);
 				final String errorMsg = failure.getMessage();
 				_eventBus.fireEvent(new UserUnfollowedEvent(user, errorMsg));
+				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
+				}
 			}
 		});
 	}
@@ -119,7 +123,19 @@ public class CurrentUser implements AppUserProxy {
 
 		// Remove from server
 		final Request<Void> unfollowReq = _requestFactory.appUserRequest().unfollowUser(user.getUsername());
-		unfollowReq.fire();
+		unfollowReq.fire(new Receiver<Void>() {
+			@Override
+			public void onSuccess(final Void response) {
+				// Don't care about success, already took action
+			}
+
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
+				}
+			}
+		});
 	}
 
 	// Needed for RequestFactory
