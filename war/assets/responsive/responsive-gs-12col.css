@@ -37,7 +37,7 @@
 	width: 100%;
 }
 
-@media ( min-width : 768px ) {
+@media ( min-width : 769px ) {
 	.col {
 		margin-left: 2%;
 	}
@@ -49,7 +49,7 @@
 
 
 /* COLUMN WIDTH ON DISPLAYS +768px */
-@media ( min-width : 768px ) {
+@media ( min-width : 769px ) {
 	.span_1 { width: 6.5%; }
 	.span_2 { width: 15.0%; }
 	.span_3 { width: 23.5%; }
