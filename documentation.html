@@ -27,17 +27,19 @@
 	<h1>Fave100 Documentation</h1>
 	<a href="#musicbrainzSongs">Musizbrainz Songs</a><br>
 	<a href="#updatingSongs">Updating Song Database</a><br>
+	<a href="#dedupeSongs">Removing duplicate songs</a><br>
 	<a href="#basicAppStructure">Basic app structure</a><br>
 	<a href="#upgradeAE-GWT">Upgrading AppEngine and GWT version</a><br>
 
 	<a name="musicbrainzSongs"/>
 	<h2>Musicbrainz Songs</h2>
-	<p>All the song data is obtained from Musicbrainz. A VM containing the Musicbrainz database (PostgreSQL) is set up on Yissachar's machine (on VirtualBox) and syncs with the main Musicbrainz database every night at midnight.</p>
-	<p>In addition to the standard Musicbrainz tables, there are 3 custom Fave100 tables:</p>
+	<p>All the song data is obtained from Musicbrainz. A VM containing the Musicbrainz database (PostgreSQL) is set up on Yissachar's machine (on VirtualBox) and needs to be periodically synced with the Musicbrainz data dumps (see <a href="#updatingSongs">Updating Song Database</a>).</p>
+	<p>In addition to the standard Musicbrainz tables, there are 4 custom Fave100 tables:</p>
 	<ul>
 		<li>autocomplete_search</li>
 		<li>autocomplete_search_staging</li>
 		<li>autocomplete_search_bad_parens</li>
+		<li>autocomplete_search_dupes</li>
 	</ul>
 
 	<h4>autocomplete_search</h4>
@@ -47,15 +49,19 @@
 	<p>autocomplete_search_staging is a temporary table that is rebuilt from scratch every time we wish to update the Fave100 song collection. It runs the entire Musicbrainz data set through a variety of filters and checks (for instance, de-duplicating the data) to give us the best results. New results that are obtained through this build (e.g. songs added to the Musicbrainz database since the last time that we updated autocomplete_search_staging) are then added to to autocomplete_search.</p>
 
 	<h4>autocomplete_search_bad_parens</h4>
-	<p>autocomplete_search_bad_parens contains a variety of entries that Fave100 considers to be duplicate with a non-parenthesis version when surrounded by parethesis. For instance, "Stairway to Heaven" and "Stairway to Heaven (acoustic)" are considered by Fave100 to be the same song. autocomplete_search_bad_parens allows for entries to easily be added when they are noted</p>
+	<p>autocomplete_search_bad_parens contains a variety of entries that Fave100 considers to be duplicate with a non-parenthesis version when surrounded by parenthesis. For instance, "Stairway to Heaven" and "Stairway to Heaven (acoustic)" are considered by Fave100 to be the same song. autocomplete_search_bad_parens allows for entries to easily be added when they are noted</p>
+
+	<h4>autocomplete_search_dupes</h4>
+	<p>autocomplete_search_dupes contains manually added dupes and their links to the master song. When a song is flagged as a dupe it is inserted into this table. The AppEngine deduper uses this table to determine what songs to dedupe. When autocomplete_search is updated, autocomplete_search_dupes is consulted to determine that we do not add any songs that are flagged as dupes.</p>
 
 	<a name="updatingSongs"/>
 	<h2>Updating Song Database</h2>
 	<ol>
-		<li>Grab the latest Musicbrainz dump from <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport</a>: On VM run wget http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/INSERT-DATE/mbdump.tar.bz2 into /mnt/postgres/dumps/DATE</li>
+		<li>Grab the latest Musicbrainz dump from <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport</a>: On VM run wget http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/INSERT-DATE/mbdump.tar.bz2 into /mnt/postgres/dumps/DATE.tar.bz2</li>
+		<li>Once dump is downloaded, extract: tar  xvjf DATE.tar.bz2</li>
 		<li>Backup up autocomplete_search.* tables through PGAdmin 3 GUI</li>
 		<li>Drop the Musicbrainz database: On VM run dropdb musicbrainz_db</li>
-		<li>Create and import new data dump with command: carton exec ./admin/InitDb.pl -- --createdb --import /mnt/postgres/dumps/*DATE*/ --echo</li>
+		<li>Create and import new data dump with command: carton exec ./admin/InitDb.pl -- --createdb --import /mnt/postgres/dumps/*DATE*/mbdump/ --echo</li>
 		<li>Restore backed_up autocomplete_search.* tables with command: psql -h 192.168.214.193 -U musicbrainz -d musicbrainz_db -f /path/to/backup</li>
 		<li>Reinstall mode command by running SQL found here: <a href="http://wiki.postgresql.org/wiki/Aggregate_Mode">http://wiki.postgresql.org/wiki/Aggregate_Mode</a></li>
 		<li>Run <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src">BuildAutocomplete.sql</a> on Musicbrainz VM (you can use PGAdmin 3 on Yissachar's machine to run the code). This should take around 2.5 hours to execute and will rebuild autocomplete_search_staging from scratch with all the latest song entries.</li>
@@ -64,6 +70,14 @@
 		<li>Run the <a href="https://github.com/hellofornow/fave100-tomcat/blob/master/src/main/java/com/caseware/fave100/Index.java">Lucene Indexer</a> to build a Lucene index from the PostgreSQL autocomplete_search song database.</li>
 		<li>Copy resulting index into <a href="https://github.com/hellofornow/fave100-tomcat">Fave100 Tomcat</a> resources. Build Fave-100 Tomcat (clean tomcat:deploy).</li>
 		<li>Deploy the resulting WAR to Jelastic</li>
+	</ol>
+
+	<a name="dedupeSongs"/>
+	<h2>Removing Duplicate Songs</h2>
+	<p>At times we will come across songs in the database that we know to be duplicates but that cannot be caught by the database builder. When this happens we can manually tag the songs as duplicates using the following procedure:</p>
+	<ol>
+		<li>Run the <a href="https://bitbucket.org/yissachar/fave100-dedupe/src/36fa90d25c7b84fbb3fa2d7a5764b28f5cd8d9e4/src/main/java/com/fave100/dedupe/App.java?at=master">database deduper</a> with the following arguments: [ID_OF_DUPE] [ID_OF_MASTER]. This will delete the dupe from the actual song database and create a new entry in the dupe database indicating that the song is a dupe of the master song. When the song database is rebuilt, all songs in the dupe database will be ignored.</li>
+		<li>Run the <a href="https://bitbucket.org/yissachar/fave100-appengine-dedupe/src/8a2a90caaf8a5782906ea38bc33d006b9d8c6b51/src/main/java/com/fave100/appengine_dedupe/App.java?at=master">AppEngine deduper</a>. This will go through all songs in the dupe database that haven't yet been purged from AppEngine and replace them with the master song in each user's favelist. This does not need to be run after each dedupe, but it should be run before too many unpurged dupes accumulate. If we find ourselved constantly deduping songs, consider running the AppEngine deduper as a cron job.</li>
 	</ol>
 
 	<a name="basicAppStructure"/>
