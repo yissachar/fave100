@@ -638,6 +638,10 @@ public class AppUser extends DatastoreObject {
 	}
 
 	public String getAvatarImage() {
+		return (getAvatarImage(80));
+	}
+
+	public String getAvatarImage(final int size) {
 		if (avatar == null) {
 			// If there is no avatar, serve a Gravatar
 			if (getEmail() == null)
@@ -657,8 +661,9 @@ public class AppUser extends DatastoreObject {
 			// Serve the image blob from Google if it exists
 			final BlobKey blobKey = new BlobKey(avatar);
 			final ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
-			final String servingUrl = ImagesServiceFactory.getImagesService().getServingUrl(options);
+			String servingUrl = ImagesServiceFactory.getImagesService().getServingUrl(options);
 			// Dev server hack to avoid errors
+			servingUrl += "=s" + size + "-c";
 			if (servingUrl != null) {
 				return servingUrl.replace("http://0.0.0.0", "http://127.0.0.1");
 			}
