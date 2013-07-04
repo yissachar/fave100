@@ -406,7 +406,7 @@ footer {
 	float: none;
 }
 
-@media ( min-width : 768px ) {
+@media ( min-width : 769px ) {
 	.songSidebar {
 		width: 34%;
 	}
@@ -421,7 +421,7 @@ footer {
 	}
 }
 
-@media ( max-width : 767px ) {	
+@media ( max-width : 768px ) {	
 	.userPageSideBar {
 		position: relative;
 	}	
