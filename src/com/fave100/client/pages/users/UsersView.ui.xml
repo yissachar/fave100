@@ -73,6 +73,40 @@
 			box-shadow: 0 0 8px #666;
 		}
 		
+		.responsiveUserTabOptions {
+			width: 100%;
+			background-color: #f0f0f0;
+			margin-bottom: 15px;
+		}
+		
+		.responsiveUserTabOptions > span {
+			width: 33.3333%;
+			display: inline-block;
+			text-align: center;
+			font-size: 1.3em;
+			padding: 5px;
+			background-color: #5eaae5;
+			color: #fff;
+			border-right: 1px solid #fff;
+		}
+		
+		.responsiveUserTabOptions > span:last-child {
+			border-right: 0px;
+		}		
+		
+		.responsiveUserTabOptions > span:hover {
+			background-color: #fff;
+			color: #5eaae5;
+			cursor: pointer;
+		}
+		
+		@external .selected;
+		
+		.responsiveUserTabOptions .selected {
+			background-color: #fff;
+			color: #5eaae5;
+		}
+		
 		.faveListContainer {
 			min-height: 500px;
 		}
@@ -99,6 +133,12 @@
 							</g:VerticalPanel>				
 						</g:HorizontalPanel>
 						
+						<g:FlowPanel ui:styleName="responsiveUserTabOptions {style.responsiveUserTabOptions}">
+							<g:InlineLabel ui:field="mobileShowShare">Share</g:InlineLabel>
+							<g:InlineLabel ui:field="mobileShowList">List</g:InlineLabel>
+							<g:InlineLabel ui:field="mobileShowFollowing">Following</g:InlineLabel>
+						</g:FlowPanel>
+						
 						<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">															
 							<uw:ShareButton ui:field="shareButton"/>							
 						</g:HTMLPanel>
@@ -110,7 +150,7 @@
 						
 					</g:HTMLPanel>
 					
-					<g:HTMLPanel ui:styleName="userPageFaveList col span_9">		
+					<g:HTMLPanel ui:field="userPageFaveList" ui:styleName="userPageFaveList col span_9">		
 						<g:HTMLPanel ui:field="songAutocomplete" ui:styleName="{style.songSearchContainer}"/>	
 						<g:HTMLPanel ui:field="faveListContainer" styleName="{style.faveListContainer}">
 							<g:HTMLPanel ui:field="favelist"/>									
