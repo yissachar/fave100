@@ -181,9 +181,9 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 		}
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Results ");
-		sb.append(numResults * getUiHandlers().getPage() + 1);
+		sb.append(5 * getUiHandlers().getPage() + 1);
 		sb.append(" - ");
-		sb.append(numResults * getUiHandlers().getPage() + numResults);
+		sb.append(5 * getUiHandlers().getPage() + numResults);
 		sb.append(" of ");
 		sb.append(total);
 		pageStats.setText(sb.toString());
