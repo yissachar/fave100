@@ -14,6 +14,8 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.SongProxy;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
@@ -99,6 +101,13 @@ public class UsersPresenter extends
 				else {
 					widget.removeStyleName(getView().getFixedSearchStyle());
 				}
+			}
+		});
+
+		Window.addResizeHandler(new ResizeHandler() {
+			@Override
+			public void onResize(final ResizeEvent event) {
+				getView().setMobileView();
 			}
 		});
 	}
