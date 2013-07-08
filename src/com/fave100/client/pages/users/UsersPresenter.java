@@ -51,6 +51,8 @@ public class UsersPresenter extends
 		void showUserNotFound();
 
 		void setFollowCTA(boolean show, boolean starred);
+
+		void setMobileView();
 	}
 
 	@ProxyCodeSplit
@@ -206,6 +208,9 @@ public class UsersPresenter extends
 		favelist.refreshFavelist();
 		usersFollowing.setUser(requestedUser);
 		usersFollowing.refreshLists();
+		if (Window.getClientWidth() <= 768) {
+			getView().setMobileView();
+		}
 
 		getProxy().manualReveal(UsersPresenter.this);
 

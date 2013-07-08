@@ -40,6 +40,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField HTMLPanel socialContainer;
 	@UiField FocusPanel followCTAcontainer;
 	@UiField Label followCTA;
+	@UiField HTMLPanel userPageFaveList;
 	@UiField HTMLPanel followingContainer;
 	@UiField ShareButton shareButton;
 	@UiField InlineHyperlink profileLink;
@@ -49,6 +50,9 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField HTMLPanel songAutocomplete;
 	@UiField HTMLPanel favelist;
 	@UiField Label userNotFound;
+	@UiField Label mobileShowShare;
+	@UiField Label mobileShowList;
+	@UiField Label mobileShowFollowing;
 	private boolean following;
 
 	@Inject
@@ -113,6 +117,39 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		if (following) {
 			followCTA.setText("Following");
 		}
+	}
+
+	@UiHandler("mobileShowShare")
+	void onMobileShowShareClick(final ClickEvent event) {
+		setSelected(mobileShowShare);
+		shareButton.setVisible(true);
+		userPageFaveList.setVisible(false);
+		followingContainer.setVisible(false);
+	}
+
+	@UiHandler("mobileShowList")
+	void onMobileShowListClick(final ClickEvent event) {
+		setSelected(mobileShowList);
+		shareButton.setVisible(false);
+		userPageFaveList.setVisible(true);
+		followingContainer.setVisible(false);
+	}
+
+	@UiHandler("mobileShowFollowing")
+	void onMobileShowFollowingClick(final ClickEvent event) {
+		setSelected(mobileShowFollowing);
+		shareButton.setVisible(false);
+		userPageFaveList.setVisible(false);
+		followingContainer.setVisible(true);
+	}
+
+	private void setSelected(final Label label) {
+		final String selected = "selected";
+		mobileShowShare.removeStyleName(selected);
+		mobileShowList.removeStyleName(selected);
+		mobileShowFollowing.removeStyleName(selected);
+
+		label.addStyleName(selected);
 	}
 
 	@Override
@@ -183,5 +220,12 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 		else {
 			followCTA.setText("Follow");
 		}
+	}
+
+	@Override
+	public void setMobileView() {
+		mobileShowList.addStyleName("selected");
+		shareButton.setVisible(false);
+		followingContainer.setVisible(false);
 	}
 }

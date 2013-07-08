@@ -419,6 +419,10 @@ footer {
 	.userPageFaveList {
 		margin-left: 260px;
 	}
+	
+	.responsiveUserTabOptions {
+		display: none;
+	}
 }
 
 @media ( max-width : 768px ) {	
@@ -429,13 +433,7 @@ footer {
 	.userPageFaveList {
 		margin-left: 0;
 	}
-}
-
-.selected{
-	background: #EFEFEF;
-	border-radius: 6px;
-	border: 1px solid #777;
-	box-shadow: 1px 1px 2px #AAA;
+		
 }
 
 .error{
