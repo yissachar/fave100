@@ -11,6 +11,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -224,9 +225,34 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Override
 	public void setMobileView() {
-		setSelected(mobileShowList);
-		userPageFaveList.setVisible(true);
-		shareButton.setVisible(false);
-		followingContainer.setVisible(false);
+		if (Window.getClientWidth() <= 768) {
+			if (mobileShowList.getStyleName().contains("selected")) {
+				userPageFaveList.setVisible(true);
+				shareButton.setVisible(false);
+				followingContainer.setVisible(false);
+			}
+			else if (mobileShowShare.getStyleName().contains("selected")) {
+				userPageFaveList.setVisible(false);
+				shareButton.setVisible(true);
+				followingContainer.setVisible(false);
+			}
+			else if (mobileShowFollowing.getStyleName().contains("selected")) {
+				userPageFaveList.setVisible(false);
+				shareButton.setVisible(false);
+				followingContainer.setVisible(true);
+			}
+
+			else {
+				setSelected(mobileShowList);
+				userPageFaveList.setVisible(true);
+				shareButton.setVisible(false);
+				followingContainer.setVisible(false);
+			}
+		}
+		else {
+			userPageFaveList.setVisible(true);
+			shareButton.setVisible(true);
+			followingContainer.setVisible(true);
+		}
 	}
 }
