@@ -78,6 +78,9 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 	}
 
 	public void refreshLists() {
+		// First clear the lists
+		getView().setFollowing(null);
+
 		boolean ownFollowing = false;
 		if (_currentUser.isLoggedIn())
 			ownFollowing = _user.getUsername().equals(_currentUser.getUsername());
