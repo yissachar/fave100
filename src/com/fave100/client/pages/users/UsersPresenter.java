@@ -208,9 +208,7 @@ public class UsersPresenter extends
 		favelist.refreshFavelist();
 		usersFollowing.setUser(requestedUser);
 		usersFollowing.refreshLists();
-		if (Window.getClientWidth() <= 768) {
-			getView().setMobileView();
-		}
+		getView().setMobileView();
 
 		getProxy().manualReveal(UsersPresenter.this);
 

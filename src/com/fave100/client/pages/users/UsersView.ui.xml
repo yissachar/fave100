@@ -134,8 +134,8 @@
 						</g:HorizontalPanel>
 						
 						<g:FlowPanel ui:styleName="responsiveUserTabOptions {style.responsiveUserTabOptions}">
-							<g:InlineLabel ui:field="mobileShowShare">Share</g:InlineLabel>
 							<g:InlineLabel ui:field="mobileShowList">List</g:InlineLabel>
+							<g:InlineLabel ui:field="mobileShowShare">Share</g:InlineLabel>							
 							<g:InlineLabel ui:field="mobileShowFollowing">Following</g:InlineLabel>
 						</g:FlowPanel>
 						

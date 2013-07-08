@@ -122,31 +122,31 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiHandler("mobileShowShare")
 	void onMobileShowShareClick(final ClickEvent event) {
 		setSelected(mobileShowShare);
-		shareButton.setVisible(true);
 		userPageFaveList.setVisible(false);
+		shareButton.setVisible(true);
 		followingContainer.setVisible(false);
 	}
 
 	@UiHandler("mobileShowList")
 	void onMobileShowListClick(final ClickEvent event) {
 		setSelected(mobileShowList);
-		shareButton.setVisible(false);
 		userPageFaveList.setVisible(true);
+		shareButton.setVisible(false);
 		followingContainer.setVisible(false);
 	}
 
 	@UiHandler("mobileShowFollowing")
 	void onMobileShowFollowingClick(final ClickEvent event) {
 		setSelected(mobileShowFollowing);
-		shareButton.setVisible(false);
 		userPageFaveList.setVisible(false);
+		shareButton.setVisible(false);
 		followingContainer.setVisible(true);
 	}
 
 	private void setSelected(final Label label) {
 		final String selected = "selected";
-		mobileShowShare.removeStyleName(selected);
 		mobileShowList.removeStyleName(selected);
+		mobileShowShare.removeStyleName(selected);
 		mobileShowFollowing.removeStyleName(selected);
 
 		label.addStyleName(selected);
@@ -224,7 +224,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Override
 	public void setMobileView() {
-		mobileShowList.addStyleName("selected");
+		setSelected(mobileShowList);
+		userPageFaveList.setVisible(true);
 		shareButton.setVisible(false);
 		followingContainer.setVisible(false);
 	}
