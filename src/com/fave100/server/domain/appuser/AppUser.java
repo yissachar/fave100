@@ -793,7 +793,6 @@ public class AppUser extends DatastoreObject {
 						final PwdResetToken pwdResetToken = new PwdResetToken(appUser.getUsername());
 						ofy().save().entity(pwdResetToken).now();
 						final Message msg = new MimeMessage(session);
-						// TODO: Change email sender to proper one for launch
 						msg.setFrom(new InternetAddress("info@fave100.com", "Fave100"));
 						msg.addRecipient(Message.RecipientType.TO,
 								new InternetAddress(emailAddress, username));
