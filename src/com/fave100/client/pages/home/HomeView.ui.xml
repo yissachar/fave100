@@ -14,7 +14,7 @@
 			top: 0;
 			background-color: #5eaae5;
 			display: block;
-			height: 212px;
+			height: 225px;
 		}
 		
 		.homeBody { 
