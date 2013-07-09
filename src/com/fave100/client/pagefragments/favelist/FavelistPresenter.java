@@ -119,6 +119,7 @@ public class FavelistPresenter extends
 	}
 
 	public void refreshFavelist() {
+		getView().setList(null);
 		final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), Constants.DEFAULT_HASHTAG);
 		req.fire(new Receiver<List<FaveItemProxy>>() {
 
