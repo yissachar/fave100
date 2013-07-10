@@ -225,8 +225,14 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@Override
-	public void setMobileView() {
+	public void setMobileView(final boolean reset) {
 		if (Window.getClientWidth() <= Constants.MOBILE_WIDTH_PX) {
+			if (reset) {
+				userPageFaveList.removeStyleName("selected");
+				shareButton.removeStyleName("selected");
+				followingContainer.removeStyleName("selected");
+			}
+
 			if (mobileShowList.getStyleName().contains("selected")) {
 				userPageFaveList.setVisible(true);
 				shareButton.setVisible(false);
