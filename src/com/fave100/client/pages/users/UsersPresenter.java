@@ -11,6 +11,7 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.SongProxy;
@@ -94,7 +95,7 @@ public class UsersPresenter extends
 			@Override
 			public void onWindowScroll(final ScrollEvent event) {
 				final Widget widget = songAutocomplete.asWidget();
-				if (event.getScrollTop() >= 26 && Window.getClientWidth() > 768) {
+				if (event.getScrollTop() >= 26 && Window.getClientWidth() > Constants.MOBILE_WIDTH_PX) {
 					songAutocomplete.getView().hideHelp();
 					widget.addStyleName(getView().getFixedSearchStyle());
 				}

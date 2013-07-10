@@ -2,6 +2,7 @@ package com.fave100.client.pages.users;
 
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.users.widgets.sharebutton.ShareButton;
+import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -225,7 +226,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 
 	@Override
 	public void setMobileView() {
-		if (Window.getClientWidth() <= 768) {
+		if (Window.getClientWidth() <= Constants.MOBILE_WIDTH_PX) {
 			if (mobileShowList.getStyleName().contains("selected")) {
 				userPageFaveList.setVisible(true);
 				shareButton.setVisible(false);
