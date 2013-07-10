@@ -55,7 +55,7 @@ public class UsersPresenter extends
 
 		void setFollowCTA(boolean show, boolean starred);
 
-		void setMobileView();
+		void setMobileView(boolean reset);
 	}
 
 	@ProxyCodeSplit
@@ -108,7 +108,7 @@ public class UsersPresenter extends
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
 			public void onResize(final ResizeEvent event) {
-				getView().setMobileView();
+				getView().setMobileView(false);
 			}
 		});
 	}
@@ -218,7 +218,7 @@ public class UsersPresenter extends
 		favelist.refreshFavelist();
 		usersFollowing.setUser(requestedUser);
 		usersFollowing.refreshLists();
-		getView().setMobileView();
+		getView().setMobileView(true);
 
 		getProxy().manualReveal(UsersPresenter.this);
 
