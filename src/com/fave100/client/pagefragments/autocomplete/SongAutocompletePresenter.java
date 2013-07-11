@@ -49,6 +49,8 @@ public class SongAutocompletePresenter extends
 		String getSearchTerm();
 
 		void resizeSearch();
+
+		void showBackToTop(boolean show);
 	}
 
 	private final EventBus eventBus;

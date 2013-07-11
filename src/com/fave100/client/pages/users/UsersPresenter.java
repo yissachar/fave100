@@ -97,10 +97,12 @@ public class UsersPresenter extends
 				final Widget widget = songAutocomplete.asWidget();
 				if (event.getScrollTop() >= 26 && Window.getClientWidth() > Constants.MOBILE_WIDTH_PX) {
 					songAutocomplete.getView().hideHelp();
+					songAutocomplete.getView().showBackToTop(true);
 					widget.addStyleName(getView().getFixedSearchStyle());
 				}
 				else {
 					widget.removeStyleName(getView().getFixedSearchStyle());
+					songAutocomplete.getView().showBackToTop(false);
 				}
 			}
 		});
