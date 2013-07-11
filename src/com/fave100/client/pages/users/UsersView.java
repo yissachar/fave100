@@ -228,9 +228,9 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	public void setMobileView(final boolean reset) {
 		if (Window.getClientWidth() <= Constants.MOBILE_WIDTH_PX) {
 			if (reset) {
-				userPageFaveList.removeStyleName("selected");
-				shareButton.removeStyleName("selected");
-				followingContainer.removeStyleName("selected");
+				mobileShowList.removeStyleName("selected");
+				mobileShowShare.removeStyleName("selected");
+				mobileShowFollowing.removeStyleName("selected");
 			}
 
 			if (mobileShowList.getStyleName().contains("selected")) {
