@@ -20,13 +20,14 @@
 		}
 		
 		.clearSearchButton {
-			margin-left: -30px;
-			font-size: 1.6em;
+			margin-left: -40px;
+			font-size: 1.3em;
 			-moz-user-select: none; 
 	        -khtml-user-select: none; 
 	        -webkit-user-select: none; 
 	        -o-user-select: none;
-	        float: left; 
+	        float: left;
+	        padding: 5px 12px 5px 10px; 
 		}
 		
 		.clearSearchButton:hover {
@@ -114,7 +115,7 @@
 	<g:HTMLPanel>
 		<div class="{style.searchArea}">
 			<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
-			<g:InlineLabel ui:field="clearSearchButton" ui:styleName="{style.clearSearchButton}">x</g:InlineLabel>
+			<g:InlineLabel ui:field="clearSearchButton" ui:styleName="{style.clearSearchButton}">&#x2716;</g:InlineLabel>
 			<g:FocusPanel ui:field="backToTopButton" ui:styleName="{style.backToTopButton}">
 				<g:Image resource="{img.upArrow}" ></g:Image>
 			</g:FocusPanel>
