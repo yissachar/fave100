@@ -1,5 +1,7 @@
 package com.fave100.client.pagefragments.autocomplete;
 
+import static com.google.gwt.query.client.GQuery.$;
+
 import java.util.List;
 
 import com.fave100.client.widgets.helpbubble.HelpBubble;
@@ -54,6 +56,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	@UiField Label pageStats;
 	@UiField Button previousButton;
 	@UiField Button nextButton;
+	@UiField FocusPanel backToTopButton;
 	final private String placeholder = "To add a song, start typing here";
 	Timer searchTimer;
 
@@ -64,6 +67,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 		helpBubble.setVisible(false);
 		widget = binder.createAndBindUi(this);
 		resultsArea.setVisible(false);
+		backToTopButton.setVisible(false);
 		// Set a placeholder text
 		DomEvent.fireNativeEvent(Document.get().createBlurEvent(), searchBox);
 	}
@@ -160,6 +164,12 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 		getUiHandlers().modifyPage(1);
 	}
 
+	@UiHandler("backToTopButton")
+	void onBackToTopClick(final ClickEvent event) {
+		$("html").animate("scrollTop: 0", 300);
+		$("body").animate("scrollTop: 0", 300);
+	}
+
 	@Override
 	public void setSuggestions(final List<SongProxy> suggestions, final int total) {
 		resultsPanel.clear();
@@ -232,5 +242,10 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	@Override
 	public void resizeSearch() {
 		resultsArea.setWidth(searchBox.getOffsetWidth() + "px");
+	}
+
+	@Override
+	public void showBackToTop(final boolean show) {
+		backToTopButton.setVisible(show);
 	}
 }
