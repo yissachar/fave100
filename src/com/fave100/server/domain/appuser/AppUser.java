@@ -12,10 +12,8 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -70,7 +68,6 @@ import com.googlecode.objectify.Work;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
-import com.googlecode.objectify.annotation.Index;
 
 /**
  * A Fave100 user.
@@ -101,7 +98,6 @@ public class AppUser extends DatastoreObject {
 	private Date joinDate;
 	private boolean followingPrivate = false;
 	private boolean followersPrivate = false;
-	@Index private Set<Ref<AppUser>> following = new HashSet<Ref<AppUser>>();
 
 	@SuppressWarnings("unused")
 	private AppUser() {
@@ -740,11 +736,16 @@ public class AppUser extends DatastoreObject {
 			throw new CannotFollowYourselfException();
 
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username));
-		if (currentUser.following.contains(userRef))
+		Following following = ofy().load().type(Following.class).id(currentUser.getUsername()).get();
+		if (following == null) {
+			following = new Following(username);
+			ofy().save().entity(following).now();
+		}
+		if (following.getFollowing().contains(userRef))
 			throw new AlreadyFollowingException();
 
-		currentUser.following.add(userRef);
-		ofy().save().entity(currentUser).now();
+		following.getFollowing().add(userRef);
+		ofy().save().entity(following).now();
 	}
 
 	public static void unfollowUser(final String username) throws NotLoggedInException {
@@ -752,8 +753,12 @@ public class AppUser extends DatastoreObject {
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
-		currentUser.following.remove(Ref.create(Key.create(AppUser.class, username)));
-		ofy().save().entity(currentUser).now();
+		final Following following = ofy().load().type(Following.class).id(currentUser.getUsername()).get();
+		if (following == null)
+			return;
+
+		following.getFollowing().remove(Ref.create(Key.create(AppUser.class, username)));
+		ofy().save().entity(following).now();
 	}
 
 	public static List<AppUser> getFollowing(final String username) throws NotLoggedInException, UserNotFoundException {
@@ -771,7 +776,11 @@ public class AppUser extends DatastoreObject {
 		if (user.isFollowingPrivate() && !user.getUsername().equals(currentUser.getUsername()))
 			return null;
 
-		return new ArrayList<AppUser>(ofy().load().refs(user.following).values());
+		final Following following = ofy().load().type(Following.class).id(username).get();
+		if (following != null && following.getFollowing() != null)
+			return new ArrayList<AppUser>(ofy().load().refs(following.getFollowing()).values());
+
+		return null;
 	}
 
 	// Emails user a password reset token if they forget their password
