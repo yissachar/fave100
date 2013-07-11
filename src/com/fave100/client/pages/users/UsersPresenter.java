@@ -144,6 +144,7 @@ public class UsersPresenter extends
 					@Override
 					public void onCurrentUserChanged(
 							final CurrentUserChangedEvent event) {
+						requestedUser = event.getUser();
 						showPage();
 					}
 				});
@@ -201,6 +202,9 @@ public class UsersPresenter extends
 	}
 
 	private void showPage() {
+		if (requestedUser == null)
+			return;
+
 		final boolean starred = currentUser.isFollowingUser(requestedUser);
 
 		getView().setUserProfile(requestedUser);
