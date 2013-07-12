@@ -70,6 +70,7 @@ public class UsersPresenter extends
 	public static final String USER_PARAM = "u";
 
 	private String requestedUsername;
+	private boolean isFollowing;
 	// For now just hardcode, only one possible hashtag
 	private AppUserProxy requestedUser;
 	private final ApplicationRequestFactory requestFactory;
@@ -130,14 +131,16 @@ public class UsersPresenter extends
 		UserFollowedEvent.register(eventBus, new UserFollowedEvent.Handler() {
 			@Override
 			public void onUserFollowed(final UserFollowedEvent event) {
-				getView().setFollowCTA(!currentUser.equals(requestedUser), true);
+				isFollowing = true;
+				getView().setFollowCTA(!currentUser.equals(requestedUser), isFollowing);
 			}
 		});
 
 		UserUnfollowedEvent.register(eventBus, new UserUnfollowedEvent.Handler() {
 			@Override
 			public void onUserUnfollowed(final UserUnfollowedEvent event) {
-				getView().setFollowCTA(!currentUser.equals(requestedUser), false);
+				isFollowing = false;
+				getView().setFollowCTA(!currentUser.equals(requestedUser), isFollowing);
 			}
 		});
 
@@ -178,6 +181,7 @@ public class UsersPresenter extends
 		super.prepareFromRequest(placeRequest);
 
 		requestedUser = null;
+		isFollowing = false;
 		// Use parameters to determine what to reveal on page
 		requestedUsername = placeRequest.getParameter("u", "");
 		if (requestedUsername.isEmpty()) {
@@ -200,6 +204,15 @@ public class UsersPresenter extends
 					}
 				}
 			});
+
+			final Request<Boolean> followingReq = requestFactory.appUserRequest().isFollowing(requestedUsername);
+			followingReq.fire(new Receiver<Boolean>() {
+				@Override
+				public void onSuccess(final Boolean following) {
+					isFollowing = following;
+					getView().setFollowCTA(currentUser.isLoggedIn(), isFollowing);
+				}
+			});
 		}
 	}
 
@@ -207,17 +220,17 @@ public class UsersPresenter extends
 		if (requestedUser == null)
 			return;
 
-		final boolean starred = currentUser.isFollowingUser(requestedUser);
+		//final boolean starred = currentUser.isFollowingUser(requestedUser);
 
 		getView().setUserProfile(requestedUser);
 		// Check if user is the currently logged in user
 		if (currentUser.isLoggedIn() && currentUser.equals(requestedUser)) {
 			getView().showOwnPage();
-			getView().setFollowCTA(false, starred);
+			getView().setFollowCTA(false, isFollowing);
 		}
 		else {
 			getView().showOtherPage();
-			getView().setFollowCTA(currentUser.isLoggedIn(), starred);
+			getView().setFollowCTA(currentUser.isLoggedIn(), isFollowing);
 		}
 
 		favelist.setUser(requestedUser);
@@ -239,7 +252,7 @@ public class UsersPresenter extends
 
 	@Override
 	public void followUser() {
-		if (!currentUser.isFollowingUser(requestedUser)) {
+		if (!isFollowing) {
 			currentUser.followUser(requestedUser);
 		}
 		else {

@@ -7,9 +7,11 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.UserFollowedEvent;
 import com.fave100.client.events.UserUnfollowedEvent;
+import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.Constants;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
@@ -25,13 +27,19 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
-import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.UiHandlers;
 
-public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPresenter.MyView> {
+public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPresenter.MyView>
+		implements UsersFollowingUiHandlers {
 
-	public interface MyView extends View {
+	public interface MyView extends BaseView, HasUiHandlers<UsersFollowingUiHandlers> {
 		void setFollowing(List<FlowPanel> lists);
+
+		void addFollowing(List<FlowPanel> lists);
+
+		void hideMoreFollowingButton();
 
 		UsersFollowingStyle getStyle();
 	}
@@ -41,6 +49,8 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 	ApplicationRequestFactory _requestFactory;
 	RequestCache _requestCache;
 	AppUserProxy _user;
+	int listSize = 0;
+	boolean fullListRetrieved = false;
 
 	@Inject
 	public UsersFollowingPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final ApplicationRequestFactory requestFactory,
@@ -50,6 +60,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 		_currentUser = currentUser;
 		_requestFactory = requestFactory;
 		_requestCache = requestCache;
+		getView().setUiHandlers(this);
 	}
 
 	@Override
@@ -80,6 +91,8 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 	public void refreshLists() {
 		// First clear the lists
 		getView().setFollowing(null);
+		listSize = 0;
+		fullListRetrieved = false;
 
 		boolean ownFollowing = false;
 		if (_currentUser.isLoggedIn())
@@ -94,13 +107,15 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 				@Override
 				public void onSuccess(final List<AppUserProxy> usersFollowing) {
 					buildListItems(true, usersFollowing);
+					if (_currentUser.isFullListRetrieved())
+						getView().hideMoreFollowingButton();
 				}
 
 			};
 			_requestCache.getFollowingForCurrentUser(_currentUser.getUsername(), followingReq);
 		}
 		else {
-			final Request<List<AppUserProxy>> followingReq = _requestFactory.appUserRequest().getFollowing(_user.getUsername());
+			final Request<List<AppUserProxy>> followingReq = _requestFactory.appUserRequest().getFollowing(_user.getUsername(), 0);
 			followingReq.fire(new Receiver<List<AppUserProxy>>() {
 				@Override
 				public void onSuccess(final List<AppUserProxy> usersFollowing) {
@@ -118,6 +133,10 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 	}
 
 	private void buildListItems(final boolean ownFollowing, final List<AppUserProxy> usersFollowing) {
+		buildListItems(ownFollowing, usersFollowing, true);
+	}
+
+	private void buildListItems(final boolean ownFollowing, final List<AppUserProxy> usersFollowing, final boolean reset) {
 		final List<FlowPanel> listContainer = new ArrayList<FlowPanel>();
 		if (usersFollowing != null && usersFollowing.size() > 0) {
 			for (final AppUserProxy user : usersFollowing) {
@@ -144,6 +163,44 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 				listContainer.add(listItem);
 			}
 		}
-		getView().setFollowing(listContainer);
+		if (reset) {
+			listSize = listContainer.size();
+			getView().setFollowing(listContainer);
+		}
+		else {
+			listSize += listContainer.size();
+			getView().addFollowing(listContainer);
+		}
+
 	}
+
+	@Override
+	public void getMoreFollowing() {
+		final Request<List<AppUserProxy>> getMoreFollowingReq = _requestFactory.appUserRequest().getFollowing(_user.getUsername(), listSize);
+		getMoreFollowingReq.fire(new Receiver<List<AppUserProxy>>() {
+			@Override
+			public void onSuccess(final List<AppUserProxy> users) {
+				if (users.size() < Constants.MORE_FOLLOWING_INC) {
+					fullListRetrieved = true;
+					getView().hideMoreFollowingButton();
+				}
+
+				boolean ownFollowing = false;
+				if (_currentUser.isLoggedIn())
+					ownFollowing = _user.getUsername().equals(_currentUser.getUsername());
+
+				if (ownFollowing) {
+					_currentUser.addMoreFollowing(users);
+					_currentUser.setFullListRetrieved(fullListRetrieved);
+				}
+				else {
+					buildListItems(false, users, false);
+				}
+			}
+		});
+	};
+}
+
+interface UsersFollowingUiHandlers extends UiHandlers {
+	void getMoreFollowing();
 }
