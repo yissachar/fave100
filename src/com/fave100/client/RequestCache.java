@@ -75,7 +75,7 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (reqRunning == false) {
 			_runningRequests.put(request, true);
-			final Request<List<AppUserProxy>> followingUserReq = _requestFactory.appUserRequest().getFollowing(username);
+			final Request<List<AppUserProxy>> followingUserReq = _requestFactory.appUserRequest().getFollowing(username, 0);
 			// If there is no existing request, create one
 			if (reqRunning == false) {
 				_runningRequests.put(request, true);

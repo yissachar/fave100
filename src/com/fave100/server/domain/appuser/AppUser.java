@@ -761,14 +761,21 @@ public class AppUser extends DatastoreObject {
 		ofy().save().entity(following).now();
 	}
 
-	public static List<AppUser> getFollowing(final String username) throws NotLoggedInException, UserNotFoundException {
+	/**
+	 * Returns 5 following users from the given index
+	 * 
+	 * @param username
+	 * @param index
+	 * @return
+	 * @throws NotLoggedInException
+	 * @throws UserNotFoundException
+	 */
+	public static List<AppUser> getFollowing(final String username, final int index) throws NotLoggedInException, UserNotFoundException {
 		// Only logged in users can see following
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
-		// TODO: Need to restrict how many items are returned. Currently can do a full 5000... but when change need to keep in mind how to detect if following etc.
-		// Have to convert to list because GWT is dumb and won't pass Sets properly
 		final AppUser user = findAppUser(username);
 		if (user == null)
 			throw new UserNotFoundException();
@@ -777,10 +784,23 @@ public class AppUser extends DatastoreObject {
 			return null;
 
 		final Following following = ofy().load().type(Following.class).id(username).get();
-		if (following != null && following.getFollowing() != null)
-			return new ArrayList<AppUser>(ofy().load().refs(following.getFollowing()).values());
+		if (following != null && following.getFollowing() != null) {
+			List<Ref<AppUser>> users = following.getFollowing();
+			users = users.subList(index, Math.min(index + Constants.MORE_FOLLOWING_INC, following.getFollowing().size()));
+			return new ArrayList<AppUser>(ofy().load().refs(users).values());
+		}
 
 		return null;
+	}
+
+	public static Boolean isFollowing(final String username) throws NotLoggedInException, UserNotFoundException {
+		if (!isAppUserLoggedIn())
+			throw new NotLoggedInException();
+
+		final String currentUserUsername = (String)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
+		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username));
+		final Following following = ofy().load().type(Following.class).id(currentUserUsername).get();
+		return following.getFollowing().contains(userRef);
 	}
 
 	// Emails user a password reset token if they forget their password

@@ -21,8 +21,12 @@
 		
 		.listContainer {
 			width: 100%;
-			display: block;			
-			overflow: hidden;			
+			display: block;		
+			overflow-y: auto;			
+		}
+		
+		.nonMobileListContainer {
+			max-height: 200px;
 		}
 		
 		.listContainer > div {
@@ -51,7 +55,7 @@
 			padding: 3px;
 			float: left;
 			font-size: 1.2em;
-			width: 75%;
+			width: 70%;
 		}		
 		
 		.listLink:hover {
@@ -68,11 +72,17 @@
 			cursor: pointer;
 			color: #000;
 		}
+		
+		.moreFollowingButton {
+			margin-top: 15px;
+			width: 100%;
+		}
 	</ui:style>
 	
 	<g:FlowPanel ui:styleName="{style.container}">
 		<g:Label ui:field="followingTitle" ui:styleName="{style.title}">Following:</g:Label>
 		<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
+		<g:Button ui:field="moreFollowingButton" ui:styleName="{style.moreFollowingButton}">More</g:Button>
 	</g:FlowPanel>
 	
 </ui:UiBinder>

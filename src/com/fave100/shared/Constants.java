@@ -9,5 +9,6 @@ public class Constants {
 	public static final int MAX_WHYLINE_LENGTH = 80;
 	public static final int MAX_STARRED_LISTS = 50;
 	public static final int MOBILE_WIDTH_PX = 768;
+	public static final int MORE_FOLLOWING_INC = 5;
 
 }

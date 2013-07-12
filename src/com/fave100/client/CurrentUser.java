@@ -24,6 +24,7 @@ public class CurrentUser implements AppUserProxy {
 	private AppUserProxy appUser;
 	private String avatar = "";
 	private List<AppUserProxy> following;
+	private boolean fullListRetrieved = false;
 
 	@Inject
 	public CurrentUser(final EventBus eventBus, final ApplicationRequestFactory requestFactory, final RequestCache requestCache) {
@@ -77,19 +78,10 @@ public class CurrentUser implements AppUserProxy {
 		return following;
 	}
 
-	public boolean isFollowingUser(final AppUserProxy user) {
-		if (!isLoggedIn() || getFollowing() == null)
-			return false;
-
-		return getFollowing().contains(user);
-	}
-
 	public void followUser(final AppUserProxy user) {
-		if (isFollowingUser(user))
-			return;
-
 		// Add to client
-		getFollowing().add(user);
+		if (!getFollowing().contains(user))
+			getFollowing().add(user);
 
 		// Add to server
 		final Request<Void> starReq = _requestFactory.appUserRequest().followUser(user.getUsername());
@@ -113,20 +105,15 @@ public class CurrentUser implements AppUserProxy {
 	}
 
 	public void unfollowUser(final AppUserProxy user) {
-		if (!isFollowingUser(user))
-			return;
-
 		// Remove from client
 		getFollowing().remove(user);
-
-		_eventBus.fireEvent(new UserUnfollowedEvent(user));
 
 		// Remove from server
 		final Request<Void> unfollowReq = _requestFactory.appUserRequest().unfollowUser(user.getUsername());
 		unfollowReq.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
-				// Don't care about success, already took action
+				_eventBus.fireEvent(new UserUnfollowedEvent(user));
 			}
 
 			@Override
@@ -136,6 +123,10 @@ public class CurrentUser implements AppUserProxy {
 				}
 			}
 		});
+	}
+
+	public void addMoreFollowing(final List<AppUserProxy> users) {
+		following.addAll(users);
 	}
 
 	// Needed for RequestFactory
@@ -162,5 +153,13 @@ public class CurrentUser implements AppUserProxy {
 	@Override
 	public boolean equals(final Object obj) {
 		return appUser.equals(obj);
+	}
+
+	public boolean isFullListRetrieved() {
+		return fullListRetrieved;
+	}
+
+	public void setFullListRetrieved(final boolean fullListRetrieved) {
+		this.fullListRetrieved = fullListRetrieved;
 	}
 }
