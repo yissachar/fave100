@@ -347,7 +347,15 @@ footer {
 	float: right;
 }
 
-.lightBoxBackground { 
+.loginLightBoxContainer {
+	position: fixed;
+	width: 100%;
+	top: 25%;
+	left: 0;
+	z-index: 100000;
+}
+
+.lightBoxBackground {
 	position: fixed;
 	top: 0;
 	left: -25%;
@@ -359,29 +367,12 @@ footer {
 }
 
 .loginLightBox { 
-	position: fixed;
-	top: 20%;
-	left: 25%;
+	position: relative;
 	width: 50%;
+	margin: 0 auto;
 	min-width: 250px;
 	max-width: 800px;
 	z-index: 100000;
-}
-
-@media ( min-width : 1025px ) {
-	.loginLightBox {
-		left: 30%;
-		width: 40%;
-		/*left: 20%;
-		width: 60%;*/
-	}
-}
-
-@media ( min-width : 1280px ) {
-	.loginLightBox {
-		left: 25%;
-		width: 50%;
-	}
 }
 
 .lightBoxHeader {
