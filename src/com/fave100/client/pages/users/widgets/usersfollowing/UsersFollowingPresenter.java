@@ -107,8 +107,10 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 				@Override
 				public void onSuccess(final List<AppUserProxy> usersFollowing) {
 					buildListItems(true, usersFollowing);
-					if (_currentUser.isFullListRetrieved())
+					if (usersFollowing.size() < Constants.MORE_FOLLOWING_INC) {
+						_currentUser.setFullListRetrieved(true);
 						getView().hideMoreFollowingButton();
+					}
 				}
 
 			};
@@ -120,6 +122,10 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 				@Override
 				public void onSuccess(final List<AppUserProxy> usersFollowing) {
 					buildListItems(false, usersFollowing);
+					if (usersFollowing.size() < Constants.MORE_FOLLOWING_INC) {
+						fullListRetrieved = true;
+						getView().hideMoreFollowingButton();
+					}
 				}
 
 				@Override
@@ -192,6 +198,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 				if (ownFollowing) {
 					_currentUser.addMoreFollowing(users);
 					_currentUser.setFullListRetrieved(fullListRetrieved);
+					buildListItems(true, users, false);
 				}
 				else {
 					buildListItems(false, users, false);
