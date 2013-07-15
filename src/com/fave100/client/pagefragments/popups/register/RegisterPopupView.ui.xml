@@ -9,7 +9,7 @@
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
 	
 	<g:PopupPanel>
-		<g:HTMLPanel ui:field="loginLightBox">
+		<g:HTMLPanel ui:field="loginLightBox" styleName="loginLightBoxContainer">
 			<g:FocusPanel ui:field="lightBoxBackground" styleName="lightBoxBackground"/>			
 			<g:HTMLPanel styleName="loginLightBox">
 				<div class="lightBoxHeader">
