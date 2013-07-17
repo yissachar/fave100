@@ -350,7 +350,7 @@ footer {
 .loginLightBoxContainer {
 	position: fixed;
 	width: 100%;
-	top: 25%;
+	top: 15%;
 	left: 0;
 	z-index: 100000;
 }
