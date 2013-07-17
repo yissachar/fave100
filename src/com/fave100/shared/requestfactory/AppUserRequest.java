@@ -1,7 +1,5 @@
 package com.fave100.shared.requestfactory;
 
-import java.util.List;
-
 import com.fave100.server.domain.appuser.AppUser;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
@@ -51,7 +49,7 @@ public interface AppUserRequest extends RequestContext {
 
 	Request<Void> unfollowUser(String username);
 
-	Request<List<AppUserProxy>> getFollowing(String username, int index);
+	Request<FollowingResultProxy> getFollowing(String username, int index);
 
 	Request<Boolean> isFollowing(String username);
 

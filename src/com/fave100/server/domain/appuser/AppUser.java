@@ -770,7 +770,7 @@ public class AppUser extends DatastoreObject {
 	 * @throws NotLoggedInException
 	 * @throws UserNotFoundException
 	 */
-	public static List<AppUser> getFollowing(final String username, final int index) throws NotLoggedInException, UserNotFoundException {
+	public static FollowingResult getFollowing(final String username, final int index) throws NotLoggedInException, UserNotFoundException {
 		// Only logged in users can see following
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
@@ -787,7 +787,8 @@ public class AppUser extends DatastoreObject {
 		if (following != null && following.getFollowing() != null) {
 			List<Ref<AppUser>> users = following.getFollowing();
 			users = users.subList(index, Math.min(index + Constants.MORE_FOLLOWING_INC, following.getFollowing().size()));
-			return new ArrayList<AppUser>(ofy().load().refs(users).values());
+			final boolean moreFollowing = (following.getFollowing().size() - index - users.size()) > 0;
+			return new FollowingResult(new ArrayList<AppUser>(ofy().load().refs(users).values()), moreFollowing);
 		}
 
 		return null;

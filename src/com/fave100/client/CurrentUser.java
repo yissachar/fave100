@@ -9,6 +9,7 @@ import com.fave100.client.events.UserUnfollowedEvent;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.FollowingResultProxy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -23,7 +24,7 @@ public class CurrentUser implements AppUserProxy {
 	private ApplicationRequestFactory _requestFactory;
 	private AppUserProxy appUser;
 	private String avatar = "";
-	private List<AppUserProxy> following;
+	private FollowingResultProxy followingResult;
 	private boolean fullListRetrieved = false;
 
 	@Inject
@@ -40,15 +41,15 @@ public class CurrentUser implements AppUserProxy {
 						if (appUser != null) {
 							avatar = appUser.getAvatarImage();
 
-							final AsyncCallback<List<AppUserProxy>> followingReq = new AsyncCallback<List<AppUserProxy>>() {
+							final AsyncCallback<FollowingResultProxy> followingReq = new AsyncCallback<FollowingResultProxy>() {
 								@Override
 								public void onFailure(final Throwable caught) {
 									// Don't care
 								}
 
 								@Override
-								public void onSuccess(final List<AppUserProxy> result) {
-									following = result;
+								public void onSuccess(final FollowingResultProxy result) {
+									followingResult = result;
 								}
 
 							};
@@ -75,7 +76,7 @@ public class CurrentUser implements AppUserProxy {
 	}
 
 	public List<AppUserProxy> getFollowing() {
-		return following;
+		return followingResult.getFollowing();
 	}
 
 	public void followUser(final AppUserProxy user) {
@@ -125,8 +126,9 @@ public class CurrentUser implements AppUserProxy {
 		});
 	}
 
-	public void addMoreFollowing(final List<AppUserProxy> users) {
-		following.addAll(users);
+	public void addMoreFollowing(final List<AppUserProxy> users, final Boolean isMore) {
+		followingResult.getFollowing().addAll(users);
+		setFullListRetrieved(!isMore);
 	}
 
 	// Needed for RequestFactory
