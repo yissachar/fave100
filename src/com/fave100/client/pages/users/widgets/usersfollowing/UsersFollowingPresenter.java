@@ -11,10 +11,10 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.Constants;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.FollowingResultProxy;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -50,7 +50,6 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 	RequestCache _requestCache;
 	AppUserProxy _user;
 	int listSize = 0;
-	boolean fullListRetrieved = false;
 
 	@Inject
 	public UsersFollowingPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final ApplicationRequestFactory requestFactory,
@@ -92,40 +91,37 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 		// First clear the lists
 		getView().setFollowing(null);
 		listSize = 0;
-		fullListRetrieved = false;
 
 		boolean ownFollowing = false;
 		if (_currentUser.isLoggedIn())
 			ownFollowing = _user.getUsername().equals(_currentUser.getUsername());
 		if (ownFollowing) {
-			final AsyncCallback<List<AppUserProxy>> followingReq = new AsyncCallback<List<AppUserProxy>>() {
+			final AsyncCallback<FollowingResultProxy> followingReq = new AsyncCallback<FollowingResultProxy>() {
 				@Override
 				public void onFailure(final Throwable caught) {
 					// Don't care
 				}
 
 				@Override
-				public void onSuccess(final List<AppUserProxy> usersFollowing) {
+				public void onSuccess(final FollowingResultProxy followingResult) {
+					final List<AppUserProxy> usersFollowing = followingResult.getFollowing();
 					buildListItems(true, usersFollowing);
-					if (usersFollowing.size() < Constants.MORE_FOLLOWING_INC) {
-						_currentUser.setFullListRetrieved(true);
+					_currentUser.setFullListRetrieved(!followingResult.isMore());
+					if (!followingResult.isMore())
 						getView().hideMoreFollowingButton();
-					}
 				}
 
 			};
 			_requestCache.getFollowingForCurrentUser(_currentUser.getUsername(), followingReq);
 		}
 		else {
-			final Request<List<AppUserProxy>> followingReq = _requestFactory.appUserRequest().getFollowing(_user.getUsername(), 0);
-			followingReq.fire(new Receiver<List<AppUserProxy>>() {
+			final Request<FollowingResultProxy> followingReq = _requestFactory.appUserRequest().getFollowing(_user.getUsername(), 0);
+			followingReq.fire(new Receiver<FollowingResultProxy>() {
 				@Override
-				public void onSuccess(final List<AppUserProxy> usersFollowing) {
-					buildListItems(false, usersFollowing);
-					if (usersFollowing.size() < Constants.MORE_FOLLOWING_INC) {
-						fullListRetrieved = true;
+				public void onSuccess(final FollowingResultProxy followingResult) {
+					buildListItems(false, followingResult.getFollowing());
+					if (!followingResult.isMore())
 						getView().hideMoreFollowingButton();
-					}
 				}
 
 				@Override
@@ -182,22 +178,21 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 
 	@Override
 	public void getMoreFollowing() {
-		final Request<List<AppUserProxy>> getMoreFollowingReq = _requestFactory.appUserRequest().getFollowing(_user.getUsername(), listSize);
-		getMoreFollowingReq.fire(new Receiver<List<AppUserProxy>>() {
+		final Request<FollowingResultProxy> getMoreFollowingReq = _requestFactory.appUserRequest().getFollowing(_user.getUsername(), listSize);
+		getMoreFollowingReq.fire(new Receiver<FollowingResultProxy>() {
 			@Override
-			public void onSuccess(final List<AppUserProxy> users) {
-				if (users.size() < Constants.MORE_FOLLOWING_INC) {
-					fullListRetrieved = true;
+			public void onSuccess(final FollowingResultProxy followingResult) {
+				final List<AppUserProxy> users = followingResult.getFollowing();
+
+				if (!followingResult.isMore())
 					getView().hideMoreFollowingButton();
-				}
 
 				boolean ownFollowing = false;
 				if (_currentUser.isLoggedIn())
 					ownFollowing = _user.getUsername().equals(_currentUser.getUsername());
 
 				if (ownFollowing) {
-					_currentUser.addMoreFollowing(users);
-					_currentUser.setFullListRetrieved(fullListRetrieved);
+					_currentUser.addMoreFollowing(users, followingResult.isMore());
 					buildListItems(true, users, false);
 				}
 				else {

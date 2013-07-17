@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.FollowingResultProxy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -55,17 +55,17 @@ public class RequestCache {
 		getLoginUrl(RequestType.FACEBOOK_LOGIN, redirect, callback);
 	}
 
-	public void getFollowingForCurrentUser(final String username, final AsyncCallback<List<AppUserProxy>> callback) {
+	public void getFollowingForCurrentUser(final String username, final AsyncCallback<FollowingResultProxy> callback) {
 		final RequestType request = RequestType.FOLLOWING_CURRENT_USER;
 		@SuppressWarnings("unchecked")
-		final List<AppUserProxy> followingUsers = (List<AppUserProxy>)_results.get(request);
-		final List<AsyncCallback<List<AppUserProxy>>> callbacks = getOrCreateCallbacks(request);
+		final FollowingResultProxy followingUsers = (FollowingResultProxy)_results.get(request);
+		final List<AsyncCallback<FollowingResultProxy>> callbacks = getOrCreateCallbacks(request);
 		final boolean reqRunning = (_runningRequests.get(request) != null) ? _runningRequests.get(request) : false;
 		// Add the callback to list of callbacks to notify		
 		callbacks.add(callback);
 		// If we already have the following users, return		
 		if (followingUsers != null) {
-			for (final AsyncCallback<List<AppUserProxy>> gCallback : callbacks) {
+			for (final AsyncCallback<FollowingResultProxy> gCallback : callbacks) {
 				gCallback.onSuccess(followingUsers);
 			}
 			callbacks.clear();
@@ -75,18 +75,18 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (reqRunning == false) {
 			_runningRequests.put(request, true);
-			final Request<List<AppUserProxy>> followingUserReq = _requestFactory.appUserRequest().getFollowing(username, 0);
+			final Request<FollowingResultProxy> followingUserReq = _requestFactory.appUserRequest().getFollowing(username, 0);
 			// If there is no existing request, create one
 			if (reqRunning == false) {
 				_runningRequests.put(request, true);
 
-				followingUserReq.fire(new Receiver<List<AppUserProxy>>() {
+				followingUserReq.fire(new Receiver<FollowingResultProxy>() {
 					@Override
-					public void onSuccess(final List<AppUserProxy> users) {
+					public void onSuccess(final FollowingResultProxy followingResult) {
 						_runningRequests.put(request, false);
-						_results.put(request, users);
-						for (final AsyncCallback<List<AppUserProxy>> gCallback : callbacks) {
-							gCallback.onSuccess(users);
+						_results.put(request, followingResult);
+						for (final AsyncCallback<FollowingResultProxy> gCallback : callbacks) {
+							gCallback.onSuccess(followingResult);
 						}
 						callbacks.clear();
 					}
