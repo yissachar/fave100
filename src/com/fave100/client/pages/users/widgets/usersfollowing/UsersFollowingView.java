@@ -2,12 +2,13 @@ package com.fave100.client.pages.users.widgets.usersfollowing;
 
 import java.util.List;
 
-import com.fave100.shared.Utils;
+import com.fave100.shared.Constants;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -38,7 +39,7 @@ public class UsersFollowingView extends ViewWithUiHandlers<UsersFollowingUiHandl
 	@Inject
 	public UsersFollowingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		if (!Utils.isTouchDevice()) {
+		if (Window.getClientWidth() > Constants.MOBILE_WIDTH_PX) {
 			listContainer.addStyleName(style.nonMobileListContainer());
 		}
 	}
