@@ -37,10 +37,10 @@ public class HomeView extends ViewWithUiHandlers<HomeUiHandlers> implements Home
 		super.setInSlot(slot, content);
 	}
 
-	/*
-		@UiHandler("registerButton")
-		void onLoginClick(final ClickEvent event) {
-		}*/
+	@UiHandler("registerButton")
+	void onLoginClick(final ClickEvent event) {
+		getUiHandlers().showRegister();
+	}
 
 	@UiHandler("loginButton")
 	void onRegisterClick(final ClickEvent event) {

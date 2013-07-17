@@ -1,8 +1,10 @@
 package com.fave100.client.pagefragments.login;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
@@ -25,10 +27,10 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
 	@UiField TextBox usernameInput;
 	@UiField PasswordTextBox passwordInput;
 	@UiField Label loginStatusMessage;
-	/*
+
 	@UiField Anchor signInWithGoogleButton;
 	@UiField Anchor signInWithTwitterButton;
-	@UiField Anchor signInWithFacebookButton;*/
+	@UiField Anchor signInWithFacebookButton;
 	@UiField Button loginButton;
 
 	@Inject
@@ -47,11 +49,10 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
 		getUiHandlers().login();
 	}
 
-	/*
-		@UiHandler("signInWithTwitterButton")
-		public void onClick(final ClickEvent event) {
-			getUiHandlers().goToTwitterAuth();
-		}*/
+	@UiHandler("signInWithTwitterButton")
+	public void onClick(final ClickEvent event) {
+		getUiHandlers().goToTwitterAuth();
+	}
 
 	@Override
 	public void setError(final String error) {
@@ -81,12 +82,12 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
 
 	@Override
 	public void setGoogleLoginUrl(final String url) {
-		//			signInWithGoogleButton.setHref(url);
+		signInWithGoogleButton.setHref(url);
 	}
 
 	@Override
 	public void setFacebookLoginUrl(final String url) {
-		//		signInWithFacebookButton.setHref(url);
+		signInWithFacebookButton.setHref(url);
 
 	}
 
