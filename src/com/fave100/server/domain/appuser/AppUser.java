@@ -738,7 +738,7 @@ public class AppUser extends DatastoreObject {
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username));
 		Following following = ofy().load().type(Following.class).id(currentUser.getUsername()).get();
 		if (following == null) {
-			following = new Following(username);
+			following = new Following(currentUser.getUsername());
 			ofy().save().entity(following).now();
 		}
 		if (following.getFollowing().contains(userRef))
@@ -791,7 +791,7 @@ public class AppUser extends DatastoreObject {
 			return new FollowingResult(new ArrayList<AppUser>(ofy().load().refs(users).values()), moreFollowing);
 		}
 
-		return null;
+		return new FollowingResult(new ArrayList<AppUser>(), false);
 	}
 
 	public static Boolean isFollowing(final String username) throws NotLoggedInException, UserNotFoundException {
