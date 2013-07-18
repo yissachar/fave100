@@ -169,6 +169,7 @@ public class UsersPresenter extends
 		// Clear the favelist
 		favelist.clearFavelist();
 		usersFollowing.refreshLists();
+		getView().setFollowCTA(false, false);
 	}
 
 	@Override
