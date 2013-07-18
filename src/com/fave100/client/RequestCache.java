@@ -112,8 +112,8 @@ public class RequestCache {
 		if (loginUrl != null) {
 			for (final AsyncCallback<String> gCallback : callbacks) {
 				gCallback.onSuccess(loginUrl);
-				callbacks.remove(callback);
 			}
+			callbacks.clear();
 			return;
 		}
 
@@ -140,17 +140,15 @@ public class RequestCache {
 					_results.put(request, url);
 					for (final AsyncCallback<String> gCallback : callbacks) {
 						gCallback.onSuccess(url);
-						callbacks.remove(gCallback);
 					}
+					callbacks.clear();
 				}
 
 				@Override
 				public void onFailure(final ServerFailure failure) {
 					_runningRequests.put(request, false);
 					// Clean all callbacks
-					for (final AsyncCallback<String> gCallback : callbacks) {
-						callbacks.remove(gCallback);
-					}
+					callbacks.clear();
 				}
 			});
 		}
