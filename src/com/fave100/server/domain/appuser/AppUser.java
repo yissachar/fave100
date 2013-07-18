@@ -620,19 +620,6 @@ public class AppUser extends DatastoreObject {
 		return BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(successPath, options);
 	}
 
-	public static String setAvatarForCurrentUser(final String avatar) throws NotLoggedInException {
-		final AppUser currentUser = getLoggedInAppUser();
-		if (currentUser == null)
-			throw new NotLoggedInException();
-		// TODO: Twitter user can't upload own avatar?
-		if (currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
-			BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
-		}
-		currentUser.setAvatar(avatar);
-		ofy().save().entity(currentUser).now();
-		return currentUser.getAvatar();
-	}
-
 	public String getAvatarImage() {
 		return (getAvatarImage(80));
 	}
@@ -801,7 +788,7 @@ public class AppUser extends DatastoreObject {
 		final String currentUserUsername = (String)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username));
 		final Following following = ofy().load().type(Following.class).id(currentUserUsername).get();
-		return following.getFollowing().contains(userRef);
+		return following != null && !following.getFollowing().isEmpty() && following.getFollowing().contains(userRef);
 	}
 
 	// Emails user a password reset token if they forget their password
