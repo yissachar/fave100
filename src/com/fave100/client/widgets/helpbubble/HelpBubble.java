@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -20,6 +21,7 @@ public class HelpBubble extends Composite {
 	interface HelpBubbleUiBinder extends UiBinder<Widget, HelpBubble> {
 	}
 
+	@UiField FocusPanel container;
 	@UiField Label helpTitle;
 	@UiField Label helpText;
 	@UiField Label closeButton;
@@ -47,7 +49,7 @@ public class HelpBubble extends Composite {
 		}
 	}
 
-	@UiHandler("closeButton")
+	@UiHandler("container")
 	void onClick(final ClickEvent event) {
 		setVisible(false);
 	}
