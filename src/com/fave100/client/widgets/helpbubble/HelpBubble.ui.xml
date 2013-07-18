@@ -12,14 +12,14 @@
 			display: block;
 			margin: 0 auto;
 			width: 10px;
-			margin-top: -18px;
+			margin-top: -21px;
 		}
 		
 		.helpContainer {
 			border: 1px solid #AAA;
 			border-radius: 4px;			
 			background-color: #FFF;
-			padding: 3px;
+			padding: 6px;
 			box-shadow: 0px 0px 3px #AAA;
 			overflow: none;
 		}
@@ -49,14 +49,14 @@
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
 	
 	<g:HTMLPanel>
-		<g:FlowPanel ui:styleName="{style.container}">
+		<g:FocusPanel ui:field="container" ui:styleName="{style.container}">
 			<g:FlowPanel ui:styleName="{style.helpContainer}">
 				<g:Image ui:field="arrow" ui:styleName="{style.arrow}" resource="{img.helpBubbleArrow}"/>						
 				<g:InlineLabel ui:field="helpTitle" ui:styleName="{style.helpTitle}"/>
 				<g:InlineLabel ui:field="closeButton" ui:styleName="{style.closeButton}">x</g:InlineLabel>
 				<g:Label ui:field="helpText" ui:styleName="{style.helpText}"/>
 			</g:FlowPanel>
-		</g:FlowPanel>
+		</g:FocusPanel>
 	</g:HTMLPanel>
 	
 </ui:UiBinder> 

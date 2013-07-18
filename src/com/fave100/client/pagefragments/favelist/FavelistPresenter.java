@@ -20,6 +20,7 @@ import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.fave100.shared.requestfactory.FaveListRequest;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -184,7 +185,8 @@ public class FavelistPresenter extends
 					final FavePickWidget widget = new FavePickWidget(item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
 					getView().addPick(widget);
 					widgets.add(widget);
-					$(widget).scrollIntoView();
+					if (getView().asWidget().getElement().getClientHeight() + widget.getElement().getClientHeight() > Window.getClientHeight())
+						$(widget).scrollIntoView();
 					favelist.add(item);
 					if (favelist.size() == 1) {
 						// Only one song in list, show help bubble for whyline and focus
