@@ -1,5 +1,7 @@
 package com.fave100.server.servlets;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fave100.server.domain.appuser.AppUser;
-import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -38,12 +39,16 @@ public class AvatarUploadServlet extends RequestFactoryServlet
 				final String username = (String)req.getSession().getAttribute(AppUser.AUTH_USER);
 				Objects.requireNonNull(username);
 				String avatar = "";
-				try {
-					avatar = AppUser.setAvatarForCurrentUser(blobKey.getKeyString());
+
+				final AppUser currentUser = AppUser.findAppUser(username);
+				// TODO: Jul-17-2013 Why do we assume the avatar is a blobkey? Can't it be a link to a Twitter avatar, in which case blob delete will fail??
+				if (currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
+					BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
 				}
-				catch (final NotLoggedInException e) {
-					// Couldn't save avatar, send back blank
-				}
+				currentUser.setAvatar(blobKey.getKeyString());
+				ofy().save().entity(currentUser).now();
+				avatar = currentUser.getAvatar();
+
 				res.getWriter().write(avatar);
 			}
 		}
