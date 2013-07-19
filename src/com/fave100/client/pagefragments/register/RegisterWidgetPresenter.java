@@ -108,6 +108,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	protected void onHide() {
 		super.onHide();
 		getView().clearFields();
+		getView().clearNativeErrors();
 	}
 
 	@Override
