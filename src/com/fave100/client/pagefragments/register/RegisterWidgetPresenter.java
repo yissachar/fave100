@@ -112,8 +112,10 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	}
 
 	@Override
-	public void register(final String username, final String email,
-			final String password, final String passwordRepeat) {
+	public void register(String username, String email, final String password, final String passwordRepeat) {
+
+		username = username.trim();
+		email = email.trim();
 
 		if (validateFields(username, email, password, passwordRepeat)) {
 			final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
