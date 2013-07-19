@@ -48,6 +48,8 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 
 	@UiField SongAutocompleteStyle style;
 	@UiField TextBox searchBox;
+	@UiField Label inlineSearchCount;
+	@UiField HTMLPanel searchLoadingIndicator;
 	@UiField InlineLabel clearSearchButton;
 	@UiField(provided = true) HelpBubble helpBubble;
 	@UiField HTMLPanel resultsArea;
@@ -120,6 +122,8 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 			searchTimer = new Timer() {
 				@Override
 				public void run() {
+					searchLoadingIndicator.setVisible(true);
+					inlineSearchCount.setText("");
 					getUiHandlers().getAutocompleteResults(searchBox.getText(), true);
 				}
 			};
@@ -130,7 +134,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 
 	@UiHandler("clearSearchButton")
 	void onClearSearchButtonClick(final ClickEvent event) {
-		searchBox.setText("");
+		clearSearch();
 		getUiHandlers().getAutocompleteResults("", true);
 	}
 
@@ -173,8 +177,16 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	@Override
 	public void setSuggestions(final List<SongProxy> suggestions, final int total) {
 		resultsPanel.clear();
+		searchLoadingIndicator.setVisible(false);
+
 		if (suggestions == null || suggestions.size() == 0) {
 			resultsArea.setVisible(false);
+			if (suggestions != null) {
+				if (suggestions.size() == 0)
+					inlineSearchCount.setText("0");
+				else
+					inlineSearchCount.setText("");
+			}
 			return;
 		}
 
@@ -198,7 +210,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 		sb.append(total);
 		pageStats.setText(sb.toString());
 		resultsArea.setVisible(true);
-
+		inlineSearchCount.setText(String.valueOf(total));
 	}
 
 	@Override
@@ -227,6 +239,8 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	@Override
 	public void clearSearch() {
 		searchBox.setText("");
+		inlineSearchCount.setText("");
+		searchLoadingIndicator.setVisible(false);
 	}
 
 	@Override

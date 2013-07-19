@@ -99,6 +99,12 @@ public class SongAutocompletePresenter extends
 		getView().resizeSearch();
 	}
 
+	@Override
+	protected void onHide() {
+		super.onHide();
+		getView().clearSearch();
+	}
+
 	public interface SearchResultFactory extends AutoBeanFactory {
 		AutoBean<SearchResultProxy> response();
 	}

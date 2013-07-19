@@ -32,4 +32,7 @@ public interface ImageResources extends ClientBundle {
 	@Source("help-bubble-arrow.png")
 	ImageResource helpBubbleArrow();
 
+	@Source("search-loading-indicator.gif")
+	ImageResource searchLoadingIndicator();
+
 }
