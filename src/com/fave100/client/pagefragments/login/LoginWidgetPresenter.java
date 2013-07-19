@@ -135,7 +135,7 @@ public class LoginWidgetPresenter extends
 		LoadingIndicator.show();
 		final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
 		final Request<AppUserProxy> loginReq = appUserRequest.login(getView()
-				.getUsername(), getView().getPassword());
+				.getUsername().trim(), getView().getPassword());
 
 		// Attempt to log the user in
 		loginReq.fire(new Receiver<AppUserProxy>() {
