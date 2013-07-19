@@ -1,8 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:w="urn:import:com.fave100.client.widgets"
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' 
 	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
+	xmlns:w='urn:import:com.fave100.client.widgets'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -72,6 +73,10 @@
 			float: right;
 		}
 		
+		.dummyListLink {
+			text-align: center;
+		}
+		
 		.hideFooter {
 			overflow: hidden;
 		}
@@ -84,8 +89,7 @@
 			margin: 0 auto;
 			margin-left: -369px;
 			overflow: hidden;
-			z-index: 0;
-			position: absolute;	
+			z-index: 0;	
 			bottom: 0;
 		}
 	</ui:style>
@@ -106,6 +110,7 @@
 							<g:Button ui:styleName="{style.registerButton}" ui:field="registerButton">Register</g:Button> 
 							<g:Button ui:styleName="{style.loginButton}" ui:field="loginButton">Sign In</g:Button>
 						</div>
+						<g:Hyperlink ui:styleName="{style.dummyListLink}" targetHistoryToken="{nameTokens.getUsers};u=Fave100">Check out a sample list</g:Hyperlink>
 					</div>
 				</div>
 			</div>			
