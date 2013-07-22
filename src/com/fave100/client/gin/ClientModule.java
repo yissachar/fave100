@@ -6,8 +6,6 @@ import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
 import com.fave100.client.pagefragments.autocomplete.SongAutocompleteView;
-import com.fave100.client.pagefragments.favelist.FavelistPresenter;
-import com.fave100.client.pagefragments.favelist.FavelistView;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pagefragments.login.LoginWidgetView;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
@@ -52,6 +50,8 @@ import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.gwtplatform.mvp.client.googleanalytics.GoogleAnalyticsNavigationTracker;
+import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter;
+import com.fave100.client.pages.users.widgets.favelist.FavelistView;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingView;
 
