@@ -12,6 +12,7 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
+import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.SongProxy;
@@ -26,6 +27,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -73,10 +75,10 @@ public class UsersPresenter extends
 	private boolean isFollowing;
 	// For now just hardcode, only one possible hashtag
 	private AppUserProxy requestedUser;
-	private final ApplicationRequestFactory requestFactory;
-	private final PlaceManager placeManager;
-	private final EventBus eventBus;
-	private CurrentUser currentUser;
+	private final ApplicationRequestFactory _requestFactory;
+	private final PlaceManager _placeManager;
+	private final EventBus _eventBus;
+	private CurrentUser _currentUser;
 	@Inject SongAutocompletePresenter songAutocomplete;
 	@Inject FavelistPresenter favelist;
 	@Inject UsersFollowingPresenter usersFollowing;
@@ -86,10 +88,10 @@ public class UsersPresenter extends
 							final MyProxy proxy, final ApplicationRequestFactory requestFactory,
 							final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
-		this.eventBus = eventBus;
-		this.requestFactory = requestFactory;
-		this.placeManager = placeManager;
-		this.currentUser = currentUser;
+		this._eventBus = eventBus;
+		this._requestFactory = requestFactory;
+		this._placeManager = placeManager;
+		this._currentUser = currentUser;
 		getView().setUiHandlers(this);
 
 		Window.addWindowScrollHandler(new ScrollHandler() {
@@ -120,7 +122,7 @@ public class UsersPresenter extends
 	protected void onBind() {
 		super.onBind();
 
-		SongSelectedEvent.register(eventBus, new SongSelectedEvent.Handler() {
+		SongSelectedEvent.register(_eventBus, new SongSelectedEvent.Handler() {
 			@Override
 			public void onSongSelected(final SongSelectedEvent event) {
 				final SongProxy song = event.getSong();
@@ -128,23 +130,23 @@ public class UsersPresenter extends
 			}
 		});
 
-		UserFollowedEvent.register(eventBus, new UserFollowedEvent.Handler() {
+		UserFollowedEvent.register(_eventBus, new UserFollowedEvent.Handler() {
 			@Override
 			public void onUserFollowed(final UserFollowedEvent event) {
 				isFollowing = true;
-				getView().setFollowCTA(!currentUser.equals(requestedUser), isFollowing);
+				getView().setFollowCTA(!_currentUser.equals(requestedUser), isFollowing);
 			}
 		});
 
-		UserUnfollowedEvent.register(eventBus, new UserUnfollowedEvent.Handler() {
+		UserUnfollowedEvent.register(_eventBus, new UserUnfollowedEvent.Handler() {
 			@Override
 			public void onUserUnfollowed(final UserUnfollowedEvent event) {
 				isFollowing = false;
-				getView().setFollowCTA(!currentUser.equals(requestedUser), isFollowing);
+				getView().setFollowCTA(!_currentUser.equals(requestedUser), isFollowing);
 			}
 		});
 
-		CurrentUserChangedEvent.register(eventBus,
+		CurrentUserChangedEvent.register(_eventBus,
 				new CurrentUserChangedEvent.Handler() {
 					@Override
 					public void onCurrentUserChanged(
@@ -187,11 +189,11 @@ public class UsersPresenter extends
 		requestedUsername = placeRequest.getParameter("u", "");
 		if (requestedUsername.isEmpty()) {
 			// Malformed request, send the user away
-			placeManager.revealDefaultPlace();
+			_placeManager.revealDefaultPlace();
 		}
 		else {
 			// Update user profile
-			final Request<AppUserProxy> userReq = requestFactory.appUserRequest().findAppUser(requestedUsername);
+			final Request<AppUserProxy> userReq = _requestFactory.appUserRequest().findAppUser(requestedUsername);
 			userReq.fire(new Receiver<AppUserProxy>() {
 				@Override
 				public void onSuccess(final AppUserProxy user) {
@@ -206,12 +208,21 @@ public class UsersPresenter extends
 				}
 			});
 
-			final Request<Boolean> followingReq = requestFactory.appUserRequest().isFollowing(requestedUsername);
+			final Request<Boolean> followingReq = _requestFactory.appUserRequest().isFollowing(requestedUsername);
 			followingReq.fire(new Receiver<Boolean>() {
 				@Override
 				public void onSuccess(final Boolean following) {
 					isFollowing = following;
-					getView().setFollowCTA(currentUser.isLoggedIn(), isFollowing);
+					getView().setFollowCTA(_currentUser.isLoggedIn(), isFollowing);
+				}
+
+				@Override
+				public void onFailure(final ServerFailure failure) {
+					isFollowing = false;
+					if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+						_eventBus.fireEvent(new CurrentUserChangedEvent(null));
+					}
+					getView().setFollowCTA(_currentUser.isLoggedIn(), isFollowing);
 				}
 			});
 		}
@@ -225,13 +236,13 @@ public class UsersPresenter extends
 
 		getView().setUserProfile(requestedUser);
 		// Check if user is the currently logged in user
-		if (currentUser.isLoggedIn() && currentUser.equals(requestedUser)) {
+		if (_currentUser.isLoggedIn() && _currentUser.equals(requestedUser)) {
 			getView().showOwnPage();
 			getView().setFollowCTA(false, isFollowing);
 		}
 		else {
 			getView().showOtherPage();
-			getView().setFollowCTA(currentUser.isLoggedIn(), isFollowing);
+			getView().setFollowCTA(_currentUser.isLoggedIn(), isFollowing);
 		}
 
 		favelist.setUser(requestedUser);
@@ -248,16 +259,16 @@ public class UsersPresenter extends
 
 	@Override
 	public void songSelected(final SongProxy song) {
-		eventBus.fireEvent(new SongSelectedEvent(song));
+		_eventBus.fireEvent(new SongSelectedEvent(song));
 	}
 
 	@Override
 	public void followUser() {
 		if (!isFollowing) {
-			currentUser.followUser(requestedUser);
+			_currentUser.followUser(requestedUser);
 		}
 		else {
-			currentUser.unfollowUser(requestedUser);
+			_currentUser.unfollowUser(requestedUser);
 		}
 	}
 }
