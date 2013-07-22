@@ -145,4 +145,9 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 		songTitle.getElement().scrollIntoView();
 	}
 
+	@Override
+	public void clearWhylines() {
+		whylineWaterfall.clearWhylines();
+	}
+
 }

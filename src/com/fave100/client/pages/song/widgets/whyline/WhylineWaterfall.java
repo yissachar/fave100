@@ -38,12 +38,11 @@ public class WhylineWaterfall extends Composite {
 	}
 
 	public void setWhylines(final SongProxy song) {
-
+		whylines.clear();
 		final Request<List<WhylineProxy>> whylineReq = requestFactory.whylineRequest().getWhylinesForSong(song);
 		whylineReq.fire(new Receiver<List<WhylineProxy>>() {
 			@Override
 			public void onSuccess(final List<WhylineProxy> whylineList) {
-				whylines.clear();
 				for (final WhylineProxy whyline : whylineList) {
 					whylines.add(new WhylineWidget(whyline));
 				}
@@ -54,5 +53,9 @@ public class WhylineWaterfall extends Composite {
 				}
 			}
 		});
+	}
+
+	public void clearWhylines() {
+		whylines.clear();
 	}
 }
