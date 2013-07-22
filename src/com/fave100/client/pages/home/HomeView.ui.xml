@@ -75,6 +75,7 @@
 		
 		.dummyListLink {
 			text-align: center;
+			display: block;
 		}
 		
 		.hideFooter {
@@ -110,7 +111,7 @@
 							<g:Button ui:styleName="{style.registerButton}" ui:field="registerButton">Register</g:Button> 
 							<g:Button ui:styleName="{style.loginButton}" ui:field="loginButton">Sign In</g:Button>
 						</div>
-						<g:Hyperlink ui:styleName="{style.dummyListLink}" targetHistoryToken="{nameTokens.getUsers};u=Fave100">Check out a sample list</g:Hyperlink>
+						<g:Anchor ui:field="dummyListLink" ui:styleName="{style.dummyListLink}">Check out a sample list</g:Anchor>
 					</div>
 				</div>
 			</div>			
