@@ -243,11 +243,9 @@ public class UsersPresenter extends
 		if (requestedUser == null)
 			return;
 
-		//final boolean starred = currentUser.isFollowingUser(requestedUser);
-
 		getView().setUserProfile(requestedUser);
-		// Check if user is the currently logged in user
-		if (_currentUser.isLoggedIn() && _currentUser.equals(requestedUser)) {
+		final boolean ownPage = _currentUser.isLoggedIn() && _currentUser.equals(requestedUser);
+		if (ownPage) {
 			getView().showOwnPage();
 			getView().setFollowCTA(false, isFollowing);
 		}
@@ -257,7 +255,7 @@ public class UsersPresenter extends
 		}
 
 		favelist.setUser(requestedUser);
-		favelist.refreshFavelist();
+		favelist.refreshFavelist(ownPage);
 		usersFollowing.setUser(requestedUser);
 		usersFollowing.refreshLists();
 		getView().setMobileView(true);
