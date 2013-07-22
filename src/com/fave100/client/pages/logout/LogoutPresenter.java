@@ -1,7 +1,7 @@
 package com.fave100.client.pages.logout;
 
 import com.fave100.client.Notification;
-import com.fave100.client.events.CurrentUserChangedEvent;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;

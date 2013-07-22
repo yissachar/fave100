@@ -1,6 +1,6 @@
 package com.fave100.client.pages.song.widgets.playlist;
 
-import com.fave100.client.events.PlaylistSongChangedEvent;
+import com.fave100.client.events.song.PlaylistSongChangedEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;

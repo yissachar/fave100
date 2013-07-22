@@ -1,6 +1,6 @@
 package com.fave100.client.widgets;
 
-import com.fave100.client.events.ResultPageChangedEvent;
+import com.fave100.client.events.song.ResultPageChangedEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

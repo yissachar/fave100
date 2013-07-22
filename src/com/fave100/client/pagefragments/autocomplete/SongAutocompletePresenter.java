@@ -3,8 +3,8 @@ package com.fave100.client.pagefragments.autocomplete;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fave100.client.events.FaveListSizeChangedEvent;
-import com.fave100.client.events.SongSelectedEvent;
+import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
+import com.fave100.client.events.song.SongSelectedEvent;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.SearchResultProxy;
 import com.fave100.shared.requestfactory.SongProxy;

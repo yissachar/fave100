@@ -1,7 +1,7 @@
 package com.fave100.client.pages.register;
 
 import com.fave100.client.LoadingIndicator;
-import com.fave100.client.events.CurrentUserChangedEvent;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pages.BasePresenter;

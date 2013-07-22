@@ -1,4 +1,4 @@
-package com.fave100.client.events;
+package com.fave100.client.events.song;
 
 import com.fave100.shared.requestfactory.SongProxy;
 import com.google.web.bindery.event.shared.Event;

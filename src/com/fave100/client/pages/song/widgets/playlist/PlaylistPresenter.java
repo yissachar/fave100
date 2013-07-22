@@ -3,8 +3,8 @@ package com.fave100.client.pages.song.widgets.playlist;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fave100.client.events.PlaylistSongChangedEvent;
-import com.fave100.client.events.YouTubePlayerEndedEvent;
+import com.fave100.client.events.song.PlaylistSongChangedEvent;
+import com.fave100.client.events.song.YouTubePlayerEndedEvent;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;

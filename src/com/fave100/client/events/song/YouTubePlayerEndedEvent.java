@@ -1,4 +1,4 @@
-package com.fave100.client.events;
+package com.fave100.client.events.song;
 
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;

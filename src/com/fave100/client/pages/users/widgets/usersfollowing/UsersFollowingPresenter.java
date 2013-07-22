@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.RequestCache;
-import com.fave100.client.events.UserFollowedEvent;
-import com.fave100.client.events.UserUnfollowedEvent;
+import com.fave100.client.events.user.UserFollowedEvent;
+import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;

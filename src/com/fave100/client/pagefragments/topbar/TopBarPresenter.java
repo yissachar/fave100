@@ -1,7 +1,7 @@
 package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.events.CurrentUserChangedEvent;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
