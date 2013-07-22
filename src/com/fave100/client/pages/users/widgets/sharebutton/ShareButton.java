@@ -9,7 +9,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -24,7 +23,6 @@ public class ShareButton extends Composite {
 
 	boolean _ownList;
 
-	@UiField FocusPanel shareArea;
 	@UiField HTMLPanel shareContainer;
 	@UiField HTMLPanel gplusPlaceholder;
 	@UiField HTMLPanel twitterContainer;
