@@ -164,4 +164,8 @@ public class CurrentUser implements AppUserProxy {
 	public void setFullListRetrieved(final boolean fullListRetrieved) {
 		this.fullListRetrieved = fullListRetrieved;
 	}
+
+	public AppUserProxy getAppUser() {
+		return appUser;
+	}
 }

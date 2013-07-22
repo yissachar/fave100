@@ -193,6 +193,17 @@ public class UsersPresenter extends
 		}
 		else {
 			// Update user profile
+
+			// If current user just grab the local info and show
+			if (requestedUsername.equals(_currentUser.getUsername())) {
+				requestedUser = _currentUser.getAppUser();
+				isFollowing = false;
+				getView().setFollowCTA(false, isFollowing);
+				showPage();
+				return;
+			}
+
+			// Otherwise, request the info from the server
 			final Request<AppUserProxy> userReq = _requestFactory.appUserRequest().findAppUser(requestedUsername);
 			userReq.fire(new Receiver<AppUserProxy>() {
 				@Override
