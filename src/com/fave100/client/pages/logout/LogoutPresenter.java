@@ -3,15 +3,15 @@ package com.fave100.client.pages.logout;
 import com.fave100.client.Notification;
 import com.fave100.client.events.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
+import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
@@ -27,9 +27,9 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
  * 
  */
 public class LogoutPresenter extends
-		Presenter<LogoutPresenter.MyView, LogoutPresenter.MyProxy> {
+		BasePresenter<LogoutPresenter.MyView, LogoutPresenter.MyProxy> {
 
-	public interface MyView extends View {
+	public interface MyView extends BaseView {
 	}
 
 	@ProxyCodeSplit
