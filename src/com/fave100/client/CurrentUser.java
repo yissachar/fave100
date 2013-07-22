@@ -145,17 +145,17 @@ public class CurrentUser implements AppUserProxy {
 	// Needed for RequestFactory
 	@Override
 	public EntityProxyId<?> stableId() {
-		return appUser.stableId();
+		return (appUser == null) ? null : appUser.stableId();
 	}
 
 	@Override
 	public Integer getVersion() {
-		return appUser.getVersion();
+		return (appUser == null) ? null : appUser.getVersion();
 	}
 
 	@Override
 	public String getUsername() {
-		return appUser.getUsername();
+		return (appUser == null) ? null : appUser.getUsername();
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class CurrentUser implements AppUserProxy {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return appUser.equals(obj);
+		return (appUser == null) ? false : appUser.equals(obj);
 	}
 
 	public List<FaveItemProxy> getFaveList() {
