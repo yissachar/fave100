@@ -1,6 +1,6 @@
 package com.fave100.client;
 
-import com.fave100.client.events.CurrentUserChangedEvent;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.resources.mobile.MobileResources;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Utils;

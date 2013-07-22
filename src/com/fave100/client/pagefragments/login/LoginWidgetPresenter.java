@@ -3,7 +3,7 @@ package com.fave100.client.pagefragments.login;
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
-import com.fave100.client.events.CurrentUserChangedEvent;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.exceptions.user.IncorrectLoginException;

@@ -1,4 +1,4 @@
-package com.fave100.client.events;
+package com.fave100.client.events.user;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.shared.requestfactory.AppUserProxy;

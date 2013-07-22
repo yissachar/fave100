@@ -2,7 +2,7 @@ package com.fave100.client.pages.profile;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.LoadingIndicator;
-import com.fave100.client.events.CurrentUserChangedEvent;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;

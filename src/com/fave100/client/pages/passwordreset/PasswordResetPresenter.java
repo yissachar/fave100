@@ -1,7 +1,7 @@
 package com.fave100.client.pages.passwordreset;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.events.CurrentUserChangedEvent;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;

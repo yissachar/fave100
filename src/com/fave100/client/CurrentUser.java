@@ -3,13 +3,19 @@ package com.fave100.client;
 import java.util.List;
 
 import com.fave100.client.RequestCache.RequestType;
-import com.fave100.client.events.CurrentUserChangedEvent;
-import com.fave100.client.events.UserFollowedEvent;
-import com.fave100.client.events.UserUnfollowedEvent;
+import com.fave100.client.events.favelist.FaveItemAddedEvent;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
+import com.fave100.client.events.user.UserFollowedEvent;
+import com.fave100.client.events.user.UserUnfollowedEvent;
+import com.fave100.client.place.NameTokens;
+import com.fave100.shared.Constants;
+import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
+import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
+import com.fave100.shared.requestfactory.FaveListRequest;
 import com.fave100.shared.requestfactory.FollowingResultProxy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -18,11 +24,14 @@ import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class CurrentUser implements AppUserProxy {
 
 	private EventBus _eventBus;
 	private ApplicationRequestFactory _requestFactory;
+	private PlaceManager _placeManager;
 	private AppUserProxy appUser;
 	private String avatar = "";
 	private List<FaveItemProxy> faveList;
@@ -30,9 +39,10 @@ public class CurrentUser implements AppUserProxy {
 	private boolean fullListRetrieved = false;
 
 	@Inject
-	public CurrentUser(final EventBus eventBus, final ApplicationRequestFactory requestFactory, final RequestCache requestCache) {
+	public CurrentUser(final EventBus eventBus, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager, final RequestCache requestCache) {
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
+		_placeManager = placeManager;
 
 		CurrentUserChangedEvent.register(eventBus,
 				new CurrentUserChangedEvent.Handler() {
@@ -140,6 +150,62 @@ public class CurrentUser implements AppUserProxy {
 	public void addMoreFollowing(final List<AppUserProxy> users, final Boolean isMore) {
 		followingResult.getFollowing().addAll(users);
 		setFullListRetrieved(!isMore);
+	}
+
+	public void addSong(final String songID, final String song, final String artist) {
+
+		final FaveListRequest faveListRequest = _requestFactory.faveListRequest();
+		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID);
+
+		addReq.fire(new Receiver<Void>() {
+			@Override
+			public void onSuccess(final Void response) {
+				Notification.show("Song added");
+				final FaveItemProxy item = new FaveItemProxy() {
+
+					@Override
+					public String getWhyline() {
+						return null;
+					}
+
+					@Override
+					public String getSongID() {
+						return songID;
+					}
+
+					@Override
+					public String getSong() {
+						return song;
+					}
+
+					@Override
+					public String getArtist() {
+						return artist;
+					}
+				};
+				// Ensure local list in sync				
+				faveList.add(item);
+				_eventBus.fireEvent(new FaveItemAddedEvent(item));
+			}
+
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
+					_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+				}
+				else if (failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
+					Notification.show("You cannot have more than 100 songs in list");
+				}
+				else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
+					Notification.show("The song is already in your list");
+				}
+				else {
+					// Catch-all
+					Notification.show("Error: Could not add song");
+				}
+			}
+		});
 	}
 
 	// Needed for RequestFactory

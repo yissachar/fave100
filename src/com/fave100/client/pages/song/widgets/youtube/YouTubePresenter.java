@@ -2,7 +2,7 @@ package com.fave100.client.pages.song.widgets.youtube;
 
 import java.util.List;
 
-import com.fave100.client.events.YouTubePlayerEndedEvent;
+import com.fave100.client.events.song.YouTubePlayerEndedEvent;
 import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;

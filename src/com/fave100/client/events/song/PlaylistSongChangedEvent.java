@@ -1,13 +1,10 @@
-package com.fave100.client.events;
+package com.fave100.client.events.song;
 
-import com.fave100.client.CurrentUser;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
- * This event indicates that the {@link CurrentUser} has changed.
- * 
  * @author yissachar.radcliffe
  * 
  */

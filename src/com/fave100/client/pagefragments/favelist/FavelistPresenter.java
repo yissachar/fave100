@@ -7,19 +7,16 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
-import com.fave100.client.events.CurrentUserChangedEvent;
-import com.fave100.client.events.FaveListSizeChangedEvent;
+import com.fave100.client.events.favelist.FaveItemAddedEvent;
+import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.pagefragments.favelist.widgets.FavePickWidget;
-import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
-import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
-import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
-import com.fave100.shared.requestfactory.FaveListRequest;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -30,7 +27,6 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class FavelistPresenter extends
 		PresenterWidget<FavelistPresenter.MyView>
@@ -67,7 +63,6 @@ public class FavelistPresenter extends
 	private AppUserProxy user;
 	// The currently logged in user
 	private CurrentUser currentUser;
-	private List<FaveItemProxy> favelist;
 	private List<FavePickWidget> widgets;
 
 	private WhyLineChanged _whyLineChanged = new WhyLineChanged() {
@@ -113,6 +108,32 @@ public class FavelistPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+
+		// Update FaveList when it changes
+		FaveItemAddedEvent.register(eventBus, new FaveItemAddedEvent.Handler() {
+			@Override
+			public void onFaveListLoaded(final FaveItemAddedEvent event) {
+				if (isEditable()) {
+					final FaveItemProxy item = event.getFaveItemProxy();
+					final FavePickWidget widget = new FavePickWidget(item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
+					getView().addPick(widget);
+					widgets.add(widget);
+					if (getView().asWidget().getElement().getClientHeight() + widget.getElement().getClientHeight() > Window.getClientHeight())
+						$(widget).scrollIntoView();
+					if (currentUser.getFaveList().size() == 1) {
+						// Only one song in list, show help bubble for whyline and focus
+						widget.focusWhyline();
+						widget.showWhylineHelpBubble();
+					}
+					else {
+						if (currentUser.getFaveList().size() == 2) {
+							widget.showRankWhylineHelpBubble();
+						}
+						widget.focusRank();
+					}
+				}
+			}
+		});
 	}
 
 	public void clearFavelist() {
@@ -124,8 +145,7 @@ public class FavelistPresenter extends
 
 		// Get the FaveList locally if possible 
 		if (ownList && currentUser.getFaveList() != null) {
-			setFavelist(currentUser.getFaveList());
-			buildWidgets(favelist);
+			buildWidgets(currentUser.getFaveList());
 			return;
 		}
 
@@ -135,10 +155,9 @@ public class FavelistPresenter extends
 
 			@Override
 			public void onSuccess(final List<FaveItemProxy> results) {
-				setFavelist(results);
 				if (ownList)
-					currentUser.setFaveList(favelist);
-				buildWidgets(favelist);
+					currentUser.setFaveList(results);
+				buildWidgets(results);
 			}
 		});
 	}
@@ -154,85 +173,12 @@ public class FavelistPresenter extends
 		widgets = pickWidgets;
 
 		getView().setList(pickWidgets);
-		eventBus.fireEvent(new FaveListSizeChangedEvent(getFavelist().size()));
+		eventBus.fireEvent(new FaveListSizeChangedEvent(faveList.size()));
 	}
 
 	@Override
 	public void addSong(final String songID, final String song, final String artist) {
-
-		final FaveListRequest faveListRequest = requestFactory.faveListRequest();
-
-		// Add the song as a FaveItem
-		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG,
-				songID);
-
-		addReq.fire(new Receiver<Void>() {
-			@Override
-			public void onSuccess(final Void response) {
-				Notification.show("Song added");
-				// Only bother with updating list if we are on the user's page 
-				if (isEditable()) {
-					// Pretty meh to do it this way, but quickest way for now
-					final FaveItemProxy item = new FaveItemProxy() {
-
-						@Override
-						public String getWhyline() {
-							return null;
-						}
-
-						@Override
-						public String getSongID() {
-							return songID;
-						}
-
-						@Override
-						public String getSong() {
-							return song;
-						}
-
-						@Override
-						public String getArtist() {
-							return artist;
-						}
-					};
-					final FavePickWidget widget = new FavePickWidget(item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
-					getView().addPick(widget);
-					widgets.add(widget);
-					if (getView().asWidget().getElement().getClientHeight() + widget.getElement().getClientHeight() > Window.getClientHeight())
-						$(widget).scrollIntoView();
-					favelist.add(item);
-					if (favelist.size() == 1) {
-						// Only one song in list, show help bubble for whyline and focus
-						widget.focusWhyline();
-						widget.showWhylineHelpBubble();
-					}
-					else {
-						if (favelist.size() == 2) {
-							widget.showRankWhylineHelpBubble();
-						}
-						widget.focusRank();
-					}
-				}
-			}
-
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					eventBus.fireEvent(new CurrentUserChangedEvent(null));
-					placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
-				}
-				else if (failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
-					Notification.show("You cannot have more than 100 songs in list");
-				}
-				else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
-					Notification.show("The song is already in your list");
-				}
-				else {
-					// Catch-all
-					Notification.show("Error: Could not add song");
-				}
-			}
-		});
+		currentUser.addSong(songID, song, artist);
 	}
 
 	@Override
@@ -247,7 +193,7 @@ public class FavelistPresenter extends
 			widgets.get(i).setRank(i);
 		}
 		widgets.remove(index);
-		favelist.remove(index);
+		currentUser.getFaveList().remove(index);
 		// Send request for server to remove it
 		final Request<Void> req = requestFactory.faveListRequest()
 				.removeFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID);
@@ -274,8 +220,8 @@ public class FavelistPresenter extends
 			@Override
 			public void onSuccess(final Void result) {
 				// Set client to match
-				for (int i = 0; i < favelist.size(); i++) {
-					final FaveItemProxy faveItem = favelist.get(i);
+				for (int i = 0; i < currentUser.getFaveList().size(); i++) {
+					final FaveItemProxy faveItem = currentUser.getFaveList().get(i);
 					if (faveItem.getSongID().equals(songID)) {
 						final FaveItemProxy newfaveItem = new FaveItemProxy() {
 							@Override
@@ -298,8 +244,8 @@ public class FavelistPresenter extends
 								return faveItem.getArtist();
 							}
 						};
-						favelist.add(i, newfaveItem);
-						favelist.remove(faveItem);
+						currentUser.getFaveList().add(i, newfaveItem);
+						currentUser.getFaveList().remove(faveItem);
 					}
 				}
 			}
@@ -328,7 +274,7 @@ public class FavelistPresenter extends
 			return;
 
 		// If index out of range, refresh with correct values
-		if (newIndex < 0 || newIndex >= getFavelist().size()) {
+		if (newIndex < 0 || newIndex >= currentUser.getFaveList().size()) {
 			widgets.get(currentIndex).setRank(currentIndex + 1);
 			return;
 		}
@@ -340,9 +286,9 @@ public class FavelistPresenter extends
 			@Override
 			public void onSuccess(final Void response) {
 				// If successfully saved on server, manually set client to match
-				final FaveItemProxy toRerank = favelist.get(currentIndex);
-				favelist.remove(toRerank);
-				favelist.add(newIndex, toRerank);
+				final FaveItemProxy toRerank = currentUser.getFaveList().get(currentIndex);
+				currentUser.getFaveList().remove(toRerank);
+				currentUser.getFaveList().add(newIndex, toRerank);
 
 				// And then manually update the widget view to match
 				final FavePickWidget pickToRank = widgets.get(currentIndex);
@@ -377,14 +323,6 @@ public class FavelistPresenter extends
 
 	public void setUser(final AppUserProxy user) {
 		this.user = user;
-	}
-
-	public List<FaveItemProxy> getFavelist() {
-		return favelist;
-	}
-
-	public void setFavelist(final List<FaveItemProxy> favelist) {
-		this.favelist = favelist;
 	}
 
 }

@@ -1,13 +1,10 @@
-package com.fave100.client.events;
+package com.fave100.client.events.favelist;
 
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
- * This event indicates that song was selected from
- * a {@link SongSuggestBox}.
- * 
  * @author yissachar.radcliffe
  * 
  */

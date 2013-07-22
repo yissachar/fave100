@@ -2,22 +2,17 @@ package com.fave100.client.pages.song;
 
 import java.util.List;
 
-import com.fave100.client.Notification;
-import com.fave100.client.events.CurrentUserChangedEvent;
-import com.fave100.client.events.PlaylistSongChangedEvent;
+import com.fave100.client.CurrentUser;
+import com.fave100.client.events.song.PlaylistSongChangedEvent;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.song.widgets.playlist.PlaylistPresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
-import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
-import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
-import com.fave100.shared.requestfactory.FaveListRequest;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -30,7 +25,6 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -78,6 +72,7 @@ public class SongPresenter extends
 	public static final String USER_PARAM = "user";
 
 	private final ApplicationRequestFactory _requestFactory;
+	private final CurrentUser _currentUser;
 	private final PlaceManager _placeManager;
 	private final EventBus _eventBus;
 	private SongProxy songProxy;
@@ -85,13 +80,12 @@ public class SongPresenter extends
 	@Inject PlaylistPresenter playlistPresenter;
 
 	@Inject
-	public SongPresenter(final EventBus eventBus, final MyView view,
-							final MyProxy proxy,
-							final ApplicationRequestFactory requestFactory,
+	public SongPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser,
 							final PlaceManager placeManager) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
+		_currentUser = currentUser;
 		_placeManager = placeManager;
 		getView().setUiHandlers(this);
 	}
@@ -236,49 +230,13 @@ public class SongPresenter extends
 		});
 	}
 
-	// TODO: Merge this method with FavelistPresenter.addSong()
 	@Override
 	public void addSong() {
-
 		// Make sure we actually have a song to work with
 		if (songProxy == null)
 			return;
 
-		// Add the song as a FaveItem
-		final FaveListRequest faveListRequest = _requestFactory
-				.faveListRequest();
-		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(
-				Constants.DEFAULT_HASHTAG, songProxy.getId());
-
-		addReq.fire(new Receiver<Void>() {
-			@Override
-			public void onSuccess(final Void response) {
-				Notification.show("Added");
-			}
-
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				// Alert the user if adding the song fails for any reason
-				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
-					_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
-				}
-				else if (failure.getExceptionType().equals(
-						SongLimitReachedException.class.getName())) {
-					Notification
-							.show("You cannot have more than 100 songs in list");
-				}
-				else if (failure.getExceptionType().equals(
-						SongAlreadyInListException.class.getName())) {
-					Notification.show("The song is already in your list");
-				}
-				else {
-					// Catch-all
-					Notification.show("Error: Could not add song");
-				}
-			}
-		});
-
+		_currentUser.addSong(songProxy.getId(), songProxy.getSong(), songProxy.getArtist());
 	}
 }
 
