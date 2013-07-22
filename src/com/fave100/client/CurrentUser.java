@@ -9,6 +9,7 @@ import com.fave100.client.events.UserUnfollowedEvent;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.fave100.shared.requestfactory.FollowingResultProxy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -24,6 +25,7 @@ public class CurrentUser implements AppUserProxy {
 	private ApplicationRequestFactory _requestFactory;
 	private AppUserProxy appUser;
 	private String avatar = "";
+	private List<FaveItemProxy> faveList;
 	private FollowingResultProxy followingResult;
 	private boolean fullListRetrieved = false;
 
@@ -56,8 +58,17 @@ public class CurrentUser implements AppUserProxy {
 							requestCache.getFollowingForCurrentUser(getUsername(), followingReq);
 						}
 						else {
-							// User not logged in, clear stale user request cache
+							// User not logged in
+
+							// Clear stale user request cache
 							requestCache.clearRequestCache(RequestType.FOLLOWING_CURRENT_USER);
+
+							// Clear all state
+							appUser = null;
+							avatar = "";
+							faveList = null;
+							followingResult = null;
+							fullListRetrieved = false;
 						}
 					}
 				});
@@ -157,6 +168,14 @@ public class CurrentUser implements AppUserProxy {
 		return appUser.equals(obj);
 	}
 
+	public List<FaveItemProxy> getFaveList() {
+		return faveList;
+	}
+
+	public void setFaveList(final List<FaveItemProxy> faveList) {
+		this.faveList = faveList;
+	}
+
 	public boolean isFullListRetrieved() {
 		return fullListRetrieved;
 	}
@@ -168,4 +187,5 @@ public class CurrentUser implements AppUserProxy {
 	public AppUserProxy getAppUser() {
 		return appUser;
 	}
+
 }

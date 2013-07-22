@@ -119,29 +119,42 @@ public class FavelistPresenter extends
 		getView().setList(null);
 	}
 
-	public void refreshFavelist() {
+	public void refreshFavelist(final boolean ownList) {
 		getView().setList(null);
+
+		// Get the FaveList locally if possible 
+		if (ownList && currentUser.getFaveList() != null) {
+			setFavelist(currentUser.getFaveList());
+			buildWidgets(favelist);
+			return;
+		}
+
+		// Otherwise get it from the server
 		final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), Constants.DEFAULT_HASHTAG);
 		req.fire(new Receiver<List<FaveItemProxy>>() {
 
 			@Override
 			public void onSuccess(final List<FaveItemProxy> results) {
 				setFavelist(results);
-
-				final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
-				int i = 1;
-				for (final FaveItemProxy item : results) {
-					final FavePickWidget widget = new FavePickWidget(item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
-					pickWidgets.add(widget);
-					i++;
-				}
-				widgets = pickWidgets;
-
-				getView().setList(pickWidgets);
-				eventBus.fireEvent(new FaveListSizeChangedEvent(getFavelist().size()));
-
+				if (ownList)
+					currentUser.setFaveList(favelist);
+				buildWidgets(favelist);
 			}
 		});
+	}
+
+	private void buildWidgets(final List<FaveItemProxy> faveList) {
+		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
+		int i = 1;
+		for (final FaveItemProxy item : faveList) {
+			final FavePickWidget widget = new FavePickWidget(item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
+			pickWidgets.add(widget);
+			i++;
+		}
+		widgets = pickWidgets;
+
+		getView().setList(pickWidgets);
+		eventBus.fireEvent(new FaveListSizeChangedEvent(getFavelist().size()));
 	}
 
 	@Override
@@ -260,7 +273,35 @@ public class FavelistPresenter extends
 		editWhyline.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void result) {
-				// Do nothing
+				// Set client to match
+				for (int i = 0; i < favelist.size(); i++) {
+					final FaveItemProxy faveItem = favelist.get(i);
+					if (faveItem.getSongID().equals(songID)) {
+						final FaveItemProxy newfaveItem = new FaveItemProxy() {
+							@Override
+							public String getWhyline() {
+								return whyline;
+							}
+
+							@Override
+							public String getSongID() {
+								return songID;
+							}
+
+							@Override
+							public String getSong() {
+								return faveItem.getSong();
+							}
+
+							@Override
+							public String getArtist() {
+								return faveItem.getArtist();
+							}
+						};
+						favelist.add(i, newfaveItem);
+						favelist.remove(faveItem);
+					}
+				}
 			}
 
 			@Override
@@ -299,6 +340,11 @@ public class FavelistPresenter extends
 			@Override
 			public void onSuccess(final Void response) {
 				// If successfully saved on server, manually set client to match
+				final FaveItemProxy toRerank = favelist.get(currentIndex);
+				favelist.remove(toRerank);
+				favelist.add(newIndex, toRerank);
+
+				// And then manually update the widget view to match
 				final FavePickWidget pickToRank = widgets.get(currentIndex);
 				widgets.remove(pickToRank);
 				widgets.add(newIndex, pickToRank);
