@@ -121,7 +121,8 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 					autoplay : 1
 				},
 				events : {
-					'onStateChange' : $wnd.onPlayerStateChange
+					'onStateChange' : $wnd.onPlayerStateChange,
+					'onError' : $wnd.onPlayerError
 				}
 			});
 			$wnd.videoCleared = false;
@@ -131,6 +132,11 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 			if (event.data == $wnd.YT.PlayerState.ENDED) {
 				widget.@com.fave100.client.pages.song.widgets.youtube.YouTubeView::dispatchEndedEvent()();
 			}
+		}
+
+		// On error, just skip to the next video
+		$wnd.onPlayerError = function onPlayerError(event) {
+			widget.@com.fave100.client.pages.song.widgets.youtube.YouTubeView::dispatchEndedEvent()();
 		}
 
 		var tag = $doc.getElementById("yt_iframe_api");
