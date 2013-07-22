@@ -213,7 +213,7 @@ public class UsersPresenter extends
 				@Override
 				public void onSuccess(final Boolean following) {
 					isFollowing = following;
-					getView().setFollowCTA(_currentUser.isLoggedIn(), isFollowing);
+					getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
 				}
 
 				@Override
@@ -222,7 +222,7 @@ public class UsersPresenter extends
 					if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
 						_eventBus.fireEvent(new CurrentUserChangedEvent(null));
 					}
-					getView().setFollowCTA(_currentUser.isLoggedIn(), isFollowing);
+					getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
 				}
 			});
 		}
