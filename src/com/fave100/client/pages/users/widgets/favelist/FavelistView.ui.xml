@@ -7,7 +7,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style type="com.fave100.client.pagefragments.favelist.FavelistView.FavelistStyle">
+	<ui:style type="com.fave100.client.pages.users.widgets.favelist.FavelistView.FavelistStyle">
 		.favelist {		
 			font-size: 1.05em;
 		}
