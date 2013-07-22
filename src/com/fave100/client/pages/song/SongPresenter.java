@@ -58,6 +58,8 @@ public class SongPresenter extends
 		void setWhylineHeight(int px);
 
 		void scrollYouTubeIntoView();
+
+		void clearWhylines();
 	}
 
 	@ProxyCodeSplit
@@ -212,6 +214,7 @@ public class SongPresenter extends
 	protected void onHide() {
 		super.onHide();
 		youtubePresenter.clearVideo();
+		getView().clearWhylines();
 	}
 
 	private void updateYouTube() {
