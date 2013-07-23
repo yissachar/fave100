@@ -1,4 +1,4 @@
-package com.fave100.client.pagefragments.autocomplete;
+package com.fave100.client.pages.users.widgets.autocomplete;
 
 import static com.google.gwt.query.client.GQuery.$;
 
@@ -261,5 +261,10 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	@Override
 	public void showBackToTop(final boolean show) {
 		backToTopButton.setVisible(show);
+	}
+
+	@Override
+	public void setFocus() {
+		searchBox.setFocus(true);
 	}
 }

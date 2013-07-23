@@ -58,7 +58,6 @@ public class FavelistPresenter extends
 
 	private EventBus eventBus;
 	private ApplicationRequestFactory requestFactory;
-	private PlaceManager placeManager;
 	// The user whose favelist we are showing
 	private AppUserProxy user;
 	// The currently logged in user
@@ -100,7 +99,6 @@ public class FavelistPresenter extends
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
-		this.placeManager = placeManager;
 		this.currentUser = currentUser;
 		getView().setUiHandlers(this);
 	}
@@ -112,10 +110,10 @@ public class FavelistPresenter extends
 		// Update FaveList when it changes
 		FaveItemAddedEvent.register(eventBus, new FaveItemAddedEvent.Handler() {
 			@Override
-			public void onFaveListLoaded(final FaveItemAddedEvent event) {
+			public void onFaveItemAdded(final FaveItemAddedEvent event) {
 				if (isEditable()) {
 					final FaveItemProxy item = event.getFaveItemProxy();
-					final FavePickWidget widget = new FavePickWidget(item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
+					final FavePickWidget widget = new FavePickWidget(eventBus, item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
 					getView().addPick(widget);
 					widgets.add(widget);
 					if (getView().asWidget().getElement().getClientHeight() + widget.getElement().getClientHeight() > Window.getClientHeight())
@@ -166,7 +164,7 @@ public class FavelistPresenter extends
 		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 		int i = 1;
 		for (final FaveItemProxy item : faveList) {
-			final FavePickWidget widget = new FavePickWidget(item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
+			final FavePickWidget widget = new FavePickWidget(eventBus, item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
 			pickWidgets.add(widget);
 			i++;
 		}

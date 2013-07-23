@@ -1,13 +1,14 @@
 package com.fave100.client.pages.users;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.events.favelist.RankInputUnfocusEvent;
 import com.fave100.client.events.song.SongSelectedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
-import com.fave100.client.pagefragments.autocomplete.SongAutocompletePresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
+import com.fave100.client.pages.users.widgets.autocomplete.SongAutocompletePresenter;
 import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
@@ -155,6 +156,13 @@ public class UsersPresenter extends
 						showPage();
 					}
 				});
+
+		RankInputUnfocusEvent.register(_eventBus, new RankInputUnfocusEvent.Handler() {
+			@Override
+			public void onRankInputUnfocus(final RankInputUnfocusEvent event) {
+				songAutocomplete.setFocus();
+			}
+		});
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 public class FaveItemAddedEvent extends Event<FaveItemAddedEvent.Handler> {
 
 	public interface Handler {
-		void onFaveListLoaded(FaveItemAddedEvent event);
+		void onFaveItemAdded(FaveItemAddedEvent event);
 	}
 
 	private static final Type<FaveItemAddedEvent.Handler> TYPE =
@@ -36,7 +36,7 @@ public class FaveItemAddedEvent extends Event<FaveItemAddedEvent.Handler> {
 
 	@Override
 	protected void dispatch(final Handler handler) {
-		handler.onFaveListLoaded(this);
+		handler.onFaveItemAdded(this);
 	}
 
 	public FaveItemProxy getFaveItemProxy() {
