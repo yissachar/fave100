@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.Notification;
+import com.fave100.client.events.favelist.RankInputUnfocusEvent;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter.ItemAdded;
 import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter.ItemDeleted;
@@ -47,6 +48,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 public class FavePickWidget extends Composite {
 
@@ -74,6 +76,7 @@ public class FavePickWidget extends Composite {
 	@UiField SimplePanel whyLinePanel;
 	@UiField HorizontalPanel hoverPanel;
 
+	private EventBus _eventBus;
 	private String _song;
 	private String _artist;
 	private String _whyline;
@@ -108,8 +111,9 @@ public class FavePickWidget extends Composite {
 	private List<HandlerRegistration> _whyLineMouseHandlers;
 	private Label _songPick;
 
-	public FavePickWidget(final FaveItemProxy item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged, final ItemDeleted itemDeleted,
+	public FavePickWidget(final EventBus eventBus, final FaveItemProxy item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged, final ItemDeleted itemDeleted,
 							final ItemAdded itemAdded, final String username) {
+		_eventBus = eventBus;
 		_song = item.getSong();
 		_artist = item.getArtist();
 		_whyline = item.getWhyline();
@@ -192,8 +196,10 @@ public class FavePickWidget extends Composite {
 							event.stopPropagation();
 						}
 
-						if (keyCode == KeyCodes.KEY_ENTER)
+						if (keyCode == KeyCodes.KEY_ENTER) {
 							updateRank(rankText);
+							_eventBus.fireEvent(new RankInputUnfocusEvent());
+						}
 					}
 				});
 				rankText.addBlurHandler(new BlurHandler() {
@@ -201,6 +207,7 @@ public class FavePickWidget extends Composite {
 					@Override
 					public void onBlur(final BlurEvent event) {
 						updateRank(rankText);
+						_eventBus.fireEvent(new RankInputUnfocusEvent());
 					}
 				});
 

@@ -1,4 +1,4 @@
-package com.fave100.client.pagefragments.autocomplete;
+package com.fave100.client.pages.users.widgets.autocomplete;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +51,8 @@ public class SongAutocompletePresenter extends
 		void resizeSearch();
 
 		void showBackToTop(boolean show);
+
+		void setFocus();
 	}
 
 	private final EventBus eventBus;
@@ -107,6 +109,10 @@ public class SongAutocompletePresenter extends
 
 	public interface SearchResultFactory extends AutoBeanFactory {
 		AutoBean<SearchResultProxy> response();
+	}
+
+	public void setFocus() {
+		getView().setFocus();
 	}
 
 	// Get a list of songs matching a search term
@@ -181,6 +187,8 @@ public class SongAutocompletePresenter extends
 	// Dispatch a song selected event and hide current results
 	@Override
 	public void songSelected() {
+		if (getSelection() < 0)
+			return;
 		eventBus.fireEvent(new SongSelectedEvent(currentSuggestions.get(getSelection())));
 		getAutocompleteResults("", true);
 		getView().clearSearch();
