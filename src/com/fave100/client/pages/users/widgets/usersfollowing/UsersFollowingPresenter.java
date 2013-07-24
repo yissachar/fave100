@@ -96,23 +96,32 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 		if (_currentUser.isLoggedIn())
 			ownFollowing = _user.getUsername().equals(_currentUser.getUsername());
 		if (ownFollowing) {
-			final AsyncCallback<FollowingResultProxy> followingReq = new AsyncCallback<FollowingResultProxy>() {
-				@Override
-				public void onFailure(final Throwable caught) {
-					// Don't care
-				}
+			// If we already have the current user list, display it
+			if (_currentUser.getFollowing() != null && _currentUser.getFollowing().size() > 0) {
+				buildListItems(true, _currentUser.getFollowing());
+				if (_currentUser.isFullListRetrieved())
+					getView().hideMoreFollowingButton();
+			}
+			// Otherwise fetch it
+			else {
+				final AsyncCallback<FollowingResultProxy> followingReq = new AsyncCallback<FollowingResultProxy>() {
+					@Override
+					public void onFailure(final Throwable caught) {
+						// Don't care
+					}
 
-				@Override
-				public void onSuccess(final FollowingResultProxy followingResult) {
-					final List<AppUserProxy> usersFollowing = followingResult.getFollowing();
-					buildListItems(true, usersFollowing);
-					_currentUser.setFullListRetrieved(!followingResult.isMore());
-					if (!followingResult.isMore())
-						getView().hideMoreFollowingButton();
-				}
+					@Override
+					public void onSuccess(final FollowingResultProxy followingResult) {
+						final List<AppUserProxy> usersFollowing = followingResult.getFollowing();
+						buildListItems(true, usersFollowing);
+						_currentUser.setFullListRetrieved(!followingResult.isMore());
+						if (!followingResult.isMore())
+							getView().hideMoreFollowingButton();
+					}
 
-			};
-			_requestCache.getFollowingForCurrentUser(_currentUser.getUsername(), followingReq);
+				};
+				_requestCache.getFollowingForCurrentUser(_currentUser.getUsername(), followingReq);
+			}
 		}
 		else {
 			final Request<FollowingResultProxy> followingReq = _requestFactory.appUserRequest().getFollowing(_user.getUsername(), 0);
