@@ -9,3 +9,4 @@ war/WEB-INF/lib/
 .factorypath
 target/
 .gwt/
+extras/
