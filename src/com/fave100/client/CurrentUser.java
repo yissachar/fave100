@@ -97,7 +97,7 @@ public class CurrentUser implements AppUserProxy {
 	}
 
 	public List<AppUserProxy> getFollowing() {
-		return followingResult.getFollowing();
+		return followingResult == null ? null : followingResult.getFollowing();
 	}
 
 	public void followUser(final AppUserProxy user) {
