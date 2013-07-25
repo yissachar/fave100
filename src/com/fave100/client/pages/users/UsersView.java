@@ -155,8 +155,8 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	}
 
 	@Override
-	public void renderSharing() {
-		shareButton.setSharingUrls();
+	public void renderSharing(final String username) {
+		shareButton.setSharingUrls(username);
 		nativeRenderShare();
 	}
 
