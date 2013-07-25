@@ -62,6 +62,7 @@ public class CurrentUser implements AppUserProxy {
 								@Override
 								public void onSuccess(final FollowingResultProxy result) {
 									followingResult = result;
+									fullListRetrieved = !result.isMore();
 								}
 
 							};
