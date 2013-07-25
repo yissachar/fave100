@@ -52,7 +52,7 @@ public class UsersPresenter extends
 
 		String getFixedSearchStyle();
 
-		void renderSharing();
+		void renderSharing(String username);
 
 		void showUserNotFound();
 
@@ -271,7 +271,7 @@ public class UsersPresenter extends
 		getProxy().manualReveal(UsersPresenter.this);
 
 		// Now that page is visible, render FB like button						
-		getView().renderSharing();
+		getView().renderSharing(requestedUser.getUsername());
 	}
 
 	@Override

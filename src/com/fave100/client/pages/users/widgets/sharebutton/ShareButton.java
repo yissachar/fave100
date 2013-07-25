@@ -1,5 +1,8 @@
 package com.fave100.client.pages.users.widgets.sharebutton;
 
+import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.place.NameTokens;
+import com.fave100.shared.UrlBuilder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -43,12 +46,13 @@ public class ShareButton extends Composite {
 		shareLink.setSelectionRange(0, shareLink.getText().length());
 	}
 
-	public void setSharingUrls() {
+	public void setSharingUrls(final String username) {
+		final String shareUrl = new UrlBuilder(NameTokens.users).with(UsersPresenter.USER_PARAM, username).getUrl();
 		// Set Facebook like URL
-		fbLike.setAttribute("data-href", Window.Location.getHref());
+		fbLike.setAttribute("data-href", shareUrl);
 
 		// Set Google+ URL
-		gplus.getElement().setAttribute("href", Window.Location.getHref());
+		gplus.getElement().setAttribute("href", shareUrl);
 
 		// Clear Twitter button
 		for (int i = 0; i < twitterContainer.getElement().getChildCount(); i++) {
@@ -63,11 +67,11 @@ public class ShareButton extends Composite {
 		twitterShare.getElement().setAttribute("data-size", "medium");
 		twitterShare.getElement().setAttribute("data-count", "horizontal");
 		twitterShare.getElement().setAttribute("data-text", twitterMessage);
-		twitterShare.getElement().setAttribute("data-url", Window.Location.getHref());
+		twitterShare.getElement().setAttribute("data-url", shareUrl);
 		twitterContainer.add(twitterShare);
 
 		// Set share link
-		shareLink.setText(Window.Location.getHref());
+		shareLink.setText(shareUrl);
 
 	}
 
