@@ -232,7 +232,13 @@ public class CurrentUser implements AppUserProxy {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return (appUser == null) ? false : appUser.equals(obj);
+		if (appUser == null) {
+			return false;
+		}
+		else if (appUser.equals(obj) || this.getUsername().equals(((AppUserProxy)obj).getUsername())) {
+			return true;
+		}
+		return false;
 	}
 
 	public List<FaveItemProxy> getFaveList() {
