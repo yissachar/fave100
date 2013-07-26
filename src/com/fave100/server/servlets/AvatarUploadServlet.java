@@ -47,7 +47,7 @@ public class AvatarUploadServlet extends RequestFactoryServlet
 				}
 				currentUser.setAvatar(blobKey.getKeyString());
 				ofy().save().entity(currentUser).now();
-				avatar = currentUser.getAvatar();
+				avatar = currentUser.getAvatarImage();
 
 				res.getWriter().write(avatar);
 			}

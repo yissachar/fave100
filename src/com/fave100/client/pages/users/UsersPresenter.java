@@ -204,7 +204,7 @@ public class UsersPresenter extends
 
 			// If current user just grab the local info and show
 			if (requestedUsername.equals(_currentUser.getUsername())) {
-				requestedUser = _currentUser.getAppUser();
+				requestedUser = _currentUser;
 				isFollowing = false;
 				getView().setFollowCTA(false, isFollowing);
 				showPage();
