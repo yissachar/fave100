@@ -27,6 +27,8 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 	@UiField SimplePanel framePanel;
 	@UiField HTMLPanel thumbnailPanel;
 	private ArrayList<Image> thumbList = new ArrayList<Image>();
+	private List<YouTubeSearchResultProxy> _videos;
+	private int _timesSkipped = 0;
 
 	@Inject
 	public YouTubeView(final Binder binder) {
@@ -44,6 +46,7 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 		// Clear old data		
 		thumbnailPanel.clear();
 		thumbList.clear();
+		_videos = videos;
 
 		if (videos == null || videos.size() == 0) {
 			errorMessage.setVisible(true);
@@ -136,7 +139,7 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 
 		// On error, just skip to the next video
 		$wnd.onPlayerError = function onPlayerError(event) {
-			widget.@com.fave100.client.pages.song.widgets.youtube.YouTubeView::dispatchEndedEvent()();
+			widget.@com.fave100.client.pages.song.widgets.youtube.YouTubeView::skipVideo()();
 		}
 
 		var tag = $doc.getElementById("yt_iframe_api");
@@ -151,6 +154,24 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 	}-*/;
 
 	private void dispatchEndedEvent() {
+		_timesSkipped = 0;
 		getUiHandlers().dispatchEndedEvent();
+	}
+
+	private void skipVideo() {
+		if (_videos.size() >= 2) {
+			final YouTubeSearchResultProxy currVid = _videos.get(0);
+			_timesSkipped++;
+			// Had to skip video twice, jump to next song in list			
+			if (_timesSkipped >= 2) {
+				dispatchEndedEvent();
+			}
+			_videos.set(0, _videos.get(1));
+			_videos.set(1, currVid);
+			setVideoData(_videos);
+		}
+		else {
+			dispatchEndedEvent();
+		}
 	}
 }
