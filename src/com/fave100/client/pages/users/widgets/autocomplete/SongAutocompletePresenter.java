@@ -53,6 +53,8 @@ public class SongAutocompletePresenter extends
 		void showBackToTop(boolean show);
 
 		void setFocus();
+
+		void setSearchError(String error);
 	}
 
 	private final EventBus eventBus;
@@ -133,6 +135,7 @@ public class SongAutocompletePresenter extends
 			@Override
 			public void onFailure(final Throwable caught) {
 				requests.remove(this);
+				getView().setSearchError("Error");
 			}
 
 			@Override
