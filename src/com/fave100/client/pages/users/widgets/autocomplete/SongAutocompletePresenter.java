@@ -170,6 +170,9 @@ public class SongAutocompletePresenter extends
 
 				getView().resizeSearch();
 
+				if (!resetPage)
+					setSelection(0, false);
+
 			}
 		};
 		requests.add(autocompleteReq);
@@ -181,7 +184,7 @@ public class SongAutocompletePresenter extends
 	@Override
 	public void setSelection(final int position, final boolean relative) {
 		final int newSelection = relative ? getSelection() + position : position;
-		if (newSelection >= 0 && newSelection <= getMaxSelection()) {
+		if (newSelection >= -1 && newSelection <= getMaxSelection()) {
 			setSelection(newSelection);
 			getView().setSelection(selection);
 		}
@@ -209,6 +212,7 @@ public class SongAutocompletePresenter extends
 
 	/* Getters and Setters */
 
+	@Override
 	public int getSelection() {
 		return selection;
 	}
@@ -246,6 +250,8 @@ public class SongAutocompletePresenter extends
 
 interface SongAutocompleteUiHandlers extends UiHandlers {
 	void getAutocompleteResults(String searchTerm, boolean resetPage);
+
+	int getSelection();
 
 	void setSelection(int position, boolean relative);
 

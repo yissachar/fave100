@@ -106,6 +106,18 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 			else if (event.isUpArrow()) {
 				getUiHandlers().setSelection(-1, true);
 			}
+			else if (event.isRightArrow()) {
+				if (getUiHandlers().getSelection() >= 0) {
+					getUiHandlers().modifyPage(1);
+					moveCursorToEnd();
+				}
+			}
+			else if (event.isLeftArrow()) {
+				if (getUiHandlers().getSelection() >= 0) {
+					getUiHandlers().modifyPage(-1);
+					moveCursorToEnd();
+				}
+			}
 		}
 		else if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()) {
 			// Enter key pressed, add currently selected song to favelist
@@ -128,8 +140,11 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 				}
 			};
 			searchTimer.schedule(50);
-
 		}
+	}
+
+	private void moveCursorToEnd() {
+		searchBox.setCursorPos(searchBox.getText().length());
 	}
 
 	@UiHandler("clearSearchButton")
@@ -226,7 +241,8 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 		for (int i = 0; i < resultsPanel.getWidgetCount(); i++) {
 			resultsPanel.getWidget(i).getElement().removeClassName(style.selected());
 		}
-		resultsPanel.getWidget(selection).getElement().addClassName(style.selected());
+		if (selection >= 0)
+			resultsPanel.getWidget(selection).getElement().addClassName(style.selected());
 	}
 
 	@Override
