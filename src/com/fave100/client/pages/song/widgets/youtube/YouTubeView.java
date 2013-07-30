@@ -61,6 +61,7 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 				ytThumb.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(final ClickEvent event) {
+						_timesSkipped = 0;
 						final YouTubeSearchResultProxy currVideo = videos.get(0);
 						final YouTubeSearchResultProxy clickedVideo = videos.get(thumbList.indexOf(ytThumb) + 1);
 						videos.set(0, clickedVideo);
