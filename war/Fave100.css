@@ -486,10 +486,10 @@ footer {
 }
 
 .error{
-	color: #D54545;
+	color: #D54545 !important;
 }
 .errorInput:not(:focus){
-	border: 1px solid #D54545; 
+	border: 1px solid #D54545 !important; 
 }
 
 .invisiSpan {

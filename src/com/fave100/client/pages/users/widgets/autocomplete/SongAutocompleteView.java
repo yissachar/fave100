@@ -178,6 +178,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	public void setSuggestions(final List<SongProxy> suggestions, final int total) {
 		resultsPanel.clear();
 		searchLoadingIndicator.setVisible(false);
+		inlineSearchCount.removeStyleName("error");
 
 		if (suggestions == null || suggestions.size() == 0) {
 			resultsArea.setVisible(false);
@@ -211,6 +212,13 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 		pageStats.setText(sb.toString());
 		resultsArea.setVisible(true);
 		inlineSearchCount.setText(String.valueOf(total));
+	}
+
+	@Override
+	public void setSearchError(final String error) {
+		inlineSearchCount.setText(error);
+		inlineSearchCount.addStyleName("error");
+		searchLoadingIndicator.setVisible(false);
 	}
 
 	@Override
