@@ -289,7 +289,7 @@ public class FavelistPresenter extends
 				currentUser.getFaveList().add(newIndex, toRerank);
 
 				// And then manually update the widget view to match
-				final FavePickWidget pickToRank = widgets.get(currentIndex);
+				FavePickWidget pickToRank = widgets.get(currentIndex);
 				widgets.remove(pickToRank);
 				widgets.add(newIndex, pickToRank);
 				int i = 1;
@@ -298,6 +298,10 @@ public class FavelistPresenter extends
 					i++;
 				}
 				getView().swapPicks(currentIndex, newIndex);
+				// Because of complications from the floating search, it is better to try to scroll the previous widget
+				if (newIndex < currentIndex && newIndex - 1 >= 0)
+					pickToRank = widgets.get(newIndex - 1);
+				$(pickToRank).scrollIntoView(true);
 			}
 
 			@Override
