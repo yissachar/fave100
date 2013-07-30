@@ -68,7 +68,7 @@
 			</g:cell>
 
 			<g:cell width="80%">
-				<g:VerticalPanel >
+				<g:VerticalPanel width="100%" >
 					<g:Anchor ui:field="song" ui:styleName="{style.song}"></g:Anchor>
 					<g:InlineLabel ui:field="artist" ui:styleName="{style.artist}"></g:InlineLabel>
 					<g:SimplePanel ui:field="whyLinePanel" ui:styleName="{style.whyLine}"></g:SimplePanel>
