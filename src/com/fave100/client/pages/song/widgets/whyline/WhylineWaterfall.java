@@ -27,6 +27,8 @@ public class WhylineWaterfall extends Composite {
 	@UiField WhylineWaterfallStyle style;
 	@UiField VerticalPanel whylines;
 	private ApplicationRequestFactory requestFactory;
+	private SongProxy _song;
+	private boolean _loaded = false;
 
 	interface WhylineWaterfallStyle extends CssResource {
 		String noWhyline();
@@ -39,20 +41,34 @@ public class WhylineWaterfall extends Composite {
 
 	public void setWhylines(final SongProxy song) {
 		whylines.clear();
-		final Request<List<WhylineProxy>> whylineReq = requestFactory.whylineRequest().getWhylinesForSong(song);
-		whylineReq.fire(new Receiver<List<WhylineProxy>>() {
-			@Override
-			public void onSuccess(final List<WhylineProxy> whylineList) {
-				for (final WhylineProxy whyline : whylineList) {
-					whylines.add(new WhylineWidget(whyline));
-				}
-				if (whylineList.size() == 0) {
-					final Label label = new Label("No whylines yet");
-					label.addStyleName(style.noWhyline());
-					whylines.add(label);
-				}
+		_loaded = false;
+		_song = song;
+	}
+
+	public void show(final boolean show) {
+		if (show) {
+			setVisible(true);
+			if (!_loaded && _song != null) {
+				final Request<List<WhylineProxy>> whylineReq = requestFactory.whylineRequest().getWhylinesForSong(_song);
+				whylineReq.fire(new Receiver<List<WhylineProxy>>() {
+					@Override
+					public void onSuccess(final List<WhylineProxy> whylineList) {
+						for (final WhylineProxy whyline : whylineList) {
+							whylines.add(new WhylineWidget(whyline));
+						}
+						if (whylineList.size() == 0) {
+							final Label label = new Label("No whylines yet");
+							label.addStyleName(style.noWhyline());
+							whylines.add(label);
+						}
+						_loaded = true;
+					}
+				});
 			}
-		});
+		}
+		else {
+			setVisible(false);
+		}
 	}
 
 	public void clearWhylines() {
