@@ -47,7 +47,6 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	public SongView(final Binder binder, final ApplicationRequestFactory requestFactory) {
 		whylineWaterfall = new WhylineWaterfall(requestFactory);
 		widget = binder.createAndBindUi(this);
-		showWhylines();
 	}
 
 	@Override
@@ -117,7 +116,7 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 
 	@Override
 	public void showPlaylist() {
-		whylineWaterfall.setVisible(false);
+		whylineWaterfall.show(false);
 		playlistPane.setVisible(true);
 	}
 
@@ -129,7 +128,7 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	@Override
 	public void showWhylines() {
 		playlistPane.setVisible(false);
-		whylineWaterfall.setVisible(true);
+		whylineWaterfall.show(true);
 	}
 
 	private void setSongTitle(final String title) {

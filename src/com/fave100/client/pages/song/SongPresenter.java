@@ -78,6 +78,7 @@ public class SongPresenter extends
 	private final PlaceManager _placeManager;
 	private final EventBus _eventBus;
 	private SongProxy songProxy;
+	private AppUserProxy _requestedAppUser;
 	@Inject YouTubePresenter youtubePresenter;
 	@Inject PlaylistPresenter playlistPresenter;
 
@@ -133,16 +134,28 @@ public class SongPresenter extends
 
 			// If there is a user, get their info and their playlist
 			if (!username.isEmpty()) {
-				// Get username and avatar
-				final Request<AppUserProxy> getUserReq = _requestFactory.appUserRequest().findAppUser(username);
-				getUserReq.fire(new Receiver<AppUserProxy>() {
-					@Override
-					public void onSuccess(final AppUserProxy user) {
-						if (user != null) {
-							playlistPresenter.setUserInfo(user.getUsername(), user.getAvatarImage());
+				// If we have a current user, just grab their info locally
+				if (_currentUser.isLoggedIn() && _currentUser.getUsername().equals(username)) {
+					_requestedAppUser = _currentUser;
+					playlistPresenter.setUserInfo(_currentUser.getUsername(), _currentUser.getAvatarImage());
+				}
+				else if (_requestedAppUser != null && username.equals(_requestedAppUser.getUsername())) {
+					// We already fetched the user info
+					playlistPresenter.setUserInfo(_requestedAppUser.getUsername(), _requestedAppUser.getAvatarImage());
+				}
+				else {
+					// Get username and avatar from the datastore
+					final Request<AppUserProxy> getUserReq = _requestFactory.appUserRequest().findAppUser(username);
+					getUserReq.fire(new Receiver<AppUserProxy>() {
+						@Override
+						public void onSuccess(final AppUserProxy user) {
+							_requestedAppUser = user;
+							if (user != null) {
+								playlistPresenter.setUserInfo(user.getUsername(), user.getAvatarImage());
+							}
 						}
-					}
-				});
+					});
+				}
 
 				// Get playlist
 				final Request<List<FaveItemProxy>> getFavelistReq = _requestFactory.faveListRequest().getFaveList(username, Constants.DEFAULT_HASHTAG);
@@ -169,6 +182,7 @@ public class SongPresenter extends
 		PlaylistSongChangedEvent.register(_eventBus, new PlaylistSongChangedEvent.Handler() {
 			@Override
 			public void onPlaylistSongChanged(final PlaylistSongChangedEvent event) {
+
 				// Load the song from the datastore
 				final Request<SongProxy> getSongReq = _requestFactory.songRequest()
 						.findSong(event.songID());
@@ -213,6 +227,7 @@ public class SongPresenter extends
 	@Override
 	protected void onHide() {
 		super.onHide();
+		_requestedAppUser = null;
 		youtubePresenter.clearVideo();
 		getView().clearWhylines();
 	}
