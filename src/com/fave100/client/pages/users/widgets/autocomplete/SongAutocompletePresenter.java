@@ -64,6 +64,7 @@ public class SongAutocompletePresenter extends
 	private int resultsPerPage = 5;
 	private int page = 0;
 	private List<SongProxy> currentSuggestions;
+	private String _lastSearch = "";
 
 	@Inject
 	public SongAutocompletePresenter(final EventBus eventBus, final MyView view) {
@@ -120,6 +121,12 @@ public class SongAutocompletePresenter extends
 	// Get a list of songs matching a search term
 	@Override
 	public void getAutocompleteResults(String searchTerm, final boolean resetPage) {
+		// Don't bother going to the server a second time for the same term
+		if (_lastSearch != null && _lastSearch.equals(searchTerm))
+			return;
+
+		_lastSearch = searchTerm;
+
 		if (resetPage)
 			setPage(0);
 
