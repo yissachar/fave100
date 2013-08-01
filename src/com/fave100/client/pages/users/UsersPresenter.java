@@ -15,6 +15,7 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
+import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -27,7 +28,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -212,38 +212,39 @@ public class UsersPresenter extends
 			}
 
 			// Otherwise, request the info from the server
-			final Request<AppUserProxy> userReq = _requestFactory.appUserRequest().findAppUser(requestedUsername);
-			userReq.fire(new Receiver<AppUserProxy>() {
-				@Override
-				public void onSuccess(final AppUserProxy user) {
-					if (user != null) {
-						requestedUser = user;
-						showPage();
-					}
-					else {
-						getView().showUserNotFound();
-						getProxy().manualReveal(UsersPresenter.this);
-					}
-				}
-			});
+			final AppUserRequest userReq = _requestFactory.appUserRequest();
+			userReq.findAppUser(requestedUsername).to(
+					new Receiver<AppUserProxy>() {
+						@Override
+						public void onSuccess(final AppUserProxy user) {
+							if (user != null) {
+								requestedUser = user;
+								showPage();
+							}
+							else {
+								getView().showUserNotFound();
+								getProxy().manualReveal(UsersPresenter.this);
+							}
+						}
+					});
+			userReq.isFollowing(requestedUsername).to(
+					new Receiver<Boolean>() {
+						@Override
+						public void onSuccess(final Boolean following) {
+							isFollowing = following;
+							getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
+						}
 
-			final Request<Boolean> followingReq = _requestFactory.appUserRequest().isFollowing(requestedUsername);
-			followingReq.fire(new Receiver<Boolean>() {
-				@Override
-				public void onSuccess(final Boolean following) {
-					isFollowing = following;
-					getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
-				}
-
-				@Override
-				public void onFailure(final ServerFailure failure) {
-					isFollowing = false;
-					if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-						_eventBus.fireEvent(new CurrentUserChangedEvent(null));
-					}
-					getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
-				}
-			});
+						@Override
+						public void onFailure(final ServerFailure failure) {
+							isFollowing = false;
+							if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
+								_eventBus.fireEvent(new CurrentUserChangedEvent(null));
+							}
+							getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
+						}
+					});
+			userReq.fire();
 		}
 	}
 

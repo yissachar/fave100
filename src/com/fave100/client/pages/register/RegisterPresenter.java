@@ -16,11 +16,10 @@ import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.gwt.core.shared.GWT;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
@@ -148,7 +147,7 @@ public class RegisterPresenter extends
 			// First see if they are already logged in
 			final String oauth_verifier = placeRequest.getParameter("oauth_verifier", "");//Window.Location
 			//					.getParameter("oauth_verifier");
-			GWT.log("Oauth verifier:" + oauth_verifier);
+
 			final Request<AppUserProxy> loginWithTwitter = requestFactory
 					.appUserRequest().loginWithTwitter(oauth_verifier);
 			loginWithTwitter.fire(new Receiver<AppUserProxy>() {
@@ -283,8 +282,6 @@ public class RegisterPresenter extends
 						getView().setThirdPartyUsernameError(errorMsg);
 					}
 				});
-				// } else if
-				// (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 			}
 			else if (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 				// Create Facebook linked account
