@@ -20,6 +20,7 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
+import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class FaveList extends DatastoreObject {
@@ -29,7 +30,7 @@ public class FaveList extends DatastoreObject {
 
 	@Id private String id;
 	private Ref<AppUser> user;
-	private String hashtag;
+	@Index private String hashtag;
 	private List<FaveItem> list = new ArrayList<FaveItem>();
 
 	@SuppressWarnings("unused")

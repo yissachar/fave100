@@ -13,6 +13,7 @@ import com.fave100.server.domain.appuser.GoogleID;
 import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
 import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.server.domain.favelist.Hashtag;
 import com.fave100.shared.UrlBuilder;
 import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.ObjectifyService;
@@ -33,6 +34,7 @@ public class ServerModule extends HandlerModule {
 		ObjectifyService.register(Whyline.class);
 		ObjectifyService.register(APIKey.class);
 		ObjectifyService.register(PwdResetToken.class);
+		ObjectifyService.register(Hashtag.class);
 
 		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").get();
 		AppUser.setFacebookApiKey(facebookApiKey.getKey().trim());
