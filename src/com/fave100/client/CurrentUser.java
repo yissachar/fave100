@@ -8,7 +8,6 @@ import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -35,6 +34,7 @@ public class CurrentUser implements AppUserProxy {
 	private AppUserProxy appUser;
 	private String avatar = "";
 	private List<FaveItemProxy> faveList;
+	private String _currentHashtag;
 	private FollowingResultProxy followingResult;
 	private boolean fullListRetrieved = false;
 
@@ -154,9 +154,13 @@ public class CurrentUser implements AppUserProxy {
 	}
 
 	public void addSong(final String songID, final String song, final String artist) {
+		addSong(songID, _currentHashtag, song, artist);
+	}
+
+	public void addSong(final String songID, final String hashtag, final String song, final String artist) {
 
 		final FaveListRequest faveListRequest = _requestFactory.faveListRequest();
-		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID);
+		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(hashtag, songID);
 
 		addReq.fire(new Receiver<Void>() {
 			@Override
@@ -259,6 +263,14 @@ public class CurrentUser implements AppUserProxy {
 
 	public AppUserProxy getAppUser() {
 		return appUser;
+	}
+
+	public String getCurrentHashtag() {
+		return _currentHashtag;
+	}
+
+	public void setCurrentHashtag(final String currentHashtag) {
+		this._currentHashtag = currentHashtag;
 	}
 
 }

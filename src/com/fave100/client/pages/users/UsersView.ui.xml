@@ -129,7 +129,7 @@
 								<!--  Follow button -->
 								<g:FocusPanel ui:field="followCTAcontainer" ui:styleName="{style.followCTAcontainer}">									
 									<g:InlineLabel ui:field="followCTA" ui:styleName="button {style.followButton}"/>
-								</g:FocusPanel>
+								</g:FocusPanel>								
 							</g:VerticalPanel>				
 						</g:HorizontalPanel>
 						
@@ -139,12 +139,12 @@
 							<g:InlineLabel ui:field="mobileShowFollowing">Following</g:InlineLabel>
 						</g:FlowPanel>
 						
+						<g:HTMLPanel ui:field="listManager"/>
+						
 						<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">															
 							<uw:ShareButton ui:field="shareButton"/>							
 						</g:HTMLPanel>
-						
-						
-						
+																		
 						<!--  Users following -->
 						<g:HTMLPanel ui:field="followingContainer"/>
 						

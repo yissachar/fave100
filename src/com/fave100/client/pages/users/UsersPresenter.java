@@ -10,6 +10,7 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.users.widgets.autocomplete.SongAutocompletePresenter;
 import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter;
+import com.fave100.client.pages.users.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
@@ -69,10 +70,12 @@ public class UsersPresenter extends
 	@ContentSlot public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot public static final Type<RevealContentHandler<?>> FAVELIST_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot public static final Type<RevealContentHandler<?>> STARRED_LISTS_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot public static final Type<RevealContentHandler<?>> LIST_MANAGER_SLOT = new Type<RevealContentHandler<?>>();
 
 	public static final String USER_PARAM = "u";
 
 	private String requestedUsername;
+	private String _requestedHashtag;
 	private boolean isFollowing;
 	// For now just hardcode, only one possible hashtag
 	private AppUserProxy requestedUser;
@@ -83,6 +86,7 @@ public class UsersPresenter extends
 	@Inject SongAutocompletePresenter songAutocomplete;
 	@Inject FavelistPresenter favelist;
 	@Inject UsersFollowingPresenter usersFollowing;
+	@Inject ListManagerPresenter listManager;
 
 	@Inject
 	public UsersPresenter(final EventBus eventBus, final MyView view,
@@ -171,6 +175,7 @@ public class UsersPresenter extends
 		setInSlot(AUTOCOMPLETE_SLOT, songAutocomplete);
 		setInSlot(FAVELIST_SLOT, favelist);
 		setInSlot(STARRED_LISTS_SLOT, usersFollowing);
+		setInSlot(LIST_MANAGER_SLOT, listManager);
 	}
 
 	@Override
@@ -195,6 +200,7 @@ public class UsersPresenter extends
 		isFollowing = false;
 		// Use parameters to determine what to reveal on page
 		requestedUsername = placeRequest.getParameter("u", "");
+		_requestedHashtag = placeRequest.getParameter("list", Constants.DEFAULT_HASHTAG);
 		if (requestedUsername.isEmpty()) {
 			// Malformed request, send the user away
 			_placeManager.revealDefaultPlace();
@@ -205,6 +211,7 @@ public class UsersPresenter extends
 			// If current user just grab the local info and show
 			if (requestedUsername.equals(_currentUser.getUsername())) {
 				requestedUser = _currentUser;
+				_currentUser.setCurrentHashtag(_requestedHashtag);
 				isFollowing = false;
 				getView().setFollowCTA(false, isFollowing);
 				showPage();
@@ -264,6 +271,7 @@ public class UsersPresenter extends
 		}
 
 		favelist.setUser(requestedUser);
+		favelist.setHashtag(_requestedHashtag);
 		favelist.refreshFavelist(ownPage);
 		usersFollowing.setUser(requestedUser);
 		usersFollowing.refreshLists();
