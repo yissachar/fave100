@@ -47,6 +47,33 @@ public class FaveList extends DatastoreObject {
 		return ofy().load().type(FaveList.class).id(id).get();
 	}
 
+	public static FaveList findFaveList(final String username, final String hashtag) {
+		return findFaveList(username + FaveList.SEPERATOR_TOKEN + hashtag);
+	}
+
+	public static void addFaveListForCurrentUser(final String hashtagName) throws Exception {
+		final AppUser currentUser = AppUser.getLoggedInAppUser();
+		if (currentUser == null)
+			throw new NotLoggedInException();
+
+		final String username = currentUser.getUsername();
+		if (findFaveList(username, hashtagName) != null)
+			// TODO: Throw exception so that we know why it doesn't work
+			return;
+
+		final FaveList faveList = new FaveList(username, hashtagName);
+		Hashtag hashtag = ofy().load().type(Hashtag.class).id(hashtagName).get();
+		// Hashtag already exists, just save user's own favelist
+		if (hashtag != null) {
+			ofy().save().entity(faveList).now();
+		}
+		// Create a new hashtag
+		else {
+			hashtag = new Hashtag(hashtagName, username);
+			ofy().save().entities(faveList, hashtag).now();
+		}
+	}
+
 	public static void addFaveItemForCurrentUser(final String hashtag, final String songID)
 			throws Exception {
 

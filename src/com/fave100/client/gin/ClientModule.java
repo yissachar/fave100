@@ -52,6 +52,8 @@ import com.fave100.client.pages.users.widgets.autocomplete.SongAutocompletePrese
 import com.fave100.client.pages.users.widgets.autocomplete.SongAutocompleteView;
 import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.users.widgets.favelist.FavelistView;
+import com.fave100.client.pages.users.widgets.listmanager.ListManagerPresenter;
+import com.fave100.client.pages.users.widgets.listmanager.ListManagerView;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingView;
 
@@ -126,6 +128,8 @@ public class ClientModule extends AbstractPresenterModule {
 		bindSingletonPresenterWidget(YouTubePresenter.class, YouTubePresenter.MyView.class, YouTubeView.class);
 
 		bindPresenterWidget(UsersFollowingPresenter.class, UsersFollowingPresenter.MyView.class, UsersFollowingView.class);
+
+		bindSingletonPresenterWidget(ListManagerPresenter.class, ListManagerPresenter.MyView.class, ListManagerView.class);
 	}
 
 	@Provides

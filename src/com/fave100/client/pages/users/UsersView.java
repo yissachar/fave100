@@ -40,6 +40,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	@UiField HTMLPanel userContainer;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel socialContainer;
+	@UiField HTMLPanel listManager;
 	@UiField FocusPanel followCTAcontainer;
 	@UiField Label followCTA;
 	@UiField HTMLPanel userPageFaveList;
@@ -92,6 +93,13 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 			followingContainer.clear();
 			if (content != null) {
 				followingContainer.add(content);
+			}
+		}
+
+		if (slot == UsersPresenter.LIST_MANAGER_SLOT) {
+			listManager.clear();
+			if (content != null) {
+				listManager.add(content);
 			}
 		}
 		super.setInSlot(slot, content);

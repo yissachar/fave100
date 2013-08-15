@@ -72,6 +72,7 @@ public class SongPresenter extends
 
 	public static final String ID_PARAM = "id";
 	public static final String USER_PARAM = "user";
+	public static final String LIST_PARAM = "list";
 
 	private final ApplicationRequestFactory _requestFactory;
 	private final CurrentUser _currentUser;
@@ -110,6 +111,8 @@ public class SongPresenter extends
 		// Use parameters to determine what to reveal on page
 		final String id = URL.decode(placeRequest.getParameter(ID_PARAM, ""));
 		final String username = URL.decode(placeRequest.getParameter(USER_PARAM, ""));
+		final String hashtag = URL.decode(placeRequest.getParameter(LIST_PARAM, Constants.DEFAULT_HASHTAG));
+
 		if (id.isEmpty()) {
 			// Malformed request, send the user away
 			_placeManager.revealDefaultPlace();
@@ -158,7 +161,7 @@ public class SongPresenter extends
 				}
 
 				// Get playlist
-				final Request<List<FaveItemProxy>> getFavelistReq = _requestFactory.faveListRequest().getFaveList(username, Constants.DEFAULT_HASHTAG);
+				final Request<List<FaveItemProxy>> getFavelistReq = _requestFactory.faveListRequest().getFaveList(username, hashtag);
 				getFavelistReq.fire(new Receiver<List<FaveItemProxy>>() {
 					@Override
 					public void onSuccess(final List<FaveItemProxy> favelist) {

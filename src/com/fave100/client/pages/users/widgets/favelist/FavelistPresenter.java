@@ -11,7 +11,6 @@ import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.pages.users.widgets.favelist.widgets.FavePickWidget;
-import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
@@ -62,6 +61,8 @@ public class FavelistPresenter extends
 	private AppUserProxy user;
 	// The currently logged in user
 	private CurrentUser currentUser;
+	// The list to work with
+	private String hashtag;
 	private List<FavePickWidget> widgets;
 
 	private WhyLineChanged _whyLineChanged = new WhyLineChanged() {
@@ -148,7 +149,7 @@ public class FavelistPresenter extends
 		}
 
 		// Otherwise get it from the server
-		final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), Constants.DEFAULT_HASHTAG);
+		final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), hashtag);
 		req.fire(new Receiver<List<FaveItemProxy>>() {
 
 			@Override
@@ -194,7 +195,7 @@ public class FavelistPresenter extends
 		currentUser.getFaveList().remove(index);
 		// Send request for server to remove it
 		final Request<Void> req = requestFactory.faveListRequest()
-				.removeFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID);
+				.removeFaveItemForCurrentUser(hashtag, songID);
 		req.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
@@ -213,7 +214,7 @@ public class FavelistPresenter extends
 	@Override
 	public void editWhyline(final String songID, final String whyline) {
 		final Request<Void> editWhyline = requestFactory.faveListRequest()
-				.editWhylineForCurrentUser(Constants.DEFAULT_HASHTAG, songID, whyline);
+				.editWhylineForCurrentUser(hashtag, songID, whyline);
 		editWhyline.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void result) {
@@ -279,7 +280,7 @@ public class FavelistPresenter extends
 
 		// Save on server
 		final Request<Void> changePosition = requestFactory.faveListRequest()
-				.rerankFaveItemForCurrentUser(Constants.DEFAULT_HASHTAG, songID, newIndex);
+				.rerankFaveItemForCurrentUser(hashtag, songID, newIndex);
 		changePosition.fire(new Receiver<Void>() {
 			@Override
 			public void onSuccess(final Void response) {
@@ -325,6 +326,14 @@ public class FavelistPresenter extends
 
 	public void setUser(final AppUserProxy user) {
 		this.user = user;
+	}
+
+	public String getHashtag() {
+		return hashtag;
+	}
+
+	public void setHashtag(final String hashtag) {
+		this.hashtag = hashtag;
 	}
 
 }
