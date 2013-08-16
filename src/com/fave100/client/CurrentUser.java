@@ -1,6 +1,8 @@
 package com.fave100.client;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fave100.client.RequestCache.RequestType;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
@@ -8,6 +10,7 @@ import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -33,8 +36,8 @@ public class CurrentUser implements AppUserProxy {
 	private PlaceManager _placeManager;
 	private AppUserProxy appUser;
 	private String avatar = "";
-	private List<FaveItemProxy> faveList;
-	private String _currentHashtag;
+	private Map<String, List<FaveItemProxy>> faveLists = new HashMap<String, List<FaveItemProxy>>();
+	private String _currentHashtag = Constants.DEFAULT_HASHTAG;
 	private FollowingResultProxy followingResult;
 	private boolean fullListRetrieved = false;
 
@@ -77,9 +80,10 @@ public class CurrentUser implements AppUserProxy {
 							// Clear all state
 							appUser = null;
 							avatar = "";
-							faveList = null;
+							faveLists = null;
 							followingResult = null;
 							fullListRetrieved = false;
+							_currentHashtag = Constants.DEFAULT_HASHTAG;
 						}
 					}
 				});
@@ -189,7 +193,7 @@ public class CurrentUser implements AppUserProxy {
 					}
 				};
 				// Ensure local list in sync				
-				faveList.add(item);
+				getFaveLists().get(hashtag).add(item);
 				_eventBus.fireEvent(new FaveItemAddedEvent(item));
 			}
 
@@ -213,6 +217,14 @@ public class CurrentUser implements AppUserProxy {
 		});
 	}
 
+	public List<FaveItemProxy> getFaveList() {
+		return faveLists.get(_currentHashtag);
+	}
+
+	public void setFaveList(final List<FaveItemProxy> favelist) {
+		faveLists.put(_currentHashtag, favelist);
+	}
+
 	// Needed for RequestFactory
 	@Override
 	public EntityProxyId<?> stableId() {
@@ -227,6 +239,11 @@ public class CurrentUser implements AppUserProxy {
 	@Override
 	public String getUsername() {
 		return (appUser == null) ? null : appUser.getUsername();
+	}
+
+	@Override
+	public List<String> getHashtags() {
+		return (appUser == null) ? null : appUser.getHashtags();
 	}
 
 	@Override
@@ -245,12 +262,12 @@ public class CurrentUser implements AppUserProxy {
 		return false;
 	}
 
-	public List<FaveItemProxy> getFaveList() {
-		return faveList;
+	public Map<String, List<FaveItemProxy>> getFaveLists() {
+		return faveLists;
 	}
 
-	public void setFaveList(final List<FaveItemProxy> faveList) {
-		this.faveList = faveList;
+	public void setFaveLists(final Map<String, List<FaveItemProxy>> faveLists) {
+		this.faveLists = faveLists;
 	}
 
 	public boolean isFullListRetrieved() {

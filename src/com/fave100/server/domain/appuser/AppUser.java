@@ -96,6 +96,8 @@ public class AppUser extends DatastoreObject {
 	private String email;
 	private String avatar;
 	private Date joinDate;
+	// A denormalized list of all the hashtags the user has
+	private List<String> hashtags = new ArrayList<String>();
 	private boolean followingPrivate = false;
 	private boolean followersPrivate = false;
 
@@ -981,6 +983,14 @@ public class AppUser extends DatastoreObject {
 
 	public void setFollowersPrivate(final boolean followersPrivate) {
 		this.followersPrivate = followersPrivate;
+	}
+
+	public List<String> getHashtags() {
+		return hashtags;
+	}
+
+	public void setHashtags(final List<String> hashtags) {
+		this.hashtags = hashtags;
 	}
 
 }

@@ -3,6 +3,7 @@ package com.fave100.client.pages.users.widgets.autocomplete;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.events.song.SongSelectedEvent;
 import com.fave100.shared.Constants;
@@ -58,6 +59,7 @@ public class SongAutocompletePresenter extends
 	}
 
 	private final EventBus eventBus;
+	private CurrentUser _currentUser;
 	private final List<AsyncCallback<JavaScriptObject>> requests;
 	private int selection = 0;
 	private int maxSelection = -1;
@@ -67,9 +69,10 @@ public class SongAutocompletePresenter extends
 	private String _lastSearch = "";
 
 	@Inject
-	public SongAutocompletePresenter(final EventBus eventBus, final MyView view) {
+	public SongAutocompletePresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
+		_currentUser = currentUser;
 		requests = new LinkedList<AsyncCallback<JavaScriptObject>>();
 		getView().setUiHandlers(this);
 	}
@@ -80,7 +83,7 @@ public class SongAutocompletePresenter extends
 		FaveListSizeChangedEvent.register(eventBus, new FaveListSizeChangedEvent.Handler() {
 			@Override
 			public void onFaveListLoaded(final FaveListSizeChangedEvent event) {
-				if (event.getSize() == 0) {
+				if (event.getSize() == 0 && _currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG)) {
 					getView().showHelp();
 				}
 				else {
