@@ -73,6 +73,7 @@ public class UsersPresenter extends
 	@ContentSlot public static final Type<RevealContentHandler<?>> LIST_MANAGER_SLOT = new Type<RevealContentHandler<?>>();
 
 	public static final String USER_PARAM = "u";
+	public static final String LIST_PARAM = "list";
 
 	private String requestedUsername;
 	private String _requestedHashtag;
@@ -199,8 +200,8 @@ public class UsersPresenter extends
 		requestedUser = null;
 		isFollowing = false;
 		// Use parameters to determine what to reveal on page
-		requestedUsername = placeRequest.getParameter("u", "");
-		_requestedHashtag = placeRequest.getParameter("list", Constants.DEFAULT_HASHTAG);
+		requestedUsername = placeRequest.getParameter(USER_PARAM, "");
+		_requestedHashtag = placeRequest.getParameter(LIST_PARAM, Constants.DEFAULT_HASHTAG);
 		if (requestedUsername.isEmpty()) {
 			// Malformed request, send the user away
 			_placeManager.revealDefaultPlace();
@@ -275,6 +276,8 @@ public class UsersPresenter extends
 		favelist.refreshFavelist(ownPage);
 		usersFollowing.setUser(requestedUser);
 		usersFollowing.refreshLists();
+		listManager.setUser(requestedUser);
+		listManager.refreshList();
 		getView().setMobileView(true);
 
 		getProxy().manualReveal(UsersPresenter.this);

@@ -1,5 +1,7 @@
 package com.fave100.shared.requestfactory;
 
+import java.util.List;
+
 import com.fave100.server.domain.appuser.AppUser;
 import com.google.web.bindery.requestfactory.shared.EntityProxy;
 import com.google.web.bindery.requestfactory.shared.ProxyFor;
@@ -11,4 +13,6 @@ public interface AppUserProxy extends EntityProxy {
 	String getUsername();
 
 	String getAvatarImage();
+
+	List<String> getHashtags();
 }

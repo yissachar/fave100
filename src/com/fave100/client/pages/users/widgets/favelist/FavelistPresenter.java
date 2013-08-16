@@ -11,6 +11,7 @@ import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.pages.users.widgets.favelist.widgets.FavePickWidget;
+import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
@@ -119,16 +120,22 @@ public class FavelistPresenter extends
 					widgets.add(widget);
 					if (getView().asWidget().getElement().getClientHeight() + widget.getElement().getClientHeight() > Window.getClientHeight())
 						$(widget).scrollIntoView();
-					if (currentUser.getFaveList().size() == 1) {
-						// Only one song in list, show help bubble for whyline and focus
+
+					final int listSize = currentUser.getFaveLists().get(currentUser.getCurrentHashtag()).size();
+					if (listSize == 1) {
+						// Only one song in list, focus whyline for convenience
 						widget.focusWhyline();
-						widget.showWhylineHelpBubble();
+						// Show help bubble if on default list
+						if (currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG))
+							widget.showWhylineHelpBubble();
 					}
-					else {
-						if (currentUser.getFaveList().size() == 2) {
+					else if (listSize > 1) {
+						// Focus rank for easy rank changing
+						widget.focusRank();
+						// Show help bubble if on default list
+						if (currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG) && listSize == 2) {
 							widget.showRankWhylineHelpBubble();
 						}
-						widget.focusRank();
 					}
 				}
 			}
