@@ -37,6 +37,7 @@ public class CurrentUser implements AppUserProxy {
 	private AppUserProxy appUser;
 	private String avatar = "";
 	private Map<String, List<FaveItemProxy>> faveLists = new HashMap<String, List<FaveItemProxy>>();
+	private List<String> _hashtags;
 	private String _currentHashtag = Constants.DEFAULT_HASHTAG;
 	private FollowingResultProxy followingResult;
 	private boolean fullListRetrieved = false;
@@ -55,6 +56,7 @@ public class CurrentUser implements AppUserProxy {
 						setAppUser(event.getUser());
 						if (appUser != null) {
 							avatar = appUser.getAvatarImage();
+							_hashtags = appUser.getHashtags();
 
 							final AsyncCallback<FollowingResultProxy> followingReq = new AsyncCallback<FollowingResultProxy>() {
 								@Override
@@ -225,6 +227,10 @@ public class CurrentUser implements AppUserProxy {
 		faveLists.put(_currentHashtag, favelist);
 	}
 
+	public void addHashtag(final String hashtag) {
+		_hashtags.add(hashtag);
+	}
+
 	// Needed for RequestFactory
 	@Override
 	public EntityProxyId<?> stableId() {
@@ -243,7 +249,7 @@ public class CurrentUser implements AppUserProxy {
 
 	@Override
 	public List<String> getHashtags() {
-		return (appUser == null) ? null : appUser.getHashtags();
+		return _hashtags;
 	}
 
 	@Override
