@@ -3,6 +3,7 @@ package com.fave100.client.pages.users.widgets.listmanager;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
@@ -13,7 +14,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -30,12 +30,14 @@ public class ListManagerPresenter extends
 
 	private ApplicationRequestFactory _requestFactory;
 	private AppUserProxy _user;
+	private CurrentUser _currentUser;
 
 	@Inject
-	public ListManagerPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory) {
+	public ListManagerPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser) {
 		super(eventBus, view);
 		view.setUiHandlers(ListManagerPresenter.this);
 		_requestFactory = requestFactory;
+		_currentUser = currentUser;
 	}
 
 	@Override
@@ -46,12 +48,9 @@ public class ListManagerPresenter extends
 	@Override
 	public void addHashtag(final String name) {
 		final Request<Void> addFavelistReq = _requestFactory.faveListRequest().addFaveListForCurrentUser(name);
-		addFavelistReq.fire(new Receiver<Void>() {
-			@Override
-			public void onSuccess(final Void response) {
-				// TODO: Update list
-			}
-		});
+		addFavelistReq.fire();
+		_currentUser.addHashtag(name);
+		refreshList();
 	}
 
 	public void refreshList() {
