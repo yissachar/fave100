@@ -72,4 +72,8 @@ public class FaveItem {
 		this.songID = songID;
 	}
 
+	public String getId() {
+		return songID;
+	}
+
 }

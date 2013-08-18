@@ -6,6 +6,4 @@ public interface SongInterface {
 	String getArtist();
 
 	String getSong();
-
-	String getCoverArtUrl();
 }

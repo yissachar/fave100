@@ -162,15 +162,6 @@ public class Song extends DatastoreObject implements SongInterface {
 		this.id = id;
 	}
 
-	@Override
-	public String getCoverArtUrl() {
-		return coverArtUrl;
-	}
-
-	public void setCoverArtUrl(final String coverArtUrl) {
-		this.coverArtUrl = coverArtUrl;
-	}
-
 	public static void setYoutubeApiKey(final String key) {
 		YOUTUBE_API_KEY = key;
 	}

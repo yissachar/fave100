@@ -9,5 +9,5 @@ import com.google.web.bindery.requestfactory.shared.Service;
 
 @Service(Whyline.class)
 public interface WhylineRequest extends RequestContext {
-	Request<List<WhylineProxy>> getWhylinesForSong(SongProxy song);
+	Request<List<WhylineProxy>> getWhylinesForSong(String id);
 }

@@ -24,6 +24,7 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 	@UiField FlowPanel playlistHeader;
 	@UiField Anchor _username;
 	@UiField Image _avatar;
+	@UiField Anchor _hashtag;
 	@UiField FlowPanel playlistContainer;
 
 	@Inject
@@ -49,12 +50,26 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 	@Override
 	public void setUsername(final String username) {
 		_username.setText(username);
-		_username.setHref(new UrlBuilder(NameTokens.users).with(UsersPresenter.USER_PARAM, username).getUrl());
 	}
 
 	@Override
-	public void setUrl(final String avatar) {
+	public void setHashtag(final String hashtag) {
+		_hashtag.setText("#" + hashtag);
+	}
+
+	@Override
+	public void setAvatar(final String avatar) {
 		_avatar.setUrl(avatar);
+	}
+
+	@Override
+	public void setUrls(final String username, final String hashtag) {
+		// Set URL to user's list
+		_username.setHref(new UrlBuilder(NameTokens.users)
+				.with(UsersPresenter.USER_PARAM, username)
+				.with(UsersPresenter.LIST_PARAM, hashtag)
+				.getUrl());
+		//TODO: Set URL to hashtag		
 	}
 
 	@Override

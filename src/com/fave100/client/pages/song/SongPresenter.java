@@ -10,6 +10,7 @@ import com.fave100.client.pages.song.widgets.playlist.PlaylistPresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
+import com.fave100.shared.SongInterface;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
@@ -47,7 +48,7 @@ public class SongPresenter extends
 		SongUiHandlers {
 
 	public interface MyView extends BaseView, HasUiHandlers<SongUiHandlers> {
-		void setSongInfo(SongProxy song);
+		void setSongInfo(SongInterface song);
 
 		void setPlaylist(Boolean visible);
 
@@ -78,7 +79,7 @@ public class SongPresenter extends
 	private final CurrentUser _currentUser;
 	private final PlaceManager _placeManager;
 	private final EventBus _eventBus;
-	private SongProxy songProxy;
+	private SongInterface songProxy;
 	private AppUserProxy _requestedAppUser;
 	@Inject YouTubePresenter youtubePresenter;
 	@Inject PlaylistPresenter playlistPresenter;
@@ -113,11 +114,16 @@ public class SongPresenter extends
 		final String username = URL.decode(placeRequest.getParameter(USER_PARAM, ""));
 		final String hashtag = URL.decode(placeRequest.getParameter(LIST_PARAM, Constants.DEFAULT_HASHTAG));
 
-		if (id.isEmpty()) {
-			// Malformed request, send the user away
-			_placeManager.revealDefaultPlace();
-		}
-		else {
+		// Valid parameter combinations:
+		// id: show the song and any whylines
+		// user: show the users #fave100 playlist, starting from the first song
+		// hashtag: show the aggregate list for the given hashtag
+		// id + user: show the user's #fave100 playlist, starting from the provided song
+		// id + hashtag: show the aggregate list for the given hashtag, starting from the provided song
+		// user + hashtag: show the user's playlist for the given hashtag, starting from the first song
+		// id + user + hashtag: show the user's playlist for the given hashtag, starting from the provided song
+
+		if (!id.isEmpty()) {
 			// Load the song from the datastore
 			final Request<SongProxy> getSongReq = _requestFactory.songRequest()
 					.findSong(id);
@@ -130,51 +136,74 @@ public class SongPresenter extends
 					getProxy().manualReveal(SongPresenter.this);
 				}
 			});
+		}
 
-			// By default, hide playlist
-			getView().setPlaylist(false);
-			getView().showWhylines();
+		// By default, hide playlist
+		getView().setPlaylist(false);
+		getView().showWhylines();
 
-			// If there is a user, get their info and their playlist
-			if (!username.isEmpty()) {
-				// If we have a current user, just grab their info locally
-				if (_currentUser.isLoggedIn() && _currentUser.getUsername().equals(username)) {
-					_requestedAppUser = _currentUser;
-					playlistPresenter.setUserInfo(_currentUser.getUsername(), _currentUser.getAvatarImage());
-				}
-				else if (_requestedAppUser != null && username.equals(_requestedAppUser.getUsername())) {
-					// We already fetched the user info
-					playlistPresenter.setUserInfo(_requestedAppUser.getUsername(), _requestedAppUser.getAvatarImage());
-				}
-				else {
-					// Get username and avatar from the datastore
-					final Request<AppUserProxy> getUserReq = _requestFactory.appUserRequest().findAppUser(username);
-					getUserReq.fire(new Receiver<AppUserProxy>() {
-						@Override
-						public void onSuccess(final AppUserProxy user) {
-							_requestedAppUser = user;
-							if (user != null) {
-								playlistPresenter.setUserInfo(user.getUsername(), user.getAvatarImage());
-							}
-						}
-					});
-				}
-
-				// Get playlist
-				final Request<List<FaveItemProxy>> getFavelistReq = _requestFactory.faveListRequest().getFaveList(username, hashtag);
-				getFavelistReq.fire(new Receiver<List<FaveItemProxy>>() {
+		// If there is a user, get their info and their playlist
+		if (!username.isEmpty()) {
+			// If we have a current user, just grab their info locally
+			if (_currentUser.isLoggedIn() && _currentUser.getUsername().equals(username)) {
+				_requestedAppUser = _currentUser;
+				playlistPresenter.setUserInfo(_currentUser.getUsername(), hashtag, _currentUser.getAvatarImage());
+			}
+			else if (_requestedAppUser != null && username.equals(_requestedAppUser.getUsername())) {
+				// We already fetched the user info
+				playlistPresenter.setUserInfo(_requestedAppUser.getUsername(), hashtag, _requestedAppUser.getAvatarImage());
+			}
+			else {
+				// Get username and avatar from the datastore
+				final Request<AppUserProxy> getUserReq = _requestFactory.appUserRequest().findAppUser(username);
+				getUserReq.fire(new Receiver<AppUserProxy>() {
 					@Override
-					public void onSuccess(final List<FaveItemProxy> favelist) {
-						// Only show playlist if good username
-						if (favelist != null) {
-							getView().setPlaylist(true);
-							playlistPresenter.setPlaylist(favelist, id);
-							getView().showPlaylist();
+					public void onSuccess(final AppUserProxy user) {
+						_requestedAppUser = user;
+						if (user != null) {
+							playlistPresenter.setUserInfo(user.getUsername(), hashtag, user.getAvatarImage());
 						}
 					}
 				});
 			}
 
+			// Get the list for the requested user 
+			// TODO: If user's own playlist, use that instead of going to server
+			final Request<List<FaveItemProxy>> getFavelistReq = _requestFactory.faveListRequest().getFaveList(username, hashtag);
+			getFavelistReq.fire(new Receiver<List<FaveItemProxy>>() {
+				@Override
+				public void onSuccess(final List<FaveItemProxy> favelist) {
+					loadedFavelist(id, favelist);
+				}
+			});
+
+		}
+		else {
+			// Get the master list for the hashtag
+			final Request<List<FaveItemProxy>> getFaveListReq = _requestFactory.faveListRequest().getMasterFaveList(hashtag);
+			getFaveListReq.fire(new Receiver<List<FaveItemProxy>>() {
+				@Override
+				public void onSuccess(final List<FaveItemProxy> favelist) {
+					loadedFavelist(id, favelist);
+				}
+			});
+		}
+	}
+
+	private void loadedFavelist(final String id, final List<FaveItemProxy> favelist) {
+		// Only show playlist if good params
+		if (favelist != null && favelist.size() > 0) {
+			getView().setPlaylist(true);
+			playlistPresenter.setPlaylist(favelist, id.isEmpty() ? favelist.get(0).getId() : id);
+			getView().showPlaylist();
+
+			// No id provided, start from first song in list
+			if (id.isEmpty()) {
+				songProxy = favelist.get(0);
+				updateYouTube();
+
+				getProxy().manualReveal(SongPresenter.this);
+			}
 		}
 	}
 
