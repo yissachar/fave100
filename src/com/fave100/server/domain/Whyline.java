@@ -43,8 +43,8 @@ public class Whyline extends DatastoreObject {
 		return ofy().load().type(Whyline.class).id(id).get();
 	}
 
-	public static List<Whyline> getWhylinesForSong(final Song song) {
-		final List<Whyline> whylines = ofy().load().type(Whyline.class).filter("song", Ref.create(song)).limit(15).list();
+	public static List<Whyline> getWhylinesForSong(final String id) {
+		final List<Whyline> whylines = ofy().load().type(Whyline.class).filter("song", Ref.create(Key.create(Song.class, id))).limit(15).list();
 		// Get the users avatars 
 		// TODO: Should be a bulk query for efficiency
 		for (final Whyline whyline : whylines) {

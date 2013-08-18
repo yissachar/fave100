@@ -17,10 +17,14 @@
 			overflow: hidden;
 		}
 		
-		.username {
+		.username, .hashtag {
 			float: left;
 			font-size: 1.3em;
 			font-weight: bold;			
+		}
+		
+		.hashtag {
+			margin-left: 20px;
 		}
 		
 		.avatar {
@@ -42,7 +46,8 @@
 		<g:FlowPanel ui:field="playlistHeader" ui:styleName="{style.playlistHeader}">
 			<g:FlowPanel ui:styleName="{style.userInfo}">
 				<g:Image ui:field="_avatar" ui:styleName="{style.avatar}"/>
-				<g:Anchor ui:field="_username" ui:styleName="{style.username}"/>			
+				<g:Anchor ui:field="_username" ui:styleName="{style.username}"/>
+				<g:Anchor ui:field="_hashtag" ui:styleName="{style.hashtag}"/>			
 			</g:FlowPanel>
 		</g:FlowPanel>
 		<g:FlowPanel ui:field="playlistContainer" ui:styleName="{style.playlist}"/>

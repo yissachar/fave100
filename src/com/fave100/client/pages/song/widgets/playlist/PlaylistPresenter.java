@@ -17,7 +17,11 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	public interface MyView extends View {
 		void setUsername(String username);
 
-		void setUrl(String avatar);
+		void setHashtag(String hashtag);
+
+		void setAvatar(String avatar);
+
+		void setUrls(String username, String hashtag);
 
 		void setPlaylist(List<PlaylistItem> playlistItems);
 
@@ -58,9 +62,11 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		});
 	}
 
-	public void setUserInfo(final String username, final String avatar) {
+	public void setUserInfo(final String username, final String hashtag, final String avatar) {
 		getView().setUsername(username);
-		getView().setUrl(avatar);
+		getView().setHashtag(hashtag);
+		getView().setAvatar(avatar);
+		getView().setUrls(username, hashtag);
 	}
 
 	public void setPlaylist(final List<FaveItemProxy> playlist, final String songPageID) {

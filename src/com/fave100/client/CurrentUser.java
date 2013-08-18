@@ -193,6 +193,11 @@ public class CurrentUser implements AppUserProxy {
 					public String getArtist() {
 						return artist;
 					}
+
+					@Override
+					public String getId() {
+						return songID;
+					}
 				};
 				// Ensure local list in sync				
 				getFaveLists().get(hashtag).add(item);

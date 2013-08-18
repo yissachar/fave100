@@ -115,7 +115,7 @@ public class FavelistPresenter extends
 			public void onFaveItemAdded(final FaveItemAddedEvent event) {
 				if (isEditable()) {
 					final FaveItemProxy item = event.getFaveItemProxy();
-					final FavePickWidget widget = new FavePickWidget(eventBus, item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
+					final FavePickWidget widget = new FavePickWidget(eventBus, item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername(), hashtag);
 					getView().addPick(widget);
 					widgets.add(widget);
 					if (getView().asWidget().getElement().getClientHeight() + widget.getElement().getClientHeight() > Window.getClientHeight())
@@ -172,7 +172,7 @@ public class FavelistPresenter extends
 		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 		int i = 1;
 		for (final FaveItemProxy item : faveList) {
-			final FavePickWidget widget = new FavePickWidget(eventBus, item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername());
+			final FavePickWidget widget = new FavePickWidget(eventBus, item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername(), hashtag);
 			pickWidgets.add(widget);
 			i++;
 		}
@@ -248,6 +248,11 @@ public class FavelistPresenter extends
 							@Override
 							public String getArtist() {
 								return faveItem.getArtist();
+							}
+
+							@Override
+							public String getId() {
+								return songID;
 							}
 						};
 						currentUser.getFaveList().add(i, newfaveItem);

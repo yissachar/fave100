@@ -2,8 +2,8 @@ package com.fave100.client.pages.song;
 
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.song.widgets.whyline.WhylineWaterfall;
+import com.fave100.shared.SongInterface;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -98,7 +98,7 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	}
 
 	@Override
-	public void setSongInfo(final SongProxy song) {
+	public void setSongInfo(final SongInterface song) {
 		setSongTitle(song.getSong());
 		setArtistName(song.getArtist());
 		whylineWaterfall.setWhylines(song);

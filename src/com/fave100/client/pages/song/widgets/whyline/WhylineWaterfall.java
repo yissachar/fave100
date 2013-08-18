@@ -2,8 +2,8 @@ package com.fave100.client.pages.song.widgets.whyline;
 
 import java.util.List;
 
+import com.fave100.shared.SongInterface;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.SongProxy;
 import com.fave100.shared.requestfactory.WhylineProxy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.CssResource;
@@ -27,7 +27,7 @@ public class WhylineWaterfall extends Composite {
 	@UiField WhylineWaterfallStyle style;
 	@UiField VerticalPanel whylines;
 	private ApplicationRequestFactory requestFactory;
-	private SongProxy _song;
+	private SongInterface _song;
 	private boolean _loaded = false;
 
 	interface WhylineWaterfallStyle extends CssResource {
@@ -39,7 +39,7 @@ public class WhylineWaterfall extends Composite {
 		this.requestFactory = requestFactory;
 	}
 
-	public void setWhylines(final SongProxy song) {
+	public void setWhylines(final SongInterface song) {
 		whylines.clear();
 		_loaded = false;
 		_song = song;
@@ -49,7 +49,7 @@ public class WhylineWaterfall extends Composite {
 		if (show) {
 			setVisible(true);
 			if (!_loaded && _song != null) {
-				final Request<List<WhylineProxy>> whylineReq = requestFactory.whylineRequest().getWhylinesForSong(_song);
+				final Request<List<WhylineProxy>> whylineReq = requestFactory.whylineRequest().getWhylinesForSong(_song.getId());
 				whylineReq.fire(new Receiver<List<WhylineProxy>>() {
 					@Override
 					public void onSuccess(final List<WhylineProxy> whylineList) {
