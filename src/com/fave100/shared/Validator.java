@@ -41,7 +41,21 @@ public abstract class Validator {
 
 	public static String validateWhyline(final String whyline) {
 		if (whyline.length() > Constants.MAX_WHYLINE_LENGTH) {
-			return "Whyline must be 80 characters or less";
+			return "Whyline must be " + Constants.MAX_WHYLINE_LENGTH + " characters or less";
+		}
+		return null;
+	}
+
+	public static String validateHashtag(final String hashtag) {
+		final String hashtagPattern = "^[a-zA-Z0-9]+$";
+		if (hashtag == null || hashtag.equals("")) {
+			return "Hashtag cannot be left empty";
+		}
+		if (hashtag.length() > Constants.MAX_HASHTAG_LENGTH) {
+			return "Hashtag must be " + Constants.MAX_HASHTAG_LENGTH + " characters or less";
+		}
+		else if (!hashtag.matches(hashtagPattern)) {
+			return "Username must only consist of letters and numbers";
 		}
 		return null;
 	}

@@ -8,13 +8,16 @@ import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.UrlBuilder;
+import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -26,6 +29,10 @@ public class ListManagerPresenter extends
 
 	public interface MyView extends View, HasUiHandlers<ListManagerUiHandlers> {
 		void refreshList(List<FlowPanel> panels);
+
+		void showError(String msg);
+
+		void hideError();
 	}
 
 	private ApplicationRequestFactory _requestFactory;
@@ -47,10 +54,29 @@ public class ListManagerPresenter extends
 
 	@Override
 	public void addHashtag(final String name) {
+		if (name.isEmpty())
+			return;
+
+		final String error = Validator.validateHashtag(name);
+		if (error != null) {
+			getView().showError(error);
+			return;
+		}
+
 		final Request<Void> addFavelistReq = _requestFactory.faveListRequest().addFaveListForCurrentUser(name);
-		addFavelistReq.fire();
-		_currentUser.addHashtag(name);
-		refreshList();
+		addFavelistReq.fire(new Receiver<Void>() {
+			@Override
+			public void onSuccess(final Void response) {
+				_currentUser.addHashtag(name);
+				refreshList();
+				getView().hideError();
+			}
+
+			@Override
+			public void onFailure(final ServerFailure failure) {
+				getView().showError(failure.getMessage());
+			}
+		});
 	}
 
 	public void refreshList() {

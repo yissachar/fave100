@@ -16,5 +16,6 @@
 		<g:TextBox ui:field="newHashtag"/>
 		<g:Button ui:field="addHashtagButton">Add</g:Button>
 		<g:FlowPanel ui:field="lists"/>
+		<g:Label ui:field="errorMsg" ui:styleName="error" />
 	</g:HTMLPanel>
 </ui:UiBinder>

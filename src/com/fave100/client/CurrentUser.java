@@ -82,7 +82,7 @@ public class CurrentUser implements AppUserProxy {
 							// Clear all state
 							appUser = null;
 							avatar = "";
-							faveLists = null;
+							faveLists = new HashMap<String, List<FaveItemProxy>>();
 							followingResult = null;
 							fullListRetrieved = false;
 							_currentHashtag = Constants.DEFAULT_HASHTAG;
