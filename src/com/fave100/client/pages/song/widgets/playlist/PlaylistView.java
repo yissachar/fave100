@@ -50,16 +50,19 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 	@Override
 	public void setUsername(final String username) {
 		_username.setText(username);
+		_username.setVisible(!username.isEmpty());
 	}
 
 	@Override
 	public void setHashtag(final String hashtag) {
 		_hashtag.setText("#" + hashtag);
+		_hashtag.setVisible(!hashtag.isEmpty());
 	}
 
 	@Override
 	public void setAvatar(final String avatar) {
 		_avatar.setUrl(avatar);
+		_avatar.setVisible(!avatar.isEmpty());
 	}
 
 	@Override
