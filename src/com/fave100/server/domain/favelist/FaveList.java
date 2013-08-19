@@ -11,6 +11,7 @@ import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.shared.Validator;
+import com.fave100.shared.exceptions.ValidationException;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
@@ -52,6 +53,11 @@ public class FaveList extends DatastoreObject {
 	}
 
 	public static void addFaveListForCurrentUser(final String hashtagName) throws Exception {
+		final String error = Validator.validateHashtag(hashtagName);
+		if (error != null) {
+			throw new ValidationException(error);
+		}
+
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
