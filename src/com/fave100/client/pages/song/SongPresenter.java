@@ -184,6 +184,7 @@ public class SongPresenter extends
 			getFaveListReq.fire(new Receiver<List<FaveItemProxy>>() {
 				@Override
 				public void onSuccess(final List<FaveItemProxy> favelist) {
+					playlistPresenter.setUserInfo("", hashtag, "");
 					loadedFavelist(id, favelist);
 				}
 			});
