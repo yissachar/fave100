@@ -36,6 +36,10 @@ public class Hashtag {
 
 	/* Getters and Setters */
 
+	public String getId() {
+		return id;
+	}
+
 	public Ref<AppUser> getCreatedBy() {
 		return createdBy;
 	}
