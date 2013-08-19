@@ -6,9 +6,16 @@
     <description>Clean up sessions</description>
     <schedule>every 15 minutes</schedule>
   </cron>  
+  
   <cron>
   	<url>/cron/pwdcleanup</url>
   	<description>Clean up expired password tokens</description>
   	<schedule>every day 00:00</schedule>
+  </cron>
+  
+  <cron>
+  	<url>/cron/hashtags</url>
+  	<description>Build hashtag master lists</description>
+  	<schedule>every 4 hours</schedule>
   </cron>
 </cronentries>

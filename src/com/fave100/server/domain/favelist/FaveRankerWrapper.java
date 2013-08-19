@@ -1,7 +1,6 @@
 package com.fave100.server.domain.favelist;
 
-
-class FaveRankerWrapper {
+public class FaveRankerWrapper {
 
 	private FaveItem faveItem;
 

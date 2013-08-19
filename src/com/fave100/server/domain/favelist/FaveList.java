@@ -3,12 +3,7 @@ package com.fave100.server.domain.favelist;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import com.fave100.server.domain.DatastoreObject;
@@ -230,39 +225,7 @@ public class FaveList extends DatastoreObject {
 
 	public static List<FaveItem> getMasterFaveList(final String hashtag) {
 		// TODO: Get from Hashtag datastore object, Cache in memcache, update hashtags by adding to task queue, NEVER CALCULATE IN RESPONSE TO REQUEST!
-		final HashMap<FaveRankerWrapper, Integer> all = new HashMap<FaveRankerWrapper, Integer>();
-
-		final List<FaveList> faveLists = ofy().load().type(FaveList.class).filter("hashtag", hashtag).list();
-		for (final FaveList faveList : faveLists) {
-			for (final FaveItem faveItem : faveList.getList()) {
-				final FaveRankerWrapper faveHolder = new FaveRankerWrapper(faveItem);
-				final int newVal = (all.get(faveHolder) != null) ? all.get(faveHolder) + 1 : 1;
-				all.put(faveHolder, newVal);
-			}
-		}
-
-		final List<Map.Entry<FaveRankerWrapper, Integer>> sorted = new LinkedList<Map.Entry<FaveRankerWrapper, Integer>>(all.entrySet());
-		Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Integer>>()
-		{
-			@Override
-			public int compare(final Map.Entry<FaveRankerWrapper, Integer> o1, final Map.Entry<FaveRankerWrapper, Integer> o2)
-			{
-				return (o2.getValue()).compareTo(o1.getValue());
-			}
-		});
-
-		int i = 0;
-		final List<FaveItem> master = new ArrayList<FaveItem>();
-		for (final Map.Entry<FaveRankerWrapper, Integer> entry : sorted) {
-			if (i >= 100)
-				break;
-			master.add(entry.getKey().getFaveItem());
-			i++;
-		}
-		//final Hashtag fave100Master = ofy().load().type(Hashtag.class).id("fave100").get();
-		//fave100Master.setList(master100);
-		//ofy().save().entity(fave100Master).now();
-		return master;
+		return ofy().load().type(Hashtag.class).id(hashtag).get().getList();
 	}
 
 	/* Getters and Setters */
