@@ -50,7 +50,7 @@ public class FaveList extends DatastoreObject {
 	}
 
 	public static FaveList findFaveList(final String username, final String hashtag) {
-		return findFaveList(username + FaveList.SEPERATOR_TOKEN + hashtag);
+		return findFaveList(username.toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag.toLowerCase());
 	}
 
 	public static void addFaveListForCurrentUser(final String hashtagName) throws Exception {
@@ -89,7 +89,7 @@ public class FaveList extends DatastoreObject {
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
+		final FaveList faveList = findFaveList(currentUser.getUsername(), hashtag);
 		if (faveList.getList().size() >= FaveList.MAX_FAVES)
 			throw new SongLimitReachedException();
 
@@ -123,7 +123,8 @@ public class FaveList extends DatastoreObject {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
+
+		final FaveList faveList = findFaveList(currentUser.getUsername(), hashtag);
 		if (faveList == null)
 			return;
 		// Find the song to remove
@@ -151,10 +152,11 @@ public class FaveList extends DatastoreObject {
 	}
 
 	public static void rerankFaveItemForCurrentUser(final String hashtag, final String songID, final int newIndex) throws NotLoggedInException {
+
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
-		final FaveList faveList = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
+		final FaveList faveList = findFaveList(currentUser.getUsername(), hashtag);
 		if (faveList == null)
 			return;
 
@@ -193,8 +195,7 @@ public class FaveList extends DatastoreObject {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
-		final FaveList faveList = ofy().load().type(FaveList.class)
-				.id(currentUser.getUsername().toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
+		final FaveList faveList = findFaveList(currentUser.getUsername(), hashtag);
 		Objects.requireNonNull(faveList);
 
 		// Find the song to edit whyline
@@ -230,7 +231,7 @@ public class FaveList extends DatastoreObject {
 	}
 
 	public static List<FaveItem> getFaveList(final String username, final String hashtag) {
-		final FaveList faveList = ofy().load().type(FaveList.class).id(username.toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag).get();
+		final FaveList faveList = findFaveList(username, hashtag);
 		if (faveList == null)
 			return null;
 		return faveList.getList();

@@ -41,13 +41,13 @@ public class MemcacheManager {
 
 	public int getFaveItemScore(final String id, final String hashtag) {
 		// Need to store in intermediate object, since casting a null results in NPE
-		final Object cacheItem = _cache.get(FAVEITEM_RANK_NAMESPACE + SEPARATOR_TOKEN + hashtag + SEPARATOR_TOKEN + id);
+		final Object cacheItem = _cache.get(FAVEITEM_RANK_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase() + SEPARATOR_TOKEN + id);
 		return (cacheItem == null) ? 0 : (int)cacheItem;
 	}
 
 	public void putFaveItemScore(final String id, final String hashtag, final int score) {
 		// e.g. {faveItemRank:rock2013:645116, 245}
-		_cache.put(FAVEITEM_RANK_NAMESPACE + SEPARATOR_TOKEN + hashtag + SEPARATOR_TOKEN + id, score);
+		_cache.put(FAVEITEM_RANK_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase() + SEPARATOR_TOKEN + id, score);
 
 		// If it now belongs to master list for hashtag, update master
 		final List<FaveItem> master = getMasterFaveList(hashtag);
@@ -110,12 +110,12 @@ public class MemcacheManager {
 
 	public List<FaveItem> getMasterFaveList(final String hashtag) {
 		// Need to store in intermediate object, since casting a null results in NPE
-		final Object cacheItem = _cache.get(MASTER_FAVELIST_NAMESPACE + SEPARATOR_TOKEN + hashtag);
+		final Object cacheItem = _cache.get(MASTER_FAVELIST_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase());
 		return cacheItem == null ? null : (List<FaveItem>)cacheItem;
 	}
 
 	public void putMasterFaveList(final String hashtag, final List<FaveItem> list) {
-		_cache.put(MASTER_FAVELIST_NAMESPACE + SEPARATOR_TOKEN + hashtag, list);
+		_cache.put(MASTER_FAVELIST_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase(), list);
 	}
 
 	/* Getters and Setters */
