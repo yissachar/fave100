@@ -22,6 +22,8 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class ListManagerPresenter extends
 		PresenterWidget<ListManagerPresenter.MyView>
@@ -38,13 +40,15 @@ public class ListManagerPresenter extends
 	private ApplicationRequestFactory _requestFactory;
 	private AppUserProxy _user;
 	private CurrentUser _currentUser;
+	private PlaceManager _placeManager;
 
 	@Inject
-	public ListManagerPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser) {
+	public ListManagerPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager) {
 		super(eventBus, view);
 		view.setUiHandlers(ListManagerPresenter.this);
 		_requestFactory = requestFactory;
 		_currentUser = currentUser;
+		_placeManager = placeManager;
 	}
 
 	@Override
@@ -70,6 +74,12 @@ public class ListManagerPresenter extends
 				_currentUser.addHashtag(name);
 				refreshList();
 				getView().hideError();
+				// Switch to new hashtag page
+				_placeManager.revealPlace(new PlaceRequest.Builder()
+						.nameToken(NameTokens.users)
+						.with(UsersPresenter.USER_PARAM, _currentUser.getUsername())
+						.with(UsersPresenter.LIST_PARAM, name)
+						.build());
 			}
 
 			@Override
