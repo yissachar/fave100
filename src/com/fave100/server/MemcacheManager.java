@@ -72,7 +72,7 @@ public class MemcacheManager {
 		}
 
 		// TODO: Bad that we have to lookup the song each time a rerank occurs -> pass the Song in since we have it already from add or remove
-		if (score > 0 && rank < FaveList.MAX_FAVES) {
+		if (rank < FaveList.MAX_FAVES) {
 			FaveItem faveItem = existingFave;
 			// Fave not in master yet, insert new fave
 			if (faveItem == null) {
@@ -90,10 +90,10 @@ public class MemcacheManager {
 				master.remove(existingFave);
 			}
 
-			if (master.size() == FaveList.MAX_FAVES || rank < master.size()) {
+			if (rank < master.size()) {
 				master.add(rank, faveItem);
 			}
-			else {
+			else if (score > 0) {
 				master.add(faveItem);
 			}
 
