@@ -104,6 +104,7 @@ public class SongAutocompletePresenter extends
 	protected void onReveal() {
 		super.onReveal();
 		getAutocompleteResults("", true);
+		getView().setSuggestions(null, 0);
 		getView().resizeSearch();
 	}
 
