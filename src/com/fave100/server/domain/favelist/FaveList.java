@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fave100.server.MemcacheManager;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
@@ -109,10 +110,13 @@ public class FaveList extends DatastoreObject {
 
 		if (unique == false)
 			throw new SongAlreadyInListException();
-		;
+
 		// Create the new FaveItem
 		faveList.getList().add(newFaveItem);
 		ofy().save().entities(faveList).now();
+
+		// Modify memcache ranking
+		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, 1);
 	}
 
 	public static void removeFaveItemForCurrentUser(final String hashtag, final String songID) throws NotLoggedInException {
@@ -141,6 +145,9 @@ public class FaveList extends DatastoreObject {
 		}
 		faveList.getList().remove(faveItemToRemove);
 		ofy().save().entities(faveList).now();
+
+		// Modify memcache ranking
+		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, -1);
 	}
 
 	public static void rerankFaveItemForCurrentUser(final String hashtag, final String songID, final int newIndex) throws NotLoggedInException {
@@ -230,8 +237,12 @@ public class FaveList extends DatastoreObject {
 	}
 
 	public static List<FaveItem> getMasterFaveList(final String hashtag) {
-		// TODO: Get from Hashtag datastore object, Cache in memcache, update hashtags by adding to task queue, NEVER CALCULATE IN RESPONSE TO REQUEST!
-		return ofy().load().type(Hashtag.class).id(hashtag).get().getList();
+		List<FaveItem> master = MemcacheManager.getInstance().getMasterFaveList(hashtag);
+		// Go to the datastore if memcache doesn't have it
+		if (master == null) {
+			master = ofy().load().type(Hashtag.class).id(hashtag).get().getList();
+		}
+		return master;
 	}
 
 	/* Getters and Setters */
