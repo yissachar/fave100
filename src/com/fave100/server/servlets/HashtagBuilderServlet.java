@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fave100.server.MemcacheManager;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveRankerWrapper;
@@ -57,6 +58,7 @@ public class HashtagBuilderServlet extends HttpServlet
 			final Hashtag hashtag = iterator.next();
 			final HashMap<FaveRankerWrapper, Integer> all = new HashMap<FaveRankerWrapper, Integer>();
 
+			// Add up the total rank for each song in the list
 			final List<FaveList> faveLists = ofy().load().type(FaveList.class).filter("hashtag", hashtag.getId()).list();
 			for (final FaveList faveList : faveLists) {
 				for (final FaveItem faveItem : faveList.getList()) {
@@ -66,6 +68,7 @@ public class HashtagBuilderServlet extends HttpServlet
 				}
 			}
 
+			// Sort the list
 			final List<Map.Entry<FaveRankerWrapper, Integer>> sorted = new LinkedList<Map.Entry<FaveRankerWrapper, Integer>>(all.entrySet());
 			Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Integer>>()
 			{
@@ -76,18 +79,26 @@ public class HashtagBuilderServlet extends HttpServlet
 				}
 			});
 
+			// Add everything to memcache
 			int i = 0;
 			final List<FaveItem> master = new ArrayList<FaveItem>();
 			for (final Map.Entry<FaveRankerWrapper, Integer> entry : sorted) {
-				if (i >= 100)
-					break;
-				master.add(entry.getKey().getFaveItem());
-				i++;
+				// Add the top 100 songs to master list
+				if (i < 100) {
+					master.add(entry.getKey().getFaveItem());
+					i++;
+				}
+				MemcacheManager.getInstance().putFaveItemScore(entry.getKey().getFaveItem().getId(), hashtag.getId(), entry.getValue());
 			}
 
+			// Save the master list back to the datastore
 			hashtag.setList(master);
 			ofy().save().entity(hashtag).now();
 
+			// And memcache the master
+			MemcacheManager.getInstance().putMasterFaveList(hashtag.getId(), master);
+
+			// If we processed the full 1000 limit, grab the next batch of hashtags to process
 			if (count == 1000)
 				shouldContinue = true;
 		}
