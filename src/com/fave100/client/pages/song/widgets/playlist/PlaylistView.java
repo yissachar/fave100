@@ -2,6 +2,7 @@ package com.fave100.client.pages.song.widgets.playlist;
 
 import java.util.List;
 
+import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
@@ -72,7 +73,10 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 				.with(UsersPresenter.USER_PARAM, username)
 				.with(UsersPresenter.LIST_PARAM, hashtag)
 				.getUrl());
-		//TODO: Set URL to hashtag		
+		//TODO: Is this where we want hashtag url to go?
+		_hashtag.setHref(new UrlBuilder(NameTokens.song)
+				.with(SongPresenter.LIST_PARAM, hashtag)
+				.getUrl());
 	}
 
 	@Override
