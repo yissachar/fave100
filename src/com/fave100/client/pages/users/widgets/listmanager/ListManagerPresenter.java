@@ -34,6 +34,9 @@ public class ListManagerPresenter extends
 		void hideError();
 
 		void setOwnList(boolean ownList);
+
+		void hideDropdown();
+
 	}
 
 	private ApplicationRequestFactory _requestFactory;
@@ -41,6 +44,7 @@ public class ListManagerPresenter extends
 	private String _hashtag;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
+	private boolean _globalList = false;
 
 	@Inject
 	public ListManagerPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager) {
@@ -54,6 +58,12 @@ public class ListManagerPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+	}
+
+	@Override
+	protected void onHide() {
+		super.onHide();
+		getView().hideDropdown();
 	}
 
 	@Override
@@ -72,7 +82,7 @@ public class ListManagerPresenter extends
 			@Override
 			public void onSuccess(final Void response) {
 				_currentUser.addHashtag(name);
-				refreshList();
+				refreshUsersLists();
 				getView().hideError();
 				listChanged(name);
 			}
@@ -84,7 +94,8 @@ public class ListManagerPresenter extends
 		});
 	}
 
-	public void refreshList() {
+	@Override
+	public void refreshUsersLists() {
 		final List<String> hashtags = new ArrayList<String>();
 		hashtags.add(Constants.DEFAULT_HASHTAG);
 		hashtags.addAll(_user.getHashtags());
@@ -105,8 +116,30 @@ public class ListManagerPresenter extends
 	}
 
 	@Override
-	public void setGlobalList(final boolean global) {
+	public void getGlobalAutocomplete(final String searchTerm) {
+		if (searchTerm.isEmpty()) {
+			final List<String> emptyList = new ArrayList<String>();
+			getView().refreshList(emptyList, _hashtag);
+			return;
+		}
 
+		final Request<List<String>> autocompleteReq = _requestFactory.faveListRequest().getHashtagAutocomplete(searchTerm);
+		autocompleteReq.fire(new Receiver<List<String>>() {
+			@Override
+			public void onSuccess(final List<String> suggestions) {
+				getView().refreshList(suggestions, _hashtag);
+			}
+		});
+	}
+
+	@Override
+	public void setGlobalList(final boolean global) {
+		_globalList = global;
+	}
+
+	@Override
+	public boolean isGlobalList() {
+		return _globalList;
 	}
 
 	/* Getters and Setters */
@@ -135,4 +168,10 @@ interface ListManagerUiHandlers extends UiHandlers {
 	void listChanged(String list);
 
 	void setGlobalList(boolean global);
+
+	boolean isGlobalList();
+
+	void getGlobalAutocomplete(String searchTerm);
+
+	void refreshUsersLists();
 }
