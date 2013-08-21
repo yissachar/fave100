@@ -277,6 +277,7 @@ public class UsersPresenter extends
 		usersFollowing.setUser(requestedUser);
 		usersFollowing.refreshLists();
 		listManager.setUser(requestedUser);
+		listManager.setHashtag(_requestedHashtag);
 		listManager.refreshList();
 		getView().setMobileView(true);
 

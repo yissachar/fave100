@@ -6,16 +6,116 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>
+		
+	<ui:style type="com.fave100.client.pages.users.widgets.listmanager.ListManagerView.ListManagerStyle">
 		.container {
 			margin-top: 15px;
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: -moz-none;
+			-ms-user-select: none;
+			user-select: none; 
+		}
+		
+		.currentListContainer {
+			border: 1px solid #bbb;
+			padding: 5px;
+			background-color: #f3f3f3;
+			box-shadow: 0px 1px 3px 5px #fff;
+			cursor: pointer;
+	 	}
+	 	
+	 	.currentListContainer img {
+			float: right;
+			opacity: 0.6;
+			-moz-transform: rotate(90deg);
+		    -webkit-transform: rotate(90deg);
+		    -o-transform: rotate(90deg);
+		    -ms-transform: rotate(90deg);
+	 	}
+	 	
+	 	.dropdownVisible img {			
+			-moz-transform: rotate(-90deg);
+		    -webkit-transform: rotate(-90deg);
+		    -o-transform: rotate(-90deg);
+		    -ms-transform: rotate(-90deg);
+	 	}
+	 	
+		.currentList {
+						
+		}
+		
+		.listDropdown {
+			background-color: #fdfdfd;
+			border: 1px solid #bbb;
+			border-top: 0px;
+		}
+		
+		.searchContainer {
+			padding: 10px 0;
+		}
+		
+		
+		.searchBox {
+			margin: 0 5px;
+			display: block;
+			width: 90%;
+		}	
+		
+		.tabContainer {
+			overflow: hidden;
+			cursor: pointer;
+			border-bottom: 1px solid #bbb;
+		}
+		
+		.tabContainer > div {
+			float: left;
+			padding: 4px;			
+		}
+		
+		.tabContainer > div:hover {
+			color: #000;
+		}
+		
+		.listContainer {
+			cursor: pointer;
+		}
+		
+		.listContainer > div {			
+			padding: 5px;
+		}
+		
+		.listContainer > div:hover {
+			background-color: #5eaae5;
+			color: #fff;
+		}
+		
+		.listContainer .selected {
 		}
 	</ui:style>
 	
+	
+	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>
+	
 	<g:HTMLPanel ui:styleName="{style.container}">
-		<g:TextBox ui:field="newHashtag"/>
-		<g:Button ui:field="addHashtagButton">Add</g:Button>
-		<g:FlowPanel ui:field="lists"/>
+		<g:FocusPanel ui:field="currentListContainer" ui:styleName="{style.currentListContainer}">
+			<g:FlowPanel>
+				<g:InlineLabel ui:field="currentList" ui:styleName="{style.currentList}" />
+				<g:Image resource="{img.triangle}"/>
+			</g:FlowPanel>
+		</g:FocusPanel>
+		<g:FlowPanel ui:field="listDropdown" ui:styleName="{style.listDropdown}">
+			<g:SimplePanel ui:styleName="{style.searchContainer}">
+				<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
+			</g:SimplePanel>
+			<g:FlowPanel ui:styleName="{style.tabContainer}">
+				<g:Label ui:field="yourListTab">Yours</g:Label>
+				<g:Label ui:field="globalListTab">Global</g:Label>
+			</g:FlowPanel>
+			<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
+			<g:Label ui:field="noMatchesLabel">No matches found</g:Label>
+		</g:FlowPanel>
 		<g:Label ui:field="errorMsg" ui:styleName="error" />
 	</g:HTMLPanel>
 </ui:UiBinder>

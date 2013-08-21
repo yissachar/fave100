@@ -14,6 +14,7 @@ import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.ValidationException;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
+import com.fave100.shared.exceptions.favelist.FaveListAlreadyExistsException;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -65,8 +66,7 @@ public class FaveList extends DatastoreObject {
 
 		final String username = currentUser.getUsername();
 		if (findFaveList(username, hashtagName) != null)
-			// TODO: Throw exception so that we know why it doesn't work
-			return;
+			throw new FaveListAlreadyExistsException("You already have a list with that name");
 
 		currentUser.getHashtags().add(hashtagName);
 		final FaveList faveList = new FaveList(username, hashtagName);
