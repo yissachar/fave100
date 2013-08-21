@@ -71,35 +71,32 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 	@UiHandler("searchBox")
 	void onSearchBoxKeyUp(final KeyUpEvent event) {
-		boolean matchFound = false;
-		for (int i = 0; i < listContainer.getWidgetCount(); i++) {
-			final Label list = (Label)listContainer.getWidget(i);
-			if (list.getText().startsWith(searchBox.getText()) || searchBox.getText().isEmpty()) {
-				list.setVisible(true);
-				matchFound = true;
-			}
-			else {
-				list.setVisible(false);
-			}
+		if (getUiHandlers().isGlobalList()) {
+			// Async, will call refreshLists() on completion
+			getUiHandlers().getGlobalAutocomplete(searchBox.getText());
 		}
-		if (!matchFound)
-			noMatchesContainer.setVisible(true);
-		else
-			noMatchesContainer.setVisible(false);
+		else {
+			// User's list
+			getUiHandlers().refreshUsersLists();
+		}
 	}
 
 	@UiHandler("yourListTab")
 	void onYourListClick(final ClickEvent event) {
 		globalListTab.removeStyleName(style.selected());
 		yourListTab.addStyleName(style.selected());
-		getUiHandlers().setGlobalList(true);
+		getUiHandlers().setGlobalList(false);
+		getUiHandlers().refreshUsersLists();
+		searchBox.setFocus(true);
 	}
 
 	@UiHandler("globalListTab")
 	void onGlobalListClick(final ClickEvent event) {
 		yourListTab.removeStyleName(style.selected());
 		globalListTab.addStyleName(style.selected());
-		getUiHandlers().setGlobalList(false);
+		getUiHandlers().setGlobalList(true);
+		getUiHandlers().getGlobalAutocomplete(searchBox.getText());
+		searchBox.setFocus(true);
 	}
 
 	@UiHandler("addHashtagButton")
@@ -111,9 +108,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@Override
 	public void refreshList(final List<String> lists, final String selected) {
 		listContainer.clear();
-		hideDropdown();
 		noMatchesContainer.setVisible(false);
-		searchBox.setText("");
 		int i = 0;
 		for (final String list : lists) {
 			final Label label = new Label(list);
@@ -134,11 +129,30 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 		currentList.setText(selected);
 
+		// Check for matches
+		boolean matchFound = false;
+		for (int j = 0; j < listContainer.getWidgetCount(); j++) {
+			final Label list = (Label)listContainer.getWidget(j);
+			if (list.getText().startsWith(searchBox.getText()) || (searchBox.getText().isEmpty() && !getUiHandlers().isGlobalList())) {
+				list.setVisible(true);
+				matchFound = true;
+			}
+			else {
+				list.setVisible(false);
+			}
+		}
+		if (!matchFound)
+			noMatchesContainer.setVisible(true);
+		else
+			noMatchesContainer.setVisible(false);
+
 	}
 
-	private void hideDropdown() {
+	@Override
+	public void hideDropdown() {
 		listDropdown.setVisible(false);
 		currentListContainer.removeStyleName(style.dropdownVisible());
+		searchBox.setText("");
 	}
 
 	@Override

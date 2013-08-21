@@ -71,15 +71,14 @@ public class FaveList extends DatastoreObject {
 		currentUser.getHashtags().add(hashtagName);
 		final FaveList faveList = new FaveList(username, hashtagName);
 		Hashtag hashtag = ofy().load().type(Hashtag.class).id(hashtagName).get();
-		// Hashtag already exists, just save user's own favelist
-		if (hashtag != null) {
-			ofy().save().entities(currentUser, faveList).now();
-		}
+		// Hashtag already exists, increment count
+		if (hashtag != null)
+			hashtag.setListCount(hashtag.getListCount() + 1);
 		// Create a new hashtag
-		else {
+		else
 			hashtag = new Hashtag(hashtagName, username);
-			ofy().save().entities(currentUser, faveList, hashtag).now();
-		}
+
+		ofy().save().entities(currentUser, faveList, hashtag).now();
 	}
 
 	public static void addFaveItemForCurrentUser(final String hashtag, final String songID)
@@ -244,6 +243,18 @@ public class FaveList extends DatastoreObject {
 			master = ofy().load().type(Hashtag.class).id(hashtag).get().getList();
 		}
 		return master;
+	}
+
+	public static List<String> getHashtagAutocomplete(final String searchTerm) {
+		final List<String> names = new ArrayList<String>();
+		if (searchTerm.isEmpty())
+			return names;
+
+		final List<Hashtag> hashtags = ofy().load().type(Hashtag.class).filter("id >=", searchTerm).filter("id <", searchTerm + "\uFFFD").order("id").order("-listCount").limit(5).list();
+		for (final Hashtag hashtag : hashtags) {
+			names.add(hashtag.getId());
+		}
+		return names;
 	}
 
 	/* Getters and Setters */
