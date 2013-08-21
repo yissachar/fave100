@@ -9,6 +9,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -28,8 +29,12 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField Label currentList;
 	@UiField FlowPanel listDropdown;
 	@UiField TextBox searchBox;
+	@UiField Label yourListTab;
+	@UiField Label globalListTab;
+	@UiField FlowPanel nonListContainer;
 	@UiField FlowPanel listContainer;
-	@UiField Label noMatchesLabel;
+	@UiField FlowPanel noMatchesContainer;
+	@UiField Button addHashtagButton;
 	@UiField Label errorMsg;
 	@UiField ListManagerStyle style;
 	int selectedIndex = 0;
@@ -44,7 +49,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	public ListManagerView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		listDropdown.setVisible(false);
-		noMatchesLabel.setVisible(false);
+		noMatchesContainer.setVisible(false);
 	}
 
 	@Override
@@ -78,15 +83,37 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 			}
 		}
 		if (!matchFound)
-			noMatchesLabel.setVisible(true);
+			noMatchesContainer.setVisible(true);
 		else
-			noMatchesLabel.setVisible(false);
+			noMatchesContainer.setVisible(false);
+	}
+
+	@UiHandler("yourListTab")
+	void onYourListClick(final ClickEvent event) {
+		globalListTab.removeStyleName(style.selected());
+		yourListTab.addStyleName(style.selected());
+		getUiHandlers().setGlobalList(true);
+	}
+
+	@UiHandler("globalListTab")
+	void onGlobalListClick(final ClickEvent event) {
+		yourListTab.removeStyleName(style.selected());
+		globalListTab.addStyleName(style.selected());
+		getUiHandlers().setGlobalList(false);
+	}
+
+	@UiHandler("addHashtagButton")
+	void onAddButtonClick(final ClickEvent event) {
+		getUiHandlers().addHashtag(searchBox.getText());
+		hideDropdown();
 	}
 
 	@Override
 	public void refreshList(final List<String> lists, final String selected) {
 		listContainer.clear();
-		currentListContainer.removeStyleName(style.dropdownVisible());
+		hideDropdown();
+		noMatchesContainer.setVisible(false);
+		searchBox.setText("");
 		int i = 0;
 		for (final String list : lists) {
 			final Label label = new Label(list);
@@ -94,8 +121,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 				@Override
 				public void onClick(final ClickEvent event) {
 					getUiHandlers().listChanged(list);
-					listDropdown.setVisible(false);
-					currentListContainer.removeStyleName(style.dropdownVisible());
+					hideDropdown();
 				}
 			});
 			listContainer.add(label);
@@ -110,6 +136,11 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 	}
 
+	private void hideDropdown() {
+		listDropdown.setVisible(false);
+		currentListContainer.removeStyleName(style.dropdownVisible());
+	}
+
 	@Override
 	public void showError(final String msg) {
 		errorMsg.setText(msg);
@@ -119,5 +150,15 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@Override
 	public void hideError() {
 		errorMsg.setVisible(false);
+	}
+
+	@Override
+	public void setOwnList(final boolean ownList) {
+		if (ownList) {
+			nonListContainer.setVisible(true);
+		}
+		else {
+			nonListContainer.setVisible(false);
+		}
 	}
 }

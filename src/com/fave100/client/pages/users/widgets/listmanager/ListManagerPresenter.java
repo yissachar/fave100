@@ -32,6 +32,8 @@ public class ListManagerPresenter extends
 		void showError(String msg);
 
 		void hideError();
+
+		void setOwnList(boolean ownList);
 	}
 
 	private ApplicationRequestFactory _requestFactory;
@@ -87,6 +89,7 @@ public class ListManagerPresenter extends
 		hashtags.add(Constants.DEFAULT_HASHTAG);
 		hashtags.addAll(_user.getHashtags());
 		getView().refreshList(hashtags, _hashtag);
+		getView().setOwnList(_currentUser != null && _currentUser.equals(_user));
 	}
 
 	@Override
@@ -99,6 +102,11 @@ public class ListManagerPresenter extends
 				.with(UsersPresenter.USER_PARAM, _user.getUsername())
 				.with(UsersPresenter.LIST_PARAM, list)
 				.build());
+	}
+
+	@Override
+	public void setGlobalList(final boolean global) {
+
 	}
 
 	/* Getters and Setters */
@@ -125,4 +133,6 @@ interface ListManagerUiHandlers extends UiHandlers {
 	void addHashtag(String name);
 
 	void listChanged(String list);
+
+	void setGlobalList(boolean global);
 }
