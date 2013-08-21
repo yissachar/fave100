@@ -149,7 +149,7 @@
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-servlet</artifactId>
 			<version>3.0</version>
-		</dependency>
+		</dependency>			
 				
 	</dependencies>
 

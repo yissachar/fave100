@@ -7,12 +7,9 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -30,7 +27,7 @@ public class ListManagerPresenter extends
 		implements ListManagerUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<ListManagerUiHandlers> {
-		void refreshList(List<FlowPanel> panels);
+		void refreshList(List<String> lists, String selected);
 
 		void showError(String msg);
 
@@ -39,6 +36,7 @@ public class ListManagerPresenter extends
 
 	private ApplicationRequestFactory _requestFactory;
 	private AppUserProxy _user;
+	private String _hashtag;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
 
@@ -74,12 +72,7 @@ public class ListManagerPresenter extends
 				_currentUser.addHashtag(name);
 				refreshList();
 				getView().hideError();
-				// Switch to new hashtag page
-				_placeManager.revealPlace(new PlaceRequest.Builder()
-						.nameToken(NameTokens.users)
-						.with(UsersPresenter.USER_PARAM, _currentUser.getUsername())
-						.with(UsersPresenter.LIST_PARAM, name)
-						.build());
+				listChanged(name);
 			}
 
 			@Override
@@ -90,22 +83,22 @@ public class ListManagerPresenter extends
 	}
 
 	public void refreshList() {
-		final List<FlowPanel> panels = new ArrayList<FlowPanel>();
 		final List<String> hashtags = new ArrayList<String>();
-		hashtags.addAll(_user.getHashtags());
 		hashtags.add(Constants.DEFAULT_HASHTAG);
-		for (final String hashtag : hashtags) {
-			final FlowPanel container = new FlowPanel();
-			final Anchor listLink = new Anchor(hashtag);
-			listLink.setHref(new UrlBuilder(NameTokens.users)
-					.with(UsersPresenter.USER_PARAM, _user.getUsername())
-					.with(UsersPresenter.LIST_PARAM, hashtag)
-					.getUrl());
+		hashtags.addAll(_user.getHashtags());
+		getView().refreshList(hashtags, _hashtag);
+	}
 
-			container.add(listLink);
-			panels.add(container);
-		}
-		getView().refreshList(panels);
+	@Override
+	public void listChanged(final String list) {
+		if (_hashtag.equals(list))
+			return;
+
+		_placeManager.revealPlace(new PlaceRequest.Builder()
+				.nameToken(NameTokens.users)
+				.with(UsersPresenter.USER_PARAM, _user.getUsername())
+				.with(UsersPresenter.LIST_PARAM, list)
+				.build());
 	}
 
 	/* Getters and Setters */
@@ -117,9 +110,19 @@ public class ListManagerPresenter extends
 	public void setUser(final AppUserProxy user) {
 		this._user = user;
 	}
+
+	public String getHashtag() {
+		return _hashtag;
+	}
+
+	public void setHashtag(final String _hashtag) {
+		this._hashtag = _hashtag;
+	}
 }
 
 interface ListManagerUiHandlers extends UiHandlers {
 
 	void addHashtag(String name);
+
+	void listChanged(String list);
 }
