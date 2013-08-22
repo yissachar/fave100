@@ -1,5 +1,6 @@
 package com.fave100.client.pages.users.widgets.listmanager;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.dom.client.Element;
@@ -15,7 +16,9 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -71,12 +74,33 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 			final ClickHandler clickHandler = new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
-					if (!Element.as(event.getNativeEvent().getEventTarget()).equals(widget.getElement()))
+					boolean shouldHide = true;
+					final Element target = Element.as(event.getNativeEvent().getEventTarget());
+
+					if (widgetContainsElement(currentListContainer, target))
+						shouldHide = false;
+
+					if (widgetContainsElement(addListContainer, target))
+						shouldHide = false;
+
+					if (shouldHide)
 						hideDropdown();
 				}
 			};
-			//rootClickHandler = RootPanel.get().addDomHandler(clickHandler, ClickEvent.getType());
+			rootClickHandler = RootPanel.get().addDomHandler(clickHandler, ClickEvent.getType());
 		}
+	}
+
+	private boolean widgetContainsElement(final Widget widget, final Element element) {
+		if (widget instanceof HasWidgets) {
+			final Iterator<Widget> iter = ((HasWidgets)widget).iterator();
+			while (iter.hasNext()) {
+				final Widget child = iter.next();
+				if ((child != widget && widgetContainsElement(child, element)) || element.equals(child.getElement()) || element.equals(widget.getElement()))
+					return true;
+			}
+		}
+		return false;
 	}
 
 	@UiHandler("listNameInput")

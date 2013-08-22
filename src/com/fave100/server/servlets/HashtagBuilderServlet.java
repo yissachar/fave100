@@ -58,6 +58,7 @@ public class HashtagBuilderServlet extends HttpServlet
 			final Hashtag hashtag = iterator.next();
 			final HashMap<FaveRankerWrapper, Integer> all = new HashMap<FaveRankerWrapper, Integer>();
 
+			// TODO: Also need a cursor here
 			// Add up the total rank for each song in the list
 			final List<FaveList> faveLists = ofy().load().type(FaveList.class).filter("hashtag", hashtag.getId()).list();
 			for (final FaveList faveList : faveLists) {
