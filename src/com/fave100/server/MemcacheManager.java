@@ -45,6 +45,25 @@ public class MemcacheManager {
 		return (cacheItem == null) ? 0 : (int)cacheItem;
 	}
 
+	/**
+	 * Inserts or updates a FaveItem score in Memcache, but does not rerank the item. Use when the rank is already known (i.e. when
+	 * initializing Memcache)
+	 * 
+	 * @param id
+	 * @param hashtag
+	 * @param score
+	 */
+	public void putFaveItemScoreNoRerank(final String id, final String hashtag, final int score) {
+		_cache.put(FAVEITEM_RANK_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase() + SEPARATOR_TOKEN + id, score);
+	}
+
+	/**
+	 * Inserts or updates a FaveItem score in Memcache and reranks the item, inserting it in the top 100 if required.
+	 * 
+	 * @param id
+	 * @param hashtag
+	 * @param score
+	 */
 	public void putFaveItemScore(final String id, final String hashtag, final int score) {
 		// e.g. {faveItemRank:rock2013:645116, 245}
 		_cache.put(FAVEITEM_RANK_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase() + SEPARATOR_TOKEN + id, score);

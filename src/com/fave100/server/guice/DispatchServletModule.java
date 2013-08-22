@@ -3,6 +3,7 @@ package com.fave100.server.guice;
 import com.fave100.server.filters.EncodingFilter;
 import com.fave100.server.servlets.CustomRequestFactoryServlet;
 import com.fave100.server.servlets.HashtagBuilderServlet;
+import com.fave100.server.servlets.HashtagEnqueuerServlet;
 import com.fave100.server.servlets.PasswordCleanupServlet;
 import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
 import com.google.inject.Singleton;
@@ -26,6 +27,9 @@ public class DispatchServletModule extends ServletModule {
 
 		bind(PasswordCleanupServlet.class).in(Singleton.class);
 		serve("/cron/pwdcleanup").with(PasswordCleanupServlet.class);
+
+		bind(HashtagEnqueuerServlet.class).in(Singleton.class);
+		serve(HashtagEnqueuerServlet.HASHTAG_ENQUEUER_URL).with(HashtagEnqueuerServlet.class);
 
 		bind(HashtagBuilderServlet.class).in(Singleton.class);
 		serve(HashtagBuilderServlet.HASHTAG_BUILDER_URL).with(HashtagBuilderServlet.class);
