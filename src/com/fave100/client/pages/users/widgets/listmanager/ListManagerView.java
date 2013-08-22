@@ -2,8 +2,11 @@ package com.fave100.client.pages.users.widgets.listmanager;
 
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -16,6 +19,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
 public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> implements ListManagerPresenter.MyView {
@@ -28,16 +32,14 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField FocusPanel currentListContainer;
 	@UiField Label currentList;
 	@UiField FlowPanel listDropdown;
-	@UiField TextBox searchBox;
-	@UiField Label yourListTab;
-	@UiField Label globalListTab;
-	@UiField FlowPanel nonListContainer;
-	@UiField FlowPanel listContainer;
-	@UiField FlowPanel noMatchesContainer;
+	@UiField TextBox listNameInput;
 	@UiField Button addHashtagButton;
+	@UiField FlowPanel addListContainer;
+	@UiField FlowPanel listContainer;
 	@UiField Label errorMsg;
 	@UiField ListManagerStyle style;
 	int selectedIndex = 0;
+	private HandlerRegistration rootClickHandler;
 
 	interface ListManagerStyle extends CssResource {
 		String selected();
@@ -49,7 +51,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	public ListManagerView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		listDropdown.setVisible(false);
-		noMatchesContainer.setVisible(false);
+		listNameInput.setVisible(false);
 	}
 
 	@Override
@@ -59,56 +61,56 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 	@UiHandler("currentListContainer")
 	void onCurrentListClick(final ClickEvent event) {
-		listDropdown.setVisible(!listDropdown.isVisible());
+		hideError();
 		if (listDropdown.isVisible()) {
+			hideDropdown();
+		}
+		else {
+			listDropdown.setVisible(true);
 			currentListContainer.addStyleName(style.dropdownVisible());
-			searchBox.setFocus(true);
-		}
-		else {
-			currentListContainer.removeStyleName(style.dropdownVisible());
-		}
-	}
-
-	@UiHandler("searchBox")
-	void onSearchBoxKeyUp(final KeyUpEvent event) {
-		if (getUiHandlers().isGlobalList()) {
-			// Async, will call refreshLists() on completion
-			getUiHandlers().getGlobalAutocomplete(searchBox.getText());
-		}
-		else {
-			// User's list
-			getUiHandlers().refreshUsersLists();
+			final ClickHandler clickHandler = new ClickHandler() {
+				@Override
+				public void onClick(final ClickEvent event) {
+					if (!Element.as(event.getNativeEvent().getEventTarget()).equals(widget.getElement()))
+						hideDropdown();
+				}
+			};
+			//rootClickHandler = RootPanel.get().addDomHandler(clickHandler, ClickEvent.getType());
 		}
 	}
 
-	@UiHandler("yourListTab")
-	void onYourListClick(final ClickEvent event) {
-		globalListTab.removeStyleName(style.selected());
-		yourListTab.addStyleName(style.selected());
-		getUiHandlers().setGlobalList(false);
-		getUiHandlers().refreshUsersLists();
-		searchBox.setFocus(true);
+	@UiHandler("listNameInput")
+	void onListNameKeyUp(final KeyUpEvent event) {
+		if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()) {
+			getUiHandlers().addHashtag(listNameInput.getText());
+			hideDropdown();
+			listNameInput.setVisible(false);
+			addHashtagButton.setVisible(true);
+		}
+		else if (KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()) {
+			listNameInput.setText("");
+			listNameInput.setVisible(false);
+			addHashtagButton.setVisible(true);
+		}
 	}
 
-	@UiHandler("globalListTab")
-	void onGlobalListClick(final ClickEvent event) {
-		yourListTab.removeStyleName(style.selected());
-		globalListTab.addStyleName(style.selected());
-		getUiHandlers().setGlobalList(true);
-		getUiHandlers().getGlobalAutocomplete(searchBox.getText());
-		searchBox.setFocus(true);
+	@UiHandler("listNameInput")
+	void onListNameBlur(final BlurEvent event) {
+		listNameInput.setText("");
+		listNameInput.setVisible(false);
+		addHashtagButton.setVisible(true);
 	}
 
 	@UiHandler("addHashtagButton")
 	void onAddButtonClick(final ClickEvent event) {
-		getUiHandlers().addHashtag(searchBox.getText());
-		hideDropdown();
+		listNameInput.setVisible(true);
+		listNameInput.setFocus(true);
+		addHashtagButton.setVisible(false);
 	}
 
 	@Override
 	public void refreshList(final List<String> lists, final String selected) {
 		listContainer.clear();
-		noMatchesContainer.setVisible(false);
 		int i = 0;
 		for (final String list : lists) {
 			final Label label = new Label(list);
@@ -134,31 +136,15 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 			widget.setVisible(true);
 
 		currentList.setText(selected);
-
-		// Check for matches
-		boolean matchFound = false;
-		for (int j = 0; j < listContainer.getWidgetCount(); j++) {
-			final Label list = (Label)listContainer.getWidget(j);
-			if (list.getText().startsWith(searchBox.getText()) || (searchBox.getText().isEmpty() && !getUiHandlers().isGlobalList())) {
-				list.setVisible(true);
-				matchFound = true;
-			}
-			else {
-				list.setVisible(false);
-			}
-		}
-		if (!matchFound)
-			noMatchesContainer.setVisible(true);
-		else
-			noMatchesContainer.setVisible(false);
-
 	}
 
 	@Override
 	public void hideDropdown() {
 		listDropdown.setVisible(false);
 		currentListContainer.removeStyleName(style.dropdownVisible());
-		searchBox.setText("");
+		listNameInput.setText("");
+		if (rootClickHandler != null)
+			rootClickHandler.removeHandler();
 	}
 
 	@Override
@@ -175,10 +161,10 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@Override
 	public void setOwnList(final boolean ownList) {
 		if (ownList) {
-			nonListContainer.setVisible(true);
+			addListContainer.setVisible(true);
 		}
 		else {
-			nonListContainer.setVisible(false);
+			addListContainer.setVisible(false);
 		}
 	}
 }

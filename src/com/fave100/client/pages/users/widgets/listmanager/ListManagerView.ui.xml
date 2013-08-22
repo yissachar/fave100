@@ -48,43 +48,28 @@
 		}
 		
 		.listDropdown {
+			position: absolute;
+			width: 100%;
 			background-color: #fdfdfd;
 			border: 1px solid #bbb;
-			border-top: 0px;
+			border-top: 0px;		
+			max-height: 250px;
+			overflow-y: auto;	
 		}
 		
-		.searchContainer {
-			padding: 10px 0;
+		.addListContainer {
+			padding: 5px;
+			border-bottom: 1px solid #bbb;	
 		}
 		
-		
-		.searchBox {
-			margin: 0 5px;
+		.addListContainer > * {
+			width: 100%;
 			display: block;
-			width: 90%;
-		}	
-		
-		.tabContainer {
-			overflow: hidden;
-			cursor: pointer;
-			border-bottom: 1px solid #bbb;
-		}
-		
-		.tabContainer > div {
-			float: left;
-			padding: 4px;			
-		}
-		
-		.tabContainer > div:hover {
-			color: #000;
-		}
-		
-		.tabContainer .selected {
-			color: #5eaae5;
 		}
 		
 		.listContainer {
 			cursor: pointer;
+			max-height: 300px;
 		}
 		
 		.listContainer > div {			
@@ -97,10 +82,6 @@
 		}
 		
 		.listContainer .selected {
-		}
-		
-		.noMatchesContainer {
-			padding: 5px;
 		}
 	</ui:style>
 	
@@ -115,20 +96,11 @@
 			</g:FlowPanel>
 		</g:FocusPanel>
 		<g:FlowPanel ui:field="listDropdown" ui:styleName="{style.listDropdown}">
-			<g:FlowPanel ui:field="nonListContainer">
-				<g:SimplePanel ui:styleName="{style.searchContainer}">
-					<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
-				</g:SimplePanel>
-				<g:FlowPanel ui:styleName="{style.tabContainer}">
-					<g:Label ui:field="yourListTab" ui:styleName="{style.selected}">Yours</g:Label>
-					<g:Label ui:field="globalListTab">Global</g:Label>
-				</g:FlowPanel>
+			<g:FlowPanel ui:field="addListContainer" ui:styleName="{style.addListContainer}">
+				<g:Button ui:field="addHashtagButton">Create new list</g:Button>
+				<g:TextBox ui:field="listNameInput" />
 			</g:FlowPanel>
 			<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
-			<g:FlowPanel ui:field="noMatchesContainer" ui:styleName="{style.noMatchesContainer}">
-				<g:Label>No matches found</g:Label>
-				<g:Button ui:field="addHashtagButton">Add</g:Button>
-			</g:FlowPanel>
 		</g:FlowPanel>
 		<g:Label ui:field="errorMsg" ui:styleName="error" />
 	</g:HTMLPanel>

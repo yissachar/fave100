@@ -71,14 +71,15 @@ public class FaveList extends DatastoreObject {
 		currentUser.getHashtags().add(hashtagName);
 		final FaveList faveList = new FaveList(username, hashtagName);
 		Hashtag hashtag = ofy().load().type(Hashtag.class).id(hashtagName).get();
-		// Hashtag already exists, increment count
-		if (hashtag != null)
-			hashtag.setListCount(hashtag.getListCount() + 1);
+		// Hashtag already exists, add it to user's lists
+		if (hashtag != null) {
+			ofy().save().entities(currentUser, faveList).now();
+		}
 		// Create a new hashtag
-		else
+		else {
 			hashtag = new Hashtag(hashtagName, username);
-
-		ofy().save().entities(currentUser, faveList, hashtag).now();
+			ofy().save().entities(currentUser, faveList, hashtag).now();
+		}
 	}
 
 	public static void addFaveItemForCurrentUser(final String hashtag, final String songID)

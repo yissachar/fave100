@@ -99,6 +99,7 @@ public class ListManagerPresenter extends
 		final List<String> hashtags = new ArrayList<String>();
 		hashtags.add(Constants.DEFAULT_HASHTAG);
 		hashtags.addAll(_user.getHashtags());
+		hashtags.remove(_hashtag);
 		getView().refreshList(hashtags, _hashtag);
 		getView().setOwnList(_currentUser != null && _currentUser.equals(_user));
 	}
