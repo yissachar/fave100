@@ -227,6 +227,8 @@ public class UsersPresenter extends
 						public void onSuccess(final AppUserProxy user) {
 							if (user != null) {
 								requestedUser = user;
+								if (!requestedUser.getHashtags().contains(_requestedHashtag))
+									_requestedHashtag = Constants.DEFAULT_HASHTAG;
 								showPage();
 							}
 							else {

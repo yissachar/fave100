@@ -11,7 +11,6 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class Hashtag {
@@ -20,8 +19,6 @@ public class Hashtag {
 	private Ref<AppUser> createdBy;
 	private Date dateCreated;
 	private List<FaveItem> list = new ArrayList<FaveItem>();
-	// How many users have this list
-	@Index private int listCount = 1;
 
 	@SuppressWarnings("unused")
 	private Hashtag() {
@@ -65,14 +62,6 @@ public class Hashtag {
 
 	public void setList(final List<FaveItem> list) {
 		this.list = list;
-	}
-
-	public int getListCount() {
-		return listCount;
-	}
-
-	public void setListCount(final int listCount) {
-		this.listCount = listCount;
 	}
 
 }
