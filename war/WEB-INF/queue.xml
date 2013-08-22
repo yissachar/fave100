@@ -1,0 +1,13 @@
+<queue-entries>
+  <queue>
+    <name>hashtag-queue</name>
+    <rate>20/m</rate>
+    <bucket-size>40</bucket-size>
+    <max-concurrent-requests>10</max-concurrent-requests>
+    <!-- Since we re-generate everything every 2 hours, it is pointless to retry an individual hashtag for very long -->
+    <retry-parameters>
+      <task-retry-limit>3</task-retry-limit>
+      <task-age-limit>1h</task-age-limit>
+    </retry-parameters>
+  </queue>
+</queue-entries>

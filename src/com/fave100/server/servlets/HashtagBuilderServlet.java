@@ -26,8 +26,8 @@ import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.cmd.Query;
 
 /**
- * This servlet will periodically be called as a cron job, to add
- * each hashtag to a queue where a master list will be built
+ * This servlet will process hashtags as they are added to the task queue
+ * by getting all FaveLists for the hashtag and calculating the top 100 items
  * 
  * @author yissachar.radcliffe
  * 
@@ -35,78 +35,78 @@ import com.googlecode.objectify.cmd.Query;
 @SuppressWarnings("serial")
 public class HashtagBuilderServlet extends HttpServlet
 {
-	public static String HASHTAG_BUILDER_URL = "/cron/hashtags";
-	public static String CURSOR_PARAM = "cursor";
+	public static String HASHTAG_BUILDER_URL = "/tasks/hashtags";
+	public static String HASHTAG_PARAM = "hashtag";
 
 	@Override
-	public void doGet(final HttpServletRequest req, final HttpServletResponse res)
+	public void doPost(final HttpServletRequest req, final HttpServletResponse res)
 			throws ServletException, IOException {
 
-		// Get hashtags 1000 at a time, and add them to hashtag builder queue
-		final Query<Hashtag> query = ofy().load().type(Hashtag.class).limit(1000);
-		final String cursor = req.getParameter(CURSOR_PARAM);
+		final String hashtag = req.getParameter(HASHTAG_PARAM);
+
+		final HashMap<FaveRankerWrapper, Integer> all = new HashMap<FaveRankerWrapper, Integer>();
+		addAllLists(null, hashtag, all);
+
+		// Sort the list
+		final List<Map.Entry<FaveRankerWrapper, Integer>> sorted = new LinkedList<Map.Entry<FaveRankerWrapper, Integer>>(all.entrySet());
+		Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Integer>>()
+		{
+			@Override
+			public int compare(final Map.Entry<FaveRankerWrapper, Integer> o1, final Map.Entry<FaveRankerWrapper, Integer> o2)
+			{
+				return (o2.getValue()).compareTo(o1.getValue());
+			}
+		});
+
+		// Add everything to memcache
+		int i = 0;
+		final List<FaveItem> master = new ArrayList<FaveItem>();
+		for (final Map.Entry<FaveRankerWrapper, Integer> entry : sorted) {
+			// Add the top 100 songs to master list
+			if (i < 100) {
+				master.add(entry.getKey().getFaveItem());
+				i++;
+			}
+			MemcacheManager.getInstance().putFaveItemScoreNoRerank(entry.getKey().getFaveItem().getId(), hashtag, entry.getValue());
+		}
+
+		// Save the master list back to the datastore
+		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).get();
+		hashtagEntity.setList(master);
+		ofy().save().entity(hashtagEntity).now();
+
+		// And memcache the master
+		MemcacheManager.getInstance().putMasterFaveList(hashtag, master);
+	}
+
+	// Get favelists 1000 at a time, and store their rank
+	private void addAllLists(final String cursor, final String hashtag, final HashMap<FaveRankerWrapper, Integer> all) {
+		final Query<FaveList> query = ofy().load().type(FaveList.class).filter("hashtag", hashtag).limit(1000);
+
 		if (cursor != null)
 			query.startAt(Cursor.fromWebSafeString(cursor));
 
 		boolean shouldContinue = false;
 
 		int count = 0;
-		final QueryResultIterator<Hashtag> iterator = query.iterator();
+		final QueryResultIterator<FaveList> iterator = query.iterator();
 		while (iterator.hasNext()) {
 			count++;
-			// TODO: Add hashtag to queue to process, instead of calculating here
-			final Hashtag hashtag = iterator.next();
-			final HashMap<FaveRankerWrapper, Integer> all = new HashMap<FaveRankerWrapper, Integer>();
-
-			// TODO: Also need a cursor here
 			// Add up the total rank for each song in the list
-			final List<FaveList> faveLists = ofy().load().type(FaveList.class).filter("hashtag", hashtag.getId()).list();
-			for (final FaveList faveList : faveLists) {
-				for (final FaveItem faveItem : faveList.getList()) {
-					final FaveRankerWrapper faveHolder = new FaveRankerWrapper(faveItem);
-					final int newVal = (all.get(faveHolder) != null) ? all.get(faveHolder) + 1 : 1;
-					all.put(faveHolder, newVal);
-				}
+			for (final FaveItem faveItem : iterator.next().getList()) {
+				final FaveRankerWrapper faveHolder = new FaveRankerWrapper(faveItem);
+				final int newVal = (all.get(faveHolder) != null) ? all.get(faveHolder) + 1 : 1;
+				all.put(faveHolder, newVal);
 			}
-
-			// Sort the list
-			final List<Map.Entry<FaveRankerWrapper, Integer>> sorted = new LinkedList<Map.Entry<FaveRankerWrapper, Integer>>(all.entrySet());
-			Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Integer>>()
-			{
-				@Override
-				public int compare(final Map.Entry<FaveRankerWrapper, Integer> o1, final Map.Entry<FaveRankerWrapper, Integer> o2)
-				{
-					return (o2.getValue()).compareTo(o1.getValue());
-				}
-			});
-
-			// Add everything to memcache
-			int i = 0;
-			final List<FaveItem> master = new ArrayList<FaveItem>();
-			for (final Map.Entry<FaveRankerWrapper, Integer> entry : sorted) {
-				// Add the top 100 songs to master list
-				if (i < 100) {
-					master.add(entry.getKey().getFaveItem());
-					i++;
-				}
-				MemcacheManager.getInstance().putFaveItemScore(entry.getKey().getFaveItem().getId(), hashtag.getId(), entry.getValue());
-			}
-
-			// Save the master list back to the datastore
-			hashtag.setList(master);
-			ofy().save().entity(hashtag).now();
-
-			// And memcache the master
-			MemcacheManager.getInstance().putMasterFaveList(hashtag.getId(), master);
 
 			// If we processed the full 1000 limit, grab the next batch of hashtags to process
 			if (count == 1000)
 				shouldContinue = true;
 		}
 
-		// While we still have hashtags to process, keep hitting the cron URL with new cursor position
+		// While we still have favelists to process, keep adding their ranks
 		if (shouldContinue) {
-			res.sendRedirect(HASHTAG_BUILDER_URL + "?" + CURSOR_PARAM + "=" + iterator.getCursor().toWebSafeString());
+			addAllLists(iterator.getCursor().toWebSafeString(), hashtag, all);
 		}
 	}
 }
