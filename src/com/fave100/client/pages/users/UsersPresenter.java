@@ -233,6 +233,7 @@ public class UsersPresenter extends
 						public void onSuccess(final Boolean following) {
 							isFollowing = following;
 							getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
+							showPage();
 						}
 
 						@Override
