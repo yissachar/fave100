@@ -64,7 +64,10 @@ public class HashtagBuilderServlet extends HttpServlet
 		for (final Map.Entry<FaveRankerWrapper, Integer> entry : sorted) {
 			// Add the top 100 songs to master list
 			if (i < 100) {
-				master.add(entry.getKey().getFaveItem());
+				final FaveItem faveItem = entry.getKey().getFaveItem();
+				faveItem.setWhyline("");
+				faveItem.setWhylineRef(null);
+				master.add(faveItem);
 				i++;
 			}
 			MemcacheManager.getInstance().putFaveItemScoreNoRerank(entry.getKey().getFaveItem().getId(), hashtag, entry.getValue());
