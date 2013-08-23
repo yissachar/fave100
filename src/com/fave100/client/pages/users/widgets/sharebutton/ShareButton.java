@@ -36,7 +36,7 @@ public class ShareButton extends Composite {
 
 	public ShareButton() {
 		initWidget(uiBinder.createAndBindUi(this));
-		final String s = "<g:plusone href='" + Window.Location.getHref() + "'></g:plusone>";
+		final String s = "<g:plusone href='" + Window.Location.getHref() + "' annotation='none'></g:plusone>";
 		gplus = new HTML(s);
 		gplusPlaceholder.add(gplus);
 	}
@@ -65,7 +65,7 @@ public class ShareButton extends Composite {
 		twitterShare.addStyleName("twitter-share-button");
 		twitterShare.getElement().setAttribute("data-lang", "en");
 		twitterShare.getElement().setAttribute("data-size", "medium");
-		twitterShare.getElement().setAttribute("data-count", "horizontal");
+		twitterShare.getElement().setAttribute("data-count", "none");
 		twitterShare.getElement().setAttribute("data-text", twitterMessage);
 		twitterShare.getElement().setAttribute("data-url", shareUrl);
 		twitterContainer.add(twitterShare);
@@ -81,7 +81,6 @@ public class ShareButton extends Composite {
 
 	public void setTwitterMessage(final String message) {
 		twitterMessage = message;
-		//	twitterShare.setAttribute("data-text", message + Window.Location.getHref());
 	}
 
 }

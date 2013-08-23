@@ -927,3 +927,17 @@ button:-moz-focus-inner {
 	padding: 0;
 }
 
+/* CSS Hack for hiding the LIKE count */
+div.fb-like span {
+  display:block;
+  width:48px !important;  
+}
+
+div.fb-like iframe {
+  width:48px !important;
+}
+
+div.fb-like iframe.fb_iframe_widget_lift {
+  width:450px !important;
+}
+
