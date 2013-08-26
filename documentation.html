@@ -57,8 +57,7 @@
 	<a name="updatingSongs"/>
 	<h2>Updating Song Database</h2>
 	<ol>
-		<li>Grab the latest Musicbrainz dump from <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport</a>: On VM run wget http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport/INSERT-DATE/mbdump.tar.bz2 into /mnt/postgres/dumps/DATE.tar.bz2</li>
-		<li>Once dump is downloaded, extract: tar  xvjf DATE.tar.bz2</li>
+		<li>Verify that the latest Musicbrainz dump exists in /mnt/postgres/dumps/. The <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">Musicbrainz server</a> is scanned daily with the <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/5749173c03b6be3c8c15300c03086e315385385e/updateMusicbrainz.py?at=master">updateMusicbrainz.py script</a> and new dumps are downloaded when found.</li>
 		<li>Backup up autocomplete_search.* tables through PGAdmin 3 GUI</li>
 		<li>Drop the Musicbrainz database: On VM run dropdb musicbrainz_db</li>
 		<li>Create and import new data dump with command: carton exec ./admin/InitDb.pl -- --createdb --import /mnt/postgres/dumps/*DATE*/mbdump/ --echo</li>
