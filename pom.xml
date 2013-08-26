@@ -14,7 +14,7 @@
 		<gwt.version>2.5.1</gwt.version>
 		<appengine.version>1.8.1</appengine.version>
 		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
-		<gwtp.version>1.0</gwtp.version>
+		<gwtp.version>1.0.1</gwtp.version>
 		<!-- tell the compiler we can use 1.7 -->
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
