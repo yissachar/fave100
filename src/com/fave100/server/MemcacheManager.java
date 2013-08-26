@@ -9,7 +9,6 @@ import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheFactory;
 import net.sf.jsr107cache.CacheManager;
 
-import com.fave100.server.domain.Song;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.server.domain.favelist.FaveList;
 
@@ -64,7 +63,7 @@ public class MemcacheManager {
 	 * @param hashtag
 	 * @param score
 	 */
-	public void putFaveItemScore(final String id, final String hashtag, final int score) {
+	public void putFaveItemScore(final String id, final String hashtag, final int score, final FaveItem passedFaveItem) {
 		// e.g. {faveItemRank:rock2013:645116, 245}
 		_cache.put(FAVEITEM_RANK_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase() + SEPARATOR_TOKEN + id, score);
 
@@ -90,19 +89,11 @@ public class MemcacheManager {
 			}
 		}
 
-		// TODO: Bad that we have to lookup the song each time a rerank occurs -> pass the Song in since we have it already from add or remove
 		if (rank < FaveList.MAX_FAVES) {
 			FaveItem faveItem = existingFave;
 			// Fave not in master yet, insert new fave
 			if (faveItem == null) {
-				Song song;
-				try {
-					song = Song.findSong(id);
-					faveItem = new FaveItem(song.getSong(), song.getArtist(), song.getId());
-				}
-				catch (final Exception e) {
-					Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
-				}
+				faveItem = passedFaveItem;
 			}
 			// Fave already in master, adjust position
 			else {
@@ -121,10 +112,10 @@ public class MemcacheManager {
 
 	}
 
-	public void modifyFaveItemScore(final String id, final String hashtag, final int delta) {
+	public void modifyFaveItemScore(final String id, final String hashtag, final int delta, final FaveItem faveItem) {
 		// TODO: Aug 19 2013: Is it possible to increment counter atomically? Not super important, but nice
 		final int currentRank = getFaveItemScore(id, hashtag);
-		putFaveItemScore(id, hashtag, currentRank + delta);
+		putFaveItemScore(id, hashtag, currentRank + delta, faveItem);
 	}
 
 	public List<FaveItem> getMasterFaveList(final String hashtag) {

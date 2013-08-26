@@ -116,7 +116,7 @@ public class FaveList extends DatastoreObject {
 		ofy().save().entities(faveList).now();
 
 		// Modify memcache ranking
-		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, 1);
+		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, 1, newFaveItem);
 	}
 
 	public static void removeFaveItemForCurrentUser(final String hashtag, final String songID) throws NotLoggedInException {
@@ -148,7 +148,7 @@ public class FaveList extends DatastoreObject {
 		ofy().save().entities(faveList).now();
 
 		// Modify memcache ranking
-		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, -1);
+		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, -1, faveItemToRemove);
 	}
 
 	public static void rerankFaveItemForCurrentUser(final String hashtag, final String songID, final int newIndex) throws NotLoggedInException {
