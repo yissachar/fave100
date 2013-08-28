@@ -6,7 +6,7 @@ import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
-import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.user.FacebookIdAlreadyExistsException;
@@ -333,7 +333,7 @@ public class RegisterPresenter extends
 
 	private void goToUserPage(final String username) {
 		getProxy().manualRevealFailed();
-		final PlaceRequest place = new PlaceRequest.Builder().nameToken(NameTokens.users).with(UsersPresenter.USER_PARAM, username).build();
+		final PlaceRequest place = new PlaceRequest.Builder().nameToken(NameTokens.lists).with(ListPresenter.USER_PARAM, username).build();
 		placeManager.revealPlace(place);
 	}
 }

@@ -2,8 +2,8 @@ package com.fave100.client.pages.song.widgets.playlist;
 
 import java.util.List;
 
+import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.song.SongPresenter;
-import com.fave100.client.pages.users.UsersPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -70,8 +70,8 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 	public void setUrls(final String username, final String hashtag) {
 		// Set URL to user's list
 		_username.setHref(new UrlBuilder(NameTokens.users)
-				.with(UsersPresenter.USER_PARAM, username)
-				.with(UsersPresenter.LIST_PARAM, hashtag)
+				.with(ListPresenter.USER_PARAM, username)
+				.with(ListPresenter.LIST_PARAM, hashtag)
 				.getUrl());
 		//TODO: Is this where we want hashtag url to go?
 		_hashtag.setHref(new UrlBuilder(NameTokens.song)

@@ -1,6 +1,6 @@
-package com.fave100.client.pages.users.widgets.sharebutton;
+package com.fave100.client.pages.lists.widgets.sharebutton;
 
-import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
 import com.google.gwt.core.client.GWT;
@@ -47,7 +47,7 @@ public class ShareButton extends Composite {
 	}
 
 	public void setSharingUrls(final String username) {
-		final String shareUrl = new UrlBuilder(NameTokens.users).with(UsersPresenter.USER_PARAM, username).getUrl();
+		final String shareUrl = new UrlBuilder(NameTokens.users).with(ListPresenter.USER_PARAM, username).getUrl();
 		// Set Facebook like URL
 		fbLike.setAttribute("data-href", shareUrl);
 

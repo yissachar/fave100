@@ -7,7 +7,7 @@
 	ui:generateLocales='default'>
 
 	
-	<ui:style type="com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle">
+	<ui:style type="com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle">
 		.container {
 			margin-top: 15px;
 			margin-bottom: 15px;

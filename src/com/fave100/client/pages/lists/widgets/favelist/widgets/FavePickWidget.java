@@ -1,4 +1,4 @@
-package com.fave100.client.pages.users.widgets.favelist.widgets;
+package com.fave100.client.pages.lists.widgets.favelist.widgets;
 
 import static com.google.gwt.query.client.GQuery.$;
 
@@ -7,11 +7,11 @@ import java.util.List;
 
 import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.RankInputUnfocusEvent;
+import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.ItemAdded;
+import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.ItemDeleted;
+import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.RankChanged;
+import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.WhyLineChanged;
 import com.fave100.client.pages.song.SongPresenter;
-import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter.ItemAdded;
-import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter.ItemDeleted;
-import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter.RankChanged;
-import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter.WhyLineChanged;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.resources.img.ImageResources;
 import com.fave100.client.widgets.helpbubble.HelpBubble;

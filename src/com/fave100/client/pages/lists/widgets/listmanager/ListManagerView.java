@@ -1,4 +1,4 @@
-package com.fave100.client.pages.users.widgets.listmanager;
+package com.fave100.client.pages.lists.widgets.listmanager;
 
 import java.util.Iterator;
 import java.util.List;

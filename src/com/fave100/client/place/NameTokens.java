@@ -4,6 +4,7 @@ public class NameTokens {
 
 	public static final String home = "home";
 	public static final String register = "register";
+	public static final String lists = "lists";
 	public static final String users = "users";
 	public static final String login = "login";
 	public static final String logout = "logout";
@@ -18,6 +19,10 @@ public class NameTokens {
 
 	public static String getRegister() {
 		return register;
+	}
+
+	public static String getLists() {
+		return lists;
 	}
 
 	public static String getUsers() {

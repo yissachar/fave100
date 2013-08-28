@@ -1,6 +1,6 @@
 package com.fave100.client.pages.home;
 
-import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,7 +30,7 @@ public class HomeView extends ViewWithUiHandlers<HomeUiHandlers> implements Home
 	@Inject
 	public HomeView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		dummyListLink.setHref(new UrlBuilder(NameTokens.users).with(UsersPresenter.USER_PARAM, "Fave100").getUrl());
+		dummyListLink.setHref(new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, "Fave100").getUrl());
 	}
 
 	@Override

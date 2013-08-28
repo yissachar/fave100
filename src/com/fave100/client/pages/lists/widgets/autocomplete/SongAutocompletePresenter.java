@@ -1,4 +1,4 @@
-package com.fave100.client.pages.users.widgets.autocomplete;
+package com.fave100.client.pages.lists.widgets.autocomplete;
 
 import java.util.LinkedList;
 import java.util.List;

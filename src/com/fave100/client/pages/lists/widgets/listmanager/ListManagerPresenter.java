@@ -1,10 +1,10 @@
-package com.fave100.client.pages.users.widgets.listmanager;
+package com.fave100.client.pages.lists.widgets.listmanager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
@@ -110,9 +110,9 @@ public class ListManagerPresenter extends
 			return;
 
 		_placeManager.revealPlace(new PlaceRequest.Builder()
-				.nameToken(NameTokens.users)
-				.with(UsersPresenter.USER_PARAM, _user.getUsername())
-				.with(UsersPresenter.LIST_PARAM, list)
+				.nameToken(NameTokens.lists)
+				.with(ListPresenter.USER_PARAM, _user.getUsername())
+				.with(ListPresenter.LIST_PARAM, list)
 				.build());
 	}
 

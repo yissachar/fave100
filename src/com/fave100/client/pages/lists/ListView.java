@@ -1,7 +1,7 @@
-package com.fave100.client.pages.users;
+package com.fave100.client.pages.lists;
 
 import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.users.widgets.sharebutton.ShareButton;
+import com.fave100.client.pages.lists.widgets.sharebutton.ShareButton;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
@@ -24,19 +24,19 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
-		implements UsersPresenter.MyView {
+public class ListView extends ViewWithUiHandlers<ListUiHandlers>
+		implements ListPresenter.MyView {
 
 	private final Widget widget;
 
-	public interface Binder extends UiBinder<Widget, UsersView> {
+	public interface Binder extends UiBinder<Widget, ListView> {
 	}
 
-	interface UsersStyle extends CssResource {
+	interface ListStyle extends CssResource {
 		String fixedSearch();
 	}
 
-	@UiField UsersStyle style;
+	@UiField ListStyle style;
 	@UiField HTMLPanel userContainer;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel socialContainer;
@@ -59,7 +59,7 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 	private boolean following;
 
 	@Inject
-	public UsersView(final Binder binder, final ApplicationRequestFactory requestFactory) {
+	public ListView(final Binder binder, final ApplicationRequestFactory requestFactory) {
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -76,27 +76,27 @@ public class UsersView extends ViewWithUiHandlers<UsersUiHandlers>
 				topBar.add(content);
 			}
 		}
-		if (slot == UsersPresenter.AUTOCOMPLETE_SLOT) {
+		if (slot == ListPresenter.AUTOCOMPLETE_SLOT) {
 			songAutocomplete.clear();
 			if (content != null) {
 				songAutocomplete.add(content);
 			}
 		}
-		if (slot == UsersPresenter.FAVELIST_SLOT) {
+		if (slot == ListPresenter.FAVELIST_SLOT) {
 			favelist.clear();
 			if (content != null) {
 				favelist.add(content);
 			}
 		}
 
-		if (slot == UsersPresenter.STARRED_LISTS_SLOT) {
+		if (slot == ListPresenter.STARRED_LISTS_SLOT) {
 			followingContainer.clear();
 			if (content != null) {
 				followingContainer.add(content);
 			}
 		}
 
-		if (slot == UsersPresenter.LIST_MANAGER_SLOT) {
+		if (slot == ListPresenter.LIST_MANAGER_SLOT) {
 			listManager.clear();
 			if (content != null) {
 				listManager.add(content);

@@ -1,4 +1,4 @@
-package com.fave100.client.pages.users.widgets.usersfollowing;
+package com.fave100.client.pages.lists.widgets.usersfollowing;
 
 import java.util.List;
 

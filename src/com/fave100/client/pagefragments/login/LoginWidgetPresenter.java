@@ -4,7 +4,7 @@ import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
-import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.exceptions.user.IncorrectLoginException;
 import com.fave100.shared.requestfactory.AppUserProxy;
@@ -144,7 +144,7 @@ public class LoginWidgetPresenter extends
 				LoadingIndicator.hide();
 				_eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 				Notification.show("Logged in successfully");
-				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.users).with(UsersPresenter.USER_PARAM, appUser.getUsername()).build());
+				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.lists).with(ListPresenter.USER_PARAM, appUser.getUsername()).build());
 			}
 
 			@Override
