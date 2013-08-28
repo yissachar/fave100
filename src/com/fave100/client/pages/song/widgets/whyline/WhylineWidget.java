@@ -1,6 +1,6 @@
 package com.fave100.client.pages.song.widgets.whyline;
 
-import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.WhylineProxy;
@@ -31,8 +31,8 @@ public class WhylineWidget extends Composite {
 
 		whyline.setText(whylineProxy.getWhyline());
 
-		final String userPlace = new UrlBuilder(NameTokens.users)
-				.with(UsersPresenter.USER_PARAM, whylineProxy.getUsername())
+		final String userPlace = new UrlBuilder(NameTokens.lists)
+				.with(ListPresenter.USER_PARAM, whylineProxy.getUsername())
 				.getPlaceToken();
 		userLink.setTargetHistoryToken(userPlace);
 		userLink.setText(whylineProxy.getUsername());

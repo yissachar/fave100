@@ -7,7 +7,7 @@
 	ui:generateLocales='default'>
 
 		
-	<ui:style type="com.fave100.client.pages.users.widgets.listmanager.ListManagerView.ListManagerStyle">
+	<ui:style type="com.fave100.client.pages.lists.widgets.listmanager.ListManagerView.ListManagerStyle">
 		.container {
 			margin-top: 15px;
 			-webkit-touch-callout: none;

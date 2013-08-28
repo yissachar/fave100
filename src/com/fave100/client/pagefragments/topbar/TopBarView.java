@@ -2,7 +2,7 @@ package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
-import com.fave100.client.pages.users.UsersPresenter;
+import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.widgets.ImageHyperlink;
 import com.fave100.shared.UrlBuilder;
@@ -75,7 +75,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		logOutLink.setVisible(true);
 		logOutLink.setText("Sign out");
 		logOutLink.setTargetHistoryToken(NameTokens.logout);
-		final String userPlace = new UrlBuilder(NameTokens.users).with(UsersPresenter.USER_PARAM, username).getPlaceToken();
+		final String userPlace = new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, username).getPlaceToken();
 		logoLink.setTargetHistoryToken(userPlace);
 	}
 

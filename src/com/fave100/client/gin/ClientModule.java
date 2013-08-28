@@ -16,6 +16,16 @@ import com.fave100.client.pagefragments.topbar.TopBarPresenter;
 import com.fave100.client.pagefragments.topbar.TopBarView;
 import com.fave100.client.pages.home.HomePresenter;
 import com.fave100.client.pages.home.HomeView;
+import com.fave100.client.pages.lists.ListPresenter;
+import com.fave100.client.pages.lists.ListView;
+import com.fave100.client.pages.lists.widgets.autocomplete.SongAutocompletePresenter;
+import com.fave100.client.pages.lists.widgets.autocomplete.SongAutocompleteView;
+import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
+import com.fave100.client.pages.lists.widgets.favelist.FavelistView;
+import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
+import com.fave100.client.pages.lists.widgets.listmanager.ListManagerView;
+import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
+import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView;
 import com.fave100.client.pages.login.LoginPresenter;
 import com.fave100.client.pages.login.LoginView;
 import com.fave100.client.pages.logout.LogoutPresenter;
@@ -32,30 +42,22 @@ import com.fave100.client.pages.song.widgets.playlist.PlaylistPresenter;
 import com.fave100.client.pages.song.widgets.playlist.PlaylistView;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubeView;
-import com.fave100.client.pages.users.UsersPresenter;
-import com.fave100.client.pages.users.UsersView;
+import com.fave100.client.pages.users.UserPresenter;
+import com.fave100.client.pages.users.UserView;
 import com.fave100.client.place.ClientPlaceManager;
 import com.fave100.client.place.DefaultPlace;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.GaAccount;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.gwtplatform.mvp.client.googleanalytics.GoogleAnalyticsNavigationTracker;
-import com.fave100.client.pages.users.widgets.autocomplete.SongAutocompletePresenter;
-import com.fave100.client.pages.users.widgets.autocomplete.SongAutocompleteView;
-import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter;
-import com.fave100.client.pages.users.widgets.favelist.FavelistView;
-import com.fave100.client.pages.users.widgets.listmanager.ListManagerPresenter;
-import com.fave100.client.pages.users.widgets.listmanager.ListManagerView;
-import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingPresenter;
-import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -88,8 +90,11 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(RegisterPresenter.class, RegisterPresenter.MyView.class,
 				RegisterView.class, RegisterPresenter.MyProxy.class);
 
-		bindPresenter(UsersPresenter.class, UsersPresenter.MyView.class,
-				UsersView.class, UsersPresenter.MyProxy.class);
+		bindPresenter(ListPresenter.class, ListPresenter.MyView.class,
+				ListView.class, ListPresenter.MyProxy.class);
+
+		bindPresenter(UserPresenter.class, UserPresenter.MyView.class,
+				UserView.class, UserPresenter.MyProxy.class);
 
 		bindPresenter(LoginPresenter.class, LoginPresenter.MyView.class,
 				LoginView.class, LoginPresenter.MyProxy.class);

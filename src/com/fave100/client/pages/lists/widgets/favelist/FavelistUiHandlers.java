@@ -1,4 +1,4 @@
-package com.fave100.client.pages.users.widgets.favelist;
+package com.fave100.client.pages.lists.widgets.favelist;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 

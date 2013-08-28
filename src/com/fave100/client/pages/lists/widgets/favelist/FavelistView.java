@@ -1,8 +1,8 @@
-package com.fave100.client.pages.users.widgets.favelist;
+package com.fave100.client.pages.lists.widgets.favelist;
 
 import java.util.List;
 
-import com.fave100.client.pages.users.widgets.favelist.widgets.FavePickWidget;
+import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;

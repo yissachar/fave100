@@ -1,4 +1,4 @@
-package com.fave100.client.pages.users;
+package com.fave100.client.pages.lists;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.RankInputUnfocusEvent;
@@ -8,10 +8,10 @@ import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
-import com.fave100.client.pages.users.widgets.autocomplete.SongAutocompletePresenter;
-import com.fave100.client.pages.users.widgets.favelist.FavelistPresenter;
-import com.fave100.client.pages.users.widgets.listmanager.ListManagerPresenter;
-import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingPresenter;
+import com.fave100.client.pages.lists.widgets.autocomplete.SongAutocompletePresenter;
+import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
+import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
+import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -40,11 +40,11 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class UsersPresenter extends
-		BasePresenter<UsersPresenter.MyView, UsersPresenter.MyProxy>
-		implements UsersUiHandlers {
+public class ListPresenter extends
+		BasePresenter<ListPresenter.MyView, ListPresenter.MyProxy>
+		implements ListUiHandlers {
 
-	public interface MyView extends BaseView, HasUiHandlers<UsersUiHandlers> {
+	public interface MyView extends BaseView, HasUiHandlers<ListUiHandlers> {
 		void setUserProfile(AppUserProxy user);
 
 		void showOwnPage();
@@ -63,8 +63,8 @@ public class UsersPresenter extends
 	}
 
 	@ProxyCodeSplit
-	@NameToken(NameTokens.users)
-	public interface MyProxy extends ProxyPlace<UsersPresenter> {
+	@NameToken(NameTokens.lists)
+	public interface MyProxy extends ProxyPlace<ListPresenter> {
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
@@ -90,7 +90,7 @@ public class UsersPresenter extends
 	@Inject ListManagerPresenter listManager;
 
 	@Inject
-	public UsersPresenter(final EventBus eventBus, final MyView view,
+	public ListPresenter(final EventBus eventBus, final MyView view,
 							final MyProxy proxy, final ApplicationRequestFactory requestFactory,
 							final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
@@ -233,7 +233,7 @@ public class UsersPresenter extends
 							}
 							else {
 								getView().showUserNotFound();
-								getProxy().manualReveal(UsersPresenter.this);
+								getProxy().manualReveal(ListPresenter.this);
 							}
 						}
 					});
@@ -283,7 +283,7 @@ public class UsersPresenter extends
 		listManager.refreshUsersLists();
 		getView().setMobileView(true);
 
-		getProxy().manualReveal(UsersPresenter.this);
+		getProxy().manualReveal(ListPresenter.this);
 
 		// Now that page is visible, render FB like button						
 		getView().renderSharing(requestedUser.getUsername());
@@ -305,7 +305,7 @@ public class UsersPresenter extends
 	}
 }
 
-interface UsersUiHandlers extends UiHandlers {
+interface ListUiHandlers extends UiHandlers {
 	void songSelected(SongProxy song);
 
 	void followUser();

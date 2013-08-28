@@ -1,4 +1,4 @@
-package com.fave100.client.pages.users.widgets.favelist;
+package com.fave100.client.pages.lists.widgets.favelist;
 
 import static com.google.gwt.query.client.GQuery.$;
 
@@ -10,7 +10,7 @@ import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
-import com.fave100.client.pages.users.widgets.favelist.widgets.FavePickWidget;
+import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;

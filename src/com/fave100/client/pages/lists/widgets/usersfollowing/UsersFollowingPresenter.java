@@ -1,4 +1,4 @@
-package com.fave100.client.pages.users.widgets.usersfollowing;
+package com.fave100.client.pages.lists.widgets.usersfollowing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.pages.BaseView;
-import com.fave100.client.pages.users.UsersPresenter;
-import com.fave100.client.pages.users.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
+import com.fave100.client.pages.lists.ListPresenter;
+import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.AppUserProxy;
@@ -156,7 +156,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 				final Image avatar = new Image(user.getAvatarImage());
 				listItem.add(avatar);
 				final Anchor listAnchor = new Anchor(user.getUsername());
-				listAnchor.setHref("#" + new UrlBuilder(NameTokens.users).with(UsersPresenter.USER_PARAM, user.getUsername()).getPlaceToken().toString());
+				listAnchor.setHref("#" + new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, user.getUsername()).getPlaceToken().toString());
 				listAnchor.addStyleName(getView().getStyle().listLink());
 				listItem.add(listAnchor);
 				if (ownFollowing) {
