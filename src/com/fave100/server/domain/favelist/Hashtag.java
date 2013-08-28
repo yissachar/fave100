@@ -16,6 +16,8 @@ import com.googlecode.objectify.annotation.Id;
 public class Hashtag {
 
 	@Id private String id;
+	// Same as id, but case sensitive for display
+	private String hashtag;
 	private Ref<AppUser> createdBy;
 	private Date dateCreated;
 	private List<FaveItem> list = new ArrayList<FaveItem>();
@@ -24,8 +26,9 @@ public class Hashtag {
 	private Hashtag() {
 	}
 
-	public Hashtag(final String id, final String createdBy) {
-		this.id = id;
+	public Hashtag(final String hashtag, final String createdBy) {
+		this.id = hashtag.toLowerCase();
+		this.hashtag = hashtag;
 		this.setCreatedBy(Ref.create(Key.create(AppUser.class, createdBy)));
 		setDateCreated(new Date());
 	}
@@ -38,6 +41,14 @@ public class Hashtag {
 
 	public String getId() {
 		return id;
+	}
+
+	public String getHashtag() {
+		return hashtag;
+	}
+
+	public void setHashtag(final String hashtag) {
+		this.hashtag = hashtag;
 	}
 
 	public Ref<AppUser> getCreatedBy() {
