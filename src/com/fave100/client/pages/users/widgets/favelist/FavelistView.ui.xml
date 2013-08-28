@@ -60,5 +60,8 @@
 		}
 	</ui:style>
 	
-	<g:FlowPanel ui:field="favelist" ui:styleName="{style.favelist} faveList"/>
+	<g:FlowPanel>
+		<g:FlowPanel ui:field="favelist" ui:styleName="{style.favelist} faveList"/>
+		<g:Label ui:field="noItemsMessage">There are no entries for this list.</g:Label>
+	</g:FlowPanel>
 </ui:UiBinder>

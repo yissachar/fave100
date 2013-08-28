@@ -7,6 +7,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -35,6 +36,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 
 	@UiField FavelistStyle style;
 	@UiField FlowPanel favelist;
+	@UiField Label noItemsMessage;
 
 	@Inject
 	public FavelistView(final Binder binder) {
@@ -50,8 +52,12 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	public void setList(final List<FavePickWidget> widgets) {
 		favelist.clear();
 
-		if (widgets == null)
+		if (widgets == null || widgets.size() == 0) {
+			noItemsMessage.setVisible(true);
 			return;
+		}
+
+		noItemsMessage.setVisible(false);
 
 		for (final FavePickWidget widget : widgets) {
 			favelist.add(widget);
