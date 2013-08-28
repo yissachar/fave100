@@ -38,6 +38,8 @@ public class FavelistPresenter extends
 		void addPick(FavePickWidget widget);
 
 		void swapPicks(int indexA, int indexB);
+
+		void hideNoItemsMessage();
 	}
 
 	public interface WhyLineChanged {
@@ -149,6 +151,7 @@ public class FavelistPresenter extends
 	public void refreshFavelist(final boolean ownList) {
 		getView().setList(null);
 
+		getView().hideNoItemsMessage();
 		// Get the FaveList locally if possible 
 		if (ownList && currentUser.getFaveList() != null) {
 			buildWidgets(currentUser.getFaveList());
