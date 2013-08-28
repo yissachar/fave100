@@ -41,6 +41,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	@Inject
 	public FavelistView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+		hideNoItemsMessage();
 	}
 
 	@Override
@@ -50,14 +51,13 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 
 	@Override
 	public void setList(final List<FavePickWidget> widgets) {
+		hideNoItemsMessage();
 		favelist.clear();
 
 		if (widgets == null || widgets.size() == 0) {
 			noItemsMessage.setVisible(true);
 			return;
 		}
-
-		noItemsMessage.setVisible(false);
 
 		for (final FavePickWidget widget : widgets) {
 			favelist.add(widget);
@@ -67,6 +67,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	@Override
 	public void addPick(final FavePickWidget widget) {
 		favelist.add(widget);
+		hideNoItemsMessage();
 	}
 
 	@Override
@@ -98,5 +99,10 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 			}
 		});*/
 
+	}
+
+	@Override
+	public void hideNoItemsMessage() {
+		noItemsMessage.setVisible(false);
 	}
 }
