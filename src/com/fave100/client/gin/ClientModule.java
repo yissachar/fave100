@@ -58,6 +58,8 @@ import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.gwtplatform.mvp.client.googleanalytics.GoogleAnalyticsNavigationTracker;
+import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
+import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView;
 
 public class ClientModule extends AbstractPresenterModule {
 
@@ -135,6 +137,8 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenterWidget(UsersFollowingPresenter.class, UsersFollowingPresenter.MyView.class, UsersFollowingView.class);
 
 		bindSingletonPresenterWidget(ListManagerPresenter.class, ListManagerPresenter.MyView.class, ListManagerView.class);
+
+		bindSingletonPresenterWidget(GlobalListDetailsPresenter.class, GlobalListDetailsPresenter.MyView.class, GlobalListDetailsView.class);
 	}
 
 	@Provides

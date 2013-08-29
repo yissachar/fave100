@@ -10,6 +10,7 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.widgets.autocomplete.SongAutocompletePresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
+import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
@@ -18,6 +19,7 @@ import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.fave100.shared.requestfactory.HashtagProxy;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -29,6 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
+import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -60,10 +63,6 @@ public class ListPresenter extends
 		void setFollowCTA(boolean show, boolean starred);
 
 		void setMobileView(boolean reset);
-
-		void setHashtagLabel(String hashtag);
-
-		void setHashtagVisible(boolean show);
 	}
 
 	@ProxyCodeSplit
@@ -75,6 +74,7 @@ public class ListPresenter extends
 	@ContentSlot public static final Type<RevealContentHandler<?>> FAVELIST_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot public static final Type<RevealContentHandler<?>> STARRED_LISTS_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot public static final Type<RevealContentHandler<?>> LIST_MANAGER_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot public static final Type<RevealContentHandler<?>> GLOBAL_LIST_DETAILS_SLOT = new Type<RevealContentHandler<?>>();
 
 	public static final String USER_PARAM = "u";
 	public static final String LIST_PARAM = "list";
@@ -82,6 +82,7 @@ public class ListPresenter extends
 	private String requestedUsername;
 	private String _requestedHashtag;
 	private boolean isFollowing;
+	private HashtagProxy _hashtag;
 	// For now just hardcode, only one possible hashtag
 	private AppUserProxy requestedUser;
 	private final ApplicationRequestFactory _requestFactory;
@@ -92,6 +93,7 @@ public class ListPresenter extends
 	@Inject FavelistPresenter favelist;
 	@Inject UsersFollowingPresenter usersFollowing;
 	@Inject ListManagerPresenter listManager;
+	@Inject GlobalListDetailsPresenter globalListDetails;
 
 	@Inject
 	public ListPresenter(final EventBus eventBus, final MyView view,
@@ -181,6 +183,7 @@ public class ListPresenter extends
 		setInSlot(FAVELIST_SLOT, favelist);
 		setInSlot(STARRED_LISTS_SLOT, usersFollowing);
 		setInSlot(LIST_MANAGER_SLOT, listManager);
+		setInSlot(GLOBAL_LIST_DETAILS_SLOT, globalListDetails);
 	}
 
 	@Override
@@ -214,7 +217,15 @@ public class ListPresenter extends
 
 		if (requestedUsername.isEmpty()) {
 			// No user, just show global list for hashtag
-			showPage();
+			final Request<HashtagProxy> hashtagReq = _requestFactory.faveListRequest().getHashtag(_requestedHashtag);
+			hashtagReq.fire(new Receiver<HashtagProxy>() {
+				@Override
+				public void onSuccess(final HashtagProxy hashtag) {
+					_hashtag = hashtag;
+					showPage();
+				}
+			});
+
 		}
 		else {
 			// Get user profile
@@ -292,13 +303,13 @@ public class ListPresenter extends
 			listManager.setUser(requestedUser);
 			listManager.setHashtag(_requestedHashtag);
 			listManager.refreshUsersLists();
-			getView().setHashtagVisible(false);
+			globalListDetails.getView().hide();
 		}
 		else {
 			usersFollowing.getView().hide();
 			listManager.getView().hide();
-			getView().setHashtagLabel("#" + _requestedHashtag);
-			getView().setHashtagVisible(true);
+			globalListDetails.getView().show();
+			globalListDetails.setHashtag(_hashtag);
 		}
 
 		getView().setMobileView(true);

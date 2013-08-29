@@ -629,13 +629,14 @@ public class AppUser extends DatastoreObject {
 	public String getAvatarImage(final int size) {
 		if (avatar == null) {
 			// If there is no avatar, serve a Gravatar
+			final String params = "?d=mm&s=" + size;
 			if (getEmail() == null)
-				return "http://www.gravatar.com/avatar/?d=mm";
+				return "http://www.gravatar.com/avatar/" + params;
 			try {
 				final byte[] bytes = getEmail().toLowerCase().getBytes("UTF-8");
 				final BigInteger i = new BigInteger(1, MessageDigest.getInstance("MD5").digest(bytes));
 				final String hash = String.format("%1$032x", i);
-				return "http://www.gravatar.com/avatar/" + hash + "?d=mm";
+				return "http://www.gravatar.com/avatar/" + hash + params;
 			}
 			catch (final Exception e) {
 				// Don't care
