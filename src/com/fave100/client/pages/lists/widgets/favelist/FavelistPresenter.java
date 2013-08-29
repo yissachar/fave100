@@ -157,25 +157,37 @@ public class FavelistPresenter extends
 			buildWidgets(currentUser.getFaveList());
 			return;
 		}
+		// Otherwise get it from the server if we are requesting a user's list
+		else if (user != null) {
+			final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), hashtag);
+			req.fire(new Receiver<List<FaveItemProxy>>() {
 
-		// Otherwise get it from the server
-		final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), hashtag);
-		req.fire(new Receiver<List<FaveItemProxy>>() {
-
-			@Override
-			public void onSuccess(final List<FaveItemProxy> results) {
-				if (ownList)
-					currentUser.setFaveList(results);
-				buildWidgets(results);
-			}
-		});
+				@Override
+				public void onSuccess(final List<FaveItemProxy> results) {
+					if (ownList)
+						currentUser.setFaveList(results);
+					buildWidgets(results);
+				}
+			});
+		}
+		// No user, get the global list 
+		else {
+			final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getMasterFaveList(hashtag);
+			req.fire(new Receiver<List<FaveItemProxy>>() {
+				@Override
+				public void onSuccess(final List<FaveItemProxy> results) {
+					buildWidgets(results);
+				}
+			});
+		}
 	}
 
 	private void buildWidgets(final List<FaveItemProxy> faveList) {
 		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 		int i = 1;
 		for (final FaveItemProxy item : faveList) {
-			final FavePickWidget widget = new FavePickWidget(eventBus, item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername(), hashtag);
+			final String username = user != null ? user.getUsername() : "";
+			final FavePickWidget widget = new FavePickWidget(eventBus, item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, username, hashtag);
 			pickWidgets.add(widget);
 			i++;
 		}

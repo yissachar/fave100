@@ -86,4 +86,14 @@ public class UsersFollowingView extends ViewWithUiHandlers<UsersFollowingUiHandl
 	public UsersFollowingStyle getStyle() {
 		return style;
 	}
+
+	@Override
+	public void show() {
+		widget.setVisible(true);
+	}
+
+	@Override
+	public void hide() {
+		widget.setVisible(false);
+	}
 }

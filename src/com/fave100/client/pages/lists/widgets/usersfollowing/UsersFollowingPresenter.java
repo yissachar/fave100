@@ -42,6 +42,10 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 		void hideMoreFollowingButton();
 
 		UsersFollowingStyle getStyle();
+
+		void show();
+
+		void hide();
 	}
 
 	EventBus _eventBus;

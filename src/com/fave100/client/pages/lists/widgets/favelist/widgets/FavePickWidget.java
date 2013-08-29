@@ -137,11 +137,19 @@ public class FavePickWidget extends Composite {
 		setupRankPanel();
 
 		song.setText(getSong());
-		song.setHref("#" + new UrlBuilder(NameTokens.song)
-				.with(SongPresenter.ID_PARAM, getSongID())
-				.with(SongPresenter.USER_PARAM, getUsername())
-				.with(SongPresenter.LIST_PARAM, getHashtag())
-				.getPlaceToken());
+		if (_username.isEmpty()) {
+			song.setHref("#" + new UrlBuilder(NameTokens.song)
+					.with(SongPresenter.ID_PARAM, getSongID())
+					.with(SongPresenter.LIST_PARAM, getHashtag())
+					.getPlaceToken());
+		}
+		else {
+			song.setHref("#" + new UrlBuilder(NameTokens.song)
+					.with(SongPresenter.ID_PARAM, getSongID())
+					.with(SongPresenter.USER_PARAM, getUsername())
+					.with(SongPresenter.LIST_PARAM, getHashtag())
+					.getPlaceToken());
+		}
 
 		artist.setText(getArtist());
 

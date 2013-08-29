@@ -37,6 +37,10 @@ public class ListManagerPresenter extends
 
 		void hideDropdown();
 
+		void show();
+
+		void hide();
+
 	}
 
 	private ApplicationRequestFactory _requestFactory;

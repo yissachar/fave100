@@ -264,7 +264,7 @@ public class CurrentUser implements AppUserProxy {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (appUser == null) {
+		if (appUser == null || obj == null) {
 			return false;
 		}
 		else if (appUser.equals(obj) || this.getUsername().equals(((AppUserProxy)obj).getUsername())) {

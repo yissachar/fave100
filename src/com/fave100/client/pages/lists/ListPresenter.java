@@ -60,6 +60,10 @@ public class ListPresenter extends
 		void setFollowCTA(boolean show, boolean starred);
 
 		void setMobileView(boolean reset);
+
+		void setHashtagLabel(String hashtag);
+
+		void setHashtagVisible(boolean show);
 	}
 
 	@ProxyCodeSplit
@@ -202,12 +206,18 @@ public class ListPresenter extends
 		// Use parameters to determine what to reveal on page
 		requestedUsername = placeRequest.getParameter(USER_PARAM, "");
 		_requestedHashtag = placeRequest.getParameter(LIST_PARAM, Constants.DEFAULT_HASHTAG);
+		// Possible combinations:
+		// Blank user, blank list => global fave100 list
+		// List only => global list for that hashtag
+		// User only => user's fave100 list
+		// List + user => user's list for that hashtag
+
 		if (requestedUsername.isEmpty()) {
-			// Malformed request, send the user away
-			_placeManager.revealDefaultPlace();
+			// No user, just show global list for hashtag
+			showPage();
 		}
 		else {
-			// Update user profile
+			// Get user profile
 
 			// If current user just grab the local info and show
 			if (requestedUsername.equals(_currentUser.getUsername())) {
@@ -259,9 +269,6 @@ public class ListPresenter extends
 	}
 
 	private void showPage() {
-		if (requestedUser == null)
-			return;
-
 		getView().setUserProfile(requestedUser);
 		final boolean ownPage = _currentUser.isLoggedIn() && _currentUser.equals(requestedUser);
 		if (ownPage) {
@@ -276,17 +283,30 @@ public class ListPresenter extends
 		favelist.setUser(requestedUser);
 		favelist.setHashtag(_requestedHashtag);
 		favelist.refreshFavelist(ownPage);
-		usersFollowing.setUser(requestedUser);
-		usersFollowing.refreshLists();
-		listManager.setUser(requestedUser);
-		listManager.setHashtag(_requestedHashtag);
-		listManager.refreshUsersLists();
+
+		if (requestedUser != null) {
+			usersFollowing.getView().show();
+			usersFollowing.setUser(requestedUser);
+			usersFollowing.refreshLists();
+			listManager.getView().show();
+			listManager.setUser(requestedUser);
+			listManager.setHashtag(_requestedHashtag);
+			listManager.refreshUsersLists();
+			getView().setHashtagVisible(false);
+		}
+		else {
+			usersFollowing.getView().hide();
+			listManager.getView().hide();
+			getView().setHashtagLabel("#" + _requestedHashtag);
+			getView().setHashtagVisible(true);
+		}
+
 		getView().setMobileView(true);
 
 		getProxy().manualReveal(ListPresenter.this);
 
-		// Now that page is visible, render FB like button						
-		getView().renderSharing(requestedUser.getUsername());
+		// Now that page is visible, render FB like button				
+		getView().renderSharing(requestedUsername);
 	}
 
 	@Override
