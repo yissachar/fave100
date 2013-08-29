@@ -45,15 +45,15 @@ public class HashtagBuilderServlet extends HttpServlet
 
 		final String hashtag = req.getParameter(HASHTAG_PARAM);
 
-		final HashMap<FaveRankerWrapper, Integer> all = new HashMap<FaveRankerWrapper, Integer>();
+		final HashMap<FaveRankerWrapper, Double> all = new HashMap<FaveRankerWrapper, Double>();
 		final List<String> userSampleIds = new ArrayList<>();
 		final int listCount = addAllLists(null, hashtag, all, userSampleIds);
 		// Sort the list
-		final List<Map.Entry<FaveRankerWrapper, Integer>> sorted = new LinkedList<Map.Entry<FaveRankerWrapper, Integer>>(all.entrySet());
-		Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Integer>>()
+		final List<Map.Entry<FaveRankerWrapper, Double>> sorted = new LinkedList<>(all.entrySet());
+		Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Double>>()
 		{
 			@Override
-			public int compare(final Map.Entry<FaveRankerWrapper, Integer> o1, final Map.Entry<FaveRankerWrapper, Integer> o2)
+			public int compare(final Map.Entry<FaveRankerWrapper, Double> o1, final Map.Entry<FaveRankerWrapper, Double> o2)
 			{
 				return (o2.getValue()).compareTo(o1.getValue());
 			}
@@ -62,7 +62,7 @@ public class HashtagBuilderServlet extends HttpServlet
 		// Add everything to memcache
 		int i = 0;
 		final List<FaveItem> master = new ArrayList<FaveItem>();
-		for (final Map.Entry<FaveRankerWrapper, Integer> entry : sorted) {
+		for (final Map.Entry<FaveRankerWrapper, Double> entry : sorted) {
 			// Add the top 100 songs to master list
 			if (i < 100) {
 				final FaveItem faveItem = entry.getKey().getFaveItem();
@@ -94,7 +94,7 @@ public class HashtagBuilderServlet extends HttpServlet
 	}
 
 	// Get favelists 1000 at a time, and store their rank, returns number of lists
-	private int addAllLists(final String cursor, final String hashtag, final HashMap<FaveRankerWrapper, Integer> all, final List<String> userSampleIds) {
+	private int addAllLists(final String cursor, final String hashtag, final HashMap<FaveRankerWrapper, Double> all, final List<String> userSampleIds) {
 		final Query<FaveList> query = ofy().load().type(FaveList.class).filter("hashtag", hashtag).limit(1000);
 
 		if (cursor != null)
@@ -121,10 +121,13 @@ public class HashtagBuilderServlet extends HttpServlet
 				}
 			}
 			// Add up the total rank for each song in the list
+			int i = 1;
 			for (final FaveItem faveItem : faveList.getList()) {
 				final FaveRankerWrapper faveHolder = new FaveRankerWrapper(faveItem);
-				final int newVal = (all.get(faveHolder) != null) ? all.get(faveHolder) + 1 : 1;
+				final double score = FaveList.calculateItemScore(i);
+				final double newVal = (all.get(faveHolder) != null) ? all.get(faveHolder) + score : score;
 				all.put(faveHolder, newVal);
+				i++;
 			}
 
 			// If we processed the full 1000 limit, grab the next batch of hashtags to process

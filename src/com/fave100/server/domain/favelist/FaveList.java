@@ -11,6 +11,7 @@ import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.ValidationException;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
@@ -124,7 +125,7 @@ public class FaveList extends DatastoreObject {
 		ofy().save().entities(faveList).now();
 
 		// Modify memcache ranking
-		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, 1, newFaveItem);
+		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, FaveList.calculateItemScore(faveList.getList().size()), newFaveItem);
 	}
 
 	public static void removeFaveItemForCurrentUser(final String hashtag, final String songID) throws NotLoggedInException {
@@ -136,12 +137,14 @@ public class FaveList extends DatastoreObject {
 		if (faveList == null)
 			return;
 		// Find the song to remove
+		int position = 0;
 		FaveItem faveItemToRemove = null;
 		for (final FaveItem faveItem : faveList.getList()) {
 			if (faveItem.getSongID().equals(songID)) {
 				faveItemToRemove = faveItem;
 				break;
 			}
+			position++;
 		}
 
 		if (faveItemToRemove == null)
@@ -156,7 +159,7 @@ public class FaveList extends DatastoreObject {
 		ofy().save().entities(faveList).now();
 
 		// Modify memcache ranking
-		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, -1, faveItemToRemove);
+		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, FaveList.calculateItemScore(position), faveItemToRemove);
 	}
 
 	public static void rerankFaveItemForCurrentUser(final String hashtag, final String songID, final int newIndex) throws NotLoggedInException {
@@ -173,12 +176,14 @@ public class FaveList extends DatastoreObject {
 			throw new IllegalArgumentException("Index out of range");
 
 		// Find the song to change position
+		int oldIndex = 0;
 		FaveItem faveItemToRerank = null;
 		for (final FaveItem faveItem : faveList.getList()) {
 			if (faveItem.getSongID().equals(songID)) {
 				faveItemToRerank = faveItem;
 				break;
 			}
+			oldIndex++;
 		}
 
 		if (faveItemToRerank == null)
@@ -187,6 +192,8 @@ public class FaveList extends DatastoreObject {
 		faveList.getList().remove(faveItemToRerank);
 		faveList.getList().add(newIndex, faveItemToRerank);
 		ofy().save().entities(faveList).now();
+
+		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, (oldIndex - newIndex) * Constants.SCORE_CALCULATOR, faveItemToRerank);
 	}
 
 	public static void editWhylineForCurrentUser(final String hashtag, final String songID, final String whyline)
@@ -268,6 +275,10 @@ public class FaveList extends DatastoreObject {
 
 	public static Hashtag getHashtag(final String id) {
 		return ofy().load().type(Hashtag.class).id(id).get();
+	}
+
+	public static double calculateItemScore(final int position) {
+		return ((-1 * position) / 11 + (111 / 11));
 	}
 
 	/* Getters and Setters */
