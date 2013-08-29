@@ -1,24 +1,27 @@
 package com.fave100.client.pages.home;
 
-import static com.google.gwt.query.client.GQuery.$;
-
 import com.fave100.client.CurrentUser;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
+import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.Constants;
 import com.fave100.shared.Utils;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 /**
  * Default page that the user will see.
@@ -42,6 +45,9 @@ public class HomePresenter extends
 	private CurrentUser currentUser;
 	@Inject RegisterPopupPresenter registerPopup;
 	@Inject LoginPopupPresenter loginPopup;
+	@Inject FavelistPresenter masterList;
+
+	@ContentSlot public static final Type<RevealContentHandler<?>> MASTER_LIST_SLOT = new Type<RevealContentHandler<?>>();
 
 	@Inject
 	public HomePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser) {
@@ -75,13 +81,14 @@ public class HomePresenter extends
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		$("body").css("overflow", "hidden");
+		setInSlot(MASTER_LIST_SLOT, masterList);
+		masterList.setHashtag(Constants.DEFAULT_HASHTAG);
+		masterList.refreshFavelist(false);
 	}
 
 	@Override
 	public void onHide() {
 		super.onHide();
-		$("body").css("overflow", "auto");
 	}
 
 	@Override
