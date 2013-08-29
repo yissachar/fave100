@@ -9,11 +9,6 @@
 	ui:generateLocales='default'>
 
 	<ui:style type="com.fave100.client.pages.lists.ListView.ListStyle">		
-		.hashtagLabel {
-			font-size: 1.8em;
-			word-wrap: beak-word;
-		}
-		
 		.userProfile{
 			display: block;
 			width: 100%;			
@@ -126,7 +121,7 @@
 			<div class="content row">
 				<g:HTMLPanel ui:field="userContainer">
 					<g:HTMLPanel styleName="userPageSideBar col span_3">
-						<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>		
+						<g:HTMLPanel ui:field="globalListDetailsContainer"/>								
 						<g:HorizontalPanel ui:field="userProfile" styleName="{style.userProfile}">
 							<g:Image styleName="{style.avatar}" ui:field="avatar"/>
 							<g:VerticalPanel>

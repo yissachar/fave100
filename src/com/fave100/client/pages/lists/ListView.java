@@ -40,7 +40,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	@UiField ListStyle style;
 	@UiField HTMLPanel userContainer;
 	@UiField HTMLPanel faveListContainer;
-	@UiField Label hashtagLabel;
+	@UiField HTMLPanel globalListDetailsContainer;
 	@UiField HTMLPanel socialContainer;
 	@UiField HTMLPanel listManager;
 	@UiField FocusPanel followCTAcontainer;
@@ -103,6 +103,13 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 			listManager.clear();
 			if (content != null) {
 				listManager.add(content);
+			}
+		}
+
+		if (slot == ListPresenter.GLOBAL_LIST_DETAILS_SLOT) {
+			globalListDetailsContainer.clear();
+			if (content != null) {
+				globalListDetailsContainer.add(content);
 			}
 		}
 		super.setInSlot(slot, content);
@@ -278,15 +285,5 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 			shareButton.setVisible(true);
 			followingContainer.setVisible(true);
 		}
-	}
-
-	@Override
-	public void setHashtagLabel(final String hashtag) {
-		hashtagLabel.setText(hashtag);
-	}
-
-	@Override
-	public void setHashtagVisible(final boolean show) {
-		hashtagLabel.setVisible(show);
 	}
 }

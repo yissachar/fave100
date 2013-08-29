@@ -258,6 +258,10 @@ public class FaveList extends DatastoreObject {
 		return names;
 	}
 
+	public static Hashtag getHashtag(final String id) {
+		return ofy().load().type(Hashtag.class).id(id).get();
+	}
+
 	/* Getters and Setters */
 
 	public String getId() {

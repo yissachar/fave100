@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fave100.server.MemcacheManager;
+import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveRankerWrapper;
@@ -45,8 +46,8 @@ public class HashtagBuilderServlet extends HttpServlet
 		final String hashtag = req.getParameter(HASHTAG_PARAM);
 
 		final HashMap<FaveRankerWrapper, Integer> all = new HashMap<FaveRankerWrapper, Integer>();
-		addAllLists(null, hashtag, all);
-
+		final List<String> userSampleIds = new ArrayList<>();
+		final int listCount = addAllLists(null, hashtag, all, userSampleIds);
 		// Sort the list
 		final List<Map.Entry<FaveRankerWrapper, Integer>> sorted = new LinkedList<Map.Entry<FaveRankerWrapper, Integer>>(all.entrySet());
 		Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Integer>>()
@@ -73,17 +74,27 @@ public class HashtagBuilderServlet extends HttpServlet
 			MemcacheManager.getInstance().putFaveItemScoreNoRerank(entry.getKey().getFaveItem().getId(), hashtag, entry.getValue());
 		}
 
+		final Map<String, AppUser> userSampleUsers = ofy().load().type(AppUser.class).ids(userSampleIds);
+		final List<String> userSampleNames = new ArrayList<>();
+		final List<String> userSampleAvatars = new ArrayList<>();
+		for (final AppUser sampleUser : userSampleUsers.values()) {
+			userSampleNames.add(sampleUser.getUsername());
+			userSampleAvatars.add(sampleUser.getAvatarImage(60));
+		}
 		// Save the master list back to the datastore
 		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).get();
 		hashtagEntity.setList(master);
+		hashtagEntity.setListCount(listCount);
+		hashtagEntity.setSampledUsersNames(userSampleNames);
+		hashtagEntity.setSampledUsersAvatars(userSampleAvatars);
 		ofy().save().entity(hashtagEntity).now();
 
 		// And memcache the master
 		MemcacheManager.getInstance().putMasterFaveList(hashtag, master);
 	}
 
-	// Get favelists 1000 at a time, and store their rank
-	private void addAllLists(final String cursor, final String hashtag, final HashMap<FaveRankerWrapper, Integer> all) {
+	// Get favelists 1000 at a time, and store their rank, returns number of lists
+	private int addAllLists(final String cursor, final String hashtag, final HashMap<FaveRankerWrapper, Integer> all, final List<String> userSampleIds) {
 		final Query<FaveList> query = ofy().load().type(FaveList.class).filter("hashtag", hashtag).limit(1000);
 
 		if (cursor != null)
@@ -95,8 +106,22 @@ public class HashtagBuilderServlet extends HttpServlet
 		final QueryResultIterator<FaveList> iterator = query.iterator();
 		while (iterator.hasNext()) {
 			count++;
+			// Decide whether to add user to sample users
+			final FaveList faveList = iterator.next();
+			//If list empty, fill up first
+			if (userSampleIds.size() < 9) {
+				userSampleIds.add(faveList.getUser().getKey().getName());
+			}
+			// Otherwise randomly replace sampled users over time
+			else {
+				final double decision = Math.random();
+				if (decision > 0.001) {
+					final int index = (int)Math.round(userSampleIds.size() * Math.random());
+					userSampleIds.set(index, faveList.getUser().getKey().getName());
+				}
+			}
 			// Add up the total rank for each song in the list
-			for (final FaveItem faveItem : iterator.next().getList()) {
+			for (final FaveItem faveItem : faveList.getList()) {
 				final FaveRankerWrapper faveHolder = new FaveRankerWrapper(faveItem);
 				final int newVal = (all.get(faveHolder) != null) ? all.get(faveHolder) + 1 : 1;
 				all.put(faveHolder, newVal);
@@ -109,7 +134,8 @@ public class HashtagBuilderServlet extends HttpServlet
 
 		// While we still have favelists to process, keep adding their ranks
 		if (shouldContinue) {
-			addAllLists(iterator.getCursor().toWebSafeString(), hashtag, all);
+			return addAllLists(iterator.getCursor().toWebSafeString(), hashtag, all, userSampleIds) + count;
 		}
+		return count;
 	}
 }

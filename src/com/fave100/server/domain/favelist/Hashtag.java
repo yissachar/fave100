@@ -17,18 +17,24 @@ public class Hashtag {
 
 	@Id private String id;
 	// Same as id, but case sensitive for display
-	private String hashtag;
+	private String name;
 	private Ref<AppUser> createdBy;
 	private Date dateCreated;
 	private List<FaveItem> list = new ArrayList<FaveItem>();
+	// A constantly regenerated sampling of up to 9 users with this list
+	// Since this is constantly regenerated, we can store denormalized data, instead of reference to actual entity
+	private List<String> sampledUsersNames = new ArrayList<>();
+	private List<String> sampledUsersAvatars = new ArrayList<>();
+	// Total number of lists with this hashtag
+	private int listCount;
 
 	@SuppressWarnings("unused")
 	private Hashtag() {
 	}
 
-	public Hashtag(final String hashtag, final String createdBy) {
-		this.id = hashtag.toLowerCase();
-		this.hashtag = hashtag;
+	public Hashtag(final String name, final String createdBy) {
+		this.id = name.toLowerCase();
+		this.name = name;
 		this.setCreatedBy(Ref.create(Key.create(AppUser.class, createdBy)));
 		setDateCreated(new Date());
 	}
@@ -43,12 +49,12 @@ public class Hashtag {
 		return id;
 	}
 
-	public String getHashtag() {
-		return hashtag;
+	public String getName() {
+		return name;
 	}
 
-	public void setHashtag(final String hashtag) {
-		this.hashtag = hashtag;
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	public Ref<AppUser> getCreatedBy() {
@@ -73,6 +79,30 @@ public class Hashtag {
 
 	public void setList(final List<FaveItem> list) {
 		this.list = list;
+	}
+
+	public List<String> getSampledUsersNames() {
+		return sampledUsersNames;
+	}
+
+	public void setSampledUsersNames(final List<String> sampledUsersNames) {
+		this.sampledUsersNames = sampledUsersNames;
+	}
+
+	public List<String> getSampledUsersAvatars() {
+		return sampledUsersAvatars;
+	}
+
+	public void setSampledUsersAvatars(final List<String> sampledUsersAvatars) {
+		this.sampledUsersAvatars = sampledUsersAvatars;
+	}
+
+	public int getListCount() {
+		return listCount;
+	}
+
+	public void setListCount(final int listCount) {
+		this.listCount = listCount;
 	}
 
 }
