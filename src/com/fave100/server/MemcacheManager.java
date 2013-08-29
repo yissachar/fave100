@@ -52,7 +52,7 @@ public class MemcacheManager {
 	 * @param hashtag
 	 * @param score
 	 */
-	public void putFaveItemScoreNoRerank(final String id, final String hashtag, final int score) {
+	public void putFaveItemScoreNoRerank(final String id, final String hashtag, final double score) {
 		_cache.put(FAVEITEM_RANK_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase() + SEPARATOR_TOKEN + id, score);
 	}
 
@@ -63,7 +63,7 @@ public class MemcacheManager {
 	 * @param hashtag
 	 * @param score
 	 */
-	public void putFaveItemScore(final String id, final String hashtag, final int score, final FaveItem passedFaveItem) {
+	public void putFaveItemScore(final String id, final String hashtag, final double score, final FaveItem passedFaveItem) {
 		// e.g. {faveItemRank:rock2013:645116, 245}
 		_cache.put(FAVEITEM_RANK_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase() + SEPARATOR_TOKEN + id, score);
 
@@ -112,9 +112,9 @@ public class MemcacheManager {
 
 	}
 
-	public void modifyFaveItemScore(final String id, final String hashtag, final int delta, final FaveItem faveItem) {
+	public void modifyFaveItemScore(final String id, final String hashtag, final double delta, final FaveItem faveItem) {
 		// TODO: Aug 19 2013: Is it possible to increment counter atomically? Not super important, but nice
-		final int currentRank = getFaveItemScore(id, hashtag);
+		final double currentRank = getFaveItemScore(id, hashtag);
 		putFaveItemScore(id, hashtag, currentRank + delta, faveItem);
 	}
 

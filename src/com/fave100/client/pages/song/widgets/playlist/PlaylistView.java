@@ -73,8 +73,7 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 				.with(ListPresenter.USER_PARAM, username)
 				.with(ListPresenter.LIST_PARAM, hashtag)
 				.getUrl());
-		//TODO: Is this where we want hashtag url to go?
-		_hashtag.setHref(new UrlBuilder(NameTokens.song)
+		_hashtag.setHref(new UrlBuilder(NameTokens.lists)
 				.with(SongPresenter.LIST_PARAM, hashtag)
 				.getUrl());
 	}
