@@ -74,7 +74,7 @@ public class ShareButton extends Composite {
 		twitterShare.addStyleName("twitter-share-button");
 		twitterShare.getElement().setAttribute("data-lang", "en");
 		twitterShare.getElement().setAttribute("data-size", "medium");
-		twitterShare.getElement().setAttribute("data-count", "horizontal");
+		twitterShare.getElement().setAttribute("data-count", "none");
 		twitterShare.getElement().setAttribute("data-text", "Check out this awesome Fave100 list: " + shareUrl);
 		twitterShare.getElement().setAttribute("data-url", shareUrl);
 		twitterContainer.add(twitterShare);
