@@ -147,6 +147,10 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 
 	}
 
+	public void clearLists() {
+		buildListItems(false, new ArrayList<AppUserProxy>());
+	}
+
 	private void buildListItems(final boolean ownFollowing, final List<AppUserProxy> usersFollowing) {
 		buildListItems(ownFollowing, usersFollowing, true);
 	}

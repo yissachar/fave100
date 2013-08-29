@@ -173,8 +173,8 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	}
 
 	@Override
-	public void renderSharing(final String username) {
-		shareButton.setSharingUrls(username);
+	public void renderSharing(final String username, final String hashtag) {
+		shareButton.setSharingUrls(username, hashtag);
 		nativeRenderShare();
 	}
 
@@ -204,7 +204,6 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		username.setVisible(false);
 		profileLink.setVisible(true);
 		songAutocomplete.setVisible(true);
-		shareButton.setTwitterMessage("Check out my Fave100 songs: ");
 	}
 
 	@Override
@@ -214,8 +213,6 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		username.setVisible(true);
 		profileLink.setVisible(false);
 		songAutocomplete.setVisible(false);
-
-		shareButton.setTwitterMessage("Check out " + username.getText() + "'s Fave100 songs: ");
 	}
 
 	@Override
