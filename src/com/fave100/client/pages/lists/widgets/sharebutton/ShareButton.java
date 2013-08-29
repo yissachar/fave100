@@ -36,7 +36,7 @@ public class ShareButton extends Composite {
 
 	public ShareButton() {
 		initWidget(uiBinder.createAndBindUi(this));
-		final String s = "<g:plusone href='" + Window.Location.getHref() + "'></g:plusone>";
+		final String s = "<g:plusone href='" + Window.Location.getHref() + "' annotation='none'></g:plusone>";
 		gplus = new HTML(s);
 		gplusPlaceholder.add(gplus);
 	}
@@ -87,5 +87,4 @@ public class ShareButton extends Composite {
 	public void setOwnList(final boolean ownList) {
 		_ownList = ownList;
 	}
-
 }
