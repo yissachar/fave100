@@ -47,7 +47,7 @@ public class ShareButton extends Composite {
 	}
 
 	public void setSharingUrls(final String username) {
-		final String shareUrl = new UrlBuilder(NameTokens.users).with(ListPresenter.USER_PARAM, username).getUrl();
+		final String shareUrl = new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, username).getUrl();
 		// Set Facebook like URL
 		fbLike.setAttribute("data-href", shareUrl);
 

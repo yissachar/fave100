@@ -69,7 +69,7 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 	@Override
 	public void setUrls(final String username, final String hashtag) {
 		// Set URL to user's list
-		_username.setHref(new UrlBuilder(NameTokens.users)
+		_username.setHref(new UrlBuilder(NameTokens.lists)
 				.with(ListPresenter.USER_PARAM, username)
 				.with(ListPresenter.LIST_PARAM, hashtag)
 				.getUrl());

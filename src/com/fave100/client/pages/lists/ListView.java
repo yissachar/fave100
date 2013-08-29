@@ -15,6 +15,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -39,6 +40,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	@UiField ListStyle style;
 	@UiField HTMLPanel userContainer;
 	@UiField HTMLPanel faveListContainer;
+	@UiField Label hashtagLabel;
 	@UiField HTMLPanel socialContainer;
 	@UiField HTMLPanel listManager;
 	@UiField FocusPanel followCTAcontainer;
@@ -46,6 +48,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	@UiField HTMLPanel userPageFaveList;
 	@UiField HTMLPanel followingContainer;
 	@UiField ShareButton shareButton;
+	@UiField HorizontalPanel userProfile;
 	@UiField InlineHyperlink profileLink;
 	@UiField Image avatar;
 	@UiField InlineLabel username;
@@ -176,9 +179,15 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 
 	@Override
 	public void setUserProfile(final AppUserProxy user) {
-		avatar.setUrl(user.getAvatarImage());
-		username.setText(user.getUsername());
-		profileLink.setText(user.getUsername());
+		if (user == null) {
+			userProfile.setVisible(false);
+		}
+		else {
+			userProfile.setVisible(true);
+			avatar.setUrl(user.getAvatarImage());
+			username.setText(user.getUsername());
+			profileLink.setText(user.getUsername());
+		}
 	}
 
 	@Override
@@ -269,5 +278,15 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 			shareButton.setVisible(true);
 			followingContainer.setVisible(true);
 		}
+	}
+
+	@Override
+	public void setHashtagLabel(final String hashtag) {
+		hashtagLabel.setText(hashtag);
+	}
+
+	@Override
+	public void setHashtagVisible(final boolean show) {
+		hashtagLabel.setVisible(show);
 	}
 }

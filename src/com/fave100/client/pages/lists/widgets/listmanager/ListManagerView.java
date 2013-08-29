@@ -191,4 +191,14 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 			addListContainer.setVisible(false);
 		}
 	}
+
+	@Override
+	public void show() {
+		widget.setVisible(true);
+	}
+
+	@Override
+	public void hide() {
+		widget.setVisible(false);
+	}
 }
