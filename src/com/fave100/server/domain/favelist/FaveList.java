@@ -20,6 +20,7 @@ import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
@@ -65,21 +66,28 @@ public class FaveList extends DatastoreObject {
 			throw new NotLoggedInException();
 
 		final String username = currentUser.getUsername();
+
 		if (findFaveList(username, hashtagName) != null)
 			throw new FaveListAlreadyExistsException("You already have a list with that name");
 
 		currentUser.getHashtags().add(hashtagName);
 		final FaveList faveList = new FaveList(username, hashtagName);
-		Hashtag hashtag = ofy().load().type(Hashtag.class).id(hashtagName).get();
-		// Hashtag already exists, add it to user's lists
-		if (hashtag != null) {
-			ofy().save().entities(currentUser, faveList).now();
-		}
-		// Create a new hashtag
-		else {
-			hashtag = new Hashtag(hashtagName, username);
-			ofy().save().entities(currentUser, faveList, hashtag).now();
-		}
+		// Transaction to ensure no duplicate hashtags created
+		ofy().transact(new VoidWork() {
+			@Override
+			public void vrun() {
+				Hashtag hashtag = ofy().load().type(Hashtag.class).id(hashtagName).get();
+				// Hashtag already exists, add it to user's lists
+				if (hashtag != null) {
+					ofy().save().entities(currentUser, faveList).now();
+				}
+				// Create a new hashtag
+				else {
+					hashtag = new Hashtag(hashtagName, username);
+					ofy().save().entities(currentUser, faveList, hashtag).now();
+				}
+			}
+		});
 	}
 
 	public static void addFaveItemForCurrentUser(final String hashtag, final String songID)
