@@ -29,14 +29,14 @@
 		
 		.fbLike { 
 			margin-top: 2px;
-		}
+		}				
 	</ui:style>
 	
 	
 	<g:HTMLPanel ui:field="shareContainer">
 		<g:Label ui:styleName="{style.shareTitle}">Share</g:Label>
 		<g:HTMLPanel ui:field="twitterContainer"/>
-		<div ui:field="fbLike" class="fb-like {style.fbLike}" data-send="false" data-layout="button_count" data-width="150" data-show-faces="false"></div>
+		<div ui:field="fbLike" class="fb-like {style.fbLike}" data-send="false" data-layout="standard" data-width="150" data-show-faces="false"></div>
 		<g:HTMLPanel ui:field="gplusPlaceholder"/>
 		<div ui:styleName="{style.linkContainer}">	
 			<g:Label>Link:</g:Label>

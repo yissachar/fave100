@@ -87,6 +87,7 @@ body{
 a{
 	color: #343;
 	text-decoration: none;
+	outline: none;
 }
 a:hover{
 	text-decoration: underline;
@@ -925,5 +926,19 @@ Credit to @guillermovs for suggesting
 button:-moz-focus-inner {
 	border: 0;
 	padding: 0;
+}
+
+/* CSS Hack for hiding the LIKE count */
+div.fb-like span {
+  display:block;
+  width:48px !important;  
+}
+
+div.fb-like iframe {
+  width:48px !important;
+}
+
+div.fb-like iframe.fb_iframe_widget_lift {
+  width:450px !important;
 }
 
