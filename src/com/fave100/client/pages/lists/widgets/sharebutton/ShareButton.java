@@ -46,8 +46,17 @@ public class ShareButton extends Composite {
 		shareLink.setSelectionRange(0, shareLink.getText().length());
 	}
 
-	public void setSharingUrls(final String username) {
-		final String shareUrl = new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, username).getUrl();
+	public void setSharingUrls(final String username, final String hashtag) {
+		String shareUrl = "";
+		if (hashtag.isEmpty()) {
+			shareUrl = new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, username).getUrl();
+		}
+		else if (username.isEmpty()) {
+			shareUrl = new UrlBuilder(NameTokens.lists).with(ListPresenter.LIST_PARAM, hashtag).getUrl();
+		}
+		else {
+			shareUrl = new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, username).with(ListPresenter.LIST_PARAM, hashtag).getUrl();
+		}
 		// Set Facebook like URL
 		fbLike.setAttribute("data-href", shareUrl);
 
@@ -66,7 +75,7 @@ public class ShareButton extends Composite {
 		twitterShare.getElement().setAttribute("data-lang", "en");
 		twitterShare.getElement().setAttribute("data-size", "medium");
 		twitterShare.getElement().setAttribute("data-count", "horizontal");
-		twitterShare.getElement().setAttribute("data-text", twitterMessage);
+		twitterShare.getElement().setAttribute("data-text", "Check out this awesome Fave100 list: " + shareUrl);
 		twitterShare.getElement().setAttribute("data-url", shareUrl);
 		twitterContainer.add(twitterShare);
 
@@ -77,11 +86,6 @@ public class ShareButton extends Composite {
 
 	public void setOwnList(final boolean ownList) {
 		_ownList = ownList;
-	}
-
-	public void setTwitterMessage(final String message) {
-		twitterMessage = message;
-		//	twitterShare.setAttribute("data-text", message + Window.Location.getHref());
 	}
 
 }
