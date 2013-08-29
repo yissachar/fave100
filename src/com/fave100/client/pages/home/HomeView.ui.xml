@@ -20,7 +20,6 @@
 		
 		.homeBody { 
 			z-index: 1;
-			padding-bottom: 25em;
 		}
 		
 		.homePageContainer {
@@ -73,32 +72,15 @@
 			float: right;
 		}
 		
-		.dummyListLink {
-			text-align: center;
-			display: block;
-		}
-		
-		.hideFooter {
-			overflow: hidden;
-		}
-		
-		.footerImage {	
-			position: absolute;
-			left: 50%;
-			bottom: -200px;			
-			display: block;
+		.masterList {
 			margin: 0 auto;
-			margin-left: -369px;
-			overflow: hidden;
-			z-index: 0;	
-			bottom: 0;
 		}
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
 	
-	<g:HTMLPanel styleName="wrap {style.hideFooter}">
+	<g:HTMLPanel styleName="wrap">
 		<div class="{style.topBackground}" />
 		<div class="container {style.homeBody}">
 			<div class="content">
@@ -111,11 +93,12 @@
 							<g:Button ui:styleName="{style.registerButton}" ui:field="registerButton">Register</g:Button> 
 							<g:Button ui:styleName="{style.loginButton}" ui:field="loginButton">Sign In</g:Button>
 						</div>
-						<g:Anchor ui:field="dummyListLink" ui:styleName="{style.dummyListLink}">Check out a sample list</g:Anchor>
 					</div>
 				</div>
 			</div>			
 		</div>
-		<g:Image resource="{img.homePageTablet}" ui:styleName="{style.footerImage} row"/>
+		<g:SimplePanel>
+			<g:HTMLPanel ui:field="masterList" ui:styleName="{style.masterList}  span_8"/>
+		</g:SimplePanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

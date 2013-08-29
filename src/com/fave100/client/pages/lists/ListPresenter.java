@@ -163,7 +163,6 @@ public class ListPresenter extends
 					@Override
 					public void onCurrentUserChanged(
 							final CurrentUserChangedEvent event) {
-						requestedUser = event.getUser();
 						showPage();
 					}
 				});
@@ -309,8 +308,10 @@ public class ListPresenter extends
 		else {
 			usersFollowing.getView().hide();
 			listManager.getView().hide();
-			globalListDetails.getView().show();
-			globalListDetails.setHashtag(_hashtag);
+			if (_hashtag != null) {
+				globalListDetails.getView().show();
+				globalListDetails.setHashtag(_hashtag);
+			}
 		}
 
 		getView().setMobileView(true);
