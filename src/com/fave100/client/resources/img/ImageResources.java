@@ -11,9 +11,6 @@ public interface ImageResources extends ClientBundle {
 	@Source("logo-large.png")
 	ImageResource logoLarge();
 
-	@Source("home-page-tablet.png")
-	ImageResource homePageTablet();
-
 	@Source("loading-indicator.gif")
 	ImageResource loadingIndicator();
 
