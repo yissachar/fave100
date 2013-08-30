@@ -33,6 +33,7 @@
 		    -webkit-transform: rotate(90deg);
 		    -o-transform: rotate(90deg);
 		    -ms-transform: rotate(90deg);
+		    margin-top: 2px;
 	 	}
 	 	
 	 	.dropdownVisible img {			

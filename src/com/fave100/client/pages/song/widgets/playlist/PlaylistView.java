@@ -3,9 +3,7 @@ package com.fave100.client.pages.song.widgets.playlist;
 import java.util.List;
 
 import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.UrlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -14,6 +12,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 
@@ -69,13 +69,17 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 	@Override
 	public void setUrls(final String username, final String hashtag) {
 		// Set URL to user's list
-		_username.setHref(new UrlBuilder(NameTokens.lists)
-				.with(ListPresenter.USER_PARAM, username)
-				.with(ListPresenter.LIST_PARAM, hashtag)
-				.getUrl());
-		_hashtag.setHref(new UrlBuilder(NameTokens.lists)
-				.with(SongPresenter.LIST_PARAM, hashtag)
-				.getUrl());
+		_username.setHref(new ParameterTokenFormatter()
+				.toPlaceToken(new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(ListPresenter.USER_PARAM, username)
+						.with(ListPresenter.LIST_PARAM, hashtag)
+						.build()));
+		_hashtag.setHref(new ParameterTokenFormatter()
+				.toPlaceToken(new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(ListPresenter.LIST_PARAM, hashtag)
+						.build()));
 	}
 
 	@Override

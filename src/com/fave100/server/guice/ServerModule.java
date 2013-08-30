@@ -2,6 +2,7 @@ package com.fave100.server.guice;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import com.fave100.server.UrlBuilder;
 import com.fave100.server.domain.APIKey;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
@@ -14,7 +15,6 @@ import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.Hashtag;
-import com.fave100.shared.UrlBuilder;
 import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.ObjectifyService;
 import com.gwtplatform.dispatch.server.guice.HandlerModule;

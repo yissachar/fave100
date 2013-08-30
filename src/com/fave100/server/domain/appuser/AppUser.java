@@ -33,11 +33,11 @@ import twitter4j.auth.RequestToken;
 
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.server.UrlBuilder;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Constants;
-import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.following.AlreadyFollowingException;
 import com.fave100.shared.exceptions.following.CannotFollowYourselfException;

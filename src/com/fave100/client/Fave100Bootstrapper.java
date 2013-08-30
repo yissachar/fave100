@@ -2,7 +2,6 @@ package com.fave100.client;
 
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.resources.mobile.MobileResources;
-import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Utils;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
@@ -28,8 +27,6 @@ public class Fave100Bootstrapper implements Bootstrapper {
 
 	@Override
 	public void onBootstrap() {
-		UrlBuilder.isDevMode = !GWT.isProdMode();
-
 		// On first page load or page refresh, check for an existing logged in user
 		final ApplicationRequestFactory requestFactory = GWT.create(ApplicationRequestFactory.class);
 		requestFactory.initialize(_eventBus);

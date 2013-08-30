@@ -6,7 +6,6 @@ import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.widgets.ImageHyperlink;
 import com.fave100.shared.Constants;
-import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
@@ -22,6 +21,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		TopBarPresenter.MyView {
@@ -46,11 +47,8 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField InlineLabel loginButton;
 	@UiField Label notification;
 
-	//	@UiField InlineLabel registerButton;
-
 	@Inject
-	public TopBarView(final Binder binder,
-						final ApplicationRequestFactory requestFactory) {
+	public TopBarView(final Binder binder, final ApplicationRequestFactory requestFactory) {
 
 		widget = binder.createAndBindUi(this);
 		Notification.init(notification);
@@ -75,9 +73,18 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		logOutLink.setVisible(true);
 		logOutLink.setText("Sign out");
 		logOutLink.setTargetHistoryToken(NameTokens.logout);
-		final String userPlace = new UrlBuilder(NameTokens.lists).with(ListPresenter.LIST_PARAM, Constants.DEFAULT_HASHTAG).getPlaceToken();
+		final String userPlace = new ParameterTokenFormatter()
+				.toPlaceToken(new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(ListPresenter.USER_PARAM, username)
+						.build());
 		listLink.setTargetHistoryToken(userPlace);
-		logoLink.setTargetHistoryToken(userPlace);
+		final String listPlace = new ParameterTokenFormatter()
+				.toPlaceToken(new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(ListPresenter.LIST_PARAM, Constants.DEFAULT_HASHTAG)
+						.build());
+		logoLink.setTargetHistoryToken(listPlace);
 		usernameLabel.setText(username);
 	}
 

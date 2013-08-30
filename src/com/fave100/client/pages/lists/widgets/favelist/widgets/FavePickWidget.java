@@ -16,7 +16,6 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.resources.img.ImageResources;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.fave100.shared.Constants;
-import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.core.client.GWT;
@@ -49,6 +48,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class FavePickWidget extends Composite {
 
@@ -138,17 +139,21 @@ public class FavePickWidget extends Composite {
 
 		song.setText(getSong());
 		if (_username.isEmpty()) {
-			song.setHref("#" + new UrlBuilder(NameTokens.song)
-					.with(SongPresenter.ID_PARAM, getSongID())
-					.with(SongPresenter.LIST_PARAM, getHashtag())
-					.getPlaceToken());
+			song.setHref("#" + new ParameterTokenFormatter()
+					.toPlaceToken(new PlaceRequest.Builder()
+							.nameToken(NameTokens.song)
+							.with(SongPresenter.ID_PARAM, getSongID())
+							.with(SongPresenter.LIST_PARAM, getHashtag())
+							.build()));
 		}
 		else {
-			song.setHref("#" + new UrlBuilder(NameTokens.song)
-					.with(SongPresenter.ID_PARAM, getSongID())
-					.with(SongPresenter.USER_PARAM, getUsername())
-					.with(SongPresenter.LIST_PARAM, getHashtag())
-					.getPlaceToken());
+			song.setHref("#" + new ParameterTokenFormatter()
+					.toPlaceToken(new PlaceRequest.Builder()
+							.nameToken(NameTokens.song)
+							.with(SongPresenter.ID_PARAM, getSongID())
+							.with(SongPresenter.USER_PARAM, getUsername())
+							.with(SongPresenter.LIST_PARAM, getHashtag())
+							.build()));
 		}
 
 		artist.setText(getArtist());
