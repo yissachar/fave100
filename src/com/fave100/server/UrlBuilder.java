@@ -1,8 +1,12 @@
-package com.fave100.shared;
+package com.fave100.server;
 
+/*
+ * A convenience class for the server to build URLs similar to ParameterTokenFormatter/PlaceRequest 
+ * on GWTP client.
+ */
 public class UrlBuilder {
 
-	// Up to the client to set this to true on init
+	// Up to the server to set this to true on init
 	public static boolean isDevMode = false;
 
 	// The entire URL including place

@@ -2,7 +2,6 @@ package com.fave100.client.pages.lists.widgets.sharebutton;
 
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.UrlBuilder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -16,6 +15,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class ShareButton extends Composite {
 
@@ -48,15 +49,14 @@ public class ShareButton extends Composite {
 
 	public void setSharingUrls(final String username, final String hashtag) {
 		String shareUrl = "";
-		if (hashtag.isEmpty()) {
-			shareUrl = new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, username).getUrl();
+		PlaceRequest.Builder builder = new PlaceRequest.Builder().nameToken(NameTokens.lists);
+		if (!hashtag.isEmpty()) {
+			builder = builder.with(ListPresenter.USER_PARAM, hashtag);
 		}
-		else if (username.isEmpty()) {
-			shareUrl = new UrlBuilder(NameTokens.lists).with(ListPresenter.LIST_PARAM, hashtag).getUrl();
+		if (!username.isEmpty()) {
+			builder = builder.with(ListPresenter.LIST_PARAM, username);
 		}
-		else {
-			shareUrl = new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, username).with(ListPresenter.LIST_PARAM, hashtag).getUrl();
-		}
+		shareUrl = new ParameterTokenFormatter().toPlaceToken(builder.build());
 		// Set Facebook like URL
 		fbLike.setAttribute("data-href", shareUrl);
 

@@ -11,7 +11,6 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FollowingResultProxy;
@@ -30,6 +29,8 @@ import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPresenter.MyView>
 		implements UsersFollowingUiHandlers {
@@ -164,7 +165,11 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 				final Image avatar = new Image(user.getAvatarImage());
 				listItem.add(avatar);
 				final Anchor listAnchor = new Anchor(user.getUsername());
-				listAnchor.setHref("#" + new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, user.getUsername()).getPlaceToken().toString());
+				listAnchor.setHref("#" + new ParameterTokenFormatter()
+						.toPlaceToken(new PlaceRequest.Builder()
+								.nameToken(NameTokens.lists)
+								.with(ListPresenter.USER_PARAM, user.getUsername())
+								.build()));
 				listAnchor.addStyleName(getView().getStyle().listLink());
 				listItem.add(listAnchor);
 				if (ownFollowing) {
