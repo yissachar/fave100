@@ -163,7 +163,8 @@ public class ListPresenter extends
 					@Override
 					public void onCurrentUserChanged(
 							final CurrentUserChangedEvent event) {
-						showPage();
+						if (event.getUser() != null)
+							showPage();
 					}
 				});
 

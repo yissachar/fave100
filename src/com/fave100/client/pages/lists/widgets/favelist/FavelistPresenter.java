@@ -142,6 +142,16 @@ public class FavelistPresenter extends
 				}
 			}
 		});
+
+		// Update user
+		CurrentUserChangedEvent.register(eventBus,
+				new CurrentUserChangedEvent.Handler() {
+					@Override
+					public void onCurrentUserChanged(
+							final CurrentUserChangedEvent event) {
+						setUser(event.getUser());
+					}
+				});
 	}
 
 	public void clearFavelist() {
@@ -150,8 +160,11 @@ public class FavelistPresenter extends
 
 	public void refreshFavelist(final boolean ownList) {
 		getView().setList(null);
-
 		getView().hideNoItemsMessage();
+
+		if (hashtag == null) {
+			hashtag = Constants.DEFAULT_HASHTAG;
+		}
 		// Get the FaveList locally if possible 
 		if (ownList && currentUser.getFaveList() != null) {
 			buildWidgets(currentUser.getFaveList());
