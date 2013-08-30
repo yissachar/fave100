@@ -48,7 +48,7 @@ public class ShareButton extends Composite {
 	}
 
 	public void setSharingUrls(final String username, final String hashtag) {
-		String shareUrl = "";
+		String shareUrl = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "#";
 		PlaceRequest.Builder builder = new PlaceRequest.Builder().nameToken(NameTokens.lists);
 		if (!hashtag.isEmpty()) {
 			builder = builder.with(ListPresenter.USER_PARAM, hashtag);
@@ -56,7 +56,7 @@ public class ShareButton extends Composite {
 		if (!username.isEmpty()) {
 			builder = builder.with(ListPresenter.LIST_PARAM, username);
 		}
-		shareUrl = new ParameterTokenFormatter().toPlaceToken(builder.build());
+		shareUrl += new ParameterTokenFormatter().toPlaceToken(builder.build());
 		// Set Facebook like URL
 		fbLike.setAttribute("data-href", shareUrl);
 
