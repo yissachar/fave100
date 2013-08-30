@@ -5,6 +5,7 @@ import com.fave100.client.Notification;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.widgets.ImageHyperlink;
+import com.fave100.shared.Constants;
 import com.fave100.shared.UrlBuilder;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -38,8 +39,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField HTMLPanel topBar;
 	@UiField Image loadingIndicator;
 	@UiField ImageHyperlink logoLink;
-	@UiField FlowPanel userInfo;
-	@UiField Image userAvatar;
+	@UiField FlowPanel loggedInContainer;
 	@UiField InlineLabel usernameLabel;
 	@UiField Hyperlink listLink;
 	@UiField Hyperlink logOutLink;
@@ -55,7 +55,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		widget = binder.createAndBindUi(this);
 		Notification.init(notification);
 		LoadingIndicator.init(loadingIndicator);
-		userInfo.setVisible(false);
+		loggedInContainer.setVisible(false);
 	}
 
 	@Override
@@ -68,34 +68,25 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		getUiHandlers().showLoginBox();
 	}
 
-	/*
-		@UiHandler("registerButton")
-		void onRegisterClick(final ClickEvent event) {
-			getUiHandlers().showRegisterBox();
-		}*/
-
 	@Override
-	public void setLoggedIn(final String username, final String avatar) {
-		//		registerButton.setVisible(false);
+	public void setLoggedIn(final String username) {
+		loggedInContainer.setVisible(true);
 		loginButton.setVisible(false);
 		logOutLink.setVisible(true);
 		logOutLink.setText("Sign out");
 		logOutLink.setTargetHistoryToken(NameTokens.logout);
-		final String userPlace = new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, username).getPlaceToken();
+		final String userPlace = new UrlBuilder(NameTokens.lists).with(ListPresenter.LIST_PARAM, Constants.DEFAULT_HASHTAG).getPlaceToken();
 		listLink.setTargetHistoryToken(userPlace);
 		logoLink.setTargetHistoryToken(userPlace);
 		usernameLabel.setText(username);
-		userAvatar.setUrl(avatar);
-		userInfo.setVisible(true);
 	}
 
 	@Override
 	public void setLoggedOut() {
-		//		registerButton.setVisible(true);
+		loggedInContainer.setVisible(false);
 		loginButton.setVisible(true);
 		logOutLink.setVisible(false);
 		logoLink.setTargetHistoryToken(NameTokens.home);
-		userInfo.setVisible(false);
 	}
 
 	@Override

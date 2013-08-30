@@ -43,7 +43,7 @@
 		}	
 		
 		.topNav li:hover {
-			/*background-color: #FFFFFF; */
+			background-color: #FFFFFF; 
 		}				
 		
 		.topNav li > a, .topNav li > span {
@@ -93,11 +93,16 @@
 		.faveLogo:hover {
 			cursor: pointer;
 		}
-		
+						
 		.userInfo {
 			float: left;
 			padding: 0 5px;
-	  	} 
+			margin-top: 12px;
+	  	}
+	  	
+	  	.userInfo:hover {
+			background-color: #FFFFFF;
+		} 
 	  	
 	  	.userAvatar {
 			width: 40px;
@@ -105,26 +110,16 @@
 		}
 		
 		.usernameLabel {
-			position: relative;
-			top: -13px;
 			margin-left: 15px;
 			font-size: 1.2em;
 			color: #fff;
 		}
 				
-		.userInfo:hover {
-			background-color: #FFFFFF;
-		}
-		
-		.userInfo:hover .usernameLabel {
-			color: #5eaae5;			
-		}
-		
 		.dropDown {
+			display: none;
 			clear: both;
 			margin-top: 5px;
 			background-color: #fff;
-			border: 1px solid #bbb;
 		}
 		
 		.dropDown a {			
@@ -136,6 +131,22 @@
 			background-color: #5eaae5;
 			color: #fff;
 			text-decoration: none;			
+		}
+		
+		.loggedInContainer:hover .dropDown {
+			display: block;
+		}
+		
+		.loggedInContainer:hover {
+			border: 1px solid #bbb;
+		}
+		
+		.loggedInContainer:hover .userInfo {						
+			border-bottom: 1px solid #bbb;
+		}
+		
+		.loggedInContainer:hover .usernameLabel {
+			color: #5eaae5;
 		}
 				
 	</ui:style>
@@ -156,19 +167,19 @@
 				<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" resource="{img.loadingIndicator}"/>			
 				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
 				<ul>						
-					<li>						
-						<g:FlowPanel ui:field="userInfo" ui:styleName="{style.userInfo}">
-							<g:Image ui:field="userAvatar" ui:styleName="{style.userAvatar}"/>
-							<g:InlineLabel ui:field="usernameLabel" ui:styleName="{style.usernameLabel}"/>							
-						</g:FlowPanel>
-						<g:FlowPanel ui:styleName="{style.dropDown}">
-							<g:Hyperlink ui:field="listLink">My List</g:Hyperlink>
-							<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}">Settings</g:Hyperlink>
-							<g:Hyperlink ui:field="logOutLink">Sign out</g:Hyperlink>
+					<li>		
+						<g:FlowPanel ui:field="loggedInContainer" ui:styleName="{style.loggedInContainer}">				
+							<g:FlowPanel ui:field="userInfo" ui:styleName="{style.userInfo}">
+								<g:InlineLabel ui:field="usernameLabel" ui:styleName="{style.usernameLabel}"/>
+							</g:FlowPanel>
+							<g:FlowPanel ui:styleName="{style.dropDown}">
+								<g:Hyperlink ui:field="listLink">My List</g:Hyperlink>
+								<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}">Settings</g:Hyperlink>
+								<g:Hyperlink ui:field="logOutLink">Sign out</g:Hyperlink>
+							</g:FlowPanel>
 						</g:FlowPanel>
 						<g:InlineLabel ui:field="loginButton">Sign in</g:InlineLabel>						
-					</li>
-					<li><!-- <g:InlineLabel ui:field="registerButton">Register</g:InlineLabel> --></li>					
+					</li>			
 				</ul>
 			</div>
 		</g:HTMLPanel>			
