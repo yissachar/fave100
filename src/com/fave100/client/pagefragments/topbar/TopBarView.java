@@ -12,9 +12,10 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,7 +38,11 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField HTMLPanel topBar;
 	@UiField Image loadingIndicator;
 	@UiField ImageHyperlink logoLink;
-	@UiField InlineHyperlink logOutLink;
+	@UiField FlowPanel userInfo;
+	@UiField Image userAvatar;
+	@UiField InlineLabel usernameLabel;
+	@UiField Hyperlink listLink;
+	@UiField Hyperlink logOutLink;
 	@UiField InlineLabel loginButton;
 	@UiField Label notification;
 
@@ -50,6 +55,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		widget = binder.createAndBindUi(this);
 		Notification.init(notification);
 		LoadingIndicator.init(loadingIndicator);
+		userInfo.setVisible(false);
 	}
 
 	@Override
@@ -69,14 +75,18 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		}*/
 
 	@Override
-	public void setLoggedIn(final String username) {
+	public void setLoggedIn(final String username, final String avatar) {
 		//		registerButton.setVisible(false);
 		loginButton.setVisible(false);
 		logOutLink.setVisible(true);
 		logOutLink.setText("Sign out");
 		logOutLink.setTargetHistoryToken(NameTokens.logout);
 		final String userPlace = new UrlBuilder(NameTokens.lists).with(ListPresenter.USER_PARAM, username).getPlaceToken();
+		listLink.setTargetHistoryToken(userPlace);
 		logoLink.setTargetHistoryToken(userPlace);
+		usernameLabel.setText(username);
+		userAvatar.setUrl(avatar);
+		userInfo.setVisible(true);
 	}
 
 	@Override
@@ -85,6 +95,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		loginButton.setVisible(true);
 		logOutLink.setVisible(false);
 		logoLink.setTargetHistoryToken(NameTokens.home);
+		userInfo.setVisible(false);
 	}
 
 	@Override

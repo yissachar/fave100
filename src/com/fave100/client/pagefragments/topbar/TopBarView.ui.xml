@@ -43,7 +43,7 @@
 		}	
 		
 		.topNav li:hover {
-			background-color: #FFFFFF; 
+			/*background-color: #FFFFFF; */
 		}				
 		
 		.topNav li > a, .topNav li > span {
@@ -94,6 +94,50 @@
 			cursor: pointer;
 		}
 		
+		.userInfo {
+			float: left;
+			padding: 0 5px;
+	  	} 
+	  	
+	  	.userAvatar {
+			width: 40px;
+			margin-top: 5px;
+		}
+		
+		.usernameLabel {
+			position: relative;
+			top: -13px;
+			margin-left: 15px;
+			font-size: 1.2em;
+			color: #fff;
+		}
+				
+		.userInfo:hover {
+			background-color: #FFFFFF;
+		}
+		
+		.userInfo:hover .usernameLabel {
+			color: #5eaae5;			
+		}
+		
+		.dropDown {
+			clear: both;
+			margin-top: 5px;
+			background-color: #fff;
+			border: 1px solid #bbb;
+		}
+		
+		.dropDown a {			
+			padding: 5px;
+			display: block;			
+		}
+		
+		.dropDown a:hover {
+			background-color: #5eaae5;
+			color: #fff;
+			text-decoration: none;			
+		}
+				
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
@@ -113,7 +157,15 @@
 				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
 				<ul>						
 					<li>						
-						<g:InlineHyperlink ui:field="logOutLink">Sign out</g:InlineHyperlink>
+						<g:FlowPanel ui:field="userInfo" ui:styleName="{style.userInfo}">
+							<g:Image ui:field="userAvatar" ui:styleName="{style.userAvatar}"/>
+							<g:InlineLabel ui:field="usernameLabel" ui:styleName="{style.usernameLabel}"/>							
+						</g:FlowPanel>
+						<g:FlowPanel ui:styleName="{style.dropDown}">
+							<g:Hyperlink ui:field="listLink">My List</g:Hyperlink>
+							<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}">Settings</g:Hyperlink>
+							<g:Hyperlink ui:field="logOutLink">Sign out</g:Hyperlink>
+						</g:FlowPanel>
 						<g:InlineLabel ui:field="loginButton">Sign in</g:InlineLabel>						
 					</li>
 					<li><!-- <g:InlineLabel ui:field="registerButton">Register</g:InlineLabel> --></li>					
