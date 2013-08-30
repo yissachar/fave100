@@ -37,7 +37,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		implements TopBarUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<TopBarUiHandlers> {
-		void setLoggedIn(String username);
+		void setLoggedIn(String username, String avatar);
 
 		void setLoggedOut();
 
@@ -120,7 +120,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 
 	private void setTopBar() {
 		if (currentUser != null && currentUser.isLoggedIn()) {
-			getView().setLoggedIn(currentUser.getUsername());
+			getView().setLoggedIn(currentUser.getUsername(), currentUser.getAvatarImage());
 		}
 		else {
 			getView().setLoggedOut();
