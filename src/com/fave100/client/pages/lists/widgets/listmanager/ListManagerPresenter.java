@@ -81,6 +81,11 @@ public class ListManagerPresenter extends
 			return;
 		}
 
+		if (_currentUser.getHashtags().size() >= Constants.MAX_LISTS_PER_USER - 1) {
+			getView().showError("You can't have  more than " + Constants.MAX_LISTS_PER_USER + " lists");
+			return;
+		}
+
 		final Request<Void> addFavelistReq = _requestFactory.faveListRequest().addFaveListForCurrentUser(name);
 		addFavelistReq.fire(new Receiver<Void>() {
 			@Override
