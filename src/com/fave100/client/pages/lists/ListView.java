@@ -1,7 +1,6 @@
 package com.fave100.client.pages.lists;
 
 import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.lists.widgets.sharebutton.ShareButton;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
@@ -41,13 +40,13 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	@UiField HTMLPanel userContainer;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel globalListDetailsContainer;
-	@UiField HTMLPanel socialContainer;
+	//@UiField HTMLPanel socialContainer;
 	@UiField HTMLPanel listManager;
 	@UiField FocusPanel followCTAcontainer;
 	@UiField Label followCTA;
 	@UiField HTMLPanel userPageFaveList;
 	@UiField HTMLPanel followingContainer;
-	@UiField ShareButton shareButton;
+	//@UiField ShareButton shareButton;
 	@UiField HorizontalPanel userProfile;
 	@UiField InlineHyperlink profileLink;
 	@UiField Image avatar;
@@ -56,7 +55,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	@UiField HTMLPanel songAutocomplete;
 	@UiField HTMLPanel favelist;
 	@UiField Label userNotFound;
-	@UiField Label mobileShowShare;
+	//@UiField Label mobileShowShare;
 	@UiField Label mobileShowList;
 	@UiField Label mobileShowFollowing;
 	private boolean following;
@@ -139,19 +138,19 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		}
 	}
 
-	@UiHandler("mobileShowShare")
+	/*@UiHandler("mobileShowShare")
 	void onMobileShowShareClick(final ClickEvent event) {
 		setSelected(mobileShowShare);
 		userPageFaveList.setVisible(false);
 		shareButton.setVisible(true);
 		followingContainer.setVisible(false);
-	}
+	}*/
 
 	@UiHandler("mobileShowList")
 	void onMobileShowListClick(final ClickEvent event) {
 		setSelected(mobileShowList);
 		userPageFaveList.setVisible(true);
-		shareButton.setVisible(false);
+		//shareButton.setVisible(false);
 		followingContainer.setVisible(false);
 	}
 
@@ -159,24 +158,24 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	void onMobileShowFollowingClick(final ClickEvent event) {
 		setSelected(mobileShowFollowing);
 		userPageFaveList.setVisible(false);
-		shareButton.setVisible(false);
+		//shareButton.setVisible(false);
 		followingContainer.setVisible(true);
 	}
 
 	private void setSelected(final Label label) {
 		final String selected = "selected";
 		mobileShowList.removeStyleName(selected);
-		mobileShowShare.removeStyleName(selected);
+		//mobileShowShare.removeStyleName(selected);
 		mobileShowFollowing.removeStyleName(selected);
 
 		label.addStyleName(selected);
 	}
 
-	@Override
+	/*@Override
 	public void renderSharing(final String username, final String hashtag) {
 		shareButton.setSharingUrls(username, hashtag);
 		nativeRenderShare();
-	}
+	}*/
 
 	public native void nativeRenderShare() /*-{
 		$wnd.FB.XFBML.parse();
@@ -250,36 +249,36 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		if (Window.getClientWidth() <= Constants.MOBILE_WIDTH_PX) {
 			if (reset) {
 				mobileShowList.removeStyleName("selected");
-				mobileShowShare.removeStyleName("selected");
+				//mobileShowShare.removeStyleName("selected");
 				mobileShowFollowing.removeStyleName("selected");
 			}
 
 			if (mobileShowList.getStyleName().contains("selected")) {
 				userPageFaveList.setVisible(true);
-				shareButton.setVisible(false);
+				//shareButton.setVisible(false);
 				followingContainer.setVisible(false);
 			}
-			else if (mobileShowShare.getStyleName().contains("selected")) {
+			/*else if (mobileShowShare.getStyleName().contains("selected")) {
 				userPageFaveList.setVisible(false);
 				shareButton.setVisible(true);
 				followingContainer.setVisible(false);
-			}
+			}*/
 			else if (mobileShowFollowing.getStyleName().contains("selected")) {
 				userPageFaveList.setVisible(false);
-				shareButton.setVisible(false);
+				//shareButton.setVisible(false);
 				followingContainer.setVisible(true);
 			}
 
 			else {
 				setSelected(mobileShowList);
 				userPageFaveList.setVisible(true);
-				shareButton.setVisible(false);
+				//shareButton.setVisible(false);
 				followingContainer.setVisible(false);
 			}
 		}
 		else {
 			userPageFaveList.setVisible(true);
-			shareButton.setVisible(true);
+			//shareButton.setVisible(true);
 			followingContainer.setVisible(true);
 		}
 	}
