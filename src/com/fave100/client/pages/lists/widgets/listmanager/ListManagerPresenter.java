@@ -104,8 +104,16 @@ public class ListManagerPresenter extends
 		hashtags.add(Constants.DEFAULT_HASHTAG);
 		hashtags.addAll(_user.getHashtags());
 		hashtags.remove(_hashtag);
+		final boolean ownList = _currentUser != null && _currentUser.equals(_user);
+		getView().setOwnList(ownList);
 		getView().refreshList(hashtags, _hashtag);
-		getView().setOwnList(_currentUser != null && _currentUser.equals(_user));
+		// Hide the whole list if only default list in there and other user page
+		if (hashtags.size() <= 1 && !ownList) {
+			getView().hide();
+		}
+		else {
+			getView().show();
+		}
 	}
 
 	@Override
