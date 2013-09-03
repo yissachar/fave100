@@ -118,6 +118,7 @@ public class MemcacheManager {
 		putFaveItemScore(id, hashtag, currentRank + delta, faveItem);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<FaveItem> getMasterFaveList(final String hashtag) {
 		// Need to store in intermediate object, since casting a null results in NPE
 		final Object cacheItem = _cache.get(MASTER_FAVELIST_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase());

@@ -86,7 +86,6 @@ public class ListPresenter extends
 	// For now just hardcode, only one possible hashtag
 	private AppUserProxy requestedUser;
 	private final ApplicationRequestFactory _requestFactory;
-	private final PlaceManager _placeManager;
 	private final EventBus _eventBus;
 	private CurrentUser _currentUser;
 	@Inject SongAutocompletePresenter songAutocomplete;
@@ -102,7 +101,6 @@ public class ListPresenter extends
 		super(eventBus, view, proxy);
 		this._eventBus = eventBus;
 		this._requestFactory = requestFactory;
-		this._placeManager = placeManager;
 		this._currentUser = currentUser;
 		getView().setUiHandlers(this);
 
