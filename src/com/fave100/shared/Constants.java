@@ -12,4 +12,5 @@ public class Constants {
 	public static final int MOBILE_WIDTH_PX = 768;
 	public static final int MORE_FOLLOWING_INC = 5;
 	public static final double SCORE_CALCULATOR = 0.0909;
+	public static final int MAX_LISTS_PER_USER = 100;
 }

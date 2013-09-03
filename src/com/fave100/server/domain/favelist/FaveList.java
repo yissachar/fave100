@@ -18,6 +18,7 @@ import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.favelist.FaveListAlreadyExistsException;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
+import com.fave100.shared.exceptions.favelist.TooManyFaveListsException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
@@ -65,6 +66,10 @@ public class FaveList extends DatastoreObject {
 		final AppUser currentUser = AppUser.getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
+
+		// -1 because #fave100 is a default list not stored in the hashtags list
+		if (currentUser.getHashtags().size() >= Constants.MAX_LISTS_PER_USER - 1)
+			throw new TooManyFaveListsException("You can't have more than " + Constants.MAX_LISTS_PER_USER + " lists");
 
 		final String username = currentUser.getUsername();
 
