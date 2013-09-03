@@ -33,7 +33,6 @@ public class ShareButton extends Composite {
 	@UiField TextBox shareLink;
 	@UiField DivElement fbLike;
 	HTML gplus;
-	private String twitterMessage;
 
 	public ShareButton() {
 		initWidget(uiBinder.createAndBindUi(this));

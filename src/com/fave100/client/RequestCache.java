@@ -57,7 +57,6 @@ public class RequestCache {
 
 	public void getFollowingForCurrentUser(final String username, final AsyncCallback<FollowingResultProxy> callback) {
 		final RequestType request = RequestType.FOLLOWING_CURRENT_USER;
-		@SuppressWarnings("unchecked")
 		final FollowingResultProxy followingUsers = (FollowingResultProxy)_results.get(request);
 		final List<AsyncCallback<FollowingResultProxy>> callbacks = getOrCreateCallbacks(request);
 		final boolean reqRunning = (_runningRequests.get(request) != null) ? _runningRequests.get(request) : false;

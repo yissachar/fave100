@@ -34,7 +34,6 @@ public class Song extends DatastoreObject implements SongInterface {
 	@Id private String id;
 	private String artist;
 	private String song;
-	private String coverArtUrl;
 
 	public Song() {
 	}

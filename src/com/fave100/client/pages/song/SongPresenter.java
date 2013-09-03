@@ -77,7 +77,6 @@ public class SongPresenter extends
 
 	private final ApplicationRequestFactory _requestFactory;
 	private final CurrentUser _currentUser;
-	private final PlaceManager _placeManager;
 	private final EventBus _eventBus;
 	private SongInterface songProxy;
 	private AppUserProxy _requestedAppUser;
@@ -91,7 +90,6 @@ public class SongPresenter extends
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_currentUser = currentUser;
-		_placeManager = placeManager;
 		getView().setUiHandlers(this);
 	}
 
