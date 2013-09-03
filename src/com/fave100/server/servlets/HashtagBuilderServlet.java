@@ -84,9 +84,6 @@ public class HashtagBuilderServlet extends HttpServlet
 		// Save the master list back to the datastore
 		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).get();
 		hashtagEntity.setList(master);
-		hashtagEntity.setListCount(listCount);
-		hashtagEntity.setSampledUsersNames(userSampleNames);
-		hashtagEntity.setSampledUsersAvatars(userSampleAvatars);
 		ofy().save().entity(hashtagEntity).now();
 
 		// And memcache the master

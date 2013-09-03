@@ -21,12 +21,6 @@ public class Hashtag {
 	private Ref<AppUser> createdBy;
 	private Date dateCreated;
 	private List<FaveItem> list = new ArrayList<FaveItem>();
-	// A constantly regenerated sampling of up to 9 users with this list
-	// Since this is constantly regenerated, we can store denormalized data, instead of reference to actual entity
-	private List<String> sampledUsersNames = new ArrayList<>();
-	private List<String> sampledUsersAvatars = new ArrayList<>();
-	// Total number of lists with this hashtag
-	private int listCount;
 
 	@SuppressWarnings("unused")
 	private Hashtag() {
@@ -79,30 +73,6 @@ public class Hashtag {
 
 	public void setList(final List<FaveItem> list) {
 		this.list = list;
-	}
-
-	public List<String> getSampledUsersNames() {
-		return sampledUsersNames;
-	}
-
-	public void setSampledUsersNames(final List<String> sampledUsersNames) {
-		this.sampledUsersNames = sampledUsersNames;
-	}
-
-	public List<String> getSampledUsersAvatars() {
-		return sampledUsersAvatars;
-	}
-
-	public void setSampledUsersAvatars(final List<String> sampledUsersAvatars) {
-		this.sampledUsersAvatars = sampledUsersAvatars;
-	}
-
-	public int getListCount() {
-		return listCount;
-	}
-
-	public void setListCount(final int listCount) {
-		this.listCount = listCount;
 	}
 
 }

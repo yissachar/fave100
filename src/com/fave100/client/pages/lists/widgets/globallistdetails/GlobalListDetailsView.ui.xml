@@ -11,24 +11,10 @@
 			font-size: 1.8em;
 			word-wrap: break-word;
 			margin-bottom: 10px;
-		}
-		
-		.builtByText {
-			font-size: 1.3em;
-			margin: 8px 0;
-		}
-		
-		.userAvatarsContainer img {
-			margin-right: 5px;
-		}
+		}		
 	</ui:style>
 	
 	<g:FlowPanel>
 		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
-		<g:FlowPanel ui:field="builtByContainer">
-			<g:Label ui:styleName="{style.builtByText}">Built by:</g:Label>
-			<g:FlowPanel ui:field="userAvatarsContainer" ui:styleName="{style.userAvatarsContainer}"/>
-			<g:Label ui:field="andXOthersLabel" ui:styleName="{style.builtByText}"/>
-		</g:FlowPanel>
 	</g:FlowPanel>
 </ui:UiBinder>

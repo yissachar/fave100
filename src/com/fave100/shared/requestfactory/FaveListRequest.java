@@ -26,6 +26,4 @@ public interface FaveListRequest extends RequestContext {
 
 	Request<List<String>> getHashtagAutocomplete(String searchTerm);
 
-	Request<HashtagProxy> getHashtag(String id);
-
 }

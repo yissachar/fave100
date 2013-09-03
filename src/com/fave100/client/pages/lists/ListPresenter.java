@@ -19,7 +19,6 @@ import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.HashtagProxy;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -31,7 +30,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -82,7 +80,6 @@ public class ListPresenter extends
 	private String requestedUsername;
 	private String _requestedHashtag;
 	private boolean isFollowing;
-	private HashtagProxy _hashtag;
 	// For now just hardcode, only one possible hashtag
 	private AppUserProxy requestedUser;
 	private final ApplicationRequestFactory _requestFactory;
@@ -215,15 +212,7 @@ public class ListPresenter extends
 
 		if (requestedUsername.isEmpty()) {
 			// No user, just show global list for hashtag
-			final Request<HashtagProxy> hashtagReq = _requestFactory.faveListRequest().getHashtag(_requestedHashtag);
-			hashtagReq.fire(new Receiver<HashtagProxy>() {
-				@Override
-				public void onSuccess(final HashtagProxy hashtag) {
-					_hashtag = hashtag;
-					showPage();
-				}
-			});
-
+			showPage();
 		}
 		else {
 			// Get user profile
@@ -307,9 +296,9 @@ public class ListPresenter extends
 		else {
 			usersFollowing.getView().hide();
 			listManager.getView().hide();
-			if (_hashtag != null) {
+			if (_requestedHashtag != null) {
 				globalListDetails.getView().show();
-				globalListDetails.setHashtag(_hashtag);
+				globalListDetails.setHashtag(_requestedHashtag);
 			}
 		}
 
