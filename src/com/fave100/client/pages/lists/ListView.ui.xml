@@ -80,7 +80,7 @@
 		}
 		
 		.responsiveUserTabOptions > span {
-			width: 33.3333%;
+			width: 50%;
 			display: inline-block;
 			text-align: center;
 			font-size: 1.3em;
@@ -136,15 +136,18 @@
 						
 						<g:FlowPanel ui:styleName="responsiveUserTabOptions {style.responsiveUserTabOptions}">
 							<g:InlineLabel ui:field="mobileShowList">List</g:InlineLabel>
-							<g:InlineLabel ui:field="mobileShowShare">Share</g:InlineLabel>							
+							<!--  Remove Sharing
+							<g:InlineLabel ui:field="mobileShowShare">Share</g:InlineLabel> -->							
 							<g:InlineLabel ui:field="mobileShowFollowing">Following</g:InlineLabel>
 						</g:FlowPanel>
 						
 						<g:HTMLPanel ui:field="listManager"/>
 						
+						<!--  Remove Sharing
 						<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">															
 							<uw:ShareButton ui:field="shareButton"/>							
 						</g:HTMLPanel>
+						-->
 																		
 						<!--  Users following -->
 						<g:HTMLPanel ui:field="followingContainer"/>
