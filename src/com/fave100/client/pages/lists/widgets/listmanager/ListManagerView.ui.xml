@@ -54,7 +54,9 @@
 			border: 1px solid #bbb;
 			border-top: 0px;		
 			max-height: 250px;
-			overflow-y: auto;	
+			overflow-y: auto;
+			/* Needs to be above facebook like button */	
+			z-index: 1;
 		}
 		
 		.addListContainer {
