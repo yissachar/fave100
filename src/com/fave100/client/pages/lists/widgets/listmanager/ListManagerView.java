@@ -153,12 +153,6 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 			i++;
 		}
 
-		// Hide the whole widget if only has one list
-		if (i <= 1)
-			widget.setVisible(false);
-		else
-			widget.setVisible(true);
-
 		currentList.setText(selected);
 	}
 
