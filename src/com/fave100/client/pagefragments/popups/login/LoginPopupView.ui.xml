@@ -7,9 +7,19 @@
 	ui:generateLocales='default'>
 
 	<ui:style>
+		.noAccountPrompt {
+			padding: 5px;
+			margin-left: 33%;
+		}
 		
+		@external .loginLightBox;
+		
+		.loginLightBox {
+			padding-bottom: 5px;
+		}
 	</ui:style>
 	
+	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
 	
 	<g:PopupPanel>
@@ -20,6 +30,9 @@
 					<g:Image resource="{img.logo}"/>
 				</div>
 				<g:HTMLPanel ui:field="loginContainer" ui:styleName="innerLoginBox"/>
+				<g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:styleName="{style.noAccountPrompt}">
+					Don't have an account? Register
+				</g:InlineHyperlink>
 			</g:HTMLPanel>
 		</g:HTMLPanel>		
 	</g:PopupPanel>
