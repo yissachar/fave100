@@ -75,6 +75,10 @@ public class HomePresenter extends
 			final PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.lists).with(ListPresenter.USER_PARAM, currentUser.getUsername()).build();
 			placeManager.revealPlace(placeRequest);
 		}
+		else {
+			final PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.lists).with(ListPresenter.LIST_PARAM, Constants.DEFAULT_HASHTAG).build();
+			placeManager.revealPlace(placeRequest);
+		}
 		getProxy().manualReveal(HomePresenter.this);
 	}
 
