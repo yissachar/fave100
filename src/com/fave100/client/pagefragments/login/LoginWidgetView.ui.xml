@@ -35,7 +35,7 @@
 		.thirdPartyLinks, .thirdPartyLinks a {
 			margin: 5px 0;
 			width: 100%;			
-		}
+		}		
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
@@ -68,6 +68,6 @@
 				<g:Anchor styleName="zocial facebook" ui:field="signInWithFacebookButton" target="_blank">Sign in with
 					Facebook</g:Anchor>
 			</div>
-		</div>		 
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>
