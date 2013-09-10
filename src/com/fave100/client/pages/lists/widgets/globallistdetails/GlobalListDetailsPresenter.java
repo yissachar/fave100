@@ -31,7 +31,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	}
 
 	public void setHashtag(final String hashtag) {
-		getView().setInfo("#" + hashtag);
+		getView().setInfo(hashtag);
 	}
 
 	@Override
