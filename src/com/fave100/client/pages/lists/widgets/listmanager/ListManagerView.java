@@ -3,6 +3,8 @@ package com.fave100.client.pages.lists.widgets.listmanager;
 import java.util.Iterator;
 import java.util.List;
 
+import com.fave100.client.pages.lists.ListPresenter;
+import com.fave100.client.place.NameTokens;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,6 +19,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -24,6 +27,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> implements ListManagerPresenter.MyView {
 
@@ -40,6 +45,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField FlowPanel addListContainer;
 	@UiField FlowPanel listContainer;
 	@UiField Label errorMsg;
+	@UiField Hyperlink globalListLink;
 	@UiField ListManagerStyle style;
 	int selectedIndex = 0;
 	private HandlerRegistration rootClickHandler;
@@ -154,6 +160,12 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 		}
 
 		currentList.setText(selected);
+		globalListLink.setTargetHistoryToken(new ParameterTokenFormatter()
+				.toPlaceToken(new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(ListPresenter.LIST_PARAM, selected)
+						.build()));
+		globalListLink.setText("View the global " + selected + " list");
 	}
 
 	@Override
