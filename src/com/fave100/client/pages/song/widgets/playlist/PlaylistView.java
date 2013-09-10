@@ -56,7 +56,7 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 
 	@Override
 	public void setHashtag(final String hashtag) {
-		_hashtag.setText("#" + hashtag);
+		_hashtag.setText(hashtag);
 		_hashtag.setVisible(!hashtag.isEmpty());
 	}
 
