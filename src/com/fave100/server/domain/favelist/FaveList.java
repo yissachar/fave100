@@ -271,7 +271,8 @@ public class FaveList extends DatastoreObject {
 		if (searchTerm.isEmpty())
 			return names;
 
-		final List<Hashtag> hashtags = ofy().load().type(Hashtag.class).filter("id >=", searchTerm).filter("id <", searchTerm + "\uFFFD").order("id").order("-listCount").limit(5).list();
+		// TODO: Need to sort by popularity
+		final List<Hashtag> hashtags = ofy().load().type(Hashtag.class).filter("id >=", searchTerm).filter("id <", searchTerm + "\uFFFD").limit(5).list();
 		for (final Hashtag hashtag : hashtags) {
 			names.add(hashtag.getId());
 		}

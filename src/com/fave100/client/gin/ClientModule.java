@@ -18,10 +18,13 @@ import com.fave100.client.pages.home.HomePresenter;
 import com.fave100.client.pages.home.HomeView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.lists.ListView;
-import com.fave100.client.pages.lists.widgets.autocomplete.SongAutocompletePresenter;
-import com.fave100.client.pages.lists.widgets.autocomplete.SongAutocompleteView;
+import com.fave100.client.pages.lists.widgets.autocomplete.list.ListAutocompleteModule;
+import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompletePresenter;
+import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompleteView;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistView;
+import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
+import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView;
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerView;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
@@ -58,13 +61,12 @@ import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.gwtplatform.mvp.client.googleanalytics.GoogleAnalyticsNavigationTracker;
-import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
-import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView;
 
 public class ClientModule extends AbstractPresenterModule {
 
 	@Override
 	protected void configure() {
+		install(new ListAutocompleteModule());
 		install(new DefaultModule(ClientPlaceManager.class));
 
 		// Google Analytics

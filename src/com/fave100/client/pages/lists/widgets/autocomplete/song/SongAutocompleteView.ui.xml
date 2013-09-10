@@ -7,7 +7,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style type="com.fave100.client.pages.lists.widgets.autocomplete.SongAutocompleteView.SongAutocompleteStyle">
+	<ui:style type="com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompleteView.SongAutocompleteStyle">
 		.searchArea {
 			overflow: hidden;
 		}
