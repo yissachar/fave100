@@ -35,6 +35,7 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 	@Inject
 	ListAutocompleteView(final Binder binder) {
 		initWidget(binder.createAndBindUi(this));
+		searchBox.getElement().setAttribute("placeholder", "Search lists...");
 	}
 
 	@UiHandler("searchBox")
