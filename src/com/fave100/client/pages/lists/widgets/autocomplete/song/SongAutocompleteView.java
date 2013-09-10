@@ -1,4 +1,4 @@
-package com.fave100.client.pages.lists.widgets.autocomplete;
+package com.fave100.client.pages.lists.widgets.autocomplete.song;
 
 import static com.google.gwt.query.client.GQuery.$;
 

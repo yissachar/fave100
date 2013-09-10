@@ -16,5 +16,6 @@
 	
 	<g:FlowPanel>
 		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
+		<g:HTMLPanel ui:field="listAutocomplete"/>
 	</g:FlowPanel>
 </ui:UiBinder>

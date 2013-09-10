@@ -1,6 +1,7 @@
 package com.fave100.client.pages.lists;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.events.favelist.ListChangedEvent;
 import com.fave100.client.events.favelist.RankInputUnfocusEvent;
 import com.fave100.client.events.song.SongSelectedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
@@ -8,7 +9,7 @@ import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
-import com.fave100.client.pages.lists.widgets.autocomplete.SongAutocompletePresenter;
+import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompletePresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
@@ -84,6 +85,7 @@ public class ListPresenter extends
 	private AppUserProxy requestedUser;
 	private final ApplicationRequestFactory _requestFactory;
 	private final EventBus _eventBus;
+	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
 	@Inject SongAutocompletePresenter songAutocomplete;
 	@Inject FavelistPresenter favelist;
@@ -96,9 +98,10 @@ public class ListPresenter extends
 							final MyProxy proxy, final ApplicationRequestFactory requestFactory,
 							final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view, proxy);
-		this._eventBus = eventBus;
-		this._requestFactory = requestFactory;
-		this._currentUser = currentUser;
+		_eventBus = eventBus;
+		_requestFactory = requestFactory;
+		_placeManager = placeManager;
+		_currentUser = currentUser;
 		getView().setUiHandlers(this);
 
 		Window.addWindowScrollHandler(new ScrollHandler() {
@@ -167,6 +170,16 @@ public class ListPresenter extends
 			@Override
 			public void onRankInputUnfocus(final RankInputUnfocusEvent event) {
 				songAutocomplete.setFocus();
+			}
+		});
+
+		ListChangedEvent.register(_eventBus, new ListChangedEvent.Handler() {
+			@Override
+			public void onListChanged(final ListChangedEvent event) {
+				_placeManager.revealPlace(new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(ListPresenter.LIST_PARAM, event.getList())
+						.build());
 			}
 		});
 	}
