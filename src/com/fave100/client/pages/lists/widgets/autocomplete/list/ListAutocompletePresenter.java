@@ -51,10 +51,10 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			return;
 
 		_lastSearch = searchTerm;
-
-		setSelection(-1);
+		
 		searchTerm = searchTerm.trim();
 		if (searchTerm.isEmpty()) {
+			setSelection(-1);
 			getView().setSuggestions(null);
 			return;
 		}
