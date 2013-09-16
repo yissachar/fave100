@@ -22,7 +22,10 @@
 			<fileset dir="${ae-sdk.dir}/lib/user">
 				<include name="*.jar" />
 			</fileset>
-			<fileset dir="${ae-sdk.dir}/lib/opt/user/">
+			<fileset dir="${ae-sdk.dir}/lib/opt/user/appengine-api-labs">
+			    <include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${ae-sdk.dir}/lib/opt/user/appengine-endpoints">
 				<include name="**/*.jar" />
 			</fileset>
 			<fileset dir="${gwt-sdk.dir}">
