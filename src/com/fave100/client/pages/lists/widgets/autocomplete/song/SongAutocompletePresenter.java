@@ -61,7 +61,7 @@ public class SongAutocompletePresenter extends
 	private final EventBus eventBus;
 	private CurrentUser _currentUser;
 	private final List<AsyncCallback<JavaScriptObject>> requests;
-	private int selection = 0;
+	private int selection = -1;
 	private int maxSelection = -1;
 	private int resultsPerPage = 5;
 	private int page = 0;

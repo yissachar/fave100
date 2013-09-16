@@ -38,10 +38,10 @@ public class MemcacheManager {
 		return _instance;
 	}
 
-	public int getFaveItemScore(final String id, final String hashtag) {
+	public double getFaveItemScore(final String id, final String hashtag) {
 		// Need to store in intermediate object, since casting a null results in NPE
 		final Object cacheItem = _cache.get(FAVEITEM_RANK_NAMESPACE + SEPARATOR_TOKEN + hashtag.toLowerCase() + SEPARATOR_TOKEN + id);
-		return (cacheItem == null) ? 0 : (int)cacheItem;
+		return (cacheItem == null) ? 0 : (double)cacheItem;
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class MemcacheManager {
 		if (master == null)
 			return;
 
-		int targetScore = 0;
+		double targetScore = 0;
 		int rank = master.size() + 1;
 		FaveItem existingFave = null;
 
