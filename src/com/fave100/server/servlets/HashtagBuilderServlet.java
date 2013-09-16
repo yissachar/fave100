@@ -83,6 +83,24 @@ public class HashtagBuilderServlet extends HttpServlet
 		}
 		// Save the master list back to the datastore
 		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).get();
+		// Calculate the zcore to determine top trending lists
+		int n = hashtagEntity.getSlidingListCount().size();
+		if(n > 0) {
+			int total = 0;
+			for(Integer count : hashtagEntity.getSlidingListCount()) {
+				total += count;
+			}
+			double avg = total / n;		
+			double sumsq = 0;
+			for(Integer count : hashtagEntity.getSlidingListCount()) {
+				sumsq += Math.pow(count - avg, 2);
+			}
+			double std = Math.sqrt(sumsq / n);
+			if(std == 0)
+				std = 1;
+			hashtagEntity.setZscore((listCount - avg) / std);
+		}
+		hashtagEntity.addListCount(listCount);
 		hashtagEntity.setList(master);
 		ofy().save().entity(hashtagEntity).now();
 

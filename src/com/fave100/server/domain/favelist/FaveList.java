@@ -286,6 +286,15 @@ public class FaveList extends DatastoreObject {
 	public static double calculateItemScore(final int position) {
 		return ((-1 * position) / 11 + (111 / 11));
 	}
+	
+	public static List<String> getTrendingFaveLists() {		
+		List<Hashtag> hashtags = ofy().load().type(Hashtag.class).order("zscore").limit(5).list();
+		List<String> trending = new ArrayList<>();
+		for(Hashtag hashtag : hashtags) {
+			trending.add(hashtag.getName());
+		}
+		return trending;
+	}
 
 	/* Getters and Setters */
 

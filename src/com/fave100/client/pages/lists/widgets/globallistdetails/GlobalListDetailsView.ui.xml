@@ -12,10 +12,17 @@
 			word-wrap: break-word;
 			margin-bottom: 10px;
 		}		
+		
+		.trendingHeader {
+			margin: 15px 0;
+			font-size: 1.1em;
+		}
 	</ui:style>
 	
 	<g:FlowPanel>
 		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
 		<g:HTMLPanel ui:field="listAutocomplete"/>
+		<g:Label ui:styleName="{style.trendingHeader}">Trending Lists</g:Label>
+		<g:FlowPanel ui:field="trendingLists" />
 	</g:FlowPanel>
 </ui:UiBinder>
