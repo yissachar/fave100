@@ -25,11 +25,42 @@
 	<div id="wrap">
 
 	<h1>Fave100 Documentation</h1>
+	<a href="#devEnvironment">Setting Up Development Environment</a><br>
 	<a href="#musicbrainzSongs">Musizbrainz Songs</a><br>
 	<a href="#updatingSongs">Updating Song Database</a><br>
 	<a href="#dedupeSongs">Removing duplicate songs</a><br>
 	<a href="#basicAppStructure">Basic app structure</a><br>
 	<a href="#upgradeAE-GWT">Upgrading AppEngine and GWT version</a><br>
+
+	<a name="devEnvironment"/>
+	<h2>Setting Up Development Environment</h2>
+	<p>The following instructions assume you are on a Windows setup.</p>
+	<ol>
+		<li>Follow instructions to download and install <a href="http://musicbrainz.org/doc/MusicBrainz_Server/Setup#MusicBrainz_Server_virtual_machine">MusicBrainz VM</a></li>
+		<li>Download latest version of Eclipse IDE for Java Developers (not EE version)</li>
+		<li>Install <a href="https://developers.google.com/eclipse/docs/getting_started">Google Plugin for Eclipse</a></li>
+		<li>Install <a href="https://github.com/ArcBees/gwtp-eclipse-plugin">GWTP Eclipse Plugin</a></li>
+		<li>Install <a href="http://msysgit.github.io">Git</a></li>
+		<li>Install <a href="https://code.google.com/p/gitextensions">Git Extensions</a></li>
+		<li>Clone Fave100 project: git clone https://github.com/yissachar/fave100</li>
+		<li>
+			<p>Enable Eclipse Annotation Processing:</p>
+			<ul>
+				<li>
+				Project->Properties->Java Compiler->Annotation Processing: Enable all check marks
+				</li>
+				<li>Project->Properties->Java Compiler->Annotation Processing->Factory Path: add external JAR, broswe to GWT SDK location and select requestfactory-apt.jar</li>
+			</ul>
+		</li>
+		<li>
+			<p>Remove JDO/JPA: Project->Properties->Google->App Engine</p>
+			<ul>
+				<li>Check enable local HRD</li>
+				<li>Uncheck use Datanucleus JDO/JPA</li>
+			</ul>
+		</li>	
+		<li>Edit Ant build.xml configuration to point to correct SDK locations. Do not push changes to Git!</li>	
+	</ol>
 
 	<a name="musicbrainzSongs"/>
 	<h2>Musicbrainz Songs</h2>
