@@ -33,8 +33,6 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	@UiField HTMLPanel topBar;
 	@UiField Label songTitle;
 	@UiField Label artistName;
-	@UiField Button addToFave100Button;
-	//@UiField YouTubeWidget youTubeWidget;
 	@UiField HTMLPanel youTubeWidget;
 	@UiField(provided = true) WhylineWaterfall whylineWaterfall;
 	@UiField HTMLPanel playlistPane;
@@ -80,11 +78,6 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 			}
 		}
 		super.setInSlot(slot, content);
-	}
-
-	@UiHandler("addToFave100Button")
-	void onAddFave100Click(final ClickEvent event) {
-		getUiHandlers().addSong();
 	}
 
 	@UiHandler("playlistTabHeader")
