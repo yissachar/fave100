@@ -203,7 +203,7 @@ public class FavePickWidget extends Composite {
 					public void onKeyDown(final KeyDownEvent event) {
 						final int keyCode = event.getNativeKeyCode();
 						// Only allow numbers and special keys
-						if ((!((keyCode > 46 && keyCode < 58)) && !((keyCode > 96 && keyCode < 108))) && (keyCode != (char)KeyCodes.KEY_TAB)
+						if ((!((keyCode > 46 && keyCode < 58)) && !((keyCode > 95 && keyCode < 108))) && (keyCode != (char)KeyCodes.KEY_TAB)
 								&& (keyCode != (char)KeyCodes.KEY_BACKSPACE)
 								&& (keyCode != (char)KeyCodes.KEY_ESCAPE)
 								&& (keyCode != (char)KeyCodes.KEY_DELETE) && (keyCode != (char)KeyCodes.KEY_ENTER)
