@@ -10,3 +10,4 @@ war/WEB-INF/lib/
 target/
 .gwt/
 extras/
+.staging/

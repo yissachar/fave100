@@ -1,6 +1,9 @@
 <project>
 	<property name="ae-sdk.dir" location="${AppEngineDir}" />
 	<property name="gwt-sdk.dir" location="${GwtDir}" />
+	<property name="staging.dir" location=".staging" />
+	
+	<import file="${ae-sdk.dir}/config/user/ant-macros.xml" />
 	
 	<target name="copyMavenJars" description="Runs the Maven command to copy JARS to WAR">
 	    <exec executable="cmd">
@@ -32,6 +35,31 @@
 				<include name="gwt-servlet.jar" />
 			</fileset>
 		</copy>	
+	</target>
+	
+	<target name="deploy" description="Deploy the application to AppEngine">
+		<input message="Enter email:" addproperty="gae-email"/>
+	    <input message="Enter password:" addproperty="gae-password" />
+	 
+		<delete dir="${staging.dir}" />
+	    <mkdir dir="${staging.dir}" />
+
+	    <copy todir="${staging.dir}">
+	        <fileset dir="war">
+	            <exclude name="WEB-INF/classes/**" />
+	            <exclude name="WEB-INF/appengine-generated/**" />
+	        </fileset>
+	    </copy>
+	    <jar destfile="${staging.dir}/WEB-INF/lib/classes.jar" basedir="WAR/WEB-INF/classes/" />
+
+	    <java classname="com.google.appengine.tools.admin.AppCfg" inputstring="${gae-password}"
+	            classpath="C:\Program Files\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.8.4\appengine-java-sdk-1.8.4\lib\appengine-tools-api.jar" fork="true" failonerror="true">
+	        <arg value="--email=${gae-email}" />
+	        <arg value="--passin" />
+	        <arg value="update" />
+	        <arg value="${staging.dir}" />
+	    </java>
+	    
 	</target>
 
 </project>
