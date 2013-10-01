@@ -26,7 +26,7 @@
 
 	<h1>Fave100 Documentation</h1>
 	<a href="#devEnvironment">Setting Up Development Environment</a><br>
-	<a href="#musicbrainzSongs">Musizbrainz Songs</a><br>
+	<a href="#musicbrainzVM">Setting Up MusicBrainz VM</a><br>
 	<a href="#updatingSongs">Updating Song Database</a><br>
 	<a href="#dedupeSongs">Removing duplicate songs</a><br>
 	<a href="#basicAppStructure">Basic app structure</a><br>
@@ -62,9 +62,9 @@
 		<li>Edit Ant build.xml configuration to point to correct SDK locations. Do not push changes to Git!</li>	
 	</ol>
 
-	<a name="musicbrainzSongs"/>
-	<h2>Musicbrainz Songs</h2>
-	<p>All the song data is obtained from Musicbrainz. A VM containing the Musicbrainz database (PostgreSQL) is set up on Yissachar's machine (on VirtualBox) and needs to be periodically synced with the Musicbrainz data dumps (see <a href="#updatingSongs">Updating Song Database</a>).</p>
+	<a name="musicbrainzVM"/>
+	<h2>Musicbrainz VM</h2>
+	<p>All the song data is obtained from Musicbrainz. A VM containing the Musicbrainz database (PostgreSQL) must be set up and periodically synced with the Musicbrainz data dumps (see <a href="#updatingSongs">Updating Song Database</a>).</p>
 	<p>In addition to the standard Musicbrainz tables, there are 4 custom Fave100 tables:</p>
 	<ul>
 		<li>autocomplete_search</li>
@@ -84,6 +84,48 @@
 
 	<h4>autocomplete_search_dupes</h4>
 	<p>autocomplete_search_dupes contains manually added dupes and their links to the master song. When a song is flagged as a dupe it is inserted into this table. The AppEngine deduper uses this table to determine what songs to dedupe. When autocomplete_search is updated, autocomplete_search_dupes is consulted to determine that we do not add any songs that are flagged as dupes.</p>
+
+	<h3>Setting up MuiscBrainz VM from scratch</h3>
+	<ol>
+		<li>Download Musicbrainz VM torrent: <a href="http://musicbrainz.org/doc/MusicBrainz_Server/Setup">http://musicbrainz.org/doc/MusicBrainz_Server/Setup</a></li>
+		<li>Extract the OVA file (you can use 7-zip or any other tool)</li>
+		<li>Run the VBoxManage command outlined in the above link. Do not run the tar portion if you have already extracted the OVA file</li>
+		<li>Download and install VirtualBox</li>
+		<li>Start VirtualBox and create new Linux/Ubuntu VM, using the VDI from above as the image and using 4096MB RAM (or as close to that as your machine can afford)</li>
+		<li>Right-click VM: Settings->Network: Set bridged adapter connection</li>
+		<li>Start VM and login with usename "vm" and password "musicbrainz"</li>
+		<li>Run command "ifconfig" and note eth0 ip address, you will need it later</li>
+		<li>Run command "sudo su - postgres"</li>
+		<li>Run command "vi /etc/postgresql/9.1/main/pg_hba.conf"</li>
+		<li>Add line: "host all all {IP from previous step}" and save file</li>
+		<li>Run command "vi /etc/postgresql/9.1/main/postgresql.conf.in"</li>
+		<li>Uncommend "listend_addresses" line and set value to "*" and save file</li>
+		<li>Run command "/etc/init.d/postgresql restart"</li>
+		<li>Run command "logout"</li>
+		<li>Run command "cd /home/musicbrainz/"</li>
+		<li>Run command "sudo mkdir dumps"</li>
+		<li>Run command "sudo git clone https://yissachar@bitbucket.org/yissachar/fave100-autocomplete.git"</li>
+		<li>Run command "cd fave100-autocomplete"</li>
+		<li>Run command "sudo vi MUSICBRAINZ_LATEST" and save file (blank file)</li>
+		<li>Run command "sudo crontab -e"</li>
+		<li>Add line "0 0 * * * python /home/musicbrainz/fave100-autocomplete/update_musicbrainz.py"</li>
+		<li>Run command "sudo python update_musicbrainz.py" This will take a long time to complete!</li>
+		<li>Run command "sudo su - postgres"</li>
+		<li>Run command "dropdb musicbrainz"</li>
+		<li>Run command "cd /home/musicbrainz/musicbrainz_server/"</li>
+		<li>Run command "./admin/InitDb.pl --createdb --import /home/musicbrainz/dumps/DATE/mbdump --echo"</li>
+		<li>Run CreateTables.sql from fave100-autocomplete repo</li>
+		<li>Follow instructions in <a href="#updatingSongs">Updating Song Database</a> from step 6 (Install MODE command) and on</li>
+		<li>Run SQL query: "update autocomplete_search set searchable_artist = 'kesha' where searchable_artist = 'ke$ha';"</li>
+		<li>Run SQL query: "update autocomplete_search set searchable_artist = 'pink' where searchable_artist = 'p!nk';"</li>
+	</ol>	
+
+	<h3>Setting up MusicBrainz VM from existing snapshots</h3>	
+	<ol>
+		<li>Backups are stored in \\broadview\WebDev\MusicBrainz VM</li>
+		<li>Run VirtualBox and create VM from existing VDI file</li>
+		<li>Restore to specified snapshots</li>
+	</ol>
 
 	<a name="updatingSongs"/>
 	<h2>Updating Song Database</h2>
