@@ -113,7 +113,7 @@ public class ListManagerPresenter extends
 		getView().setOwnList(ownList);
 		getView().refreshList(hashtags, _hashtag);
 		// Hide the whole list if only default list in there and other user page
-		if (hashtags.size() <= 1 && !ownList) {
+		if (hashtags.size() <= 0 && !ownList) {
 			getView().hide();
 		}
 		else {
