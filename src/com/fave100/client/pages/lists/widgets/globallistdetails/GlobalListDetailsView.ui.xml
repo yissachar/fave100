@@ -8,14 +8,27 @@
 
 	<ui:style>
 		.hashtagLabel {
-			font-size: 1.8em;
-			word-wrap: break-word;
+			font-size: 60px;
 			margin-bottom: 10px;
+			text-align: right;
+			margin-left: -100%;
+			text-overflow: ellipsis;
+			overflow: hidden;
 		}		
 		
 		.trendingHeader {
 			margin: 15px 0;
 			font-size: 1.1em;
+		}
+		
+		.trendingList {
+			line-height: 20px;
+		}
+				
+		.trendingList a {
+			color: #5eaae5;
+			display: block;
+			clear: both;
 		}
 	</ui:style>
 	
@@ -23,6 +36,6 @@
 		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
 		<g:HTMLPanel ui:field="listAutocomplete"/>
 		<g:Label ui:styleName="{style.trendingHeader}">Trending Lists</g:Label>
-		<g:FlowPanel ui:field="trendingLists" />
+		<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />
 	</g:FlowPanel>
 </ui:UiBinder>

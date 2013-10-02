@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -60,7 +61,7 @@ public class GlobalListDetailsView extends ViewImpl implements GlobalListDetails
 	public void setTrendingLists(final List<String> lists) {
 		trendingLists.clear();
 		for(String list : lists) {
-			Hyperlink link = new Hyperlink();
+			InlineHyperlink link = new InlineHyperlink();
 			link.setTargetHistoryToken(new ParameterTokenFormatter()
 				.toPlaceToken(new PlaceRequest.Builder()
 				.nameToken(NameTokens.lists)
