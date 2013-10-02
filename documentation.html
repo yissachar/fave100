@@ -108,8 +108,10 @@
 		<li>Run command "cd fave100-autocomplete"</li>
 		<li>Run command "sudo vi MUSICBRAINZ_LATEST" and save file (blank file)</li>
 		<li>Run command "sudo crontab -e"</li>
-		<li>Add line "0 0 * * * python /home/musicbrainz/fave100-autocomplete/update_musicbrainz.py"</li>
-		<li>Run command "sudo python update_musicbrainz.py" This will take a long time to complete!</li>
+		<li>Add line "0 0 * * * python /home/musicbrainz/fave100-autocomplete/updateMusicbrainz.py"</li>
+		<li>Change datetime settings so crontab will run when it should: "dpkg-reconfigure tzdata" select location</li>
+		<li>Ensure time synced: "sudo ntpdate ntp.ubuntu.com"</li>
+		<li>Run command "sudo python updateMusicbrainz.py" This will take a long time to complete!</li>
 		<li>Run command "sudo su - postgres"</li>
 		<li>Run command "dropdb musicbrainz"</li>
 		<li>Run command "cd /home/musicbrainz/musicbrainz_server/"</li>
