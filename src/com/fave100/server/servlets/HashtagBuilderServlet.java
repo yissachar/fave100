@@ -47,7 +47,7 @@ public class HashtagBuilderServlet extends HttpServlet
 
 		final HashMap<FaveRankerWrapper, Double> all = new HashMap<FaveRankerWrapper, Double>();
 		final List<String> userSampleIds = new ArrayList<>();
-		final int listCount = addAllLists(null, hashtag, all, userSampleIds);
+		final int listCount = addAllLists(null, hashtag, all);
 		// Sort the list
 		final List<Map.Entry<FaveRankerWrapper, Double>> sorted = new LinkedList<>(all.entrySet());
 		Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Double>>()
@@ -73,14 +73,7 @@ public class HashtagBuilderServlet extends HttpServlet
 			}
 			MemcacheManager.getInstance().putFaveItemScoreNoRerank(entry.getKey().getFaveItem().getId(), hashtag, entry.getValue());
 		}
-
-		final Map<String, AppUser> userSampleUsers = ofy().load().type(AppUser.class).ids(userSampleIds);
-		final List<String> userSampleNames = new ArrayList<>();
-		final List<String> userSampleAvatars = new ArrayList<>();
-		for (final AppUser sampleUser : userSampleUsers.values()) {
-			userSampleNames.add(sampleUser.getUsername());
-			userSampleAvatars.add(sampleUser.getAvatarImage(60));
-		}
+		
 		// Save the master list back to the datastore
 		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).get();
 		// Calculate the zcore to determine top trending lists
@@ -109,7 +102,7 @@ public class HashtagBuilderServlet extends HttpServlet
 	}
 
 	// Get favelists 1000 at a time, and store their rank, returns number of lists
-	private int addAllLists(final String cursor, final String hashtag, final HashMap<FaveRankerWrapper, Double> all, final List<String> userSampleIds) {
+	private int addAllLists(final String cursor, final String hashtag, final HashMap<FaveRankerWrapper, Double> all) {
 		final Query<FaveList> query = ofy().load().type(FaveList.class).filter("hashtag", hashtag).limit(1000);
 
 		if (cursor != null)
@@ -120,21 +113,8 @@ public class HashtagBuilderServlet extends HttpServlet
 		int count = 0;
 		final QueryResultIterator<FaveList> iterator = query.iterator();
 		while (iterator.hasNext()) {
-			count++;
-			// Decide whether to add user to sample users
+			count++;			
 			final FaveList faveList = iterator.next();
-			//If list empty, fill up first
-			if (userSampleIds.size() < 9) {
-				userSampleIds.add(faveList.getUser().getKey().getName());
-			}
-			// Otherwise randomly replace sampled users over time
-			else {
-				final double decision = Math.random();
-				if (decision > 0.001) {
-					final int index = (int)Math.round(userSampleIds.size() * Math.random());
-					userSampleIds.set(index, faveList.getUser().getKey().getName());
-				}
-			}
 			// Add up the total rank for each song in the list
 			int i = 1;
 			for (final FaveItem faveItem : faveList.getList()) {
@@ -152,7 +132,7 @@ public class HashtagBuilderServlet extends HttpServlet
 
 		// While we still have favelists to process, keep adding their ranks
 		if (shouldContinue) {
-			return addAllLists(iterator.getCursor().toWebSafeString(), hashtag, all, userSampleIds) + count;
+			return addAllLists(iterator.getCursor().toWebSafeString(), hashtag, all) + count;
 		}
 		return count;
 	}
