@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fave100.server.MemcacheManager;
-import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveRankerWrapper;
@@ -46,7 +45,6 @@ public class HashtagBuilderServlet extends HttpServlet
 		final String hashtag = req.getParameter(HASHTAG_PARAM);
 
 		final HashMap<FaveRankerWrapper, Double> all = new HashMap<FaveRankerWrapper, Double>();
-		final List<String> userSampleIds = new ArrayList<>();
 		final int listCount = addAllLists(null, hashtag, all);
 		// Sort the list
 		final List<Map.Entry<FaveRankerWrapper, Double>> sorted = new LinkedList<>(all.entrySet());
@@ -73,23 +71,23 @@ public class HashtagBuilderServlet extends HttpServlet
 			}
 			MemcacheManager.getInstance().putFaveItemScoreNoRerank(entry.getKey().getFaveItem().getId(), hashtag, entry.getValue());
 		}
-		
+
 		// Save the master list back to the datastore
 		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).get();
 		// Calculate the zcore to determine top trending lists
 		int n = hashtagEntity.getSlidingListCount().size();
-		if(n > 0) {
+		if (n > 0) {
 			int total = 0;
-			for(Integer count : hashtagEntity.getSlidingListCount()) {
+			for (Integer count : hashtagEntity.getSlidingListCount()) {
 				total += count;
 			}
-			double avg = total / n;		
+			double avg = total / n;
 			double sumsq = 0;
-			for(Integer count : hashtagEntity.getSlidingListCount()) {
+			for (Integer count : hashtagEntity.getSlidingListCount()) {
 				sumsq += Math.pow(count - avg, 2);
 			}
 			double std = Math.sqrt(sumsq / n);
-			if(std == 0)
+			if (std == 0)
 				std = 1;
 			hashtagEntity.setZscore((listCount - avg) / std);
 		}
@@ -113,7 +111,7 @@ public class HashtagBuilderServlet extends HttpServlet
 		int count = 0;
 		final QueryResultIterator<FaveList> iterator = query.iterator();
 		while (iterator.hasNext()) {
-			count++;			
+			count++;
 			final FaveList faveList = iterator.next();
 			// Add up the total rank for each song in the list
 			int i = 1;
