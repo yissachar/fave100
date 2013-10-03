@@ -65,6 +65,7 @@ public class SongAutocompletePresenter extends
 	private int maxSelection = -1;
 	private int resultsPerPage = 5;
 	private int page = 0;
+	private int _lastPage = 0;
 	private List<SongProxy> currentSuggestions;
 	private String _lastSearch = "";
 
@@ -126,10 +127,11 @@ public class SongAutocompletePresenter extends
 	@Override
 	public void getAutocompleteResults(String searchTerm, final boolean resetPage) {
 		// Don't bother going to the server a second time for the same term
-		if (_lastSearch != null && _lastSearch.equals(searchTerm))
+		if (_lastSearch != null && _lastSearch.equals(searchTerm) && page == _lastPage)
 			return;
 
 		_lastSearch = searchTerm;
+		_lastPage = page;
 
 		if (resetPage)
 			setPage(0);
