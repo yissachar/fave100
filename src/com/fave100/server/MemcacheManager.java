@@ -106,6 +106,11 @@ public class MemcacheManager {
 			else if (score > 0) {
 				master.add(faveItem);
 			}
+			
+			// If it was inserted into middle of master, may need to remove last item to fit under limit
+			while(master.size() > FaveList.MAX_FAVES) {
+				master.remove(master.size()-1);
+			}
 
 			putMasterFaveList(hashtag, master);
 		}
