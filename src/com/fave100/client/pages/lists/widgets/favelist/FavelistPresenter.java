@@ -177,9 +177,12 @@ public class FavelistPresenter extends
 
 				@Override
 				public void onSuccess(final List<FaveItemProxy> results) {
-					if (ownList)
-						currentUser.setFaveList(results);
-					buildWidgets(results);
+					// Make sure user still not null when results fetched, otherwise could be stale data
+					if (user != null) {
+						if (ownList)
+							currentUser.setFaveList(results);
+						buildWidgets(results);
+					}
 				}
 			});
 		}
@@ -189,7 +192,9 @@ public class FavelistPresenter extends
 			req.fire(new Receiver<List<FaveItemProxy>>() {
 				@Override
 				public void onSuccess(final List<FaveItemProxy> results) {
-					buildWidgets(results);
+					// Make sure user still null when results fetched, otherwise could be stale data
+					if (user == null)
+						buildWidgets(results);
 				}
 			});
 		}
