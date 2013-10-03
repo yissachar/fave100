@@ -9,12 +9,17 @@
 	<ui:style>
 		.hashtagLabel {
 			font-size: 60px;
-			margin-bottom: 10px;
 			text-align: right;
 			margin-left: -100%;
 			text-overflow: ellipsis;
 			overflow: hidden;
 		}		
+		
+		.contributeCTA {
+			float: right;
+			cursor: pointer;
+			margin-bottom: 10px;
+		}
 		
 		.trendingHeader {
 			margin: 15px 0;
@@ -34,6 +39,7 @@
 	
 	<g:FlowPanel>
 		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
+		<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 		<g:HTMLPanel ui:field="listAutocomplete"/>
 		<g:Label ui:styleName="{style.trendingHeader}">Trending Lists</g:Label>
 		<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />

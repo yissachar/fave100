@@ -9,6 +9,7 @@ import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
+import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
@@ -220,6 +221,25 @@ public class CurrentUser implements AppUserProxy {
 					// Catch-all
 					Notification.show("Error: Could not add song");
 				}
+			}
+		});
+	}
+
+	public void addFaveList(String name) {
+		if (getHashtags().contains(name) || name.equals(Constants.DEFAULT_HASHTAG))
+			return;
+
+		final String listName = name;
+		Request<Void> addFaveListReq = _requestFactory.faveListRequest().addFaveListForCurrentUser(listName);
+		addFaveListReq.fire(new Receiver<Void>() {
+			@Override
+			public void onSuccess(Void response) {
+				getHashtags().add(listName);
+				_placeManager.revealPlace(new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(ListPresenter.LIST_PARAM, listName)
+						.with(ListPresenter.USER_PARAM, getUsername())
+						.build());
 			}
 		});
 	}
