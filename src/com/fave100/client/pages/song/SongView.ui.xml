@@ -82,7 +82,8 @@
 		
 		.tabContainer {			
 			clear: both;
-			overflow-y: auto;		
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;		
 			overflow-x: hidden;	
 		}
 		

@@ -39,6 +39,7 @@
 			/* This is just an inital height, will be recalculated at runtime */
 			height: 420px;
 			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
 		}
 	</ui:style>
 	

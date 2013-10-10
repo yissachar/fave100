@@ -23,6 +23,7 @@
 			width: 100%;
 			display: block;		
 			overflow-y: auto;			
+			-webkit-overflow-scrolling: touch;
 		}
 		
 		.nonMobileListContainer {
