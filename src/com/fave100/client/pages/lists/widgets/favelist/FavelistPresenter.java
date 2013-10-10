@@ -142,16 +142,6 @@ public class FavelistPresenter extends
 				}
 			}
 		});
-
-		// Update user
-		CurrentUserChangedEvent.register(eventBus,
-				new CurrentUserChangedEvent.Handler() {
-					@Override
-					public void onCurrentUserChanged(
-							final CurrentUserChangedEvent event) {
-						setUser(event.getUser());
-					}
-				});
 	}
 
 	public void clearFavelist() {
