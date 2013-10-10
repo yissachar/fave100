@@ -41,7 +41,7 @@
 		}
 		
 		.mobile .trendingList a {
-			display: inline;
+			display: inline-block;
 			margin-right: 5px;
 		}
 	</ui:style>
