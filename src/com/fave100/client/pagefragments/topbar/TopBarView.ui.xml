@@ -51,8 +51,8 @@
 			display: inline-block;
 			text-decoration: none;
 			padding: 0 6px;
-			font-size: 1.3em;
-			line-height: 2.4em;
+			font-size: 1.2em;
+			line-height: 2.56em;
 		}
 		
 		.topNav li:hover > a, .topNav li:hover > span {
