@@ -3,6 +3,7 @@ package com.fave100.client.pages.lists.widgets.listmanager;
 import java.util.Iterator;
 import java.util.List;
 
+import com.fave100.shared.Constants;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -57,6 +58,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 		widget = binder.createAndBindUi(this);
 		listDropdown.setVisible(false);
 		listNameInput.setVisible(false);
+		listNameInput.getElement().setAttribute("maxlength", Integer.toString(Constants.MAX_HASHTAG_LENGTH));
 	}
 
 	@Override
