@@ -109,6 +109,7 @@
 		
 		.faveListContainer {
 			min-height: 500px;
+			-webkit-overflow-scrolling: touch;
 		}		
 	</ui:style>
 	
