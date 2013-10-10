@@ -49,13 +49,15 @@ public abstract class Validator {
 	public static String validateHashtag(final String hashtag) {
 		final String hashtagPattern = "^[a-zA-Z0-9]+$";
 		if (hashtag == null || hashtag.equals("")) {
-			return "Hashtag cannot be left empty";
+			return "List name cannot be left empty";
 		}
 		if (hashtag.length() > Constants.MAX_HASHTAG_LENGTH) {
-			return "Hashtag must be " + Constants.MAX_HASHTAG_LENGTH + " characters or less";
+			return "List name must be " + Constants.MAX_HASHTAG_LENGTH + " characters or less";
 		}
 		else if (!hashtag.matches(hashtagPattern)) {
-			return "Username must only consist of letters and numbers";
+			if (hashtag.contains(" "))
+				return "List name must not contain spaces";
+			return "List name must only consist of letters and numbers";
 		}
 		return null;
 	}
