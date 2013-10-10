@@ -93,7 +93,12 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		loggedInContainer.setVisible(false);
 		loginButton.setVisible(true);
 		logOutLink.setVisible(false);
-		logoLink.setTargetHistoryToken(NameTokens.home);
+		final String listPlace = new ParameterTokenFormatter()
+				.toPlaceToken(new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(ListPresenter.LIST_PARAM, Constants.DEFAULT_HASHTAG)
+						.build());
+		logoLink.setTargetHistoryToken(listPlace);
 	}
 
 	@Override
