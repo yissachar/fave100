@@ -12,7 +12,7 @@
 		}
 		
 		.hashtagLabel {
-			font-size: 60px;
+			font-size: 56px;
 			text-align: right;
 			margin-left: -100%;
 			text-overflow: ellipsis;
