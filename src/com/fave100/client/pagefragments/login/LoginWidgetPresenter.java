@@ -132,6 +132,11 @@ public class LoginWidgetPresenter extends
 	// Native login
 	@Override
 	public void login() {
+		if (getView().getUsername().isEmpty() || getView().getPassword().isEmpty()) {
+			getView().setError("Fields must not be empty");
+			return;
+		}
+
 		LoadingIndicator.show();
 		final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
 		final Request<AppUserProxy> loginReq = appUserRequest.login(getView()
