@@ -87,6 +87,7 @@ public class ListPresenter extends
 	private final EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
+	private boolean _ownPage = false;
 	@Inject SongAutocompletePresenter songAutocomplete;
 	@Inject FavelistPresenter favelist;
 	@Inject UsersFollowingPresenter usersFollowing;
@@ -282,8 +283,8 @@ public class ListPresenter extends
 
 	private void showPage() {
 		getView().setUserProfile(requestedUser);
-		final boolean ownPage = _currentUser.isLoggedIn() && _currentUser.equals(requestedUser);
-		if (ownPage) {
+		_ownPage = _currentUser.isLoggedIn() && _currentUser.equals(requestedUser);
+		if (_ownPage) {
 			getView().showOwnPage();
 			getView().setFollowCTA(false, isFollowing);
 		}
@@ -294,7 +295,7 @@ public class ListPresenter extends
 
 		favelist.setUser(requestedUser);
 		favelist.setHashtag(_requestedHashtag);
-		favelist.refreshFavelist(ownPage);
+		favelist.refreshFavelist(_ownPage);
 
 		if (requestedUser != null) {
 			usersFollowing.getView().show();
@@ -337,10 +338,17 @@ public class ListPresenter extends
 			_currentUser.unfollowUser(requestedUser);
 		}
 	}
+
+	@Override
+	public boolean isOwnPage() {
+		return _ownPage;
+	}
 }
 
 interface ListUiHandlers extends UiHandlers {
 	void songSelected(SongProxy song);
 
 	void followUser();
+
+	boolean isOwnPage();
 }
