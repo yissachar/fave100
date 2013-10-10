@@ -56,6 +56,7 @@
 	            classpath="C:\Program Files\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.8.4\appengine-java-sdk-1.8.4\lib\appengine-tools-api.jar" fork="true" failonerror="true">
 	        <arg value="--email=${gae-email}" />
 	        <arg value="--passin" />
+	    	<arg value="--enable_jar_classes" />
 	        <arg value="update" />
 	        <arg value="${staging.dir}" />
 	    </java>
