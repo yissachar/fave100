@@ -44,6 +44,7 @@
 			display: block;
 			font-size: 0.75em;
 			margin: 5px 0;
+			float: left;
 		}
 		
 		.registerButton {

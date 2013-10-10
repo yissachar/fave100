@@ -4,14 +4,15 @@ public abstract class Validator {
 
 	public static String validateUsername(final String username) {
 		final String usernamePattern = "^[a-zA-Z0-9]+$";
-		final int maxNameLength = 15;
 		if (username == null || username.equals("")) {
 			return "Username cannot be left empty";
 		}
-		else if (username.length() > maxNameLength) {
-			return "Username must be less than " + maxNameLength + " characters long";
+		else if (username.length() > Constants.MAX_USERNAME_LENGTH) {
+			return "Username must be less than " + Constants.MAX_USERNAME_LENGTH + " characters long";
 		}
 		else if (!username.matches(usernamePattern)) {
+			if (username.contains(" "))
+				return "Username must not contain spaces";
 			return "Username must only consist of letters and numbers";
 		}
 		return null;

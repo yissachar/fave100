@@ -1,5 +1,6 @@
 package com.fave100.client.pagefragments.register;
 
+import com.fave100.shared.Constants;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -38,6 +39,7 @@ public class RegisterWidgetView extends ViewWithUiHandlers<RegisterWidgetUiHandl
 	@Inject
 	public RegisterWidgetView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+		usernameField.getElement().setAttribute("maxlength", Integer.toString(Constants.MAX_USERNAME_LENGTH));
 	}
 
 	@Override
