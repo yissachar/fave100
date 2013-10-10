@@ -152,6 +152,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		userPageFaveList.setVisible(true);
 		//shareButton.setVisible(false);
 		followingContainer.setVisible(false);
+		listManager.setVisible(true);
 	}
 
 	@UiHandler("mobileShowFollowing")
@@ -160,6 +161,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		userPageFaveList.setVisible(false);
 		//shareButton.setVisible(false);
 		followingContainer.setVisible(true);
+		listManager.setVisible(false);
 	}
 
 	private void setSelected(final Label label) {
@@ -274,6 +276,15 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 				userPageFaveList.setVisible(true);
 				//shareButton.setVisible(false);
 				followingContainer.setVisible(false);
+			}
+
+			if (getUiHandlers().isOwnPage()) {
+				mobileShowFollowing.setVisible(true);
+				mobileShowList.setVisible(true);
+			}
+			else {
+				mobileShowFollowing.setVisible(false);
+				mobileShowList.setVisible(false);
 			}
 		}
 		else {

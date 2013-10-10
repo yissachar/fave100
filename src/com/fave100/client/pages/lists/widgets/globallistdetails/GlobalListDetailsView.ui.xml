@@ -6,7 +6,11 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>
+	<ui:style type="com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView.Style">
+		.mobile {
+			padding: 10px;
+		}
+		
 		.hashtagLabel {
 			font-size: 60px;
 			text-align: right;
@@ -35,9 +39,14 @@
 			display: block;
 			clear: both;
 		}
+		
+		.mobile .trendingList a {
+			display: inline;
+			margin-right: 5px;
+		}
 	</ui:style>
 	
-	<g:FlowPanel>
+	<g:FlowPanel ui:field="container">
 		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
 		<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 		<g:HTMLPanel ui:field="listAutocomplete"/>
