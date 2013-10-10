@@ -1,5 +1,6 @@
 package com.fave100.shared;
 
+
 public class Constants {
 
 	public static final String DEFAULT_HASHTAG = "alltime";
@@ -13,4 +14,5 @@ public class Constants {
 	public static final int MORE_FOLLOWING_INC = 5;
 	public static final double SCORE_CALCULATOR = 0.0909;
 	public static final int MAX_LISTS_PER_USER = 100;
+	public static final int MAX_USERNAME_LENGTH = 15;
 }
