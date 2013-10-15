@@ -109,6 +109,12 @@ public class CurrentUser implements AppUserProxy {
 	}
 
 	public void followUser(final AppUserProxy user) {
+		// Not logged in, redirect to login
+		if (!isLoggedIn()) {
+			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+			return;
+		}
+
 		// Add to client
 		if (!getFollowing().contains(user))
 			getFollowing().add(user);
