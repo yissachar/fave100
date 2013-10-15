@@ -3,13 +3,9 @@ package com.fave100.client.pages.lists.widgets.listmanager;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fave100.shared.Constants;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -17,11 +13,12 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -37,7 +34,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField FocusPanel currentListContainer;
 	@UiField Label currentList;
 	@UiField FlowPanel listDropdown;
-	@UiField TextBox listNameInput;
+	@UiField HTMLPanel autocomplete;
 	@UiField Button addHashtagButton;
 	@UiField FlowPanel addListContainer;
 	@UiField FlowPanel listContainer;
@@ -56,14 +53,25 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@Inject
 	public ListManagerView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+		autocomplete.setVisible(false);
 		listDropdown.setVisible(false);
-		listNameInput.setVisible(false);
-		listNameInput.getElement().setAttribute("maxlength", Integer.toString(Constants.MAX_HASHTAG_LENGTH));
 	}
 
 	@Override
 	public Widget asWidget() {
 		return widget;
+	}
+
+	@Override
+	public void setInSlot(final Object slot, final IsWidget content) {
+
+		if (slot == ListManagerPresenter.AUTOCOMPLETE_SLOT) {
+			autocomplete.clear();
+			if (content != null) {
+				autocomplete.add(content);
+			}
+		}
+		super.setInSlot(slot, content);
 	}
 
 	@UiHandler("currentListContainer")
@@ -87,6 +95,9 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 					if (widgetContainsElement(addListContainer, target))
 						shouldHide = false;
 
+					if (widgetContainsElement(autocomplete, target))
+						shouldHide = false;
+
 					if (shouldHide)
 						hideDropdown();
 				}
@@ -104,36 +115,15 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 					return true;
 			}
 		}
-		return false;
-	}
-
-	@UiHandler("listNameInput")
-	void onListNameKeyUp(final KeyUpEvent event) {
-		if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()) {
-			getUiHandlers().addHashtag(listNameInput.getText());
-			hideDropdown();
-			listNameInput.setVisible(false);
-			addHashtagButton.setVisible(true);
-		}
-		else if (KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()) {
-			listNameInput.setText("");
-			listNameInput.setVisible(false);
-			addHashtagButton.setVisible(true);
-		}
-	}
-
-	@UiHandler("listNameInput")
-	void onListNameBlur(final BlurEvent event) {
-		listNameInput.setText("");
-		listNameInput.setVisible(false);
-		addHashtagButton.setVisible(true);
+		return element.equals(widget.getElement());
 	}
 
 	@UiHandler("addHashtagButton")
 	void onAddButtonClick(final ClickEvent event) {
-		listNameInput.setVisible(true);
-		listNameInput.setFocus(true);
 		addHashtagButton.setVisible(false);
+		autocomplete.setVisible(true);
+		listContainer.setVisible(false);
+		getUiHandlers().setAutocompleteFocus(true);
 	}
 
 	@Override
@@ -169,8 +159,11 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@Override
 	public void hideDropdown() {
 		listDropdown.setVisible(false);
+		listContainer.setVisible(true);
 		currentListContainer.removeStyleName(style.dropdownVisible());
-		listNameInput.setText("");
+		addHashtagButton.setVisible(true);
+		autocomplete.setVisible(false);
+		getUiHandlers().clearSearch();
 		if (rootClickHandler != null)
 			rootClickHandler.removeHandler();
 	}
