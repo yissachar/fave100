@@ -27,6 +27,7 @@ import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetail
 import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView;
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerView;
+import com.fave100.client.pages.lists.widgets.listmanager.widgets.autocomplete.AddListAutocompleteModule;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView;
 import com.fave100.client.pages.login.LoginPresenter;
@@ -66,6 +67,7 @@ public class ClientModule extends AbstractPresenterModule {
 
 	@Override
 	protected void configure() {
+		install(new AddListAutocompleteModule());
 		install(new ListAutocompleteModule());
 		install(new DefaultModule(ClientPlaceManager.class));
 

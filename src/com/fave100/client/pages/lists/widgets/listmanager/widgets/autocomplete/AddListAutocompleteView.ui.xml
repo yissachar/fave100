@@ -1,0 +1,39 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             
+    <ui:style type="com.fave100.client.pages.lists.widgets.listmanager.widgets.autocomplete.AddListAutocompleteView.ListAutocompleteStyle">
+    
+    	.container {
+	
+		}
+		
+		.searchBox {
+			width: 100%;
+		}
+		
+    	.resultsPanel {
+			border: 1px solid #bbb;
+			border-top: 0px;
+			background: #fff;
+		}
+		
+		.resultsPanel > * {	
+			padding: 5px;
+		}
+		
+		.selected {
+			color: #FFF;
+			background-color: #5eaae5;
+		}
+		
+		.noResultsMsg {
+			margin-top: 10px;
+		}
+    </ui:style>
+    
+    <g:HTMLPanel ui:styleName="{style.container}">
+    	<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
+    	<g:FlowPanel ui:field="resultsPanel" ui:styleName="{style.resultsPanel}"/>
+    	<g:Label ui:field="noResultsMsg" ui:styleName="{style.noResultsMsg}">No results found</g:Label>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -87,9 +87,13 @@
 		.listContainer .selected {
 		}
 		
+		.errorMsg {
+			padding: 5px;
+		}
+		
 		.globalListLink {
 			margin-top: 10px;
-		}
+		}		
 	</ui:style>
 	
 	
@@ -104,12 +108,12 @@
 		</g:FocusPanel>
 		<g:FlowPanel ui:field="listDropdown" ui:styleName="{style.listDropdown}">
 			<g:FlowPanel ui:field="addListContainer" ui:styleName="{style.addListContainer}">
-				<g:Button ui:field="addHashtagButton">Create new list</g:Button>
-				<g:TextBox ui:field="listNameInput" />
+				<g:Button ui:field="addHashtagButton">Add a list</g:Button>
+				<g:HTMLPanel ui:field="autocomplete"/>				
 			</g:FlowPanel>
+			<g:Label ui:field="errorMsg" ui:styleName="error {style.errorMsg}" />
 			<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
-		</g:FlowPanel>
-		<g:Label ui:field="errorMsg" ui:styleName="error" />
+		</g:FlowPanel>		
 		<g:Hyperlink ui:field="globalListLink" ui:styleName="{style.globalListLink}"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

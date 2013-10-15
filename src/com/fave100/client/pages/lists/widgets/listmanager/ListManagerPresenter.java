@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.pages.lists.ListPresenter;
+import com.fave100.client.pages.lists.widgets.listmanager.widgets.autocomplete.AddListAutocompletePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -19,8 +22,10 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class ListManagerPresenter extends
 		PresenterWidget<ListManagerPresenter.MyView>
@@ -43,17 +48,22 @@ public class ListManagerPresenter extends
 
 	}
 
+	@ContentSlot public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
+
+	private EventBus _eventBus;
 	private ApplicationRequestFactory _requestFactory;
 	private AppUserProxy _user;
 	private String _hashtag;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
 	private boolean _globalList = false;
+	@Inject AddListAutocompletePresenter autocomplete;
 
 	@Inject
 	public ListManagerPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager) {
 		super(eventBus, view);
 		view.setUiHandlers(ListManagerPresenter.this);
+		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
@@ -62,6 +72,19 @@ public class ListManagerPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+
+		ListAddedEvent.register(_eventBus, new ListAddedEvent.Handler() {
+			@Override
+			public void onListAdded(final ListAddedEvent event) {
+				addHashtag(event.getList());
+			}
+		});
+	}
+
+	@Override
+	public void onReveal() {
+		super.onReveal();
+		setInSlot(AUTOCOMPLETE_SLOT, autocomplete);
 	}
 
 	@Override
@@ -126,6 +149,8 @@ public class ListManagerPresenter extends
 		if (_hashtag.equals(list))
 			return;
 
+		getView().hideDropdown();
+
 		_placeManager.revealPlace(new PlaceRequest.Builder()
 				.nameToken(NameTokens.lists)
 				.with(ListPresenter.USER_PARAM, _user.getUsername())
@@ -160,6 +185,16 @@ public class ListManagerPresenter extends
 		return _globalList;
 	}
 
+	@Override
+	public void setAutocompleteFocus(boolean focus) {
+		autocomplete.getView().setFocus(focus);
+	}
+
+	@Override
+	public void clearSearch() {
+		autocomplete.getView().clearSearch();
+	}
+
 	/* Getters and Setters */
 
 	public AppUserProxy getUser() {
@@ -192,4 +227,8 @@ interface ListManagerUiHandlers extends UiHandlers {
 	void getGlobalAutocomplete(String searchTerm);
 
 	void refreshUsersLists();
+
+	void setAutocompleteFocus(boolean focus);
+
+	void clearSearch();
 }
