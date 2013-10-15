@@ -219,6 +219,9 @@ public class FavePickWidget extends Composite {
 							updateRank(rankText);
 							_eventBus.fireEvent(new RankInputUnfocusEvent());
 						}
+						else if (keyCode == KeyCodes.KEY_ESCAPE) {
+							_eventBus.fireEvent(new RankInputUnfocusEvent());
+						}
 					}
 				});
 				rankText.addBlurHandler(new BlurHandler() {
