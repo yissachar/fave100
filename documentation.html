@@ -134,9 +134,9 @@
 	<ol>
 		<li>Verify that the latest Musicbrainz dump exists in /mnt/postgres/dumps/. The <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">Musicbrainz server</a> is scanned daily with the <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/5749173c03b6be3c8c15300c03086e315385385e/updateMusicbrainz.py?at=master">updateMusicbrainz.py script</a> and new dumps are downloaded when found.</li>
 		<li>Backup up autocomplete_search.* tables through PGAdmin 3 GUI</li>
-		<li>Drop the Musicbrainz database: On VM run dropdb musicbrainz</li>
+		<li>Drop the Musicbrainz database: On VM run "sudo su - postgres" and then "dropdb musicbrainz"</li>
 		<li>Create and import new data dump with command: "./admin/InitDb.pl --createdb --import /home/musicbrainz/dumps/DATE/mbdump --echo"</li>
-		<li>Restore backed_up autocomplete_search.* tables with command: psql -h 192.168.214.193 -U musicbrainz -d musicbrainz_db -f /path/to/backup</li>
+		<li>Restore backed_up autocomplete_search.* tables with command: psql -h 192.168.214.177 -U musicbrainz -d musicbrainz -f /path/to/backup</li>
 		<li>Reinstall mode command by running SQL found here: <a href="http://wiki.postgresql.org/wiki/Aggregate_Mode">http://wiki.postgresql.org/wiki/Aggregate_Mode</a></li>
 		<li>Run <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src">BuildAutocomplete.sql</a> on Musicbrainz VM (you can use PGAdmin 3 on Yissachar's machine to run the code). This should take around 2.5 hours to execute and will rebuild autocomplete_search_staging from scratch with all the latest song entries.</li>
 		<li>Run <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src">UpdateAutocomplete.sql</a> on Musicbrainz VM. This should take around 0.5 hours to execute and will import all new entries from staging into the actual song database.</li>		
