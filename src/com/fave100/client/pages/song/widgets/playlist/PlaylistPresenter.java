@@ -107,6 +107,9 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 			}
 		}
 
+		if (currentPlayingItem == null)
+			return;
+
 		currentPlayingItem.getElement().scrollIntoView();
 		PlaylistItem toScroll = null;
 		int i = 7;

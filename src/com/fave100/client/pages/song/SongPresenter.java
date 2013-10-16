@@ -136,10 +136,6 @@ public class SongPresenter extends
 			});
 		}
 
-		// By default, hide playlist
-		getView().setPlaylist(false);
-		getView().showWhylines();
-
 		// If there is a user, get their info and their playlist
 		if (!username.isEmpty()) {
 			// If we have a current user, just grab their info locally
