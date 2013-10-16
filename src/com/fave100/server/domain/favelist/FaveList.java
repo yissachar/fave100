@@ -36,7 +36,8 @@ public class FaveList extends DatastoreObject {
 
 	@Id private String id;
 	private Ref<AppUser> user;
-	@Index private String hashtag;
+	private String hashtag;
+	@Index private String hashtagId;
 	private List<FaveItem> list = new ArrayList<FaveItem>();
 
 	@SuppressWarnings("unused")
@@ -46,7 +47,7 @@ public class FaveList extends DatastoreObject {
 	public FaveList(final String username, final String hashtag) {
 		this.id = username.toLowerCase() + FaveList.SEPERATOR_TOKEN + hashtag.toLowerCase();
 		this.user = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
-		this.hashtag = hashtag;
+		setHashtag(hashtag);
 	}
 
 	public static FaveList findFaveList(final String id) {
@@ -272,9 +273,9 @@ public class FaveList extends DatastoreObject {
 			return names;
 
 		// TODO: Need to sort by popularity
-		final List<Hashtag> hashtags = ofy().load().type(Hashtag.class).filter("id >=", searchTerm).filter("id <", searchTerm + "\uFFFD").limit(5).list();
+		final List<Hashtag> hashtags = ofy().load().type(Hashtag.class).filter("id >=", searchTerm.toLowerCase()).filter("id <", searchTerm.toLowerCase() + "\uFFFD").limit(5).list();
 		for (final Hashtag hashtag : hashtags) {
-			names.add(hashtag.getId());
+			names.add(hashtag.getName());
 		}
 		return names;
 	}
@@ -320,10 +321,19 @@ public class FaveList extends DatastoreObject {
 
 	public void setHashtag(final String hashtag) {
 		this.hashtag = hashtag;
+		this.hashtagId = hashtag.toLowerCase();
 	}
 
 	public List<FaveItem> getList() {
 		return list;
+	}
+
+	public String getHashtagId() {
+		return hashtagId;
+	}
+
+	public void setHashtagId(String hashtagId) {
+		this.hashtagId = hashtagId;
 	}
 
 }
