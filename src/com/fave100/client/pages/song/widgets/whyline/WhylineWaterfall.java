@@ -39,7 +39,7 @@ public class WhylineWaterfall extends Composite {
 		this.requestFactory = requestFactory;
 	}
 
-	public void setWhylines(final SongInterface song) {
+	public void setSong(final SongInterface song) {
 		whylines.clear();
 		_loaded = false;
 		_song = song;
@@ -53,6 +53,7 @@ public class WhylineWaterfall extends Composite {
 				whylineReq.fire(new Receiver<List<WhylineProxy>>() {
 					@Override
 					public void onSuccess(final List<WhylineProxy> whylineList) {
+						whylines.clear();
 						for (final WhylineProxy whyline : whylineList) {
 							whylines.add(new WhylineWidget(whyline));
 						}
