@@ -101,7 +101,7 @@ public class HashtagBuilderServlet extends HttpServlet
 
 	// Get favelists 1000 at a time, and store their rank, returns number of lists
 	private int addAllLists(final String cursor, final String hashtag, final HashMap<FaveRankerWrapper, Double> all) {
-		final Query<FaveList> query = ofy().load().type(FaveList.class).filter("hashtag", hashtag).limit(1000);
+		final Query<FaveList> query = ofy().load().type(FaveList.class).filter("hashtagId", hashtag).limit(1000);
 
 		if (cursor != null)
 			query.startAt(Cursor.fromWebSafeString(cursor));
