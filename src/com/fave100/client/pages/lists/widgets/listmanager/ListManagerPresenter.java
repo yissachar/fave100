@@ -104,7 +104,7 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		if (_currentUser.getHashtags().size() >= Constants.MAX_LISTS_PER_USER - 1) {
+		if (_currentUser.getHashtags().size() >= Constants.MAX_LISTS_PER_USER) {
 			getView().showError("You can't have  more than " + Constants.MAX_LISTS_PER_USER + " lists");
 			return;
 		}
@@ -129,7 +129,6 @@ public class ListManagerPresenter extends
 	@Override
 	public void refreshUsersLists() {
 		final List<String> hashtags = new ArrayList<String>();
-		hashtags.add(Constants.DEFAULT_HASHTAG);
 		hashtags.addAll(_user.getHashtags());
 		hashtags.remove(_hashtag);
 		final boolean ownList = _currentUser != null && _currentUser.equals(_user);

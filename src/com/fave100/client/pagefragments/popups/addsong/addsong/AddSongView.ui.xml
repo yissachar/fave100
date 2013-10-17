@@ -1,0 +1,58 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+             
+    <ui:style>
+        
+    .lightBox {
+		border: 1px solid #555; 
+		position: relative;
+		width: 35%;
+		margin: 0 auto;
+		min-width: 250px;
+		max-width: 800px;
+		z-index: 100000;
+    }
+    
+    .header {
+		color: #fff;
+		background-color: #5eaae5;
+		padding: 5px;
+    }    
+		
+	.content {
+		padding: 8px;
+		background-color: #fff;
+	}
+	
+	.checkboxes > span {		
+		display: block;
+		padding: 3px;
+	}
+	
+	.checkboxes > span > input {
+		margin-right: 7px;
+	}
+	
+	.content > button {
+		margin-top: 10px;
+		margin-right: 10px;
+	}
+    </ui:style>
+    
+    <g:PopupPanel autoHideOnHistoryEventsEnabled="true" autoHideEnabled="true">
+    	<g:HTMLPanel ui:field="loginLightBox" styleName="loginLightBoxContainer">
+			<g:FocusPanel ui:field="lightBoxBackground" styleName="lightBoxBackground"/>			
+			<g:FlowPanel ui:styleName="{style.lightBox}">
+				<g:SimplePanel ui:styleName="{style.header}">
+					<g:Label ui:field="headerLabel"></g:Label>
+				</g:SimplePanel>
+				<g:FlowPanel ui:styleName="{style.content}">
+					<g:FlowPanel ui:field="checkboxContainer" ui:styleName="{style.checkboxes}" />
+					<g:Button ui:field="okButton">OK</g:Button>
+					<g:Button ui:field="cancelButton">Cancel</g:Button>
+				</g:FlowPanel>				
+			</g:FlowPanel>
+		</g:HTMLPanel>
+    </g:PopupPanel>
+</ui:UiBinder>

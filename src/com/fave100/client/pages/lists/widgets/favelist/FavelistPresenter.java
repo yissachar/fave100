@@ -10,7 +10,9 @@ import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
+import com.fave100.client.pagefragments.popups.addsong.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
+import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
@@ -27,6 +29,7 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
 public class FavelistPresenter extends
 		PresenterWidget<FavelistPresenter.MyView>
@@ -64,9 +67,11 @@ public class FavelistPresenter extends
 	private AppUserProxy user;
 	// The currently logged in user
 	private CurrentUser currentUser;
+	private PlaceManager _placeManager;
 	// The list to work with
 	private String hashtag;
 	private List<FavePickWidget> widgets;
+	@Inject private AddSongPresenter addSongPresenter;
 
 	private WhyLineChanged _whyLineChanged = new WhyLineChanged() {
 		@Override
@@ -104,6 +109,7 @@ public class FavelistPresenter extends
 		this.eventBus = eventBus;
 		this.requestFactory = requestFactory;
 		this.currentUser = currentUser;
+		_placeManager = placeManager;
 		getView().setUiHandlers(this);
 	}
 
@@ -207,7 +213,20 @@ public class FavelistPresenter extends
 
 	@Override
 	public void addSong(final String songID, final String song, final String artist) {
-		currentUser.addSong(songID, song, artist);
+		if (!currentUser.isLoggedIn()) {
+			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+		}
+		else {
+			if (currentUser.getHashtags().size() == 1) {
+				currentUser.addSong(songID, song, artist);
+			}
+			else {
+				addSongPresenter.setSongToAddId(songID);
+				addSongPresenter.setSongToAddName(song);
+				addSongPresenter.setSongToAddArtist(artist);
+				addToPopupSlot(addSongPresenter);
+			}
+		}
 	}
 
 	@Override

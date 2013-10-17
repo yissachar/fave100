@@ -393,6 +393,17 @@ public class FavePickWidget extends Composite {
 			});
 			hoverPanel.add(deleteButton);
 		}
+		else {
+			final Image addButton = new Image(resources.add());
+			addButton.setTitle("Add to your Fave100");
+			addButton.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(final ClickEvent event) {
+					_addedCallback.onAdded(getSongID(), getSong(), getArtist());
+				}
+			});
+			hoverPanel.add(addButton);
+		}
 	}
 
 	public void showWhylineHelpBubble() {

@@ -1,10 +1,12 @@
 package com.fave100.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.fave100.client.RequestCache.RequestType;
+import com.fave100.client.events.favelist.AddSongListsSelectedEvent;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
@@ -38,7 +40,7 @@ public class CurrentUser implements AppUserProxy {
 	private AppUserProxy appUser;
 	private String avatar = "";
 	private Map<String, List<FaveItemProxy>> faveLists = new HashMap<String, List<FaveItemProxy>>();
-	private List<String> _hashtags;
+	private List<String> _hashtags = new ArrayList<String>();
 	private String _currentHashtag = Constants.DEFAULT_HASHTAG;
 	private FollowingResultProxy followingResult;
 	private boolean fullListRetrieved = false;
@@ -57,7 +59,8 @@ public class CurrentUser implements AppUserProxy {
 						setAppUser(event.getUser());
 						if (appUser != null) {
 							avatar = appUser.getAvatarImage();
-							_hashtags = appUser.getHashtags();
+							_hashtags.add(Constants.DEFAULT_HASHTAG);
+							_hashtags.addAll(appUser.getHashtags());
 
 							final AsyncCallback<FollowingResultProxy> followingReq = new AsyncCallback<FollowingResultProxy>() {
 								@Override
@@ -87,9 +90,19 @@ public class CurrentUser implements AppUserProxy {
 							followingResult = null;
 							fullListRetrieved = false;
 							_currentHashtag = Constants.DEFAULT_HASHTAG;
+							_hashtags = new ArrayList<String>();
 						}
 					}
 				});
+
+		AddSongListsSelectedEvent.register(eventBus, new AddSongListsSelectedEvent.Handler() {
+			@Override
+			public void onAddSongListsSelected(AddSongListsSelectedEvent event) {
+				for (String listName : event.getSelectedLists()) {
+					addSong(event.getSongId(), listName, event.getSongName(), event.getSongArtist());
+				}
+			}
+		});
 	}
 
 	public boolean isLoggedIn() {
@@ -206,9 +219,11 @@ public class CurrentUser implements AppUserProxy {
 						return songID;
 					}
 				};
-				// Ensure local list in sync				
-				getFaveLists().get(hashtag).add(item);
-				_eventBus.fireEvent(new FaveItemAddedEvent(item));
+				// Ensure local list in sync	
+				if (getFaveLists().get(hashtag) != null) {
+					getFaveLists().get(hashtag).add(item);
+					_eventBus.fireEvent(new FaveItemAddedEvent(item));
+				}
 			}
 
 			@Override
