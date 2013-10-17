@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.song.PlaylistSongChangedEvent;
+import com.fave100.client.pagefragments.popups.addsong.addsong.AddSongPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.song.widgets.playlist.PlaylistPresenter;
@@ -80,8 +81,10 @@ public class SongPresenter extends
 	private final EventBus _eventBus;
 	private SongInterface songProxy;
 	private AppUserProxy _requestedAppUser;
+	private PlaceManager _placeManager;
 	@Inject YouTubePresenter youtubePresenter;
 	@Inject PlaylistPresenter playlistPresenter;
+	@Inject private AddSongPresenter addSongPresenter;
 
 	@Inject
 	public SongPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser,
@@ -90,6 +93,7 @@ public class SongPresenter extends
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_currentUser = currentUser;
+		_placeManager = placeManager;
 		getView().setUiHandlers(this);
 	}
 
@@ -281,7 +285,20 @@ public class SongPresenter extends
 		if (songProxy == null)
 			return;
 
-		_currentUser.addSong(songProxy.getId(), songProxy.getSong(), songProxy.getArtist());
+		if (!_currentUser.isLoggedIn()) {
+			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+		}
+		else {
+			if (_currentUser.getHashtags().size() == 1) {
+				_currentUser.addSong(songProxy.getId(), songProxy.getSong(), songProxy.getArtist());
+			}
+			else {
+				addSongPresenter.setSongToAddId(songProxy.getId());
+				addSongPresenter.setSongToAddName(songProxy.getSong());
+				addSongPresenter.setSongToAddArtist(songProxy.getArtist());
+				addToPopupSlot(addSongPresenter);
+			}
+		}
 	}
 }
 

@@ -99,6 +99,7 @@
 							<g:Label ui:field="songTitle" styleName="{style.songTitle}"/>
 							<g:Label ui:field="artistName"/>
 						</div>
+						<g:Button ui:field="addToFave100Button" styleName="{style.addToFave100Button}">+Fave100</g:Button>
 					</div>
 					<div class="row">
 						<div class="{style.songBody} col span_8">
