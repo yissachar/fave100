@@ -235,7 +235,7 @@ public class SongPresenter extends
 		final Timer timer = new Timer() {
 			@Override
 			public void run() {
-				final int newHeight = youtubePresenter.asWidget().getOffsetHeight() + 7;
+				final int newHeight = youtubePresenter.asWidget().getOffsetHeight() + 6;
 				playlistPresenter.setHeight(newHeight);
 				getView().setWhylineHeight(newHeight);
 			}
