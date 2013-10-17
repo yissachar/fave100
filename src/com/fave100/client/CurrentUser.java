@@ -59,6 +59,7 @@ public class CurrentUser implements AppUserProxy {
 						setAppUser(event.getUser());
 						if (appUser != null) {
 							avatar = appUser.getAvatarImage();
+							_hashtags.clear();
 							_hashtags.add(Constants.DEFAULT_HASHTAG);
 							_hashtags.addAll(appUser.getHashtags());
 
