@@ -130,6 +130,8 @@ public class ListManagerPresenter extends
 	public void refreshUsersLists() {
 		final List<String> hashtags = new ArrayList<String>();
 		hashtags.addAll(_user.getHashtags());
+		if (!hashtags.contains(Constants.DEFAULT_HASHTAG))
+			hashtags.add(0, Constants.DEFAULT_HASHTAG);
 		hashtags.remove(_hashtag);
 		final boolean ownList = _currentUser != null && _currentUser.equals(_user);
 		getView().setOwnList(ownList);
