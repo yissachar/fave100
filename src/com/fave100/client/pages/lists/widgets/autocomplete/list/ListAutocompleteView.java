@@ -2,6 +2,7 @@ package com.fave100.client.pages.lists.widgets.autocomplete.list;
 
 import java.util.List;
 
+import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -56,12 +57,17 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 		}
 		else if (KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()) {
 			// Escape key, cancel search
-			getUiHandlers().getAutocompleteResults("");
+			clearSearch();
 		}
 		else {
 			// Otherwise search for song
 			getUiHandlers().getAutocompleteResults(searchBox.getText());
 		}
+	}
+
+	@UiHandler("searchBox")
+	void onBlur(final BlurEvent event) {
+		clearSearch();
 	}
 
 	@Override
@@ -106,5 +112,6 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 	@Override
 	public void clearSearch() {
 		searchBox.setText("");
+		setSuggestions(null);
 	}
 }
