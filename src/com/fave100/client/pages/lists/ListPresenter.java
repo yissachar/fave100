@@ -137,7 +137,7 @@ public class ListPresenter extends
 			@Override
 			public void onSongSelected(final SongSelectedEvent event) {
 				final SongProxy song = event.getSong();
-				favelist.addSong(song.getId(), song.getSong(), song.getArtist());
+				favelist.addSong(song.getId(), song.getSong(), song.getArtist(), true);
 			}
 		});
 

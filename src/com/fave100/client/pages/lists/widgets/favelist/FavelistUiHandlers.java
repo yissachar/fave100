@@ -3,7 +3,7 @@ package com.fave100.client.pages.lists.widgets.favelist;
 import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface FavelistUiHandlers extends UiHandlers {
-	void addSong(String songID, String song, String artist);
+	void addSong(String songID, String song, String artist, boolean forceAddToCurrentList);
 
 	void removeSong(String songID, int index);
 
