@@ -3,6 +3,28 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
              
     <ui:style>
+    
+    .lightBoxContainer {
+		position: fixed;
+		width: 100%;
+		top: 15%;
+		left: 0;
+		height: 350px;
+		max-height: 70%;
+		overflow: hidden;
+		z-index: 100000;
+    }
+    
+    .lightBoxBackground {
+		position: fixed;
+		top: 0;
+		left: -25%;
+		width: 125%;
+		height: 100%;
+		opacity: .40;
+		background-color: #000;
+		z-index: 99999; 
+	}
         
     .lightBox {
 		border: 1px solid #555; 
@@ -12,6 +34,7 @@
 		min-width: 250px;
 		max-width: 800px;
 		z-index: 100000;
+		height: 100%;
     }
     
     .header {
@@ -23,6 +46,12 @@
 	.content {
 		padding: 8px;
 		background-color: #fff;
+		height: 100%;
+	}
+	
+	.checkboxes {
+		height: 80%;
+		overflow-y: auto;
 	}
 	
 	.checkboxes > span {		
@@ -41,8 +70,8 @@
     </ui:style>
     
     <g:PopupPanel autoHideOnHistoryEventsEnabled="true" autoHideEnabled="true">
-    	<g:HTMLPanel ui:field="loginLightBox" styleName="loginLightBoxContainer">
-			<g:FocusPanel ui:field="lightBoxBackground" styleName="lightBoxBackground"/>			
+    	<g:HTMLPanel ui:field="loginLightBox" styleName="{style.lightBoxContainer}">
+			<g:FocusPanel ui:field="lightBoxBackground" styleName="{style.lightBoxBackground}"/>			
 			<g:FlowPanel ui:styleName="{style.lightBox}">
 				<g:SimplePanel ui:styleName="{style.header}">
 					<g:Label ui:field="headerLabel"></g:Label>
