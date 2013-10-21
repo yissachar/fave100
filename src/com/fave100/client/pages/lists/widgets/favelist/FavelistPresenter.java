@@ -97,7 +97,7 @@ public class FavelistPresenter extends
 	private ItemAdded _itemAdded = new ItemAdded() {
 		@Override
 		public void onAdded(final String songID, final String song, final String artist) {
-			addSong(songID, song, artist);
+			addSong(songID, song, artist, false);
 		}
 	};
 
@@ -212,12 +212,12 @@ public class FavelistPresenter extends
 	}
 
 	@Override
-	public void addSong(final String songID, final String song, final String artist) {
+	public void addSong(final String songID, final String song, final String artist, boolean forceAddToCurrentList) {
 		if (!currentUser.isLoggedIn()) {
 			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 		}
 		else {
-			if (currentUser.getHashtags().size() == 1) {
+			if (currentUser.getHashtags().size() == 1 || forceAddToCurrentList == true) {
 				currentUser.addSong(songID, song, artist);
 			}
 			else {
