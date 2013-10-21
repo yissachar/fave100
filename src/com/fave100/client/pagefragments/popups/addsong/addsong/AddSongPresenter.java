@@ -1,5 +1,6 @@
 package com.fave100.client.pagefragments.popups.addsong.addsong;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class AddSongPresenter extends PresenterWidget<AddSongPresenter.MyView> i
 	protected void onReveal() {
 		super.onReveal();
 
-		List<String> listNames = _currentUser.getHashtags();
+		List<String> listNames = new ArrayList<String>(_currentUser.getHashtags());
 		// Remove lists that the song is already in (won't always work, since we don't retrieve all users lists)
 		for (Map.Entry<String, List<FaveItemProxy>> entry : _currentUser.getFaveLists().entrySet()) {
 			boolean inList = false;
