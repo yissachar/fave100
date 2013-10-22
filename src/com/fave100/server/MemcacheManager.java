@@ -10,7 +10,7 @@ import net.sf.jsr107cache.CacheFactory;
 import net.sf.jsr107cache.CacheManager;
 
 import com.fave100.server.domain.favelist.FaveItem;
-import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.server.domain.favelist.FaveListDao;
 
 public class MemcacheManager {
 
@@ -89,7 +89,7 @@ public class MemcacheManager {
 			}
 		}
 
-		if (rank < FaveList.MAX_FAVES) {
+		if (rank < FaveListDao.MAX_FAVES) {
 			FaveItem faveItem = existingFave;
 			// Fave not in master yet, insert new fave
 			if (faveItem == null) {
@@ -108,7 +108,7 @@ public class MemcacheManager {
 			}
 			
 			// If it was inserted into middle of master, may need to remove last item to fit under limit
-			while(master.size() > FaveList.MAX_FAVES) {
+			while(master.size() > FaveListDao.MAX_FAVES) {
 				master.remove(master.size()-1);
 			}
 
