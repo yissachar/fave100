@@ -2,12 +2,13 @@ package com.fave100.shared.requestfactory;
 
 import java.util.List;
 
-import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.server.domain.FaveServiceLocator;
+import com.fave100.server.domain.favelist.FaveListDao;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;
 
-@Service(FaveList.class)
+@Service(value = FaveListDao.class, locator = FaveServiceLocator.class)
 public interface FaveListRequest extends RequestContext {
 
 	Request<Void> addFaveListForCurrentUser(String hashtag);
@@ -25,7 +26,7 @@ public interface FaveListRequest extends RequestContext {
 	Request<List<FaveItemProxy>> getMasterFaveList(String hashtag);
 
 	Request<List<String>> getHashtagAutocomplete(String searchTerm);
-	
+
 	Request<List<String>> getTrendingFaveLists();
 
 }

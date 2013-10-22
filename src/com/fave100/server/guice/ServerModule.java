@@ -7,6 +7,7 @@ import com.fave100.server.domain.APIKey;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.appuser.FacebookID;
 import com.fave100.server.domain.appuser.Following;
@@ -14,8 +15,10 @@ import com.fave100.server.domain.appuser.GoogleID;
 import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
 import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.google.appengine.api.utils.SystemProperty;
+import com.google.inject.Singleton;
 import com.googlecode.objectify.ObjectifyService;
 import com.gwtplatform.dispatch.server.guice.HandlerModule;
 
@@ -54,5 +57,7 @@ public class ServerModule extends HandlerModule {
 
 	@Override
 	protected void configureHandlers() {
+		bind(AppUserDao.class).in(Singleton.class);
+		bind(FaveListDao.class).in(Singleton.class);
 	}
 }

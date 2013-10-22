@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.server.domain.appuser.AppUserDao;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -23,6 +24,7 @@ public class AvatarUploadServlet extends RequestFactoryServlet
 {
 
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+	@Inject AppUserDao appUserDao;
 
 	@Override
 	@Inject
@@ -36,11 +38,11 @@ public class AvatarUploadServlet extends RequestFactoryServlet
 			final BlobKey blobKey = bloblist.get(0);
 
 			if (blobKey != null) {
-				final String username = (String)req.getSession().getAttribute(AppUser.AUTH_USER);
+				final String username = (String)req.getSession().getAttribute(AppUserDao.AUTH_USER);
 				Objects.requireNonNull(username);
 				String avatar = "";
 
-				final AppUser currentUser = AppUser.findAppUser(username);
+				final AppUser currentUser = appUserDao.findAppUser(username);
 				// TODO: Jul-17-2013 Why do we assume the avatar is a blobkey? Can't it be a link to a Twitter avatar, in which case blob delete will fail??
 				if (currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
 					BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
