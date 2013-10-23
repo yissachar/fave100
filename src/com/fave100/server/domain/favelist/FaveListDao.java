@@ -20,6 +20,7 @@ import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.favelist.TooManyFaveListsException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
+import com.google.inject.Inject;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
 
@@ -28,7 +29,7 @@ public class FaveListDao {
 	public static final String SEPERATOR_TOKEN = ":";
 	public static final int MAX_FAVES = 100;
 
-	private AppUserDao appUserDao = new AppUserDao();
+	@Inject private AppUserDao appUserDao;
 
 	public FaveList findFaveList(final String id) {
 		return ofy().load().type(FaveList.class).id(id).get();

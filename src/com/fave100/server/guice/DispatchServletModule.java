@@ -4,10 +4,12 @@ import com.fave100.server.filters.EncodingFilter;
 import com.fave100.server.servlets.CustomRequestFactoryServlet;
 import com.fave100.server.servlets.HashtagBuilderServlet;
 import com.fave100.server.servlets.HashtagEnqueuerServlet;
+import com.fave100.server.servlets.LoquaciousExceptionHandler;
 import com.fave100.server.servlets.PasswordCleanupServlet;
 import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
+import com.google.web.bindery.requestfactory.server.ExceptionHandler;
 import com.googlecode.objectify.ObjectifyFilter;
 import com.gwtplatform.dispatch.server.guice.DispatchServiceImpl;
 import com.gwtplatform.dispatch.shared.ActionImpl;
@@ -21,6 +23,8 @@ public class DispatchServletModule extends ServletModule {
 
 		bind(CustomRequestFactoryServlet.class).in(Singleton.class);
 		serve("/gwtRequest").with(CustomRequestFactoryServlet.class);
+
+		bind(ExceptionHandler.class).to(LoquaciousExceptionHandler.class);
 
 		bind(RemoteApiServlet.class).in(Singleton.class);
 		serve("/remote_api").with(RemoteApiServlet.class);
