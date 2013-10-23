@@ -1,12 +1,12 @@
 package com.fave100.shared.requestfactory;
 
-import com.fave100.server.domain.FaveServiceLocator;
 import com.fave100.server.domain.appuser.AppUserDao;
+import com.fave100.server.guice.GuiceServiceLocator;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.RequestContext;
 import com.google.web.bindery.requestfactory.shared.Service;
 
-@Service(value = AppUserDao.class, locator = FaveServiceLocator.class)
+@Service(value = AppUserDao.class, locator = GuiceServiceLocator.class)
 public interface AppUserRequest extends RequestContext {
 	Request<AppUserProxy> findAppUser(String username);
 

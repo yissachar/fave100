@@ -4,11 +4,19 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import com.google.web.bindery.requestfactory.shared.Locator;
 
+/**
+ * A locator class that RequestFactory will use to obtain instances of AppUser on the client.
+ * Theoretically this is not needed, since all interaction with AppUser is done through AppUserDao service methods,
+ * and not through RequestFactory instance methods, but RequestFactory insists on a locator.
+ * 
+ * @author yissachar.radcliffe
+ * 
+ */
 public class AppUserLocator extends Locator<AppUser, String> {
 
 	@Override
 	public AppUser create(Class<? extends AppUser> clazz) {
-		// No creation of AppUsers through client, interact only with the AppUser registration methods
+		// No creation of AppUsers through client, interact only with the AppUser registration methods in AppUserDao
 		return null;
 	}
 
@@ -19,7 +27,7 @@ public class AppUserLocator extends Locator<AppUser, String> {
 
 	@Override
 	public Class<AppUser> getDomainType() {
-		// TODO Auto-generated method stub
+		// Never called
 		return null;
 	}
 
@@ -30,8 +38,7 @@ public class AppUserLocator extends Locator<AppUser, String> {
 
 	@Override
 	public Class<String> getIdType() {
-		// TODO Auto-generated method stub
-		return null;
+		return String.class;
 	}
 
 	@Override
