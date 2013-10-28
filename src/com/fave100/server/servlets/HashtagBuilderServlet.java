@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fave100.server.MemcacheManager;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
@@ -73,7 +72,6 @@ public class HashtagBuilderServlet extends HttpServlet
 				master.add(faveItem);
 				i++;
 			}
-			MemcacheManager.getInstance().putFaveItemScoreNoRerank(entry.getKey().getFaveItem().getId(), hashtag, entry.getValue());
 		}
 
 		// Save the master list back to the datastore
@@ -98,9 +96,6 @@ public class HashtagBuilderServlet extends HttpServlet
 		hashtagEntity.addListCount(listCount);
 		hashtagEntity.setList(master);
 		ofy().save().entity(hashtagEntity).now();
-
-		// And memcache the master
-		MemcacheManager.getInstance().putMasterFaveList(hashtag, master);
 	}
 
 	// Get favelists 1000 at a time, and store their rank, returns number of lists
