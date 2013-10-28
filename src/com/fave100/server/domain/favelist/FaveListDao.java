@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.fave100.server.MemcacheManager;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
@@ -110,9 +109,6 @@ public class FaveListDao {
 		// Create the new FaveItem
 		faveList.getList().add(newFaveItem);
 		ofy().save().entities(faveList).now();
-
-		// Modify memcache ranking
-		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, calculateItemScore(faveList.getList().size()), newFaveItem);
 	}
 
 	public void removeFaveItemForCurrentUser(final String hashtag, final String songID) throws NotLoggedInException {
@@ -144,9 +140,6 @@ public class FaveListDao {
 		}
 		faveList.getList().remove(faveItemToRemove);
 		ofy().save().entities(faveList).now();
-
-		// Modify memcache ranking
-		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, calculateItemScore(position), faveItemToRemove);
 	}
 
 	public void rerankFaveItemForCurrentUser(final String hashtag, final String songID, final int newIndex) throws NotLoggedInException {
@@ -179,8 +172,6 @@ public class FaveListDao {
 		faveList.getList().remove(faveItemToRerank);
 		faveList.getList().add(newIndex, faveItemToRerank);
 		ofy().save().entities(faveList).now();
-
-		MemcacheManager.getInstance().modifyFaveItemScore(songID, hashtag, (oldIndex - newIndex) * Constants.SCORE_CALCULATOR, faveItemToRerank);
 	}
 
 	public void editWhylineForCurrentUser(final String hashtag, final String songID, final String whyline)
@@ -240,12 +231,7 @@ public class FaveListDao {
 	}
 
 	public List<FaveItem> getMasterFaveList(final String hashtag) {
-		List<FaveItem> master = MemcacheManager.getInstance().getMasterFaveList(hashtag);
-		// Go to the datastore if memcache doesn't have it
-		if (master == null) {
-			master = ofy().load().type(Hashtag.class).id(hashtag).get().getList();
-		}
-		return master;
+		return ofy().load().type(Hashtag.class).id(hashtag).get().getList();
 	}
 
 	public List<String> getHashtagAutocomplete(final String searchTerm) {
