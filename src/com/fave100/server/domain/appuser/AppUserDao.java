@@ -129,7 +129,8 @@ public class AppUserDao {
 				throw new IncorrectLoginException();
 			}
 			// Successful login - store session
-			RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
+			if (RequestFactoryServlet.getThreadLocalRequest() != null)
+				RequestFactoryServlet.getThreadLocalRequest().getSession().setAttribute(AUTH_USER, username);
 		}
 		else {
 			// Bad username
