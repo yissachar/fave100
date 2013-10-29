@@ -46,7 +46,7 @@ public class UserCreationTest {
 	}
 
 	@Test
-	public void nativeUserCanBeCreated() {
+	public void nativeUserCanBeCreated() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		// No users exist in datastore
 		assertEquals("There must not be pre-existing users", 0, ofy().load().type(AppUser.class).count());
 
@@ -56,12 +56,7 @@ public class UserCreationTest {
 		AppUser appUser = null;
 
 		// Create a user
-		try {
-			appUser = appUserDao.createAppUser(username, pw, "testuser@example.com");
-		}
-		catch (Exception e) {
-			fail();
-		}
+		appUser = appUserDao.createAppUser(username, pw, "testuser@example.com");
 
 		// User now exists in datastore
 		assertNotNull("Created user cannot be null", appUser);
@@ -71,53 +66,38 @@ public class UserCreationTest {
 	// TODO: Test third party users here
 
 	@Test
-	public void userNameMustNotBeEmpty() {
+	public void userNameMustNotBeEmpty() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		AppUser appUser = null;
 
-		try {
-			appUser = appUserDao.createAppUser("", "security", "testuser@example.com");
-		}
-		catch (Exception e) {
-			// Will fail
-		}
+		appUser = appUserDao.createAppUser("", "security", "testuser@example.com");
 
 		assertNull("User must not be created with empty user name", appUser);
 	}
 
 	@Test
-	public void userNameMustNotBeTooLong() {
+	public void userNameMustNotBeTooLong() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		AppUser appUser = null;
 
-		try {
-			String username = "";
-			for (int i = 0; i < Constants.MAX_USERNAME_LENGTH + 1; i++) {
-				username += "a";
-			}
-			appUser = appUserDao.createAppUser(username, "apassword", "testuser@example.com");
+		String username = "";
+		for (int i = 0; i < Constants.MAX_USERNAME_LENGTH + 1; i++) {
+			username += "a";
 		}
-		catch (Exception e) {
-			// Will fail
-		}
+		appUser = appUserDao.createAppUser(username, "apassword", "testuser@example.com");
 
 		assertNull("User must not be created if name is too long", appUser);
 	}
 
 	@Test
-	public void userNameMustOnlyContainLettersAndNumbers() {
+	public void userNameMustOnlyContainLettersAndNumbers() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		AppUser appUser1 = null;
 		AppUser appUser2 = null;
 		AppUser appUser3 = null;
 		AppUser appUser4 = null;
 
-		try {
-			appUser1 = appUserDao.createAppUser("bob&", "apassword", "testuser1@example.com");
-			appUser2 = appUserDao.createAppUser("-", "apassword", "testuser2@example.com");
-			appUser3 = appUserDao.createAppUser("jo hn", "apassword", "testuser3@example.com");
-			appUser4 = appUserDao.createAppUser("@me", "apassword", "testuser4@example.com");
-		}
-		catch (Exception e) {
-			// Will fail
-		}
+		appUser1 = appUserDao.createAppUser("bob&", "apassword", "testuser1@example.com");
+		appUser2 = appUserDao.createAppUser("-", "apassword", "testuser2@example.com");
+		appUser3 = appUserDao.createAppUser("jo hn", "apassword", "testuser3@example.com");
+		appUser4 = appUserDao.createAppUser("@me", "apassword", "testuser4@example.com");
 
 		String msg = "User must not be created if name does not only contain letters and numbes";
 		assertNull(msg, appUser1);
@@ -127,99 +107,72 @@ public class UserCreationTest {
 	}
 
 	@Test
-	public void userNameMustBeUnique() {
+	public void userNameMustBeUnique() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		String username = "bob";
 
-		// Create a user with that name
-		try {
-			appUserDao.createAppUser(username, "123456", "testuser1@example.com");
-		}
-		catch (UsernameAlreadyExistsException | EmailIDAlreadyExistsException e) {
-			// Should not fail
-		}
+		// Create a user with that name		
+		appUserDao.createAppUser(username, "123456", "testuser1@example.com");
 
 		// User with duplicate username not created
 		AppUser secondAppUser = null;
 		try {
 			secondAppUser = appUserDao.createAppUser(username, "654321", "testuser2@example.com");
+			fail("Exception not thrown");
 		}
 		catch (UsernameAlreadyExistsException | EmailIDAlreadyExistsException e) {
-			// Should fail with UsernameAlreadyExistsException
+			// Success!
 		}
 
 		assertNull("User with duplicate username must not be created", secondAppUser);
 	}
 
 	@Test
-	public void passwordMustNotBeEmpty() {
+	public void passwordMustNotBeEmpty() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		AppUser appUser = null;
-
-		try {
-			appUser = appUserDao.createAppUser("lax", "", "testuser@example.com");
-		}
-		catch (Exception e) {
-			// Will fail
-		}
+		appUser = appUserDao.createAppUser("lax", "", "testuser@example.com");
 
 		assertNull("User must not be created with empty password", appUser);
 	}
 
 	@Test
-	public void passwordMustNotBeStoredInPlaintext() {
+	public void passwordMustNotBeStoredInPlaintext() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 
 		String username = "larry";
 		String pw = "superSecurePw";
-		try {
-			appUserDao.createAppUser(username, pw, "testuser@example.com");
-		}
-		catch (Exception e) {
-		}
+
+		appUserDao.createAppUser(username, pw, "testuser@example.com");
 
 		String storedPw = appUserDao.findAppUser(username).getPassword();
 		assertFalse("Password must not be stored in plaintext", pw.equals(storedPw));
 	}
 
 	@Test
-	public void passwordNeedNotBeUnique() {
+	public void passwordNeedNotBeUnique() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		String pw = "test@example.coms";
 
-		try {
-			appUserDao.createAppUser("bob", pw, "test1@example.com");
-		}
-		catch (Exception e) {
-			fail();
-		}
+		appUserDao.createAppUser("bob", pw, "test1@example.com");
 
 		AppUser secondAppUser = null;
-		try {
-			secondAppUser = appUserDao.createAppUser("alex", pw, "test2@example.com");
-		}
-		catch (Exception e) {
-			fail();
-		}
+		secondAppUser = appUserDao.createAppUser("alex", pw, "test2@example.com");
 
 		assertNotNull("User with duplicate passwoed should be created", secondAppUser);
 	}
 
 	@Test
-	public void userEmailMustBeUnique() {
+	public void userEmailMustBeUnique() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		String email = "test@example.coms";
 
-		// Create a user with that name
-		try {
-			appUserDao.createAppUser("bob", "123456", email);
-		}
-		catch (UsernameAlreadyExistsException | EmailIDAlreadyExistsException e) {
-			// Should not fail
-		}
+		// Create a user with that name		
+		appUserDao.createAppUser("bob", "123456", email);
 
 		// User with duplicate username not created
 		AppUser secondAppUser = null;
 		try {
 			secondAppUser = appUserDao.createAppUser("mike", "654321", email);
+			fail("Exception not thrown");
 		}
 		catch (UsernameAlreadyExistsException | EmailIDAlreadyExistsException e) {
-			// Should fail with UsernameAlreadyExistsException
+			// Success!!
 		}
 
 		assertNull("User with duplicate username must not be created", secondAppUser);
