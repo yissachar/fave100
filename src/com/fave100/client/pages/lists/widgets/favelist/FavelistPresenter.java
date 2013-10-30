@@ -19,7 +19,6 @@ import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -126,8 +125,6 @@ public class FavelistPresenter extends
 					final FavePickWidget widget = new FavePickWidget(eventBus, item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername(), hashtag);
 					getView().addPick(widget);
 					widgets.add(widget);
-					if (getView().asWidget().getElement().getClientHeight() + widget.getElement().getClientHeight() > Window.getClientHeight())
-						$(widget).scrollIntoView();
 
 					final int listSize = currentUser.getFaveLists().get(currentUser.getCurrentHashtag()).size();
 					if (listSize == 1) {

@@ -26,17 +26,6 @@
 			height: 80px;
 		}
 		
-		.socialContainer {
-			display: inline-block;
-			width: 100%;
-			font-size: 0.9em;			
-			margin: 15px 0;
-		}
-		
-		.socialContainer button {
-			width: 100%;			
-		}
-		
 		.username {	
 			color: #5eaae5;
 			display: block;
@@ -136,21 +125,11 @@
 						</g:HorizontalPanel>
 						
 						<g:FlowPanel ui:styleName="responsiveUserTabOptions {style.responsiveUserTabOptions}">
-							<g:InlineLabel ui:field="mobileShowList">List</g:InlineLabel>
-							<!--  Remove Sharing
-							<g:InlineLabel ui:field="mobileShowShare">Share</g:InlineLabel> -->							
+							<g:InlineLabel ui:field="mobileShowList">List</g:InlineLabel>							
 							<g:InlineLabel ui:field="mobileShowFollowing">Following</g:InlineLabel>
 						</g:FlowPanel>
 						
 						<g:HTMLPanel ui:field="listManager"/>
-						
-						<!--  Remove Sharing
-						<g:HTMLPanel ui:field="socialContainer" styleName="{style.socialContainer}">															
-							<uw:ShareButton ui:field="shareButton"/>							
-						</g:HTMLPanel>
-						-->
-																		
-						<!--  Users following -->
 						<g:HTMLPanel ui:field="followingContainer"/>
 						
 					</g:HTMLPanel>

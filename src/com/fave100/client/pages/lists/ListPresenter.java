@@ -81,7 +81,6 @@ public class ListPresenter extends
 	private String requestedUsername;
 	private String _requestedHashtag;
 	private boolean isFollowing;
-	// For now just hardcode, only one possible hashtag
 	private AppUserProxy requestedUser;
 	private final ApplicationRequestFactory _requestFactory;
 	private final EventBus _eventBus;

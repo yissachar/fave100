@@ -165,8 +165,7 @@ public class SongPresenter extends
 				});
 			}
 
-			// Get the list for the requested user 
-			// TODO: If user's own playlist, use that instead of going to server
+			// Get the list for the requested user			
 			final Request<List<FaveItemProxy>> getFavelistReq = _requestFactory.faveListRequest().getFaveList(username, hashtag);
 			getFavelistReq.fire(new Receiver<List<FaveItemProxy>>() {
 				@Override
