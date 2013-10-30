@@ -28,7 +28,12 @@ public class FaveListDao {
 	public static final String SEPERATOR_TOKEN = ":";
 	public static final int MAX_FAVES = 100;
 
-	@Inject private AppUserDao appUserDao;
+	private AppUserDao appUserDao;
+
+	@Inject
+	public FaveListDao(AppUserDao appUserDao) {
+		this.appUserDao = appUserDao;
+	}
 
 	public FaveList findFaveList(final String id) {
 		return ofy().load().type(FaveList.class).id(id).get();
