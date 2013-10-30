@@ -138,6 +138,8 @@ public class SongAutocompletePresenter extends
 
 		setSelection(-1);
 		searchTerm = searchTerm.trim();
+
+		// Don't show any suggestions for searches of length <= 2
 		if (searchTerm.isEmpty() || searchTerm.length() <= 2) {
 			getView().setSuggestions(null, 0);
 			return;

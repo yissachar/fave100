@@ -55,30 +55,25 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 
 	@Override
 	public void setInSlot(final Object slot, final IsWidget content) {
+		super.setInSlot(slot, content);
+
+		if (content == null)
+			return;
+
 		if (slot == BasePresenter.TOP_BAR_SLOT) {
 			topBar.clear();
-
-			if (content != null) {
-				topBar.add(content);
-			}
+			topBar.add(content);
 		}
 
 		if (slot == SongPresenter.YOUTUBE_SLOT) {
 			youTubeWidget.clear();
-
-			if (content != null) {
-				youTubeWidget.add(content);
-			}
+			youTubeWidget.add(content);
 		}
 
 		if (slot == SongPresenter.PLAYLIST_SLOT) {
 			playlistPane.clear();
-
-			if (content != null) {
-				playlistPane.add(content);
-			}
+			playlistPane.add(content);
 		}
-		super.setInSlot(slot, content);
 	}
 
 	@UiHandler("addToFave100Button")

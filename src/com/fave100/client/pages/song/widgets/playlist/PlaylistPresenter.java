@@ -107,14 +107,20 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 			}
 		}
 
-		if (currentPlayingItem == null)
-			return;
+		if (currentPlayingItem != null)
+			scrollPlaylistItemToTop(currentPlayingItem);
 
-		currentPlayingItem.getElement().scrollIntoView();
+	}
+
+	private void scrollPlaylistItemToTop(PlaylistItem item) {
+		// First simply scroll it into the view
+		item.getElement().scrollIntoView();
+
+		// Pick an item further down the list and scroll it into view
 		PlaylistItem toScroll = null;
 		int i = 7;
 		while (toScroll == null && i > 0) {
-			final int furtherIndex = playlistItems.indexOf(currentPlayingItem) + i;
+			final int furtherIndex = playlistItems.indexOf(item) + i;
 			if (furtherIndex < playlistItems.size())
 				toScroll = playlistItems.get(furtherIndex);
 			i--;
@@ -122,7 +128,8 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 
 		if (toScroll != null) {
 			toScroll.getElement().scrollIntoView();
-			currentPlayingItem.getElement().scrollIntoView();
+			// At this point our item may be too high up and out of view, so scroll it back into view
+			item.getElement().scrollIntoView();
 		}
 	}
 

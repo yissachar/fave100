@@ -1,11 +1,14 @@
 package com.fave100.client.pages.lists.widgets.favelist;
 
+import static com.google.gwt.query.client.GQuery.$;
+
 import java.util.List;
 
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -68,6 +71,9 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	public void addPick(final FavePickWidget widget) {
 		favelist.add(widget);
 		hideNoItemsMessage();
+
+		if (this.asWidget().getElement().getClientHeight() + widget.getElement().getClientHeight() > Window.getClientHeight())
+			$(widget).scrollIntoView();
 	}
 
 	@Override
@@ -75,30 +81,6 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 		final Widget widget = favelist.getWidget(indexA);
 		favelist.remove(widget);
 		favelist.insert(widget, indexB);
-		/*final Widget widget2 = favelist.getWidget(indexB);
-		final GQuery $set1 = $(widget);
-		final GQuery $set2 = $(widget2);
-
-		final int move1 = $set2.offset().top - $(favelist).offset().top * 2;
-		final int move2 = $(favelist).offset().top - $set1.outerHeight();
-		GWT.log("1:" + move1);
-		GWT.log("2:" + move2);
-		// let's move stuff
-		$set1.css("position", "relative");
-		$set2.css("position", "relative");
-		$set1.animate("top:" + move1, 1000);
-		$set2.animate("top:" + move2, 1000, new Function() {
-			@Override
-			public void f() {
-					$set1.css("position: static");
-					$set1.css("top: 0");
-					$set2.css("position: static");
-					$set2.css("top: 0");
-					favelist.remove(widget);
-					favelist.insert(widget, indexB);
-			}
-		});*/
-
 	}
 
 	@Override

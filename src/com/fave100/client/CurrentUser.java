@@ -80,18 +80,10 @@ public class CurrentUser implements AppUserProxy {
 						}
 						else {
 							// User not logged in
+							resetState();
 
 							// Clear stale user request cache
 							requestCache.clearRequestCache(RequestType.FOLLOWING_CURRENT_USER);
-
-							// Clear all state
-							appUser = null;
-							avatar = "";
-							faveLists = new HashMap<String, List<FaveItemProxy>>();
-							followingResult = null;
-							fullListRetrieved = false;
-							_currentHashtag = Constants.DEFAULT_HASHTAG;
-							_hashtags = new ArrayList<String>();
 						}
 					}
 				});
@@ -104,6 +96,17 @@ public class CurrentUser implements AppUserProxy {
 				}
 			}
 		});
+	}
+
+	private void resetState() {
+		// Clear all state
+		appUser = null;
+		avatar = "";
+		faveLists = new HashMap<String, List<FaveItemProxy>>();
+		followingResult = null;
+		fullListRetrieved = false;
+		_currentHashtag = Constants.DEFAULT_HASHTAG;
+		_hashtags = new ArrayList<String>();
 	}
 
 	public boolean isLoggedIn() {

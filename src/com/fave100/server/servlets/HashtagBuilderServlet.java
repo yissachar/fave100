@@ -48,19 +48,13 @@ public class HashtagBuilderServlet extends HttpServlet
 		final String hashtag = req.getParameter(HASHTAG_PARAM);
 
 		final HashMap<FaveRankerWrapper, Double> all = new HashMap<FaveRankerWrapper, Double>();
-		final int listCount = addAllLists(null, hashtag, all);
-		// Sort the list
-		final List<Map.Entry<FaveRankerWrapper, Double>> sorted = new LinkedList<>(all.entrySet());
-		Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Double>>()
-		{
-			@Override
-			public int compare(final Map.Entry<FaveRankerWrapper, Double> o1, final Map.Entry<FaveRankerWrapper, Double> o2)
-			{
-				return (o2.getValue()).compareTo(o1.getValue());
-			}
-		});
 
-		// Add everything to memcache
+		// Build the list
+		final int listCount = addAllLists(null, hashtag, all);
+
+		// Sort the list
+		final List<Map.Entry<FaveRankerWrapper, Double>> sorted = sort(all);
+
 		int i = 0;
 		final List<FaveItem> master = new ArrayList<FaveItem>();
 		for (final Map.Entry<FaveRankerWrapper, Double> entry : sorted) {
@@ -74,28 +68,49 @@ public class HashtagBuilderServlet extends HttpServlet
 			}
 		}
 
-		// Save the master list back to the datastore
-		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).get();
 		// Calculate the zcore to determine top trending lists
-		int n = hashtagEntity.getSlidingListCount().size();
-		if (n > 0) {
-			int total = 0;
-			for (Integer count : hashtagEntity.getSlidingListCount()) {
-				total += count;
-			}
-			double avg = total / n;
-			double sumsq = 0;
-			for (Integer count : hashtagEntity.getSlidingListCount()) {
-				sumsq += Math.pow(count - avg, 2);
-			}
-			double std = Math.sqrt(sumsq / n);
-			if (std == 0)
-				std = 1;
-			hashtagEntity.setZscore((listCount - avg) / std);
-		}
+		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).get();
+		hashtagEntity.setZscore(calculateZscore(hashtagEntity.getSlidingListCount(), listCount));
 		hashtagEntity.addListCount(listCount);
 		hashtagEntity.setList(master);
+
+		// Save the master list to the datastore
 		ofy().save().entity(hashtagEntity).now();
+	}
+
+	private List<Map.Entry<FaveRankerWrapper, Double>> sort(Map<FaveRankerWrapper, Double> items) {
+		List<Map.Entry<FaveRankerWrapper, Double>> sorted = new LinkedList<>(items.entrySet());
+		Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Double>>()
+		{
+			@Override
+			public int compare(final Map.Entry<FaveRankerWrapper, Double> o1, final Map.Entry<FaveRankerWrapper, Double> o2)
+			{
+				return (o2.getValue()).compareTo(o1.getValue());
+			}
+		});
+		return sorted;
+	}
+
+	private double calculateZscore(List<Integer> slidingListCount, int newListCount) {
+		int n = slidingListCount.size();
+
+		if (n == 0)
+			return 0;
+
+		int total = 0;
+		for (Integer count : slidingListCount) {
+			total += count;
+		}
+		double avg = total / n;
+		double sumsq = 0;
+		for (Integer count : slidingListCount) {
+			sumsq += Math.pow(count - avg, 2);
+		}
+		double std = Math.sqrt(sumsq / n);
+		if (std == 0)
+			std = 1;
+
+		return (newListCount - avg) / std;
 	}
 
 	// Get favelists 1000 at a time, and store their rank, returns number of lists
