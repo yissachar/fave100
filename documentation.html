@@ -30,6 +30,7 @@
 	<a href="#updatingSongs">Updating Song Database</a><br>
 	<a href="#dedupeSongs">Removing duplicate songs</a><br>
 	<a href="#basicAppStructure">Basic app structure</a><br>
+	<a href="#codeRepos">Code Repositories</a><br>
 	<a href="#upgradeAE-GWT">Upgrading AppEngine and GWT version</a><br>
 
 	<a name="devEnvironment"/>
@@ -173,6 +174,39 @@
 
 	<h4>Lucene Song Storage</h4>
 	<p>Lucene (Tomcat server hosted on Jelastic) manages storage of all Song entities. Lucene server provides search (autocomplete) and  lookup (by unique integer ID) APIs.</p>
+
+	<a name="codeRepos"/>
+	<h2>Code Repositories</h2>
+	<p>
+		Fave100 Source consists of multiple repositories stored on different services.
+	</p>
+	<ul>
+		<li>
+			<b>Client-Server</b>
+			<a href="https://github.com/yissachar/fave100">https://github.com/yissachar/fave100</a>
+			<p>For the GWT client and the AppEngine server.</p>
+		</li>
+		<li>
+			<b>Lucene Search</b>
+			<a href="https://github.com/hellofornow/fave100-tomcat">https://github.com/hellofornow/fave100-tomcat</a>
+			<p>For building a Lucene index from the song database, as well as a Tomcat server for running search and lookup operations.</p>
+		</li>
+		<li>
+			<b>Song Database Building</b>
+			<a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/">https://bitbucket.org/yissachar/fave100-autocomplete/src/</a>
+			<p>For building and updating the PostgreSQL song database.</p>
+		</li>			
+		<li>
+			<b>Song Database Deduper</b>
+			<a href="https://bitbucket.org/yissachar/fave100-dedupe/src">https://bitbucket.org/yissachar/fave100-dedupe/src</a>
+			<p>For going through the PostgreSQL song database and removing any songs that have been marked as dupes</p>
+		</li>	
+		<li>
+			<b>AppEngine Deduper</b>
+			<a href="https://bitbucket.org/yissachar/fave100-appengine-dedupe/src">https://bitbucket.org/yissachar/fave100-appengine-dedupe/src</a>
+			<p>For iterating through all AppEngine entities and de-duping any songs that point to a duplicate.</p>
+		</li>		
+	</ul>
 
 	<a name="upgradeAE-GWT"/>
 	<h2>Upgrading AppEngine and GWT version</h2>
