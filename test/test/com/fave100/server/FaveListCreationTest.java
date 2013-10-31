@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -172,8 +173,6 @@ public class FaveListCreationTest {
 		// Store used faveListNames to avoid creating list with duplicate name
 		Set<String> faveListNames = new HashSet<>();
 
-		// TODO: Should be able to test this faster, by mocking or somehow changing value of MAX_LISTS_PER_USER
-
 		// Create 99 randomly named favelists (user already has 1 list, alltime)
 		for (int i = 0; i < Constants.MAX_LISTS_PER_USER - 1; i++) {
 			StringBuilder sb = new StringBuilder();
@@ -185,10 +184,12 @@ public class FaveListCreationTest {
 				}
 			}
 			faveListNames.add(sb.toString());
-			faveListDao.addFaveListForCurrentUser(sb.toString());
 		}
 
-		// Guranteed not to be in lists already, since numbers were not part of the alphabet
+		// Cheat by simply setting the user's hashtags instead of actually saving each FaveList into datastore
+		loggedInUser.setHashtags(new ArrayList<>(faveListNames));
+
+		// Guaranteed not to be in lists already, since numbers were not part of the alphabet
 		String faveListName = "101stlist";
 
 		try {
