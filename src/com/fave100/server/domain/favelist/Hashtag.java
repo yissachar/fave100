@@ -9,15 +9,17 @@ import java.util.List;
 import com.fave100.server.domain.appuser.AppUser;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.IgnoreSave;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
+@Cache
 public class Hashtag {
-	
-	@IgnoreSave public static final int MAX_STORED_LIST_COUNTS = 84; 
+
+	@IgnoreSave public static final int MAX_STORED_LIST_COUNTS = 84;
 
 	@Id private String id;
 	// Same as id, but case sensitive for display
@@ -42,10 +44,10 @@ public class Hashtag {
 	public static Hashtag findHashtag(final String id) {
 		return ofy().load().type(Hashtag.class).id(id).get();
 	}
-	
+
 	public void addListCount(int listCount) {
 		getSlidingListCount().add(listCount);
-		while(getSlidingListCount().size() > MAX_STORED_LIST_COUNTS) {
+		while (getSlidingListCount().size() > MAX_STORED_LIST_COUNTS) {
 			getSlidingListCount().remove(0);
 		}
 	}
@@ -99,11 +101,11 @@ public class Hashtag {
 	public void setZscore(double zscore) {
 		this.zscore = zscore;
 	}
-	
+
 	public List<Integer> getSlidingListCount() {
 		return slidingListCount;
 	}
-	
+
 	public void setSlidingListCount(List<Integer> slidingListCount) {
 		this.slidingListCount = slidingListCount;
 	}
