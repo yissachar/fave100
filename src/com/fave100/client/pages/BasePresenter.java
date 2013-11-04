@@ -23,6 +23,13 @@ public abstract class BasePresenter<V extends BaseView, Proxy_ extends Proxy<?>>
 
 	protected BasePresenter(final EventBus eventBus, final V view, final Proxy_ proxy) {
 		super(eventBus, view, proxy);
+
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.addRegisteredHandler(new Type<AsyncCallFailHandler>(), this);
 	}
 
 	@Override
