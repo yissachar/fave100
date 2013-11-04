@@ -158,6 +158,9 @@ public class FavelistPresenter extends
 		if (hashtag == null) {
 			hashtag = Constants.DEFAULT_HASHTAG;
 		}
+
+		final String hashtagPerRequest = hashtag;
+
 		// Get the FaveList locally if possible 
 		if (ownList && currentUser.getFaveList() != null) {
 			buildWidgets(currentUser.getFaveList());
@@ -170,8 +173,8 @@ public class FavelistPresenter extends
 
 				@Override
 				public void onSuccess(final List<FaveItemProxy> results) {
-					// Make sure user still not null when results fetched, otherwise could be stale data
-					if (user != null) {
+					// Make sure user still not null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
+					if (user != null && hashtagPerRequest.equals(hashtag)) {
 						if (ownList)
 							currentUser.setFaveList(results);
 						buildWidgets(results);
@@ -185,8 +188,8 @@ public class FavelistPresenter extends
 			req.fire(new Receiver<List<FaveItemProxy>>() {
 				@Override
 				public void onSuccess(final List<FaveItemProxy> results) {
-					// Make sure user still null when results fetched, otherwise could be stale data
-					if (user == null)
+					// Make sure user still null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
+					if (user == null && hashtagPerRequest.equals(hashtag))
 						buildWidgets(results);
 				}
 			});
