@@ -1,4 +1,4 @@
-package test.com.fave100.server;
+package com.fave100.server;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 import static org.junit.Assert.assertEquals;
