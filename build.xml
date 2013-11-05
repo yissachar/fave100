@@ -38,7 +38,11 @@
 	</target>
 	
 	<target name="deploy" description="Deploy the application to AppEngine">
-		<input message="Enter email:" addproperty="gae-email"/>
+		
+		<!-- Fetch the AppEngine properties to determine what app is being uploaded -->
+		<xmlproperty file="war/WEB-INF/appengine-web.xml" />
+		
+		<input message="You are uploading to ${appengine-web-app.application} version ${appengine-web-app.version}. Enter email:" addproperty="gae-email"/>
 	    <input message="Enter password:" addproperty="gae-password" />
 	 
 		<delete dir="${staging.dir}" />
