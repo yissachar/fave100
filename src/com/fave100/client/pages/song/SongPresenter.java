@@ -8,6 +8,7 @@ import com.fave100.client.pagefragments.popups.addsong.addsong.AddSongPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.song.widgets.playlist.PlaylistPresenter;
+import com.fave100.client.pages.song.widgets.whyline.WhylinePresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
@@ -51,17 +52,9 @@ public class SongPresenter extends
 	public interface MyView extends BaseView, HasUiHandlers<SongUiHandlers> {
 		void setSongInfo(SongInterface song);
 
-		void setPlaylist(Boolean visible);
-
-		void showPlaylist();
-
-		void showWhylines();
-
-		void setWhylineHeight(int px);
-
 		void scrollYouTubeIntoView();
 
-		void clearWhylines();
+		int getSongContainerHeight();
 	}
 
 	@ProxyCodeSplit
@@ -70,6 +63,7 @@ public class SongPresenter extends
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> YOUTUBE_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot public static final Type<RevealContentHandler<?>> WHYLINE_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot public static final Type<RevealContentHandler<?>> PLAYLIST_SLOT = new Type<RevealContentHandler<?>>();
 
 	public static final String ID_PARAM = "id";
@@ -83,6 +77,7 @@ public class SongPresenter extends
 	private AppUserProxy _requestedAppUser;
 	private PlaceManager _placeManager;
 	@Inject YouTubePresenter youtubePresenter;
+	@Inject WhylinePresenter whylinePresenter;
 	@Inject PlaylistPresenter playlistPresenter;
 	@Inject private AddSongPresenter addSongPresenter;
 
@@ -191,9 +186,7 @@ public class SongPresenter extends
 	private void loadedFavelist(final String id, final List<FaveItemProxy> favelist) {
 		// Only show playlist if good params
 		if (favelist != null && favelist.size() > 0) {
-			getView().setPlaylist(true);
 			playlistPresenter.setPlaylist(favelist, id.isEmpty() ? favelist.get(0).getId() : id);
-			getView().showPlaylist();
 
 			// No id provided, start from first song in list
 			if (id.isEmpty()) {
@@ -234,23 +227,33 @@ public class SongPresenter extends
 		});
 	}
 
+	/**
+	 * Resizes the playlist to match the height of the song container
+	 */
 	private void resizePlaylist() {
+		resizePlaylistAfterDelay(50);
+		resizePlaylistAfterDelay(150);
+		resizePlaylistAfterDelay(350);
+		resizePlaylistAfterDelay(500);
+		resizePlaylistAfterDelay(900);
+	}
+
+	private void resizePlaylistAfterDelay(int delay) {
 		final Timer timer = new Timer() {
 			@Override
 			public void run() {
-				final int newHeight = youtubePresenter.asWidget().getOffsetHeight() + 6;
+				final int newHeight = getView().getSongContainerHeight() - 2;
 				playlistPresenter.setHeight(newHeight);
-				getView().setWhylineHeight(newHeight);
 			}
 		};
-		timer.schedule(500);
-
+		timer.schedule(delay);
 	}
 
 	@Override
 	protected void onReveal() {
 		super.onReveal();
 		setInSlot(YOUTUBE_SLOT, youtubePresenter);
+		setInSlot(WHYLINE_SLOT, whylinePresenter);
 		setInSlot(PLAYLIST_SLOT, playlistPresenter);
 	}
 
@@ -259,10 +262,10 @@ public class SongPresenter extends
 		super.onHide();
 		_requestedAppUser = null;
 		youtubePresenter.clearVideo();
-		getView().clearWhylines();
 	}
 
 	private void updateYouTube() {
+		whylinePresenter.showWhylines(songProxy);
 		getView().setSongInfo(songProxy);
 
 		// Get any YouTube videos

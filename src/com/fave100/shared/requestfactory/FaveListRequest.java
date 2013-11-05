@@ -29,4 +29,6 @@ public interface FaveListRequest extends RequestContext {
 
 	Request<List<String>> getTrendingFaveLists();
 
+	Request<List<UserListResultProxy>> getListsContainingSong(String songID);
+
 }
