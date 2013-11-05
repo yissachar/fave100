@@ -32,8 +32,6 @@ import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPrese
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView;
 import com.fave100.client.pages.login.LoginPresenter;
 import com.fave100.client.pages.login.LoginView;
-import com.fave100.client.pages.logout.LogoutPresenter;
-import com.fave100.client.pages.logout.LogoutView;
 import com.fave100.client.pages.passwordreset.PasswordResetPresenter;
 import com.fave100.client.pages.passwordreset.PasswordResetView;
 import com.fave100.client.pages.profile.ProfilePresenter;
@@ -104,9 +102,6 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(LoginPresenter.class, LoginPresenter.MyView.class,
 				LoginView.class, LoginPresenter.MyProxy.class);
-
-		bindPresenter(LogoutPresenter.class, LogoutPresenter.MyView.class,
-				LogoutView.class, LogoutPresenter.MyProxy.class);
 
 		bindPresenter(ProfilePresenter.class, ProfilePresenter.MyView.class,
 				ProfileView.class, ProfilePresenter.MyProxy.class);

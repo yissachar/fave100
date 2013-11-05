@@ -122,12 +122,12 @@
 			background-color: #fff;
 		}
 		
-		.dropDown a {			
+		.dropDownElement, .dropDown a {			
 			padding: 5px;
 			display: block;			
 		}
 		
-		.dropDown a:hover {
+		.dropDownElement:hover, .dropDown a:hover {
 			background-color: #5eaae5;
 			color: #fff;
 			text-decoration: none;			
@@ -175,7 +175,7 @@
 							<g:FlowPanel ui:styleName="{style.dropDown}">
 								<g:Hyperlink ui:field="listLink">My List</g:Hyperlink>
 								<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}">Settings</g:Hyperlink>
-								<g:Hyperlink ui:field="logOutLink">Sign out</g:Hyperlink>
+								<g:InlineLabel ui:styleName="{style.dropDownElement}" ui:field="logOutButton">Sign out</g:InlineLabel>
 							</g:FlowPanel>
 						</g:FlowPanel>
 						<g:InlineLabel ui:field="loginButton">Sign in</g:InlineLabel>						

@@ -43,7 +43,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField FlowPanel loggedInContainer;
 	@UiField InlineLabel usernameLabel;
 	@UiField Hyperlink listLink;
-	@UiField Hyperlink logOutLink;
+	@UiField InlineLabel logOutButton;
 	@UiField InlineLabel loginButton;
 	@UiField Label notification;
 
@@ -66,13 +66,16 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		getUiHandlers().showLoginBox();
 	}
 
+	@UiHandler("logOutButton")
+	void onLogoutClick(final ClickEvent event) {
+		getUiHandlers().logout();
+	}
+
 	@Override
 	public void setLoggedIn(final String username) {
 		loggedInContainer.setVisible(true);
 		loginButton.setVisible(false);
-		logOutLink.setVisible(true);
-		logOutLink.setText("Sign out");
-		logOutLink.setTargetHistoryToken(NameTokens.logout);
+		logOutButton.setVisible(true);
 		final String userPlace = new ParameterTokenFormatter()
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
@@ -92,7 +95,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	public void setLoggedOut() {
 		loggedInContainer.setVisible(false);
 		loginButton.setVisible(true);
-		logOutLink.setVisible(false);
+		logOutButton.setVisible(false);
 		final String listPlace = new ParameterTokenFormatter()
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)

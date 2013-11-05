@@ -143,6 +143,11 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 			addToPopupSlot(registerBox);
 	}
 
+	@Override
+	public void logout() {
+		currentUser.logout();
+	}
+
 	public native void registerCallbacks()/*-{
 		$wnd.googleCallback = (function(obj) {
 			return function() {
@@ -179,4 +184,6 @@ interface TopBarUiHandlers extends UiHandlers {
 	void showLoginBox();
 
 	void showRegisterBox();
+
+	void logout();
 }

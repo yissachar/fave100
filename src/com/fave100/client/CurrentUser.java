@@ -18,6 +18,7 @@ import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
+import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.fave100.shared.requestfactory.FaveListRequest;
@@ -119,6 +120,19 @@ public class CurrentUser implements AppUserProxy {
 
 	public void setAvatar(final String url) {
 		avatar = url;
+	}
+
+	public void logout() {
+		final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
+		final Request<Void> logoutReq = appUserRequest.logout();
+		logoutReq.fire(new Receiver<Void>() {
+			@Override
+			public void onSuccess(final Void response) {
+				_eventBus.fireEvent(new CurrentUserChangedEvent(null));
+				Notification.show("Logged out successfully");
+				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.home).build());
+			}
+		});
 	}
 
 	public List<AppUserProxy> getFollowing() {
