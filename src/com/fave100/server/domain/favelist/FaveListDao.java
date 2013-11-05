@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fave100.server.domain.Song;
+import com.fave100.server.domain.UserListResult;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
@@ -125,14 +126,12 @@ public class FaveListDao {
 		if (faveList == null)
 			return;
 		// Find the song to remove
-		int position = 0;
 		FaveItem faveItemToRemove = null;
 		for (final FaveItem faveItem : faveList.getList()) {
 			if (faveItem.getSongID().equals(songID)) {
 				faveItemToRemove = faveItem;
 				break;
 			}
-			position++;
 		}
 
 		if (faveItemToRemove == null)
@@ -161,14 +160,12 @@ public class FaveListDao {
 			throw new IllegalArgumentException("Index out of range");
 
 		// Find the song to change position
-		int oldIndex = 0;
 		FaveItem faveItemToRerank = null;
 		for (final FaveItem faveItem : faveList.getList()) {
 			if (faveItem.getSongID().equals(songID)) {
 				faveItemToRerank = faveItem;
 				break;
 			}
-			oldIndex++;
 		}
 
 		if (faveItemToRerank == null)
@@ -267,6 +264,26 @@ public class FaveListDao {
 			trending.add(hashtag.getName());
 		}
 		return trending;
+	}
+
+	public List<UserListResult> getListsContainingSong(final String songID) {
+		final List<UserListResult> userListResults = new ArrayList<>();
+
+		// Get up to 30 FaveLists containing the song
+		final List<FaveList> faveLists = ofy().load().type(FaveList.class).filter("list.songID", songID).limit(30).list();
+
+		// Get the user's avatars
+		for (final FaveList faveList : faveLists) {
+			ofy().load().ref(faveList.getUser());
+			final AppUser user = faveList.getUser().get();
+			String avatar = "";
+			if (user != null)
+				avatar = user.getAvatarImage(30);
+
+			UserListResult userListResult = new UserListResult(user.getUsername(), faveList.getHashtag(), avatar);
+			userListResults.add(userListResult);
+		}
+		return userListResults;
 	}
 
 }

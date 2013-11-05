@@ -1,16 +1,13 @@
 package com.fave100.client.pages.song;
 
 import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.song.widgets.whyline.WhylineWaterfall;
 import com.fave100.shared.SongInterface;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -27,24 +24,20 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	}
 
 	interface SongViewStyle extends CssResource {
-		String playlistVisible();
 	}
 
 	@UiField HTMLPanel topBar;
 	@UiField Label songTitle;
 	@UiField Label artistName;
 	@UiField Button addToFave100Button;
+	@UiField HTMLPanel songContainer;
 	@UiField HTMLPanel youTubeWidget;
-	@UiField(provided = true) WhylineWaterfall whylineWaterfall;
-	@UiField HTMLPanel playlistPane;
-	@UiField FlowPanel tabHeaderContainer;
-	@UiField Label playlistTabHeader;
-	@UiField Label whylineTabHeader;
+	@UiField HTMLPanel whylineWidget;
+	@UiField HTMLPanel playlistPanel;
 	@UiField SongViewStyle style;
 
 	@Inject
-	public SongView(final Binder binder, final ApplicationRequestFactory requestFactory) {
-		whylineWaterfall = new WhylineWaterfall(requestFactory);
+	public SongView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -70,9 +63,17 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 			youTubeWidget.add(content);
 		}
 
+		if (slot == SongPresenter.WHYLINE_SLOT) {
+			whylineWidget.clear();
+
+			if (content != null) {
+				whylineWidget.add(content);
+			}
+		}
+
 		if (slot == SongPresenter.PLAYLIST_SLOT) {
-			playlistPane.clear();
-			playlistPane.add(content);
+			playlistPanel.clear();
+			playlistPanel.add(content);
 		}
 	}
 
@@ -81,48 +82,10 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 		getUiHandlers().addSong();
 	}
 
-	@UiHandler("playlistTabHeader")
-	void onPlaylistTabHeaderClick(final ClickEvent event) {
-		showPlaylist();
-	}
-
-	@UiHandler("whylineTabHeader")
-	void onWhylineTabHeaderClick(final ClickEvent event) {
-		showWhylines();
-	}
-
 	@Override
 	public void setSongInfo(final SongInterface song) {
 		setSongTitle(song.getSong());
 		setArtistName(song.getArtist());
-		whylineWaterfall.setSong(song);
-	}
-
-	@Override
-	public void setPlaylist(final Boolean visible) {
-		if (visible) {
-			tabHeaderContainer.addStyleName(style.playlistVisible());
-		}
-		else {
-			tabHeaderContainer.removeStyleName(style.playlistVisible());
-		}
-	}
-
-	@Override
-	public void showPlaylist() {
-		whylineWaterfall.show(false);
-		playlistPane.setVisible(true);
-	}
-
-	@Override
-	public void setWhylineHeight(final int px) {
-		whylineWaterfall.setHeight(px + "px");
-	}
-
-	@Override
-	public void showWhylines() {
-		playlistPane.setVisible(false);
-		whylineWaterfall.show(true);
 	}
 
 	private void setSongTitle(final String title) {
@@ -139,8 +102,8 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	}
 
 	@Override
-	public void clearWhylines() {
-		whylineWaterfall.clearWhylines();
+	public int getSongContainerHeight() {
+		return songContainer.getOffsetHeight();
 	}
 
 }
