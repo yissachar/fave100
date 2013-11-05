@@ -7,7 +7,6 @@ import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pages.home.HomePresenter;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.login.LoginPresenter;
-import com.fave100.client.pages.logout.LogoutPresenter;
 import com.fave100.client.pages.passwordreset.PasswordResetPresenter;
 import com.fave100.client.pages.profile.ProfilePresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
@@ -20,7 +19,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.client.gin.DispatchAsyncModule;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
-@GinModules({	DispatchAsyncModule.class,
+@GinModules({DispatchAsyncModule.class,
 				ClientModule.class})
 public interface ClientGinjector extends Ginjector {
 
@@ -45,8 +44,6 @@ public interface ClientGinjector extends Ginjector {
 	AsyncProvider<UserPresenter> getUsersPresenter();
 
 	AsyncProvider<LoginPresenter> getLoginPresenter();
-
-	AsyncProvider<LogoutPresenter> getLogoutPresenter();
 
 	AsyncProvider<ProfilePresenter> getProfilePresenter();
 
