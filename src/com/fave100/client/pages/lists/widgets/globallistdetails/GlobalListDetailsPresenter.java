@@ -3,7 +3,6 @@ package com.fave100.client.pages.lists.widgets.globallistdetails;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.pages.lists.widgets.autocomplete.list.ListAutocompletePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
@@ -45,7 +44,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
 	private String _hashtag;
-	@Inject ListAutocompletePresenter listAutocomplete;
+	@Inject GlobalListAutocompletePresenter listAutocomplete;
 
 	@Inject
 	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager) {

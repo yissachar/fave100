@@ -114,4 +114,9 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 		searchBox.setText("");
 		setSuggestions(null);
 	}
+
+	@Override
+	public void setFocus(boolean focus) {
+		searchBox.setFocus(focus);
+	}
 }

@@ -3,7 +3,6 @@ package com.fave100.client.pages.lists.widgets.autocomplete.list;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fave100.client.events.favelist.ListChangedEvent;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -23,18 +22,20 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 		void setSelection(int selection);
 
 		void clearSearch();
+
+		void setFocus(boolean focused);
 	}
 
-	private EventBus _eventBus;
-	private ApplicationRequestFactory _requestFactory;
+	protected EventBus _eventBus;
+	protected ApplicationRequestFactory _requestFactory;
+	protected List<String> _suggestions;
+	protected String _lastSearch;
 	private final List<Request<List<String>>> _requests;
-	private List<String> _suggestions;
-	private String _lastSearch;
 	private int _selection = 0;
 	private int _maxSelection = -1;
 
 	@Inject
-	ListAutocompletePresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory) {
+	public ListAutocompletePresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
@@ -51,7 +52,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			return;
 
 		_lastSearch = searchTerm;
-		
+
 		searchTerm = searchTerm.trim();
 		if (searchTerm.isEmpty()) {
 			setSelection(-1);
@@ -70,11 +71,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 				}
 
 				_requests.clear();
-
-				_suggestions = suggestions;
-				getView().setSuggestions(suggestions);
-				setMaxSelection(suggestions == null ? 0 : suggestions.size() - 1);
-				setSelection(0);
+				setSuggestions(suggestions);
 			}
 
 			@Override
@@ -99,9 +96,16 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 	public void listSelected() {
 		if (getSelection() < 0)
 			return;
-		_eventBus.fireEvent(new ListChangedEvent(_suggestions.get(getSelection())));
+
 		getAutocompleteResults("");
 		getView().clearSearch();
+	}
+
+	public void setSuggestions(List<String> suggestions) {
+		_suggestions = suggestions;
+		getView().setSuggestions(suggestions);
+		setMaxSelection(suggestions == null ? 0 : suggestions.size() - 1);
+		setSelection(0);
 	}
 
 	/* Getters and Setters */

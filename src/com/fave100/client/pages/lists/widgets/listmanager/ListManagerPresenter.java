@@ -6,7 +6,6 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.pages.lists.widgets.listmanager.widgets.autocomplete.AddListAutocompletePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
