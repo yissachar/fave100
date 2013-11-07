@@ -88,19 +88,16 @@
 
 	<h3>Setting up MuiscBrainz VM from scratch</h3>
 	<ol>
-		<li>Download Musicbrainz VM torrent: <a href="http://musicbrainz.org/doc/MusicBrainz_Server/Setup">http://musicbrainz.org/doc/MusicBrainz_Server/Setup</a></li>
-		<li>Extract the OVA file (you can use 7-zip or any other tool)</li>
-		<li>Run the VBoxManage command outlined in the above link. Do not run the tar portion if you have already extracted the OVA file</li>
 		<li>Download and install VirtualBox</li>
-		<li>Start VirtualBox and create new Linux/Ubuntu VM, using the VDI from above as the image and using 4096MB RAM (or as close to that as your machine can afford)</li>
+		<li>Download Musicbrainz VM torrent: <a href="http://musicbrainz.org/doc/MusicBrainz_Server/Setup">http://musicbrainz.org/doc/MusicBrainz_Server/Setup</a></li>
+		<li>VirtualBox menu: File -> Import appliance, select downloaded OVA, and give 4096MB RAM (or as close to that as your machine can afford)</li>
 		<li>Right-click VM: Settings->Network: Set bridged adapter connection</li>
 		<li>Start VM and login with usename "vm" and password "musicbrainz"</li>
-		<li>Run command "ifconfig" and note eth0 ip address, you will need it later</li>
 		<li>Run command "sudo su - postgres"</li>
-		<li>Run command "vi /etc/postgresql/9.1/main/pg_hba.conf"</li>
-		<li>Add line: "host all all {IP from previous step}" and save file</li>
-		<li>Run command "vi /etc/postgresql/9.1/main/postgresql.conf.in"</li>
-		<li>Uncommend "listen_addresses" line and set value to "*" and save file</li>
+		<li>Open "/etc/postgresql/9.1/main/pg_hba.conf" in a text editor</li>
+		<li>Add line: "host all all {IP of client you want to add}/32 trust" and save file</li>
+		<li>Open "/etc/postgresql/9.1/main/postgresql.conf.in" in a text editor</li>
+		<li>Add line "listen_addresses = '*' " and save file</li>
 		<li>Run command "/etc/init.d/postgresql restart"</li>
 		<li>Run command "logout"</li>
 		<li>Run command "cd /home/musicbrainz/"</li>
@@ -109,7 +106,7 @@
 		<li>Run command "cd fave100-autocomplete"</li>
 		<li>Run command "sudo vi MUSICBRAINZ_LATEST" and save file (blank file)</li>
 		<li>Run command "sudo crontab -e"</li>
-		<li>Add line "0 0 * * * python /home/musicbrainz/fave100-autocomplete/updateMusicbrainz.py > /tmp/musicbrainz_update.log 2>&1"</li>
+		<li>Add line "0 0 * * * python /home/musicbrainz/fave100-autocomplete/updateMusicbrainz.py > /tmp/musicbrainz_update.log 2>&1"  and save</li>
 		<li>Change datetime settings so crontab will run when it should: "sudo dpkg-reconfigure tzdata" select location</li>
 		<li>Ensure time synced: "sudo ntpdate ntp.ubuntu.com"</li>
 		<li>Run command "sudo python updateMusicbrainz.py" This will take a long time to complete!</li>
