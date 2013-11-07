@@ -86,7 +86,7 @@
 	<h4>autocomplete_search_dupes</h4>
 	<p>autocomplete_search_dupes contains manually added dupes and their links to the master song. When a song is flagged as a dupe it is inserted into this table. The AppEngine deduper uses this table to determine what songs to dedupe. When autocomplete_search is updated, autocomplete_search_dupes is consulted to determine that we do not add any songs that are flagged as dupes.</p>
 
-	<h3>Setting up MuiscBrainz VM from scratch</h3>
+	<h3>Setting up MuiscBrainz VM</h3>
 	<ol>
 		<li>Download and install VirtualBox</li>
 		<li>Download Musicbrainz VM torrent: <a href="http://musicbrainz.org/doc/MusicBrainz_Server/Setup">http://musicbrainz.org/doc/MusicBrainz_Server/Setup</a></li>
@@ -110,6 +110,7 @@
 		<li>Change datetime settings so crontab will run when it should: "sudo dpkg-reconfigure tzdata" select location</li>
 		<li>Ensure time synced: "sudo ntpdate ntp.ubuntu.com"</li>
 		<li>Run command "sudo python updateMusicbrainz.py" This will take a long time to complete!</li>
+		<li>If you are setting up the VM from scratch with no existing data, continue below. Otherwise skip the rest of the instructions and instead continue from <a href="#updatingSongs">Updating Song Database</a></li>
 		<li>Run command "sudo su - postgres"</li>
 		<li>Run command "dropdb musicbrainz"</li>
 		<li>Run command "cd /home/musicbrainz/musicbrainz_server/"</li>
