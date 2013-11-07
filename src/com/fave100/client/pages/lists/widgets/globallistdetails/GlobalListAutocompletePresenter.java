@@ -1,6 +1,6 @@
 package com.fave100.client.pages.lists.widgets.globallistdetails;
 
-import com.fave100.client.events.favelist.ListAddedEvent;
+import com.fave100.client.events.favelist.ListChangedEvent;
 import com.fave100.client.pages.lists.widgets.autocomplete.list.ListAutocompletePresenter;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.inject.Inject;
@@ -22,7 +22,7 @@ public class GlobalListAutocompletePresenter extends ListAutocompletePresenter {
 
 		super.listSelected();
 
-		_eventBus.fireEvent(new ListAddedEvent(selection));
+		_eventBus.fireEvent(new ListChangedEvent(selection));
 	}
 
 }
