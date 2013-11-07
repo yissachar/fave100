@@ -162,7 +162,7 @@ public class UserCreationTest {
 	public void userEmailMustBeUnique() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
 		String email = "test@example.coms";
 
-		// Create a user with that name		
+		// Create a user with the same email		
 		appUserDao.createAppUser("bob", "123456", email);
 
 		// User with duplicate username not created
@@ -175,6 +175,6 @@ public class UserCreationTest {
 			// Success!!
 		}
 
-		assertNull("User with duplicate username must not be created", secondAppUser);
+		assertNull("User with duplicate email must not be created", secondAppUser);
 	}
 }
