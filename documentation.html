@@ -32,6 +32,7 @@
 	<a href="#basicAppStructure">Basic app structure</a><br>
 	<a href="#codeRepos">Code Repositories</a><br>
 	<a href="#upgradeAE-GWT">Upgrading AppEngine and GWT version</a><br>
+	<a href="#testingAvatarUpload">Testing Avatar Upload Locally</a><br>
 
 	<a name="devEnvironment"/>
 	<h2>Setting Up Development Environment</h2>
@@ -216,6 +217,15 @@
 		<li>In ANT build.xml run configuration update AppEngineDir and GwtDir arguments</li>
 		<li>Run build.xml</li>
 	</ol>
+	
+	<a name="testingAvatarUpload"/>
+	<h2>Testing Avatar Upload Locally</h2>
+	<p>The local blobstore service has a few idiosyncrasies that must be followed in order for it to work correctly:</p>
+	<ol>
+		<li>The URL must be the name of your computer and not 127.0.0.1. Additionally, ensure that the URL host of the dev server matches the URL that the avatar upload is being POSTed to, otherwise they will not share sessions and the avatar upload will fail.</li>
+		<li>In dev mode, you cannot change an avatar locally once it has been uploaded, due to a bug with the dev server, which locks images. Instead use hosted mode to perform this operation.</li>
+	</ol>
+
 	</div>
 </body>
 </html>
