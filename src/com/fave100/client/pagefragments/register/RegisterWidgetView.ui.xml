@@ -2,27 +2,12 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:my='urn:import:com.fave100.client.widgets'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 	
-	<ui:style>
-		.registerContainer{
-			margin: 0px auto;
-		}
-
-		.registerContainer h1 {
-			text-align: center;
-		}
-		
-		.registerContainer div{
-			float: left;
-		}
-		
-		.registerContainer a {
-			margin: 5px 0;
-		}
-		
+	<ui:style>		
 		.registerForm {
 			background-color: #EEE;
 			border: 1px solid #AAA;
@@ -30,7 +15,11 @@
 			border-radius: 5px;
 		}
 		
-		.registerForm input {
+		.nativeRegisterForm div{
+			float: left;
+		}
+		
+		.nativeRegisterForm input {
 			float: right;
 			min-width: 60%;
 		}
@@ -40,7 +29,7 @@
 			margin-bottom: 10px;
 		}
 		
-		.statusMessage{
+		.statusMessage {
 			display: block;
 			font-size: 0.75em;
 			margin: 5px 0;
@@ -56,15 +45,18 @@
 			font-size: 80%;
 		}
 		
-		.thirdPartyLinks, .thirdPartyLinks a {
+		.thirdPartyLinks, .thirdPartyLinks > * {
 			margin: 5px 0;
-			width: 100%;			
+			width: 100%;	
+			clear: both;		
 		}
 	</ui:style>
+	
+	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>
 
 	<g:HTMLPanel ui:styleName="row">
 		<g:FormPanel ui:field="registerForm" ui:styleName="col span_5">				
-			<g:HTMLPanel styleName="{style.registerForm}">	
+			<g:HTMLPanel styleName="{style.registerForm} {style.nativeRegisterForm}">	
 				<div class="{style.field}">				
 					<g:Label>Username</g:Label>					
 					<g:TextBox ui:field="usernameField"/>
@@ -92,17 +84,9 @@
 		<div class="loginDivider col span_2">or</div>				
 		<div class="{style.registerForm} col span_5">		
 			<div class="{style.thirdPartyLinks}">	
-				<g:Anchor styleName="zocial googleplus" ui:field="registerWithGoogleButton" target="_blank">
-					Register with Google
-				</g:Anchor>
-				<br/>
-				<g:Anchor styleName="zocial twitter" ui:field="registerWithTwitterButton">
-					Register with Twitter
-				</g:Anchor>
-				<br/>
-				<g:Anchor styleName="zocial facebook" ui:field="registerWithFacebookButton" target="_blank">
-					Register with Facebook
-				</g:Anchor>
+				<my:SocialButton ui:field="registerWithGoogleButton" img="{img.gPlusIcon}" text="Register with Google" style="googleSocialLogo"></my:SocialButton>
+				<my:SocialButton ui:field="registerWithTwitterButton" img="{img.twitterLogo}" text="Register with Twitter" style="twitterSocialLogo"></my:SocialButton>
+				<my:SocialButton ui:field="registerWithFacebookButton" img="{img.fbLogo}" text="Register with Facebook" style="facebookSocialLogo"></my:SocialButton>
 			</div>
 		</div>
 	</g:HTMLPanel>

@@ -1,9 +1,9 @@
 package com.fave100.client.pagefragments.popups.login;
 
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -34,5 +34,6 @@ public class LoginPopupPresenter extends PresenterWidget<LoginPopupPresenter.MyV
 	protected void onReveal() {
 		super.onReveal();
 		setInSlot(LOGIN_SLOT, loginContainer);
+		loginContainer.setShortNames(true);
 	}
 }

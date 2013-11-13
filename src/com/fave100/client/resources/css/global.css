@@ -1,0 +1,46 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+html {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	background-color: #F9F9F9;
+	font-family: "Source Sans Pro", Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+	color: #454;
+	height: 100%;
+}
+
+a {
+	color: #343;
+	text-decoration: none;
+	outline: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+h1 {
+	margin: 30px;
+	color: #555;
+	font-size: 1.9em;		
+}
+
+input, select {
+	padding: 4px;	
+	border: 1px solid #AAA;
+}
+
+input:hover, select:hover {
+	border-color: #666;
+}
+
+input:focus, select:focus {
+	border-color: #5A9DE8;
+}
