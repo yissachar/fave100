@@ -1,7 +1,7 @@
 package com.fave100.client;
 
 import com.fave100.client.events.user.CurrentUserChangedEvent;
-import com.fave100.client.resources.mobile.MobileResources;
+import com.fave100.client.resources.css.AppClientBundle;
 import com.fave100.shared.Utils;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
@@ -45,7 +45,9 @@ public class Fave100Bootstrapper implements Bootstrapper {
 			}
 		});
 
+		AppClientBundle.INSTANCE.getGlobalCss().ensureInjected();
+
 		if (Utils.isTouchDevice())
-			MobileResources.INSTANCE.css().ensureInjected();
+			AppClientBundle.INSTANCE.getMobileCss().ensureInjected();
 	}
 }

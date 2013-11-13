@@ -15,11 +15,7 @@
 		.registerContainer h1 {
 			text-align: center;
 		}
-		
-		.registerContainer div{
-			float: left;
-		}
-		
+				
 		.registerContainer a {
 			margin: 5px 0;
 		}

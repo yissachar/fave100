@@ -50,6 +50,8 @@ public class LoginWidgetPresenter extends
 		void setFacebookLoginUrl(String url);
 
 		void setUsernameFocus();
+
+		void setShortNames(boolean yes);
 	}
 
 	private EventBus _eventBus;
@@ -127,6 +129,10 @@ public class LoginWidgetPresenter extends
 	public void clearLoginDetails() {
 		getView().clearUsername();
 		getView().clearPassword();
+	}
+
+	public void setShortNames(boolean yes) {
+		getView().setShortNames(yes);
 	}
 
 	// Native login

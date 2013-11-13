@@ -1,12 +1,12 @@
 package com.fave100.client.pagefragments.register;
 
+import com.fave100.client.widgets.SocialButton;
 import com.fave100.shared.Constants;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -28,13 +28,13 @@ public class RegisterWidgetView extends ViewWithUiHandlers<RegisterWidgetUiHandl
 	@UiField TextBox usernameField;
 	@UiField PasswordTextBox passwordField;
 	@UiField PasswordTextBox passwordRepeatField;
-	@UiField Anchor registerWithGoogleButton;
 	@UiField SpanElement usernameStatusMessage;
 	@UiField SpanElement passwordStatusMessage;
 	@UiField TextBox emailField;
 	@UiField SpanElement emailStatusMessage;
-	@UiField Anchor registerWithTwitterButton;
-	@UiField Anchor registerWithFacebookButton;
+	@UiField SocialButton registerWithGoogleButton;
+	@UiField SocialButton registerWithTwitterButton;
+	@UiField SocialButton registerWithFacebookButton;
 
 	@Inject
 	public RegisterWidgetView(final Binder binder) {

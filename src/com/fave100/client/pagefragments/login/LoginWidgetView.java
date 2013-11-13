@@ -1,10 +1,10 @@
 package com.fave100.client.pagefragments.login;
 
+import com.fave100.client.widgets.SocialButton;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
@@ -28,9 +28,9 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
 	@UiField PasswordTextBox passwordInput;
 	@UiField Label loginStatusMessage;
 
-	@UiField Anchor signInWithGoogleButton;
-	@UiField Anchor signInWithTwitterButton;
-	@UiField Anchor signInWithFacebookButton;
+	@UiField SocialButton signInWithGoogleButton;
+	@UiField SocialButton signInWithTwitterButton;
+	@UiField SocialButton signInWithFacebookButton;
 	@UiField Button loginButton;
 
 	@Inject
@@ -50,7 +50,7 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
 	}
 
 	@UiHandler("signInWithTwitterButton")
-	public void onClick(final ClickEvent event) {
+	public void onTwitterClick(final ClickEvent event) {
 		getUiHandlers().goToTwitterAuth();
 	}
 
@@ -96,4 +96,17 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
 		usernameInput.setFocus(true);
 	}
 
+	@Override
+	public void setShortNames(boolean yes) {
+		if (yes) {
+			signInWithGoogleButton.setText("Google");
+			signInWithTwitterButton.setText("Twitter");
+			signInWithFacebookButton.setText("Facebook");
+		}
+		else {
+			signInWithGoogleButton.setText("Sign in with Google");
+			signInWithTwitterButton.setText("Sign in with Twitter");
+			signInWithFacebookButton.setText("Sign in with Facebook");
+		}
+	}
 }

@@ -1,0 +1,118 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>		
+		.generalButton {	
+			cursor: pointer;
+			font-size: 0.85em;
+			border-radius: 4px;
+			color: #FFF;			
+			box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset;
+			padding: 6px;
+			text-transform: uppercase;
+			text-shadow: #777 0 1px 0;
+			font-size: 15px;
+		}		
+		
+		.generalButton:hover {
+			cursor: pointer;
+			text-decoration: none;
+			border: 1px solid #555;
+		}
+		
+		.buttonImageContainer {
+			height: 100%;
+			width: 30px;
+			border-right: 1px solid #d5d5d5;
+			display: inline-block;
+		}
+		
+		.buttonText {
+			position: relative;
+			top: -10%;
+			margin-left: 10px;
+		}
+		
+		@external googleSocialLogo;
+		.googleSocialLogo {
+			border: 1px solid #9E1919;
+			background: #f2615c; /* Old browsers */
+			background: literal("-moz-linear-gradient(top,  #f2615c 0%, #d13429 100%)"); /* FF3.6+ */
+			background: literal("-webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2615c), color-stop(100%,#d13429))"); /* Chrome,Safari4+ */
+			background: literal("-webkit-linear-gradient(top,  #f2615c 0%,#d13429 100%)"); /* Chrome10+,Safari5.1+ */
+			background: literal("-o-linear-gradient(top,  #f2615c 0%,#d13429 100%)"); /* Opera 11.10+ */
+			background: literal("-ms-linear-gradient(top,  #f2615c 0%,#d13429 100%)"); /* IE10+ */
+			background: literal("linear-gradient(to bottom,  #f2615c 0%,#d13429 100%)"); /* W3C */
+			filter: literal("progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2615c', endColorstr='#d13429',GradientType=0 )"); /* IE6-9 */
+		}		
+		
+		.googleSocialLogo:hover {
+			background: #f2615c; /* Old browsers */
+			background: literal("-moz-linear-gradient(top,  #f2615c 0%, #ce0c02 100%)"); /* FF3.6+ */
+			background: literal("-webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2615c), color-stop(100%,#ce0c02))"); /* Chrome,Safari4+ */
+			background: literal("-webkit-linear-gradient(top,  #f2615c 0%,#ce0c02 100%)"); /* Chrome10+,Safari5.1+ */
+			background: literal("-o-linear-gradient(top,  #f2615c 0%,#ce0c02 100%)"); /* Opera 11.10+ */
+			background: literal("-ms-linear-gradient(top,  #f2615c 0%,#ce0c02 100%)"); /* IE10+ */
+			background: literal("linear-gradient(to bottom,  #f2615c 0%,#ce0c02 100%)"); /* W3C */
+			filter: literal("progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2615c', endColorstr='#ce0c02',GradientType=0)" ); /* IE6-9 */			
+		}
+		
+		@external twitterSocialLogo;
+		.twitterSocialLogo {			
+			border: 1px solid #02A1DB;
+			background: #72cff9; /* Old browsers */
+			background: literal("-moz-linear-gradient(top,  #72cff9 1%, #22b5f9 100%)"); /* FF3.6+ */
+			background: literal("-webkit-gradient(linear, left top, left bottom, color-stop(1%,#72cff9), color-stop(100%,#22b5f9))"); /* Chrome,Safari4+ */
+			background: literal("-webkit-linear-gradient(top,  #72cff9 1%,#22b5f9 100%)"); /* Chrome10+,Safari5.1+ */
+			background: literal("-o-linear-gradient(top,  #72cff9 1%,#22b5f9 100%)"); /* Opera 11.10+ */
+			background: literal("-ms-linear-gradient(top,  #72cff9 1%,#22b5f9 100%)"); /* IE10+ */
+			background: literal("linear-gradient(to bottom,  #72cff9 1%,#22b5f9 100%)"); /* W3C */
+			filter: literal("progid:DXImageTransform.Microsoft.gradient( startColorstr='#72cff9', endColorstr='#22b5f9',GradientType=0)" ); /* IE6-9 */
+		}		
+		
+		.twitterSocialLogo:hover {
+			background: #72cff9; /* Old browsers */
+			background: literal("-moz-linear-gradient(top,  #72cff9 1%, #02adf7 100%)"); /* FF3.6+ */
+			background: literal("-webkit-gradient(linear, left top, left bottom, color-stop(1%,#72cff9), color-stop(100%,#02adf7))"); /* Chrome,Safari4+ */
+			background: literal("-webkit-linear-gradient(top,  #72cff9 1%,#02adf7 100%)"); /* Chrome10+,Safari5.1+ */
+			background: literal("-o-linear-gradient(top,  #72cff9 1%,#02adf7 100%)"); /* Opera 11.10+ */
+			background: literal("-ms-linear-gradient(top,  #72cff9 1%,#02adf7 100%)"); /* IE10+ */
+			background: literal("linear-gradient(to bottom,  #72cff9 1%,#02adf7 100%)"); /* W3C */
+			filter: literal("progid:DXImageTransform.Microsoft.gradient( startColorstr='#72cff9', endColorstr='#02adf7',GradientType=0)" ); /* IE6-9 */	
+		}
+		
+		@external facebookSocialLogo;
+		.facebookSocialLogo {	
+			border: 1px solid #1D3C84;
+			background: #6377aa; /* Old browsers */
+			background: literal("-moz-linear-gradient(top,  #6377aa 0%, #3756ad 100%)"); /* FF3.6+ */
+			background: literal("-webkit-gradient(linear, left top, left bottom, color-stop(0%,#6377aa), color-stop(100%,#3756ad))"); /* Chrome,Safari4+ */
+			background: literal("-webkit-linear-gradient(top,  #6377aa 0%,#3756ad 100%)"); /* Chrome10+,Safari5.1+ */
+			background: literal("-o-linear-gradient(top,  #6377aa 0%,#3756ad 100%)"); /* Opera 11.10+ */
+			background: literal("-ms-linear-gradient(top,  #6377aa 0%,#3756ad 100%)"); /* IE10+ */
+			background: literal("linear-gradient(to bottom,  #6377aa 0%,#3756ad 100%)"); /* W3C */
+			filter: literal("progid:DXImageTransform.Microsoft.gradient( startColorstr='#6377aa', endColorstr='#3756ad',GradientType=0)" ); /* IE6-9 */
+		}		
+	
+		.facebookSocialLogo:hover {
+			background: #6377aa; /* Old browsers */
+			background: literal("-moz-linear-gradient(top,  #6377aa 0%, #2549aa 100%)"); /* FF3.6+ */
+			background: literal("-webkit-gradient(linear, left top, left bottom, color-stop(0%,#6377aa), color-stop(100%,#2549aa))"); /* Chrome,Safari4+ */
+			background: literal("-webkit-linear-gradient(top,  #6377aa 0%,#2549aa 100%)"); /* Chrome10+,Safari5.1+ */
+			background: literal("-o-linear-gradient(top,  #6377aa 0%,#2549aa 100%)"); /* Opera 11.10+ */
+			background: literal("-ms-linear-gradient(top,  #6377aa 0%,#2549aa 100%)"); /* IE10+ */
+			background: literal("linear-gradient(to bottom,  #6377aa 0%,#2549aa 100%)"); /* W3C */
+			filter: literal("progid:DXImageTransform.Microsoft.gradient( startColorstr='#6377aa', endColorstr='#2549aa',GradientType=0)" ); /* IE6-9 */	
+		}
+	</ui:style>
+	
+	<g:FocusPanel ui:field="focusPanel">
+		<g:HTMLPanel ui:field="buttonContainer" ui:styleName="{style.generalButton}">
+			<span class="{style.buttonImageContainer}">
+				<g:Image ui:field="imgIcon"></g:Image>
+			</span>
+			<g:InlineLabel ui:field="buttonLabel" ui:styleName="{style.buttonText}"></g:InlineLabel>
+		</g:HTMLPanel>
+	</g:FocusPanel>
+	
+</ui:UiBinder> 

@@ -35,4 +35,13 @@ public interface ImageResources extends ClientBundle {
 	@Source("triangle.png")
 	ImageResource triangle();
 
+	@Source("g-plus-icon.png")
+	ImageResource gPlusIcon();
+
+	@Source("twitter_logo_white.png")
+	ImageResource twitterLogo();
+
+	@Source("fb_logo.png")
+	ImageResource fbLogo();
+
 }
