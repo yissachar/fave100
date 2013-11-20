@@ -32,6 +32,7 @@
 		
 		.trendingList {
 			line-height: 20px;
+			margin-bottom: 30px;
 		}
 				
 		.trendingList a {
@@ -44,6 +45,10 @@
 			display: inline-block;
 			margin-right: 5px;
 		}
+		
+		.aboutLink {
+			cursor: pointer;
+		}
 	</ui:style>
 	
 	<g:FlowPanel ui:field="container">
@@ -52,5 +57,6 @@
 		<g:HTMLPanel ui:field="listAutocomplete"/>
 		<g:Label ui:styleName="{style.trendingHeader}">Trending Lists</g:Label>
 		<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />
+		<g:Anchor ui:field="aboutLink" ui:styleName="{style.aboutLink}">What's it all about?</g:Anchor>
 	</g:FlowPanel>
 </ui:UiBinder>
