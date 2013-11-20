@@ -25,13 +25,13 @@
 			background: #FFF;
 			border: 1px solid #555;
 			position: relative;
-			width: 70%;
+			width: 75%;
 			margin: 0 auto;
 			min-width: 250px;
 			max-width: 800px;
 			z-index: 100000;
 			overflow: hidden;
-			padding: 5px;
+			padding: 15px;
 		}
 		
 		.slides {
@@ -43,8 +43,12 @@
 		}
 		
 		.description p {
-			margin-left: 505px;
-			padding: 5px;
+			margin-left: 515px;
+			padding: 7px;
+		}
+		
+		.nav {
+			margin-top: 10px;
 		}
 				
 		.arrows {
@@ -108,7 +112,7 @@
 					</g:HTMLPanel>
 				</g:FlowPanel>
 				
-				<g:FlowPanel>
+				<g:FlowPanel ui:styleName="{style.nav}">
 					<g:Image ui:field="leftArrow" ui:styleName="{style.arrows}" resource="{img.leftArrow}"></g:Image>
 					<g:InlineLabel ui:field="pageNumLabel" ui:styleName="{style.pageNumLabel}"></g:InlineLabel>
 					<g:Image ui:field="rightArrow" ui:styleName="{style.arrows}" resource="{img.rightArrow}"></g:Image>
