@@ -44,4 +44,25 @@ public interface ImageResources extends ClientBundle {
 	@Source("fb_logo.png")
 	ImageResource fbLogo();
 
+	@Source("/about/about_screen_1.png")
+	ImageResource aboutScreen1();
+
+	@Source("/about/about_screen_2.png")
+	ImageResource aboutScreen2();
+
+	@Source("/about/about_screen_3.png")
+	ImageResource aboutScreen3();
+
+	@Source("/about/about_screen_4.png")
+	ImageResource aboutScreen4();
+
+	@Source("/about/about_screen_5.png")
+	ImageResource aboutScreen5();
+
+	@Source("left-arrow.png")
+	ImageResource leftArrow();
+
+	@Source("right-arrow.png")
+	ImageResource rightArrow();
+
 }

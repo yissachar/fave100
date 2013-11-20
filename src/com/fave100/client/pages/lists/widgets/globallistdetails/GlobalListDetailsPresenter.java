@@ -3,6 +3,7 @@ package com.fave100.client.pages.lists.widgets.globallistdetails;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
@@ -45,6 +46,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	private PlaceManager _placeManager;
 	private String _hashtag;
 	@Inject GlobalListAutocompletePresenter listAutocomplete;
+	@Inject AboutPopupPresenter aboutPresenter;
 
 	@Inject
 	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager) {
@@ -89,10 +91,17 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 		}
 
 	}
+
+	@Override
+	public void showAbout() {
+		addToPopupSlot(aboutPresenter);
+	}
 }
 
 interface GlobalListDetailsUiHandlers extends UiHandlers {
 
 	void contributeToList();
+
+	void showAbout();
 
 }

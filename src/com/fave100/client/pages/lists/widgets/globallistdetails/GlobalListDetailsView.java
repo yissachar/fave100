@@ -40,6 +40,7 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	@UiField Anchor contributeCTA;
 	@UiField HTMLPanel listAutocomplete;
 	@UiField FlowPanel trendingLists;
+	@UiField Anchor aboutLink;
 
 	@Inject
 	public GlobalListDetailsView(final Binder binder) {
@@ -66,6 +67,11 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	@UiHandler("contributeCTA")
 	void onContributeClick(ClickEvent event) {
 		getUiHandlers().contributeToList();
+	}
+
+	@UiHandler("aboutLink")
+	void onAboutClick(ClickEvent event) {
+		getUiHandlers().showAbout();
 	}
 
 	@Override
