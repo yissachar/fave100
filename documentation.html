@@ -98,7 +98,7 @@
 		<li>Open "/etc/postgresql/9.1/main/pg_hba.conf" in a text editor</li>
 		<li>Add line: "host all all {IP of client you want to add}/32 trust" and save file</li>
 		<li>Open "/etc/postgresql/9.1/main/postgresql.conf.in" in a text editor</li>
-		<li>Add line "listen_addresses = '*' " and save file</li>
+		<li>Add line "listen_addresses = '*' ", remove performance tuning lines and save file</li>
 		<li>Run command "/etc/init.d/postgresql restart"</li>
 		<li>Run command "logout"</li>
 		<li>Run command "cd /home/musicbrainz/"</li>
