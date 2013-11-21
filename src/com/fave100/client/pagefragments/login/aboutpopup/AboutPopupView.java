@@ -50,6 +50,8 @@ public class AboutPopupView extends PopupViewWithUiHandlers<AboutPopupUiHandlers
 
 	@UiHandler("lightBoxBackground")
 	void onBackgroundClick(ClickEvent event) {
+		pageNum = 0;
+		setPageNum();
 		hide();
 	}
 
