@@ -26,6 +26,7 @@
 			border: 1px solid #555;
 			position: relative;
 			width: 75%;
+			height: 405px;
 			margin: 0 auto;
 			min-width: 250px;
 			max-width: 800px;
@@ -49,16 +50,19 @@
 		
 		.nav {
 			margin-top: 10px;
+			position: absolute;
+			bottom: 15px;
+			width: 96%;
 		}
 				
 		.arrows {
 			position: relative;
-			top: 9px;
+			top: 20px;
 		}
 		
 		.pageNumLabel {
-			font-size: 1.3em;
-			width: 90%;
+			font-size: 1.4em;
+			width: 86%;
 			text-align: center;
 			display: inline-block;
 		}
@@ -113,9 +117,9 @@
 				</g:FlowPanel>
 				
 				<g:FlowPanel ui:styleName="{style.nav}">
-					<g:Image ui:field="leftArrow" ui:styleName="{style.arrows}" resource="{img.leftArrow}"></g:Image>
+					<g:Image ui:field="leftArrow" ui:styleName="{style.arrows}" url="{img.leftArrow.getSafeUri.asString}" pixelSize="50, 50"></g:Image>
 					<g:InlineLabel ui:field="pageNumLabel" ui:styleName="{style.pageNumLabel}"></g:InlineLabel>
-					<g:Image ui:field="rightArrow" ui:styleName="{style.arrows}" resource="{img.rightArrow}"></g:Image>
+					<g:Image ui:field="rightArrow" ui:styleName="{style.arrows}" url="{img.rightArrow.getSafeUri.asString}" pixelSize="50, 50"></g:Image>
 				</g:FlowPanel>
 				
 			</g:HTMLPanel>
