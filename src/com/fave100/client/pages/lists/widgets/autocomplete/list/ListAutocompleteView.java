@@ -3,10 +3,10 @@ package com.fave100.client.pages.lists.widgets.autocomplete.list;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.resources.client.CssResource;
@@ -90,9 +90,9 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 					getUiHandlers().setSelection(resultsPanel.getWidgetIndex(listName), false);
 				}
 			});
-			listName.addClickHandler(new ClickHandler() {
+			listName.addMouseDownHandler(new MouseDownHandler() {
 				@Override
-				public void onClick(final ClickEvent event) {
+				public void onMouseDown(final MouseDownEvent event) {
 					getUiHandlers().listSelected();
 				}
 			});
