@@ -218,11 +218,6 @@ public class CurrentUser implements AppUserProxy {
 					}
 
 					@Override
-					public String getSongID() {
-						return songID;
-					}
-
-					@Override
 					public String getSong() {
 						return song;
 					}

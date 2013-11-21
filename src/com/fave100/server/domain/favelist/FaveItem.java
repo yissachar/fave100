@@ -1,7 +1,5 @@
 package com.fave100.server.domain.favelist;
 
-import java.io.Serializable;
-
 import com.fave100.server.domain.Whyline;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Embed;
@@ -14,10 +12,7 @@ import com.googlecode.objectify.annotation.Index;
  * 
  */
 @Embed
-public class FaveItem implements Serializable {
-
-	// This field MUST be updated if this class is changed in a way that affects serialization: http://docs.oracle.com/javase/6/docs/platform/serialization/spec/version.html#6678
-	private static final long serialVersionUID = -8899544665404145248L;
+public class FaveItem {
 
 	private String song;
 	private String artist;

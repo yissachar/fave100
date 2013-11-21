@@ -120,7 +120,7 @@ public class FavePickWidget extends Composite {
 		_artist = item.getArtist();
 		_whyline = item.getWhyline();
 		_rank = rank;
-		_songID = item.getSongID();
+		_songID = item.getId();
 		_editable = editable;
 		_whyLineCallback = whyLineChanged;
 		_rankCallback = rankChanged;

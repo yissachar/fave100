@@ -13,8 +13,6 @@ public interface FaveItemProxy extends ValueProxy, SongInterface {
 	@Override
 	String getArtist();
 
-	String getSongID();
-
 	// This is just a pointer to songID
 	@Override
 	String getId();
