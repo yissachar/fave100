@@ -270,16 +270,11 @@ public class FavelistPresenter extends
 				// Set client to match
 				for (int i = 0; i < currentUser.getFaveList().size(); i++) {
 					final FaveItemProxy faveItem = currentUser.getFaveList().get(i);
-					if (faveItem.getSongID().equals(songID)) {
+					if (faveItem.getId().equals(songID)) {
 						final FaveItemProxy newfaveItem = new FaveItemProxy() {
 							@Override
 							public String getWhyline() {
 								return whyline;
-							}
-
-							@Override
-							public String getSongID() {
-								return songID;
 							}
 
 							@Override

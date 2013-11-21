@@ -78,7 +78,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 			playlistItem.setSong(faveItem.getSong());
 			playlistItem.setArtist(faveItem.getArtist());
 			playlistItem.setWhyline(faveItem.getWhyline());
-			playlistItem.setSongID(faveItem.getSongID());
+			playlistItem.setSongID(faveItem.getId());
 			playlistItems.add(playlistItem);
 			i++;
 		}
