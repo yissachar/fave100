@@ -16,6 +16,6 @@
   <cron>
   	<url>/cron/hashtags</url>
   	<description>Build hashtag master lists</description>
-  	<schedule>every 2 hours</schedule>
+  	<schedule>every 20 minutes</schedule>
   </cron>
 </cronentries>
