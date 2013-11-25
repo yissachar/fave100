@@ -258,7 +258,7 @@ public class FaveListDao {
 	}
 
 	public List<String> getTrendingFaveLists() {
-		List<Hashtag> hashtags = ofy().load().type(Hashtag.class).order("zscore").limit(5).list();
+		List<Hashtag> hashtags = ofy().load().type(Hashtag.class).order("-zscore").limit(5).list();
 		List<String> trending = new ArrayList<>();
 		for (Hashtag hashtag : hashtags) {
 			trending.add(hashtag.getName());
