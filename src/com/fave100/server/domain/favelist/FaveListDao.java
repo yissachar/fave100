@@ -258,11 +258,20 @@ public class FaveListDao {
 	}
 
 	public List<String> getTrendingFaveLists() {
-		List<Hashtag> hashtags = ofy().load().type(Hashtag.class).order("-zscore").limit(5).list();
+		// Nov 26 2013: Temporarily disabling proper trending in favor of hard-coded popular lists
+		//		List<Hashtag> hashtags = ofy().load().type(Hashtag.class).order("-zscore").limit(5).list();
+		//		List<String> trending = new ArrayList<>();
+		//		for (Hashtag hashtag : hashtags) {
+		//			trending.add(hashtag.getName());
+		//		}
+		//		return trending;
 		List<String> trending = new ArrayList<>();
-		for (Hashtag hashtag : hashtags) {
-			trending.add(hashtag.getName());
-		}
+		trending.add("alltime");
+		trending.add("2013");
+		trending.add("classicrock");
+		trending.add("2012");
+		trending.add("2011");
+		trending.add("dance");
 		return trending;
 	}
 
