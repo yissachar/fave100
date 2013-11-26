@@ -55,7 +55,7 @@
 		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
 		<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 		<g:HTMLPanel ui:field="listAutocomplete"/>
-		<g:Label ui:styleName="{style.trendingHeader}">Trending Lists</g:Label>
+		<g:Label ui:styleName="{style.trendingHeader}">Featured Lists</g:Label>
 		<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />
 		<g:Anchor ui:field="aboutLink" ui:styleName="{style.aboutLink}">What's it all about?</g:Anchor>
 	</g:FlowPanel>
