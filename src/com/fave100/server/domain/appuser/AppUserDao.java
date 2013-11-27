@@ -646,10 +646,10 @@ public class AppUserDao {
 		if (currentUser.getUsername().equals(username))
 			throw new CannotFollowYourselfException();
 
-		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username));
-		Following following = ofy().load().type(Following.class).id(currentUser.getUsername()).get();
+		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
+		Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
 		if (following == null) {
-			following = new Following(currentUser.getUsername());
+			following = new Following(currentUser.getId());
 			ofy().save().entity(following).now();
 		}
 		if (following.getFollowing().contains(userRef))
@@ -664,11 +664,11 @@ public class AppUserDao {
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
-		final Following following = ofy().load().type(Following.class).id(currentUser.getUsername()).get();
+		final Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
 		if (following == null)
 			return;
 
-		following.getFollowing().remove(Ref.create(Key.create(AppUser.class, username)));
+		following.getFollowing().remove(Ref.create(Key.create(AppUser.class, username.toLowerCase())));
 		ofy().save().entity(following).now();
 	}
 
@@ -682,7 +682,7 @@ public class AppUserDao {
 	 * @throws UserNotFoundException
 	 */
 	public FollowingResult getFollowing(final String username, final int index) throws NotLoggedInException, UserNotFoundException {
-		// Only logged in users can see following
+		// Only logged in users can see following		
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
@@ -691,10 +691,10 @@ public class AppUserDao {
 		if (user == null)
 			throw new UserNotFoundException();
 
-		if (user.isFollowingPrivate() && !user.getUsername().equals(currentUser.getUsername()))
+		if (user.isFollowingPrivate() && !user.getId().equals(currentUser.getId()))
 			return null;
 
-		final Following following = ofy().load().type(Following.class).id(username).get();
+		final Following following = ofy().load().type(Following.class).id(username.toLowerCase()).get();
 		if (following != null && following.getFollowing() != null) {
 			List<Ref<AppUser>> users = following.getFollowing();
 			users = users.subList(index, Math.min(index + Constants.MORE_FOLLOWING_INC, following.getFollowing().size()));
@@ -710,8 +710,8 @@ public class AppUserDao {
 			throw new NotLoggedInException();
 
 		final String currentUserUsername = (String)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AUTH_USER);
-		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username));
-		final Following following = ofy().load().type(Following.class).id(currentUserUsername).get();
+		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
+		final Following following = ofy().load().type(Following.class).id(currentUserUsername.toLowerCase()).get();
 		return following != null && !following.getFollowing().isEmpty() && following.getFollowing().contains(userRef);
 	}
 
