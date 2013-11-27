@@ -1,4 +1,6 @@
 <project>
+	<taskdef name="antform" classname="com.sardak.antform.AntForm"  classpath="C:\Users\yissachar.radcliffe\dev\lib\antform-bin-2.0\lib\antform.jar"/>
+	
 	<property name="ae-sdk.dir" location="${AppEngineDir}" />
 	<property name="gwt-sdk.dir" location="${GwtDir}" />
 	<property name="staging.dir" location=".staging" />
@@ -42,8 +44,11 @@
 		<!-- Fetch the AppEngine properties to determine what app is being uploaded -->
 		<xmlproperty file="war/WEB-INF/appengine-web.xml" />
 		
-		<input message="You are uploading to ${appengine-web-app.application} version ${appengine-web-app.version}. Enter email:" addproperty="gae-email"/>
-	    <input message="Enter password:" addproperty="gae-password" />
+		<antform title="Deploy Fave100">
+			<label>You are uploading to ${appengine-web-app.application} version ${appengine-web-app.version}.</label>
+			<textProperty label="Email:" property="gae-email" required="true"/>
+			<textProperty label="Password:" property="gae-password" required="true" password="true"/>
+		</antform>
 	 
 		<delete dir="${staging.dir}" />
 	    <mkdir dir="${staging.dir}" />
