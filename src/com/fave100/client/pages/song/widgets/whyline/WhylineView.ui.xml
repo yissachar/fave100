@@ -28,7 +28,7 @@
     <g:FlowPanel>
     
     	<g:FlowPanel ui:styleName="{style.whylines} {style.tab}">
-    		<g:Label ui:styleName="{style.tabTitle}">Whylines</g:Label>
+    		<g:Label ui:styleName="{style.tabTitle}">Why-Lines</g:Label>
     		<g:FlowPanel ui:field="whylinePanel"></g:FlowPanel>
     	</g:FlowPanel>
     
