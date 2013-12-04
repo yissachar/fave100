@@ -167,11 +167,9 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 			if (_timesSkipped >= 2) {
 				dispatchEndedEvent();
 			}
-			else {
-				_videos.set(0, _videos.get(1));
-				_videos.set(1, currVid);
-				setVideoData(_videos);
-			}
+			_videos.set(0, _videos.get(1));
+			_videos.set(1, currVid);
+			setVideoData(_videos);
 		}
 		else {
 			dispatchEndedEvent();
