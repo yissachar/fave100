@@ -19,6 +19,7 @@ import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
@@ -208,6 +209,7 @@ public class FavelistPresenter extends
 		widgets = pickWidgets;
 
 		getView().setList(pickWidgets);
+		Window.scrollTo(0, 0);
 		eventBus.fireEvent(new FaveListSizeChangedEvent(faveList.size()));
 	}
 
