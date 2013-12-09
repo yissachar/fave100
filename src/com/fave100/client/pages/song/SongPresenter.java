@@ -236,6 +236,7 @@ public class SongPresenter extends
 		resizePlaylistAfterDelay(350);
 		resizePlaylistAfterDelay(500);
 		resizePlaylistAfterDelay(900);
+		resizePlaylistAfterDelay(1600);
 	}
 
 	private void resizePlaylistAfterDelay(int delay) {
