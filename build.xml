@@ -1,5 +1,5 @@
 <project>
-	<taskdef name="antform" classname="com.sardak.antform.AntForm"  classpath="C:\Users\yissachar.radcliffe\dev\lib\antform-bin-2.0\lib\antform.jar"/>
+	<taskdef name="antform" classname="com.sardak.antform.AntForm"  classpath="C:\Users\yissachar.radcliffe\dev\lib\java\antform-bin-2.0\lib\antform.jar"/>
 	
 	<property name="ae-sdk.dir" location="${AppEngineDir}" />
 	<property name="gwt-sdk.dir" location="${GwtDir}" />
