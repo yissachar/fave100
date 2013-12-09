@@ -1,5 +1,6 @@
 package com.fave100.client.pages.song.widgets.whyline;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.shared.SongInterface;
@@ -29,6 +30,13 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 		_requestFactory = requestFactory;
 
 		getView().setUiHandlers(this);
+	}
+
+	@Override
+	public void onHide() {
+		super.onHide();
+		getView().setWhylines(new ArrayList<WhylineProxy>());
+		getView().setUserLists(new ArrayList<UserListResultProxy>());
 	}
 
 	public void showWhylines(SongInterface song) {
