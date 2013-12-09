@@ -72,11 +72,11 @@ public class RequestCache {
 		}
 
 		// If there is no existing request, create one
-		if (reqRunning == false) {
+		if (!reqRunning) {
 			_runningRequests.put(request, true);
 			final Request<FollowingResultProxy> followingUserReq = _requestFactory.appUserRequest().getFollowing(username, 0);
 			// If there is no existing request, create one
-			if (reqRunning == false) {
+			if (!reqRunning) {
 				_runningRequests.put(request, true);
 
 				followingUserReq.fire(new Receiver<FollowingResultProxy>() {
@@ -117,7 +117,7 @@ public class RequestCache {
 		}
 
 		// If there is no existing request, create one
-		if (reqRunning == false) {
+		if (!reqRunning) {
 			_runningRequests.put(request, true);
 			Request<String> loginUrlReq = null;
 			switch (request) {
