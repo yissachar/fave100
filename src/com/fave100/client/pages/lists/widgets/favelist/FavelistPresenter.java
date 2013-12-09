@@ -219,7 +219,7 @@ public class FavelistPresenter extends
 			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 		}
 		else {
-			if (currentUser.getHashtags().size() == 1 || forceAddToCurrentList == true) {
+			if (currentUser.getHashtags().size() == 1 || forceAddToCurrentList) {
 				currentUser.addSong(songID, song, artist);
 			}
 			else {

@@ -119,7 +119,7 @@ public class PasswordResetPresenter
 		sendEmailReq.fire(new Receiver<Boolean>() {
 			@Override
 			public void onSuccess(final Boolean validInfo) {
-				if (validInfo == false) {
+				if (!validInfo) {
 					// Warn user if invalid username or email
 					getView().showTokenError();
 				}
@@ -159,7 +159,7 @@ public class PasswordResetPresenter
 		changePasswordReq.fire(new Receiver<Boolean>() {
 			@Override
 			public void onSuccess(final Boolean pwdChanged) {
-				if (pwdChanged == false) {
+				if (!pwdChanged) {
 					String errorMsg = "Incorrect password";
 					if (!token.isEmpty()) {
 						errorMsg = "Token expired or doesn't exist";

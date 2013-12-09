@@ -797,7 +797,7 @@ public class AppUserDao {
 			appUser = getLoggedInAppUser();
 			if (appUser != null) {
 				// We have a logged in user, check if pwd matches
-				if (BCrypt.checkpw(tokenOrPassword, appUser.getPassword()) == true) {
+				if (BCrypt.checkpw(tokenOrPassword, appUser.getPassword())) {
 					// Password matches, allow password change
 					changePwd = true;
 				}

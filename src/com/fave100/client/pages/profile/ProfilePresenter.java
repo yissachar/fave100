@@ -174,7 +174,7 @@ public class ProfilePresenter extends
 				@Override
 				public void onSuccess(final Boolean saved) {
 					LoadingIndicator.hide();
-					if (saved == true) {
+					if (saved) {
 						oldUserInfo = userInfo;
 						populateFields(userInfo);
 						getView().setFormStatusMessage("Profile saved");

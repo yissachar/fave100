@@ -109,7 +109,7 @@ public class FaveListDao {
 			}
 		}
 
-		if (unique == false)
+		if (!unique)
 			throw new SongAlreadyInListException();
 
 		// Create the new FaveItem
@@ -254,7 +254,7 @@ public class FaveListDao {
 	}
 
 	public double calculateItemScore(final int position) {
-		return ((double)(-1 * position) / 11 + (111 / 11));
+		return ((double)(-1 * position) / 11 + ((double)111 / 11));
 	}
 
 	public List<String> getTrendingFaveLists() {

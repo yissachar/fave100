@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.fave100.client.events.song.YouTubePlayerEndedEvent;
 import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -29,11 +29,6 @@ public class YouTubePresenter extends PresenterWidget<YouTubePresenter.MyView>
 		super(eventBus, view);
 		_eventBus = eventBus;
 		getView().setUiHandlers(this);
-	}
-
-	@Override
-	protected void onBind() {
-		super.onBind();
 	}
 
 	public void setYouTubeVideos(final List<YouTubeSearchResultProxy> videos) {
