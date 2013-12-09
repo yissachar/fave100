@@ -271,7 +271,6 @@ public class FaveListDao {
 		trending.add("wedding");
 		trending.add("dance");
 		trending.add("classicrock");
-		trending.add("cwparty");
 		return trending;
 	}
 
