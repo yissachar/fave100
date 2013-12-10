@@ -31,7 +31,7 @@ public class ListManagerPresenter extends
 		implements ListManagerUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<ListManagerUiHandlers> {
-		void refreshList(List<String> lists, String selected);
+		void refreshList(List<String> lists, String selected, boolean ownList);
 
 		void showError(String msg);
 
@@ -134,7 +134,7 @@ public class ListManagerPresenter extends
 		hashtags.remove(_hashtag);
 		final boolean ownList = _currentUser != null && _currentUser.equals(_user);
 		getView().setOwnList(ownList);
-		getView().refreshList(hashtags, _hashtag);
+		getView().refreshList(hashtags, _hashtag, ownList);
 		// Hide the whole list if only default list in there and other user page
 		if (hashtags.size() <= 0 && !ownList) {
 			getView().hide();
@@ -160,9 +160,11 @@ public class ListManagerPresenter extends
 
 	@Override
 	public void getGlobalAutocomplete(final String searchTerm) {
+		final boolean ownList = _currentUser != null && _currentUser.equals(_user);
+
 		if (searchTerm.isEmpty()) {
 			final List<String> emptyList = new ArrayList<String>();
-			getView().refreshList(emptyList, _hashtag);
+			getView().refreshList(emptyList, _hashtag, ownList);
 			return;
 		}
 
@@ -170,9 +172,17 @@ public class ListManagerPresenter extends
 		autocompleteReq.fire(new Receiver<List<String>>() {
 			@Override
 			public void onSuccess(final List<String> suggestions) {
-				getView().refreshList(suggestions, _hashtag);
+				getView().refreshList(suggestions, _hashtag, ownList);
 			}
 		});
+	}
+
+	@Override
+	public void deleteList(final String listName) {
+		final Request<Void> faveListReq = _requestFactory.faveListRequest().deleteFaveListForCurrentUser(listName);
+		faveListReq.fire();
+		_currentUser.getHashtags().remove(listName);
+		refreshUsersLists();
 	}
 
 	@Override
@@ -231,4 +241,6 @@ interface ListManagerUiHandlers extends UiHandlers {
 	void setAutocompleteFocus(boolean focus);
 
 	void clearSearch();
+
+	void deleteList(String listName);
 }

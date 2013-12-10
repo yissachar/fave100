@@ -75,16 +75,24 @@
 			max-height: 300px;
 		}
 		
-		.listContainer > div {			
-			padding: 5px;
-		}
-		
 		.listContainer > div:hover {
 			background-color: #5eaae5;
 			color: #fff;
 		}
 		
 		.listContainer .selected {
+		}
+		
+		.listContainer .listName {
+			width: 90%;
+			display: inline-block;
+			padding: 5px;			
+		}
+		
+		.listContainer .deleteButton {			
+			float: right;
+			padding: 6px;
+			font-size: 12px;
 		}
 		
 		.errorMsg {
