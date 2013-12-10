@@ -7,6 +7,8 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.widgets.alert.AlertCallback;
+import com.fave100.client.widgets.alert.AlertPresenter;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.AppUserProxy;
@@ -57,6 +59,7 @@ public class ListManagerPresenter extends
 	private PlaceManager _placeManager;
 	private boolean _globalList = false;
 	@Inject AddListAutocompletePresenter autocomplete;
+	@Inject AlertPresenter alertPresenter;
 
 	@Inject
 	public ListManagerPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager) {
@@ -179,10 +182,23 @@ public class ListManagerPresenter extends
 
 	@Override
 	public void deleteList(final String listName) {
-		final Request<Void> faveListReq = _requestFactory.faveListRequest().deleteFaveListForCurrentUser(listName);
-		faveListReq.fire();
-		_currentUser.getHashtags().remove(listName);
-		refreshUsersLists();
+		alertPresenter.setAlertCallback(new AlertCallback() {
+
+			@Override
+			public void onOk() {
+				final Request<Void> faveListReq = _requestFactory.faveListRequest().deleteFaveListForCurrentUser(listName);
+				faveListReq.fire();
+				_currentUser.getHashtags().remove(listName);
+				refreshUsersLists();
+			}
+
+			@Override
+			public void onCancel() {
+				// Alert canceled, do nothing				
+			}
+		});
+		addToPopupSlot(alertPresenter);
+
 	}
 
 	@Override

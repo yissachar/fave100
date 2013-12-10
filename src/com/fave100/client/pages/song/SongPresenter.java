@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.song.PlaylistSongChangedEvent;
-import com.fave100.client.pagefragments.popups.addsong.addsong.AddSongPresenter;
+import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.song.widgets.playlist.PlaylistPresenter;
