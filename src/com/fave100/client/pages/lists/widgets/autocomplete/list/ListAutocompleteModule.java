@@ -1,6 +1,6 @@
 package com.fave100.client.pages.lists.widgets.autocomplete.list;
 
-import com.fave100.client.pagefragments.popups.addsong.addsong.AddSongModule;
+import com.fave100.client.pagefragments.popups.addsong.AddSongModule;
 import com.fave100.client.pages.song.widgets.whyline.WhylineModule;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 

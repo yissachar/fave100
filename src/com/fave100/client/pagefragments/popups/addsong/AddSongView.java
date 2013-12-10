@@ -1,4 +1,4 @@
-package com.fave100.client.pagefragments.popups.addsong.addsong;
+package com.fave100.client.pagefragments.popups.addsong;
 
 import java.util.ArrayList;
 import java.util.List;
