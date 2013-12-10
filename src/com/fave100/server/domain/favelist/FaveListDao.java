@@ -83,6 +83,17 @@ public class FaveListDao {
 		});
 	}
 
+	public void deleteFaveListForCurrentUser(final String listName) throws NotLoggedInException {
+		final AppUser currentUser = appUserDao.getLoggedInAppUser();
+		if (currentUser == null)
+			throw new NotLoggedInException();
+
+		currentUser.getHashtags().remove(listName);
+		ofy().save().entity(currentUser).now();
+
+		ofy().delete().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveListDao.SEPERATOR_TOKEN + listName.toLowerCase()).now();
+	}
+
 	public void addFaveItemForCurrentUser(final String hashtag, final String songID)
 			throws Exception {
 

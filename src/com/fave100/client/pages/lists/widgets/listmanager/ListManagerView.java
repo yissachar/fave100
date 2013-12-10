@@ -6,6 +6,10 @@ import java.util.List;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -16,6 +20,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -48,6 +53,10 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 		String selected();
 
 		String dropdownVisible();
+
+		String listName();
+
+		String deleteButton();
 	}
 
 	@Inject
@@ -127,11 +136,14 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	}
 
 	@Override
-	public void refreshList(final List<String> lists, final String selected) {
+	public void refreshList(final List<String> lists, final String selected, boolean ownList) {
 		listContainer.clear();
 		int i = 0;
 		for (final String list : lists) {
-			final Label label = new Label(list);
+			final FlowPanel listItemContainer = new FlowPanel();
+
+			final InlineLabel label = new InlineLabel(list);
+			label.addStyleName(style.listName());
 			label.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
@@ -139,21 +151,51 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 					hideDropdown();
 				}
 			});
-			listContainer.add(label);
+			listItemContainer.add(label);
+
+			if (ownList) {
+				final InlineLabel deleteButton = new InlineLabel("✖");
+				deleteButton.setVisible(false);
+				deleteButton.addStyleName(style.deleteButton());
+				deleteButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						getUiHandlers().deleteList(list);
+					}
+				});
+				listItemContainer.add(deleteButton);
+
+				MouseOverHandler mouseOverHandler = new MouseOverHandler() {
+					@Override
+					public void onMouseOver(MouseOverEvent event) {
+						deleteButton.setVisible(true);
+					}
+				};
+
+				MouseOutHandler mouseOutHandler = new MouseOutHandler() {
+					@Override
+					public void onMouseOut(MouseOutEvent event) {
+						deleteButton.setVisible(false);
+					}
+				};
+
+				deleteButton.addMouseOverHandler(mouseOverHandler);
+				deleteButton.addMouseOutHandler(mouseOutHandler);
+				label.addMouseOverHandler(mouseOverHandler);
+				label.addMouseOutHandler(mouseOutHandler);
+			}
+
+			listContainer.add(listItemContainer);
+
 			if (list.equals(selected)) {
 				label.addStyleName("selected");
 				selectedIndex = i;
 			}
+
 			i++;
 		}
 
 		currentList.setText(selected);
-		/*globalListLink.setTargetHistoryToken(new ParameterTokenFormatter()
-				.toPlaceToken(new PlaceRequest.Builder()
-						.nameToken(NameTokens.lists)
-						.with(ListPresenter.LIST_PARAM, selected)
-						.build()));
-		globalListLink.setText("View the global " + selected + " list");*/
 	}
 
 	@Override

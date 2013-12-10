@@ -13,6 +13,8 @@ public interface FaveListRequest extends RequestContext {
 
 	Request<Void> addFaveListForCurrentUser(String hashtag);
 
+	Request<Void> deleteFaveListForCurrentUser(String listName);
+
 	Request<Void> addFaveItemForCurrentUser(String hashtag, String songID);
 
 	Request<Void> removeFaveItemForCurrentUser(String hashtag, String songID);
