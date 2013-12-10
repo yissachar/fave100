@@ -6,10 +6,6 @@ import java.util.List;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -155,7 +151,6 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 			if (ownList) {
 				final InlineLabel deleteButton = new InlineLabel("✖");
-				deleteButton.setVisible(false);
 				deleteButton.addStyleName(style.deleteButton());
 				deleteButton.addClickHandler(new ClickHandler() {
 					@Override
@@ -164,25 +159,6 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 					}
 				});
 				listItemContainer.add(deleteButton);
-
-				MouseOverHandler mouseOverHandler = new MouseOverHandler() {
-					@Override
-					public void onMouseOver(MouseOverEvent event) {
-						deleteButton.setVisible(true);
-					}
-				};
-
-				MouseOutHandler mouseOutHandler = new MouseOutHandler() {
-					@Override
-					public void onMouseOut(MouseOutEvent event) {
-						deleteButton.setVisible(false);
-					}
-				};
-
-				deleteButton.addMouseOverHandler(mouseOverHandler);
-				deleteButton.addMouseOutHandler(mouseOutHandler);
-				label.addMouseOverHandler(mouseOverHandler);
-				label.addMouseOutHandler(mouseOutHandler);
 			}
 
 			listContainer.add(listItemContainer);

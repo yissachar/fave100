@@ -198,7 +198,6 @@ public class ListManagerPresenter extends
 			}
 		});
 		addToPopupSlot(alertPresenter);
-
 	}
 
 	@Override
