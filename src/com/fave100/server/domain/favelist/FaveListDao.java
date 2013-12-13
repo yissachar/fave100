@@ -279,6 +279,8 @@ public class FaveListDao {
 		List<String> trending = new ArrayList<>();
 		trending.add("alltime");
 		trending.add("2013");
+		trending.add("2012");
+		trending.add("2011");
 		trending.add("wedding");
 		trending.add("dance");
 		trending.add("classicrock");
