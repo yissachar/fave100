@@ -84,7 +84,7 @@
 		}
 		
 		.listContainer .listName {
-			width: 89%;
+			width: 87%;
 			display: inline-block;
 			padding: 5px;			
 		}
