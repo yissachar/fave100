@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+<head>
+	<title>Fave100 Documentation</title>
+	<style type="text/css">
+		body {
+			background-color: #FAFAFA;
+			color: #555;
+			font-size: 1.1em;
+			font-family: "calibri", sans-serif;
+		}
+
+		h2 {
+			text-decoration: underline;
+		}
+
+		#wrap {
+			display: block;
+			margin: 0 auto;
+			width: 960px;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+
+	<h1>Fave100 Documentation</h1>
+	<a href="#devEnvironment">Setting Up Development Environment</a><br>
+	<a href="#musicbrainzVM">Setting Up MusicBrainz VM</a><br>
+	<a href="#updatingSongs">Updating Song Database</a><br>
+	<a href="#dedupeSongs">Removing duplicate songs</a><br>
+	<a href="#basicAppStructure">Basic app structure</a><br>
+	<a href="#codeRepos">Code Repositories</a><br>
+	<a href="#upgradeAE-GWT">Upgrading AppEngine and GWT version</a><br>
+	<a href="#testingAvatarUpload">Testing Avatar Upload Locally</a><br>
+
+	<a name="devEnvironment"/>
+	<h2>Setting Up Development Environment</h2>
+	<p>The following instructions assume you are on a Windows setup.</p>
+	<ol>
+		<li>Follow instructions to download and install <a href="http://musicbrainz.org/doc/MusicBrainz_Server/Setup#MusicBrainz_Server_virtual_machine">MusicBrainz VM</a></li>
+		<li>Download latest version of Eclipse IDE for Java Developers (not EE version)</li>
+		<li>Install <a href="https://developers.google.com/eclipse/docs/getting_started">Google Plugin for Eclipse</a></li>
+		<li>Install <a href="https://github.com/ArcBees/gwtp-eclipse-plugin">GWTP Eclipse Plugin</a></li>
+		<li>Install <a href="http://msysgit.github.io">Git</a></li>
+		<li>Install <a href="https://code.google.com/p/gitextensions">Git Extensions</a></li>
+		<li>Clone Fave100 project: git clone https://github.com/yissachar/fave100</li>
+		<li>
+			<p>Enable Eclipse Annotation Processing:</p>
+			<ul>
+				<li>
+				Project->Properties->Java Compiler->Annotation Processing: Enable all check marks
+				</li>
+				<li>Project->Properties->Java Compiler->Annotation Processing->Factory Path: add external JAR, broswe to GWT SDK location and select requestfactory-apt.jar</li>
+			</ul>
+		</li>
+		<li>
+			<p>Remove JDO/JPA: Project->Properties->Google->App Engine</p>
+			<ul>
+				<li>Check enable local HRD</li>
+				<li>Uncheck use Datanucleus JDO/JPA</li>
+			</ul>
+		</li>	
+		<li>Edit Ant build.xml configuration to point to correct SDK locations. Do not push changes to Git!</li>	
+	</ol>
+
+	<a name="musicbrainzVM"/>
+	<h2>Musicbrainz VM</h2>
+	<p>All the song data is obtained from Musicbrainz. A VM containing the Musicbrainz database (PostgreSQL) must be set up and periodically synced with the Musicbrainz data dumps (see <a href="#updatingSongs">Updating Song Database</a>).</p>
+	<p>In addition to the standard Musicbrainz tables, there are 4 custom Fave100 tables:</p>
+	<ul>
+		<li>autocomplete_search</li>
+		<li>autocomplete_search_staging</li>
+		<li>autocomplete_search_bad_parens</li>
+		<li>autocomplete_search_dupes</li>
+	</ul>
+
+	<h4>autocomplete_search</h4>
+	<p>autocomplete_search represents the entirety of the Fave100 song collection. It includes a unique integer ID for every song stored.</p>
+
+	<h4>autocomplete_search_staging</h4>
+	<p>autocomplete_search_staging is a temporary table that is rebuilt from scratch every time we wish to update the Fave100 song collection. It runs the entire Musicbrainz data set through a variety of filters and checks (for instance, de-duplicating the data) to give us the best results. New results that are obtained through this build (e.g. songs added to the Musicbrainz database since the last time that we updated autocomplete_search_staging) are then added to to autocomplete_search.</p>
+
+	<h4>autocomplete_search_bad_parens</h4>
+	<p>autocomplete_search_bad_parens contains a variety of entries that Fave100 considers to be duplicate with a non-parenthesis version when surrounded by parenthesis. For instance, "Stairway to Heaven" and "Stairway to Heaven (acoustic)" are considered by Fave100 to be the same song. autocomplete_search_bad_parens allows for entries to easily be added when they are noted</p>
+
+	<h4>autocomplete_search_dupes</h4>
+	<p>autocomplete_search_dupes contains manually added dupes and their links to the master song. When a song is flagged as a dupe it is inserted into this table. The AppEngine deduper uses this table to determine what songs to dedupe. When autocomplete_search is updated, autocomplete_search_dupes is consulted to determine that we do not add any songs that are flagged as dupes.</p>
+
+	<h3>Setting up MuiscBrainz VM</h3>
+	<ol>
+		<li>Download and install VirtualBox</li>
+		<li>Download Musicbrainz VM torrent: <a href="http://musicbrainz.org/doc/MusicBrainz_Server/Setup">http://musicbrainz.org/doc/MusicBrainz_Server/Setup</a></li>
+		<li>VirtualBox menu: File -> Import appliance, select downloaded OVA, and give 4096MB RAM (or as close to that as your machine can afford)</li>
+		<li>Right-click VM: Settings->Network: Set bridged adapter connection</li>
+		<li>Start VM and login with usename "vm" and password "musicbrainz"</li>
+		<li>Run command "sudo su - postgres"</li>
+		<li>Open "/etc/postgresql/9.1/main/pg_hba.conf" in a text editor</li>
+		<li>Add line: "host all all {IP of client you want to add}/32 trust" and save file</li>
+		<li>Open "/etc/postgresql/9.1/main/postgresql.conf.in" in a text editor</li>
+		<li>Add line "listen_addresses = '*' ", remove performance tuning lines and save file</li>
+		<li>Run command "/etc/init.d/postgresql restart"</li>
+		<li>Run command "logout"</li>
+		<li>Run command "cd /home/musicbrainz/"</li>
+		<li>Run command "sudo mkdir dumps"</li>
+		<li>Run command "sudo git clone https://yissachar@bitbucket.org/yissachar/fave100-autocomplete.git"</li>
+		<li>Run command "cd fave100-autocomplete"</li>
+		<li>Run command "sudo vi MUSICBRAINZ_LATEST" and save file (blank file)</li>
+		<li>Run command "sudo crontab -e"</li>
+		<li>Add line "0 0 * * * python /home/musicbrainz/fave100-autocomplete/updateMusicbrainz.py > /tmp/musicbrainz_update.log 2>&1"  and save</li>
+		<li>Change datetime settings so crontab will run when it should: "sudo dpkg-reconfigure tzdata" select location</li>
+		<li>Ensure time synced: "sudo ntpdate ntp.ubuntu.com"</li>
+		<li>Run command "sudo python updateMusicbrainz.py" This will take a long time to complete!</li>
+		<li>If you are setting up the VM from scratch with no existing data, continue below. Otherwise skip the rest of the instructions and instead continue from <a href="#updatingSongs">Updating Song Database</a></li>
+		<li>Run command "sudo su - postgres"</li>
+		<li>Run command "dropdb musicbrainz"</li>
+		<li>Run command "cd /home/musicbrainz/musicbrainz_server/"</li>
+		<li>Run command "./admin/InitDb.pl --createdb --import /home/musicbrainz/dumps/DATE/mbdump --echo"</li>
+		<li>Run CreateTables.sql from fave100-autocomplete repo</li>
+		<li>Follow instructions in <a href="#updatingSongs">Updating Song Database</a> from step 6 (Install MODE command) and on</li>
+		<li>Run SQL query: "update autocomplete_search set searchable_artist = 'kesha' where searchable_artist = 'ke$ha';"</li>
+		<li>Run SQL query: "update autocomplete_search set searchable_artist = 'pink' where searchable_artist = 'p!nk';"</li>
+	</ol>	
+
+	<h3>Setting up MusicBrainz VM from existing snapshots</h3>	
+	<ol>
+		<li>Backups are stored in \\broadview\WebDev\MusicBrainz VM</li>
+		<li>Run VirtualBox and create VM from existing VDI file</li>
+		<li>Restore to specified snapshots</li>
+	</ol>
+
+	<a name="updatingSongs"/>
+	<h2>Updating Song Database</h2>
+	<ol>
+		<li>Verify that the latest Musicbrainz dump exists in /mnt/postgres/dumps/. The <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">Musicbrainz server</a> is scanned daily with the <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/5749173c03b6be3c8c15300c03086e315385385e/updateMusicbrainz.py?at=master">updateMusicbrainz.py script</a> and new dumps are downloaded when found.</li>
+		<li>Backup up autocomplete_search.* tables through PGAdmin 3 GUI</li>
+		<li>Drop the Musicbrainz database: On VM run "sudo su - postgres" and then "dropdb musicbrainz"</li>
+		<li>Create and import new data dump with command: "/home/musicbrainz/musicbrainz-server/admin/InitDb.pl --createdb --import /home/musicbrainz/dumps/DATE/mbdump --echo"</li>
+		<li>Restore backed_up autocomplete_search.* tables with command: psql -h {{VM IP_ADDRESS}} -U musicbrainz -d musicbrainz -f /path/to/backup</li>
+		<li>Rebuild the Fave100 tables with the new Musicbrainz data by running <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src">RebuildSQL.bat {{VM IP_ADDRESS}}</a>. This script assumes the availability of "psql" command. The script will take a couple of hours to run (assuming the VM has at least 4GB of RAM).</li>		
+		<li>Run the <a href="https://github.com/hellofornow/fave100-tomcat/blob/master/src/main/java/com/caseware/fave100/Index.java">Lucene Indexer</a> to build a Lucene index from the PostgreSQL autocomplete_search song database.</li>
+		<li>Copy resulting index into <a href="https://github.com/hellofornow/fave100-tomcat">Fave100 Tomcat</a> resources. Build Fave-100 Tomcat (clean tomcat:deploy).</li>
+		<li>Deploy the resulting WAR to Jelastic</li>
+	</ol>
+
+	<a name="dedupeSongs"/>
+	<h2>Removing Duplicate Songs</h2>
+	<p>At times we will come across songs in the database that we know to be duplicates but that cannot be caught by the database builder. When this happens we can manually tag the songs as duplicates using the following procedure:</p>
+	<ol>
+		<li>Run the <a href="https://bitbucket.org/yissachar/fave100-dedupe/src/36fa90d25c7b84fbb3fa2d7a5764b28f5cd8d9e4/src/main/java/com/fave100/dedupe/App.java?at=master">database deduper</a> with the following arguments: [ID_OF_DUPE] [ID_OF_MASTER]. This will delete the dupe from the actual song database and create a new entry in the dupe database indicating that the song is a dupe of the master song. When the song database is rebuilt, all songs in the dupe database will be ignored.</li>
+		<li>Run the <a href="https://bitbucket.org/yissachar/fave100-appengine-dedupe/src/8a2a90caaf8a5782906ea38bc33d006b9d8c6b51/src/main/java/com/fave100/appengine_dedupe/App.java?at=master">AppEngine deduper</a>. This will go through all songs in the dupe database that haven't yet been purged from AppEngine and replace them with the master song in each user's favelist. This does not need to be run after each dedupe, but it should be run before too many unpurged dupes accumulate. If we find ourselved constantly deduping songs, consider running the AppEngine deduper as a cron job.</li>
+	</ol>
+
+	<a name="basicAppStructure"/>
+	<h2>Basic App Structure</h2>
+	<p>
+		The app consists of 3 basic components:
+	</p>
+	<ul>
+		<li>GWTP Client</li>
+		<li>AppEngine Server</li>
+		<li>Lucene Song Server</li>
+	</ul>
+
+	<h4>GWTP Client</h4>
+	<p>Manages all client-side actions and display. Interfaces with AppEngine Server through RequestFactory and with Lucene Song Server through JSONP</p>
+
+	<h4>AppEngine Server</h4>
+	<p>AppEngine manages storage for all entities aside from Songs. For example, AppUser, Favelist, FaveItem, etc. are all AppEngine Datastore entities. Song entities are managed through references to their unique integer ID and retrieved through Lucene.</p>
+
+	<h4>Lucene Song Storage</h4>
+	<p>Lucene (Tomcat server hosted on Jelastic) manages storage of all Song entities. Lucene server provides search (autocomplete) and  lookup (by unique integer ID) APIs.</p>
+
+	<a name="codeRepos"/>
+	<h2>Code Repositories</h2>
+	<p>
+		Fave100 Source consists of multiple repositories stored on different services.
+	</p>
+	<ul>
+		<li>
+			<b>Client-Server</b>
+			<a href="https://github.com/yissachar/fave100">https://github.com/yissachar/fave100</a>
+			<p>For the GWT client and the AppEngine server.</p>
+		</li>
+		<li>
+			<b>Lucene Search</b>
+			<a href="https://github.com/hellofornow/fave100-tomcat">https://github.com/hellofornow/fave100-tomcat</a>
+			<p>For building a Lucene index from the song database, as well as a Tomcat server for running search and lookup operations.</p>
+		</li>
+		<li>
+			<b>Song Database Building</b>
+			<a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/">https://bitbucket.org/yissachar/fave100-autocomplete/src/</a>
+			<p>For building and updating the PostgreSQL song database.</p>
+		</li>			
+		<li>
+			<b>Song Database Deduper</b>
+			<a href="https://bitbucket.org/yissachar/fave100-dedupe/src">https://bitbucket.org/yissachar/fave100-dedupe/src</a>
+			<p>For going through the PostgreSQL song database and removing any songs that have been marked as dupes</p>
+		</li>	
+		<li>
+			<b>AppEngine Deduper</b>
+			<a href="https://bitbucket.org/yissachar/fave100-appengine-dedupe/src">https://bitbucket.org/yissachar/fave100-appengine-dedupe/src</a>
+			<p>For iterating through all AppEngine entities and de-duping any songs that point to a duplicate.</p>
+		</li>		
+	</ul>
+
+	<a name="upgradeAE-GWT"/>
+	<h2>Upgrading AppEngine and GWT version</h2>
+
+	<ol>
+		<li>Find the latest <a href="https://developers.google.com/eclipse/docs/download">Google Plugin for Eclipse</a></li>
+		<li>In Eclipse Help->Install new software, install the plugin</li>
+		<li>In Maven pom.xml update gwt.version and appengine.version properties</li>
+		<li>In ANT build.xml run configuration update AppEngineDir and GwtDir arguments</li>
+		<li>Run build.xml</li>
+	</ol>
+	
+	<a name="testingAvatarUpload"/>
+	<h2>Testing Avatar Upload Locally</h2>
+	<p>The local blobstore service has a few idiosyncrasies that must be followed in order for it to work correctly:</p>
+	<ol>
+		<li>The URL must be the name of your computer and not 127.0.0.1. Additionally, ensure that the URL host of the dev server matches the URL that the avatar upload is being POSTed to, otherwise they will not share sessions and the avatar upload will fail.</li>
+		<li>In dev mode, you cannot change an avatar locally once it has been uploaded, due to a bug with the dev server, which locks images. Instead use hosted mode to perform this operation.</li>
+	</ol>
+
+	</div>
+</body>
+</html>
