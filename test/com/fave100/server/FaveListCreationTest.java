@@ -26,6 +26,7 @@ import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
 
 public class FaveListCreationTest {
@@ -58,6 +59,7 @@ public class FaveListCreationTest {
 
 	@After
 	public void tearDown() {
+		ObjectifyFilter.complete();
 		helper.tearDown();
 		loggedInUser = null;
 		faveListDao = null;

@@ -20,6 +20,7 @@ import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
 
 public class UserCreationTest {
@@ -42,6 +43,7 @@ public class UserCreationTest {
 
 	@After
 	public void tearDown() {
+		ObjectifyFilter.complete();
 		helper.tearDown();
 	}
 
