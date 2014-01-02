@@ -9,7 +9,7 @@
 		width: 100%;
 		top: 15%;
 		left: 0;
-		height: 350px;
+		height: 380px;
 		max-height: 70%;
 		overflow: hidden;
 		z-index: 100000;
@@ -27,9 +27,9 @@
 	}
         
     .lightBox {
-		border: 1px solid #555; 
+		border: 1px solid #888; 
 		position: relative;
-		width: 35%;
+		width: 38%;
 		margin: 0 auto;
 		min-width: 250px;
 		max-width: 800px;
@@ -40,7 +40,8 @@
     .header {
 		color: #fff;
 		background-color: #5eaae5;
-		padding: 5px;
+		padding: 12px;
+		font-size: 1.05em;
     }    
 		
 	.content {
@@ -50,22 +51,46 @@
 	}
 	
 	.checkboxes {
-		height: 80%;
+		height: 70%;
 		overflow-y: auto;
 	}
 	
 	.checkboxes > span {		
 		display: block;
 		padding: 3px;
+	}	
+	
+	.checkboxes > span:hover {
+		background-color: #eee;
 	}
 	
 	.checkboxes > span > input {
 		margin-right: 7px;
+		margin-top: 5px;
+		float: right;
 	}
 	
-	.content > button {
+	.checkboxes > span > label {
+		display: block;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	
+	.buttons {
+		padding-top: 20px;
 		margin-top: 10px;
-		margin-right: 10px;
+		border-top: 1px solid #bbb;
+		width: 100%;
+	}
+	
+	.buttons button {
+		margin-right: 10px;		
+		width: 100px;
+		float: right;
 	}
     </ui:style>
     
@@ -78,8 +103,10 @@
 				</g:SimplePanel>
 				<g:FlowPanel ui:styleName="{style.content}">
 					<g:FlowPanel ui:field="checkboxContainer" ui:styleName="{style.checkboxes}" />
-					<g:Button ui:field="okButton">OK</g:Button>
-					<g:Button ui:field="cancelButton">Cancel</g:Button>
+					<g:FlowPanel ui:styleName="{style.buttons}">			
+						<g:Button ui:field="okButton">OK</g:Button>		
+						<g:Button ui:field="cancelButton">Cancel</g:Button>
+					</g:FlowPanel>
 				</g:FlowPanel>				
 			</g:FlowPanel>
 		</g:HTMLPanel>
