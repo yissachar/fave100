@@ -91,7 +91,21 @@ public class FaveListDao {
 		currentUser.getHashtags().remove(listName);
 		ofy().save().entity(currentUser).now();
 
-		ofy().delete().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveListDao.SEPERATOR_TOKEN + listName.toLowerCase()).now();
+		FaveList listToDelete = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveListDao.SEPERATOR_TOKEN + listName.toLowerCase()).get();
+
+		// Get associated WhyLines and mark for deletion
+		List<Ref<Whyline>> whylinesToDelete = new ArrayList<>();
+		for (FaveItem faveItem : listToDelete.getList()) {
+			Ref<Whyline> whylineRef = faveItem.getWhylineRef();
+			if (whylineRef != null)
+				whylinesToDelete.add(whylineRef);
+		}
+
+		// Delete FaveList
+		ofy().delete().entity(listToDelete).now();
+
+		// Delete associated WhyLines
+		ofy().delete().entities(whylinesToDelete).now();
 	}
 
 	public void addFaveItemForCurrentUser(final String hashtag, final String songID)

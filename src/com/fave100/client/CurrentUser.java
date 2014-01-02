@@ -283,6 +283,11 @@ public class CurrentUser implements AppUserProxy {
 		});
 	}
 
+	public void deleteList(String name) {
+		getHashtags().remove(name);
+		faveLists.remove(name);
+	}
+
 	public List<FaveItemProxy> getFaveList() {
 		return faveLists.get(_currentHashtag);
 	}
