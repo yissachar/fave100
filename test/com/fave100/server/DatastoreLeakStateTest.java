@@ -12,6 +12,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.dev.HighRepJobPolicy;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
 
 public class DatastoreLeakStateTest {
@@ -46,6 +47,7 @@ public class DatastoreLeakStateTest {
 
 	@After
 	public void tearDown() {
+		ObjectifyFilter.complete();
 		helper.tearDown();
 	}
 
