@@ -188,7 +188,7 @@ public class ListManagerPresenter extends
 			public void onOk() {
 				final Request<Void> faveListReq = _requestFactory.faveListRequest().deleteFaveListForCurrentUser(listName);
 				faveListReq.fire();
-				_currentUser.getHashtags().remove(listName);
+				_currentUser.deleteList(listName);
 				refreshUsersLists();
 			}
 
