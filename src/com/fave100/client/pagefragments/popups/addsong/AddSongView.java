@@ -44,6 +44,7 @@ public class AddSongView extends PopupViewWithUiHandlers<AddSongUiHandlers> impl
 			checkboxContainer.add(checkBox);
 		}
 		headerLabel.setText("Add \"" + songName + "\" to the following lists:");
+		checkboxContainer.setHeight(String.valueOf(275 - headerLabel.getOffsetHeight()) + "px");
 	}
 
 	@UiHandler("lightBoxBackground")

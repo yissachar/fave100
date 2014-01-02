@@ -50,8 +50,8 @@
 		height: 100%;
 	}
 	
+	/* Height will be set in AddSongView.java */
 	.checkboxes {
-		height: 70%;
 		overflow-y: auto;
 	}
 	
