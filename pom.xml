@@ -11,7 +11,7 @@
 
 	<properties>
 		<!-- convenience to define GWT version in one place -->
-		<gwt.version>2.5.1</gwt.version>
+		<gwt.version>2.6.0-rc4</gwt.version>
 		<appengine.version>1.8.4</appengine.version>
 		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
 		<gwtp.version>1.0.1</gwtp.version>
@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>com.google.gwt.inject</groupId>
 			<artifactId>gin</artifactId>
-			<version>2.0.0</version>
+			<version>2.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>aopalliance</groupId>
