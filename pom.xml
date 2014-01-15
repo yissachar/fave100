@@ -20,6 +20,14 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>	
+	
+	<repositories>
+        <!-- temporary repo for gss.gwt snapshot -->
+        <repository>
+            <id>site</id>
+            <url>http://gwtquery-plugins.googlecode.com/svn/mavenrepo</url>
+        </repository>
+    </repositories>
 
 	<dependencies>
 		<dependency>
@@ -157,7 +165,14 @@
 			<version>1.8.4</version>
 			<scope>test</scope>
 		</dependency>
-            			
+		
+		<!-- GSS Resource -->
+		<dependency>
+		    <groupId>com.google.gwt</groupId>
+		    <artifactId>gssresource</artifactId>
+		    <version>1.0-20131219.102520-2</version>
+		    <scope>provided</scope>
+		</dependency>            			
 				
 	</dependencies>
 
