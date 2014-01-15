@@ -3,6 +3,9 @@ package com.fave100.client.pagefragments.login.aboutpopup;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.client.resources.img.ImageResources;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -27,6 +30,11 @@ public class AboutPopupView extends PopupViewWithUiHandlers<AboutPopupUiHandlers
 	@UiField HTMLPanel slide3;
 	@UiField HTMLPanel slide4;
 	@UiField HTMLPanel slide5;
+	@UiField Image imgSlide1;
+	@UiField Image imgSlide2;
+	@UiField Image imgSlide3;
+	@UiField Image imgSlide4;
+	@UiField Image imgSlide5;
 	@UiField Image leftArrow;
 	@UiField Image rightArrow;
 	@UiField InlineLabel pageNumLabel;
@@ -87,5 +95,27 @@ public class AboutPopupView extends PopupViewWithUiHandlers<AboutPopupUiHandlers
 			rightArrow.getElement().getStyle().setVisibility(Visibility.HIDDEN);
 
 		pageNumLabel.setText((pageNum + 1) + "/" + slides.size());
+	}
+
+	@Override
+	public void loadImages() {
+		// Code split About Screen images since they are usually not needed
+		GWT.runAsync(new RunAsyncCallback() {
+
+			@Override
+			public void onSuccess() {
+				imgSlide1.setResource(ImageResources.INSTANCE.aboutScreen1());
+				imgSlide2.setResource(ImageResources.INSTANCE.aboutScreen2());
+				imgSlide3.setResource(ImageResources.INSTANCE.aboutScreen3());
+				imgSlide4.setResource(ImageResources.INSTANCE.aboutScreen4());
+				imgSlide5.setResource(ImageResources.INSTANCE.aboutScreen5());
+			}
+
+			@Override
+			public void onFailure(Throwable reason) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 	}
 }
