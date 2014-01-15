@@ -9,7 +9,7 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.GssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -24,7 +24,7 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 	public interface Binder extends UiBinder<HTMLPanel, ListAutocompleteView> {
 	}
 
-	interface ListAutocompleteStyle extends CssResource {
+	interface ListAutocompleteStyle extends GssResource {
 		String selected();
 	}
 

@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
-	<ui:style type="com.fave100.client.pages.song.widgets.playlist.PlaylistItem.PlaylistStyle">	
+	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.song.widgets.playlist.PlaylistItem.PlaylistStyle">
 		.container {
 			border-top: 1px solid #AAA;
 			padding: 5px;
@@ -12,11 +12,11 @@
 		.container:hover {
 			cursor: pointer;
 			background-color: #FFF;
-			color: #5eaae5;
+			color: PRIMARY_COLOR;
 		}
 		
 		.playing, .playing:hover {
-			background-color: #5eaae5;
+			background-color: PRIMARY_COLOR;
 			color: #FFF;
 		}
 		

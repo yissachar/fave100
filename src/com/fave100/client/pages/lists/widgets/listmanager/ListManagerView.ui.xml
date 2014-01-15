@@ -6,8 +6,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-		
-	<ui:style type="com.fave100.client.pages.lists.widgets.listmanager.ListManagerView.ListManagerStyle">
+	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.listmanager.ListManagerView.ListManagerStyle">
 		.container {
 			margin-top: 15px;
 			-webkit-touch-callout: none;
@@ -42,10 +41,6 @@
 		    -o-transform: rotate(-90deg);
 		    -ms-transform: rotate(-90deg);
 	 	}
-	 	
-		.currentList {
-						
-		}
 		
 		.listDropdown {
 			position: absolute;
@@ -76,11 +71,8 @@
 		}
 		
 		.listContainer > div:hover {
-			background-color: #5eaae5;
+			background-color: PRIMARY_COLOR;
 			color: #fff;
-		}
-		
-		.listContainer .selected {
 		}
 		
 		.listContainer .listName {
@@ -115,7 +107,7 @@
 	<g:HTMLPanel ui:styleName="{style.container}">
 		<g:FocusPanel ui:field="currentListContainer" ui:styleName="{style.currentListContainer}">
 			<g:FlowPanel>
-				<g:InlineLabel ui:field="currentList" ui:styleName="{style.currentList}" />
+				<g:InlineLabel ui:field="currentList" />
 				<g:Image resource="{img.triangle}"/>
 			</g:FlowPanel>
 		</g:FocusPanel>

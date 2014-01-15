@@ -6,7 +6,7 @@ import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.GssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -30,7 +30,7 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	public interface Binder extends UiBinder<Widget, GlobalListDetailsView> {
 	}
 
-	interface Style extends CssResource {
+	interface Style extends GssResource {
 		String mobile();
 	}
 

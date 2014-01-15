@@ -3,7 +3,7 @@ package com.fave100.client.pages.song;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.shared.SongInterface;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.GssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -23,7 +23,7 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	public interface Binder extends UiBinder<Widget, SongView> {
 	}
 
-	interface SongViewStyle extends CssResource {
+	interface SongViewStyle extends GssResource {
 	}
 
 	@UiField HTMLPanel topBar;

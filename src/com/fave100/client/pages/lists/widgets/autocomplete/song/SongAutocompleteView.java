@@ -14,7 +14,7 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.GssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -38,7 +38,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	public interface Binder extends UiBinder<Widget, SongAutocompleteView> {
 	}
 
-	interface SongAutocompleteStyle extends CssResource {
+	interface SongAutocompleteStyle extends GssResource {
 		String selected();
 
 		String artistName();

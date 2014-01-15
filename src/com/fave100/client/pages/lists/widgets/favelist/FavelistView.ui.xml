@@ -7,13 +7,13 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style type="com.fave100.client.pages.lists.widgets.favelist.FavelistView.FavelistStyle">
+	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.FavelistView.FavelistStyle">
 		.favelist {		
 			font-size: 1.05em;
 		}
 		
 		.favelist a {
-			color: #5eaae5;	
+			color: PRIMARY_COLOR;	
 		}
 		
 		.favelist button {
