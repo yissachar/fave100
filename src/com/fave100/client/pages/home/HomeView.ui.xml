@@ -8,12 +8,12 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>		
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">	
 		.topBackground {
 			width: 100%;
 			position: absolute;
 			top: 0;
-			background-color: #5eaae5;
+			background-color: PRIMARY_COLOR;
 			display: block;
 			height: 225px;
 		}

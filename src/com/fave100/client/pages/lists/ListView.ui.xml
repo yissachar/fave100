@@ -7,7 +7,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style type="com.fave100.client.pages.lists.ListView.ListStyle">		
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.ListView.ListStyle">
 		.userProfile{
 			display: block;
 			width: 100%;			
@@ -15,7 +15,7 @@
 			border: 1px solid #999;			
 			background-color: #fff;
 			padding: 5px;
-			color: #5eaae5;
+			color: PRIMARY_COLOR;
 		}
 		
 		.avatar {
@@ -26,7 +26,7 @@
 		}
 		
 		.username {	
-			color: #5eaae5;
+			color: PRIMARY_COLOR;
 			display: block;
 			width: 140px;
 			font-size: 1.4em;
@@ -73,7 +73,7 @@
 			text-align: center;
 			font-size: 1.3em;
 			padding: 5px;
-			background-color: #5eaae5;
+			background-color: PRIMARY_COLOR;
 			color: #fff;
 			border-right: 1px solid #fff;
 		}
@@ -84,7 +84,7 @@
 		
 		.responsiveUserTabOptions > span:hover {
 			background-color: #fff;
-			color: #5eaae5;
+			color: PRIMARY_COLOR;
 			cursor: pointer;
 		}
 		
@@ -92,7 +92,7 @@
 		
 		.responsiveUserTabOptions .selected {
 			background-color: #fff;
-			color: #5eaae5;
+			color: PRIMARY_COLOR;
 		}
 		
 		.faveListContainer {

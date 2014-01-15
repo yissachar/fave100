@@ -32,7 +32,7 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.query.client.Function;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.GssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -64,7 +64,7 @@ public class FavePickWidget extends Composite {
 	public interface Binder extends UiBinder<Widget, FavePickWidget> {
 	}
 
-	public interface FavePickWidgetStyle extends CssResource {
+	public interface FavePickWidgetStyle extends GssResource {
 		String hoverPanel();
 	}
 

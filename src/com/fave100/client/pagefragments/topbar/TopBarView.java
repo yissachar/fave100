@@ -4,11 +4,11 @@ import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.ImageHyperlink;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -32,7 +32,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	public interface Binder extends UiBinder<Widget, TopBarView> {
 	}
 
-	public interface TopBarStyle extends CssResource {
+	public interface TopBarStyle extends GlobalStyle {
 		String topBarDropShadow();
 	}
 

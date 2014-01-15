@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
              
-    <ui:style>
+    <ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
     
     .lightBoxContainer {
 		position: fixed;
@@ -39,7 +39,7 @@
     
     .header {
 		color: #fff;
-		background-color: #5eaae5;
+		background-color: PRIMARY_COLOR;
 		padding: 12px;
 		font-size: 1.05em;
     }    

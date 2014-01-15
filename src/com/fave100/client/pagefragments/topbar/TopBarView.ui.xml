@@ -7,18 +7,17 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">
-		
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">		
 		
 		.topNavSticky {
-			background-color: #5eaae5;			
+			background-color: PRIMARY_COLOR;			
 			height: 50px;
 			margin-bottom: 25px;
 			width: 1px;
 		}
 		
 		.topNav {
-			background-color: #5eaae5;			
+			background-color: PRIMARY_COLOR;			
 			height: 50px;
 			border-bottom: 1px solid #555;			
 			position: fixed;
@@ -56,7 +55,7 @@
 		}
 		
 		.topNav li:hover > a, .topNav li:hover > span {
-			color: #5eaae5;
+			color: PRIMARY_COLOR;
 		}
 		
 		.topBarDropShadow {
@@ -128,7 +127,7 @@
 		}
 		
 		.dropDownElement:hover, .dropDown a:hover {
-			background-color: #5eaae5;
+			background-color: PRIMARY_COLOR;
 			color: #fff;
 			text-decoration: none;			
 		}
@@ -146,7 +145,7 @@
 		}
 		
 		.loggedInContainer:hover .usernameLabel {
-			color: #5eaae5;
+			color: PRIMARY_COLOR;
 		}
 				
 	</ui:style>

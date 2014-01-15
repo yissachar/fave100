@@ -6,7 +6,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style type="com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView.Style">
+	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView.Style">
 		.mobile {
 			padding: 10px;
 		}
@@ -36,7 +36,7 @@
 		}
 				
 		.trendingList a {
-			color: #5eaae5;
+			color: PRIMARY_COLOR;
 			display: block;
 			clear: both;
 		}
