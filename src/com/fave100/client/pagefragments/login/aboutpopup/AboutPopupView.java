@@ -11,7 +11,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -24,7 +23,6 @@ public class AboutPopupView extends PopupViewWithUiHandlers<AboutPopupUiHandlers
 	public interface Binder extends UiBinder<PopupPanel, AboutPopupView> {
 	}
 
-	@UiField FocusPanel lightBoxBackground;
 	@UiField HTMLPanel slide1;
 	@UiField HTMLPanel slide2;
 	@UiField HTMLPanel slide3;
@@ -54,13 +52,6 @@ public class AboutPopupView extends PopupViewWithUiHandlers<AboutPopupUiHandlers
 
 		setPageNum();
 
-	}
-
-	@UiHandler("lightBoxBackground")
-	void onBackgroundClick(ClickEvent event) {
-		pageNum = 0;
-		setPageNum();
-		hide();
 	}
 
 	@UiHandler("leftArrow")
@@ -117,5 +108,11 @@ public class AboutPopupView extends PopupViewWithUiHandlers<AboutPopupUiHandlers
 
 			}
 		});
+	}
+
+	@Override
+	public void resetPage() {
+		pageNum = 0;
+		setPageNum();
 	}
 }

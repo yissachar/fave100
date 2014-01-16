@@ -1,42 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:style>
-    	.lightBoxContainer {
-			position: fixed;
-			width: 100%;
-			top: 15%;
-			left: 0;
-			z-index: 100000;
-		}
-				
-		.lightBoxBackground {
-			position: fixed;
-			top: 0;
-			left: -25%;
-			width: 125%;
-			height: 100%;
-			opacity: .40;
-			background-color: #000;
-			z-index: 99999; 
-		}
-		
-		.lightBox {
-			background: #FFF;
-			border: 1px solid #555;
-			position: relative;
-			width: 75%;
-			height: 405px;
-			margin: 0 auto;
-			min-width: 250px;
-			max-width: 800px;
-			z-index: 100000;
-			overflow: hidden;
-			padding: 15px;
-		}
-		
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:w="urn:import:com.fave100.client.widgets.lightbox">
+    <ui:style>		
 		.slides {
 			overflow: hidden;
+			padding: 15px;
 		}
 		
 		.slides img {
@@ -69,11 +38,9 @@
     </ui:style>
     
     <ui:with type="com.fave100.client.resources.img.ImageResources" field="img" />
-    
-    <g:PopupPanel>
-    	<g:HTMLPanel styleName="{style.lightBoxContainer}">
-			<g:FocusPanel ui:field="lightBoxBackground" styleName="{style.lightBoxBackground}"/>			
-			<g:HTMLPanel styleName="{style.lightBox}">
+    <w:LightBox>			
+		<w:content width="75%" height="405px">
+			<g:FlowPanel>
 				<g:FlowPanel ui:styleName="{style.slides}">
 					<g:HTMLPanel ui:field="slide1">
 						<g:Image ui:field="imgSlide1"></g:Image>
@@ -121,8 +88,8 @@
 					<g:InlineLabel ui:field="pageNumLabel" ui:styleName="{style.pageNumLabel}"></g:InlineLabel>
 					<g:Image ui:field="rightArrow" ui:styleName="{style.arrows}" url="{img.rightArrow.getSafeUri.asString}" pixelSize="50, 50"></g:Image>
 				</g:FlowPanel>
-				
-			</g:HTMLPanel>
-		</g:HTMLPanel>	
-    </g:PopupPanel>
+			</g:FlowPanel>
+			
+		</w:content>
+	</w:LightBox>
 </ui:UiBinder>

@@ -2,38 +2,48 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	ui:generateLocales='default'>
+	xmlns:w='urn:import:com.fave100.client.widgets.lightbox'>
 
-	<ui:style>
+	<ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+	
+		.header {
+			display: block;
+			background-color: PRIMARY_COLOR;
+			padding: 6px 0;
+			border-bottom: 1px solid #555;
+		}
+		
+		.header img {
+			display: block;
+			margin: 0 auto;
+		}
+		
+		.innerLoginBox {
+			padding: 15px;
+		}
+		
 		.noAccountPrompt {
 			padding: 5px;
 			margin-left: 33%;
-		}
+		}		
 		
-		@external .loginLightBox;
-		
-		.loginLightBox {
-			padding-bottom: 5px;
-		}
 	</ui:style>
 	
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
-	
-	<g:PopupPanel>
-		<g:HTMLPanel ui:field="loginLightBox" styleName="loginLightBoxContainer">
-			<g:FocusPanel ui:field="lightBoxBackground" styleName="lightBoxBackground"/>			
-			<g:HTMLPanel styleName="loginLightBox">
-				<div class="lightBoxHeader">
+			
+	<w:LightBox>
+		<w:content width="50%" height="100%">	
+			<g:HTMLPanel>
+				<g:SimplePanel ui:styleName="{style.header}">
 					<g:Image resource="{img.logo}"/>
-				</div>
-				<g:HTMLPanel ui:field="loginContainer" ui:styleName="innerLoginBox"/>
+				</g:SimplePanel>
+				<g:HTMLPanel ui:field="loginContainer" ui:styleName="{style.innerLoginBox}"/>
 				<g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}" ui:styleName="{style.noAccountPrompt}">
 					Don't have an account? Register
 				</g:InlineHyperlink>
 			</g:HTMLPanel>
-		</g:HTMLPanel>		
-	</g:PopupPanel>
+			</w:content>
+	</w:LightBox>
+	
 </ui:UiBinder>

@@ -1,41 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:w="urn:import:com.fave100.client.widgets.lightbox">
              
     <ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
-    
-    .lightBoxContainer {
-		position: fixed;
-		width: 100%;
-		top: 15%;
-		left: 0;
-		height: 380px;
-		max-height: 70%;
-		overflow: hidden;
-		z-index: 100000;
-    }
-    
-    .lightBoxBackground {
-		position: fixed;
-		top: 0;
-		left: -25%;
-		width: 125%;
-		height: 100%;
-		opacity: .40;
-		background-color: #000;
-		z-index: 99999; 
-	}
-        
-    .lightBox {
-		border: 1px solid #888; 
-		position: relative;
-		width: 38%;
-		margin: 0 auto;
-		min-width: 250px;
-		max-width: 800px;
-		z-index: 100000;
-		height: 100%;
-    }
     
     .header {
 		color: #fff;
@@ -94,10 +62,9 @@
 	}
     </ui:style>
     
-    <g:PopupPanel autoHideOnHistoryEventsEnabled="true" autoHideEnabled="true">
-    	<g:HTMLPanel ui:field="loginLightBox" styleName="{style.lightBoxContainer}">
-			<g:FocusPanel ui:field="lightBoxBackground" styleName="{style.lightBoxBackground}"/>			
-			<g:FlowPanel ui:styleName="{style.lightBox}">
+    <w:LightBox>		
+    	<w:content width="38%" height="100%">
+			<g:FlowPanel>
 				<g:SimplePanel ui:styleName="{style.header}">
 					<g:Label ui:field="headerLabel"></g:Label>
 				</g:SimplePanel>
@@ -109,6 +76,6 @@
 					</g:FlowPanel>
 				</g:FlowPanel>				
 			</g:FlowPanel>
-		</g:HTMLPanel>
-    </g:PopupPanel>
+		</w:content>
+    </w:LightBox>
 </ui:UiBinder>

@@ -10,7 +10,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,7 +21,6 @@ public class AddSongView extends PopupViewWithUiHandlers<AddSongUiHandlers> impl
 	public interface Binder extends UiBinder<PopupPanel, AddSongView> {
 	}
 
-	@UiField FocusPanel lightBoxBackground;
 	@UiField Label headerLabel;
 	@UiField FlowPanel checkboxContainer;
 	@UiField Button okButton;
@@ -45,11 +43,6 @@ public class AddSongView extends PopupViewWithUiHandlers<AddSongUiHandlers> impl
 		}
 		headerLabel.setText("Add \"" + songName + "\" to the following lists:");
 		checkboxContainer.setHeight(String.valueOf(275 - headerLabel.getOffsetHeight()) + "px");
-	}
-
-	@UiHandler("lightBoxBackground")
-	void onBackgroundClick(final ClickEvent event) {
-		hide();
 	}
 
 	@UiHandler("cancelButton")

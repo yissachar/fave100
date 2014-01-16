@@ -9,6 +9,8 @@ import com.gwtplatform.mvp.client.PresenterWidget;
 public class AboutPopupPresenter extends PresenterWidget<AboutPopupPresenter.MyView> implements AboutPopupUiHandlers {
 	public interface MyView extends PopupView, HasUiHandlers<AboutPopupUiHandlers> {
 		void loadImages();
+
+		void resetPage();
 	}
 
 	@Inject
@@ -21,6 +23,11 @@ public class AboutPopupPresenter extends PresenterWidget<AboutPopupPresenter.MyV
 	@Override
 	protected void onReveal() {
 		getView().loadImages();
+	}
+
+	@Override
+	protected void onHide() {
+		getView().resetPage();
 	}
 
 }
