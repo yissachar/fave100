@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
@@ -11,7 +12,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -37,8 +37,10 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	public interface Binder extends UiBinder<Widget, ListView> {
 	}
 
-	interface ListStyle extends CssResource {
+	interface ListStyle extends GlobalStyle {
 		String fixedSearch();
+
+		String selected();
 	}
 
 	@UiField ListStyle style;
@@ -124,7 +126,6 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	void onMobileShowListClick(final ClickEvent event) {
 		setSelected(mobileShowList);
 		userPageFaveList.setVisible(true);
-		//shareButton.setVisible(false);
 		followingContainer.setVisible(false);
 		listManager.setVisible(true);
 	}
@@ -133,17 +134,15 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	void onMobileShowFollowingClick(final ClickEvent event) {
 		setSelected(mobileShowFollowing);
 		userPageFaveList.setVisible(false);
-		//shareButton.setVisible(false);
 		followingContainer.setVisible(true);
 		listManager.setVisible(false);
 	}
 
 	private void setSelected(final Label label) {
-		final String selected = "selected";
-		mobileShowList.removeStyleName(selected);
-		mobileShowFollowing.removeStyleName(selected);
+		mobileShowList.removeStyleName(style.selected());
+		mobileShowFollowing.removeStyleName(style.selected());
 
-		label.addStyleName(selected);
+		label.addStyleName(style.selected());
 	}
 
 	public native void nativeRenderShare() /*-{
@@ -217,15 +216,15 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	public void setMobileView(final boolean reset) {
 		if (Window.getClientWidth() <= Constants.MOBILE_WIDTH_PX) {
 			if (reset) {
-				mobileShowList.removeStyleName("selected");
-				mobileShowFollowing.removeStyleName("selected");
+				mobileShowList.removeStyleName(style.selected());
+				mobileShowFollowing.removeStyleName(style.selected());
 			}
 
-			if (mobileShowList.getStyleName().contains("selected")) {
+			if (mobileShowList.getStyleName().contains(style.selected())) {
 				userPageFaveList.setVisible(true);
 				followingContainer.setVisible(false);
 			}
-			else if (mobileShowFollowing.getStyleName().contains("selected")) {
+			else if (mobileShowFollowing.getStyleName().contains(style.selected())) {
 				userPageFaveList.setVisible(false);
 				followingContainer.setVisible(true);
 			}

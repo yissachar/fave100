@@ -9,14 +9,13 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style type="com.fave100.client.pages.song.SongView.SongViewStyle">	
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">	
 		.songContainer {	
 			height: 577px;
 		}
 		
 		.songHeader {
 			overflow: hidden;
-			border-bottom: 0px;
 			border: 1px solid #AAA;
 			border-bottom: 0px;
 			background-color: #f0f0f0;

@@ -3,10 +3,10 @@ package com.fave100.client.pages.lists.widgets.listmanager;
 import java.util.Iterator;
 import java.util.List;
 
+import com.fave100.client.resources.css.GlobalStyle;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.resources.client.GssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -45,7 +45,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	int selectedIndex = 0;
 	private HandlerRegistration rootClickHandler;
 
-	interface ListManagerStyle extends GssResource {
+	interface ListManagerStyle extends GlobalStyle {
 		String dropdownVisible();
 
 		String listName();

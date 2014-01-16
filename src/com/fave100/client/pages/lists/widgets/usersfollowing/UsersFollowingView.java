@@ -2,9 +2,9 @@ package com.fave100.client.pages.lists.widgets.usersfollowing;
 
 import java.util.List;
 
+import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.resources.client.GssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -23,7 +23,7 @@ public class UsersFollowingView extends ViewWithUiHandlers<UsersFollowingUiHandl
 	public interface Binder extends UiBinder<Widget, UsersFollowingView> {
 	}
 
-	public interface UsersFollowingStyle extends GssResource {
+	public interface UsersFollowingStyle extends GlobalStyle {
 		String listLink();
 
 		String deleteButton();
