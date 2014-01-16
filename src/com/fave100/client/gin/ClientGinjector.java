@@ -10,7 +10,6 @@ import com.fave100.client.pages.passwordreset.PasswordResetPresenter;
 import com.fave100.client.pages.profile.ProfilePresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.pages.song.SongPresenter;
-import com.fave100.client.pages.users.UserPresenter;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
@@ -37,8 +36,6 @@ public interface ClientGinjector extends Ginjector {
 	AsyncProvider<RegisterPresenter> getRegisterPresenter();
 
 	AsyncProvider<ListPresenter> getListPresenter();
-
-	AsyncProvider<UserPresenter> getUsersPresenter();
 
 	AsyncProvider<LoginPresenter> getLoginPresenter();
 
