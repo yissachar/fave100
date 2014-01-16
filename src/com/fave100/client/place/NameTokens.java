@@ -2,7 +2,6 @@ package com.fave100.client.place;
 
 public class NameTokens {
 
-	public static final String home = "home";
 	public static final String register = "register";
 	public static final String lists = "lists";
 	public static final String users = "users";
@@ -11,10 +10,6 @@ public class NameTokens {
 	public static final String profile = "profile";
 	public static final String song = "song";
 	public static final String passwordreset = "passwordreset";
-
-	public static String getHome() {
-		return home;
-	}
 
 	public static String getRegister() {
 		return register;

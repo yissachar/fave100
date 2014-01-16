@@ -14,8 +14,6 @@ import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pagefragments.register.RegisterWidgetView;
 import com.fave100.client.pagefragments.topbar.TopBarPresenter;
 import com.fave100.client.pagefragments.topbar.TopBarView;
-import com.fave100.client.pages.home.HomePresenter;
-import com.fave100.client.pages.home.HomeView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.lists.ListView;
 import com.fave100.client.pages.lists.widgets.autocomplete.list.ListAutocompleteModule;
@@ -79,12 +77,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bind(NotLoggedInGatekeeper.class).asEagerSingleton();
 
-		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
-		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.home);
-		bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.home);
-
-		bindPresenter(HomePresenter.class, HomePresenter.MyView.class,
-				HomeView.class, HomePresenter.MyProxy.class);
+		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.lists);
+		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.lists);
+		bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.lists);
 
 		bindSingletonPresenterWidget(TopBarPresenter.class,
 				TopBarPresenter.MyView.class, TopBarView.class);

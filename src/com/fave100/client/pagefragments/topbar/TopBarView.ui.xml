@@ -162,7 +162,7 @@
 		<div class="{style.topNavSticky}"/>
 		<g:HTMLPanel ui:styleName="{style.topNav}" ui:field="topBar">
 			<div class="container">
-				<w:ImageHyperlink ui:field="logoLink" targetHistoryToken="{nameTokens.getHome}" styleName="{style.faveLogo}" resource="{img.logo}"/>		
+				<w:ImageHyperlink ui:field="logoLink" targetHistoryToken="{nameTokens.getLists}" styleName="{style.faveLogo}" resource="{img.logo}"/>		
 				<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" resource="{img.loadingIndicator}"/>			
 				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
 				<ul>						
