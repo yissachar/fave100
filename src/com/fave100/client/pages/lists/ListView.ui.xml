@@ -18,9 +18,13 @@
 			color: PRIMARY_COLOR;
 		}
 		
+		.userDetails {
+			float: left;
+		}
+		
 		.avatar {
 			float: left;
-			margin-right: 10px;
+			margin-right: 8px;
 			width: 80px;
 			height: 80px;
 		}
@@ -109,17 +113,17 @@
 				<g:HTMLPanel ui:field="userContainer">
 					<g:HTMLPanel styleName="userPageSideBar col span_3">
 						<g:HTMLPanel ui:field="globalListDetailsContainer"/>								
-						<g:HorizontalPanel ui:field="userProfile" styleName="{style.userProfile}">
+						<g:FlowPanel ui:field="userProfile" styleName="{style.userProfile}">
 							<g:Image styleName="{style.avatar}" ui:field="avatar"/>
-							<g:VerticalPanel>
+							<g:FlowPanel styleName="{style.userDetails}">
 								<g:InlineLabel ui:styleName="{style.username}" ui:field="username"/>
 								<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}"  ui:styleName="{style.username}"  ui:field="profileLink"/>
 								<!--  Follow button -->
 								<g:FocusPanel ui:field="followCTAcontainer" ui:styleName="{style.followCTAcontainer}">									
 									<g:InlineLabel ui:field="followCTA" ui:styleName="button {style.followButton}"/>
-								</g:FocusPanel>								
-							</g:VerticalPanel>				
-						</g:HorizontalPanel>
+								</g:FocusPanel>							
+							</g:FlowPanel>				
+						</g:FlowPanel>
 						
 						<g:FlowPanel ui:styleName="responsiveUserTabOptions {style.responsiveUserTabOptions}">
 							<g:InlineLabel ui:field="mobileShowList">List</g:InlineLabel>							
