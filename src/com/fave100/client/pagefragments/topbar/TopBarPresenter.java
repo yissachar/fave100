@@ -3,7 +3,6 @@ package com.fave100.client.pagefragments.topbar;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
-import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Utils;
@@ -47,7 +46,6 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	@ContentSlot public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
 
 	@Inject private LoginPopupPresenter loginBox;
-	@Inject private RegisterPopupPresenter registerBox;
 	private EventBus eventBus;
 	private CurrentUser currentUser;
 	private PlaceManager placeManager;
@@ -136,14 +134,6 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	}
 
 	@Override
-	public void showRegisterBox() {
-		if (Utils.isTouchDevice())
-			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).build());
-		else
-			addToPopupSlot(registerBox);
-	}
-
-	@Override
 	public void logout() {
 		currentUser.logout();
 	}
@@ -182,8 +172,6 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 
 interface TopBarUiHandlers extends UiHandlers {
 	void showLoginBox();
-
-	void showRegisterBox();
 
 	void logout();
 }
