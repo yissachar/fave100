@@ -19,11 +19,6 @@ public class AlertView extends PopupViewWithUiHandlers<AlertUiHandlers> implemen
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	@UiHandler("lightBoxBackground")
-	void onBackgroundClick(final ClickEvent event) {
-		hide();
-	}
-
 	@UiHandler("cancelButton")
 	void onCancelButtonClick(final ClickEvent event) {
 		hide();
