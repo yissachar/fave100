@@ -2,6 +2,7 @@ package com.fave100.client.pages.lists.widgets.autocomplete.list;
 
 import java.util.List;
 
+import com.fave100.client.resources.css.GlobalStyle;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -9,7 +10,6 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.resources.client.GssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -24,7 +24,7 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 	public interface Binder extends UiBinder<HTMLPanel, ListAutocompleteView> {
 	}
 
-	interface ListAutocompleteStyle extends GssResource {
+	interface ListAutocompleteStyle extends GlobalStyle {
 		String selected();
 	}
 

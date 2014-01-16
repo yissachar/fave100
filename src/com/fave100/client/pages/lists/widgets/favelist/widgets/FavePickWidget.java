@@ -13,6 +13,7 @@ import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.RankCha
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.WhyLineChanged;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.resources.img.ImageResources;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.fave100.shared.Constants;
@@ -32,7 +33,6 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.query.client.Function;
-import com.google.gwt.resources.client.GssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -64,7 +64,7 @@ public class FavePickWidget extends Composite {
 	public interface Binder extends UiBinder<Widget, FavePickWidget> {
 	}
 
-	public interface FavePickWidgetStyle extends GssResource {
+	public interface FavePickWidgetStyle extends GlobalStyle {
 		String hoverPanel();
 	}
 

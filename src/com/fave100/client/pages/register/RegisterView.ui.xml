@@ -7,7 +7,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 	
-	<ui:style>
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
 		.registerContainer{
 			margin: 0px auto;
 		}

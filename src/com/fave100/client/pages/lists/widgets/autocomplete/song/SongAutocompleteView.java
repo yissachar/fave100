@@ -4,6 +4,7 @@ import static com.google.gwt.query.client.GQuery.$;
 
 import java.util.List;
 
+import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.dom.client.Document;
@@ -14,7 +15,6 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.resources.client.GssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -38,7 +38,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	public interface Binder extends UiBinder<Widget, SongAutocompleteView> {
 	}
 
-	interface SongAutocompleteStyle extends GssResource {
+	interface SongAutocompleteStyle extends GlobalStyle {
 		String selected();
 
 		String artistName();

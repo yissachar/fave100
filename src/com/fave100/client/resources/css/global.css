@@ -28,12 +28,6 @@ a:hover {
 	text-decoration: underline;
 }
 
-h1 {
-	margin: 30px;
-	color: #555;
-	font-size: 1.9em;		
-}
-
 input, select {
 	padding: 4px;	
 	border: 1px solid #AAA;

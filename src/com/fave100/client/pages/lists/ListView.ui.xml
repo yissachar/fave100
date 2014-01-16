@@ -87,9 +87,7 @@
 			color: PRIMARY_COLOR;
 			cursor: pointer;
 		}
-		
-		@external .selected;
-		
+				
 		.responsiveUserTabOptions .selected {
 			background-color: #fff;
 			color: PRIMARY_COLOR;

@@ -22,7 +22,6 @@
 		
 		.favelist > div{
 			overflow: hidden;
-			padding: 15px 2px;
 			border: 2px solid #ddd;
 			border-top: none;
 			background-color: #FFF;	

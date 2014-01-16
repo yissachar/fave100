@@ -5,7 +5,7 @@ import static com.google.gwt.query.client.GQuery.$;
 import java.util.List;
 
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
-import com.google.gwt.resources.client.CssResource;
+import com.fave100.client.resources.css.GlobalStyle;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -23,7 +23,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	public interface Binder extends UiBinder<Widget, FavelistView> {
 	}
 
-	interface FavelistStyle extends CssResource {
+	interface FavelistStyle extends GlobalStyle {
 		String personalListItem();
 
 		String rank();
