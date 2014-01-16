@@ -8,8 +8,6 @@ import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pagefragments.login.LoginWidgetView;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pagefragments.popups.login.LoginPopupView;
-import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
-import com.fave100.client.pagefragments.popups.register.RegisterPopupView;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pagefragments.register.RegisterWidgetView;
 import com.fave100.client.pagefragments.topbar.TopBarPresenter;
@@ -110,8 +108,6 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindSingletonPresenterWidget(FavelistPresenter.class,
 				FavelistPresenter.MyView.class, FavelistView.class);
-
-		bindSingletonPresenterWidget(RegisterPopupPresenter.class, RegisterPopupPresenter.MyView.class, RegisterPopupView.class);
 
 		bindSingletonPresenterWidget(LoginPopupPresenter.class, LoginPopupPresenter.MyView.class, LoginPopupView.class);
 
