@@ -159,7 +159,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	}
 
 	public void appUserCreated() {
-		_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.home).build());
+		_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.lists).build());
 		Notification.show("Thanks for registering!");
 	}
 

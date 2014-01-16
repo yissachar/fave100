@@ -130,7 +130,7 @@ public class CurrentUser implements AppUserProxy {
 			public void onSuccess(final Void response) {
 				_eventBus.fireEvent(new CurrentUserChangedEvent(null));
 				Notification.show("Logged out successfully");
-				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.home).build());
+				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.lists).build());
 			}
 		});
 	}
