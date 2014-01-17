@@ -12,7 +12,7 @@
 	<properties>
 		<!-- convenience to define GWT version in one place -->
 		<gwt.version>2.6.0-rc4</gwt.version>
-		<appengine.version>1.8.4</appengine.version>
+		<appengine.version>1.8.9</appengine.version>
 		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
 		<gwtp.version>1.0.1</gwtp.version>
 		<!-- tell the compiler we can use 1.7 -->
