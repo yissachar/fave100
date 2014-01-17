@@ -3,6 +3,8 @@ package com.fave100.server.domain.favelist;
 import java.io.Serializable;
 
 import com.fave100.server.domain.Whyline;
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Index;
@@ -61,10 +63,12 @@ public class FaveItem implements Serializable {
 		this.whyline = whyline;
 	}
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Ref<Whyline> getWhylineRef() {
 		return whylineRef;
 	}
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setWhylineRef(final Ref<Whyline> whylineRef) {
 		this.whylineRef = whylineRef;
 	}
