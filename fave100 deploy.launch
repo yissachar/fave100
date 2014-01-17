@@ -13,7 +13,7 @@
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="deploy,"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LAUNCH_CONFIGURATION_BUILD_SCOPE" value="${project}"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/fave100/build.xml}"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-DAppEngineDir=&quot;C:\Program Files\eclipse\plugins\com.google.appengine.eclipse.sdkbundle_1.8.4\appengine-java-sdk-1.8.4&quot;&#13;&#10;-DGwtDir=&quot;C:\Users\yissachar.radcliffe\dev\lib\gwt-2.5.1&quot;&#13;&#10;-DMvnDir=&quot;C:\maven\bin\mvn&quot;&#13;&#10;-DAeVersion=&quot;1.8.4&quot;&#13;&#10;-DGwtVersion=&quot;2.5.1&quot;"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS" value="-DAppEngineDir=&quot;C:\Users\yissachar.radcliffe\dev\lib\java\appengine-java-sdk-1.8.9&quot;&#13;&#10;-DGwtDir=&quot;C:\Users\yissachar.radcliffe\dev\lib\java\gwt-2.6.0-rc4&quot;&#13;&#10;-DMvnDir=&quot;C:\maven\bin\mvn&quot;&#13;&#10;-DAeVersion=&quot;1.8.9&quot;&#13;&#10;-DGwtVersion=&quot;2.6.0-rc4&quot;"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:/fave100}"/>
 <stringAttribute key="process_factory_id" value="org.eclipse.ant.ui.remoteAntProcessFactory"/>
 </launchConfiguration>
