@@ -13,18 +13,23 @@ import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.services.FaveItemService;
 import com.fave100.shared.Constants;
+import com.fave100.shared.domain.FaveItemCollection;
+import com.fave100.shared.domain.FaveItemDto;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
@@ -63,6 +68,8 @@ public class FavelistPresenter extends
 
 	private EventBus eventBus;
 	private ApplicationRequestFactory requestFactory;
+	private DispatchAsync _dispatcher;
+	private FaveItemService _faveItemService;
 	// The user whose favelist we are showing
 	private AppUserProxy user;
 	// The currently logged in user
@@ -102,11 +109,13 @@ public class FavelistPresenter extends
 	};
 
 	@Inject
-	public FavelistPresenter(final EventBus eventBus, final MyView view,
+	public FavelistPresenter(final EventBus eventBus, final MyView view, DispatchAsync dispatcher, FaveItemService faveItemService,
 								final ApplicationRequestFactory requestFactory,
 								final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
+		_dispatcher = dispatcher;
+		_faveItemService = faveItemService;
 		this.requestFactory = requestFactory;
 		this.currentUser = currentUser;
 		_placeManager = placeManager;
@@ -185,16 +194,46 @@ public class FavelistPresenter extends
 		}
 		// No user, get the global list 
 		else {
-			final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getMasterFaveList(hashtag);
-			req.fire(new Receiver<List<FaveItemProxy>>() {
+			//			final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getMasterFaveList(hashtag);
+			//			req.fire(new Receiver<List<FaveItemProxy>>() {
+			//				@Override
+			//				public void onSuccess(final List<FaveItemProxy> results) {
+			//					// Make sure user still null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
+			//					if (user == null && hashtagPerRequest.equals(hashtag))
+			//						buildWidgets(results);
+			//				}
+			//			});
+
+			_dispatcher.execute(_faveItemService.listFaveItems(), new AsyncCallback<FaveItemCollection>() {
+
 				@Override
-				public void onSuccess(final List<FaveItemProxy> results) {
-					// Make sure user still null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
+				public void onFailure(Throwable caught) {
+					System.out.println("error");
+				}
+
+				@Override
+				public void onSuccess(FaveItemCollection result) {
 					if (user == null && hashtagPerRequest.equals(hashtag))
-						buildWidgets(results);
+						fakeBuildWidgets(result.getItems());
 				}
 			});
 		}
+	}
+
+	private void fakeBuildWidgets(final List<FaveItemDto> faveList) {
+		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
+		int i = 1;
+		for (final FaveItemDto item : faveList) {
+			final String username = user != null ? user.getUsername() : "";
+			//final FavePickWidget widget = new FavePickWidget(eventBus, item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, username, hashtag);
+			//pickWidgets.add(widget);
+			i++;
+		}
+		widgets = pickWidgets;
+
+		getView().setList(pickWidgets);
+		Window.scrollTo(0, 0);
+		eventBus.fireEvent(new FaveListSizeChangedEvent(faveList.size()));
 	}
 
 	private void buildWidgets(final List<FaveItemProxy> faveList) {
