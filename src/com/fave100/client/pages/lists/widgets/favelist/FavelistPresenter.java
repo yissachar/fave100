@@ -194,17 +194,8 @@ public class FavelistPresenter extends
 		}
 		// No user, get the global list 
 		else {
-			//			final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getMasterFaveList(hashtag);
-			//			req.fire(new Receiver<List<FaveItemProxy>>() {
-			//				@Override
-			//				public void onSuccess(final List<FaveItemProxy> results) {
-			//					// Make sure user still null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
-			//					if (user == null && hashtagPerRequest.equals(hashtag))
-			//						buildWidgets(results);
-			//				}
-			//			});
 
-			_dispatcher.execute(_faveItemService.listFaveItems(), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_faveItemService.getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -213,6 +204,7 @@ public class FavelistPresenter extends
 
 				@Override
 				public void onSuccess(FaveItemCollection result) {
+					// Make sure user still null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
 					if (user == null && hashtagPerRequest.equals(hashtag))
 						fakeBuildWidgets(result.getItems());
 				}

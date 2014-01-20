@@ -14,6 +14,7 @@ public class GuiceSSSModule extends GuiceSystemServiceServletModule {
 
 		Set<Class<?>> serviceClasses = new HashSet<Class<?>>();
 		serviceClasses.add(Fave100Api.class);
+		//		serviceClasses.add(FaveListDao.class);
 		this.serveGuiceSystemServiceServlet("/_ah/spi/*", serviceClasses);
 	}
 }
