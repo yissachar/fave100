@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Named;
+
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.UserListResult;
 import com.fave100.server.domain.Whyline;
@@ -20,6 +22,7 @@ import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.favelist.TooManyFaveListsException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
+import com.google.api.server.spi.config.ApiMethod;
 import com.google.inject.Inject;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
@@ -83,7 +86,7 @@ public class FaveListDao {
 		});
 	}
 
-	public void deleteFaveListForCurrentUser(final String listName) throws NotLoggedInException {
+	public void deleteFaveListForCurrentUser(@Named final String listName) throws NotLoggedInException {
 		final AppUser currentUser = appUserDao.getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
@@ -142,7 +145,7 @@ public class FaveListDao {
 		ofy().save().entities(faveList).now();
 	}
 
-	public void removeFaveItemForCurrentUser(final String hashtag, final String songID) throws NotLoggedInException {
+	public void removeFaveItemForCurrentUser(@Named("hashtag") final String hashtag, @Named("songID") final String songID) throws NotLoggedInException {
 		final AppUser currentUser = appUserDao.getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();
@@ -257,6 +260,7 @@ public class FaveListDao {
 		return faveList.getList();
 	}
 
+	@ApiMethod(name = "fave100.getMasterFaveList", path = "masterFaveList")
 	public List<FaveItem> getMasterFaveList(final String hashtag) {
 		return ofy().load().type(Hashtag.class).id(hashtag).get().getList();
 	}
@@ -278,7 +282,7 @@ public class FaveListDao {
 		return ofy().load().type(Hashtag.class).id(id).get();
 	}
 
-	public double calculateItemScore(final int position) {
+	public double calculateItemScore(@Named final int position) {
 		return ((double)(-1 * position) / 11 + ((double)111 / 11));
 	}
 
