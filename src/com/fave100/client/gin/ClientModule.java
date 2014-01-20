@@ -47,6 +47,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.client.gin.RestDispatchAsyncModule;
+import com.gwtplatform.dispatch.client.rest.RestApplicationPath;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.GaAccount;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
@@ -60,6 +62,9 @@ public class ClientModule extends AbstractPresenterModule {
 	protected void configure() {
 		install(new ListAutocompleteModule());
 		install(new DefaultModule(ClientPlaceManager.class));
+		install(new RestDispatchAsyncModule.Builder().build());
+
+		bindConstant().annotatedWith(RestApplicationPath.class).to("/_ah/api");
 
 		// Google Analytics
 		bindConstant().annotatedWith(GaAccount.class).to("UA-39911495-1");

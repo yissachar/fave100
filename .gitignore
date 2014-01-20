@@ -13,3 +13,5 @@ extras/
 .staging/
 /test-classes
 *.api
+*.discovery
+endpoint-libs/
