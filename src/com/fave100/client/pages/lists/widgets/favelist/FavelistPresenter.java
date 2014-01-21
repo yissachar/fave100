@@ -10,13 +10,13 @@ import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
+import com.fave100.client.generated.entities.FaveItemCollection;
+import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.services.Fave100Service;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.services.FaveItemService;
 import com.fave100.shared.Constants;
-import com.fave100.shared.domain.FaveItemCollection;
-import com.fave100.shared.domain.FaveItemDto;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
@@ -69,7 +69,7 @@ public class FavelistPresenter extends
 	private EventBus eventBus;
 	private ApplicationRequestFactory requestFactory;
 	private DispatchAsync _dispatcher;
-	private FaveItemService _faveItemService;
+	private Fave100Service _faveItemService;
 	// The user whose favelist we are showing
 	private AppUserProxy user;
 	// The currently logged in user
@@ -109,7 +109,7 @@ public class FavelistPresenter extends
 	};
 
 	@Inject
-	public FavelistPresenter(final EventBus eventBus, final MyView view, DispatchAsync dispatcher, FaveItemService faveItemService,
+	public FavelistPresenter(final EventBus eventBus, final MyView view, DispatchAsync dispatcher, Fave100Service faveItemService,
 								final ApplicationRequestFactory requestFactory,
 								final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
@@ -199,7 +199,7 @@ public class FavelistPresenter extends
 
 				@Override
 				public void onFailure(Throwable caught) {
-					System.out.println("error");
+					// TODO: Alert user about fail
 				}
 
 				@Override

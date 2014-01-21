@@ -3,7 +3,6 @@ package com.fave100.server.domain.favelist;
 import java.io.Serializable;
 
 import com.fave100.server.domain.Whyline;
-import com.fave100.shared.domain.FaveItemDto;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Ref;
@@ -17,12 +16,15 @@ import com.googlecode.objectify.annotation.Index;
  * 
  */
 @Embed
-public class FaveItem extends FaveItemDto implements Serializable {
+public class FaveItem implements Serializable {
 
 	// This field MUST be updated if this class is changed in a way that affects serialization: http://docs.oracle.com/javase/6/docs/platform/serialization/spec/version.html#6678
 	private static final long serialVersionUID = -8899544665404145248L;
 
+	private String song;
+	private String artist;
 	@Index private String songID;
+	private String whyline = "";
 	private Ref<Whyline> whylineRef;
 
 	@SuppressWarnings("unused")
@@ -30,11 +32,36 @@ public class FaveItem extends FaveItemDto implements Serializable {
 	}
 
 	public FaveItem(final String song, final String artist, final String songID) {
-		super(song, artist);
+		this.setSong(song);
+		this.setArtist(artist);
 		this.setSongID(songID);
 	}
 
 	/* Getters and Setters */
+
+	public String getSong() {
+		return song;
+	}
+
+	public void setSong(final String song) {
+		this.song = song;
+	}
+
+	public String getArtist() {
+		return artist;
+	}
+
+	public void setArtist(final String artist) {
+		this.artist = artist;
+	}
+
+	public String getWhyline() {
+		return whyline;
+	}
+
+	public void setWhyline(final String whyline) {
+		this.whyline = whyline;
+	}
 
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Ref<Whyline> getWhylineRef() {
