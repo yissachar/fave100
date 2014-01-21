@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.AddSongListsSelectedEvent;
-import com.fave100.shared.requestfactory.FaveItemProxy;
+import com.fave100.client.generated.entities.FaveItemDto;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -41,9 +41,9 @@ public class AddSongPresenter extends PresenterWidget<AddSongPresenter.MyView> i
 
 		List<String> listNames = new ArrayList<String>(_currentUser.getHashtags());
 		// Remove lists that the song is already in (won't always work, since we don't retrieve all users lists)
-		for (Map.Entry<String, List<FaveItemProxy>> entry : _currentUser.getFaveLists().entrySet()) {
+		for (Map.Entry<String, List<FaveItemDto>> entry : _currentUser.getFaveLists().entrySet()) {
 			boolean inList = false;
-			for (FaveItemProxy faveItem : entry.getValue()) {
+			for (FaveItemDto faveItem : entry.getValue()) {
 				if (faveItem.getId().equals(getSongToAddId())) {
 					inList = true;
 				}

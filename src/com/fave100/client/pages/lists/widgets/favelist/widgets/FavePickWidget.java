@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.RankInputUnfocusEvent;
+import com.fave100.client.generated.entities.FaveItemDto;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.ItemAdded;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.ItemDeleted;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.RankChanged;
@@ -18,7 +19,6 @@ import com.fave100.client.resources.img.ImageResources;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
-import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -113,7 +113,7 @@ public class FavePickWidget extends Composite {
 	private List<HandlerRegistration> _whyLineMouseHandlers;
 	private Label _songPick;
 
-	public FavePickWidget(final EventBus eventBus, final FaveItemProxy item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged, final ItemDeleted itemDeleted,
+	public FavePickWidget(final EventBus eventBus, final FaveItemDto item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged, final ItemDeleted itemDeleted,
 							final ItemAdded itemAdded, final String username, final String hashtag) {
 		_eventBus = eventBus;
 		_song = item.getSong();
