@@ -1,12 +1,12 @@
 package com.fave100.shared.requestfactory;
 
 import com.fave100.server.domain.favelist.FaveItem;
-import com.fave100.shared.SongInterface;
+import com.fave100.shared.FaveItemInterface;
 import com.google.web.bindery.requestfactory.shared.ProxyFor;
 import com.google.web.bindery.requestfactory.shared.ValueProxy;
 
 @ProxyFor(FaveItem.class)
-public interface FaveItemProxy extends ValueProxy, SongInterface {
+public interface FaveItemProxy extends ValueProxy, FaveItemInterface {
 	@Override
 	String getSong();
 

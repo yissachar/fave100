@@ -22,7 +22,6 @@ import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.favelist.TooManyFaveListsException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
-import com.google.api.server.spi.config.ApiMethod;
 import com.google.inject.Inject;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
@@ -258,11 +257,6 @@ public class FaveListDao {
 		if (faveList == null)
 			return null;
 		return faveList.getList();
-	}
-
-	@ApiMethod(name = "fave100.getMasterFaveList", path = "masterFaveList")
-	public List<FaveItem> getMasterFaveList(final String hashtag) {
-		return ofy().load().type(Hashtag.class).id(hashtag).get().getList();
 	}
 
 	public List<String> getHashtagAutocomplete(final String searchTerm) {

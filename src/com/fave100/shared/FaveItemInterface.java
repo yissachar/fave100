@@ -1,6 +1,6 @@
 package com.fave100.shared;
 
-public interface SongInterface {
+public interface FaveItemInterface {
 	String getId();
 
 	String getArtist();

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fave100.client.events.song.PlaylistSongChangedEvent;
 import com.fave100.client.events.song.YouTubePlayerEndedEvent;
-import com.fave100.shared.requestfactory.FaveItemProxy;
+import com.fave100.client.generated.entities.FaveItemDto;
 import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -69,10 +69,10 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		getView().setUrls(username, hashtag);
 	}
 
-	public void setPlaylist(final List<FaveItemProxy> playlist, final String songPageID) {
+	public void setPlaylist(final List<FaveItemDto> playlist, final String songPageID) {
 		playlistItems.clear();
 		int i = 1;
-		for (final FaveItemProxy faveItem : playlist) {
+		for (final FaveItemDto faveItem : playlist) {
 			final PlaylistItem playlistItem = new PlaylistItem(_eventBus);
 			playlistItem.setRank(i);
 			playlistItem.setSong(faveItem.getSong());

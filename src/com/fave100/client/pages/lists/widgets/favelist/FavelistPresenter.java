@@ -12,7 +12,7 @@ import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItemDto;
-import com.fave100.client.generated.services.Fave100Service;
+import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.fave100.client.place.NameTokens;
@@ -68,7 +68,7 @@ public class FavelistPresenter extends
 	private EventBus eventBus;
 	private ApplicationRequestFactory requestFactory;
 	private DispatchAsync _dispatcher;
-	private Fave100Service _faveItemService;
+	private FaveListService _faveListService;;
 	// The user whose favelist we are showing
 	private AppUserProxy user;
 	// The currently logged in user
@@ -108,13 +108,13 @@ public class FavelistPresenter extends
 	};
 
 	@Inject
-	public FavelistPresenter(final EventBus eventBus, final MyView view, DispatchAsync dispatcher, Fave100Service faveItemService,
+	public FavelistPresenter(final EventBus eventBus, final MyView view, DispatchAsync dispatcher, FaveListService faveListService,
 								final ApplicationRequestFactory requestFactory,
 								final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		_dispatcher = dispatcher;
-		_faveItemService = faveItemService;
+		_faveListService = faveListService;
 		this.requestFactory = requestFactory;
 		this.currentUser = currentUser;
 		_placeManager = placeManager;
@@ -177,7 +177,7 @@ public class FavelistPresenter extends
 		}
 		// Otherwise get it from the server if we are requesting a user's list
 		else if (user != null) {
-			_dispatcher.execute(_faveItemService.getFaveList(user.getUsername(), hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_faveListService.getFaveList(user.getUsername(), hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -199,7 +199,7 @@ public class FavelistPresenter extends
 		// No user, get the global list 
 		else {
 
-			_dispatcher.execute(_faveItemService.getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_faveListService.getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

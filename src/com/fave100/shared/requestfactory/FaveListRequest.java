@@ -25,8 +25,6 @@ public interface FaveListRequest extends RequestContext {
 
 	Request<List<FaveItemProxy>> getFaveList(String username, String hashtag);
 
-	Request<List<FaveItemProxy>> getMasterFaveList(String hashtag);
-
 	Request<List<String>> getHashtagAutocomplete(String searchTerm);
 
 	Request<List<String>> getTrendingFaveLists();

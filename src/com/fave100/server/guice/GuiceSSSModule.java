@@ -3,6 +3,7 @@ package com.fave100.server.guice;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fave100.server.domain.SongApi;
 import com.fave100.server.domain.favelist.FaveListApi;
 import com.google.api.server.spi.guice.GuiceSystemServiceServletModule;
 
@@ -14,7 +15,7 @@ public class GuiceSSSModule extends GuiceSystemServiceServletModule {
 
 		Set<Class<?>> serviceClasses = new HashSet<Class<?>>();
 		serviceClasses.add(FaveListApi.class);
-		//		serviceClasses.add(FaveListDao.class);
+		serviceClasses.add(SongApi.class);
 		this.serveGuiceSystemServiceServlet("/_ah/spi/*", serviceClasses);
 	}
 }

@@ -6,31 +6,29 @@ import java.util.List;
 
 import javax.inject.Named;
 
-import com.fave100.shared.Constants;
-import com.google.api.server.spi.config.Api;
+import com.fave100.server.domain.ApiBase;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.inject.Inject;
 
-@Api(name = "fave100", version = "v1")
-public class FaveListApi {
+public class FaveListApi extends ApiBase {
 
-	private FaveList findFaveList(final String id) {
-		return ofy().load().type(FaveList.class).id(id).get();
+	private FaveListDao faveListDao;
+
+	@Inject
+	public FaveListApi(FaveListDao faveListDao) {
+		this.faveListDao = faveListDao;
 	}
 
-	private FaveList findFaveList(final String username, final String hashtag) {
-		return findFaveList(username.toLowerCase() + FaveListDao.SEPERATOR_TOKEN + hashtag.toLowerCase());
-	}
-
-	@ApiMethod(name = "fave100.getFaveList", path = "favelist")
+	@ApiMethod(name = "faveList.getFaveList", path = "favelist")
 	public List<FaveItem> getFaveList(@Named("username") final String username, @Named("hashtag") final String hashtag) {
-		final FaveList faveList = findFaveList(username, hashtag);
+		final FaveList faveList = faveListDao.findFaveList(username, hashtag);
 		if (faveList == null)
 			return null;
 		return faveList.getList();
 	}
 
-	@ApiMethod(name = "fave100.getMasterFaveList", path = "masterFaveList")
+	@ApiMethod(name = "faveList.getMasterFaveList", path = "masterFaveList")
 	public List<FaveItem> getMasterFaveList(@Named("hashtag") final String hashtag) {
-		return ofy().load().type(Hashtag.class).id(Constants.DEFAULT_HASHTAG).get().getList();
+		return ofy().load().type(Hashtag.class).id(hashtag).get().getList();
 	}
 }

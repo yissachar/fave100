@@ -3,7 +3,7 @@ package com.fave100.client.pages.song.widgets.whyline;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fave100.shared.SongInterface;
+import com.fave100.client.generated.entities.FaveItemDto;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.UserListResultProxy;
 import com.fave100.shared.requestfactory.WhylineProxy;
@@ -39,7 +39,7 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 		getView().setUserLists(new ArrayList<UserListResultProxy>());
 	}
 
-	public void showWhylines(SongInterface song) {
+	public void showWhylines(FaveItemDto song) {
 		final Request<List<WhylineProxy>> whylineReq = _requestFactory.whylineRequest().getWhylinesForSong(song.getId());
 		whylineReq.fire(new Receiver<List<WhylineProxy>>() {
 			@Override
