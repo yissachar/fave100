@@ -23,8 +23,6 @@ public interface FaveListRequest extends RequestContext {
 
 	Request<Void> editWhylineForCurrentUser(String hashtag, String songID, String whyline);
 
-	Request<List<String>> getTrendingFaveLists();
-
 	Request<List<UserListResultProxy>> getListsContainingSong(String songID);
 
 }
