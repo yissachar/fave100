@@ -1,5 +1,6 @@
 package com.fave100.server.domain;
 
+
 public class UserListResult {
 
 	private String _userName;
