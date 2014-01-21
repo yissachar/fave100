@@ -21,7 +21,6 @@ import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -131,7 +130,7 @@ public class FavelistPresenter extends
 			@Override
 			public void onFaveItemAdded(final FaveItemAddedEvent event) {
 				if (isEditable()) {
-					final FaveItemProxy item = event.getFaveItemProxy();
+					final FaveItemDto item = event.getFaveItemDto();
 					final FavePickWidget widget = new FavePickWidget(eventBus, item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername(), hashtag);
 					getView().addPick(widget);
 					widgets.add(widget);
@@ -178,19 +177,24 @@ public class FavelistPresenter extends
 		}
 		// Otherwise get it from the server if we are requesting a user's list
 		else if (user != null) {
-			final Request<List<FaveItemProxy>> req = requestFactory.faveListRequest().getFaveList(user.getUsername(), hashtag);
-			req.fire(new Receiver<List<FaveItemProxy>>() {
+			_dispatcher.execute(_faveItemService.getFaveList(user.getUsername(), hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
-				public void onSuccess(final List<FaveItemProxy> results) {
+				public void onFailure(Throwable caught) {
+					// TODO: Alert user about fail
+				}
+
+				@Override
+				public void onSuccess(FaveItemCollection result) {
 					// Make sure user still not null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
 					if (user != null && hashtagPerRequest.equals(hashtag)) {
 						if (ownList)
-							currentUser.setFaveList(results);
-						buildWidgets(results);
+							currentUser.setFaveList(result.getItems());
+						buildWidgets(result.getItems());
 					}
 				}
 			});
+
 		}
 		// No user, get the global list 
 		else {
@@ -206,32 +210,16 @@ public class FavelistPresenter extends
 				public void onSuccess(FaveItemCollection result) {
 					// Make sure user still null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
 					if (user == null && hashtagPerRequest.equals(hashtag))
-						fakeBuildWidgets(result.getItems());
+						buildWidgets(result.getItems());
 				}
 			});
 		}
 	}
 
-	private void fakeBuildWidgets(final List<FaveItemDto> faveList) {
+	private void buildWidgets(final List<FaveItemDto> faveList) {
 		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 		int i = 1;
 		for (final FaveItemDto item : faveList) {
-			final String username = user != null ? user.getUsername() : "";
-			//final FavePickWidget widget = new FavePickWidget(eventBus, item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, username, hashtag);
-			//pickWidgets.add(widget);
-			i++;
-		}
-		widgets = pickWidgets;
-
-		getView().setList(pickWidgets);
-		Window.scrollTo(0, 0);
-		eventBus.fireEvent(new FaveListSizeChangedEvent(faveList.size()));
-	}
-
-	private void buildWidgets(final List<FaveItemProxy> faveList) {
-		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
-		int i = 1;
-		for (final FaveItemProxy item : faveList) {
 			final String username = user != null ? user.getUsername() : "";
 			final FavePickWidget widget = new FavePickWidget(eventBus, item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, username, hashtag);
 			pickWidgets.add(widget);
@@ -302,34 +290,15 @@ public class FavelistPresenter extends
 			public void onSuccess(final Void result) {
 				// Set client to match
 				for (int i = 0; i < currentUser.getFaveList().size(); i++) {
-					final FaveItemProxy faveItem = currentUser.getFaveList().get(i);
+					final FaveItemDto faveItem = currentUser.getFaveList().get(i);
 					if (faveItem.getSongID().equals(songID)) {
-						final FaveItemProxy newfaveItem = new FaveItemProxy() {
-							@Override
-							public String getWhyline() {
-								return whyline;
-							}
+						FaveItemDto newfaveItem = new FaveItemDto();
+						newfaveItem.setSongID(songID);
+						newfaveItem.setId(songID);
+						newfaveItem.setWhyline(whyline);
+						newfaveItem.setArtist(faveItem.getArtist());
+						newfaveItem.setSong(faveItem.getSong());
 
-							@Override
-							public String getSongID() {
-								return songID;
-							}
-
-							@Override
-							public String getSong() {
-								return faveItem.getSong();
-							}
-
-							@Override
-							public String getArtist() {
-								return faveItem.getArtist();
-							}
-
-							@Override
-							public String getId() {
-								return songID;
-							}
-						};
 						currentUser.getFaveList().add(i, newfaveItem);
 						currentUser.getFaveList().remove(faveItem);
 					}
@@ -372,7 +341,7 @@ public class FavelistPresenter extends
 			@Override
 			public void onSuccess(final Void response) {
 				// If successfully saved on server, manually set client to match
-				final FaveItemProxy toRerank = currentUser.getFaveList().get(currentIndex);
+				final FaveItemDto toRerank = currentUser.getFaveList().get(currentIndex);
 				currentUser.getFaveList().remove(toRerank);
 				currentUser.getFaveList().add(newIndex, toRerank);
 

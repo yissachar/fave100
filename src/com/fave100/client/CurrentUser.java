@@ -11,6 +11,7 @@ import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
+import com.fave100.client.generated.entities.FaveItemDto;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
@@ -20,7 +21,6 @@ import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.FaveItemProxy;
 import com.fave100.shared.requestfactory.FaveListRequest;
 import com.fave100.shared.requestfactory.FollowingResultProxy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -40,7 +40,7 @@ public class CurrentUser implements AppUserProxy {
 	private PlaceManager _placeManager;
 	private AppUserProxy appUser;
 	private String avatar = "";
-	private Map<String, List<FaveItemProxy>> faveLists = new HashMap<String, List<FaveItemProxy>>();
+	private Map<String, List<FaveItemDto>> faveLists = new HashMap<String, List<FaveItemDto>>();
 	private List<String> _hashtags = new ArrayList<String>();
 	private String _currentHashtag = Constants.DEFAULT_HASHTAG;
 	private FollowingResultProxy followingResult;
@@ -103,7 +103,7 @@ public class CurrentUser implements AppUserProxy {
 		// Clear all state
 		appUser = null;
 		avatar = "";
-		faveLists = new HashMap<String, List<FaveItemProxy>>();
+		faveLists = new HashMap<String, List<FaveItemDto>>();
 		followingResult = null;
 		fullListRetrieved = false;
 		_currentHashtag = Constants.DEFAULT_HASHTAG;
@@ -210,33 +210,12 @@ public class CurrentUser implements AppUserProxy {
 			@Override
 			public void onSuccess(final Void response) {
 				Notification.show("Song added");
-				final FaveItemProxy item = new FaveItemProxy() {
+				final FaveItemDto item = new FaveItemDto();
+				item.setSong(song);
+				item.setArtist(artist);
+				item.setSong(songID);
+				item.setId(songID);
 
-					@Override
-					public String getWhyline() {
-						return null;
-					}
-
-					@Override
-					public String getSongID() {
-						return songID;
-					}
-
-					@Override
-					public String getSong() {
-						return song;
-					}
-
-					@Override
-					public String getArtist() {
-						return artist;
-					}
-
-					@Override
-					public String getId() {
-						return songID;
-					}
-				};
 				// Ensure local list in sync	
 				if (getFaveLists().get(hashtag) != null) {
 					getFaveLists().get(hashtag).add(item);
@@ -288,11 +267,11 @@ public class CurrentUser implements AppUserProxy {
 		faveLists.remove(name);
 	}
 
-	public List<FaveItemProxy> getFaveList() {
+	public List<FaveItemDto> getFaveList() {
 		return faveLists.get(_currentHashtag);
 	}
 
-	public void setFaveList(final List<FaveItemProxy> favelist) {
+	public void setFaveList(final List<FaveItemDto> favelist) {
 		faveLists.put(_currentHashtag, favelist);
 	}
 
@@ -337,11 +316,11 @@ public class CurrentUser implements AppUserProxy {
 		return false;
 	}
 
-	public Map<String, List<FaveItemProxy>> getFaveLists() {
+	public Map<String, List<FaveItemDto>> getFaveLists() {
 		return faveLists;
 	}
 
-	public void setFaveLists(final Map<String, List<FaveItemProxy>> faveLists) {
+	public void setFaveLists(final Map<String, List<FaveItemDto>> faveLists) {
 		this.faveLists = faveLists;
 	}
 
