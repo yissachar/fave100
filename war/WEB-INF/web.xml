@@ -114,7 +114,7 @@
     <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
     <init-param>
       <param-name>services</param-name>
-      <param-value>com.fave100.server.domain.favelist.Fave100Api</param-value>
+      <param-value>com.fave100.server.domain.favelist.FaveListApi</param-value>
     </init-param>
   </servlet>
 
