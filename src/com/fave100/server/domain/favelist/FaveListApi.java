@@ -8,6 +8,8 @@ import java.util.List;
 import javax.inject.Named;
 
 import com.fave100.server.domain.ApiBase;
+import com.fave100.server.domain.UserListResult;
+import com.fave100.server.domain.appuser.AppUser;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.inject.Inject;
 
@@ -64,5 +66,26 @@ public class FaveListApi extends ApiBase {
 		trending.add("dance");
 		trending.add("classicrock");
 		return trending;
+	}
+
+	@ApiMethod(name = "faveList.getListsContainingSong", path = "listsContainingSong")
+	public List<UserListResult> getListsContainingSong(@Named("songID") final String songID) {
+		final List<UserListResult> userListResults = new ArrayList<>();
+
+		// Get up to 30 FaveLists containing the song
+		final List<FaveList> faveLists = ofy().load().type(FaveList.class).filter("list.songID", songID).limit(30).list();
+
+		// Get the user's avatars
+		for (final FaveList faveList : faveLists) {
+			ofy().load().ref(faveList.getUser());
+			final AppUser user = faveList.getUser().get();
+			String avatar = "";
+			if (user != null)
+				avatar = user.getAvatarImage(30);
+
+			UserListResult userListResult = new UserListResult(user.getUsername(), faveList.getHashtag(), avatar);
+			userListResults.add(userListResult);
+		}
+		return userListResults;
 	}
 }

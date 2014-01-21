@@ -2,10 +2,10 @@ package com.fave100.client.pages.song.widgets.whyline;
 
 import java.util.List;
 
+import com.fave100.client.generated.entities.UserListResultDto;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.song.widgets.whyline.userlisthoverhead.UserListHoverHead;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.requestfactory.UserListResultProxy;
 import com.fave100.shared.requestfactory.WhylineProxy;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -36,9 +36,9 @@ public class WhylineView extends ViewWithUiHandlers<WhylineUiHandlers> implement
 	}
 
 	@Override
-	public void setUserLists(List<UserListResultProxy> userLists) {
+	public void setUserLists(List<UserListResultDto> userLists) {
 		userListsPanel.clear();
-		for (UserListResultProxy userList : userLists) {
+		for (UserListResultDto userList : userLists) {
 			String listPlaceToken = new ParameterTokenFormatter()
 					.toPlaceToken(new PlaceRequest.Builder()
 							.nameToken(NameTokens.lists)

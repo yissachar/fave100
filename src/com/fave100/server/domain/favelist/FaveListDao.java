@@ -9,7 +9,6 @@ import java.util.Objects;
 import javax.inject.Named;
 
 import com.fave100.server.domain.Song;
-import com.fave100.server.domain.UserListResult;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
@@ -265,26 +264,6 @@ public class FaveListDao {
 
 	public double calculateItemScore(@Named final int position) {
 		return ((double)(-1 * position) / 11 + ((double)111 / 11));
-	}
-
-	public List<UserListResult> getListsContainingSong(final String songID) {
-		final List<UserListResult> userListResults = new ArrayList<>();
-
-		// Get up to 30 FaveLists containing the song
-		final List<FaveList> faveLists = ofy().load().type(FaveList.class).filter("list.songID", songID).limit(30).list();
-
-		// Get the user's avatars
-		for (final FaveList faveList : faveLists) {
-			ofy().load().ref(faveList.getUser());
-			final AppUser user = faveList.getUser().get();
-			String avatar = "";
-			if (user != null)
-				avatar = user.getAvatarImage(30);
-
-			UserListResult userListResult = new UserListResult(user.getUsername(), faveList.getHashtag(), avatar);
-			userListResults.add(userListResult);
-		}
-		return userListResults;
 	}
 
 }
