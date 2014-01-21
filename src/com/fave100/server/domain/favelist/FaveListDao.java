@@ -259,19 +259,6 @@ public class FaveListDao {
 		return faveList.getList();
 	}
 
-	public List<String> getHashtagAutocomplete(final String searchTerm) {
-		final List<String> names = new ArrayList<String>();
-		if (searchTerm.isEmpty())
-			return names;
-
-		// TODO: Need to sort by popularity
-		final List<Hashtag> hashtags = ofy().load().type(Hashtag.class).filter("id >=", searchTerm.toLowerCase()).filter("id <", searchTerm.toLowerCase() + "\uFFFD").limit(5).list();
-		for (final Hashtag hashtag : hashtags) {
-			names.add(hashtag.getName());
-		}
-		return names;
-	}
-
 	public Hashtag getHashtag(final String id) {
 		return ofy().load().type(Hashtag.class).id(id).get();
 	}
