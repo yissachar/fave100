@@ -11,7 +11,7 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 
 @Api(name = "fave100", version = "v1")
-public class Fave100Api {
+public class FaveListApi {
 
 	private FaveList findFaveList(final String id) {
 		return ofy().load().type(FaveList.class).id(id).get();
