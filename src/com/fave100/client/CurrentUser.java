@@ -213,7 +213,7 @@ public class CurrentUser implements AppUserProxy {
 				final FaveItemDto item = new FaveItemDto();
 				item.setSong(song);
 				item.setArtist(artist);
-				item.setSong(songID);
+				item.setSongID(songID);
 				item.setId(songID);
 
 				// Ensure local list in sync	

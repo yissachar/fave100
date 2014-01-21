@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.song.PlaylistSongChangedEvent;
+import com.fave100.client.generated.entities.FaveItemCollection;
+import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.services.FaveListService;
+import com.fave100.client.generated.services.SongService;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
@@ -12,11 +16,8 @@ import com.fave100.client.pages.song.widgets.whyline.WhylinePresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.SongInterface;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.FaveItemProxy;
-import com.fave100.shared.requestfactory.SongProxy;
 import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -24,10 +25,12 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -50,7 +53,7 @@ public class SongPresenter extends
 		SongUiHandlers {
 
 	public interface MyView extends BaseView, HasUiHandlers<SongUiHandlers> {
-		void setSongInfo(SongInterface song);
+		void setSongInfo(FaveItemDto song);
 
 		void scrollYouTubeIntoView();
 
@@ -73,9 +76,12 @@ public class SongPresenter extends
 	private final ApplicationRequestFactory _requestFactory;
 	private final CurrentUser _currentUser;
 	private final EventBus _eventBus;
-	private SongInterface songProxy;
+	private FaveItemDto songProxy;
 	private AppUserProxy _requestedAppUser;
 	private PlaceManager _placeManager;
+	private DispatchAsync _dispatcher;
+	private SongService _songService;
+	private FaveListService _faveListService;
 	@Inject YouTubePresenter youtubePresenter;
 	@Inject WhylinePresenter whylinePresenter;
 	@Inject PlaylistPresenter playlistPresenter;
@@ -83,12 +89,15 @@ public class SongPresenter extends
 
 	@Inject
 	public SongPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser,
-							final PlaceManager placeManager) {
+							final PlaceManager placeManager, final DispatchAsync dispatcher, final SongService songService, final FaveListService faveListService) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
+		_dispatcher = dispatcher;
+		_songService = songService;
+		_faveListService = faveListService;
 		getView().setUiHandlers(this);
 	}
 
@@ -122,11 +131,15 @@ public class SongPresenter extends
 
 		if (!id.isEmpty()) {
 			// Load the song from the datastore
-			final Request<SongProxy> getSongReq = _requestFactory.songRequest()
-					.findSong(id);
-			getSongReq.fire(new Receiver<SongProxy>() {
+			_dispatcher.execute(_songService.getSong(id), new AsyncCallback<FaveItemDto>() {
+
 				@Override
-				public void onSuccess(final SongProxy song) {
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub
+				}
+
+				@Override
+				public void onSuccess(FaveItemDto song) {
 					songProxy = song;
 					updateYouTube();
 
@@ -160,30 +173,42 @@ public class SongPresenter extends
 				});
 			}
 
-			// Get the list for the requested user			
-			final Request<List<FaveItemProxy>> getFavelistReq = _requestFactory.faveListRequest().getFaveList(username, hashtag);
-			getFavelistReq.fire(new Receiver<List<FaveItemProxy>>() {
+			// Get the list for the requested user
+			_dispatcher.execute(_faveListService.getFaveList(username, hashtag), new AsyncCallback<FaveItemCollection>() {
+
 				@Override
-				public void onSuccess(final List<FaveItemProxy> favelist) {
-					loadedFavelist(id, favelist);
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub					
 				}
+
+				@Override
+				public void onSuccess(FaveItemCollection faveList) {
+					loadedFavelist(id, faveList.getItems());
+				}
+
 			});
 
 		}
 		else {
 			// Get the master list for the hashtag
-			final Request<List<FaveItemProxy>> getFaveListReq = _requestFactory.faveListRequest().getMasterFaveList(hashtag);
-			getFaveListReq.fire(new Receiver<List<FaveItemProxy>>() {
+			_dispatcher.execute(_faveListService.getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
+
 				@Override
-				public void onSuccess(final List<FaveItemProxy> favelist) {
-					playlistPresenter.setUserInfo("", hashtag, "");
-					loadedFavelist(id, favelist);
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub					
 				}
+
+				@Override
+				public void onSuccess(FaveItemCollection faveList) {
+					playlistPresenter.setUserInfo("", hashtag, "");
+					loadedFavelist(id, faveList.getItems());
+				}
+
 			});
 		}
 	}
 
-	private void loadedFavelist(final String id, final List<FaveItemProxy> favelist) {
+	private void loadedFavelist(final String id, final List<FaveItemDto> favelist) {
 		// Only show playlist if good params
 		if (favelist != null && favelist.size() > 0) {
 			playlistPresenter.setPlaylist(favelist, id.isEmpty() ? favelist.get(0).getId() : id);
@@ -207,11 +232,15 @@ public class SongPresenter extends
 			public void onPlaylistSongChanged(final PlaylistSongChangedEvent event) {
 
 				// Load the song from the datastore
-				final Request<SongProxy> getSongReq = _requestFactory.songRequest()
-						.findSong(event.songID());
-				getSongReq.fire(new Receiver<SongProxy>() {
+				_dispatcher.execute(_songService.getSong(event.songID()), new AsyncCallback<FaveItemDto>() {
+
 					@Override
-					public void onSuccess(final SongProxy song) {
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+					}
+
+					@Override
+					public void onSuccess(FaveItemDto song) {
 						songProxy = song;
 						updateYouTube();
 					}

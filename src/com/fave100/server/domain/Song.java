@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.shared.Constants;
-import com.fave100.shared.SongInterface;
+import com.fave100.shared.FaveItemInterface;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,7 +27,7 @@ import com.googlecode.objectify.annotation.IgnoreSave;
  * 
  */
 @Entity
-public class Song extends DatastoreObject implements SongInterface {
+public class Song implements FaveItemInterface {
 
 	@IgnoreSave private static String YOUTUBE_API_KEY = "";
 
