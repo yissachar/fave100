@@ -3,15 +3,17 @@ package com.fave100.client.pages.lists.widgets.globallistdetails;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.generated.entities.StringCollection;
+import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -44,27 +46,38 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	private ApplicationRequestFactory _requestFactory;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
+	private DispatchAsync _dispatcher;
+	private FaveListService _faveListService;
 	private String _hashtag;
 	@Inject GlobalListAutocompletePresenter listAutocomplete;
 	@Inject AboutPopupPresenter aboutPresenter;
 
 	@Inject
-	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager) {
+	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager,
+										final DispatchAsync dispatcher, final FaveListService faveListService) {
 		super(eventBus, view);
 		_requestFactory = requestFactory;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
+		_dispatcher = dispatcher;
+		_faveListService = faveListService;
 		getView().setUiHandlers(this);
 	}
 
 	public void setHashtag(final String hashtag) {
 		_hashtag = hashtag;
 		getView().setInfo(hashtag);
-		final Request<List<String>> getTrendingReq = _requestFactory.faveListRequest().getTrendingFaveLists();
-		getTrendingReq.fire(new Receiver<List<String>>() {
+		_dispatcher.execute(_faveListService.getTrendingFaveLists(), new AsyncCallback<StringCollection>() {
+
 			@Override
-			public void onSuccess(List<String> lists) {
-				getView().setTrendingLists(lists);
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onSuccess(StringCollection result) {
+				getView().setTrendingLists(result.getItems());
 			}
 		});
 
