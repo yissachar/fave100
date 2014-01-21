@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.ListAddedEvent;
+import com.fave100.client.generated.entities.StringCollection;
+import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.widgets.alert.AlertCallback;
@@ -14,11 +16,13 @@ import com.fave100.shared.Validator;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -57,18 +61,23 @@ public class ListManagerPresenter extends
 	private String _hashtag;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
+	private DispatchAsync _dispatcher;
+	private FaveListService _faveListService;
 	private boolean _globalList = false;
 	@Inject AddListAutocompletePresenter autocomplete;
 	@Inject AlertPresenter alertPresenter;
 
 	@Inject
-	public ListManagerPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager) {
+	public ListManagerPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager,
+								final DispatchAsync dispatcher, final FaveListService faveListService) {
 		super(eventBus, view);
 		view.setUiHandlers(ListManagerPresenter.this);
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
+		_dispatcher = dispatcher;
+		_faveListService = faveListService;
 	}
 
 	@Override
@@ -171,11 +180,17 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		final Request<List<String>> autocompleteReq = _requestFactory.faveListRequest().getHashtagAutocomplete(searchTerm);
-		autocompleteReq.fire(new Receiver<List<String>>() {
+		_dispatcher.execute(_faveListService.getHashtagAutocomplete(searchTerm), new AsyncCallback<StringCollection>() {
+
 			@Override
-			public void onSuccess(final List<String> suggestions) {
-				getView().refreshList(suggestions, _hashtag, ownList);
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub				
+			}
+
+			@Override
+			public void onSuccess(StringCollection result) {
+				getView().refreshList(result.getItems(), _hashtag, ownList);
+
 			}
 		});
 	}

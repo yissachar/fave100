@@ -3,12 +3,13 @@ package com.fave100.client.pages.lists.widgets.autocomplete.list;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fave100.client.generated.entities.StringCollection;
+import com.fave100.client.generated.services.FaveListService;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
@@ -28,18 +29,23 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 
 	protected EventBus _eventBus;
 	protected ApplicationRequestFactory _requestFactory;
+	protected DispatchAsync _dispatcher;
+	protected FaveListService _faveListService;
 	protected List<String> _suggestions;
 	protected String _lastSearch;
-	private final List<Request<List<String>>> _requests;
+	private final List<AsyncCallback<StringCollection>> _requests;
 	private int _selection = 0;
 	private int _maxSelection = -1;
 
 	@Inject
-	public ListAutocompletePresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory) {
+	public ListAutocompletePresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final DispatchAsync dispatcher,
+										final FaveListService faveListService) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
-		_requests = new LinkedList<Request<List<String>>>();
+		_dispatcher = dispatcher;
+		_faveListService = faveListService;
+		_requests = new LinkedList<AsyncCallback<StringCollection>>();
 		getAutocompleteResults("");
 		getView().setUiHandlers(this);
 	}
@@ -60,25 +66,27 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			return;
 		}
 
-		final Request<List<String>> listAutocompleteReq = _requestFactory.faveListRequest().getHashtagAutocomplete(searchTerm);
-		listAutocompleteReq.fire(new Receiver<List<String>>() {
+		final AsyncCallback<StringCollection> listAutocompleteReq = new AsyncCallback<StringCollection>() {
+
 			@Override
-			public void onSuccess(final List<String> suggestions) {
-				if (_requests.indexOf(listAutocompleteReq) != _requests.size() - 1
-						|| _requests.indexOf(listAutocompleteReq) == -1) {
-					_requests.remove(listAutocompleteReq);
+			public void onFailure(Throwable caught) {
+				_requests.remove(this);
+			}
+
+			@Override
+			public void onSuccess(StringCollection result) {
+				if (_requests.indexOf(this) != _requests.size() - 1
+						|| _requests.indexOf(this) == -1) {
+					_requests.remove(this);
 					return;
 				}
 
 				_requests.clear();
-				setSuggestions(suggestions);
+				setSuggestions(result.getItems());
 			}
+		};
 
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				_requests.remove(this);
-			}
-		});
+		_dispatcher.execute(_faveListService.getHashtagAutocomplete(searchTerm), listAutocompleteReq);
 		_requests.add(listAutocompleteReq);
 	}
 
