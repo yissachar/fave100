@@ -1,6 +1,6 @@
 package com.fave100.client.events.user;
 
-import com.fave100.shared.requestfactory.AppUserProxy;
+import com.fave100.client.generated.entities.AppUserDto;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -25,17 +25,17 @@ public class UserUnfollowedEvent extends Event<UserUnfollowedEvent.Handler> {
 	}
 
 	private String _exception = "";
-	private AppUserProxy _user = null;
+	private AppUserDto _user = null;
 
 	public UserUnfollowedEvent() {
 	}
 
-	public UserUnfollowedEvent(final AppUserProxy user, final String exception) {
+	public UserUnfollowedEvent(final AppUserDto user, final String exception) {
 		_user = user;
 		_exception = exception;
 	}
 
-	public UserUnfollowedEvent(final AppUserProxy user) {
+	public UserUnfollowedEvent(final AppUserDto user) {
 		_user = user;
 	}
 
@@ -43,7 +43,7 @@ public class UserUnfollowedEvent extends Event<UserUnfollowedEvent.Handler> {
 		return _exception;
 	}
 
-	public AppUserProxy getUser() {
+	public AppUserDto getUser() {
 		return _user;
 	}
 

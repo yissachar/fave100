@@ -11,7 +11,10 @@ import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
+import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.entities.FollowingResultDto;
+import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
@@ -22,35 +25,39 @@ import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveListRequest;
-import com.fave100.shared.requestfactory.FollowingResultProxy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.EntityProxyId;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
-public class CurrentUser implements AppUserProxy {
+public class CurrentUser extends AppUserDto {
 
 	private EventBus _eventBus;
 	private ApplicationRequestFactory _requestFactory;
 	private PlaceManager _placeManager;
-	private AppUserProxy appUser;
+	private DispatchAsync _dispatcher;
+	private AppUserService _appUserService;
+	private AppUserDto appUser;
 	private String avatar = "";
 	private Map<String, List<FaveItemDto>> faveLists = new HashMap<String, List<FaveItemDto>>();
 	private List<String> _hashtags = new ArrayList<String>();
 	private String _currentHashtag = Constants.DEFAULT_HASHTAG;
-	private FollowingResultProxy followingResult;
+	private FollowingResultDto followingResult;
 	private boolean fullListRetrieved = false;
 
 	@Inject
-	public CurrentUser(final EventBus eventBus, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager, final RequestCache requestCache) {
+	public CurrentUser(final EventBus eventBus, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager, final RequestCache requestCache,
+						final DispatchAsync dispatcher, final AppUserService appUserService) {
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_placeManager = placeManager;
+		_dispatcher = dispatcher;
+		_appUserService = appUserService;
 
 		CurrentUserChangedEvent.register(eventBus,
 				new CurrentUserChangedEvent.Handler() {
@@ -64,14 +71,14 @@ public class CurrentUser implements AppUserProxy {
 							_hashtags.add(Constants.DEFAULT_HASHTAG);
 							_hashtags.addAll(appUser.getHashtags());
 
-							final AsyncCallback<FollowingResultProxy> followingReq = new AsyncCallback<FollowingResultProxy>() {
+							final AsyncCallback<FollowingResultDto> followingReq = new AsyncCallback<FollowingResultDto>() {
 								@Override
 								public void onFailure(final Throwable caught) {
-									// Don't care
+									// TODO: What happens if fail?
 								}
 
 								@Override
-								public void onSuccess(final FollowingResultProxy result) {
+								public void onSuccess(final FollowingResultDto result) {
 									followingResult = result;
 									fullListRetrieved = !result.isMore();
 								}
@@ -114,7 +121,7 @@ public class CurrentUser implements AppUserProxy {
 		return appUser != null;
 	}
 
-	public void setAppUser(final AppUserProxy appUser) {
+	public void setAppUser(final AppUserDto appUser) {
 		this.appUser = appUser;
 	}
 
@@ -135,11 +142,11 @@ public class CurrentUser implements AppUserProxy {
 		});
 	}
 
-	public List<AppUserProxy> getFollowing() {
+	public List<AppUserDto> getFollowing() {
 		return followingResult == null ? null : followingResult.getFollowing();
 	}
 
-	public void followUser(final AppUserProxy user) {
+	public void followUser(final AppUserDto user) {
 		// Not logged in, redirect to login
 		if (!isLoggedIn()) {
 			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
@@ -171,7 +178,7 @@ public class CurrentUser implements AppUserProxy {
 		});
 	}
 
-	public void unfollowUser(final AppUserProxy user) {
+	public void unfollowUser(final AppUserDto user) {
 		// Remove from client
 		getFollowing().remove(user);
 
@@ -192,7 +199,7 @@ public class CurrentUser implements AppUserProxy {
 		});
 	}
 
-	public void addMoreFollowing(final List<AppUserProxy> users, final Boolean isMore) {
+	public void addMoreFollowing(final List<AppUserDto> users, final Boolean isMore) {
 		followingResult.getFollowing().addAll(users);
 		setFullListRetrieved(!isMore);
 	}
@@ -279,14 +286,8 @@ public class CurrentUser implements AppUserProxy {
 		_hashtags.add(hashtag);
 	}
 
-	// Needed for RequestFactory
 	@Override
-	public EntityProxyId<?> stableId() {
-		return (appUser == null) ? null : appUser.stableId();
-	}
-
-	@Override
-	public Integer getVersion() {
+	public int getVersion() {
 		return (appUser == null) ? null : appUser.getVersion();
 	}
 
@@ -332,7 +333,7 @@ public class CurrentUser implements AppUserProxy {
 		this.fullListRetrieved = fullListRetrieved;
 	}
 
-	public AppUserProxy getAppUser() {
+	public AppUserDto getAppUser() {
 		return appUser;
 	}
 

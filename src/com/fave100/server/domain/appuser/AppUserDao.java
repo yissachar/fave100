@@ -682,7 +682,7 @@ public class AppUserDao {
 	 * @throws UserNotFoundException
 	 */
 	public FollowingResult getFollowing(final String username, final int index) throws NotLoggedInException, UserNotFoundException {
-		// Only logged in users can see following		
+		// Only logged in users can see following                
 		final AppUser currentUser = getLoggedInAppUser();
 		if (currentUser == null)
 			throw new NotLoggedInException();

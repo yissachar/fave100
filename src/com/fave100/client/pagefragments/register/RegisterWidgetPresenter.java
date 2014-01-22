@@ -4,10 +4,10 @@ import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
+import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
-import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
-import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
@@ -17,7 +17,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -52,16 +52,20 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	private ApplicationRequestFactory _requestFactory;
 	private PlaceManager _placeManager;
 	private RequestCache _requestCache;
+	private DispatchAsync _dispatcher;
+	private AppUserService _appUserService;
 	private String redirect;
 
 	@Inject
 	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager,
-									final RequestCache requestCache) {
+									final RequestCache requestCache, final DispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_placeManager = placeManager;
 		_requestCache = requestCache;
+		_dispatcher = dispatcher;
+		_appUserService = appUserService;
 		getView().setUiHandlers(this);
 	}
 
@@ -123,9 +127,16 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(username, password, email);
 
 			LoadingIndicator.show();
-			createAppUserReq.fire(new Receiver<AppUserProxy>() {
+			_dispatcher.execute(_appUserService.createAppUser(username, email, password), new AsyncCallback<AppUserDto>() {
+
 				@Override
-				public void onSuccess(final AppUserProxy createdUser) {
+				public void onFailure(Throwable caught) {
+					LoadingIndicator.hide();
+					getView().setNativeUsernameError(caught.getMessage());
+				}
+
+				@Override
+				public void onSuccess(AppUserDto createdUser) {
 					LoadingIndicator.hide();
 					_eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 					if (createdUser != null) {
@@ -133,25 +144,6 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 					}
 					else {
 						getView().setPasswordError("An error occurred");
-					}
-				}
-
-				@Override
-				public void onFailure(final ServerFailure failure) {
-					LoadingIndicator.hide();
-					String errorMsg = "An error occurred";
-					if (failure.getExceptionType().equals(
-							UsernameAlreadyExistsException.class.getName())) {
-						errorMsg = "A user with that name already exists";
-						getView().setNativeUsernameError(errorMsg);
-					}
-					else if (failure.getExceptionType().equals(
-							EmailIDAlreadyExistsException.class.getName())) {
-						errorMsg = "A user with that email address is already registered";
-						getView().setEmailError(errorMsg);
-					}
-					else {
-						getView().setNativeUsernameError(errorMsg);
 					}
 				}
 			});

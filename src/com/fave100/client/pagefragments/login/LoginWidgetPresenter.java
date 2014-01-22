@@ -4,11 +4,10 @@ import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
+import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.exceptions.user.IncorrectLoginException;
-import com.fave100.shared.requestfactory.AppUserProxy;
-import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -16,7 +15,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -58,17 +57,20 @@ public class LoginWidgetPresenter extends
 	private ApplicationRequestFactory _requestFactory;
 	private PlaceManager _placeManager;
 	private RequestCache _requestCache;
+	private DispatchAsync _dispatcher;
+	private AppUserService _appUserService;
 	private String redirect;
 
 	@Inject
-	public LoginWidgetPresenter(final EventBus eventBus, final MyView view,
-								final ApplicationRequestFactory requestFactory,
-								final PlaceManager placeManager, final RequestCache requestCache) {
+	public LoginWidgetPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager,
+								final RequestCache requestCache, final DispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_placeManager = placeManager;
 		_requestCache = requestCache;
+		_dispatcher = dispatcher;
+		_appUserService = appUserService;
 		getView().setUiHandlers(this);
 	}
 
@@ -144,29 +146,25 @@ public class LoginWidgetPresenter extends
 		}
 
 		LoadingIndicator.show();
-		final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
-		final Request<AppUserProxy> loginReq = appUserRequest.login(getView()
-				.getUsername().trim(), getView().getPassword());
+		_dispatcher.execute(_appUserService.login(getView().getUsername().trim(), getView().getPassword()), new AsyncCallback<AppUserDto>() {
 
-		// Attempt to log the user in
-		loginReq.fire(new Receiver<AppUserProxy>() {
 			@Override
-			public void onSuccess(final AppUserProxy appUser) {
+			public void onFailure(Throwable caught) {
+				LoadingIndicator.hide();
+				//				String errorMsg = "An error occurred";
+				//				if (failure.getExceptionType().equals(
+				//						IncorrectLoginException.class.getName())) {
+				//					errorMsg = "Username or password incorrect";
+				//				}
+				getView().setError(caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(AppUserDto appUser) {
 				LoadingIndicator.hide();
 				_eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 				Notification.show("Logged in successfully");
 				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.lists).with(ListPresenter.USER_PARAM, appUser.getUsername()).build());
-			}
-
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				LoadingIndicator.hide();
-				String errorMsg = "An error occurred";
-				if (failure.getExceptionType().equals(
-						IncorrectLoginException.class.getName())) {
-					errorMsg = "Username or password incorrect";
-				}
-				getView().setError(errorMsg);
 			}
 		});
 	}

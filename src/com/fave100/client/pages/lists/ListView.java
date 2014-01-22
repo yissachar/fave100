@@ -3,10 +3,10 @@ package com.fave100.client.pages.lists;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.shared.Constants;
-import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -152,7 +152,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	}-*/;
 
 	@Override
-	public void setUserProfile(final AppUserProxy user) {
+	public void setUserProfile(final AppUserDto user) {
 		if (user == null) {
 			userProfile.setVisible(false);
 		}

@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.song.PlaylistSongChangedEvent;
+import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.generated.services.SongService;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
@@ -16,7 +18,6 @@ import com.fave100.client.pages.song.widgets.whyline.WhylinePresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -77,11 +78,12 @@ public class SongPresenter extends
 	private final CurrentUser _currentUser;
 	private final EventBus _eventBus;
 	private FaveItemDto songProxy;
-	private AppUserProxy _requestedAppUser;
+	private AppUserDto _requestedAppUser;
 	private PlaceManager _placeManager;
 	private DispatchAsync _dispatcher;
 	private SongService _songService;
 	private FaveListService _faveListService;
+	private AppUserService _appUserService;
 	@Inject YouTubePresenter youtubePresenter;
 	@Inject WhylinePresenter whylinePresenter;
 	@Inject PlaylistPresenter playlistPresenter;
@@ -89,7 +91,8 @@ public class SongPresenter extends
 
 	@Inject
 	public SongPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser,
-							final PlaceManager placeManager, final DispatchAsync dispatcher, final SongService songService, final FaveListService faveListService) {
+							final PlaceManager placeManager, final DispatchAsync dispatcher, final SongService songService, final FaveListService faveListService,
+							final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
@@ -98,6 +101,7 @@ public class SongPresenter extends
 		_dispatcher = dispatcher;
 		_songService = songService;
 		_faveListService = faveListService;
+		_appUserService = appUserService;
 		getView().setUiHandlers(this);
 	}
 
@@ -161,10 +165,15 @@ public class SongPresenter extends
 			}
 			else {
 				// Get username and avatar from the datastore
-				final Request<AppUserProxy> getUserReq = _requestFactory.appUserRequest().findAppUser(username);
-				getUserReq.fire(new Receiver<AppUserProxy>() {
+				_dispatcher.execute(_appUserService.getAppUser(username), new AsyncCallback<AppUserDto>() {
+
 					@Override
-					public void onSuccess(final AppUserProxy user) {
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub						
+					}
+
+					@Override
+					public void onSuccess(AppUserDto user) {
 						_requestedAppUser = user;
 						if (user != null) {
 							playlistPresenter.setUserInfo(user.getUsername(), hashtag, user.getAvatarImage());
