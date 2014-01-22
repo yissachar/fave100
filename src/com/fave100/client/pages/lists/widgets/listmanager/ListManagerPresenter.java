@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.ListAddedEvent;
+import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.StringCollection;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pages.lists.ListPresenter;
@@ -13,7 +14,6 @@ import com.fave100.client.widgets.alert.AlertCallback;
 import com.fave100.client.widgets.alert.AlertPresenter;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
-import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -57,7 +57,7 @@ public class ListManagerPresenter extends
 
 	private EventBus _eventBus;
 	private ApplicationRequestFactory _requestFactory;
-	private AppUserProxy _user;
+	private AppUserDto _user;
 	private String _hashtag;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
@@ -237,11 +237,11 @@ public class ListManagerPresenter extends
 
 	/* Getters and Setters */
 
-	public AppUserProxy getUser() {
+	public AppUserDto getUser() {
 		return _user;
 	}
 
-	public void setUser(final AppUserProxy user) {
+	public void setUser(final AppUserDto user) {
 		this._user = user;
 	}
 

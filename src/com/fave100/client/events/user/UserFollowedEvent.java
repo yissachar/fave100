@@ -1,6 +1,6 @@
 package com.fave100.client.events.user;
 
-import com.fave100.shared.requestfactory.AppUserProxy;
+import com.fave100.client.generated.entities.AppUserDto;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -24,13 +24,13 @@ public class UserFollowedEvent extends Event<UserFollowedEvent.Handler> {
 		return eventBus.addHandler(TYPE, handler);
 	}
 
-	private AppUserProxy _user = null;
+	private AppUserDto _user = null;
 
-	public UserFollowedEvent(final AppUserProxy user) {
+	public UserFollowedEvent(final AppUserDto user) {
 		_user = user;
 	}
 
-	public AppUserProxy getUser() {
+	public AppUserDto getUser() {
 		return _user;
 	}
 

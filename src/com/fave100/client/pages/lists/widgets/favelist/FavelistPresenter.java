@@ -10,6 +10,7 @@ import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
+import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItemDto;
 import com.fave100.client.generated.services.FaveListService;
@@ -19,7 +20,6 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.BadWhylineException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
-import com.fave100.shared.requestfactory.AppUserProxy;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -70,7 +70,7 @@ public class FavelistPresenter extends
 	private DispatchAsync _dispatcher;
 	private FaveListService _faveListService;;
 	// The user whose favelist we are showing
-	private AppUserProxy user;
+	private AppUserDto user;
 	// The currently logged in user
 	private CurrentUser currentUser;
 	private PlaceManager _placeManager;
@@ -376,11 +376,11 @@ public class FavelistPresenter extends
 
 	/* Getters and Setters */
 
-	public AppUserProxy getUser() {
+	public AppUserDto getUser() {
 		return user;
 	}
 
-	public void setUser(final AppUserProxy user) {
+	public void setUser(final AppUserDto user) {
 		this.user = user;
 	}
 

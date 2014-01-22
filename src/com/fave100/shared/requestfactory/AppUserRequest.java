@@ -10,8 +10,6 @@ import com.google.web.bindery.requestfactory.shared.Service;
 public interface AppUserRequest extends RequestContext {
 	Request<AppUserProxy> findAppUser(String username);
 
-	Request<AppUserProxy> login(String username, String password);
-
 	Request<Void> logout();
 
 	Request<AppUserProxy> createAppUser(String username, String password, String email);
@@ -49,8 +47,6 @@ public interface AppUserRequest extends RequestContext {
 	Request<Void> followUser(String username);
 
 	Request<Void> unfollowUser(String username);
-
-	Request<FollowingResultProxy> getFollowing(String username, int index);
 
 	Request<Boolean> isFollowing(String username);
 

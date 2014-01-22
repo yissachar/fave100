@@ -7,6 +7,9 @@ import com.fave100.client.events.song.SongSelectedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
+import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.BooleanResultDto;
+import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompletePresenter;
@@ -16,9 +19,6 @@ import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.exceptions.user.NotLoggedInException;
-import com.fave100.shared.requestfactory.AppUserProxy;
-import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -27,11 +27,11 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -47,7 +47,7 @@ public class ListPresenter extends
 		implements ListUiHandlers {
 
 	public interface MyView extends BaseView, HasUiHandlers<ListUiHandlers> {
-		void setUserProfile(AppUserProxy user);
+		void setUserProfile(AppUserDto user);
 
 		void showOwnPage();
 
@@ -81,11 +81,13 @@ public class ListPresenter extends
 	private String requestedUsername;
 	private String _requestedHashtag;
 	private boolean isFollowing;
-	private AppUserProxy requestedUser;
+	private AppUserDto requestedUser;
 	private final ApplicationRequestFactory _requestFactory;
 	private final EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
+	private DispatchAsync _dispatcher;
+	private AppUserService _appUserService;
 	private boolean _ownPage = false;
 	@Inject SongAutocompletePresenter songAutocomplete;
 	@Inject FavelistPresenter favelist;
@@ -94,14 +96,15 @@ public class ListPresenter extends
 	@Inject GlobalListDetailsPresenter globalListDetails;
 
 	@Inject
-	public ListPresenter(final EventBus eventBus, final MyView view,
-							final MyProxy proxy, final ApplicationRequestFactory requestFactory,
-							final PlaceManager placeManager, final CurrentUser currentUser) {
+	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final ApplicationRequestFactory requestFactory,
+							final PlaceManager placeManager, final CurrentUser currentUser, final DispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_placeManager = placeManager;
 		_currentUser = currentUser;
+		_dispatcher = dispatcher;
+		_appUserService = appUserService;
 		getView().setUiHandlers(this);
 
 		Window.addWindowScrollHandler(new ScrollHandler() {
@@ -241,42 +244,43 @@ public class ListPresenter extends
 			}
 
 			// Otherwise, request the info from the server
-			final AppUserRequest userReq = _requestFactory.appUserRequest();
-			userReq.findAppUser(requestedUsername).to(
-					new Receiver<AppUserProxy>() {
-						@Override
-						public void onSuccess(final AppUserProxy user) {
-							if (user != null) {
-								requestedUser = user;
-								if (!requestedUser.getHashtags().contains(_requestedHashtag))
-									_requestedHashtag = Constants.DEFAULT_HASHTAG;
-								showPage();
-							}
-							else {
-								getView().showUserNotFound();
-								getProxy().manualReveal(ListPresenter.this);
-							}
-						}
-					});
-			userReq.isFollowing(requestedUsername).to(
-					new Receiver<Boolean>() {
-						@Override
-						public void onSuccess(final Boolean following) {
-							isFollowing = following;
-							getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
-							showPage();
-						}
+			_dispatcher.execute(_appUserService.getAppUser(requestedUsername), new AsyncCallback<AppUserDto>() {
 
-						@Override
-						public void onFailure(final ServerFailure failure) {
-							isFollowing = false;
-							if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-								_eventBus.fireEvent(new CurrentUserChangedEvent(null));
-							}
-							getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
-						}
-					});
-			userReq.fire();
+				@Override
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub					
+				}
+
+				@Override
+				public void onSuccess(AppUserDto user) {
+					if (user != null) {
+						requestedUser = user;
+						if (!requestedUser.getHashtags().contains(_requestedHashtag))
+							_requestedHashtag = Constants.DEFAULT_HASHTAG;
+						showPage();
+					}
+					else {
+						getView().showUserNotFound();
+						getProxy().manualReveal(ListPresenter.this);
+					}
+				}
+			});
+
+			_dispatcher.execute(_appUserService.isFollowing(requestedUsername), new AsyncCallback<BooleanResultDto>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					isFollowing = false;
+					getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
+				}
+
+				@Override
+				public void onSuccess(BooleanResultDto result) {
+					isFollowing = result.getValue();
+					getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
+					showPage();
+				}
+			});
 		}
 	}
 

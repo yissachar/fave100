@@ -5,13 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fave100.client.generated.entities.FollowingResultDto;
+import com.fave100.client.generated.services.AppUserService;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.FollowingResultProxy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.shared.Receiver;
 import com.google.web.bindery.requestfactory.shared.Request;
 import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 
 /**
  * Stores common RequestFactory requests and their results in order to prevent constant trips to the server for unchanged data.
@@ -28,14 +30,18 @@ public class RequestCache {
 	}
 
 	private ApplicationRequestFactory _requestFactory;
+	private DispatchAsync _dispatcher;
+	private AppUserService _appUserService;
 
 	private Map<RequestType, Boolean> _runningRequests = new HashMap<RequestType, Boolean>();
 	private Map<RequestType, Object> _callbacks = new HashMap<RequestType, Object>();
 	private Map<RequestType, Object> _results = new HashMap<RequestType, Object>();
 
 	@Inject
-	public RequestCache(final ApplicationRequestFactory requestFactory) {
+	public RequestCache(final ApplicationRequestFactory requestFactory, DispatchAsync dispatcher, AppUserService appUserService) {
 		_requestFactory = requestFactory;
+		_dispatcher = dispatcher;
+		_appUserService = appUserService;
 	}
 
 	/**
@@ -55,16 +61,16 @@ public class RequestCache {
 		getLoginUrl(RequestType.FACEBOOK_LOGIN, redirect, callback);
 	}
 
-	public void getFollowingForCurrentUser(final String username, final AsyncCallback<FollowingResultProxy> callback) {
+	public void getFollowingForCurrentUser(final String username, final AsyncCallback<FollowingResultDto> callback) {
 		final RequestType request = RequestType.FOLLOWING_CURRENT_USER;
-		final FollowingResultProxy followingUsers = (FollowingResultProxy)_results.get(request);
-		final List<AsyncCallback<FollowingResultProxy>> callbacks = getOrCreateCallbacks(request);
+		final FollowingResultDto followingUsers = (FollowingResultDto)_results.get(request);
+		final List<AsyncCallback<FollowingResultDto>> callbacks = getOrCreateCallbacks(request);
 		final boolean reqRunning = (_runningRequests.get(request) != null) ? _runningRequests.get(request) : false;
 		// Add the callback to list of callbacks to notify		
 		callbacks.add(callback);
 		// If we already have the following users, return		
 		if (followingUsers != null) {
-			for (final AsyncCallback<FollowingResultProxy> gCallback : callbacks) {
+			for (final AsyncCallback<FollowingResultDto> gCallback : callbacks) {
 				gCallback.onSuccess(followingUsers);
 			}
 			callbacks.clear();
@@ -74,30 +80,25 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (!reqRunning) {
 			_runningRequests.put(request, true);
-			final Request<FollowingResultProxy> followingUserReq = _requestFactory.appUserRequest().getFollowing(username, 0);
-			// If there is no existing request, create one
-			if (!reqRunning) {
-				_runningRequests.put(request, true);
+			_dispatcher.execute(_appUserService.getFollowing(username, 0), new AsyncCallback<FollowingResultDto>() {
 
-				followingUserReq.fire(new Receiver<FollowingResultProxy>() {
-					@Override
-					public void onSuccess(final FollowingResultProxy followingResult) {
-						_runningRequests.put(request, false);
-						_results.put(request, followingResult);
-						for (final AsyncCallback<FollowingResultProxy> gCallback : callbacks) {
-							gCallback.onSuccess(followingResult);
-						}
-						callbacks.clear();
-					}
+				@Override
+				public void onFailure(Throwable caught) {
+					_runningRequests.put(request, false);
+					// Clean all callbacks
+					callbacks.clear();
+				}
 
-					@Override
-					public void onFailure(final ServerFailure failure) {
-						_runningRequests.put(request, false);
-						// Clean all callbacks
-						callbacks.clear();
+				@Override
+				public void onSuccess(FollowingResultDto followingResult) {
+					_runningRequests.put(request, false);
+					_results.put(request, followingResult);
+					for (final AsyncCallback<FollowingResultDto> gCallback : callbacks) {
+						gCallback.onSuccess(followingResult);
 					}
-				});
-			}
+					callbacks.clear();
+				}
+			});
 		}
 	}
 
