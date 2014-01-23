@@ -8,7 +8,5 @@ public interface ApplicationRequestFactory extends RequestFactory {
 
 	SongRequest songRequest();
 
-	FaveListRequest faveListRequest();
-
 	WhylineRequest whylineRequest();
 }
