@@ -1,6 +1,7 @@
 package com.fave100.client.pages.lists;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.entities.SongDto;
 import com.fave100.client.events.favelist.ListChangedEvent;
 import com.fave100.client.events.favelist.RankInputUnfocusEvent;
 import com.fave100.client.events.song.SongSelectedEvent;
@@ -19,8 +20,6 @@ import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -31,7 +30,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -42,9 +41,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class ListPresenter extends
-		BasePresenter<ListPresenter.MyView, ListPresenter.MyProxy>
-		implements ListUiHandlers {
+public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPresenter.MyProxy> implements ListUiHandlers {
 
 	public interface MyView extends BaseView, HasUiHandlers<ListUiHandlers> {
 		void setUserProfile(AppUserDto user);
@@ -54,8 +51,6 @@ public class ListPresenter extends
 		void showOtherPage();
 
 		String getFixedSearchStyle();
-
-		//void renderSharing(String username, String hashtag);
 
 		void showUserNotFound();
 
@@ -82,11 +77,10 @@ public class ListPresenter extends
 	private String _requestedHashtag;
 	private boolean isFollowing;
 	private AppUserDto requestedUser;
-	private final ApplicationRequestFactory _requestFactory;
 	private final EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
-	private DispatchAsync _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private AppUserService _appUserService;
 	private boolean _ownPage = false;
 	@Inject SongAutocompletePresenter songAutocomplete;
@@ -96,11 +90,10 @@ public class ListPresenter extends
 	@Inject GlobalListDetailsPresenter globalListDetails;
 
 	@Inject
-	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final ApplicationRequestFactory requestFactory,
-							final PlaceManager placeManager, final CurrentUser currentUser, final DispatchAsync dispatcher, final AppUserService appUserService) {
+	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser,
+							final RestDispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
-		_requestFactory = requestFactory;
 		_placeManager = placeManager;
 		_currentUser = currentUser;
 		_dispatcher = dispatcher;
@@ -138,7 +131,7 @@ public class ListPresenter extends
 		SongSelectedEvent.register(_eventBus, new SongSelectedEvent.Handler() {
 			@Override
 			public void onSongSelected(final SongSelectedEvent event) {
-				final SongProxy song = event.getSong();
+				final SongDto song = event.getSong();
 				favelist.addSong(song.getId(), song.getSong(), song.getArtist(), true);
 			}
 		});
@@ -322,13 +315,10 @@ public class ListPresenter extends
 		getView().setMobileView(true);
 
 		getProxy().manualReveal(ListPresenter.this);
-
-		// Now that page is visible, render FB like button				
-		//getView().renderSharing(requestedUsername, _requestedHashtag);
 	}
 
 	@Override
-	public void songSelected(final SongProxy song) {
+	public void songSelected(final SongDto song) {
 		_eventBus.fireEvent(new SongSelectedEvent(song));
 	}
 
@@ -349,7 +339,7 @@ public class ListPresenter extends
 }
 
 interface ListUiHandlers extends UiHandlers {
-	void songSelected(SongProxy song);
+	void songSelected(SongDto song);
 
 	void followUser();
 

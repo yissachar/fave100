@@ -12,13 +12,12 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -67,19 +66,17 @@ public class RegisterPresenter extends
 	public static final String PROVIDER_FACEBOOK = "facebook";
 
 	private EventBus eventBus;
-	private ApplicationRequestFactory requestFactory;
 	private PlaceManager placeManager;
-	private DispatchAsync _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private AppUserService _appUserService;
 	private String provider;
 	private String facebookRedirect;
 
 	@Inject
-	public RegisterPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager,
-								final DispatchAsync dispatcher, final AppUserService appUserService) {
+	public RegisterPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager,
+								final RestDispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		this.eventBus = eventBus;
-		this.requestFactory = requestFactory;
 		this.placeManager = placeManager;
 		_dispatcher = dispatcher;
 		_appUserService = appUserService;

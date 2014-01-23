@@ -11,11 +11,10 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -61,19 +60,17 @@ public class ProfilePresenter extends
 	}
 
 	private EventBus _eventBus;
-	private ApplicationRequestFactory _requestFactory;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private DispatchAsync _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private AppUserService _appUserService;
 	private UserInfoDto oldUserInfo = null;
 
 	@Inject
-	public ProfilePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser,
-							final PlaceManager placeManager, final DispatchAsync dispatcher, final AppUserService appUserService) {
+	public ProfilePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final CurrentUser currentUser,
+							final PlaceManager placeManager, final RestDispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
-		_requestFactory = requestFactory;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;

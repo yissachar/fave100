@@ -7,7 +7,6 @@ import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.shared.Constants;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -65,7 +64,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	private boolean following;
 
 	@Inject
-	public ListView(final Binder binder, final ApplicationRequestFactory requestFactory) {
+	public ListView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 	}
 

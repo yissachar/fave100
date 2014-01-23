@@ -8,11 +8,10 @@ import java.util.Map;
 import com.fave100.client.generated.entities.FollowingResultDto;
 import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.AppUserService;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.gwtplatform.dispatch.shared.Action;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
+import com.gwtplatform.dispatch.rest.shared.RestAction;
 
 /**
  * Stores common RequestFactory requests and their results in order to prevent constant trips to the server for unchanged data.
@@ -28,8 +27,7 @@ public class RequestCache {
 		FOLLOWING_CURRENT_USER
 	}
 
-	private ApplicationRequestFactory _requestFactory;
-	private DispatchAsync _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private AppUserService _appUserService;
 
 	private Map<RequestType, Boolean> _runningRequests = new HashMap<RequestType, Boolean>();
@@ -37,8 +35,7 @@ public class RequestCache {
 	private Map<RequestType, Object> _results = new HashMap<RequestType, Object>();
 
 	@Inject
-	public RequestCache(final ApplicationRequestFactory requestFactory, DispatchAsync dispatcher, AppUserService appUserService) {
-		_requestFactory = requestFactory;
+	public RequestCache(RestDispatchAsync dispatcher, AppUserService appUserService) {
 		_dispatcher = dispatcher;
 		_appUserService = appUserService;
 	}
@@ -119,7 +116,7 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (!reqRunning) {
 			_runningRequests.put(request, true);
-			Action<StringResultDto> loginUrlReq = null;
+			RestAction<StringResultDto> loginUrlReq = null;
 			switch (request) {
 				case GOOGLE_LOGIN:
 					loginUrlReq = _appUserService.getGoogleLoginURL(redirect);

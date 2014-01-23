@@ -9,12 +9,11 @@ import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -46,19 +45,17 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	}
 
 	private EventBus _eventBus;
-	private ApplicationRequestFactory _requestFactory;
 	private PlaceManager _placeManager;
 	private RequestCache _requestCache;
-	private DispatchAsync _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private AppUserService _appUserService;
 	private String redirect;
 
 	@Inject
-	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager,
-									final RequestCache requestCache, final DispatchAsync dispatcher, final AppUserService appUserService) {
+	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RequestCache requestCache,
+									final RestDispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view);
 		_eventBus = eventBus;
-		_requestFactory = requestFactory;
 		_placeManager = placeManager;
 		_requestCache = requestCache;
 		_dispatcher = dispatcher;

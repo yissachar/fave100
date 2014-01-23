@@ -5,11 +5,10 @@ import java.util.List;
 
 import com.fave100.client.generated.entities.StringCollection;
 import com.fave100.client.generated.services.FaveListService;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
@@ -28,8 +27,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 	}
 
 	protected EventBus _eventBus;
-	protected ApplicationRequestFactory _requestFactory;
-	protected DispatchAsync _dispatcher;
+	protected RestDispatchAsync _dispatcher;
 	protected FaveListService _faveListService;
 	protected List<String> _suggestions;
 	protected String _lastSearch;
@@ -38,11 +36,10 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 	private int _maxSelection = -1;
 
 	@Inject
-	public ListAutocompletePresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final DispatchAsync dispatcher,
+	public ListAutocompletePresenter(final EventBus eventBus, final MyView view, final RestDispatchAsync dispatcher,
 										final FaveListService faveListService) {
 		super(eventBus, view);
 		_eventBus = eventBus;
-		_requestFactory = requestFactory;
 		_dispatcher = dispatcher;
 		_faveListService = faveListService;
 		_requests = new LinkedList<AsyncCallback<StringCollection>>();

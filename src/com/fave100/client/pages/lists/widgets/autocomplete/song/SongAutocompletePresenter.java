@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.entities.SearchResultMapper;
+import com.fave100.client.entities.SongDto;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.events.song.SongSelectedEvent;
 import com.fave100.shared.Constants;
-import com.fave100.shared.requestfactory.SearchResultProxy;
-import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -19,9 +19,6 @@ import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -33,7 +30,7 @@ public class SongAutocompletePresenter extends
 		implements SongAutocompleteUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<SongAutocompleteUiHandlers> {
-		void setSuggestions(List<SongProxy> suggestions, int total);
+		void setSuggestions(List<SongDto> suggestions, int total);
 
 		void setSelection(int selection);
 
@@ -66,7 +63,7 @@ public class SongAutocompletePresenter extends
 	private int resultsPerPage = 5;
 	private int page = 0;
 	private int _lastPage = 0;
-	private List<SongProxy> currentSuggestions;
+	private List<SongDto> currentSuggestions;
 	private String _lastSearch = "";
 
 	@Inject
@@ -115,10 +112,6 @@ public class SongAutocompletePresenter extends
 		getView().clearSearch();
 	}
 
-	public interface SearchResultFactory extends AutoBeanFactory {
-		AutoBean<SearchResultProxy> response();
-	}
-
 	public void setFocus() {
 		getView().setFocus();
 	}
@@ -164,9 +157,8 @@ public class SongAutocompletePresenter extends
 				requests.clear();
 
 				final JSONObject obj = new JSONObject(jsObject);
-				final SearchResultFactory factory = GWT.create(SearchResultFactory.class);
-				final AutoBean<SearchResultProxy> autoBean = AutoBeanCodex.decode(factory, SearchResultProxy.class, obj.toString());
-				final List<SongProxy> results = autoBean.as().getResults();
+				SearchResultMapper mapper = GWT.create(SearchResultMapper.class);
+				final List<SongDto> results = mapper.read(obj.toString()).getResults();//autoBean.as().getResults();
 				currentSuggestions = results;
 				final int totalResults = Integer.parseInt(obj.get("total").toString());
 				getView().setSuggestions(results, totalResults);

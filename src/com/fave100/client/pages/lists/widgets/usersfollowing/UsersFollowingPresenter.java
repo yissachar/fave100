@@ -14,7 +14,6 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -24,7 +23,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -50,20 +49,18 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 
 	EventBus _eventBus;
 	CurrentUser _currentUser;
-	ApplicationRequestFactory _requestFactory;
 	RequestCache _requestCache;
 	AppUserDto _user;
-	private DispatchAsync _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private AppUserService _appUserService;
 	int listSize = 0;
 
 	@Inject
-	public UsersFollowingPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final ApplicationRequestFactory requestFactory,
-									final RequestCache requestCache, final DispatchAsync dispatcher, final AppUserService appUserService) {
+	public UsersFollowingPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final RequestCache requestCache,
+									final RestDispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_currentUser = currentUser;
-		_requestFactory = requestFactory;
 		_requestCache = requestCache;
 		_dispatcher = dispatcher;
 		_appUserService = appUserService;
