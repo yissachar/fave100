@@ -3,10 +3,10 @@ package com.fave100.client.pages.song.widgets.whyline;
 import java.util.List;
 
 import com.fave100.client.generated.entities.UserListResultDto;
+import com.fave100.client.generated.entities.WhylineDto;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.song.widgets.whyline.userlisthoverhead.UserListHoverHead;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.requestfactory.WhylineProxy;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -28,9 +28,9 @@ public class WhylineView extends ViewWithUiHandlers<WhylineUiHandlers> implement
 	}
 
 	@Override
-	public void setWhylines(List<WhylineProxy> whylines) {
+	public void setWhylines(List<WhylineDto> whylines) {
 		whylinePanel.clear();
-		for (WhylineProxy whyline : whylines) {
+		for (WhylineDto whyline : whylines) {
 			whylinePanel.add(new WhylineWidget(whyline));
 		}
 	}
