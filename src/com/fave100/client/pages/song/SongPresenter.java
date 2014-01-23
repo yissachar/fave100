@@ -7,6 +7,7 @@ import com.fave100.client.events.song.PlaylistSongChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.entities.YouTubeSearchResultCollection;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.generated.services.SongService;
@@ -19,7 +20,6 @@ import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -29,8 +29,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -308,12 +306,17 @@ public class SongPresenter extends
 		getView().setSongInfo(songProxy);
 
 		// Get any YouTube videos
-		final Request<List<YouTubeSearchResultProxy>> getYoutubeReq = _requestFactory.songRequest()
-				.getYouTubeResults(songProxy.getSong(), songProxy.getArtist());
-		getYoutubeReq.fire(new Receiver<List<YouTubeSearchResultProxy>>() {
+		_dispatcher.execute(_songService.getYouTubeSearchResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
+
 			@Override
-			public void onSuccess(final List<YouTubeSearchResultProxy> results) {
-				youtubePresenter.setYouTubeVideos(results);
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onSuccess(YouTubeSearchResultCollection result) {
+				youtubePresenter.setYouTubeVideos(result.getItems());
 				resizePlaylist();
 				getView().scrollYouTubeIntoView();
 			}

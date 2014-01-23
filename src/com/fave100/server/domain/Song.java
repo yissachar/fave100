@@ -29,7 +29,7 @@ import com.googlecode.objectify.annotation.IgnoreSave;
 @Entity
 public class Song implements FaveItemInterface {
 
-	@IgnoreSave private static String YOUTUBE_API_KEY = "";
+	@IgnoreSave public static String YOUTUBE_API_KEY = "";
 
 	@Id private String id;
 	private String artist;

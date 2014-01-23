@@ -3,7 +3,7 @@ package com.fave100.client.pages.song.widgets.youtube;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
+import com.fave100.client.generated.entities.YouTubeSearchResultDto;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -27,7 +27,7 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 	@UiField SimplePanel framePanel;
 	@UiField HTMLPanel thumbnailPanel;
 	private ArrayList<Image> thumbList = new ArrayList<Image>();
-	private List<YouTubeSearchResultProxy> _videos;
+	private List<YouTubeSearchResultDto> _videos;
 	private int _timesSkipped = 0;
 
 	@Inject
@@ -42,7 +42,7 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 	}
 
 	@Override
-	public void setVideoData(final List<YouTubeSearchResultProxy> videos) {
+	public void setVideoData(final List<YouTubeSearchResultDto> videos) {
 		// Clear old data		
 		thumbnailPanel.clear();
 		thumbList.clear();
@@ -62,8 +62,8 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 					@Override
 					public void onClick(final ClickEvent event) {
 						_timesSkipped = 0;
-						final YouTubeSearchResultProxy currVideo = videos.get(0);
-						final YouTubeSearchResultProxy clickedVideo = videos.get(thumbList.indexOf(ytThumb) + 1);
+						final YouTubeSearchResultDto currVideo = videos.get(0);
+						final YouTubeSearchResultDto clickedVideo = videos.get(thumbList.indexOf(ytThumb) + 1);
 						videos.set(0, clickedVideo);
 						videos.set(thumbList.indexOf(ytThumb) + 1, currVideo);
 						setVideoData(videos);
@@ -161,7 +161,7 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 
 	private void skipVideo() {
 		if (_videos.size() >= 2) {
-			final YouTubeSearchResultProxy currVid = _videos.get(0);
+			final YouTubeSearchResultDto currVid = _videos.get(0);
 			_timesSkipped++;
 			// Had to skip video twice, jump to next song in list			
 			if (_timesSkipped >= 2) {
