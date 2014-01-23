@@ -5,6 +5,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.List;
 
 import com.fave100.server.domain.appuser.AppUser;
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
@@ -57,10 +59,12 @@ public class Whyline extends DatastoreObject {
 
 	/* Getters and Setters */
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Long getId() {
 		return id;
 	}
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setId(final Long id) {
 		this.id = id;
 	}
@@ -73,10 +77,12 @@ public class Whyline extends DatastoreObject {
 		this.whyline = whyline;
 	}
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Ref<Song> getSong() {
 		return song;
 	}
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setSong(final Ref<Song> song) {
 		this.song = song;
 	}
