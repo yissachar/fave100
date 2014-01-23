@@ -8,8 +8,6 @@ import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
-import com.fave100.shared.requestfactory.AppUserProxy;
-import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -122,10 +120,8 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		email = email.trim();
 
 		if (validateFields(username, email, password, passwordRepeat)) {
-			final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
-			// Create a new user with the username and password entered
-			final Request<AppUserProxy> createAppUserReq = appUserRequest.createAppUser(username, password, email);
 
+			// Create a new user with the username and password entered
 			LoadingIndicator.show();
 			_dispatcher.execute(_appUserService.createAppUser(username, email, password), new AsyncCallback<AppUserDto>() {
 
