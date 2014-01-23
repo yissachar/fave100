@@ -14,6 +14,7 @@ import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FaveItemDto;
 import com.fave100.client.generated.entities.FollowingResultDto;
+import com.fave100.client.generated.entities.VoidResultDto;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
@@ -21,8 +22,6 @@ import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
 import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
-import com.fave100.shared.requestfactory.AppUserProxy;
-import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.fave100.shared.requestfactory.FaveListRequest;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -130,11 +129,15 @@ public class CurrentUser extends AppUserDto {
 	}
 
 	public void logout() {
-		final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
-		final Request<Void> logoutReq = appUserRequest.logout();
-		logoutReq.fire(new Receiver<Void>() {
+		_dispatcher.execute(_appUserService.logout(), new AsyncCallback<VoidResultDto>() {
+
 			@Override
-			public void onSuccess(final Void response) {
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onSuccess(VoidResultDto result) {
 				_eventBus.fireEvent(new CurrentUserChangedEvent(null));
 				Notification.show("Logged out successfully");
 				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.lists).build());
@@ -311,7 +314,7 @@ public class CurrentUser extends AppUserDto {
 		if (appUser == null || obj == null) {
 			return false;
 		}
-		else if (appUser == obj || appUser.equals(obj) || this.getUsername().equals(((AppUserProxy)obj).getUsername())) {
+		else if (appUser == obj || appUser.equals(obj) || this.getUsername().equals(((AppUserDto)obj).getUsername())) {
 			return true;
 		}
 		return false;
