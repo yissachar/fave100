@@ -3,7 +3,7 @@ package com.fave100.client.pages.song.widgets.youtube;
 import java.util.List;
 
 import com.fave100.client.events.song.YouTubePlayerEndedEvent;
-import com.fave100.shared.requestfactory.YouTubeSearchResultProxy;
+import com.fave100.client.generated.entities.YouTubeSearchResultDto;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -15,7 +15,7 @@ public class YouTubePresenter extends PresenterWidget<YouTubePresenter.MyView>
 		implements YouTubeUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<YouTubeUiHandlers> {
-		void setVideoData(List<YouTubeSearchResultProxy> videos);
+		void setVideoData(List<YouTubeSearchResultDto> videos);
 
 		void clearVideo();
 	}
@@ -31,7 +31,7 @@ public class YouTubePresenter extends PresenterWidget<YouTubePresenter.MyView>
 		getView().setUiHandlers(this);
 	}
 
-	public void setYouTubeVideos(final List<YouTubeSearchResultProxy> videos) {
+	public void setYouTubeVideos(final List<YouTubeSearchResultDto> videos) {
 		getView().setVideoData(videos);
 	}
 
