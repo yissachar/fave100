@@ -6,7 +6,5 @@ public interface ApplicationRequestFactory extends RequestFactory {
 
 	AppUserRequest appUserRequest();
 
-	SongRequest songRequest();
-
 	WhylineRequest whylineRequest();
 }
