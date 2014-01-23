@@ -1,18 +1,17 @@
 package com.fave100.client.pages.passwordreset;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.events.user.CurrentUserChangedEvent;
+import com.fave100.client.generated.entities.BooleanResultDto;
+import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
-import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -51,6 +50,8 @@ public class PasswordResetPresenter
 	private ApplicationRequestFactory _requestFactory;
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
+	private DispatchAsync _dispatcher;
+	private AppUserService _appUserService;
 	private EventBus _eventBus;
 	private String token;
 
@@ -60,15 +61,15 @@ public class PasswordResetPresenter
 	}
 
 	@Inject
-	public PasswordResetPresenter(final EventBus eventBus, final MyView view,
-									final MyProxy proxy,
-									final ApplicationRequestFactory requestFactory,
-									final PlaceManager placeManager, final CurrentUser currentUser) {
+	public PasswordResetPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager,
+									final CurrentUser currentUser, final DispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		_requestFactory = requestFactory;
 		_placeManager = placeManager;
 		_currentUser = currentUser;
 		_eventBus = eventBus;
+		_dispatcher = dispatcher;
+		_appUserService = appUserService;
 		getView().setUiHandlers(this);
 	}
 
@@ -114,12 +115,16 @@ public class PasswordResetPresenter
 
 	@Override
 	public void sendEmail(final String username, final String emailAddress) {
-		final Request<Boolean> sendEmailReq = _requestFactory.appUserRequest()
-				.emailPasswordResetToken(username, emailAddress);
-		sendEmailReq.fire(new Receiver<Boolean>() {
+		_dispatcher.execute(_appUserService.emailPasswordResetToken(username, emailAddress), new AsyncCallback<BooleanResultDto>() {
+
 			@Override
-			public void onSuccess(final Boolean validInfo) {
-				if (!validInfo) {
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub				
+			}
+
+			@Override
+			public void onSuccess(BooleanResultDto validInfo) {
+				if (!validInfo.getValue()) {
 					// Warn user if invalid username or email
 					getView().showTokenError();
 				}
@@ -129,7 +134,6 @@ public class PasswordResetPresenter
 				}
 			}
 		});
-
 	}
 
 	@Override
@@ -154,12 +158,16 @@ public class PasswordResetPresenter
 			passwordOrToken = currPassword;
 		}
 
-		final Request<Boolean> changePasswordReq = _requestFactory
-				.appUserRequest().changePassword(newPassword, passwordOrToken);
-		changePasswordReq.fire(new Receiver<Boolean>() {
+		_dispatcher.execute(_appUserService.changePassword(newPassword, passwordOrToken), new AsyncCallback<BooleanResultDto>() {
+
 			@Override
-			public void onSuccess(final Boolean pwdChanged) {
-				if (!pwdChanged) {
+			public void onFailure(Throwable caught) {
+				getView().showPwdError(caught.getMessage(), false);
+			}
+
+			@Override
+			public void onSuccess(BooleanResultDto pwdChanged) {
+				if (!pwdChanged.getValue()) {
 					String errorMsg = "Incorrect password";
 					if (!token.isEmpty()) {
 						errorMsg = "Token expired or doesn't exist";
@@ -170,16 +178,6 @@ public class PasswordResetPresenter
 					_placeManager
 							.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 				}
-			}
-
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				String errorMsg = "An unknown error occured. Please try again later.";
-				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
-					errorMsg = "Could not complete the action because you are not logged in. Please log in and try again.";
-				}
-				getView().showPwdError(errorMsg, false);
 			}
 		});
 	}

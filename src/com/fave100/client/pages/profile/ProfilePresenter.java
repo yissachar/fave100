@@ -2,29 +2,26 @@ package com.fave100.client.pages.profile;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.LoadingIndicator;
-import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
+import com.fave100.client.generated.entities.BooleanResultDto;
+import com.fave100.client.generated.entities.StringResultDto;
+import com.fave100.client.generated.entities.UserInfoDto;
+import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
-import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
-import com.fave100.shared.exceptions.user.NotLoggedInException;
-import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.UserInfoProxy;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 /**
@@ -67,19 +64,20 @@ public class ProfilePresenter extends
 	private ApplicationRequestFactory _requestFactory;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private UserInfoProxy oldUserInfo = null;
+	private DispatchAsync _dispatcher;
+	private AppUserService _appUserService;
+	private UserInfoDto oldUserInfo = null;
 
 	@Inject
-	public ProfilePresenter(final EventBus eventBus, final MyView view,
-							final MyProxy proxy,
-							final ApplicationRequestFactory requestFactory,
-							final CurrentUser currentUser,
-							final PlaceManager placeManager) {
+	public ProfilePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser,
+							final PlaceManager placeManager, final DispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
+		_dispatcher = dispatcher;
+		_appUserService = appUserService;
 		getView().setUiHandlers(this);
 	}
 
@@ -107,39 +105,39 @@ public class ProfilePresenter extends
 	}
 
 	private void setEmail() {
-		final Request<UserInfoProxy> emailReq = _requestFactory.appUserRequest().getCurrentUserSettings();
-		emailReq.fire(new Receiver<UserInfoProxy>() {
+		_dispatcher.execute(_appUserService.getCurrentUserSettings(), new AsyncCallback<UserInfoDto>() {
+
 			@Override
-			public void onSuccess(final UserInfoProxy userInfo) {
-				populateFields(userInfo);
-				oldUserInfo = userInfo;
+			public void onFailure(Throwable caught) {
+				// TODO If not logged in redirect to login				
 			}
 
 			@Override
-			public void onFailure(final ServerFailure failure) {
-				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
-					_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
-				}
+			public void onSuccess(UserInfoDto userInfo) {
+				populateFields(userInfo);
+				oldUserInfo = userInfo;
 			}
 		});
 	}
 
-	private void populateFields(final UserInfoProxy userInfo) {
+	private void populateFields(final UserInfoDto userInfo) {
 		getView().setEmailValue(userInfo.getEmail());
 		getView().setFollowingPrivate(userInfo.isFollowingPrivate());
 	}
 
 	private void setUploadAction() {
 		// Create the blobstore URL that the avatar will be uploaded to
-		// Need to recreate each time because session expires after succesful
-		// upload
-		final Request<String> blobRequest = _requestFactory.appUserRequest()
-				.createBlobstoreUrl("/avatarUpload");
-		blobRequest.fire(new Receiver<String>() {
+		// Need to recreate each time because session expires after successful upload
+		_dispatcher.execute(_appUserService.createBlobstoreUrl("/avatarUpload"), new AsyncCallback<StringResultDto>() {
+
 			@Override
-			public void onSuccess(final String url) {
-				getView().createActionUrl(url);
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub				
+			}
+
+			@Override
+			public void onSuccess(StringResultDto url) {
+				getView().createActionUrl(url.getValue());
 			}
 		});
 	}
@@ -156,10 +154,7 @@ public class ProfilePresenter extends
 	public void saveUserInfo(final String email, final boolean followingPrivate) {
 		getView().clearErrors();
 
-		final AppUserRequest appUserRequest = _requestFactory.appUserRequest();
-
-		// Clone user info because request factory is silly
-		final UserInfoProxy userInfo = appUserRequest.create(UserInfoProxy.class);
+		final UserInfoDto userInfo = new UserInfoDto();
 		userInfo.setEmail(email);
 		userInfo.setFollowingPrivate(followingPrivate);
 
@@ -170,26 +165,24 @@ public class ProfilePresenter extends
 		if (emailError == null) {
 
 			LoadingIndicator.show();
-			appUserRequest.setUserInfo(userInfo).fire(new Receiver<Boolean>() {
+			_dispatcher.execute(_appUserService.setUserInfo(userInfo), new AsyncCallback<BooleanResultDto>() {
+
 				@Override
-				public void onSuccess(final Boolean saved) {
+				public void onFailure(Throwable caught) {
 					LoadingIndicator.hide();
-					if (saved) {
+					getView().setEmailError(caught.getMessage());
+				}
+
+				@Override
+				public void onSuccess(BooleanResultDto saved) {
+					LoadingIndicator.hide();
+					if (saved.getValue()) {
 						oldUserInfo = userInfo;
 						populateFields(userInfo);
 						getView().setFormStatusMessage("Profile saved");
 					}
 					else {
 						getView().setFormStatusMessage("Error: Profile not saved");
-					}
-				}
-
-				@Override
-				public void onFailure(final ServerFailure failure) {
-
-					LoadingIndicator.hide();
-					if (failure.getExceptionType().equals(EmailIDAlreadyExistsException.class.getName())) {
-						getView().setEmailError("A user with that email already exists");
 					}
 				}
 			});

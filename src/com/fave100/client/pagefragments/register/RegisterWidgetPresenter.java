@@ -5,6 +5,7 @@ import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
@@ -13,8 +14,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -153,12 +152,16 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 
 	@Override
 	public void goToTwitterAuth() {
-		final Request<String> authUrlReq = _requestFactory.appUserRequest()
-				.getTwitterAuthUrl(redirect);
-		authUrlReq.fire(new Receiver<String>() {
+		_dispatcher.execute(_appUserService.getTwitterAuthUrl(redirect), new AsyncCallback<StringResultDto>() {
+
 			@Override
-			public void onSuccess(final String url) {
-				Window.open(url, "", "");
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub				
+			}
+
+			@Override
+			public void onSuccess(StringResultDto url) {
+				Window.open(url.getValue(), "", "");
 			}
 		});
 	}

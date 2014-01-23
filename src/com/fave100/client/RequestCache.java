@@ -6,13 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.fave100.client.generated.entities.FollowingResultDto;
+import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
+import com.gwtplatform.dispatch.shared.Action;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 
 /**
@@ -120,34 +119,35 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (!reqRunning) {
 			_runningRequests.put(request, true);
-			Request<String> loginUrlReq = null;
+			Action<StringResultDto> loginUrlReq = null;
 			switch (request) {
 				case GOOGLE_LOGIN:
-					loginUrlReq = _requestFactory.appUserRequest().getGoogleLoginURL(redirect);
+					loginUrlReq = _appUserService.getGoogleLoginURL(redirect);
 					break;
 				case FACEBOOK_LOGIN:
-					loginUrlReq = _requestFactory.appUserRequest().getFacebookAuthUrl(redirect);
+					loginUrlReq = _appUserService.getFacebookAuthUrl(redirect);
 					break;
 				default:
 					// No request to fire
 					return;
 			}
 
-			loginUrlReq.fire(new Receiver<String>() {
+			_dispatcher.execute(loginUrlReq, new AsyncCallback<StringResultDto>() {
+
 				@Override
-				public void onSuccess(final String url) {
+				public void onFailure(Throwable caught) {
 					_runningRequests.put(request, false);
-					_results.put(request, url);
-					for (final AsyncCallback<String> gCallback : callbacks) {
-						gCallback.onSuccess(url);
-					}
+					// Clean all callbacks
 					callbacks.clear();
 				}
 
 				@Override
-				public void onFailure(final ServerFailure failure) {
+				public void onSuccess(StringResultDto url) {
 					_runningRequests.put(request, false);
-					// Clean all callbacks
+					_results.put(request, url);
+					for (final AsyncCallback<String> gCallback : callbacks) {
+						gCallback.onSuccess(url.getValue());
+					}
 					callbacks.clear();
 				}
 			});

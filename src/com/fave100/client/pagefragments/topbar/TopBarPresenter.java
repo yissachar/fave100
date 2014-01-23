@@ -2,6 +2,8 @@ package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
+import com.fave100.client.generated.entities.BooleanResultDto;
+import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
@@ -13,10 +15,10 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
+import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -50,14 +52,19 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	private CurrentUser currentUser;
 	private PlaceManager placeManager;
 	private ApplicationRequestFactory _requestFactory;
+	private DispatchAsync _dispatcher;
+	private AppUserService _appUserService;
 
 	@Inject
-	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser, final ApplicationRequestFactory requestFactory) {
+	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser, final ApplicationRequestFactory requestFactory,
+							final DispatchAsync dispatcher, final AppUserService appUserService) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.currentUser = currentUser;
 		this.placeManager = placeManager;
 		_requestFactory = requestFactory;
+		_dispatcher = dispatcher;
+		_appUserService = appUserService;
 		getView().setUiHandlers(this);
 
 		Window.addWindowScrollHandler(new ScrollHandler() {
@@ -97,11 +104,16 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 				if (!currentUser.isLoggedIn())
 					return;
 
-				final Request<Boolean> loggedInReq = _requestFactory.appUserRequest().isAppUserLoggedIn();
-				loggedInReq.fire(new Receiver<Boolean>() {
+				_dispatcher.execute(_appUserService.isAppUserLoggedIn(), new AsyncCallback<BooleanResultDto>() {
+
 					@Override
-					public void onSuccess(final Boolean loggedIn) {
-						if (!loggedIn)
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+					}
+
+					@Override
+					public void onSuccess(BooleanResultDto loggedIn) {
+						if (!loggedIn.getValue())
 							eventBus.fireEvent(new CurrentUserChangedEvent(null));
 					}
 				});

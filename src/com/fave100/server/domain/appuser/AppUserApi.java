@@ -2,25 +2,45 @@ package com.fave100.server.domain.appuser;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import javax.inject.Named;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.auth.RequestToken;
+
+import com.fave100.server.UrlBuilder;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiBase;
 import com.fave100.server.domain.BooleanResult;
+import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.VoidResult;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
+import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.UploadOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -28,6 +48,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
 
 public class AppUserApi extends ApiBase {
@@ -395,5 +416,273 @@ public class AppUserApi extends ApiBase {
 
 		BooleanResult result = new BooleanResult(following != null && !following.getFollowing().isEmpty() && following.getFollowing().contains(userRef));
 		return result;
+	}
+
+	/*
+	 * Checks if the user is logged into Google (though not necessarily logged
+	 * into Fave100)
+	 */
+	@ApiMethod(name = "appUser.isGoogleLoggedIn", path = "user/google/loggedIn", httpMethod = HttpMethod.GET)
+	public BooleanResult isGoogleUserLoggedIn() {
+		final UserService userService = UserServiceFactory.getUserService();
+		final User user = userService.getCurrentUser();
+		return new BooleanResult(user != null);
+	}
+
+	// Builds a URL that client can use to log user in to Google Account
+	@ApiMethod(name = "appUser.getGoogleLoginURL", path = "user/google/loginUrl")
+	public StringResult getGoogleLoginURL(@Named("destinationURL") final String destinationURL) {
+		return new StringResult(UserServiceFactory.getUserService().createLoginURL(destinationURL));
+	}
+
+	// Builds a Facebook login URL that the client can use
+	@ApiMethod(name = "appUser.getFacebookAuthUrl", path = "user/facebook/loginUrl")
+	public StringResult getFacebookAuthUrl(HttpServletRequest request, @Named("redirectUrl") final String redirectUrl) throws BadRequestException {
+		request.getSession().setAttribute("facebookRedirect", redirectUrl);
+		try {
+			return new StringResult("https://www.facebook.com/dialog/oauth?client_id=" + AppUserDao.FACEBOOK_APP_ID + "&display=page&redirect_uri=" + URLEncoder.encode(redirectUrl, "UTF-8"));
+		}
+		catch (UnsupportedEncodingException e) {
+			throw new BadRequestException("Unsupported encoding");
+		}
+	}
+
+	// Check if Fave100 user is logged in 
+	@ApiMethod(name = "appUser.isAppUserLoggedIn", path = "user/isLoggedIn")
+	public BooleanResult isAppUserLoggedIn(HttpServletRequest request) {
+		final String username = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
+		return new BooleanResult(username != null);
+	}
+
+	// Builds a Twitter login URL that the client can use
+	@ApiMethod(name = "appUser.getTwitterAuthUrl", path = "user/twitterAuthUrl")
+	public StringResult getTwitterAuthUrl(HttpServletRequest request, @Named("redirectUrl") final String redirectUrl) {
+		final Twitter twitter = appUserDao.getTwitterInstance();
+		twitter.setOAuthConsumer(AppUserDao.TWITTER_CONSUMER_KEY, AppUserDao.TWITTER_CONSUMER_SECRET);
+
+		try {
+			final RequestToken requestToken = twitter.getOAuthRequestToken(redirectUrl);
+			request.getSession().setAttribute("requestToken", requestToken);
+			return new StringResult(requestToken.getAuthenticationURL());
+		}
+		catch (final TwitterException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@ApiMethod(name = "appUser.createBlobstoreUrl", path = "user/createBlobstoreUrl")
+	public StringResult createBlobstoreUrl(@Named("successPath") final String successPath) {
+		final UploadOptions options = UploadOptions.Builder.withMaxUploadSizeBytes(Constants.MAX_AVATAR_SIZE);
+		return new StringResult(BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(successPath, options));
+	}
+
+	@ApiMethod(name = "appUser.getCurrentUserSettings", path = "user/settings")
+	public UserInfo getCurrentUserSettings(HttpServletRequest request) throws UnauthorizedException {
+		final AppUser currentUser = getLoggedInAppUser(request);
+		if (currentUser == null)
+			throw new UnauthorizedException("Not logged in");
+
+		return new UserInfo(currentUser);
+	}
+
+	@ApiMethod(name = "appUser.setUserInfo", path = "user/settings")
+	public BooleanResult setUserInfo(HttpServletRequest request, final UserInfo userInfo) throws ForbiddenException {
+		final AppUser currentUser = getLoggedInAppUser(request);
+		if (currentUser == null)
+			return new BooleanResult(false);
+		try {
+			ofy().transact(new VoidWork() {
+				@Override
+				public void vrun() {
+					final String email = userInfo.getEmail();
+					// Change info
+					currentUser.setFollowingPrivate(userInfo.isFollowingPrivate());
+					// If email wasn't changed, just save the user
+					if (email.equals(currentUser.getEmail())) {
+						ofy().save().entity(currentUser).now();
+					}
+					// Otherwise handle email special case
+					else {
+						EmailID emailID = EmailID.findEmailID(email);
+						// Existing email for a different user, throw exception
+						if (emailID != null && !emailID.getEmailID().equals(currentUser.getEmail().toLowerCase())) {
+							throw new RuntimeException(new EmailIDAlreadyExistsException());
+						}
+						else if (emailID == null) {
+							// No existing email, allow it to be changed
+
+							// First delete the old EmailID
+							emailID = EmailID.findEmailID(currentUser.getEmail());
+							ofy().delete().entity(emailID).now();
+							// Then create a new EmailID with the new email
+							emailID = new EmailID(email, currentUser);
+							// Manually keep local user email in sync
+							currentUser.setEmail(email);
+							// Save entities
+							ofy().save().entities(emailID, currentUser).now();
+						}
+					}
+				}
+			});
+		}
+		catch (final RuntimeException re) {
+			if (re.getCause() instanceof EmailIDAlreadyExistsException) {
+				throw new ForbiddenException("Email already exists");
+			}
+		}
+
+		return new BooleanResult(true);
+	}
+
+	@ApiMethod(name = "appUser.followUser", path = "user/followUser")
+	public VoidResult followUser(HttpServletRequest request, @Named("username") final String username) throws UnauthorizedException, ForbiddenException {
+		final AppUser currentUser = getLoggedInAppUser(request);
+
+		if (currentUser == null)
+			throw new UnauthorizedException("Not logged in");
+
+		// Check if user trying to follow themselves
+		if (currentUser.getUsername().equals(username))
+			throw new ForbiddenException("You cannot follow yourself");
+
+		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
+		Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
+		if (following == null) {
+			following = new Following(currentUser.getId());
+			ofy().save().entity(following).now();
+		}
+
+		// Check if already following that user
+		if (following.getFollowing().contains(userRef))
+			throw new ForbiddenException("You are already following that user");
+
+		following.getFollowing().add(userRef);
+		ofy().save().entity(following).now();
+
+		return new VoidResult();
+	}
+
+	@ApiMethod(name = "appUser.unfollowUser", path = "user/unfollow")
+	public VoidResult unfollowUser(HttpServletRequest request, @Named("username") final String username) throws UnauthorizedException {
+		final AppUser currentUser = getLoggedInAppUser(request);
+		if (currentUser == null)
+			throw new UnauthorizedException("Not logged in");
+
+		final Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
+		if (following == null)
+			return new VoidResult();
+
+		following.getFollowing().remove(Ref.create(Key.create(AppUser.class, username.toLowerCase())));
+		ofy().save().entity(following).now();
+
+		return new VoidResult();
+	}
+
+	// Emails user a password reset token if they forget their password
+	@ApiMethod(name = "appUser.emailPasswordResetToken", path = "user/email/reset/")
+	public BooleanResult emailPasswordResetToken(@Named("username") final String username, @Named("emailAddress") final String emailAddress) {
+		if (!username.isEmpty() && !emailAddress.isEmpty()) {
+			final AppUser appUser = appUserDao.findAppUser(username);
+			if (appUser != null) {
+				// Make sure that Google, Twitter, Facebook users can't "forget password"
+				if (appUser.getPassword() == null || appUser.getPassword().isEmpty())
+					return new BooleanResult(false);
+				if (appUser.getEmail() == null || appUser.getEmail().isEmpty())
+					return new BooleanResult(false);
+
+				if (appUser.getEmail().equals(emailAddress)) {
+					final Properties props = new Properties();
+					final Session session = Session.getDefaultInstance(props, null);
+
+					try {
+						final PwdResetToken pwdResetToken = new PwdResetToken(appUser.getUsername());
+						ofy().save().entity(pwdResetToken).now();
+						final Message msg = new MimeMessage(session);
+						msg.setFrom(new InternetAddress("info@fave100.com", "Fave100"));
+						msg.addRecipient(Message.RecipientType.TO,
+								new InternetAddress(emailAddress, username));
+						msg.setSubject("Fave100 Password Change");
+						// TODO: wording?
+						String msgBody = "To change your Fave100 password, please visit the following URL and change your password within 24 hours.";
+						final String pwdResetPlace = new UrlBuilder("passwordreset").with("token", pwdResetToken.getToken()).getUrl();
+						msgBody += pwdResetPlace;
+						msg.setText(msgBody);
+
+						Transport.send(msg);
+						return new BooleanResult(true);
+					}
+					catch (final AddressException e) {
+						// ...
+					}
+					catch (final MessagingException e) {
+						// ...
+					}
+					catch (final UnsupportedEncodingException e) {
+						// ...
+					}
+				}
+			}
+		}
+		return new BooleanResult(true);
+	}
+
+	// Allows a user to change their password provided they have a password reset token or the current password
+	@ApiMethod(name = "appUser.changePassword", path = "user/password/change")
+	public BooleanResult changePassword(HttpServletRequest request, @Named("newPassoword") final String newPassword, @Named("tokenOrPassword") final String tokenOrPassword)
+			throws UnauthorizedException {
+
+		if (Validator.validatePassword(newPassword) != null || tokenOrPassword == null || tokenOrPassword.isEmpty()) {
+			// TODO: Shouldn't this be an exception instead??
+			return new BooleanResult(false);
+		}
+
+		AppUser appUser = null;
+		Boolean changePwd = false;
+
+		// Check if the string is a password reset token
+		final PwdResetToken pwdResetToken = PwdResetToken.findPwdResetToken(tokenOrPassword);
+		if (pwdResetToken != null) {
+			// Check if reset token has expired
+			final Date now = new Date();
+			if (pwdResetToken.getExpiry().getTime() > now.getTime()) {
+				// Token hasn't expired yet, change password
+				appUser = pwdResetToken.getAppUser().get();
+				if (appUser != null) {
+					changePwd = true;
+				}
+			}
+			else {
+				// Token expired, delete it
+				ofy().delete().entity(pwdResetToken);
+			}
+		}
+		else {
+			// No password reset token, check for logged in user
+			appUser = getLoggedInAppUser(request);
+			if (appUser != null) {
+				// We have a logged in user, check if pwd matches
+				if (BCrypt.checkpw(tokenOrPassword, appUser.getPassword())) {
+					// Password matches, allow password change
+					changePwd = true;
+				}
+			}
+			else {
+				throw new UnauthorizedException("Not logged in");
+			}
+		}
+
+		if (appUser != null && changePwd == true) {
+			// Change the password
+			appUser.setPassword(newPassword);
+			ofy().save().entity(appUser).now();
+			if (pwdResetToken != null) {
+				// Delete token now that we've used it
+				ofy().delete().entity(pwdResetToken);
+			}
+			return new BooleanResult(true);
+		}
+
+		return new BooleanResult(false);
 	}
 }
