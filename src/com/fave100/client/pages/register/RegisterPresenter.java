@@ -4,6 +4,7 @@ import com.fave100.client.LoadingIndicator;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.BooleanResultDto;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pages.BasePresenter;
@@ -11,15 +12,12 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
-import com.fave100.shared.requestfactory.AppUserRequest;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -104,21 +102,22 @@ public class RegisterPresenter extends
 			// username and create their account
 
 			// Make sure that the user is actually logged into Google
-			final AppUserRequest appUserRequest = requestFactory
-					.appUserRequest();
-			final Request<Boolean> checkGoogleUserLoggedIn = appUserRequest
-					.isGoogleUserLoggedIn();
-			checkGoogleUserLoggedIn.fire(new Receiver<Boolean>() {
+			_dispatcher.execute(_appUserService.isGoogleLoggedIn(), new AsyncCallback<BooleanResultDto>() {
+
 				@Override
-				public void onSuccess(final Boolean loggedIn) {
-					if (loggedIn) {
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub
+				}
+
+				@Override
+				public void onSuccess(BooleanResultDto loggedIn) {
+					if (loggedIn.getValue()) {
 						// If user is logged in to Google, log them in to Fave100
 						_dispatcher.execute(_appUserService.loginWithGoogle(), new AsyncCallback<AppUserDto>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
 								// TODO Auto-generated method stub
-
 							}
 
 							@Override
@@ -226,8 +225,6 @@ public class RegisterPresenter extends
 	@Override
 	public void registerThirdParty(final String username) {
 		if (validateThirdPartyFields(username)) {
-			final AppUserRequest appUserRequest = requestFactory
-					.appUserRequest();
 			if (provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
 				// Create Google-linked account
 				_dispatcher.execute(_appUserService.createAppUserFromGoogleAccount(username), new AsyncCallback<AppUserDto>() {

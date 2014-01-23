@@ -20,14 +20,10 @@ import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
@@ -161,22 +157,19 @@ public class CurrentUser extends AppUserDto {
 			getFollowing().add(user);
 
 		// Add to server
-		final Request<Void> starReq = _requestFactory.appUserRequest().followUser(user.getUsername());
-		starReq.fire(new Receiver<Void>() {
+		_dispatcher.execute(_appUserService.followUser(user.getUsername()), new AsyncCallback<VoidResultDto>() {
+
 			@Override
-			public void onSuccess(final Void response) {
-				_eventBus.fireEvent(new UserFollowedEvent(user));
+			public void onFailure(Throwable caught) {
+				// Roll back
+				getFollowing().remove(user);
+				final String errorMsg = caught.getMessage();
+				_eventBus.fireEvent(new UserUnfollowedEvent(user, errorMsg));
 			}
 
 			@Override
-			public void onFailure(final ServerFailure failure) {
-				// Roll back
-				getFollowing().remove(user);
-				final String errorMsg = failure.getMessage();
-				_eventBus.fireEvent(new UserUnfollowedEvent(user, errorMsg));
-				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
-				}
+			public void onSuccess(VoidResultDto result) {
+				_eventBus.fireEvent(new UserFollowedEvent(user));
 			}
 		});
 	}
@@ -186,18 +179,16 @@ public class CurrentUser extends AppUserDto {
 		getFollowing().remove(user);
 
 		// Remove from server
-		final Request<Void> unfollowReq = _requestFactory.appUserRequest().unfollowUser(user.getUsername());
-		unfollowReq.fire(new Receiver<Void>() {
+		_dispatcher.execute(_appUserService.unfollowUser(user.getUsername()), new AsyncCallback<VoidResultDto>() {
+
 			@Override
-			public void onSuccess(final Void response) {
-				_eventBus.fireEvent(new UserUnfollowedEvent(user));
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub				
 			}
 
 			@Override
-			public void onFailure(final ServerFailure failure) {
-				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
-				}
+			public void onSuccess(VoidResultDto result) {
+				_eventBus.fireEvent(new UserUnfollowedEvent(user));
 			}
 		});
 	}
