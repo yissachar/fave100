@@ -7,7 +7,6 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.ImageHyperlink;
 import com.fave100.shared.Constants;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -48,7 +47,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField Label notification;
 
 	@Inject
-	public TopBarView(final Binder binder, final ApplicationRequestFactory requestFactory) {
+	public TopBarView(final Binder binder) {
 
 		widget = binder.createAndBindUi(this);
 		Notification.init(notification);

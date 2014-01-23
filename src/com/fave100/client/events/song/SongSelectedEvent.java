@@ -1,6 +1,6 @@
 package com.fave100.client.events.song;
 
-import com.fave100.shared.requestfactory.SongProxy;
+import com.fave100.client.entities.SongDto;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -26,9 +26,9 @@ public class SongSelectedEvent extends Event<SongSelectedEvent.Handler> {
 		return eventBus.addHandler(TYPE, handler);
 	}
 
-	private final SongProxy song;
+	private final SongDto song;
 
-	public SongSelectedEvent(final SongProxy song) {
+	public SongSelectedEvent(final SongDto song) {
 		this.song = song;
 	}
 
@@ -37,7 +37,7 @@ public class SongSelectedEvent extends Event<SongSelectedEvent.Handler> {
 		return TYPE;
 	}
 
-	public SongProxy getSong() {
+	public SongDto getSong() {
 		return song;
 	}
 

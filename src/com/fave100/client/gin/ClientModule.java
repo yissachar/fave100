@@ -42,13 +42,8 @@ import com.fave100.client.pages.song.widgets.youtube.YouTubeView;
 import com.fave100.client.place.ClientPlaceManager;
 import com.fave100.client.place.DefaultPlace;
 import com.fave100.client.place.NameTokens;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.google.gwt.core.client.GWT;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.client.gin.RestDispatchAsyncModule;
-import com.gwtplatform.dispatch.client.rest.RestApplicationPath;
+import com.gwtplatform.dispatch.rest.client.RestApplicationPath;
+import com.gwtplatform.dispatch.rest.client.gin.RestDispatchAsyncModule;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.GaAccount;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
@@ -127,15 +122,5 @@ public class ClientModule extends AbstractPresenterModule {
 		bindSingletonPresenterWidget(ListManagerPresenter.class, ListManagerPresenter.MyView.class, ListManagerView.class);
 
 		bindSingletonPresenterWidget(GlobalListDetailsPresenter.class, GlobalListDetailsPresenter.MyView.class, GlobalListDetailsView.class);
-	}
-
-	@Provides
-	@Singleton
-	public ApplicationRequestFactory createApplicationRequestFactory(
-			final EventBus eventBus) {
-		final ApplicationRequestFactory requestFactory = GWT
-				.create(ApplicationRequestFactory.class);
-		requestFactory.initialize(eventBus);
-		return requestFactory;
 	}
 }

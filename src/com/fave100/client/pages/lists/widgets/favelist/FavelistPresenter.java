@@ -18,12 +18,11 @@ import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
@@ -61,8 +60,7 @@ public class FavelistPresenter extends
 	}
 
 	private EventBus eventBus;
-	private ApplicationRequestFactory requestFactory;
-	private DispatchAsync _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private FaveListService _faveListService;;
 	// The user whose favelist we are showing
 	private AppUserDto user;
@@ -103,14 +101,12 @@ public class FavelistPresenter extends
 	};
 
 	@Inject
-	public FavelistPresenter(final EventBus eventBus, final MyView view, DispatchAsync dispatcher, FaveListService faveListService,
-								final ApplicationRequestFactory requestFactory,
+	public FavelistPresenter(final EventBus eventBus, final MyView view, RestDispatchAsync dispatcher, FaveListService faveListService,
 								final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		_dispatcher = dispatcher;
 		_faveListService = faveListService;
-		this.requestFactory = requestFactory;
 		this.currentUser = currentUser;
 		_placeManager = placeManager;
 		getView().setUiHandlers(this);

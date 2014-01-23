@@ -15,12 +15,11 @@ import com.fave100.client.widgets.alert.AlertCallback;
 import com.fave100.client.widgets.alert.AlertPresenter;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -54,24 +53,22 @@ public class ListManagerPresenter extends
 	@ContentSlot public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
 
 	private EventBus _eventBus;
-	private ApplicationRequestFactory _requestFactory;
 	private AppUserDto _user;
 	private String _hashtag;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private DispatchAsync _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private FaveListService _faveListService;
 	private boolean _globalList = false;
 	@Inject AddListAutocompletePresenter autocomplete;
 	@Inject AlertPresenter alertPresenter;
 
 	@Inject
-	public ListManagerPresenter(final EventBus eventBus, final MyView view, final ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager,
-								final DispatchAsync dispatcher, final FaveListService faveListService) {
+	public ListManagerPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
+								final RestDispatchAsync dispatcher, final FaveListService faveListService) {
 		super(eventBus, view);
 		view.setUiHandlers(ListManagerPresenter.this);
 		_eventBus = eventBus;
-		_requestFactory = requestFactory;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;

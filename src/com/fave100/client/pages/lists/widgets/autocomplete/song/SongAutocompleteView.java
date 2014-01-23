@@ -4,9 +4,9 @@ import static com.google.gwt.query.client.GQuery.$;
 
 import java.util.List;
 
+import com.fave100.client.entities.SongDto;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
-import com.fave100.shared.requestfactory.SongProxy;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -190,7 +190,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 	}
 
 	@Override
-	public void setSuggestions(final List<SongProxy> suggestions, final int total) {
+	public void setSuggestions(final List<SongDto> suggestions, final int total) {
 		resultsPanel.clear();
 		searchLoadingIndicator.setVisible(false);
 		inlineSearchCount.removeStyleName("error");
@@ -207,7 +207,7 @@ public class SongAutocompleteView extends ViewWithUiHandlers<SongAutocompleteUiH
 		}
 
 		int numResults = 0;
-		for (final SongProxy suggestion : suggestions) {
+		for (final SongDto suggestion : suggestions) {
 			numResults++;
 			final HTMLPanel songItem = new HTMLPanel("");
 			final Label songName = new Label(suggestion.getSong());

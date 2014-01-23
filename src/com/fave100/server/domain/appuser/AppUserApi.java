@@ -45,7 +45,6 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.inject.Inject;
-import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
@@ -406,11 +405,11 @@ public class AppUserApi extends ApiBase {
 	}
 
 	@ApiMethod(name = "appUser.isFollowing", path = "isFollowing", httpMethod = HttpMethod.GET)
-	public BooleanResult isFollowing(@Named("username") final String username) throws UnauthorizedException {
+	public BooleanResult isFollowing(HttpServletRequest request, @Named("username") final String username) throws UnauthorizedException {
 		if (!appUserDao.isAppUserLoggedIn())
 			throw new UnauthorizedException("Not logged in");
 
-		final String currentUserUsername = (String)RequestFactoryServlet.getThreadLocalRequest().getSession().getAttribute(AppUserDao.AUTH_USER);
+		final String currentUserUsername = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
 		final Following following = ofy().load().type(Following.class).id(currentUserUsername.toLowerCase()).get();
 

@@ -8,12 +8,11 @@ import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.shared.DispatchAsync;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -43,20 +42,18 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> LIST_AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
 
-	private ApplicationRequestFactory _requestFactory;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private DispatchAsync _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private FaveListService _faveListService;
 	private String _hashtag;
 	@Inject GlobalListAutocompletePresenter listAutocomplete;
 	@Inject AboutPopupPresenter aboutPresenter;
 
 	@Inject
-	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, ApplicationRequestFactory requestFactory, final CurrentUser currentUser, final PlaceManager placeManager,
-										final DispatchAsync dispatcher, final FaveListService faveListService) {
+	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
+										final RestDispatchAsync dispatcher, final FaveListService faveListService) {
 		super(eventBus, view);
-		_requestFactory = requestFactory;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
