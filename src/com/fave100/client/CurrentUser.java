@@ -16,14 +16,12 @@ import com.fave100.client.generated.entities.FaveItemDto;
 import com.fave100.client.generated.entities.FollowingResultDto;
 import com.fave100.client.generated.entities.VoidResultDto;
 import com.fave100.client.generated.services.AppUserService;
+import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.exceptions.favelist.SongAlreadyInListException;
-import com.fave100.shared.exceptions.favelist.SongLimitReachedException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
-import com.fave100.shared.requestfactory.FaveListRequest;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -41,6 +39,7 @@ public class CurrentUser extends AppUserDto {
 	private PlaceManager _placeManager;
 	private DispatchAsync _dispatcher;
 	private AppUserService _appUserService;
+	private FaveListService _faveListService;
 	private AppUserDto appUser;
 	private String avatar = "";
 	private Map<String, List<FaveItemDto>> faveLists = new HashMap<String, List<FaveItemDto>>();
@@ -51,12 +50,13 @@ public class CurrentUser extends AppUserDto {
 
 	@Inject
 	public CurrentUser(final EventBus eventBus, final ApplicationRequestFactory requestFactory, final PlaceManager placeManager, final RequestCache requestCache,
-						final DispatchAsync dispatcher, final AppUserService appUserService) {
+						final DispatchAsync dispatcher, final AppUserService appUserService, final FaveListService faveListService) {
 		_eventBus = eventBus;
 		_requestFactory = requestFactory;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
 		_appUserService = appUserService;
+		_faveListService = faveListService;
 
 		CurrentUserChangedEvent.register(eventBus,
 				new CurrentUserChangedEvent.Handler() {
@@ -207,47 +207,33 @@ public class CurrentUser extends AppUserDto {
 		setFullListRetrieved(!isMore);
 	}
 
-	public void addSong(final String songID, final String song, final String artist) {
-		addSong(songID, _currentHashtag, song, artist);
+	public void addSong(final String songId, final String song, final String artist) {
+		addSong(songId, _currentHashtag, song, artist);
 	}
 
-	public void addSong(final String songID, final String hashtag, final String song, final String artist) {
+	public void addSong(final String songId, final String hashtag, final String song, final String artist) {
 
-		final FaveListRequest faveListRequest = _requestFactory.faveListRequest();
-		final Request<Void> addReq = faveListRequest.addFaveItemForCurrentUser(hashtag, songID);
+		_dispatcher.execute(_faveListService.addFaveItem(hashtag, songId), new AsyncCallback<VoidResultDto>() {
 
-		addReq.fire(new Receiver<Void>() {
 			@Override
-			public void onSuccess(final Void response) {
+			public void onFailure(Throwable caught) {
+				// TODO: If not logged in, redirect to login page
+				Notification.show(caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(VoidResultDto result) {
 				Notification.show("Song added");
 				final FaveItemDto item = new FaveItemDto();
 				item.setSong(song);
 				item.setArtist(artist);
-				item.setSongID(songID);
-				item.setId(songID);
+				item.setSongID(songId);
+				item.setId(songId);
 
 				// Ensure local list in sync	
 				if (getFaveLists().get(hashtag) != null) {
 					getFaveLists().get(hashtag).add(item);
 					_eventBus.fireEvent(new FaveItemAddedEvent(item));
-				}
-			}
-
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					_eventBus.fireEvent(new CurrentUserChangedEvent(null));
-					_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
-				}
-				else if (failure.getExceptionType().equals(SongLimitReachedException.class.getName())) {
-					Notification.show("You cannot have more than 100 songs in list");
-				}
-				else if (failure.getExceptionType().equals(SongAlreadyInListException.class.getName())) {
-					Notification.show("The song is already in your list");
-				}
-				else {
-					// Catch-all
-					Notification.show("Error: Could not add song");
 				}
 			}
 		});
@@ -258,10 +244,16 @@ public class CurrentUser extends AppUserDto {
 			return;
 
 		final String listName = name;
-		Request<Void> addFaveListReq = _requestFactory.faveListRequest().addFaveListForCurrentUser(listName);
-		addFaveListReq.fire(new Receiver<Void>() {
+
+		_dispatcher.execute(_faveListService.add(listName), new AsyncCallback<VoidResultDto>() {
+
 			@Override
-			public void onSuccess(Void response) {
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onSuccess(VoidResultDto result) {
 				getHashtags().add(listName);
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)

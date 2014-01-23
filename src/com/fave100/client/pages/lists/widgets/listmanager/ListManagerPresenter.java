@@ -7,6 +7,7 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.StringCollection;
+import com.fave100.client.generated.entities.VoidResultDto;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
@@ -19,9 +20,6 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -120,19 +118,19 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		final Request<Void> addFavelistReq = _requestFactory.faveListRequest().addFaveListForCurrentUser(name);
-		addFavelistReq.fire(new Receiver<Void>() {
+		_dispatcher.execute(_faveListService.add(name), new AsyncCallback<VoidResultDto>() {
+
 			@Override
-			public void onSuccess(final Void response) {
+			public void onFailure(Throwable caught) {
+				getView().showError(caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(VoidResultDto result) {
 				_currentUser.addHashtag(name);
 				refreshUsersLists();
 				getView().hideError();
 				listChanged(name);
-			}
-
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				getView().showError(failure.getMessage());
 			}
 		});
 	}
@@ -201,8 +199,20 @@ public class ListManagerPresenter extends
 
 			@Override
 			public void onOk() {
-				final Request<Void> faveListReq = _requestFactory.faveListRequest().deleteFaveListForCurrentUser(listName);
-				faveListReq.fire();
+				_dispatcher.execute(_faveListService.delete(listName), new AsyncCallback<VoidResultDto>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onSuccess(VoidResultDto result) {
+						// TODO Auto-generated method stub
+
+					}
+				});
 				_currentUser.deleteList(listName);
 				refreshUsersLists();
 			}
