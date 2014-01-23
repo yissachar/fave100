@@ -9,25 +9,20 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
-import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.entities.VoidResultDto;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
-import com.fave100.shared.exceptions.favelist.BadWhylineException;
-import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.requestfactory.ApplicationRequestFactory;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.google.web.bindery.requestfactory.shared.ServerFailure;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -251,7 +246,7 @@ public class FavelistPresenter extends
 	}
 
 	@Override
-	public void removeSong(final String songID, final int index) {
+	public void removeSong(final String songId, final int index) {
 		// Only bother with updating list if we are on the user's page 
 		if (!isEditable()) {
 			return;
@@ -264,37 +259,38 @@ public class FavelistPresenter extends
 		widgets.remove(index);
 		currentUser.getFaveList().remove(index);
 		// Send request for server to remove it
-		final Request<Void> req = requestFactory.faveListRequest()
-				.removeFaveItemForCurrentUser(hashtag, songID);
-		req.fire(new Receiver<Void>() {
+		_dispatcher.execute(_faveListService.removeFaveItem(hashtag, songId), new AsyncCallback<VoidResultDto>() {
+
 			@Override
-			public void onSuccess(final Void response) {
-				// Don't care about success, already did what we need to
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub				
 			}
 
 			@Override
-			public void onFailure(final ServerFailure failure) {
-				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					eventBus.fireEvent(new CurrentUserChangedEvent(null));
-				}
+			public void onSuccess(VoidResultDto result) {
+				// Do nothing, since we have already removed the song on the client before sending the server request
 			}
 		});
 	}
 
 	@Override
-	public void editWhyline(final String songID, final String whyline) {
-		final Request<Void> editWhyline = requestFactory.faveListRequest()
-				.editWhylineForCurrentUser(hashtag, songID, whyline);
-		editWhyline.fire(new Receiver<Void>() {
+	public void editWhyline(final String songId, final String whyline) {
+		_dispatcher.execute(_faveListService.editWhyline(hashtag, whyline, songId), new AsyncCallback<VoidResultDto>() {
+
 			@Override
-			public void onSuccess(final Void result) {
+			public void onFailure(Throwable caught) {
+				Notification.show(caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(VoidResultDto result) {
 				// Set client to match
 				for (int i = 0; i < currentUser.getFaveList().size(); i++) {
 					final FaveItemDto faveItem = currentUser.getFaveList().get(i);
-					if (faveItem.getSongID().equals(songID)) {
+					if (faveItem.getSongID().equals(songId)) {
 						FaveItemDto newfaveItem = new FaveItemDto();
-						newfaveItem.setSongID(songID);
-						newfaveItem.setId(songID);
+						newfaveItem.setSongID(songId);
+						newfaveItem.setId(songId);
 						newfaveItem.setWhyline(whyline);
 						newfaveItem.setArtist(faveItem.getArtist());
 						newfaveItem.setSong(faveItem.getSong());
@@ -304,21 +300,11 @@ public class FavelistPresenter extends
 					}
 				}
 			}
-
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				if (failure.getExceptionType().equals(BadWhylineException.class.getName())) {
-					Notification.show(failure.getMessage());
-				}
-				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					eventBus.fireEvent(new CurrentUserChangedEvent(null));
-				}
-			}
 		});
 	}
 
 	@Override
-	public void changeSongPosition(final String songID, final int currentIndex, final int newIndex) {
+	public void changeSongPosition(final String songId, final int currentIndex, final int newIndex) {
 		// Only bother with updating list if we are on the user's page 
 		if (!isEditable()) {
 			return;
@@ -335,11 +321,15 @@ public class FavelistPresenter extends
 		}
 
 		// Save on server
-		final Request<Void> changePosition = requestFactory.faveListRequest()
-				.rerankFaveItemForCurrentUser(hashtag, songID, newIndex);
-		changePosition.fire(new Receiver<Void>() {
+		_dispatcher.execute(_faveListService.rerankFaveItem(hashtag, songId, newIndex), new AsyncCallback<VoidResultDto>() {
+
 			@Override
-			public void onSuccess(final Void response) {
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onSuccess(VoidResultDto result) {
 				// If successfully saved on server, manually set client to match
 				final FaveItemDto toRerank = currentUser.getFaveList().get(currentIndex);
 				currentUser.getFaveList().remove(toRerank);
@@ -359,13 +349,6 @@ public class FavelistPresenter extends
 				if (newIndex < currentIndex && newIndex - 1 >= 0)
 					pickToRank = widgets.get(newIndex - 1);
 				$(pickToRank).scrollIntoView(true);
-			}
-
-			@Override
-			public void onFailure(final ServerFailure failure) {
-				if (failure.getExceptionType().equals(NotLoggedInException.class.getName())) {
-					eventBus.fireEvent(new CurrentUserChangedEvent(null));
-				}
 			}
 		});
 	}
