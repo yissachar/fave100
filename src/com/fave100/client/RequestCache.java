@@ -14,7 +14,7 @@ import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
 
 /**
- * Stores common RequestFactory requests and their results in order to prevent constant trips to the server for unchanged data.
+ * Stores common server requests and their results in order to prevent constant trips to the server for unchanged data.
  * 
  * @author yissachar.radcliffe
  * 

@@ -4,23 +4,28 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.server.domain.appuser.AppUserApi;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.appuser.Following;
 import com.fave100.server.domain.appuser.FollowingResult;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.Hashtag;
-import com.fave100.shared.exceptions.following.AlreadyFollowingException;
-import com.fave100.shared.exceptions.following.CannotFollowYourselfException;
 import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.fave100.shared.exceptions.user.NotLoggedInException;
 import com.fave100.shared.exceptions.user.UserNotFoundException;
 import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
+import com.google.api.server.spi.response.BadRequestException;
+import com.google.api.server.spi.response.ForbiddenException;
+import com.google.api.server.spi.response.NotFoundException;
+import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
@@ -39,15 +44,20 @@ public class FollowingTest {
 	private final LocalServiceTestHelper helper =
 			new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100));
 	private AppUserDao appUserDao;
+	private AppUserApi appUserApi;
 
 	@Before
 	public void setUp() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException, NotLoggedInException, UserNotFoundException {
 		helper.setUp();
 		// Create a user
 		appUserDao = new AppUserDao();
+		appUserApi = new AppUserApi(appUserDao);
 
 		AppUserDao mockAppUserDao = spy(new AppUserDao());
 		appUserDao = mockAppUserDao;
+
+		AppUserApi mockAppUserApi = spy(new AppUserApi(appUserDao));
+		appUserApi = mockAppUserApi;
 	}
 
 	@After
@@ -58,30 +68,34 @@ public class FollowingTest {
 	}
 
 	@Test
-	public void followUserTest() throws NotLoggedInException, CannotFollowYourselfException, AlreadyFollowingException, UserNotFoundException, UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
-		AppUser loggedInUser = appUserDao.createAppUser("tester", "goodtests", "testuser@example.com");
-		doReturn(loggedInUser).when(appUserDao).getLoggedInAppUser();
+	public void followUserTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
+		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser userToFollow = appUserDao.createAppUser("john", "passpass31", "lemmings@example.com");
-		appUserDao.followUser(userToFollow.getUsername());
-		FollowingResult followingResult = appUserDao.getFollowing(loggedInUser.getUsername(), 0);
+		AppUser loggedInUser = appUserApi.createAppUser(req, "tester", "goodtests", "testuser@example.com");
+		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
+
+		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "john", "passpass31", "lemmings@example.com");
+		appUserApi.followUser(req, userToFollow.getUsername());
+		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 		assertTrue(followingResult.getFollowing().contains(userToFollow));
 	}
 
 	@Test
-	public void followMultipleUsersTest() throws NotLoggedInException, CannotFollowYourselfException, AlreadyFollowingException, UserNotFoundException, UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
-		AppUser loggedInUser = appUserDao.createAppUser("tester2", "goodtests", "testuser2@example.com");
-		doReturn(loggedInUser).when(appUserDao).getLoggedInAppUser();
+	public void followMultipleUsersTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
+		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser userToFollow1 = appUserDao.createAppUser("bob", "passpass31", "followuser@example.com");
-		AppUser userToFollow2 = appUserDao.createAppUser("derek", "xcvb1sdf1", "anotheruser@example.com");
+		AppUser loggedInUser = appUserApi.createAppUser(req, "tester2", "goodtests", "testuser2@example.com");
+		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
 
-		appUserDao.followUser(userToFollow1.getUsername());
-		appUserDao.followUser(userToFollow2.getUsername());
+		AppUser userToFollow1 = appUserApi.createAppUser(TestHelper.newReq(), "bob", "passpass31", "followuser@example.com");
+		AppUser userToFollow2 = appUserApi.createAppUser(TestHelper.newReq(), "derek", "xcvb1sdf1", "anotheruser@example.com");
 
-		FollowingResult followingResult = appUserDao.getFollowing(loggedInUser.getUsername(), 0);
+		appUserApi.followUser(req, userToFollow1.getUsername());
+		appUserApi.followUser(req, userToFollow2.getUsername());
+
+		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 2);
 		assertTrue(followingResult.getFollowing().contains(userToFollow1));
@@ -89,51 +103,57 @@ public class FollowingTest {
 	}
 
 	@Test
-	public void followUserCaseInsensitiveTest() throws NotLoggedInException, CannotFollowYourselfException, AlreadyFollowingException, UserNotFoundException, UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
-		AppUser loggedInUser = appUserDao.createAppUser("tester3", "goodtests", "testuser3@example.com");
-		doReturn(loggedInUser).when(appUserDao).getLoggedInAppUser();
+	public void followUserCaseInsensitiveTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
+		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser userToFollow = appUserDao.createAppUser("MIKE", "bcv13zxcg", "foobar@example.com");
-		appUserDao.followUser(userToFollow.getUsername());
-		FollowingResult followingResult = appUserDao.getFollowing(loggedInUser.getUsername(), 0);
+		AppUser loggedInUser = appUserApi.createAppUser(req, "tester3", "goodtests", "testuser3@example.com");
+		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
+
+		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "MIKE", "bcv13zxcg", "foobar@example.com");
+		appUserApi.followUser(req, userToFollow.getUsername());
+		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 		assertTrue(followingResult.getFollowing().contains(userToFollow));
 	}
 
 	@Test
-	public void unfollowUserTest() throws NotLoggedInException, CannotFollowYourselfException, AlreadyFollowingException, UserNotFoundException, UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
-		AppUser loggedInUser = appUserDao.createAppUser("tester4", "goodtests", "testuser4@example.com");
-		doReturn(loggedInUser).when(appUserDao).getLoggedInAppUser();
+	public void unfollowUserTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
+		HttpServletRequest req = TestHelper.newReq();
+
+		AppUser loggedInUser = appUserApi.createAppUser(req, "tester4", "goodtests", "testuser4@example.com");
+		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
 
 		// Follow
-		AppUser userToFollow = appUserDao.createAppUser("liam", "bv1xcvaw46", "booj@example.com");
-		appUserDao.followUser(userToFollow.getUsername());
-		FollowingResult followingResult = appUserDao.getFollowing(loggedInUser.getUsername(), 0);
+		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "liam", "bv1xcvaw46", "booj@example.com");
+		appUserApi.followUser(req, userToFollow.getUsername());
+		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 
 		// Unfollow
-		appUserDao.unfollowUser(userToFollow.getUsername());
-		followingResult = appUserDao.getFollowing(loggedInUser.getUsername(), 0);
+		appUserApi.unfollowUser(req, userToFollow.getUsername());
+		followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 		assertTrue(followingResult.getFollowing().size() == 0);
 	}
 
 	@Test
-	public void unfollowUserCaseInsensitiveTest() throws NotLoggedInException, CannotFollowYourselfException, AlreadyFollowingException, UserNotFoundException, UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
-		AppUser loggedInUser = appUserDao.createAppUser("tester5", "goodtests", "testuser5@example.com");
-		doReturn(loggedInUser).when(appUserDao).getLoggedInAppUser();
+	public void unfollowUserCaseInsensitiveTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
+		HttpServletRequest req = TestHelper.newReq();
+
+		AppUser loggedInUser = appUserApi.createAppUser(req, "tester5", "goodtests", "testuser5@example.com");
+		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
 
 		// Follow
-		AppUser userToFollow = appUserDao.createAppUser("KRING", "awetzx14sva", "kiasd@example.com");
-		appUserDao.followUser(userToFollow.getUsername());
-		FollowingResult followingResult = appUserDao.getFollowing(loggedInUser.getUsername(), 0);
+		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "KRING", "awetzx14sva", "kiasd@example.com");
+		appUserApi.followUser(req, userToFollow.getUsername());
+		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 
 		// Unfollow
-		appUserDao.unfollowUser(userToFollow.getUsername());
-		followingResult = appUserDao.getFollowing(loggedInUser.getUsername(), 0);
+		appUserApi.unfollowUser(req, userToFollow.getUsername());
+		followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 		assertTrue(followingResult.getFollowing().size() == 0);
 	}
 }

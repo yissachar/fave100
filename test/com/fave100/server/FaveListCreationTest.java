@@ -11,19 +11,25 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fave100.server.domain.SongApi;
 import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.server.domain.appuser.AppUserApi;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.server.domain.favelist.FaveListApi;
 import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.fave100.shared.Constants;
-import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
-import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
+import com.google.api.server.spi.response.BadRequestException;
+import com.google.api.server.spi.response.ForbiddenException;
+import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
@@ -42,19 +48,27 @@ public class FaveListCreationTest {
 			new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100));
 	private AppUser loggedInUser;
 	private FaveListDao faveListDao;
+	private FaveListApi faveListApi;
+	private HttpServletRequest req;
 
 	@Before
-	public void setUp() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
+	public void setUp() throws BadRequestException {
 		helper.setUp();
 		// Create a user
 		String username = "tester";
 		AppUserDao appUserDao = new AppUserDao();
-		loggedInUser = appUserDao.createAppUser(username, "goodtests", "testuser@example.com");
 
-		AppUserDao mockAppUserDao = mock(AppUserDao.class);
-		when(mockAppUserDao.getLoggedInAppUser()).thenReturn(loggedInUser);
+		AppUserApi appUserApi = new AppUserApi(appUserDao);
 
-		faveListDao = new FaveListDao(mockAppUserDao);
+		req = TestHelper.newReq();
+
+		loggedInUser = appUserApi.createAppUser(req, username, "goodtests", "testuser@example.com");
+
+		AppUserApi mockAppUserApi = mock(AppUserApi.class);
+		when(mockAppUserApi.getLoggedInAppUser(req)).thenReturn(loggedInUser);
+
+		faveListDao = new FaveListDao();
+		faveListApi = new FaveListApi(faveListDao, mockAppUserApi, new SongApi());
 	}
 
 	@After
@@ -69,35 +83,35 @@ public class FaveListCreationTest {
 	public void faveListCreated() throws Exception {
 		// Create a favelist
 		String faveListName = "anewfavelist";
-		faveListDao.addFaveListForCurrentUser(faveListName);
+		faveListApi.addFaveListForCurrentUser(req, faveListName);
 
 		// Favelist now exists in datastore
 		assertNotNull("Created faveList must exist in datastore", faveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
 	}
 
 	@Test
-	public void faveListNameMustBeUniquePerUser() throws Exception {
+	public void faveListNameMustBeUniquePerUser() throws BadRequestException, UnauthorizedException, ForbiddenException {
 		// Create a favelist
 		String faveListName = "boo";
-		faveListDao.addFaveListForCurrentUser(faveListName);
+		faveListApi.addFaveListForCurrentUser(req, faveListName);
 
 		// Attempt to add a second favelist with same name
 		try {
-			faveListDao.addFaveListForCurrentUser(faveListName);
+			faveListApi.addFaveListForCurrentUser(req, faveListName);
 			fail("Exception not thrown");
 		}
-		catch (Exception e) {
+		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
 			// Success!
 		}
 	}
 
 	@Test
-	public void faveListNameMustNotBeNull() throws Exception {
+	public void faveListNameMustNotBeNull() {
 		// Create a favelist with null name
 		String faveListName = null;
 
 		try {
-			faveListDao.addFaveListForCurrentUser(faveListName);
+			faveListApi.addFaveListForCurrentUser(req, faveListName);
 			fail("Exception not thrown");
 		}
 		catch (Exception e) {
@@ -106,15 +120,15 @@ public class FaveListCreationTest {
 	}
 
 	@Test
-	public void faveListNameMustNotBeEmpty() throws Exception {
+	public void faveListNameMustNotBeEmpty() {
 		// Create a favelist with empty name
 		String faveListName = "";
 
 		try {
-			faveListDao.addFaveListForCurrentUser(faveListName);
+			faveListApi.addFaveListForCurrentUser(req, faveListName);
 			fail("Exception not thrown");
 		}
-		catch (Exception e) {
+		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
 			// Success!
 		}
 
@@ -122,7 +136,7 @@ public class FaveListCreationTest {
 	}
 
 	@Test
-	public void faveListNameMustNotBeTooLong() throws Exception {
+	public void faveListNameMustNotBeTooLong() {
 		// Create a favelist with a name that is too long
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Constants.MAX_HASHTAG_LENGTH + 1; i++) {
@@ -132,10 +146,10 @@ public class FaveListCreationTest {
 		String faveListName = sb.toString();
 
 		try {
-			faveListDao.addFaveListForCurrentUser(faveListName);
+			faveListApi.addFaveListForCurrentUser(req, faveListName);
 			fail("Exception not thrown");
 		}
-		catch (Exception e) {
+		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
 			// Success!
 		}
 
@@ -143,7 +157,7 @@ public class FaveListCreationTest {
 	}
 
 	@Test
-	public void faveListNameMustOnlyConsistOfLettersAndNumbers() throws Exception {
+	public void faveListNameMustOnlyConsistOfLettersAndNumbers() {
 		// Create favelists with special chars and spaces
 		String name1 = "foo%";
 		String name2 = "^bar";
@@ -151,13 +165,13 @@ public class FaveListCreationTest {
 		String name4 = "baz inga";
 
 		try {
-			faveListDao.addFaveListForCurrentUser(name1);
-			faveListDao.addFaveListForCurrentUser(name2);
-			faveListDao.addFaveListForCurrentUser(name3);
-			faveListDao.addFaveListForCurrentUser(name4);
+			faveListApi.addFaveListForCurrentUser(req, name1);
+			faveListApi.addFaveListForCurrentUser(req, name2);
+			faveListApi.addFaveListForCurrentUser(req, name3);
+			faveListApi.addFaveListForCurrentUser(req, name4);
 			fail("Exception not thrown");
 		}
-		catch (Exception e) {
+		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
 			// Success!
 		}
 
@@ -169,7 +183,7 @@ public class FaveListCreationTest {
 	}
 
 	@Test
-	public void mustNotCreateTooManyFaveLists() throws Exception {
+	public void mustNotCreateTooManyFaveLists() {
 		// Alphabet for naming lists
 		char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z'};
 		// Store used faveListNames to avoid creating list with duplicate name
@@ -195,10 +209,10 @@ public class FaveListCreationTest {
 		String faveListName = "101stlist";
 
 		try {
-			faveListDao.addFaveListForCurrentUser(faveListName);
+			faveListApi.addFaveListForCurrentUser(req, faveListName);
 			fail("Exception not thrown");
 		}
-		catch (Exception e) {
+		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
 			// Success!
 		}
 
@@ -208,12 +222,16 @@ public class FaveListCreationTest {
 	/**
 	 * When a FaveList is first created, it should not have any FaveItems stored
 	 * 
+	 * @throws ForbiddenException
+	 * @throws UnauthorizedException
+	 * @throws BadRequestException
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void createdFaveListMustBeEmpty() throws Exception {
+	public void createdFaveListMustBeEmpty() throws BadRequestException, UnauthorizedException, ForbiddenException {
 		String faveListName = "booya";
-		faveListDao.addFaveListForCurrentUser(faveListName);
+		faveListApi.addFaveListForCurrentUser(req, faveListName);
 
 		FaveList faveList = faveListDao.findFaveList(loggedInUser.getUsername(), faveListName);
 		assertEquals("A newly created FaveList must not have any FaveItems stored", 0, faveList.getList().size());
@@ -223,14 +241,18 @@ public class FaveListCreationTest {
 	 * When a FaveList is created, the name of the list is also stored in the User object. We
 	 * denormalize this for better performance so as not to have to perform N FaveList fetches
 	 * to retrieve a list of FaveList names for a user.
+	 * 
+	 * @throws ForbiddenException
+	 * @throws UnauthorizedException
+	 * @throws BadRequestException
 	 */
 	@Test
-	public void faveListNameAlsoStoredInUser() throws Exception {
+	public void faveListNameAlsoStoredInUser() throws BadRequestException, UnauthorizedException, ForbiddenException {
 		String firstfaveListName = "gret";
-		faveListDao.addFaveListForCurrentUser(firstfaveListName);
+		faveListApi.addFaveListForCurrentUser(req, firstfaveListName);
 
 		String secondFaveListName = "thasdf";
-		faveListDao.addFaveListForCurrentUser(secondFaveListName);
+		faveListApi.addFaveListForCurrentUser(req, secondFaveListName);
 
 		String msg = "User object must store FaveList name";
 		assertEquals(msg, 2, loggedInUser.getHashtags().size());
