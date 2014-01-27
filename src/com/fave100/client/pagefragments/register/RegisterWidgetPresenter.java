@@ -5,10 +5,13 @@ import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.LoginResultDto;
 import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -119,7 +122,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 
 			// Create a new user with the username and password entered
 			LoadingIndicator.show();
-			_dispatcher.execute(_appUserService.createAppUser(username, email, password), new AsyncCallback<AppUserDto>() {
+			_dispatcher.execute(_appUserService.createAppUser(username, email, password), new AsyncCallback<LoginResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -128,7 +131,9 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 				}
 
 				@Override
-				public void onSuccess(AppUserDto createdUser) {
+				public void onSuccess(LoginResultDto loginResult) {
+					AppUserDto createdUser = loginResult.getAppUser();
+					Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
 					LoadingIndicator.hide();
 					_eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 					if (createdUser != null) {

@@ -12,7 +12,6 @@ import java.util.Properties;
 import javax.inject.Named;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -23,10 +22,13 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.RequestToken;
 
+import com.fave100.server.SessionHelper;
 import com.fave100.server.UrlBuilder;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiBase;
 import com.fave100.server.domain.BooleanResult;
+import com.fave100.server.domain.LoginResult;
+import com.fave100.server.domain.Session;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.VoidResult;
 import com.fave100.server.domain.favelist.FaveList;
@@ -65,17 +67,16 @@ public class AppUserApi extends ApiBase {
 	}
 
 	@ApiMethod(name = "appUser.createAppUser", path = "createAppUser")
-	public AppUser createAppUser(final HttpServletRequest request, @Named("username") final String username, @Named("password") final String password,
+	public LoginResult createAppUser(final HttpServletRequest request, @Named("username") final String username, @Named("password") final String password,
 			@Named("email") final String email) throws BadRequestException {
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name is already registered";
 		final String emailExistsMsg = "A user with that email is already registered";
-		AppUser newAppUser = null;
-
+		LoginResult loginResult = null;
 		try {
-			newAppUser = ofy().transact(new Work<AppUser>() {
+			loginResult = ofy().transact(new Work<LoginResult>() {
 				@Override
-				public AppUser run() {
+				public LoginResult run() {
 					if (getAppUser(username) != null) {
 						// Username already exists
 						throw new RuntimeException(userExistsMsg);
@@ -117,20 +118,20 @@ public class AppUserApi extends ApiBase {
 			throw new BadRequestException(e.getMessage());
 		}
 
-		return newAppUser;
+		return loginResult;
 	}
 
 	@ApiMethod(name = "appUser.createAppUserFromGoogleAccount", path = "createAppUserFromGoogleAccount")
-	public AppUser createAppUserFromGoogleAccount(final HttpServletRequest request, @Named("username") final String username) throws BadRequestException {
+	public LoginResult createAppUserFromGoogleAccount(final HttpServletRequest request, @Named("username") final String username) throws BadRequestException {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name already exists";
 		final String googleIDMsg = "There is already a Fave100 account associated with this Google ID";
-		AppUser newAppUser = null;
+		LoginResult loginResult = null;
 		try {
-			newAppUser = ofy().transact(new Work<AppUser>() {
+			loginResult = ofy().transact(new Work<LoginResult>() {
 				@Override
-				public AppUser run() {
+				public LoginResult run() {
 					final UserService userService = UserServiceFactory.getUserService();
 					final User user = userService.getCurrentUser();
 					if (getAppUser(username) != null) {
@@ -160,16 +161,19 @@ public class AppUserApi extends ApiBase {
 			throw new BadRequestException(e.getMessage());
 		}
 
-		return newAppUser;
+		return loginResult;
 	}
 
 	@ApiMethod(name = "appUser.createAppUserFromTwitterAccount", path = "createAppUserFromTwitterAccount")
-	public AppUser createAppUserFromTwitterAccount(final HttpServletRequest request, @Named("username") final String username, @Named("oauthVerifier") final String oauth_verifier)
+	public LoginResult createAppUserFromTwitterAccount(final HttpServletRequest request, @Named("username") final String username, @Named("oauthVerifier") final String oauth_verifier)
 			throws BadRequestException {
+
+		final Session session = SessionHelper.getSession(request);
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name already exists";
 		final String twitterIDMsg = "There is already a Fave100 account associated with this Twitter ID";
+
 		AppUser newAppUser = null;
 		try {
 			newAppUser = ofy().transact(new Work<AppUser>() {
@@ -191,7 +195,8 @@ public class AppUserApi extends ApiBase {
 						// Create the TwitterID lookup
 						final TwitterID twitterID = new TwitterID(user.getId(), appUser);
 						ofy().save().entities(appUser, twitterID, faveList).now();
-						request.getSession().setAttribute(AppUserDao.AUTH_USER, username);
+						session.setAttribute(AppUserDao.AUTH_USER, username);
+						ofy().save().entity(session).now();
 						return appUser;
 					}
 					return null;
@@ -203,22 +208,23 @@ public class AppUserApi extends ApiBase {
 			throw new BadRequestException(e.getMessage());
 		}
 
-		return newAppUser;
+		return new LoginResult(newAppUser, session.getId());
 	}
 
 	@ApiMethod(name = "appUser.createAppUserFromFacebookAccount", path = "createAppUserFromFacebookAccount")
-	public AppUser createAppUserFromFacebookAccount(final HttpServletRequest request, @Named("username") final String username, @Named("state") final String state,
+	public LoginResult createAppUserFromFacebookAccount(final HttpServletRequest request, @Named("username") final String username, @Named("state") final String state,
 			@Named("code") final String code, @Named("redirectUrl") final String redirectUrl) throws BadRequestException {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 
 		final String userExistsMsg = "A user with that name already exists";
 		final String facebookIDMsg = "There is already a Fave100 account associated with this Facebook ID";
-		AppUser newAppUser = null;
+
+		LoginResult loginResult = null;
 		try {
-			newAppUser = ofy().transact(new Work<AppUser>() {
+			loginResult = ofy().transact(new Work<LoginResult>() {
 				@Override
-				public AppUser run() {
+				public LoginResult run() {
 					final Long userFacebookId = appUserDao.getCurrentFacebookUserId(request, code);
 					if (userFacebookId != null) {
 						if (getAppUser(username) != null) {
@@ -249,13 +255,14 @@ public class AppUserApi extends ApiBase {
 			throw new BadRequestException(e.getMessage());
 		}
 
-		return newAppUser;
+		return loginResult;
 	}
 
 	@ApiMethod(name = "appUser.login", path = "login")
-	public AppUser login(HttpServletRequest request, @Named("username") final String username, @Named("password") final String password) throws UnauthorizedException {
+	public LoginResult login(HttpServletRequest request, @Named("username") final String username, @Named("password") final String password) throws UnauthorizedException {
 		AppUser loggingInUser = null;
 		String errorMessage = "Invalid credentials";
+		Session session = SessionHelper.getSession(request);
 
 		if (username.contains("@")) {
 			// User trying to login with email address
@@ -278,17 +285,20 @@ public class AppUserApi extends ApiBase {
 				throw new UnauthorizedException(errorMessage);
 			}
 			// Successful login - store session
-			request.getSession().setAttribute(AppUserDao.AUTH_USER, username);
+			session.setAttribute(AppUserDao.AUTH_USER, username);
+			ofy().save().entity(session);
 		}
 		else {
 			// Bad username
 			throw new UnauthorizedException(errorMessage);
 		}
-		return loggingInUser;
+		return new LoginResult(loggingInUser, session.getId());
 	}
 
 	@ApiMethod(name = "appUser.loginWithGoogle", path = "googleLogin")
-	public AppUser loginWithGoogle(HttpServletRequest request) {
+	public LoginResult loginWithGoogle(HttpServletRequest request) {
+		Session session = SessionHelper.getSession(request);
+
 		AppUser loggedInUser;
 		// Get the Google user
 		final UserService userService = UserServiceFactory.getUserService();
@@ -299,13 +309,16 @@ public class AppUserApi extends ApiBase {
 		loggedInUser = appUserDao.findAppUserByGoogleId(user.getUserId());
 		if (loggedInUser != null) {
 			// Successful login - store session
-			request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+			session.setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+			ofy().save().entity(session).now();
 		}
-		return loggedInUser;
+		return new LoginResult(loggedInUser, session.getId());
 	}
 
 	@ApiMethod(name = "appUser.loginWithTwitter", path = "twitterLogin")
-	public AppUser loginWithTwitter(HttpServletRequest request, @Named("oauthVerifier") final String oauth_verifier) {
+	public LoginResult loginWithTwitter(HttpServletRequest request, @Named("oauthVerifier") final String oauth_verifier) {
+		Session session = SessionHelper.getSession(request);
+
 		// Get the Twitter user
 		final twitter4j.User twitterUser = appUserDao.getTwitterUser(request, oauth_verifier);
 		if (twitterUser != null) {
@@ -313,7 +326,8 @@ public class AppUserApi extends ApiBase {
 			final AppUser loggedInUser = appUserDao.findAppUserByTwitterId(twitterUser.getId());
 			if (loggedInUser != null) {
 				// Successful login - store session
-				request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+				session.setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+				ofy().save().entity(session).now();
 				final String twitterAvatar = twitterUser.getProfileImageURL();
 				if (loggedInUser.getAvatar() == null) {
 					// Update the user's avatar from Twitter
@@ -322,21 +336,23 @@ public class AppUserApi extends ApiBase {
 					ofy().save().entity(loggedInUser).now();
 				}
 			}
-			return loggedInUser;
+			return new LoginResult(loggedInUser, session.getId());
 		}
 		return null;
 	}
 
 	@ApiMethod(name = "appUser.loginWithFacebook", path = "facebookLogin")
-	public AppUser loginWithFacebook(HttpServletRequest request, @Named("code") final String code) {
+	public LoginResult loginWithFacebook(HttpServletRequest request, @Named("code") final String code) {
 		// Get the Facebook user
 		final Long facebookUserId = appUserDao.getCurrentFacebookUserId(request, code);
+		Session session = SessionHelper.getSession(request);
 		if (facebookUserId != null) {
 			// Find the corresponding Fave100 user
 			final AppUser loggedInUser = appUserDao.findAppUserByFacebookId(facebookUserId);
 			if (loggedInUser != null) {
-				// Successful login - store session
-				request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+				// Successful login - store session				
+				session.setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+				ofy().save().entity(session).now();
 				// TODO: Handle Facebook avatars
 				/*	final URL twitterAvatar =  twitterUser.getProfileImageURL();
 					if(loggedInUser.getAvatar() == null || !loggedInUser.getAvatar().equals(twitterAvatar.toString())) {
@@ -345,22 +361,25 @@ public class AppUserApi extends ApiBase {
 						ofy().save().entity(loggedInUser).now();
 					}*/
 			}
-			return loggedInUser;
+			return new LoginResult(loggedInUser, session.getId());
 		}
 		return null;
 	}
 
 	@ApiMethod(name = "appUser.logout", path = "logout")
 	public VoidResult logout(HttpServletRequest request) {
-		request.getSession().setAttribute(AppUserDao.AUTH_USER, null);
-		request.getSession().setAttribute("requestToken", null);
-		request.getSession().setAttribute("twitterUser", null);
+		Session session = SessionHelper.getSession(request);
+		session.setAttribute(AppUserDao.AUTH_USER, null);
+		session.setAttribute("requestToken", null);
+		session.setAttribute("twitterUser", null);
+		ofy().save().entity(session).now();
 		return new VoidResult();
 	}
 
 	@ApiMethod(name = "appUser.getLoggedInAppUser", path = "loggedInAppUser")
 	public AppUser getLoggedInAppUser(HttpServletRequest request) {
-		final String username = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
+		Session session = SessionHelper.getSession(request);
+		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
 		if (username != null) {
 			return getAppUser(username);
 		}
@@ -409,7 +428,9 @@ public class AppUserApi extends ApiBase {
 		if (!appUserDao.isAppUserLoggedIn(request))
 			throw new UnauthorizedException("Not logged in");
 
-		final String currentUserUsername = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
+		Session session = SessionHelper.getSession(request);
+
+		final String currentUserUsername = (String)session.getAttribute(AppUserDao.AUTH_USER);
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
 		final Following following = ofy().load().type(Following.class).id(currentUserUsername.toLowerCase()).get();
 
@@ -449,7 +470,9 @@ public class AppUserApi extends ApiBase {
 	// Check if Fave100 user is logged in 
 	@ApiMethod(name = "appUser.isAppUserLoggedIn", path = "user/isLoggedIn")
 	public BooleanResult isAppUserLoggedIn(HttpServletRequest request) {
-		final String username = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
+		Session session = SessionHelper.getSession(request);
+
+		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
 		return new BooleanResult(username != null);
 	}
 
@@ -459,9 +482,12 @@ public class AppUserApi extends ApiBase {
 		final Twitter twitter = appUserDao.getTwitterInstance();
 		twitter.setOAuthConsumer(AppUserDao.TWITTER_CONSUMER_KEY, AppUserDao.TWITTER_CONSUMER_SECRET);
 
+		Session session = SessionHelper.getSession(request);
+
 		try {
 			final RequestToken requestToken = twitter.getOAuthRequestToken(redirectUrl);
-			request.getSession().setAttribute("requestToken", requestToken);
+			session.setAttribute("requestToken", requestToken);
+			ofy().save().entity(session).now();
 			return new StringResult(requestToken.getAuthenticationURL());
 		}
 		catch (final TwitterException e) {
@@ -592,7 +618,7 @@ public class AppUserApi extends ApiBase {
 
 				if (appUser.getEmail().equals(emailAddress)) {
 					final Properties props = new Properties();
-					final Session session = Session.getDefaultInstance(props, null);
+					final javax.mail.Session session = javax.mail.Session.getDefaultInstance(props, null);
 
 					try {
 						final PwdResetToken pwdResetToken = new PwdResetToken(appUser.getUsername());

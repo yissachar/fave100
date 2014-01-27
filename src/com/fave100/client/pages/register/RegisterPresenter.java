@@ -5,14 +5,17 @@ import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.BooleanResultDto;
+import com.fave100.client.generated.entities.LoginResultDto;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -110,7 +113,7 @@ public class RegisterPresenter extends
 				public void onSuccess(BooleanResultDto loggedIn) {
 					if (loggedIn.getValue()) {
 						// If user is logged in to Google, log them in to Fave100
-						_dispatcher.execute(_appUserService.loginWithGoogle(), new AsyncCallback<AppUserDto>() {
+						_dispatcher.execute(_appUserService.loginWithGoogle(), new AsyncCallback<LoginResultDto>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -118,7 +121,9 @@ public class RegisterPresenter extends
 							}
 
 							@Override
-							public void onSuccess(AppUserDto user) {
+							public void onSuccess(LoginResultDto loginResult) {
+								AppUserDto user = loginResult.getAppUser();
+								Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
 								eventBus.fireEvent(new CurrentUserChangedEvent(user));
 								if (user != null) {
 									goToUserPage(user.getUsername());
@@ -148,7 +153,7 @@ public class RegisterPresenter extends
 			final String oauth_verifier = placeRequest.getParameter("oauth_verifier", "");//Window.Location
 			//					.getParameter("oauth_verifier");
 
-			_dispatcher.execute(_appUserService.loginWithTwitter(oauth_verifier), new AsyncCallback<AppUserDto>() {
+			_dispatcher.execute(_appUserService.loginWithTwitter(oauth_verifier), new AsyncCallback<LoginResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -158,7 +163,9 @@ public class RegisterPresenter extends
 				}
 
 				@Override
-				public void onSuccess(AppUserDto user) {
+				public void onSuccess(LoginResultDto loginResult) {
+					AppUserDto user = loginResult.getAppUser();
+					Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
 					LoadingIndicator.hide();
 					eventBus.fireEvent(new CurrentUserChangedEvent(user));
 					if (user != null) {
@@ -176,7 +183,7 @@ public class RegisterPresenter extends
 		else if (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 			// Check if user alaready logged in through Facebook
 			LoadingIndicator.show();
-			_dispatcher.execute(_appUserService.loginWithFacebook(placeRequest.getParameter("code", "")), new AsyncCallback<AppUserDto>() {
+			_dispatcher.execute(_appUserService.loginWithFacebook(placeRequest.getParameter("code", "")), new AsyncCallback<LoginResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -186,7 +193,9 @@ public class RegisterPresenter extends
 				}
 
 				@Override
-				public void onSuccess(AppUserDto user) {
+				public void onSuccess(LoginResultDto loginResult) {
+					AppUserDto user = loginResult.getAppUser();
+					Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
 					LoadingIndicator.hide();
 					eventBus.fireEvent(new CurrentUserChangedEvent(user));
 					if (user != null) {
@@ -224,7 +233,7 @@ public class RegisterPresenter extends
 		if (validateThirdPartyFields(username)) {
 			if (provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
 				// Create Google-linked account
-				_dispatcher.execute(_appUserService.createAppUserFromGoogleAccount(username), new AsyncCallback<AppUserDto>() {
+				_dispatcher.execute(_appUserService.createAppUserFromGoogleAccount(username), new AsyncCallback<LoginResultDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -232,8 +241,8 @@ public class RegisterPresenter extends
 					}
 
 					@Override
-					public void onSuccess(AppUserDto createdUser) {
-						eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
+					public void onSuccess(LoginResultDto loginResult) {
+						eventBus.fireEvent(new CurrentUserChangedEvent(loginResult.getAppUser()));
 						registerContainer.appUserCreated();
 					}
 				});
@@ -242,7 +251,7 @@ public class RegisterPresenter extends
 				// Create Twitter-linked account
 				final String oauth_verifier = Window.Location.getParameter("oauth_verifier");
 
-				_dispatcher.execute(_appUserService.createAppUserFromTwitterAccount(username, oauth_verifier), new AsyncCallback<AppUserDto>() {
+				_dispatcher.execute(_appUserService.createAppUserFromTwitterAccount(username, oauth_verifier), new AsyncCallback<LoginResultDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -250,7 +259,9 @@ public class RegisterPresenter extends
 					}
 
 					@Override
-					public void onSuccess(AppUserDto createdUser) {
+					public void onSuccess(LoginResultDto loginResult) {
+						AppUserDto createdUser = loginResult.getAppUser();
+						Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
 						eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 						registerContainer.appUserCreated();
 						goToUserPage(createdUser.getUsername());
@@ -261,7 +272,7 @@ public class RegisterPresenter extends
 				// Create Facebook linked account
 				final String state = Window.Location.getParameter("state");
 				final String code = Window.Location.getParameter("code");
-				_dispatcher.execute(_appUserService.createAppUserFromFacebookAccount(username, state, code, facebookRedirect), new AsyncCallback<AppUserDto>() {
+				_dispatcher.execute(_appUserService.createAppUserFromFacebookAccount(username, state, code, facebookRedirect), new AsyncCallback<LoginResultDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -269,7 +280,9 @@ public class RegisterPresenter extends
 					}
 
 					@Override
-					public void onSuccess(AppUserDto createdUser) {
+					public void onSuccess(LoginResultDto loginResult) {
+						AppUserDto createdUser = loginResult.getAppUser();
+						Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
 						eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 						if (createdUser != null) {
 							registerContainer.appUserCreated();

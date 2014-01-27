@@ -55,7 +55,7 @@ public class FaveListDeletionTest {
 
 		req = TestHelper.newReq();
 
-		loggedInUser = appUserApi.createAppUser(req, username, "goodtests", "testuser@example.com");
+		loggedInUser = appUserApi.createAppUser(req, username, "goodtests", "testuser@example.com").getAppUser();
 
 		AppUserApi mockAppUserApi = mock(AppUserApi.class);
 		when(mockAppUserApi.getLoggedInAppUser(req)).thenReturn(loggedInUser);
