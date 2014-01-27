@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,11 +18,9 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.inject.Inject;
-import com.google.web.bindery.requestfactory.server.RequestFactoryServlet;
 
 @SuppressWarnings("serial")
-public class AvatarUploadServlet extends RequestFactoryServlet
-{
+public class AvatarUploadServlet extends HttpServlet {
 
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
@@ -29,6 +28,7 @@ public class AvatarUploadServlet extends RequestFactoryServlet
 	@Inject
 	public void doPost(final HttpServletRequest req, final HttpServletResponse res)
 			throws ServletException, IOException {
+
 		final Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
 
 		final List<BlobKey> bloblist = blobs.get("avatar");

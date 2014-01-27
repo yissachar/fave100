@@ -175,7 +175,7 @@ public class AppUserApi extends ApiBase {
 			newAppUser = ofy().transact(new Work<AppUser>() {
 				@Override
 				public AppUser run() {
-					final twitter4j.User user = appUserDao.getTwitterUser(oauth_verifier);
+					final twitter4j.User user = appUserDao.getTwitterUser(request, oauth_verifier);
 					if (getAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
@@ -219,7 +219,7 @@ public class AppUserApi extends ApiBase {
 			newAppUser = ofy().transact(new Work<AppUser>() {
 				@Override
 				public AppUser run() {
-					final Long userFacebookId = appUserDao.getCurrentFacebookUserId(code);
+					final Long userFacebookId = appUserDao.getCurrentFacebookUserId(request, code);
 					if (userFacebookId != null) {
 						if (getAppUser(username) != null) {
 							throw new RuntimeException(userExistsMsg);
@@ -307,7 +307,7 @@ public class AppUserApi extends ApiBase {
 	@ApiMethod(name = "appUser.loginWithTwitter", path = "twitterLogin")
 	public AppUser loginWithTwitter(HttpServletRequest request, @Named("oauthVerifier") final String oauth_verifier) {
 		// Get the Twitter user
-		final twitter4j.User twitterUser = appUserDao.getTwitterUser(oauth_verifier);
+		final twitter4j.User twitterUser = appUserDao.getTwitterUser(request, oauth_verifier);
 		if (twitterUser != null) {
 			// Find the corresponding Fave100 user
 			final AppUser loggedInUser = appUserDao.findAppUserByTwitterId(twitterUser.getId());
@@ -330,7 +330,7 @@ public class AppUserApi extends ApiBase {
 	@ApiMethod(name = "appUser.loginWithFacebook", path = "facebookLogin")
 	public AppUser loginWithFacebook(HttpServletRequest request, @Named("code") final String code) {
 		// Get the Facebook user
-		final Long facebookUserId = appUserDao.getCurrentFacebookUserId(code);
+		final Long facebookUserId = appUserDao.getCurrentFacebookUserId(request, code);
 		if (facebookUserId != null) {
 			// Find the corresponding Fave100 user
 			final AppUser loggedInUser = appUserDao.findAppUserByFacebookId(facebookUserId);
@@ -406,7 +406,7 @@ public class AppUserApi extends ApiBase {
 
 	@ApiMethod(name = "appUser.isFollowing", path = "isFollowing", httpMethod = HttpMethod.GET)
 	public BooleanResult isFollowing(HttpServletRequest request, @Named("username") final String username) throws UnauthorizedException {
-		if (!appUserDao.isAppUserLoggedIn())
+		if (!appUserDao.isAppUserLoggedIn(request))
 			throw new UnauthorizedException("Not logged in");
 
 		final String currentUserUsername = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);

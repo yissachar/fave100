@@ -12,12 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.server.domain.appuser.AppUserApi;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Constants;
 import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
-import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
+import com.google.api.server.spi.response.BadRequestException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
@@ -34,11 +35,13 @@ public class UserCreationTest {
 	private final LocalServiceTestHelper helper =
 			new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100));
 	private AppUserDao appUserDao = null;
+	private AppUserApi appUserApi;
 
 	@Before
 	public void setUp() {
 		helper.setUp();
 		appUserDao = new AppUserDao();
+		appUserApi = new AppUserApi(appUserDao);
 	}
 
 	@After
@@ -48,7 +51,7 @@ public class UserCreationTest {
 	}
 
 	@Test
-	public void nativeUserCanBeCreated() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
+	public void nativeUserCanBeCreated() throws BadRequestException, EmailIDAlreadyExistsException {
 		// No users exist in datastore
 		assertEquals("There must not be pre-existing users", 0, ofy().load().type(AppUser.class).count());
 
@@ -58,7 +61,7 @@ public class UserCreationTest {
 		AppUser appUser = null;
 
 		// Create a user
-		appUser = appUserDao.createAppUser(username, pw, "testuser@example.com");
+		appUser = appUserApi.createAppUser(TestHelper.newReq(), username, pw, "testuser@example.com");
 
 		// User now exists in datastore
 		assertNotNull("Created user cannot be null", appUser);
@@ -68,38 +71,44 @@ public class UserCreationTest {
 	// TODO: Test third party users here
 
 	@Test
-	public void userNameMustNotBeEmpty() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
+	public void userNameMustNotBeEmpty() throws BadRequestException {
 		AppUser appUser = null;
 
-		appUser = appUserDao.createAppUser("", "security", "testuser@example.com");
+		try {
+			appUser = appUserApi.createAppUser(TestHelper.newReq(), "", "security", "testuser@example.com");
+			fail("Exception not thrown");
+		}
+		catch (BadRequestException e) {
+			// Success!
+		}
 
 		assertNull("User must not be created with empty user name", appUser);
 	}
 
 	@Test
-	public void userNameMustNotBeTooLong() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
+	public void userNameMustNotBeTooLong() throws BadRequestException {
 		AppUser appUser = null;
 
 		String username = "";
 		for (int i = 0; i < Constants.MAX_USERNAME_LENGTH + 1; i++) {
 			username += "a";
 		}
-		appUser = appUserDao.createAppUser(username, "apassword", "testuser@example.com");
+		appUser = appUserApi.createAppUser(TestHelper.newReq(), username, "apassword", "testuser@example.com");
 
 		assertNull("User must not be created if name is too long", appUser);
 	}
 
 	@Test
-	public void userNameMustOnlyContainLettersAndNumbers() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
+	public void userNameMustOnlyContainLettersAndNumbers() throws BadRequestException {
 		AppUser appUser1 = null;
 		AppUser appUser2 = null;
 		AppUser appUser3 = null;
 		AppUser appUser4 = null;
 
-		appUser1 = appUserDao.createAppUser("bob&", "apassword", "testuser1@example.com");
-		appUser2 = appUserDao.createAppUser("-", "apassword", "testuser2@example.com");
-		appUser3 = appUserDao.createAppUser("jo hn", "apassword", "testuser3@example.com");
-		appUser4 = appUserDao.createAppUser("@me", "apassword", "testuser4@example.com");
+		appUser1 = appUserApi.createAppUser(TestHelper.newReq(), "bob&", "apassword", "testuser1@example.com");
+		appUser2 = appUserApi.createAppUser(TestHelper.newReq(), "-", "apassword", "testuser2@example.com");
+		appUser3 = appUserApi.createAppUser(TestHelper.newReq(), "jo hn", "apassword", "testuser3@example.com");
+		appUser4 = appUserApi.createAppUser(TestHelper.newReq(), "@me", "apassword", "testuser4@example.com");
 
 		String msg = "User must not be created if name does not only contain letters and numbes";
 		assertNull(msg, appUser1);
@@ -109,19 +118,19 @@ public class UserCreationTest {
 	}
 
 	@Test
-	public void userNameMustBeUnique() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
+	public void userNameMustBeUnique() throws BadRequestException {
 		String username = "bob";
 
 		// Create a user with that name		
-		appUserDao.createAppUser(username, "123456", "testuser1@example.com");
+		appUserApi.createAppUser(TestHelper.newReq(), username, "123456", "testuser1@example.com");
 
 		// User with duplicate username not created
 		AppUser secondAppUser = null;
 		try {
-			secondAppUser = appUserDao.createAppUser(username, "654321", "testuser2@example.com");
+			secondAppUser = appUserApi.createAppUser(TestHelper.newReq(), username, "654321", "testuser2@example.com");
 			fail("Exception not thrown");
 		}
-		catch (UsernameAlreadyExistsException | EmailIDAlreadyExistsException e) {
+		catch (BadRequestException e) {
 			// Success!
 		}
 
@@ -129,51 +138,51 @@ public class UserCreationTest {
 	}
 
 	@Test
-	public void passwordMustNotBeEmpty() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
+	public void passwordMustNotBeEmpty() throws BadRequestException {
 		AppUser appUser = null;
-		appUser = appUserDao.createAppUser("lax", "", "testuser@example.com");
+		appUser = appUserApi.createAppUser(TestHelper.newReq(), "lax", "", "testuser@example.com");
 
 		assertNull("User must not be created with empty password", appUser);
 	}
 
 	@Test
-	public void passwordMustNotBeStoredInPlaintext() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
+	public void passwordMustNotBeStoredInPlaintext() throws BadRequestException {
 
 		String username = "larry";
 		String pw = "superSecurePw";
 
-		appUserDao.createAppUser(username, pw, "testuser@example.com");
+		appUserApi.createAppUser(TestHelper.newReq(), username, pw, "testuser@example.com");
 
 		String storedPw = appUserDao.findAppUser(username).getPassword();
 		assertFalse("Password must not be stored in plaintext", pw.equals(storedPw));
 	}
 
 	@Test
-	public void passwordNeedNotBeUnique() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
+	public void passwordNeedNotBeUnique() throws BadRequestException {
 		String pw = "test@example.coms";
 
-		appUserDao.createAppUser("bob", pw, "test1@example.com");
+		appUserApi.createAppUser(TestHelper.newReq(), "bob", pw, "test1@example.com");
 
 		AppUser secondAppUser = null;
-		secondAppUser = appUserDao.createAppUser("alex", pw, "test2@example.com");
+		secondAppUser = appUserApi.createAppUser(TestHelper.newReq(), "alex", pw, "test2@example.com");
 
 		assertNotNull("User with duplicate passwoed should be created", secondAppUser);
 	}
 
 	@Test
-	public void userEmailMustBeUnique() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException {
+	public void userEmailMustBeUnique() throws BadRequestException {
 		String email = "test@example.coms";
 
 		// Create a user with the same email		
-		appUserDao.createAppUser("bob", "123456", email);
+		appUserApi.createAppUser(TestHelper.newReq(), "bob", "123456", email);
 
 		// User with duplicate username not created
 		AppUser secondAppUser = null;
 		try {
-			secondAppUser = appUserDao.createAppUser("mike", "654321", email);
+			secondAppUser = appUserApi.createAppUser(TestHelper.newReq(), "mike", "654321", email);
 			fail("Exception not thrown");
 		}
-		catch (UsernameAlreadyExistsException | EmailIDAlreadyExistsException e) {
+		catch (BadRequestException e) {
 			// Success!!
 		}
 
