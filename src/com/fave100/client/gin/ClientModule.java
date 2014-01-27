@@ -43,7 +43,6 @@ import com.fave100.client.place.ClientPlaceManager;
 import com.fave100.client.place.DefaultPlace;
 import com.fave100.client.place.NameTokens;
 import com.gwtplatform.dispatch.rest.client.RestApplicationPath;
-import com.gwtplatform.dispatch.rest.client.gin.RestDispatchAsyncModule;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.GaAccount;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
@@ -57,7 +56,7 @@ public class ClientModule extends AbstractPresenterModule {
 	protected void configure() {
 		install(new ListAutocompleteModule());
 		install(new DefaultModule(ClientPlaceManager.class));
-		install(new RestDispatchAsyncModule.Builder().build());
+		install(new TolerantRestDispatchAsyncModule.Builder().build());
 
 		bindConstant().annotatedWith(RestApplicationPath.class).to("/_ah/api");
 
