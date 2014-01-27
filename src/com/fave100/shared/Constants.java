@@ -14,4 +14,5 @@ public class Constants {
 	public static final double SCORE_CALCULATOR = 0.0909;
 	public static final int MAX_LISTS_PER_USER = 100;
 	public static final int MAX_USERNAME_LENGTH = 15;
+	public static final String SESSION_COOKIE_NAME = "fave100session";
 }

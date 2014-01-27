@@ -71,10 +71,10 @@ public class FollowingTest {
 	public void followUserTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
 		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser loggedInUser = appUserApi.createAppUser(req, "tester", "goodtests", "testuser@example.com");
+		AppUser loggedInUser = appUserApi.createAppUser(req, "tester", "goodtests", "testuser@example.com").getAppUser();
 		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
 
-		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "john", "passpass31", "lemmings@example.com");
+		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "john", "passpass31", "lemmings@example.com").getAppUser();
 		appUserApi.followUser(req, userToFollow.getUsername());
 		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
@@ -86,11 +86,11 @@ public class FollowingTest {
 	public void followMultipleUsersTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
 		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser loggedInUser = appUserApi.createAppUser(req, "tester2", "goodtests", "testuser2@example.com");
+		AppUser loggedInUser = appUserApi.createAppUser(req, "tester2", "goodtests", "testuser2@example.com").getAppUser();
 		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
 
-		AppUser userToFollow1 = appUserApi.createAppUser(TestHelper.newReq(), "bob", "passpass31", "followuser@example.com");
-		AppUser userToFollow2 = appUserApi.createAppUser(TestHelper.newReq(), "derek", "xcvb1sdf1", "anotheruser@example.com");
+		AppUser userToFollow1 = appUserApi.createAppUser(TestHelper.newReq(), "bob", "passpass31", "followuser@example.com").getAppUser();
+		AppUser userToFollow2 = appUserApi.createAppUser(TestHelper.newReq(), "derek", "xcvb1sdf1", "anotheruser@example.com").getAppUser();
 
 		appUserApi.followUser(req, userToFollow1.getUsername());
 		appUserApi.followUser(req, userToFollow2.getUsername());
@@ -106,10 +106,10 @@ public class FollowingTest {
 	public void followUserCaseInsensitiveTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
 		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser loggedInUser = appUserApi.createAppUser(req, "tester3", "goodtests", "testuser3@example.com");
+		AppUser loggedInUser = appUserApi.createAppUser(req, "tester3", "goodtests", "testuser3@example.com").getAppUser();
 		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
 
-		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "MIKE", "bcv13zxcg", "foobar@example.com");
+		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "MIKE", "bcv13zxcg", "foobar@example.com").getAppUser();
 		appUserApi.followUser(req, userToFollow.getUsername());
 		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
@@ -121,11 +121,11 @@ public class FollowingTest {
 	public void unfollowUserTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
 		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser loggedInUser = appUserApi.createAppUser(req, "tester4", "goodtests", "testuser4@example.com");
+		AppUser loggedInUser = appUserApi.createAppUser(req, "tester4", "goodtests", "testuser4@example.com").getAppUser();
 		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
 
 		// Follow
-		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "liam", "bv1xcvaw46", "booj@example.com");
+		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "liam", "bv1xcvaw46", "booj@example.com").getAppUser();
 		appUserApi.followUser(req, userToFollow.getUsername());
 		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
@@ -141,11 +141,11 @@ public class FollowingTest {
 	public void unfollowUserCaseInsensitiveTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
 		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser loggedInUser = appUserApi.createAppUser(req, "tester5", "goodtests", "testuser5@example.com");
+		AppUser loggedInUser = appUserApi.createAppUser(req, "tester5", "goodtests", "testuser5@example.com").getAppUser();
 		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
 
 		// Follow
-		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "KRING", "awetzx14sva", "kiasd@example.com");
+		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "KRING", "awetzx14sva", "kiasd@example.com").getAppUser();
 		appUserApi.followUser(req, userToFollow.getUsername());
 		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 

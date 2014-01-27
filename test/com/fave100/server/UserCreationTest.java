@@ -61,7 +61,7 @@ public class UserCreationTest {
 		AppUser appUser = null;
 
 		// Create a user
-		appUser = appUserApi.createAppUser(TestHelper.newReq(), username, pw, "testuser@example.com");
+		appUser = appUserApi.createAppUser(TestHelper.newReq(), username, pw, "testuser@example.com").getAppUser();
 
 		// User now exists in datastore
 		assertNotNull("Created user cannot be null", appUser);
@@ -75,7 +75,7 @@ public class UserCreationTest {
 		AppUser appUser = null;
 
 		try {
-			appUser = appUserApi.createAppUser(TestHelper.newReq(), "", "security", "testuser@example.com");
+			appUser = appUserApi.createAppUser(TestHelper.newReq(), "", "security", "testuser@example.com").getAppUser();
 			fail("Exception not thrown");
 		}
 		catch (BadRequestException e) {
@@ -93,7 +93,7 @@ public class UserCreationTest {
 		for (int i = 0; i < Constants.MAX_USERNAME_LENGTH + 1; i++) {
 			username += "a";
 		}
-		appUser = appUserApi.createAppUser(TestHelper.newReq(), username, "apassword", "testuser@example.com");
+		appUser = appUserApi.createAppUser(TestHelper.newReq(), username, "apassword", "testuser@example.com").getAppUser();
 
 		assertNull("User must not be created if name is too long", appUser);
 	}
@@ -105,10 +105,10 @@ public class UserCreationTest {
 		AppUser appUser3 = null;
 		AppUser appUser4 = null;
 
-		appUser1 = appUserApi.createAppUser(TestHelper.newReq(), "bob&", "apassword", "testuser1@example.com");
-		appUser2 = appUserApi.createAppUser(TestHelper.newReq(), "-", "apassword", "testuser2@example.com");
-		appUser3 = appUserApi.createAppUser(TestHelper.newReq(), "jo hn", "apassword", "testuser3@example.com");
-		appUser4 = appUserApi.createAppUser(TestHelper.newReq(), "@me", "apassword", "testuser4@example.com");
+		appUser1 = appUserApi.createAppUser(TestHelper.newReq(), "bob&", "apassword", "testuser1@example.com").getAppUser();
+		appUser2 = appUserApi.createAppUser(TestHelper.newReq(), "-", "apassword", "testuser2@example.com").getAppUser();
+		appUser3 = appUserApi.createAppUser(TestHelper.newReq(), "jo hn", "apassword", "testuser3@example.com").getAppUser();
+		appUser4 = appUserApi.createAppUser(TestHelper.newReq(), "@me", "apassword", "testuser4@example.com").getAppUser();
 
 		String msg = "User must not be created if name does not only contain letters and numbes";
 		assertNull(msg, appUser1);
@@ -127,7 +127,7 @@ public class UserCreationTest {
 		// User with duplicate username not created
 		AppUser secondAppUser = null;
 		try {
-			secondAppUser = appUserApi.createAppUser(TestHelper.newReq(), username, "654321", "testuser2@example.com");
+			secondAppUser = appUserApi.createAppUser(TestHelper.newReq(), username, "654321", "testuser2@example.com").getAppUser();
 			fail("Exception not thrown");
 		}
 		catch (BadRequestException e) {
@@ -140,7 +140,7 @@ public class UserCreationTest {
 	@Test
 	public void passwordMustNotBeEmpty() throws BadRequestException {
 		AppUser appUser = null;
-		appUser = appUserApi.createAppUser(TestHelper.newReq(), "lax", "", "testuser@example.com");
+		appUser = appUserApi.createAppUser(TestHelper.newReq(), "lax", "", "testuser@example.com").getAppUser();
 
 		assertNull("User must not be created with empty password", appUser);
 	}
@@ -164,7 +164,7 @@ public class UserCreationTest {
 		appUserApi.createAppUser(TestHelper.newReq(), "bob", pw, "test1@example.com");
 
 		AppUser secondAppUser = null;
-		secondAppUser = appUserApi.createAppUser(TestHelper.newReq(), "alex", pw, "test2@example.com");
+		secondAppUser = appUserApi.createAppUser(TestHelper.newReq(), "alex", pw, "test2@example.com").getAppUser();
 
 		assertNotNull("User with duplicate passwoed should be created", secondAppUser);
 	}
@@ -179,7 +179,7 @@ public class UserCreationTest {
 		// User with duplicate username not created
 		AppUser secondAppUser = null;
 		try {
-			secondAppUser = appUserApi.createAppUser(TestHelper.newReq(), "mike", "654321", email);
+			secondAppUser = appUserApi.createAppUser(TestHelper.newReq(), "mike", "654321", email).getAppUser();
 			fail("Exception not thrown");
 		}
 		catch (BadRequestException e) {
