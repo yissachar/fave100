@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.fave100.server.domain.ApiBase;
 import com.fave100.server.domain.SongApi;
+import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.UserListResult;
 import com.fave100.server.domain.VoidResult;
 import com.fave100.server.domain.Whyline;
@@ -56,21 +57,21 @@ public class FaveListApi extends ApiBase {
 	}
 
 	@ApiMethod(name = "faveList.getHashtagAutocomplete", path = FAVELIST_PATH + "/hashtagAutocomplete")
-	public List<String> getHashtagAutocomplete(@Named("searchTerm") final String searchTerm) {
-		final List<String> names = new ArrayList<String>();
+	public List<StringResult> getHashtagAutocomplete(@Named("searchTerm") final String searchTerm) {
+		final List<StringResult> names = new ArrayList<>();
 		if (searchTerm.isEmpty())
 			return names;
 
 		// TODO: Need to sort by popularity
 		final List<Hashtag> hashtags = ofy().load().type(Hashtag.class).filter("id >=", searchTerm.toLowerCase()).filter("id <", searchTerm.toLowerCase() + "\uFFFD").limit(5).list();
 		for (final Hashtag hashtag : hashtags) {
-			names.add(hashtag.getName());
+			names.add(new StringResult(hashtag.getName()));
 		}
 		return names;
 	}
 
 	@ApiMethod(name = "faveList.getTrendingFaveLists", path = FAVELIST_PATH + "/trendingFaveLists")
-	public List<String> getTrendingFaveLists() {
+	public List<StringResult> getTrendingFaveLists() {
 		// Nov 26 2013: Temporarily disabling proper trending in favor of hard-coded popular lists
 		//		List<Hashtag> hashtags = ofy().load().type(Hashtag.class).order("-zscore").limit(5).list();
 		//		List<String> trending = new ArrayList<>();
@@ -78,13 +79,13 @@ public class FaveListApi extends ApiBase {
 		//			trending.add(hashtag.getName());
 		//		}
 		//		return trending;
-		List<String> trending = new ArrayList<>();
-		trending.add("alltime");
-		trending.add("2014");
-		trending.add("2013");
-		trending.add("2012");
-		trending.add("dance");
-		trending.add("classicrock");
+		List<StringResult> trending = new ArrayList<>();
+		trending.add(new StringResult("alltime"));
+		trending.add(new StringResult("2014"));
+		trending.add(new StringResult("2013"));
+		trending.add(new StringResult("2012"));
+		trending.add(new StringResult("dance"));
+		trending.add(new StringResult("classicrock"));
 		return trending;
 	}
 

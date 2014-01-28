@@ -1,9 +1,11 @@
 package com.fave100.client.pages.lists.widgets.autocomplete.list;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fave100.client.generated.entities.StringCollection;
+import com.fave100.client.generated.entities.StringResultCollection;
+import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -31,7 +33,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 	protected FaveListService _faveListService;
 	protected List<String> _suggestions;
 	protected String _lastSearch;
-	private final List<AsyncCallback<StringCollection>> _requests;
+	private final List<AsyncCallback<StringResultCollection>> _requests;
 	private int _selection = 0;
 	private int _maxSelection = -1;
 
@@ -42,7 +44,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;
 		_faveListService = faveListService;
-		_requests = new LinkedList<AsyncCallback<StringCollection>>();
+		_requests = new LinkedList<AsyncCallback<StringResultCollection>>();
 		getAutocompleteResults("");
 		getView().setUiHandlers(this);
 	}
@@ -63,7 +65,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			return;
 		}
 
-		final AsyncCallback<StringCollection> listAutocompleteReq = new AsyncCallback<StringCollection>() {
+		final AsyncCallback<StringResultCollection> listAutocompleteReq = new AsyncCallback<StringResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -71,7 +73,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			}
 
 			@Override
-			public void onSuccess(StringCollection result) {
+			public void onSuccess(StringResultCollection result) {
 				if (_requests.indexOf(this) != _requests.size() - 1
 						|| _requests.indexOf(this) == -1) {
 					_requests.remove(this);
@@ -79,7 +81,11 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 				}
 
 				_requests.clear();
-				setSuggestions(result.getItems());
+				List<String> suggestions = new ArrayList<>();
+				for (StringResultDto stringResult : result.getItems()) {
+					suggestions.add(stringResult.getValue());
+				}
+				setSuggestions(suggestions);
 			}
 		};
 
