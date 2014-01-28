@@ -25,7 +25,7 @@ public class SessionHelper {
 			session = ofy().load().type(Session.class).id(sessionId).get();
 
 		// If the retrieved session is already expired, delete it
-		if (session.isExpired()) {
+		if (session != null && session.isExpired()) {
 			ofy().delete().entity(session).now();
 			session = null;
 		}
