@@ -7,12 +7,12 @@ import com.fave100.client.generated.entities.StringCollection;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -44,7 +44,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private FaveListService _faveListService;
 	private String _hashtag;
 	@Inject GlobalListAutocompletePresenter listAutocomplete;
@@ -52,7 +52,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 
 	@Inject
 	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
-										final RestDispatchAsync dispatcher, final FaveListService faveListService) {
+										final RestSessionDispatch dispatcher, final FaveListService faveListService) {
 		super(eventBus, view);
 		_currentUser = currentUser;
 		_placeManager = placeManager;

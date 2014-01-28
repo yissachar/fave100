@@ -12,6 +12,7 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -20,7 +21,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -70,14 +70,14 @@ public class RegisterPresenter extends
 
 	private EventBus eventBus;
 	private PlaceManager placeManager;
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private AppUserService _appUserService;
 	private String provider;
 	private String facebookRedirect;
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager,
-								final RestDispatchAsync dispatcher, final AppUserService appUserService) {
+								final RestSessionDispatch dispatcher, final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		this.eventBus = eventBus;
 		this.placeManager = placeManager;
@@ -123,7 +123,7 @@ public class RegisterPresenter extends
 							@Override
 							public void onSuccess(LoginResultDto loginResult) {
 								AppUserDto user = loginResult.getAppUser();
-								Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
+								Cookies.setCookie(Constants.SESSION_HEADER, loginResult.getSessionId());
 								eventBus.fireEvent(new CurrentUserChangedEvent(user));
 								if (user != null) {
 									goToUserPage(user.getUsername());
@@ -165,7 +165,7 @@ public class RegisterPresenter extends
 				@Override
 				public void onSuccess(LoginResultDto loginResult) {
 					AppUserDto user = loginResult.getAppUser();
-					Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
+					Cookies.setCookie(Constants.SESSION_HEADER, loginResult.getSessionId());
 					LoadingIndicator.hide();
 					eventBus.fireEvent(new CurrentUserChangedEvent(user));
 					if (user != null) {
@@ -195,7 +195,7 @@ public class RegisterPresenter extends
 				@Override
 				public void onSuccess(LoginResultDto loginResult) {
 					AppUserDto user = loginResult.getAppUser();
-					Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
+					Cookies.setCookie(Constants.SESSION_HEADER, loginResult.getSessionId());
 					LoadingIndicator.hide();
 					eventBus.fireEvent(new CurrentUserChangedEvent(user));
 					if (user != null) {
@@ -261,7 +261,7 @@ public class RegisterPresenter extends
 					@Override
 					public void onSuccess(LoginResultDto loginResult) {
 						AppUserDto createdUser = loginResult.getAppUser();
-						Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
+						Cookies.setCookie(Constants.SESSION_HEADER, loginResult.getSessionId());
 						eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 						registerContainer.appUserCreated();
 						goToUserPage(createdUser.getUsername());
@@ -282,7 +282,7 @@ public class RegisterPresenter extends
 					@Override
 					public void onSuccess(LoginResultDto loginResult) {
 						AppUserDto createdUser = loginResult.getAppUser();
-						Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
+						Cookies.setCookie(Constants.SESSION_HEADER, loginResult.getSessionId());
 						eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 						if (createdUser != null) {
 							registerContainer.appUserCreated();

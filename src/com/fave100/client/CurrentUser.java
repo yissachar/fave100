@@ -19,11 +19,11 @@ import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Constants;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
@@ -31,7 +31,7 @@ public class CurrentUser extends AppUserDto {
 
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private AppUserService _appUserService;
 	private FaveListService _faveListService;
 	private AppUserDto appUser;
@@ -44,7 +44,7 @@ public class CurrentUser extends AppUserDto {
 
 	@Inject
 	public CurrentUser(final EventBus eventBus, final PlaceManager placeManager, final RequestCache requestCache,
-						final RestDispatchAsync dispatcher, final AppUserService appUserService, final FaveListService faveListService) {
+						final RestSessionDispatch dispatcher, final AppUserService appUserService, final FaveListService faveListService) {
 		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;

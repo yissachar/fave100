@@ -6,11 +6,11 @@ import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Validator;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -48,7 +48,7 @@ public class PasswordResetPresenter
 
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private AppUserService _appUserService;
 	private EventBus _eventBus;
 	private String token;
@@ -60,7 +60,7 @@ public class PasswordResetPresenter
 
 	@Inject
 	public PasswordResetPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager,
-									final CurrentUser currentUser, final RestDispatchAsync dispatcher, final AppUserService appUserService) {
+									final CurrentUser currentUser, final RestSessionDispatch dispatcher, final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		_placeManager = placeManager;
 		_currentUser = currentUser;

@@ -19,6 +19,7 @@ import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetail
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -30,7 +31,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -80,7 +80,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 	private final EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private AppUserService _appUserService;
 	private boolean _ownPage = false;
 	@Inject SongAutocompletePresenter songAutocomplete;
@@ -91,7 +91,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 
 	@Inject
 	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser,
-							final RestDispatchAsync dispatcher, final AppUserService appUserService) {
+							final RestSessionDispatch dispatcher, final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_placeManager = placeManager;

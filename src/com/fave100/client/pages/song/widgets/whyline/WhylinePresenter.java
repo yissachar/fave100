@@ -10,10 +10,10 @@ import com.fave100.client.generated.entities.WhylineCollection;
 import com.fave100.client.generated.entities.WhylineDto;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.generated.services.WhylineService;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
@@ -25,12 +25,12 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 		void setUserLists(List<UserListResultDto> userLists);
 	}
 
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private FaveListService _faveListService;
 	private WhylineService _whylineService;
 
 	@Inject
-	WhylinePresenter(final EventBus eventBus, final MyView view, final RestDispatchAsync dispatcher, final FaveListService faveListService,
+	WhylinePresenter(final EventBus eventBus, final MyView view, final RestSessionDispatch dispatcher, final FaveListService faveListService,
 						final WhylineService whylineService) {
 		super(eventBus, view);
 		_dispatcher = dispatcher;

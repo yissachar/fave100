@@ -7,6 +7,7 @@ import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Utils;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -17,7 +18,6 @@ import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -50,12 +50,12 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	private EventBus eventBus;
 	private CurrentUser currentUser;
 	private PlaceManager placeManager;
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private AppUserService _appUserService;
 
 	@Inject
 	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser,
-							final RestDispatchAsync dispatcher, final AppUserService appUserService) {
+							final RestSessionDispatch dispatcher, final AppUserService appUserService) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.currentUser = currentUser;
