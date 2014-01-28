@@ -24,7 +24,13 @@ public class SessionHelper {
 		if (sessionId != null)
 			session = ofy().load().type(Session.class).id(sessionId).get();
 
-		// If there is no existing session, create a new one
+		// If the retrieved session is already expired, delete it
+		if (session.isExpired()) {
+			ofy().delete().entity(session).now();
+			session = null;
+		}
+
+		// If there is no existing session (or we deleted the expired session), create a new one
 		if (session == null)
 			session = new Session();
 
