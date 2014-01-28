@@ -62,8 +62,12 @@ public class AppUserApi extends ApiBase {
 	}
 
 	@ApiMethod(name = "appUser.getAppUser", path = "appUser")
-	public AppUser getAppUser(@Named("username") final String username) {
-		return ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
+	public AppUser getAppUser(@Named("username") final String username) throws NotFoundException {
+		AppUser appUser = ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
+		if (appUser == null)
+			throw new NotFoundException("User not found");
+
+		return appUser;
 	}
 
 	@ApiMethod(name = "appUser.createAppUser", path = "createAppUser")
@@ -77,7 +81,7 @@ public class AppUserApi extends ApiBase {
 			loginResult = ofy().transact(new Work<LoginResult>() {
 				@Override
 				public LoginResult run() {
-					if (getAppUser(username) != null) {
+					if (appUserDao.findAppUser(username) != null) {
 						// Username already exists
 						throw new RuntimeException(userExistsMsg);
 					}
@@ -134,7 +138,7 @@ public class AppUserApi extends ApiBase {
 				public LoginResult run() {
 					final UserService userService = UserServiceFactory.getUserService();
 					final User user = userService.getCurrentUser();
-					if (getAppUser(username) != null) {
+					if (appUserDao.findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
 					if (ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
@@ -180,7 +184,7 @@ public class AppUserApi extends ApiBase {
 				@Override
 				public AppUser run() {
 					final twitter4j.User user = appUserDao.getTwitterUser(request, oauth_verifier);
-					if (getAppUser(username) != null) {
+					if (appUserDao.findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
 					if (ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
@@ -227,7 +231,7 @@ public class AppUserApi extends ApiBase {
 				public LoginResult run() {
 					final Long userFacebookId = appUserDao.getCurrentFacebookUserId(request, code);
 					if (userFacebookId != null) {
-						if (getAppUser(username) != null) {
+						if (appUserDao.findAppUser(username) != null) {
 							throw new RuntimeException(userExistsMsg);
 						}
 						if (ofy().load().type(FacebookID.class).id(userFacebookId).get() != null) {
@@ -381,7 +385,7 @@ public class AppUserApi extends ApiBase {
 		Session session = SessionHelper.getSession(request);
 		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
 		if (username != null) {
-			return getAppUser(username);
+			return appUserDao.findAppUser(username);
 		}
 		else {
 			return null;
