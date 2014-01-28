@@ -6,7 +6,8 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
-import com.fave100.client.generated.entities.StringCollection;
+import com.fave100.client.generated.entities.StringResultCollection;
+import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.entities.VoidResultDto;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pages.lists.ListPresenter;
@@ -175,7 +176,7 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		_dispatcher.execute(_faveListService.getHashtagAutocomplete(searchTerm), new AsyncCallback<StringCollection>() {
+		_dispatcher.execute(_faveListService.getHashtagAutocomplete(searchTerm), new AsyncCallback<StringResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -183,8 +184,12 @@ public class ListManagerPresenter extends
 			}
 
 			@Override
-			public void onSuccess(StringCollection result) {
-				getView().refreshList(result.getItems(), _hashtag, ownList);
+			public void onSuccess(StringResultCollection result) {
+				List<String> suggestions = new ArrayList<>();
+				for (StringResultDto stringResult : result.getItems()) {
+					suggestions.add(stringResult.getValue());
+				}
+				getView().refreshList(suggestions, _hashtag, ownList);
 
 			}
 		});

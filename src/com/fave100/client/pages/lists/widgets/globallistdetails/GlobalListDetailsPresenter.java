@@ -1,9 +1,11 @@
 package com.fave100.client.pages.lists.widgets.globallistdetails;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.generated.entities.StringCollection;
+import com.fave100.client.generated.entities.StringResultCollection;
+import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.place.NameTokens;
@@ -64,7 +66,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	public void setHashtag(final String hashtag) {
 		_hashtag = hashtag;
 		getView().setInfo(hashtag);
-		_dispatcher.execute(_faveListService.getTrendingFaveLists(), new AsyncCallback<StringCollection>() {
+		_dispatcher.execute(_faveListService.getTrendingFaveLists(), new AsyncCallback<StringResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -73,8 +75,12 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 			}
 
 			@Override
-			public void onSuccess(StringCollection result) {
-				getView().setTrendingLists(result.getItems());
+			public void onSuccess(StringResultCollection result) {
+				List<String> trending = new ArrayList<>();
+				for (StringResultDto stringResult : result.getItems()) {
+					trending.add(stringResult.getValue());
+				}
+				getView().setTrendingLists(trending);
 			}
 		});
 
