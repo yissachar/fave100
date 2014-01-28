@@ -22,12 +22,12 @@ package com.fave100.client.gin;
 
 import javax.inject.Singleton;
 
+import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.client.serialization.TolerantJsonSerialization;
 import com.gwtplatform.dispatch.client.gin.AbstractDispatchAsyncModule;
 import com.gwtplatform.dispatch.rest.client.DefaultRestDispatchCallFactory;
 import com.gwtplatform.dispatch.rest.client.DefaultRestRequestBuilderFactory;
 import com.gwtplatform.dispatch.rest.client.DefaultRestResponseDeserializer;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.client.RestDispatchCallFactory;
 import com.gwtplatform.dispatch.rest.client.RestRequestBuilderFactory;
 import com.gwtplatform.dispatch.rest.client.RestResponseDeserializer;
@@ -98,6 +98,6 @@ public class TolerantRestDispatchAsyncModule extends AbstractDispatchAsyncModule
 
 		bind(Serialization.class).to(TolerantJsonSerialization.class);
 
-		bind(RestDispatch.class).to(RestDispatchAsync.class).in(Singleton.class);
+		bind(RestDispatch.class).to(RestSessionDispatch.class).in(Singleton.class);
 	}
 }

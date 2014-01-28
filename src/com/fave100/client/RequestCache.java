@@ -8,9 +8,9 @@ import java.util.Map;
 import com.fave100.client.generated.entities.FollowingResultDto;
 import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.AppUserService;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
 
 /**
@@ -27,7 +27,7 @@ public class RequestCache {
 		FOLLOWING_CURRENT_USER
 	}
 
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private AppUserService _appUserService;
 
 	private Map<RequestType, Boolean> _runningRequests = new HashMap<RequestType, Boolean>();
@@ -35,7 +35,7 @@ public class RequestCache {
 	private Map<RequestType, Object> _results = new HashMap<RequestType, Object>();
 
 	@Inject
-	public RequestCache(RestDispatchAsync dispatcher, AppUserService appUserService) {
+	public RequestCache(RestSessionDispatch dispatcher, AppUserService appUserService) {
 		_dispatcher = dispatcher;
 		_appUserService = appUserService;
 	}

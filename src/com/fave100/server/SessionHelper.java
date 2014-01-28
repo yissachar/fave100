@@ -2,7 +2,6 @@ package com.fave100.server;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.fave100.server.domain.Session;
@@ -17,18 +16,13 @@ public class SessionHelper {
 
 	public static Session getSession(HttpServletRequest request) {
 
-		// Get the client cookie that tells us the session id (if any)
-		Cookie authCookie = null;
-		for (Cookie cookie : request.getCookies()) {
-			if (cookie.getName().equals(Constants.SESSION_COOKIE_NAME))
-				authCookie = cookie;
-		}
+		String sessionId = request.getHeader(Constants.SESSION_HEADER);
 
 		Session session = null;
 
 		// Retrieve the session from the datastore
-		if (authCookie != null)
-			session = ofy().load().type(Session.class).id(authCookie.getValue()).get();
+		if (sessionId != null)
+			session = ofy().load().type(Session.class).id(sessionId).get();
 
 		// If there is no existing session, create a new one
 		if (session == null)
@@ -37,5 +31,4 @@ public class SessionHelper {
 		return session;
 
 	}
-
 }

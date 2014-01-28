@@ -18,6 +18,7 @@ import com.fave100.client.pages.song.widgets.playlist.PlaylistPresenter;
 import com.fave100.client.pages.song.widgets.whyline.WhylinePresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -28,7 +29,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -76,7 +76,7 @@ public class SongPresenter extends
 	private FaveItemDto songProxy;
 	private AppUserDto _requestedAppUser;
 	private PlaceManager _placeManager;
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private SongService _songService;
 	private FaveListService _faveListService;
 	private AppUserService _appUserService;
@@ -87,7 +87,7 @@ public class SongPresenter extends
 
 	@Inject
 	public SongPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final CurrentUser currentUser,
-							final PlaceManager placeManager, final RestDispatchAsync dispatcher, final SongService songService, final FaveListService faveListService,
+							final PlaceManager placeManager, final RestSessionDispatch dispatcher, final SongService songService, final FaveListService faveListService,
 							final AppUserService appUserService) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;

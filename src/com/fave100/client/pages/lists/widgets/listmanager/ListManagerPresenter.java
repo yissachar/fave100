@@ -11,6 +11,7 @@ import com.fave100.client.generated.entities.VoidResultDto;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.client.widgets.alert.AlertCallback;
 import com.fave100.client.widgets.alert.AlertPresenter;
 import com.fave100.shared.Constants;
@@ -19,7 +20,6 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -57,7 +57,7 @@ public class ListManagerPresenter extends
 	private String _hashtag;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private FaveListService _faveListService;
 	private boolean _globalList = false;
 	@Inject AddListAutocompletePresenter autocomplete;
@@ -65,7 +65,7 @@ public class ListManagerPresenter extends
 
 	@Inject
 	public ListManagerPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
-								final RestDispatchAsync dispatcher, final FaveListService faveListService) {
+								final RestSessionDispatch dispatcher, final FaveListService faveListService) {
 		super(eventBus, view);
 		view.setUiHandlers(ListManagerPresenter.this);
 		_eventBus = eventBus;

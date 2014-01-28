@@ -9,6 +9,7 @@ import com.fave100.client.generated.entities.LoginResultDto;
 import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.place.NameTokens;
+import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
 import com.google.gwt.user.client.Cookies;
@@ -16,7 +17,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -50,13 +50,13 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private RequestCache _requestCache;
-	private RestDispatchAsync _dispatcher;
+	private RestSessionDispatch _dispatcher;
 	private AppUserService _appUserService;
 	private String redirect;
 
 	@Inject
 	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RequestCache requestCache,
-									final RestDispatchAsync dispatcher, final AppUserService appUserService) {
+									final RestSessionDispatch dispatcher, final AppUserService appUserService) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_placeManager = placeManager;
@@ -133,7 +133,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 				@Override
 				public void onSuccess(LoginResultDto loginResult) {
 					AppUserDto createdUser = loginResult.getAppUser();
-					Cookies.setCookie(Constants.SESSION_COOKIE_NAME, loginResult.getSessionId());
+					Cookies.setCookie(Constants.SESSION_HEADER, loginResult.getSessionId());
 					LoadingIndicator.hide();
 					_eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 					if (createdUser != null) {
