@@ -372,7 +372,7 @@ public class AppUserApi extends ApiBase {
 		session.setAttribute(AppUserDao.AUTH_USER, null);
 		session.setAttribute("requestToken", null);
 		session.setAttribute("twitterUser", null);
-		ofy().save().entity(session).now();
+		ofy().delete().entity(session).now();
 		return new VoidResult();
 	}
 
