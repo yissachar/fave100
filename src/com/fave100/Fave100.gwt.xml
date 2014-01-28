@@ -9,7 +9,6 @@
   	<inherits name="com.gwtplatform.dispatch.rest.DispatchRest"/>
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
 	<inherits name="com.google.web.bindery.requestfactory.RequestFactory"/>
-	<inherits name='com.googlecode.objectify.Objectify'/>
 	<inherits name='com.google.gwt.query.Query'/>
 
 	<!-- Specify the paths for translatable code                    -->
