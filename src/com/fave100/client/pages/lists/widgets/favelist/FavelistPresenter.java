@@ -12,7 +12,6 @@ import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItemDto;
-import com.fave100.client.generated.entities.VoidResultDto;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
@@ -255,7 +254,7 @@ public class FavelistPresenter extends
 		widgets.remove(index);
 		currentUser.getFaveList().remove(index);
 		// Send request for server to remove it
-		_dispatcher.execute(_faveListService.removeFaveItem(hashtag, songId), new AsyncCallback<VoidResultDto>() {
+		_dispatcher.execute(_faveListService.removeFaveItem(hashtag, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -263,7 +262,7 @@ public class FavelistPresenter extends
 			}
 
 			@Override
-			public void onSuccess(VoidResultDto result) {
+			public void onSuccess(Void result) {
 				// Do nothing, since we have already removed the song on the client before sending the server request
 			}
 		});
@@ -271,7 +270,7 @@ public class FavelistPresenter extends
 
 	@Override
 	public void editWhyline(final String songId, final String whyline) {
-		_dispatcher.execute(_faveListService.editWhyline(hashtag, whyline, songId), new AsyncCallback<VoidResultDto>() {
+		_dispatcher.execute(_faveListService.editWhyline(hashtag, whyline, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -279,7 +278,7 @@ public class FavelistPresenter extends
 			}
 
 			@Override
-			public void onSuccess(VoidResultDto result) {
+			public void onSuccess(Void result) {
 				// Set client to match
 				for (int i = 0; i < currentUser.getFaveList().size(); i++) {
 					final FaveItemDto faveItem = currentUser.getFaveList().get(i);
@@ -317,7 +316,7 @@ public class FavelistPresenter extends
 		}
 
 		// Save on server
-		_dispatcher.execute(_faveListService.rerankFaveItem(hashtag, songId, newIndex), new AsyncCallback<VoidResultDto>() {
+		_dispatcher.execute(_faveListService.rerankFaveItem(hashtag, songId, newIndex), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -325,7 +324,7 @@ public class FavelistPresenter extends
 			}
 
 			@Override
-			public void onSuccess(VoidResultDto result) {
+			public void onSuccess(Void result) {
 				// If successfully saved on server, manually set client to match
 				final FaveItemDto toRerank = currentUser.getFaveList().get(currentIndex);
 				currentUser.getFaveList().remove(toRerank);

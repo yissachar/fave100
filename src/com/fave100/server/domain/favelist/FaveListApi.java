@@ -13,7 +13,6 @@ import com.fave100.server.domain.ApiBase;
 import com.fave100.server.domain.SongApi;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.UserListResult;
-import com.fave100.server.domain.VoidResult;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserApi;
@@ -111,7 +110,7 @@ public class FaveListApi extends ApiBase {
 	}
 
 	@ApiMethod(name = "faveList.add", path = FAVELIST_PATH + "/add")
-	public VoidResult addFaveListForCurrentUser(HttpServletRequest request, @Named("hashtag") final String hashtagName) throws BadRequestException, UnauthorizedException, ForbiddenException {
+	public void addFaveListForCurrentUser(HttpServletRequest request, @Named("hashtag") final String hashtagName) throws BadRequestException, UnauthorizedException, ForbiddenException {
 		final String error = Validator.validateHashtag(hashtagName);
 		if (error != null) {
 			throw new BadRequestException(error);
@@ -151,11 +150,11 @@ public class FaveListApi extends ApiBase {
 			}
 		});
 
-		return new VoidResult();
+		return;
 	}
 
 	@ApiMethod(name = "faveList.delete", path = FAVELIST_PATH + "/delete")
-	public VoidResult deleteFaveListForCurrentUser(HttpServletRequest request, @Named("list") final String listName) throws UnauthorizedException {
+	public void deleteFaveListForCurrentUser(HttpServletRequest request, @Named("list") final String listName) throws UnauthorizedException {
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new UnauthorizedException("Not logged in");
@@ -179,11 +178,11 @@ public class FaveListApi extends ApiBase {
 		// Delete associated WhyLines
 		ofy().delete().entities(whylinesToDelete).now();
 
-		return new VoidResult();
+		return;
 	}
 
 	@ApiMethod(name = "faveList.addFaveItem", path = FAVELIST_PATH + "item/add")
-	public VoidResult addFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID)
+	public void addFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID)
 			throws UnauthorizedException, ForbiddenException {
 
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
@@ -199,7 +198,7 @@ public class FaveListApi extends ApiBase {
 		// Get the song from Lucene lookup
 		final FaveItem newFaveItem = _songApi.getSong(songID);
 		if (newFaveItem == null)
-			return new VoidResult();
+			return;
 
 		// Check if it is a unique song for this user
 		boolean unique = true;
@@ -217,18 +216,18 @@ public class FaveListApi extends ApiBase {
 		faveList.getList().add(newFaveItem);
 		ofy().save().entities(faveList).now();
 
-		return new VoidResult();
+		return;
 	}
 
 	@ApiMethod(name = "faveList.removeFaveItem", path = FAVELIST_PATH + "/item/remove")
-	public VoidResult removeFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID) throws NotLoggedInException {
+	public void removeFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID) throws NotLoggedInException {
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
 		final FaveList faveList = _faveListDao.findFaveList(currentUser.getUsername(), hashtag);
 		if (faveList == null)
-			return new VoidResult();
+			return;
 
 		// Find the song to remove
 		FaveItem faveItemToRemove = null;
@@ -240,7 +239,7 @@ public class FaveListApi extends ApiBase {
 		}
 
 		if (faveItemToRemove == null)
-			return new VoidResult();
+			return;
 
 		// We must also delete the whyline if it exists
 		final Ref<Whyline> currentWhyline = faveItemToRemove.getWhylineRef();
@@ -250,11 +249,11 @@ public class FaveListApi extends ApiBase {
 		faveList.getList().remove(faveItemToRemove);
 		ofy().save().entities(faveList).now();
 
-		return new VoidResult();
+		return;
 	}
 
 	@ApiMethod(name = "faveList.rerankFaveItem", path = FAVELIST_PATH + "/item/rerank")
-	public VoidResult rerankFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID,
+	public void rerankFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID,
 			@Named("newIndex") final int newIndex) throws UnauthorizedException, BadRequestException {
 
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
@@ -263,7 +262,7 @@ public class FaveListApi extends ApiBase {
 
 		final FaveList faveList = _faveListDao.findFaveList(currentUser.getUsername(), hashtag);
 		if (faveList == null)
-			return new VoidResult();
+			return;
 
 		// Make sure new index is valid
 		if (newIndex < 0 || newIndex >= faveList.getList().size())
@@ -279,17 +278,17 @@ public class FaveListApi extends ApiBase {
 		}
 
 		if (faveItemToRerank == null)
-			return new VoidResult();
+			return;
 
 		faveList.getList().remove(faveItemToRerank);
 		faveList.getList().add(newIndex, faveItemToRerank);
 		ofy().save().entities(faveList).now();
 
-		return new VoidResult();
+		return;
 	}
 
 	@ApiMethod(name = "faveList.editWhyline", path = FAVELIST_PATH + "/item/whyline")
-	public VoidResult editWhylineForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID, @Named("whyline") final String whyline)
+	public void editWhylineForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID, @Named("whyline") final String whyline)
 			throws BadRequestException, UnauthorizedException {
 		Objects.requireNonNull(hashtag);
 		Objects.requireNonNull(songID);
@@ -338,6 +337,6 @@ public class FaveListApi extends ApiBase {
 
 		ofy().save().entity(faveList).now();
 
-		return new VoidResult();
+		return;
 	}
 }

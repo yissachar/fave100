@@ -14,7 +14,6 @@ import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FaveItemDto;
 import com.fave100.client.generated.entities.FollowingResultDto;
-import com.fave100.client.generated.entities.VoidResultDto;
 import com.fave100.client.generated.services.AppUserService;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pages.lists.ListPresenter;
@@ -122,7 +121,7 @@ public class CurrentUser extends AppUserDto {
 	}
 
 	public void logout() {
-		_dispatcher.execute(_appUserService.logout(), new AsyncCallback<VoidResultDto>() {
+		_dispatcher.execute(_appUserService.logout(), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -130,7 +129,7 @@ public class CurrentUser extends AppUserDto {
 			}
 
 			@Override
-			public void onSuccess(VoidResultDto result) {
+			public void onSuccess(Void result) {
 				_eventBus.fireEvent(new CurrentUserChangedEvent(null));
 				Notification.show("Logged out successfully");
 				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.lists).build());
@@ -154,7 +153,7 @@ public class CurrentUser extends AppUserDto {
 			getFollowing().add(user);
 
 		// Add to server
-		_dispatcher.execute(_appUserService.followUser(user.getUsername()), new AsyncCallback<VoidResultDto>() {
+		_dispatcher.execute(_appUserService.followUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -165,7 +164,7 @@ public class CurrentUser extends AppUserDto {
 			}
 
 			@Override
-			public void onSuccess(VoidResultDto result) {
+			public void onSuccess(Void result) {
 				_eventBus.fireEvent(new UserFollowedEvent(user));
 			}
 		});
@@ -176,7 +175,7 @@ public class CurrentUser extends AppUserDto {
 		getFollowing().remove(user);
 
 		// Remove from server
-		_dispatcher.execute(_appUserService.unfollowUser(user.getUsername()), new AsyncCallback<VoidResultDto>() {
+		_dispatcher.execute(_appUserService.unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -184,7 +183,7 @@ public class CurrentUser extends AppUserDto {
 			}
 
 			@Override
-			public void onSuccess(VoidResultDto result) {
+			public void onSuccess(Void result) {
 				_eventBus.fireEvent(new UserUnfollowedEvent(user));
 			}
 		});
@@ -201,7 +200,7 @@ public class CurrentUser extends AppUserDto {
 
 	public void addSong(final String songId, final String hashtag, final String song, final String artist) {
 
-		_dispatcher.execute(_faveListService.addFaveItem(hashtag, songId), new AsyncCallback<VoidResultDto>() {
+		_dispatcher.execute(_faveListService.addFaveItem(hashtag, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -210,7 +209,7 @@ public class CurrentUser extends AppUserDto {
 			}
 
 			@Override
-			public void onSuccess(VoidResultDto result) {
+			public void onSuccess(Void result) {
 				Notification.show("Song added");
 				final FaveItemDto item = new FaveItemDto();
 				item.setSong(song);
@@ -233,7 +232,7 @@ public class CurrentUser extends AppUserDto {
 
 		final String listName = name;
 
-		_dispatcher.execute(_faveListService.add(listName), new AsyncCallback<VoidResultDto>() {
+		_dispatcher.execute(_faveListService.add(listName), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -241,7 +240,7 @@ public class CurrentUser extends AppUserDto {
 			}
 
 			@Override
-			public void onSuccess(VoidResultDto result) {
+			public void onSuccess(Void result) {
 				getHashtags().add(listName);
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
