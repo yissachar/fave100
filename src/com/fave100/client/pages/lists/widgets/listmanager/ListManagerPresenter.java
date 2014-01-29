@@ -8,7 +8,6 @@ import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.entities.StringResultDto;
-import com.fave100.client.generated.entities.VoidResultDto;
 import com.fave100.client.generated.services.FaveListService;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
@@ -116,7 +115,7 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		_dispatcher.execute(_faveListService.add(name), new AsyncCallback<VoidResultDto>() {
+		_dispatcher.execute(_faveListService.add(name), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -124,7 +123,7 @@ public class ListManagerPresenter extends
 			}
 
 			@Override
-			public void onSuccess(VoidResultDto result) {
+			public void onSuccess(Void result) {
 				_currentUser.addHashtag(name);
 				refreshUsersLists();
 				getView().hideError();
@@ -201,7 +200,7 @@ public class ListManagerPresenter extends
 
 			@Override
 			public void onOk() {
-				_dispatcher.execute(_faveListService.delete(listName), new AsyncCallback<VoidResultDto>() {
+				_dispatcher.execute(_faveListService.delete(listName), new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -210,7 +209,7 @@ public class ListManagerPresenter extends
 					}
 
 					@Override
-					public void onSuccess(VoidResultDto result) {
+					public void onSuccess(Void result) {
 						// TODO Auto-generated method stub
 
 					}

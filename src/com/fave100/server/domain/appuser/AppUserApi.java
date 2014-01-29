@@ -30,7 +30,6 @@ import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.LoginResult;
 import com.fave100.server.domain.Session;
 import com.fave100.server.domain.StringResult;
-import com.fave100.server.domain.VoidResult;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
@@ -371,13 +370,13 @@ public class AppUserApi extends ApiBase {
 	}
 
 	@ApiMethod(name = "appUser.logout", path = "logout")
-	public VoidResult logout(HttpServletRequest request) {
+	public void logout(HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 		session.setAttribute(AppUserDao.AUTH_USER, null);
 		session.setAttribute("requestToken", null);
 		session.setAttribute("twitterUser", null);
 		ofy().delete().entity(session).now();
-		return new VoidResult();
+		return;
 	}
 
 	@ApiMethod(name = "appUser.getLoggedInAppUser", path = "loggedInAppUser")
@@ -565,7 +564,7 @@ public class AppUserApi extends ApiBase {
 	}
 
 	@ApiMethod(name = "appUser.followUser", path = "user/followUser")
-	public VoidResult followUser(HttpServletRequest request, @Named("username") final String username) throws UnauthorizedException, ForbiddenException {
+	public void followUser(HttpServletRequest request, @Named("username") final String username) throws UnauthorizedException, ForbiddenException {
 		final AppUser currentUser = getLoggedInAppUser(request);
 
 		if (currentUser == null)
@@ -589,23 +588,23 @@ public class AppUserApi extends ApiBase {
 		following.getFollowing().add(userRef);
 		ofy().save().entity(following).now();
 
-		return new VoidResult();
+		return;
 	}
 
 	@ApiMethod(name = "appUser.unfollowUser", path = "user/unfollow")
-	public VoidResult unfollowUser(HttpServletRequest request, @Named("username") final String username) throws UnauthorizedException {
+	public void unfollowUser(HttpServletRequest request, @Named("username") final String username) throws UnauthorizedException {
 		final AppUser currentUser = getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new UnauthorizedException("Not logged in");
 
 		final Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
 		if (following == null)
-			return new VoidResult();
+			return;
 
 		following.getFollowing().remove(Ref.create(Key.create(AppUser.class, username.toLowerCase())));
 		ofy().save().entity(following).now();
 
-		return new VoidResult();
+		return;
 	}
 
 	// Emails user a password reset token if they forget their password
