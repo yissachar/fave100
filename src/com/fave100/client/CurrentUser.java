@@ -14,8 +14,7 @@ import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FaveItemDto;
 import com.fave100.client.generated.entities.FollowingResultDto;
-import com.fave100.client.generated.services.AppUserService;
-import com.fave100.client.generated.services.FaveListService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.rest.RestSessionDispatch;
@@ -31,8 +30,7 @@ public class CurrentUser extends AppUserDto {
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private RestSessionDispatch _dispatcher;
-	private AppUserService _appUserService;
-	private FaveListService _faveListService;
+	private RestServiceFactory _restServiceFactory;
 	private AppUserDto appUser;
 	private String avatar = "";
 	private Map<String, List<FaveItemDto>> faveLists = new HashMap<String, List<FaveItemDto>>();
@@ -43,12 +41,11 @@ public class CurrentUser extends AppUserDto {
 
 	@Inject
 	public CurrentUser(final EventBus eventBus, final PlaceManager placeManager, final RequestCache requestCache,
-						final RestSessionDispatch dispatcher, final AppUserService appUserService, final FaveListService faveListService) {
+						final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
-		_appUserService = appUserService;
-		_faveListService = faveListService;
+		_restServiceFactory = restServiceFactory;
 
 		CurrentUserChangedEvent.register(eventBus,
 				new CurrentUserChangedEvent.Handler() {
@@ -121,7 +118,7 @@ public class CurrentUser extends AppUserDto {
 	}
 
 	public void logout() {
-		_dispatcher.execute(_appUserService.logout(), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().logout(), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -153,7 +150,7 @@ public class CurrentUser extends AppUserDto {
 			getFollowing().add(user);
 
 		// Add to server
-		_dispatcher.execute(_appUserService.followUser(user.getUsername()), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().followUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -175,7 +172,7 @@ public class CurrentUser extends AppUserDto {
 		getFollowing().remove(user);
 
 		// Remove from server
-		_dispatcher.execute(_appUserService.unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -200,7 +197,7 @@ public class CurrentUser extends AppUserDto {
 
 	public void addSong(final String songId, final String hashtag, final String song, final String artist) {
 
-		_dispatcher.execute(_faveListService.addFaveItem(hashtag, songId), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.getFaveListService().addFaveItem(hashtag, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -232,7 +229,7 @@ public class CurrentUser extends AppUserDto {
 
 		final String listName = name;
 
-		_dispatcher.execute(_faveListService.add(listName), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.getFaveListService().add(listName), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

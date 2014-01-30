@@ -7,7 +7,7 @@ import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.LoginResultDto;
 import com.fave100.client.generated.entities.StringResultDto;
-import com.fave100.client.generated.services.AppUserService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Constants;
@@ -51,18 +51,18 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	private PlaceManager _placeManager;
 	private RequestCache _requestCache;
 	private RestSessionDispatch _dispatcher;
-	private AppUserService _appUserService;
+	private RestServiceFactory _serviceFactory;
 	private String redirect;
 
 	@Inject
 	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RequestCache requestCache,
-									final RestSessionDispatch dispatcher, final AppUserService appUserService) {
+									final RestSessionDispatch dispatcher, final RestServiceFactory serviceFactory) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_requestCache = requestCache;
 		_dispatcher = dispatcher;
-		_appUserService = appUserService;
+		_serviceFactory = serviceFactory;
 		getView().setUiHandlers(this);
 	}
 
@@ -122,7 +122,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 
 			// Create a new user with the username and password entered
 			LoadingIndicator.show();
-			_dispatcher.execute(_appUserService.createAppUser(username, email, password), new AsyncCallback<LoginResultDto>() {
+			_dispatcher.execute(_serviceFactory.getAppUserService().createAppUser(username, email, password), new AsyncCallback<LoginResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -154,7 +154,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 
 	@Override
 	public void goToTwitterAuth() {
-		_dispatcher.execute(_appUserService.getTwitterAuthUrl(redirect), new AsyncCallback<StringResultDto>() {
+		_dispatcher.execute(_serviceFactory.getAppUserService().getTwitterAuthUrl(redirect), new AsyncCallback<StringResultDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

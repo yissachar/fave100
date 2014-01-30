@@ -8,7 +8,7 @@ import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.entities.StringResultDto;
-import com.fave100.client.generated.services.FaveListService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.rest.RestSessionDispatch;
@@ -58,21 +58,21 @@ public class ListManagerPresenter extends
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
 	private RestSessionDispatch _dispatcher;
-	private FaveListService _faveListService;
+	private RestServiceFactory _restServiceFactory;
 	private boolean _globalList = false;
 	@Inject AddListAutocompletePresenter autocomplete;
 	@Inject AlertPresenter alertPresenter;
 
 	@Inject
 	public ListManagerPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
-								final RestSessionDispatch dispatcher, final FaveListService faveListService) {
+								final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		view.setUiHandlers(ListManagerPresenter.this);
 		_eventBus = eventBus;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
-		_faveListService = faveListService;
+		_restServiceFactory = restServiceFactory;
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		_dispatcher.execute(_faveListService.add(name), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.getFaveListService().add(name), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -175,7 +175,7 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		_dispatcher.execute(_faveListService.getHashtagAutocomplete(searchTerm), new AsyncCallback<StringResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.getFaveListService().getHashtagAutocomplete(searchTerm), new AsyncCallback<StringResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -200,7 +200,7 @@ public class ListManagerPresenter extends
 
 			@Override
 			public void onOk() {
-				_dispatcher.execute(_faveListService.delete(listName), new AsyncCallback<Void>() {
+				_dispatcher.execute(_restServiceFactory.getFaveListService().delete(listName), new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

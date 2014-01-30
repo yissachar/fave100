@@ -7,7 +7,7 @@ import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.LoginResultDto;
 import com.fave100.client.generated.entities.StringResultDto;
-import com.fave100.client.generated.services.AppUserService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.rest.RestSessionDispatch;
@@ -58,18 +58,18 @@ public class LoginWidgetPresenter extends
 	private PlaceManager _placeManager;
 	private RequestCache _requestCache;
 	private RestSessionDispatch _dispatcher;
-	private AppUserService _appUserService;
+	private RestServiceFactory _restServiceFactory;
 	private String redirect;
 
 	@Inject
 	public LoginWidgetPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RequestCache requestCache,
-								final RestSessionDispatch dispatcher, final AppUserService appUserService) {
+								final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_requestCache = requestCache;
 		_dispatcher = dispatcher;
-		_appUserService = appUserService;
+		_restServiceFactory = restServiceFactory;
 		getView().setUiHandlers(this);
 	}
 
@@ -145,7 +145,7 @@ public class LoginWidgetPresenter extends
 		}
 
 		LoadingIndicator.show();
-		_dispatcher.execute(_appUserService.login(getView().getUsername().trim(), getView().getPassword()), new AsyncCallback<LoginResultDto>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().login(getView().getUsername().trim(), getView().getPassword()), new AsyncCallback<LoginResultDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -175,7 +175,7 @@ public class LoginWidgetPresenter extends
 	@Override
 	public void goToTwitterAuth() {
 		// Authenticate the user with Twitter
-		_dispatcher.execute(_appUserService.getTwitterAuthUrl(redirect), new AsyncCallback<StringResultDto>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().getTwitterAuthUrl(redirect), new AsyncCallback<StringResultDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

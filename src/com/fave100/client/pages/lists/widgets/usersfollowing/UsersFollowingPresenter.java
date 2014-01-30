@@ -9,7 +9,7 @@ import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FollowingResultDto;
-import com.fave100.client.generated.services.AppUserService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
@@ -52,18 +52,18 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 	RequestCache _requestCache;
 	AppUserDto _user;
 	private RestSessionDispatch _dispatcher;
-	private AppUserService _appUserService;
+	private RestServiceFactory _restServiceFactory;
 	int listSize = 0;
 
 	@Inject
 	public UsersFollowingPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final RequestCache requestCache,
-									final RestSessionDispatch dispatcher, final AppUserService appUserService) {
+									final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_currentUser = currentUser;
 		_requestCache = requestCache;
 		_dispatcher = dispatcher;
-		_appUserService = appUserService;
+		_restServiceFactory = restServiceFactory;
 		getView().setUiHandlers(this);
 	}
 
@@ -129,7 +129,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 			}
 		}
 		else {
-			_dispatcher.execute(_appUserService.getFollowing(_user.getUsername(), 0), new AsyncCallback<FollowingResultDto>() {
+			_dispatcher.execute(_restServiceFactory.getAppUserService().getFollowing(_user.getUsername(), 0), new AsyncCallback<FollowingResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -200,7 +200,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 
 	@Override
 	public void getMoreFollowing() {
-		_dispatcher.execute(_appUserService.getFollowing(_user.getUsername(), listSize), new AsyncCallback<FollowingResultDto>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().getFollowing(_user.getUsername(), listSize), new AsyncCallback<FollowingResultDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

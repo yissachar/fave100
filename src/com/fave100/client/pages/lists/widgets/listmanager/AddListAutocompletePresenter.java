@@ -3,7 +3,7 @@ package com.fave100.client.pages.lists.widgets.listmanager;
 import java.util.List;
 
 import com.fave100.client.events.favelist.ListAddedEvent;
-import com.fave100.client.generated.services.FaveListService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.widgets.autocomplete.list.ListAutocompletePresenter;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.google.inject.Inject;
@@ -14,8 +14,8 @@ public class AddListAutocompletePresenter extends ListAutocompletePresenter {
 	public static final String NEW_LIST_PROMPT = "Create new list: ";
 
 	@Inject
-	AddListAutocompletePresenter(final EventBus eventBus, final MyView view, final RestSessionDispatch dispatcher, final FaveListService faveListService) {
-		super(eventBus, view, dispatcher, faveListService);
+	AddListAutocompletePresenter(final EventBus eventBus, final MyView view, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+		super(eventBus, view, dispatcher, restServiceFactory);
 	}
 
 	@Override
