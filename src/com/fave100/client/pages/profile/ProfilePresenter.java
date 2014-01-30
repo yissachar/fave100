@@ -6,7 +6,7 @@ import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.generated.entities.BooleanResultDto;
 import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.entities.UserInfoDto;
-import com.fave100.client.generated.services.AppUserService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
@@ -63,18 +63,18 @@ public class ProfilePresenter extends
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
 	private RestSessionDispatch _dispatcher;
-	private AppUserService _appUserService;
+	private RestServiceFactory _restServiceFactory;
 	private UserInfoDto oldUserInfo = null;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final CurrentUser currentUser,
-							final PlaceManager placeManager, final RestSessionDispatch dispatcher, final AppUserService appUserService) {
+							final PlaceManager placeManager, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
-		_appUserService = appUserService;
+		_restServiceFactory = restServiceFactory;
 		getView().setUiHandlers(this);
 	}
 
@@ -102,7 +102,7 @@ public class ProfilePresenter extends
 	}
 
 	private void setEmail() {
-		_dispatcher.execute(_appUserService.getCurrentUserSettings(), new AsyncCallback<UserInfoDto>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().getCurrentUserSettings(), new AsyncCallback<UserInfoDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -125,7 +125,7 @@ public class ProfilePresenter extends
 	private void setUploadAction() {
 		// Create the blobstore URL that the avatar will be uploaded to
 		// Need to recreate each time because session expires after successful upload
-		_dispatcher.execute(_appUserService.createBlobstoreUrl("/avatarUpload"), new AsyncCallback<StringResultDto>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().createBlobstoreUrl("/avatarUpload"), new AsyncCallback<StringResultDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -162,7 +162,7 @@ public class ProfilePresenter extends
 		if (emailError == null) {
 
 			LoadingIndicator.show();
-			_dispatcher.execute(_appUserService.setUserInfo(userInfo), new AsyncCallback<BooleanResultDto>() {
+			_dispatcher.execute(_restServiceFactory.getAppUserService().setUserInfo(userInfo), new AsyncCallback<BooleanResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

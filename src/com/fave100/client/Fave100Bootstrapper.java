@@ -2,7 +2,7 @@ package com.fave100.client;
 
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
-import com.fave100.client.generated.services.AppUserService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.resources.css.AppClientBundle;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Utils;
@@ -17,20 +17,20 @@ public class Fave100Bootstrapper implements Bootstrapper {
 	private PlaceManager _placeManager;
 	private EventBus _eventBus;
 	private RestSessionDispatch _dispatcher;
-	private AppUserService _appUserService;
+	private RestServiceFactory _restServiceFactory;
 
 	@Inject
-	public Fave100Bootstrapper(final PlaceManager placeManager, final EventBus eventBus, final RestSessionDispatch dispatcher, final AppUserService appUserService) {
+	public Fave100Bootstrapper(final PlaceManager placeManager, final EventBus eventBus, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		_placeManager = placeManager;
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;
-		_appUserService = appUserService;
+		_restServiceFactory = restServiceFactory;
 	}
 
 	@Override
 	public void onBootstrap() {
 		// On first page load or page refresh, check for an existing logged in user
-		_dispatcher.execute(_appUserService.getLoggedInAppUser(), new AsyncCallback<AppUserDto>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().getLoggedInAppUser(), new AsyncCallback<AppUserDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

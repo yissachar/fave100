@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.entities.StringResultDto;
-import com.fave100.client.generated.services.FaveListService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -30,7 +30,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 
 	protected EventBus _eventBus;
 	protected RestSessionDispatch _dispatcher;
-	protected FaveListService _faveListService;
+	protected RestServiceFactory _restServiceFactory;
 	protected List<String> _suggestions;
 	protected String _lastSearch;
 	private final List<AsyncCallback<StringResultCollection>> _requests;
@@ -38,12 +38,11 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 	private int _maxSelection = -1;
 
 	@Inject
-	public ListAutocompletePresenter(final EventBus eventBus, final MyView view, final RestSessionDispatch dispatcher,
-										final FaveListService faveListService) {
+	public ListAutocompletePresenter(final EventBus eventBus, final MyView view, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;
-		_faveListService = faveListService;
+		_restServiceFactory = restServiceFactory;
 		_requests = new LinkedList<AsyncCallback<StringResultCollection>>();
 		getAutocompleteResults("");
 		getView().setUiHandlers(this);
@@ -89,7 +88,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			}
 		};
 
-		_dispatcher.execute(_faveListService.getHashtagAutocomplete(searchTerm), listAutocompleteReq);
+		_dispatcher.execute(_restServiceFactory.getFaveListService().getHashtagAutocomplete(searchTerm), listAutocompleteReq);
 		_requests.add(listAutocompleteReq);
 	}
 

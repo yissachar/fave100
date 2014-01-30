@@ -8,9 +8,7 @@ import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItemDto;
 import com.fave100.client.generated.entities.YouTubeSearchResultCollection;
-import com.fave100.client.generated.services.AppUserService;
-import com.fave100.client.generated.services.FaveListService;
-import com.fave100.client.generated.services.SongService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
@@ -77,9 +75,7 @@ public class SongPresenter extends
 	private AppUserDto _requestedAppUser;
 	private PlaceManager _placeManager;
 	private RestSessionDispatch _dispatcher;
-	private SongService _songService;
-	private FaveListService _faveListService;
-	private AppUserService _appUserService;
+	private RestServiceFactory _restServiceFactory;
 	@Inject YouTubePresenter youtubePresenter;
 	@Inject WhylinePresenter whylinePresenter;
 	@Inject PlaylistPresenter playlistPresenter;
@@ -87,16 +83,13 @@ public class SongPresenter extends
 
 	@Inject
 	public SongPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final CurrentUser currentUser,
-							final PlaceManager placeManager, final RestSessionDispatch dispatcher, final SongService songService, final FaveListService faveListService,
-							final AppUserService appUserService) {
+							final PlaceManager placeManager, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
-		_songService = songService;
-		_faveListService = faveListService;
-		_appUserService = appUserService;
+		_restServiceFactory = restServiceFactory;
 		getView().setUiHandlers(this);
 	}
 
@@ -130,7 +123,7 @@ public class SongPresenter extends
 
 		if (!id.isEmpty()) {
 			// Load the song from the datastore
-			_dispatcher.execute(_songService.getSong(id), new AsyncCallback<FaveItemDto>() {
+			_dispatcher.execute(_restServiceFactory.getSongService().getSong(id), new AsyncCallback<FaveItemDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -160,7 +153,7 @@ public class SongPresenter extends
 			}
 			else {
 				// Get username and avatar from the datastore
-				_dispatcher.execute(_appUserService.getAppUser(username), new AsyncCallback<AppUserDto>() {
+				_dispatcher.execute(_restServiceFactory.getAppUserService().getAppUser(username), new AsyncCallback<AppUserDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -178,7 +171,7 @@ public class SongPresenter extends
 			}
 
 			// Get the list for the requested user
-			_dispatcher.execute(_faveListService.getFaveList(username, hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.getFaveListService().getFaveList(username, hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -195,7 +188,7 @@ public class SongPresenter extends
 		}
 		else {
 			// Get the master list for the hashtag
-			_dispatcher.execute(_faveListService.getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.getFaveListService().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -236,7 +229,7 @@ public class SongPresenter extends
 			public void onPlaylistSongChanged(final PlaylistSongChangedEvent event) {
 
 				// Load the song from the datastore
-				_dispatcher.execute(_songService.getSong(event.songID()), new AsyncCallback<FaveItemDto>() {
+				_dispatcher.execute(_restServiceFactory.getSongService().getSong(event.songID()), new AsyncCallback<FaveItemDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -303,7 +296,7 @@ public class SongPresenter extends
 		getView().setSongInfo(songProxy);
 
 		// Get any YouTube videos
-		_dispatcher.execute(_songService.getYouTubeSearchResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.getSongService().getYouTubeSearchResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

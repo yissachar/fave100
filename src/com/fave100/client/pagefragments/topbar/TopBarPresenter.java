@@ -3,7 +3,7 @@ package com.fave100.client.pagefragments.topbar;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.BooleanResultDto;
-import com.fave100.client.generated.services.AppUserService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
@@ -51,17 +51,17 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	private CurrentUser currentUser;
 	private PlaceManager placeManager;
 	private RestSessionDispatch _dispatcher;
-	private AppUserService _appUserService;
+	private RestServiceFactory _restServiceFactory;
 
 	@Inject
 	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser,
-							final RestSessionDispatch dispatcher, final AppUserService appUserService) {
+							final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.currentUser = currentUser;
 		this.placeManager = placeManager;
 		_dispatcher = dispatcher;
-		_appUserService = appUserService;
+		_restServiceFactory = restServiceFactory;
 		getView().setUiHandlers(this);
 
 		Window.addWindowScrollHandler(new ScrollHandler() {
@@ -101,7 +101,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 				if (!currentUser.isLoggedIn())
 					return;
 
-				_dispatcher.execute(_appUserService.isAppUserLoggedIn(), new AsyncCallback<BooleanResultDto>() {
+				_dispatcher.execute(_restServiceFactory.getAppUserService().isAppUserLoggedIn(), new AsyncCallback<BooleanResultDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

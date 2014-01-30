@@ -10,7 +10,7 @@ import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
 import com.fave100.client.generated.entities.BooleanResultDto;
-import com.fave100.client.generated.services.AppUserService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompletePresenter;
@@ -81,7 +81,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
 	private RestSessionDispatch _dispatcher;
-	private AppUserService _appUserService;
+	private RestServiceFactory _restServiceFactory;
 	private boolean _ownPage = false;
 	@Inject SongAutocompletePresenter songAutocomplete;
 	@Inject FavelistPresenter favelist;
@@ -91,13 +91,13 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 
 	@Inject
 	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser,
-							final RestSessionDispatch dispatcher, final AppUserService appUserService) {
+							final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_currentUser = currentUser;
 		_dispatcher = dispatcher;
-		_appUserService = appUserService;
+		_restServiceFactory = restServiceFactory;
 		getView().setUiHandlers(this);
 
 		Window.addWindowScrollHandler(new ScrollHandler() {
@@ -237,7 +237,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 			}
 
 			// Otherwise, request the info from the server
-			_dispatcher.execute(_appUserService.getAppUser(requestedUsername), new AsyncCallback<AppUserDto>() {
+			_dispatcher.execute(_restServiceFactory.getAppUserService().getAppUser(requestedUsername), new AsyncCallback<AppUserDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -259,7 +259,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 				}
 			});
 
-			_dispatcher.execute(_appUserService.isFollowing(requestedUsername), new AsyncCallback<BooleanResultDto>() {
+			_dispatcher.execute(_restServiceFactory.getAppUserService().isFollowing(requestedUsername), new AsyncCallback<BooleanResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

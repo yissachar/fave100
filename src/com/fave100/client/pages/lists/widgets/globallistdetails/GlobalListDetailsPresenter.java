@@ -6,7 +6,7 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.entities.StringResultDto;
-import com.fave100.client.generated.services.FaveListService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.rest.RestSessionDispatch;
@@ -47,26 +47,26 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
 	private RestSessionDispatch _dispatcher;
-	private FaveListService _faveListService;
+	private RestServiceFactory _restServiceFactory;
 	private String _hashtag;
 	@Inject GlobalListAutocompletePresenter listAutocomplete;
 	@Inject AboutPopupPresenter aboutPresenter;
 
 	@Inject
 	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
-										final RestSessionDispatch dispatcher, final FaveListService faveListService) {
+										final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		_currentUser = currentUser;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
-		_faveListService = faveListService;
+		_restServiceFactory = restServiceFactory;
 		getView().setUiHandlers(this);
 	}
 
 	public void setHashtag(final String hashtag) {
 		_hashtag = hashtag;
 		getView().setInfo(hashtag);
-		_dispatcher.execute(_faveListService.getTrendingFaveLists(), new AsyncCallback<StringResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.getFaveListService().getTrendingFaveLists(), new AsyncCallback<StringResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

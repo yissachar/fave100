@@ -2,7 +2,7 @@ package com.fave100.client.pages.passwordreset;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.BooleanResultDto;
-import com.fave100.client.generated.services.AppUserService;
+import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
@@ -49,7 +49,7 @@ public class PasswordResetPresenter
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
 	private RestSessionDispatch _dispatcher;
-	private AppUserService _appUserService;
+	private RestServiceFactory _restServiceFactory;
 	private EventBus _eventBus;
 	private String token;
 
@@ -60,13 +60,13 @@ public class PasswordResetPresenter
 
 	@Inject
 	public PasswordResetPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager,
-									final CurrentUser currentUser, final RestSessionDispatch dispatcher, final AppUserService appUserService) {
+									final CurrentUser currentUser, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view, proxy);
 		_placeManager = placeManager;
 		_currentUser = currentUser;
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;
-		_appUserService = appUserService;
+		_restServiceFactory = restServiceFactory;
 		getView().setUiHandlers(this);
 	}
 
@@ -112,7 +112,7 @@ public class PasswordResetPresenter
 
 	@Override
 	public void sendEmail(final String username, final String emailAddress) {
-		_dispatcher.execute(_appUserService.emailPasswordResetToken(username, emailAddress), new AsyncCallback<BooleanResultDto>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().emailPasswordResetToken(username, emailAddress), new AsyncCallback<BooleanResultDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -155,7 +155,7 @@ public class PasswordResetPresenter
 			passwordOrToken = currPassword;
 		}
 
-		_dispatcher.execute(_appUserService.changePassword(newPassword, passwordOrToken), new AsyncCallback<BooleanResultDto>() {
+		_dispatcher.execute(_restServiceFactory.getAppUserService().changePassword(newPassword, passwordOrToken), new AsyncCallback<BooleanResultDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
