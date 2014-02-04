@@ -58,7 +58,7 @@ public class ClientModule extends AbstractPresenterModule {
 		install(new DefaultModule(ClientPlaceManager.class));
 		install(new TolerantRestDispatchAsyncModule.Builder().build());
 
-		bindConstant().annotatedWith(RestApplicationPath.class).to("/_ah/api");
+		bindConstant().annotatedWith(RestApplicationPath.class).to("/rest");
 
 		// Google Analytics
 		bindConstant().annotatedWith(GaAccount.class).to("UA-39911495-1");
