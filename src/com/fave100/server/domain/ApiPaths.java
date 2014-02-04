@@ -17,7 +17,29 @@ public class ApiPaths {
 
 	// AppUser paths
 	public static final String APPUSER_ROOT = "appuser";
+	public static final String GET_APPUSER = "/getAppUser";
+	public static final String CREATE_APPUSER = "/createAppUser";
+	public static final String CREATE_APPUSER_FROM_GOOGLE_ACCOUNT = "/createAppUserFromGoogleAccount";
+	public static final String CREATE_APPUSER_FROM_TWITTER_ACCOUNT = "/createAppUserFromTwitterAccount";
+	public static final String CREATE_APPUSER_FROM_FACEBOOK_ACCOUNT = "/createAppUserFromFacebookAccount";
 	public static final String LOGIN = "/login";
+	public static final String LOGIN_WITH_GOOGLE = "/loginWithGoogle";
+	public static final String LOGIN_WITH_TWITTER = "/loginWithTwitter";
+	public static final String LOGIN_WITH_FACEBOOK = "/loginWithFacebook";
+	public static final String LOGOUT = "/logout";
 	public static final String LOGGED_IN_APPUSER = "/loggedInAppUser";
+	public static final String GET_FOLLOWING = "/following";
+	public static final String IS_FOLLOWING = "/isFollowing";
+	public static final String IS_GOOGLE_LOGGED_IN = "/google/loggedin";
+	public static final String GET_GOOGLE_LOGIN_URL = "/google/loginUrl";
+	public static final String GET_FACEBOOK_AUTH_URL = "/facebook/authUrl";
+	public static final String GET_TWITTER_AUTH_URL = "/twitter/authUrl";
+	public static final String IS_APPUSER_LOGGED_IN = "/isLoggedIn";
+	public static final String CREATE_BLOBSTORE_URL = "/createBlobstoreUrl";;
+	public static final String USER_SETTINGS = "/settings";
+	public static final String FOLLOW = "/follow";
+	public static final String UNFOLLOW = "/unfollow";
+	public static final String EMAIL_PASSWORD_RESET = "/password/reset";
+	public static final String CHANGE_PASSWORD = "/password/change";
 
 }

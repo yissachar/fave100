@@ -5,9 +5,8 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.song.PlaylistSongChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
-import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItemDto;
-import com.fave100.client.generated.entities.YouTubeSearchResultCollection;
+import com.fave100.client.generated.entities.YouTubeSearchResultDto;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.BasePresenter;
@@ -171,7 +170,7 @@ public class SongPresenter extends
 			}
 
 			// Get the list for the requested user
-			_dispatcher.execute(_restServiceFactory.getFaveListService().getFaveList(username, hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.getFaveListService().getFaveList(username, hashtag), new AsyncCallback<List<FaveItemDto>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -179,8 +178,8 @@ public class SongPresenter extends
 				}
 
 				@Override
-				public void onSuccess(FaveItemCollection faveList) {
-					loadedFavelist(id, faveList.getItems());
+				public void onSuccess(List<FaveItemDto> faveList) {
+					loadedFavelist(id, faveList);
 				}
 
 			});
@@ -296,7 +295,7 @@ public class SongPresenter extends
 		getView().setSongInfo(songProxy);
 
 		// Get any YouTube videos
-		_dispatcher.execute(_restServiceFactory.getSongService().getYouTubeSearchResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.getSongService().getYouTubeSearchResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<List<YouTubeSearchResultDto>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -305,8 +304,8 @@ public class SongPresenter extends
 			}
 
 			@Override
-			public void onSuccess(YouTubeSearchResultCollection result) {
-				youtubePresenter.setYouTubeVideos(result.getItems());
+			public void onSuccess(List<YouTubeSearchResultDto> result) {
+				youtubePresenter.setYouTubeVideos(result);
 				resizePlaylist();
 				getView().scrollYouTubeIntoView();
 			}

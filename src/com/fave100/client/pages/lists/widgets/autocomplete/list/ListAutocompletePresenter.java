@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.rest.RestSessionDispatch;
@@ -33,7 +32,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 	protected RestServiceFactory _restServiceFactory;
 	protected List<String> _suggestions;
 	protected String _lastSearch;
-	private final List<AsyncCallback<StringResultCollection>> _requests;
+	private final List<AsyncCallback<List<StringResultDto>>> _requests;
 	private int _selection = 0;
 	private int _maxSelection = -1;
 
@@ -43,7 +42,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
-		_requests = new LinkedList<AsyncCallback<StringResultCollection>>();
+		_requests = new LinkedList<AsyncCallback<List<StringResultDto>>>();
 		getAutocompleteResults("");
 		getView().setUiHandlers(this);
 	}
@@ -64,7 +63,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			return;
 		}
 
-		final AsyncCallback<StringResultCollection> listAutocompleteReq = new AsyncCallback<StringResultCollection>() {
+		final AsyncCallback<List<StringResultDto>> listAutocompleteReq = new AsyncCallback<List<StringResultDto>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -72,7 +71,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			}
 
 			@Override
-			public void onSuccess(StringResultCollection result) {
+			public void onSuccess(List<StringResultDto> results) {
 				if (_requests.indexOf(this) != _requests.size() - 1
 						|| _requests.indexOf(this) == -1) {
 					_requests.remove(this);
@@ -81,7 +80,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 
 				_requests.clear();
 				List<String> suggestions = new ArrayList<>();
-				for (StringResultDto stringResult : result.getItems()) {
+				for (StringResultDto stringResult : results) {
 					suggestions.add(stringResult.getValue());
 				}
 				setSuggestions(suggestions);

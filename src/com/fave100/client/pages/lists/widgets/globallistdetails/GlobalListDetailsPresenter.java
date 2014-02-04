@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.entities.StringResultDto;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
@@ -66,7 +65,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	public void setHashtag(final String hashtag) {
 		_hashtag = hashtag;
 		getView().setInfo(hashtag);
-		_dispatcher.execute(_restServiceFactory.getFaveListService().getTrendingFaveLists(), new AsyncCallback<StringResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.getFaveListService().getTrendingFaveLists(), new AsyncCallback<List<StringResultDto>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -75,9 +74,9 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 			}
 
 			@Override
-			public void onSuccess(StringResultCollection result) {
+			public void onSuccess(List<StringResultDto> result) {
 				List<String> trending = new ArrayList<>();
-				for (StringResultDto stringResult : result.getItems()) {
+				for (StringResultDto stringResult : result) {
 					trending.add(stringResult.getValue());
 				}
 				getView().setTrendingLists(trending);
