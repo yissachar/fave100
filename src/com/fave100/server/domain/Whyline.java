@@ -4,6 +4,9 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.fave100.server.domain.appuser.AppUser;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
@@ -16,6 +19,7 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.PojoIf;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Whyline extends DatastoreObject {
 
 	// Lets us know whether or not to index song
@@ -59,11 +63,13 @@ public class Whyline extends DatastoreObject {
 
 	/* Getters and Setters */
 
+	@JsonIgnore
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Long getId() {
 		return id;
 	}
 
+	@JsonIgnore
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setId(final Long id) {
 		this.id = id;
@@ -77,11 +83,13 @@ public class Whyline extends DatastoreObject {
 		this.whyline = whyline;
 	}
 
+	@JsonIgnore
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Ref<Song> getSong() {
 		return song;
 	}
 
+	@JsonIgnore
 	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setSong(final Ref<Song> song) {
 		this.song = song;

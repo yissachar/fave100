@@ -10,7 +10,6 @@ import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
-import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItemDto;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
@@ -167,7 +166,7 @@ public class FavelistPresenter extends
 		}
 		// Otherwise get it from the server if we are requesting a user's list
 		else if (user != null) {
-			_dispatcher.execute(_restServiceFactory.getFaveListService().getFaveList(user.getUsername(), hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.getFaveListService().getFaveList(user.getUsername(), hashtag), new AsyncCallback<List<FaveItemDto>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -175,12 +174,12 @@ public class FavelistPresenter extends
 				}
 
 				@Override
-				public void onSuccess(FaveItemCollection result) {
+				public void onSuccess(List<FaveItemDto> items) {
 					// Make sure user still not null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
 					if (user != null && hashtagPerRequest.equals(hashtag)) {
 						if (ownList)
-							currentUser.setFaveList(result.getItems());
-						buildWidgets(result.getItems());
+							currentUser.setFaveList(items);
+						buildWidgets(items);
 					}
 				}
 			});

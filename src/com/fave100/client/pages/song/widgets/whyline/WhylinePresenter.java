@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.generated.entities.FaveItemDto;
-import com.fave100.client.generated.entities.UserListResultCollection;
 import com.fave100.client.generated.entities.UserListResultDto;
-import com.fave100.client.generated.entities.WhylineCollection;
 import com.fave100.client.generated.entities.WhylineDto;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.rest.RestSessionDispatch;
@@ -44,7 +42,7 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 	}
 
 	public void showWhylines(FaveItemDto song) {
-		_dispatcher.execute(_restServiceFactory.getWhylineService().getSongWhylines(song.getId()), new AsyncCallback<WhylineCollection>() {
+		_dispatcher.execute(_restServiceFactory.getWhylineService().getSongWhylines(song.getId()), new AsyncCallback<List<WhylineDto>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -52,8 +50,8 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 			}
 
 			@Override
-			public void onSuccess(WhylineCollection result) {
-				getView().setWhylines(result.getItems());
+			public void onSuccess(List<WhylineDto> result) {
+				getView().setWhylines(result);
 				/*if (whylineList.size() == 0) {
 					final Label label = new Label("No whylines yet");
 					label.addStyleName(style.noWhyline());
@@ -62,7 +60,7 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 			}
 		});
 
-		_dispatcher.execute(_restServiceFactory.getFaveListService().getListsContainingSong(song.getId()), new AsyncCallback<UserListResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.getFaveListService().getListsContainingSong(song.getId()), new AsyncCallback<List<UserListResultDto>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -70,8 +68,8 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 			}
 
 			@Override
-			public void onSuccess(UserListResultCollection result) {
-				getView().setUserLists(result.getItems());
+			public void onSuccess(List<UserListResultDto> result) {
+				getView().setUserLists(result);
 			}
 		});
 	}
