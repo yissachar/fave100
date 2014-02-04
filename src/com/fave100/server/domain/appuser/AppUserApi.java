@@ -17,6 +17,12 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -26,6 +32,7 @@ import com.fave100.server.SessionHelper;
 import com.fave100.server.UrlBuilder;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiBase;
+import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.LoginResult;
 import com.fave100.server.domain.Session;
@@ -51,6 +58,7 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
 
+@Path("/" + ApiPaths.API_NAME + "/" + ApiPaths.API_VERSION + "/" + ApiPaths.APPUSER_ROOT)
 public class AppUserApi extends ApiBase {
 
 	private AppUserDao appUserDao;
@@ -261,8 +269,11 @@ public class AppUserApi extends ApiBase {
 		return loginResult;
 	}
 
-	@ApiMethod(name = "appUser.login", path = "login")
-	public LoginResult login(HttpServletRequest request, @Named("username") final String username, @Named("password") final String password) throws UnauthorizedException {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.LOGIN)
+	@ApiMethod(name = "appUser.login", path = ApiPaths.APPUSER_ROOT + ApiPaths.LOGIN)
+	public LoginResult login(@Context HttpServletRequest request, @Named("username") @QueryParam("username") final String username, @Named("password") @QueryParam("password") final String password) throws UnauthorizedException {
 		AppUser loggingInUser = null;
 		String errorMessage = "Invalid credentials";
 		Session session = SessionHelper.getSession(request);
@@ -379,8 +390,11 @@ public class AppUserApi extends ApiBase {
 		return;
 	}
 
-	@ApiMethod(name = "appUser.getLoggedInAppUser", path = "loggedInAppUser")
-	public AppUser getLoggedInAppUser(HttpServletRequest request) {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.LOGGED_IN_APPUSER)
+	@ApiMethod(name = "appUser.getLoggedInAppUser", path = ApiPaths.APPUSER_ROOT + ApiPaths.LOGGED_IN_APPUSER)
+	public AppUser getLoggedInAppUser(@Context HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
 		if (username != null) {

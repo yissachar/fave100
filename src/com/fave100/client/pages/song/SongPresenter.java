@@ -188,7 +188,7 @@ public class SongPresenter extends
 		}
 		else {
 			// Get the master list for the hashtag
-			_dispatcher.execute(_restServiceFactory.getFaveListService().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.getFaveListService().getMasterFaveList(hashtag), new AsyncCallback<List<FaveItemDto>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -196,9 +196,9 @@ public class SongPresenter extends
 				}
 
 				@Override
-				public void onSuccess(FaveItemCollection faveList) {
+				public void onSuccess(List<FaveItemDto> faveList) {
 					playlistPresenter.setUserInfo("", hashtag, "");
-					loadedFavelist(id, faveList.getItems());
+					loadedFavelist(id, faveList);
 				}
 
 			});

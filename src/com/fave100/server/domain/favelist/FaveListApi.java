@@ -8,8 +8,15 @@ import java.util.Objects;
 
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import com.fave100.server.domain.ApiBase;
+import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.SongApi;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.UserListResult;
@@ -27,9 +34,8 @@ import com.google.inject.Inject;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
 
+@Path("/" + ApiPaths.API_NAME + "/" + ApiPaths.API_VERSION + "/" + ApiPaths.FAVELIST_ROOT)
 public class FaveListApi extends ApiBase {
-
-	public static final String FAVELIST_PATH = "favelist";
 
 	private FaveListDao _faveListDao;
 	private AppUserApi _appUserApi;
@@ -42,21 +48,30 @@ public class FaveListApi extends ApiBase {
 		_songApi = songApi;
 	}
 
-	@ApiMethod(name = "faveList.getFaveList", path = "getfavelist")
-	public List<FaveItem> getFaveList(@Named("username") final String username, @Named("hashtag") final String hashtag) {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.GET_FAVELIST)
+	@ApiMethod(name = "faveList.getFaveList", path = ApiPaths.FAVELIST_ROOT + ApiPaths.GET_FAVELIST)
+	public List<FaveItem> getFaveList(@Named("username") @QueryParam("username") final String username, @Named("hashtag") @QueryParam("hashtag") final String hashtag) {
 		final FaveList faveList = _faveListDao.findFaveList(username, hashtag);
 		if (faveList == null)
 			return null;
 		return faveList.getList();
 	}
 
-	@ApiMethod(name = "faveList.getMasterFaveList", path = FAVELIST_PATH + "/masterFaveList")
-	public List<FaveItem> getMasterFaveList(@Named("hashtag") final String hashtag) {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.GET_MASTER_FAVELIST)
+	@ApiMethod(name = "faveList.getMasterFaveList", path = ApiPaths.FAVELIST_ROOT + ApiPaths.GET_MASTER_FAVELIST)
+	public List<FaveItem> getMasterFaveList(@Named("hashtag") @QueryParam("hashtag") final String hashtag) {
 		return ofy().load().type(Hashtag.class).id(hashtag).get().getList();
 	}
 
-	@ApiMethod(name = "faveList.getHashtagAutocomplete", path = FAVELIST_PATH + "/hashtagAutocomplete")
-	public List<StringResult> getHashtagAutocomplete(@Named("searchTerm") final String searchTerm) {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.GET_HASHTAG_AUTOCOMPLETE)
+	@ApiMethod(name = "faveList.getHashtagAutocomplete", path = ApiPaths.FAVELIST_ROOT + ApiPaths.GET_HASHTAG_AUTOCOMPLETE)
+	public List<StringResult> getHashtagAutocomplete(@Named("searchTerm") @QueryParam("searchTerm") final String searchTerm) {
 		final List<StringResult> names = new ArrayList<>();
 		if (searchTerm.isEmpty())
 			return names;
@@ -69,7 +84,10 @@ public class FaveListApi extends ApiBase {
 		return names;
 	}
 
-	@ApiMethod(name = "faveList.getTrendingFaveLists", path = FAVELIST_PATH + "/trendingFaveLists")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.TRENDING_FAVELISTS)
+	@ApiMethod(name = "faveList.getTrendingFaveLists", path = ApiPaths.FAVELIST_ROOT + ApiPaths.TRENDING_FAVELISTS)
 	public List<StringResult> getTrendingFaveLists() {
 		// Nov 26 2013: Temporarily disabling proper trending in favor of hard-coded popular lists
 		//		List<Hashtag> hashtags = ofy().load().type(Hashtag.class).order("-zscore").limit(5).list();
@@ -88,8 +106,11 @@ public class FaveListApi extends ApiBase {
 		return trending;
 	}
 
-	@ApiMethod(name = "faveList.getListsContainingSong", path = FAVELIST_PATH + "/listsContainingSong")
-	public List<UserListResult> getListsContainingSong(@Named("songID") final String songID) {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.GET_LISTS_CONTAINING_SONG)
+	@ApiMethod(name = "faveList.getListsContainingSong", path = ApiPaths.FAVELIST_ROOT + ApiPaths.GET_LISTS_CONTAINING_SONG)
+	public List<UserListResult> getListsContainingSong(@Named("songID") @QueryParam("songID") final String songID) {
 		final List<UserListResult> userListResults = new ArrayList<>();
 
 		// Get up to 30 FaveLists containing the song
@@ -109,8 +130,11 @@ public class FaveListApi extends ApiBase {
 		return userListResults;
 	}
 
-	@ApiMethod(name = "faveList.add", path = FAVELIST_PATH + "/add")
-	public void addFaveListForCurrentUser(HttpServletRequest request, @Named("hashtag") final String hashtagName) throws BadRequestException, UnauthorizedException, ForbiddenException {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.ADD_FAVELIST)
+	@ApiMethod(name = "faveList.add", path = ApiPaths.FAVELIST_ROOT + ApiPaths.ADD_FAVELIST)
+	public void addFaveListForCurrentUser(HttpServletRequest request, @Named("hashtag") @QueryParam("hashtag") final String hashtagName) throws BadRequestException, UnauthorizedException, ForbiddenException {
 		final String error = Validator.validateHashtag(hashtagName);
 		if (error != null) {
 			throw new BadRequestException(error);
@@ -153,8 +177,11 @@ public class FaveListApi extends ApiBase {
 		return;
 	}
 
-	@ApiMethod(name = "faveList.delete", path = FAVELIST_PATH + "/delete")
-	public void deleteFaveListForCurrentUser(HttpServletRequest request, @Named("list") final String listName) throws UnauthorizedException {
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.DELETE_FAVELIST)
+	@ApiMethod(name = "faveList.delete", path = ApiPaths.FAVELIST_ROOT + ApiPaths.DELETE_FAVELIST)
+	public void deleteFaveListForCurrentUser(HttpServletRequest request, @Named("list") @QueryParam("list") final String listName) throws UnauthorizedException {
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new UnauthorizedException("Not logged in");
@@ -181,7 +208,7 @@ public class FaveListApi extends ApiBase {
 		return;
 	}
 
-	@ApiMethod(name = "faveList.addFaveItem", path = FAVELIST_PATH + "item/add")
+	@ApiMethod(name = "faveList.addFaveItem", path = ApiPaths.FAVELIST_ROOT + "item/add")
 	public void addFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID)
 			throws UnauthorizedException, ForbiddenException {
 
@@ -219,7 +246,7 @@ public class FaveListApi extends ApiBase {
 		return;
 	}
 
-	@ApiMethod(name = "faveList.removeFaveItem", path = FAVELIST_PATH + "/item/remove")
+	@ApiMethod(name = "faveList.removeFaveItem", path = ApiPaths.FAVELIST_ROOT + "/item/remove")
 	public void removeFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID) throws NotLoggedInException {
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
@@ -252,7 +279,7 @@ public class FaveListApi extends ApiBase {
 		return;
 	}
 
-	@ApiMethod(name = "faveList.rerankFaveItem", path = FAVELIST_PATH + "/item/rerank")
+	@ApiMethod(name = "faveList.rerankFaveItem", path = ApiPaths.FAVELIST_ROOT + "/item/rerank")
 	public void rerankFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID,
 			@Named("newIndex") final int newIndex) throws UnauthorizedException, BadRequestException {
 
@@ -287,7 +314,7 @@ public class FaveListApi extends ApiBase {
 		return;
 	}
 
-	@ApiMethod(name = "faveList.editWhyline", path = FAVELIST_PATH + "/item/whyline")
+	@ApiMethod(name = "faveList.editWhyline", path = ApiPaths.FAVELIST_ROOT + "/item/whyline")
 	public void editWhylineForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID, @Named("whyline") final String whyline)
 			throws BadRequestException, UnauthorizedException {
 		Objects.requireNonNull(hashtag);

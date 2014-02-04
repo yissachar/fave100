@@ -189,7 +189,7 @@ public class FavelistPresenter extends
 		// No user, get the global list 
 		else {
 
-			_dispatcher.execute(_restServiceFactory.getFaveListService().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.getFaveListService().getMasterFaveList(hashtag), new AsyncCallback<List<FaveItemDto>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -197,10 +197,10 @@ public class FavelistPresenter extends
 				}
 
 				@Override
-				public void onSuccess(FaveItemCollection result) {
+				public void onSuccess(List<FaveItemDto> result) {
 					// Make sure user still null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
 					if (user == null && hashtagPerRequest.equals(hashtag))
-						buildWidgets(result.getItems());
+						buildWidgets(result);
 				}
 			});
 		}
