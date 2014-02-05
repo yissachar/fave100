@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Named;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.shared.Constants;
@@ -17,10 +22,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+@Path("/" + ApiPaths.API_NAME + "/" + ApiPaths.API_VERSION + "/" + ApiPaths.SONG_ROOT)
 public class SongApi extends ApiBase {
 
-	@ApiMethod(name = "song.getSong", path = "song")
-	public FaveItem getSong(@Named("id") final String id) {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.GET_SONG)
+	@ApiMethod(name = "song.getSong", path = ApiPaths.SONG_ROOT + ApiPaths.GET_SONG)
+	public FaveItem getSong(@Named("id") @QueryParam("id") final String id) {
 		try {
 			final String lookupUrl = Constants.LOOKUP_URL + "id=" + id;
 			final URL url = new URL(lookupUrl);
@@ -48,8 +57,14 @@ public class SongApi extends ApiBase {
 		return null;
 	}
 
-	@ApiMethod(name = "song.getYouTubeSearchResults", path = "song/search")
-	public List<YouTubeSearchResult> getYouTubeResults(@Named("song") final String song, @Named("artist") final String artist) {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.GET_YOUTUBE_SEARCH_RESULTS)
+	@ApiMethod(name = "song.getYouTubeSearchResults", path = ApiPaths.SONG_ROOT + ApiPaths.GET_YOUTUBE_SEARCH_RESULTS)
+	public List<YouTubeSearchResult> getYouTubeResults(
+			@Named("song") @QueryParam("song") final String song,
+			@Named("artist") @QueryParam("artist") final String artist) {
+
 		try {
 			String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&maxResults=5&type=video&videoEmbeddable=true";
 			searchUrl += "&q=" + song.replace(" ", "+") + "+" + artist.replace(" ", "+");

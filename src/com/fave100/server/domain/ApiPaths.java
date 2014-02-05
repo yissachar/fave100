@@ -14,6 +14,9 @@ public class ApiPaths {
 	public static final String GET_LISTS_CONTAINING_SONG = "/getListsContainingSong";
 	public static final String ADD_FAVELIST = "/add";
 	public static final String DELETE_FAVELIST = "/delete";
+	public static final String ADD_FAVEITEM = "/item/add";
+	public static final String REMOVE_FAVEITEM = "/item/remove";
+	public static final String EDIT_WHYLINE = "/item/whyline/edit";
 
 	// AppUser paths
 	public static final String APPUSER_ROOT = "appuser";
@@ -41,5 +44,14 @@ public class ApiPaths {
 	public static final String UNFOLLOW = "/unfollow";
 	public static final String EMAIL_PASSWORD_RESET = "/password/reset";
 	public static final String CHANGE_PASSWORD = "/password/change";
+
+	// Song paths
+	public static final String SONG_ROOT = "song";
+	public static final String GET_SONG = "/song";
+	public static final String GET_YOUTUBE_SEARCH_RESULTS = "/youtubeSearchResults";
+
+	// Whyline paths
+	public static final String WHYLINE_ROOT = "whyline";
+	public static final String GET_SONG_WHYLINES = "/songWhylines";
 
 }
