@@ -8,11 +8,13 @@ import java.util.Objects;
 
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import com.fave100.server.domain.ApiBase;
@@ -177,7 +179,7 @@ public class FaveListApi extends ApiBase {
 		return;
 	}
 
-	@POST
+	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.DELETE_FAVELIST)
 	@ApiMethod(name = "faveList.delete", path = ApiPaths.FAVELIST_ROOT + ApiPaths.DELETE_FAVELIST)
@@ -208,9 +210,15 @@ public class FaveListApi extends ApiBase {
 		return;
 	}
 
-	@ApiMethod(name = "faveList.addFaveItem", path = ApiPaths.FAVELIST_ROOT + "item/add")
-	public void addFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID)
-			throws UnauthorizedException, ForbiddenException {
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.ADD_FAVEITEM)
+	@ApiMethod(name = "faveList.addFaveItem", path = ApiPaths.FAVELIST_ROOT + ApiPaths.ADD_FAVEITEM)
+	public void addFaveItemForCurrentUser(
+			@Context HttpServletRequest request,
+			@Named("list") @QueryParam("list") final String hashtag,
+			@Named("songId") @QueryParam("songId") final String songID
+			) throws UnauthorizedException, ForbiddenException {
 
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
@@ -246,8 +254,16 @@ public class FaveListApi extends ApiBase {
 		return;
 	}
 
-	@ApiMethod(name = "faveList.removeFaveItem", path = ApiPaths.FAVELIST_ROOT + "/item/remove")
-	public void removeFaveItemForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID) throws NotLoggedInException {
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.REMOVE_FAVEITEM)
+	@ApiMethod(name = "faveList.removeFaveItem", path = ApiPaths.FAVELIST_ROOT + ApiPaths.REMOVE_FAVEITEM)
+	public void removeFaveItemForCurrentUser(
+			@Context HttpServletRequest request,
+			@Named("list") @QueryParam("list") final String hashtag,
+			@Named("songId") @QueryParam("songId") final String songID
+			) throws NotLoggedInException {
+
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
@@ -314,9 +330,17 @@ public class FaveListApi extends ApiBase {
 		return;
 	}
 
-	@ApiMethod(name = "faveList.editWhyline", path = ApiPaths.FAVELIST_ROOT + "/item/whyline")
-	public void editWhylineForCurrentUser(HttpServletRequest request, @Named("list") final String hashtag, @Named("songId") final String songID, @Named("whyline") final String whyline)
-			throws BadRequestException, UnauthorizedException {
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(ApiPaths.EDIT_WHYLINE)
+	@ApiMethod(name = "faveList.editWhyline", path = ApiPaths.FAVELIST_ROOT + ApiPaths.EDIT_WHYLINE)
+	public void editWhylineForCurrentUser(
+			@Context HttpServletRequest request,
+			@Named("list") @QueryParam("list") final String hashtag,
+			@Named("songId") @QueryParam("songId") final String songID,
+			@Named("whyline") @QueryParam("whyline") final String whyline
+			) throws BadRequestException, UnauthorizedException {
+
 		Objects.requireNonNull(hashtag);
 		Objects.requireNonNull(songID);
 		Objects.requireNonNull(whyline);

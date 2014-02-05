@@ -2,6 +2,8 @@ package com.fave100.server.guice;
 
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
+import com.fave100.server.domain.SongApi;
+import com.fave100.server.domain.WhylineApi;
 import com.fave100.server.domain.appuser.AppUserApi;
 import com.fave100.server.domain.favelist.FaveListApi;
 import com.fave100.server.filters.EncodingFilter;
@@ -22,6 +24,8 @@ public class DispatchServletModule extends ServletModule {
 
 		bind(AppUserApi.class);
 		bind(FaveListApi.class);
+		bind(SongApi.class);
+		bind(WhylineApi.class);
 		serve("/rest/*").with(GuiceContainer.class);
 
 		bind(RemoteApiServlet.class).in(Singleton.class);

@@ -575,7 +575,7 @@ public class AppUserApi extends ApiBase {
 		return null;
 	}
 
-	@GET
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_BLOBSTORE_URL)
 	@ApiMethod(name = "appUser.createBlobstoreUrl", path = ApiPaths.APPUSER_ROOT + ApiPaths.CREATE_BLOBSTORE_URL)
