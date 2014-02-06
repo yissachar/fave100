@@ -7,8 +7,8 @@ import java.util.List;
 import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.fave100.server.domain.appuser.AppUser;
@@ -23,7 +23,7 @@ public class WhylineApi extends ApiBase {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_SONG_WHYLINES)
 	@ApiMethod(name = "whyline.getSongWhylines", path = ApiPaths.WHYLINE_ROOT + ApiPaths.GET_SONG_WHYLINES)
-	public List<Whyline> getWhylinesForSong(@Named("id") @QueryParam("id") final String id) {
+	public List<Whyline> getWhylinesForSong(@Named("id") @PathParam("id") final String id) {
 		final List<Whyline> whylines = ofy().load().type(Whyline.class).filter("song", Ref.create(Key.create(Song.class, id))).limit(15).list();
 		// Get the users avatars 
 		// TODO: Should be a bulk query for efficiency

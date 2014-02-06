@@ -12,6 +12,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -21,7 +22,6 @@ import com.fave100.server.domain.ApiBase;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.SongApi;
 import com.fave100.server.domain.StringResult;
-import com.fave100.server.domain.UserListResult;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserApi;
@@ -52,20 +52,24 @@ public class FaveListApi extends ApiBase {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path(ApiPaths.GET_FAVELIST)
-	@ApiMethod(name = "faveList.getFaveList", path = ApiPaths.FAVELIST_ROOT + ApiPaths.GET_FAVELIST)
-	public List<FaveItem> getFaveList(@Named("username") @QueryParam("username") final String username, @Named("hashtag") @QueryParam("hashtag") final String hashtag) {
+	@Path("{username}/{hashtag}")
+	@ApiMethod(name = "faveList.getFaveList", path = ApiPaths.FAVELIST_ROOT + "/{username}/{hashtag}")
+	public List<FaveItem> getFaveList(
+			@Named("username") @PathParam("username") final String username,
+			@Named("hashtag") @PathParam("hashtag") final String hashtag) {
+
 		final FaveList faveList = _faveListDao.findFaveList(username, hashtag);
 		if (faveList == null)
 			return null;
+
 		return faveList.getList();
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path(ApiPaths.GET_MASTER_FAVELIST)
-	@ApiMethod(name = "faveList.getMasterFaveList", path = ApiPaths.FAVELIST_ROOT + ApiPaths.GET_MASTER_FAVELIST)
-	public List<FaveItem> getMasterFaveList(@Named("hashtag") @QueryParam("hashtag") final String hashtag) {
+	@Path("{hashtag}")
+	@ApiMethod(name = "faveList.getMasterFaveList", path = ApiPaths.FAVELIST_ROOT + "/{hashtag}")
+	public List<FaveItem> getMasterFaveList(@Named("hashtag") @PathParam("hashtag") final String hashtag) {
 		return ofy().load().type(Hashtag.class).id(hashtag).get().getList();
 	}
 
@@ -108,35 +112,15 @@ public class FaveListApi extends ApiBase {
 		return trending;
 	}
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path(ApiPaths.GET_LISTS_CONTAINING_SONG)
-	@ApiMethod(name = "faveList.getListsContainingSong", path = ApiPaths.FAVELIST_ROOT + ApiPaths.GET_LISTS_CONTAINING_SONG)
-	public List<UserListResult> getListsContainingSong(@Named("songID") @QueryParam("songID") final String songID) {
-		final List<UserListResult> userListResults = new ArrayList<>();
-
-		// Get up to 30 FaveLists containing the song
-		final List<FaveList> faveLists = ofy().load().type(FaveList.class).filter("list.songID", songID).limit(30).list();
-
-		// Get the user's avatars
-		for (final FaveList faveList : faveLists) {
-			ofy().load().ref(faveList.getUser());
-			final AppUser user = faveList.getUser().get();
-			String avatar = "";
-			if (user != null)
-				avatar = user.getAvatarImage(30);
-
-			UserListResult userListResult = new UserListResult(user.getUsername(), faveList.getHashtag(), avatar);
-			userListResults.add(userListResult);
-		}
-		return userListResults;
-	}
-
-	@GET
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.ADD_FAVELIST)
 	@ApiMethod(name = "faveList.add", path = ApiPaths.FAVELIST_ROOT + ApiPaths.ADD_FAVELIST)
-	public void addFaveListForCurrentUser(HttpServletRequest request, @Named("hashtag") @QueryParam("hashtag") final String hashtagName) throws BadRequestException, UnauthorizedException, ForbiddenException {
+	public void addFaveListForCurrentUser(
+			@Context HttpServletRequest request,
+			@Named("hashtag") @QueryParam("hashtag") final String hashtagName
+			) throws BadRequestException, UnauthorizedException, ForbiddenException {
+
 		final String error = Validator.validateHashtag(hashtagName);
 		if (error != null) {
 			throw new BadRequestException(error);

@@ -648,7 +648,7 @@ public class AppUserApi extends ApiBase {
 		return new BooleanResult(true);
 	}
 
-	@GET
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.FOLLOW)
 	@ApiMethod(name = "appUser.followUser", path = ApiPaths.APPUSER_ROOT + ApiPaths.FOLLOW)
@@ -679,7 +679,7 @@ public class AppUserApi extends ApiBase {
 		return;
 	}
 
-	@GET
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.UNFOLLOW)
 	@ApiMethod(name = "appUser.unfollowUser", path = ApiPaths.APPUSER_ROOT + ApiPaths.UNFOLLOW)
