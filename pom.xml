@@ -11,7 +11,7 @@
 
 	<properties>
 		<!-- convenience to define GWT version in one place -->
-		<gwt.version>2.6.0-rc4</gwt.version>
+		<gwt.version>2.6.0</gwt.version>
 		<appengine.version>1.8.9</appengine.version>
 		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
 		<gwtp.version>1.1.1</gwtp.version>
