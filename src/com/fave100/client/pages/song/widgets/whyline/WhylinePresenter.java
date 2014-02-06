@@ -60,7 +60,7 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 			}
 		});
 
-		_dispatcher.execute(_restServiceFactory.getFaveListService().getListsContainingSong(song.getId()), new AsyncCallback<List<UserListResultDto>>() {
+		_dispatcher.execute(_restServiceFactory.getSongService().getFaveLists(song.getId()), new AsyncCallback<List<UserListResultDto>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

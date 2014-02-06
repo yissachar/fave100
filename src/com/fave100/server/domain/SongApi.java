@@ -1,5 +1,7 @@
 package com.fave100.server.domain;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -10,11 +12,14 @@ import java.util.List;
 import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.FaveItem;
+import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Constants;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.gson.JsonArray;
@@ -27,9 +32,9 @@ public class SongApi extends ApiBase {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path(ApiPaths.GET_SONG)
-	@ApiMethod(name = "song.getSong", path = ApiPaths.SONG_ROOT + ApiPaths.GET_SONG)
-	public FaveItem getSong(@Named("id") @QueryParam("id") final String id) {
+	@Path("{id}")
+	@ApiMethod(name = "song.getSong", path = ApiPaths.SONG_ROOT + "/{id}")
+	public FaveItem getSong(@Named("id") @PathParam("id") final String id) {
 		try {
 			final String lookupUrl = Constants.LOOKUP_URL + "id=" + id;
 			final URL url = new URL(lookupUrl);
@@ -104,5 +109,29 @@ public class SongApi extends ApiBase {
 
 		}
 		return null;
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("{id}/favelists")
+	@ApiMethod(name = "song.getFaveLists", path = ApiPaths.SONG_ROOT + "{id}/favelists")
+	public List<UserListResult> getFaveLists(@Named("id") @PathParam("id") final String id) {
+		final List<UserListResult> userListResults = new ArrayList<>();
+
+		// Get up to 30 FaveLists containing the song
+		final List<FaveList> faveLists = ofy().load().type(FaveList.class).filter("list.songID", id).limit(30).list();
+
+		// Get the user's avatars
+		for (final FaveList faveList : faveLists) {
+			ofy().load().ref(faveList.getUser());
+			final AppUser user = faveList.getUser().get();
+			String avatar = "";
+			if (user != null)
+				avatar = user.getAvatarImage(30);
+
+			UserListResult userListResult = new UserListResult(user.getUsername(), faveList.getHashtag(), avatar);
+			userListResults.add(userListResult);
+		}
+		return userListResults;
 	}
 }
