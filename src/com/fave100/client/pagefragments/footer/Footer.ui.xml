@@ -9,7 +9,7 @@
 	
 	<g:HTMLPanel>
 		<footer>
-			Copyright <span ui:field="year"></span> Fave100 Inc. <a href="mailto:info@fave100.com">Contact us</a>
+			Copyright <span ui:field="year"></span> <a href="http://caseware.com">CaseWare International Inc.</a> <a href="mailto:info@fave100.com">Contact us</a>
 		</footer> 
 	</g:HTMLPanel>
 </ui:UiBinder> 
