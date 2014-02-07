@@ -70,7 +70,7 @@ public class FaveListApi extends ApiBase {
 	@Path("{hashtag}")
 	@ApiMethod(name = "faveList.getMasterFaveList", path = ApiPaths.FAVELIST_ROOT + "/{hashtag}")
 	public List<FaveItem> getMasterFaveList(@Named("hashtag") @PathParam("hashtag") final String hashtag) {
-		return ofy().load().type(Hashtag.class).id(hashtag).get().getList();
+		return ofy().load().type(Hashtag.class).id(hashtag.toLowerCase()).get().getList();
 	}
 
 	@GET
