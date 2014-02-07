@@ -258,7 +258,7 @@ public class FaveListDao {
 	}
 
 	public List<FaveItem> getMasterFaveList(final String hashtag) {
-		return ofy().load().type(Hashtag.class).id(hashtag).get().getList();
+		return ofy().load().type(Hashtag.class).id(hashtag.toLowerCase()).get().getList();
 	}
 
 	public List<String> getHashtagAutocomplete(final String searchTerm) {
