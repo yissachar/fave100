@@ -11,6 +11,8 @@ import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Index;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
  * A song that a Fave100 user has added to their Fave100.
@@ -20,12 +22,13 @@ import com.googlecode.objectify.annotation.Index;
  */
 @Embed
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ApiModel(value = "FaveItem")
 public class FaveItem implements Serializable {
 
 	// This field MUST be updated if this class is changed in a way that affects serialization: http://docs.oracle.com/javase/6/docs/platform/serialization/spec/version.html#6678
 	private static final long serialVersionUID = -8899544665404145248L;
 
-	private String song;
+	@ApiModelProperty(required = true, value = "The song name") private String song;
 	private String artist;
 	@Index private String songID;
 	private String whyline = "";
