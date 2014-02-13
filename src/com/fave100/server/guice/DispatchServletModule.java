@@ -2,10 +2,10 @@ package com.fave100.server.guice;
 
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
-import com.fave100.server.domain.SongApi;
-import com.fave100.server.domain.WhylineApi;
-import com.fave100.server.domain.appuser.AppUserApi;
-import com.fave100.server.domain.favelist.FaveListApi;
+import com.fave100.server.api.AppUserApi;
+import com.fave100.server.api.FaveListApi;
+import com.fave100.server.api.SongApi;
+import com.fave100.server.api.WhylineApi;
 import com.fave100.server.filters.EncodingFilter;
 import com.fave100.server.servlets.HashtagBuilderServlet;
 import com.fave100.server.servlets.HashtagEnqueuerServlet;
