@@ -30,7 +30,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 
 @Path("/" + ApiPaths.SONG_ROOT)
 @Api(value = "/" + ApiPaths.SONG_ROOT, description = "Operations on Songs")
-public class SongApi extends ApiBase {
+public class SongApi {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
