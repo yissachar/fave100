@@ -1,4 +1,4 @@
-package com.fave100.server.domain.favelist;
+package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -20,12 +20,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fave100.server.domain.ApiPaths;
-import com.fave100.server.domain.SongApi;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.StringResultCollection;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
-import com.fave100.server.domain.appuser.AppUserApi;
+import com.fave100.server.domain.favelist.FaveItem;
+import com.fave100.server.domain.favelist.FaveItemCollection;
+import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.server.domain.favelist.FaveListDao;
+import com.fave100.server.domain.favelist.Hashtag;
 import com.fave100.server.exceptions.FaveItemAlreadyInListException;
 import com.fave100.server.exceptions.FaveListAlreadyExistsException;
 import com.fave100.server.exceptions.FaveListLimitReachedException;

@@ -1,4 +1,4 @@
-package com.fave100.server.domain.appuser;
+package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -38,6 +38,16 @@ import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.LoginResult;
 import com.fave100.server.domain.Session;
 import com.fave100.server.domain.StringResult;
+import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.server.domain.appuser.AppUserDao;
+import com.fave100.server.domain.appuser.EmailID;
+import com.fave100.server.domain.appuser.FacebookID;
+import com.fave100.server.domain.appuser.Following;
+import com.fave100.server.domain.appuser.FollowingResult;
+import com.fave100.server.domain.appuser.GoogleID;
+import com.fave100.server.domain.appuser.PwdResetToken;
+import com.fave100.server.domain.appuser.TwitterID;
+import com.fave100.server.domain.appuser.UserInfo;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.exceptions.AlreadyFollowingException;
 import com.fave100.server.exceptions.CannotFollowYourselfException;

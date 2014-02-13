@@ -1,4 +1,4 @@
-package com.fave100.server.domain;
+package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -17,6 +17,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.fave100.server.domain.ApiPaths;
+import com.fave100.server.domain.Song;
+import com.fave100.server.domain.UserListResult;
+import com.fave100.server.domain.UserListResultCollection;
+import com.fave100.server.domain.YouTubeSearchResult;
+import com.fave100.server.domain.YouTubeSearchResultCollection;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.server.domain.favelist.FaveList;

@@ -17,13 +17,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fave100.server.domain.SongApi;
+import com.fave100.server.api.AppUserApi;
+import com.fave100.server.api.FaveListApi;
+import com.fave100.server.api.SongApi;
 import com.fave100.server.domain.appuser.AppUser;
-import com.fave100.server.domain.appuser.AppUserApi;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.favelist.FaveList;
-import com.fave100.server.domain.favelist.FaveListApi;
 import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.fave100.shared.Constants;

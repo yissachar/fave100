@@ -1,4 +1,4 @@
-package com.fave100.server.domain;
+package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -10,6 +10,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.fave100.server.domain.ApiPaths;
+import com.fave100.server.domain.Song;
+import com.fave100.server.domain.Whyline;
+import com.fave100.server.domain.WhylineCollection;
 import com.fave100.server.domain.appuser.AppUser;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
