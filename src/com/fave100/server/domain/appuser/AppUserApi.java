@@ -33,7 +33,6 @@ import twitter4j.auth.RequestToken;
 import com.fave100.server.SessionHelper;
 import com.fave100.server.UrlBuilder;
 import com.fave100.server.bcrypt.BCrypt;
-import com.fave100.server.domain.ApiBase;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.LoginResult;
@@ -70,7 +69,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 
 @Path("/" + ApiPaths.APPUSER_ROOT)
 @Api(value = "/" + ApiPaths.APPUSER_ROOT, description = "Operations on Users")
-public class AppUserApi extends ApiBase {
+public class AppUserApi {
 
 	private AppUserDao appUserDao;
 
