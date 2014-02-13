@@ -68,6 +68,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @Path("/" + ApiPaths.APPUSER_ROOT)
+@Produces(MediaType.APPLICATION_JSON)
 @Api(value = "/" + ApiPaths.APPUSER_ROOT, description = "Operations on Users")
 public class AppUserApi {
 
@@ -79,7 +80,6 @@ public class AppUserApi {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_APPUSER)
 	@ApiOperation(value = "Get an AppUser", response = AppUser.class)
 	public AppUser getAppUser(@QueryParam("username") final String username) {
@@ -91,7 +91,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_APPUSER)
 	@ApiOperation(value = "Create an AppUser", response = LoginResult.class)
 	public LoginResult createAppUser(@Context final HttpServletRequest request,
@@ -151,7 +150,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_APPUSER_FROM_GOOGLE_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Google", response = LoginResult.class)
 	public LoginResult createAppUserFromGoogleAccount(@Context final HttpServletRequest request, @QueryParam("username") final String username) {
@@ -202,7 +200,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_APPUSER_FROM_TWITTER_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Twitter", response = LoginResult.class)
 	public LoginResult createAppUserFromTwitterAccount(
@@ -259,7 +256,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_APPUSER_FROM_FACEBOOK_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Facebook", response = LoginResult.class)
 	public LoginResult createAppUserFromFacebookAccount(
@@ -318,7 +314,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGIN)
 	@ApiOperation(value = "Login", response = LoginResult.class)
 	public LoginResult login(
@@ -362,7 +357,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGIN_WITH_GOOGLE)
 	@ApiOperation(value = "Login with Google", response = LoginResult.class)
 	public LoginResult loginWithGoogle(@Context HttpServletRequest request) {
@@ -385,7 +379,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGIN_WITH_TWITTER)
 	@ApiOperation(value = "Login with Twitter", response = LoginResult.class)
 	public LoginResult loginWithTwitter(@Context HttpServletRequest request, @QueryParam("oauthVerifier") final String oauth_verifier) {
@@ -414,7 +407,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGIN_WITH_FACEBOOK)
 	@ApiOperation(value = "Login with Facebook", response = LoginResult.class)
 	public LoginResult loginWithFacebook(@Context HttpServletRequest request, @QueryParam("code") final String code) {
@@ -442,7 +434,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGOUT)
 	@ApiOperation(value = "Logout")
 	public void logout(@Context HttpServletRequest request) {
@@ -455,7 +446,6 @@ public class AppUserApi {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGGED_IN_APPUSER)
 	@ApiOperation(value = "Get logged in user", response = AppUser.class)
 	public AppUser getLoggedInAppUser(@Context HttpServletRequest request) {
@@ -480,7 +470,6 @@ public class AppUserApi {
 	 * @throws ForbiddenException
 	 */
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_FOLLOWING)
 	@ApiOperation(value = "Get following", response = FollowingResult.class)
 	public FollowingResult getFollowing(
@@ -512,7 +501,6 @@ public class AppUserApi {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.IS_FOLLOWING)
 	@ApiOperation(value = "Is following", response = BooleanResult.class)
 	public BooleanResult isFollowing(@Context HttpServletRequest request, @QueryParam("username") final String username) {
@@ -533,7 +521,6 @@ public class AppUserApi {
 	 * Checks if the user is logged into Google (though not necessarily logged into Fave100)
 	 */
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.IS_GOOGLE_LOGGED_IN)
 	@ApiOperation(value = "Is google user logged in", response = BooleanResult.class)
 	public BooleanResult isGoogleUserLoggedIn() {
@@ -544,7 +531,6 @@ public class AppUserApi {
 
 	// Builds a URL that client can use to log user in to Google Account
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_GOOGLE_LOGIN_URL)
 	@ApiOperation(value = "Get Google login URL", response = StringResult.class)
 	public StringResult getGoogleLoginURL(@QueryParam("destinationURL") final String destinationURL) {
@@ -553,7 +539,6 @@ public class AppUserApi {
 
 	// Builds a Facebook login URL that the client can use
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_FACEBOOK_AUTH_URL)
 	@ApiOperation(value = "Get Facebook auth URL", response = StringResult.class)
 	public StringResult getFacebookAuthUrl(@Context HttpServletRequest request, @QueryParam("redirectUrl") final String redirectUrl) {
@@ -568,7 +553,6 @@ public class AppUserApi {
 
 	// Check if Fave100 user is logged in 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.IS_APPUSER_LOGGED_IN)
 	@ApiOperation(value = "Is app user logged in", response = BooleanResult.class)
 	public BooleanResult isAppUserLoggedIn(@Context HttpServletRequest request) {
@@ -580,7 +564,6 @@ public class AppUserApi {
 
 	// Builds a Twitter login URL that the client can use
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_TWITTER_AUTH_URL)
 	@ApiOperation(value = "Get Twitter auth URL", response = StringResult.class)
 	public StringResult getTwitterAuthUrl(@Context HttpServletRequest request, final String redirectUrl) {
@@ -602,7 +585,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_BLOBSTORE_URL)
 	@ApiOperation(value = "Get Twitter auth URL", response = StringResult.class)
 	public StringResult createBlobstoreUrl(final String successPath) {
@@ -611,7 +593,6 @@ public class AppUserApi {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.USER_SETTINGS)
 	@ApiOperation(value = "Get current user settings", response = UserInfo.class)
 	public UserInfo getCurrentUserSettings(@Context HttpServletRequest request) {
@@ -623,7 +604,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.USER_SETTINGS)
 	@ApiOperation(value = "Set user info", response = BooleanResult.class)
 	public BooleanResult setUserInfo(@Context HttpServletRequest request, final UserInfo userInfo) {
@@ -675,7 +655,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.FOLLOW)
 	@ApiOperation(value = "Follow user")
 	public void followUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
@@ -706,7 +685,6 @@ public class AppUserApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.UNFOLLOW)
 	@ApiOperation(value = "Unfollow user")
 	public void unfollowUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
@@ -727,7 +705,6 @@ public class AppUserApi {
 
 	// Emails user a password reset token if they forget their password
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.EMAIL_PASSWORD_RESET)
 	@ApiOperation(value = "Email password reset token", response = BooleanResult.class)
 	public BooleanResult emailPasswordResetToken(@QueryParam("username") final String username, @QueryParam("emailAddress") final String emailAddress) {
@@ -779,7 +756,6 @@ public class AppUserApi {
 
 	// Allows a user to change their password provided they have a password reset token or the current password
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CHANGE_PASSWORD)
 	@ApiOperation(value = "Change password", response = BooleanResult.class)
 	public BooleanResult changePassword(@Context HttpServletRequest request, @QueryParam("newPassword") final String newPassword,

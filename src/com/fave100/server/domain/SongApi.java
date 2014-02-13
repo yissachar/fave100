@@ -29,11 +29,11 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @Path("/" + ApiPaths.SONG_ROOT)
+@Produces(MediaType.APPLICATION_JSON)
 @Api(value = "/" + ApiPaths.SONG_ROOT, description = "Operations on Songs")
 public class SongApi {
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}")
 	@ApiOperation(value = "Get a Song", response = FaveItem.class)
 	public FaveItem getSong(@Named("id") @PathParam("id") final String id) {
@@ -65,7 +65,6 @@ public class SongApi {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_YOUTUBE_SEARCH_RESULTS)
 	@ApiOperation(value = "Get a Song", response = YouTubeSearchResultCollection.class)
 	public YouTubeSearchResultCollection getYouTubeResults(
@@ -114,7 +113,6 @@ public class SongApi {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}/favelists")
 	@ApiOperation(value = "Get a Song", response = UserListResultCollection.class)
 	public UserListResultCollection getFaveLists(@Named("id") @PathParam("id") final String id) {

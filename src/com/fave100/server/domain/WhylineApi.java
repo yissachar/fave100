@@ -17,11 +17,11 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @Path("/" + ApiPaths.WHYLINE_ROOT)
+@Produces(MediaType.APPLICATION_JSON)
 @Api(value = "/" + ApiPaths.WHYLINE_ROOT, description = "Operations on Whylines")
 public class WhylineApi {
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_SONG_WHYLINES)
 	@ApiOperation(value = "Get whylines for the song", response = WhylineCollection.class)
 	public List<Whyline> getWhylinesForSong(@PathParam("id") final String id) {
