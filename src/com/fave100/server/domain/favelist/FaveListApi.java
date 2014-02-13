@@ -40,6 +40,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 @Path("/" + ApiPaths.FAVELIST_ROOT)
+@Produces(MediaType.APPLICATION_JSON)
 @Api(value = "/" + ApiPaths.FAVELIST_ROOT, description = "Operations on FaveLists")
 public class FaveListApi {
 
@@ -55,7 +56,6 @@ public class FaveListApi {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{username}/{hashtag}")
 	@ApiOperation(value = "Get a user's FaveList", response = FaveItemCollection.class)
 	public FaveItemCollection getFaveList(
@@ -70,7 +70,6 @@ public class FaveListApi {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{hashtag}")
 	@ApiOperation(value = "Get a master FaveList", response = FaveItemCollection.class)
 	public FaveItemCollection getMasterFaveList(@PathParam("hashtag") final String hashtag) {
@@ -78,7 +77,6 @@ public class FaveListApi {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_HASHTAG_AUTOCOMPLETE)
 	@ApiOperation(value = "Get list name suggestions", response = StringResultCollection.class)
 	public StringResultCollection getHashtagAutocomplete(@QueryParam("searchTerm") final String searchTerm) {
@@ -98,7 +96,6 @@ public class FaveListApi {
 	}
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.TRENDING_FAVELISTS)
 	@ApiOperation(value = "Get a list of trending FaveLists", response = StringResultCollection.class)
 	public StringResultCollection getTrendingFaveLists() {
@@ -120,7 +117,6 @@ public class FaveListApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.ADD_FAVELIST)
 	@ApiOperation(value = "Add a FaveList")
 	public void addFaveListForCurrentUser(@Context HttpServletRequest request, @QueryParam("hashtag") final String hashtagName) {
@@ -166,7 +162,6 @@ public class FaveListApi {
 	}
 
 	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.DELETE_FAVELIST)
 	@ApiOperation(value = "Delete a FaveList")
 	public void deleteFaveListForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String listName) {
@@ -197,7 +192,6 @@ public class FaveListApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.ADD_FAVEITEM)
 	@ApiOperation(value = "Add a FaveItem")
 	public void addFaveItemForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID) {
@@ -237,7 +231,6 @@ public class FaveListApi {
 	}
 
 	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.REMOVE_FAVEITEM)
 	@ApiOperation(value = "Remove a FaveItem")
 	public void removeFaveItemForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID) {
@@ -311,7 +304,6 @@ public class FaveListApi {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.EDIT_WHYLINE)
 	@ApiOperation(value = "Edit a WhyLine")
 	public void editWhylineForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID,
