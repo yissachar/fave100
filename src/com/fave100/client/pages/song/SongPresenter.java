@@ -5,8 +5,9 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.song.PlaylistSongChangedEvent;
 import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItemDto;
-import com.fave100.client.generated.entities.YouTubeSearchResultDto;
+import com.fave100.client.generated.entities.YouTubeSearchResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.BasePresenter;
@@ -152,7 +153,7 @@ public class SongPresenter extends
 			}
 			else {
 				// Get username and avatar from the datastore
-				_dispatcher.execute(_restServiceFactory.getAppUserService().getAppUser(username), new AsyncCallback<AppUserDto>() {
+				_dispatcher.execute(_restServiceFactory.getAppuserService().getAppUser(username), new AsyncCallback<AppUserDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -170,7 +171,7 @@ public class SongPresenter extends
 			}
 
 			// Get the list for the requested user
-			_dispatcher.execute(_restServiceFactory.getFaveListService().getFaveList(username, hashtag), new AsyncCallback<List<FaveItemDto>>() {
+			_dispatcher.execute(_restServiceFactory.getFavelistService().getFaveList(username, hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -178,8 +179,8 @@ public class SongPresenter extends
 				}
 
 				@Override
-				public void onSuccess(List<FaveItemDto> faveList) {
-					loadedFavelist(id, faveList);
+				public void onSuccess(FaveItemCollection faveList) {
+					loadedFavelist(id, faveList.getItems());
 				}
 
 			});
@@ -187,7 +188,7 @@ public class SongPresenter extends
 		}
 		else {
 			// Get the master list for the hashtag
-			_dispatcher.execute(_restServiceFactory.getFaveListService().getMasterFaveList(hashtag), new AsyncCallback<List<FaveItemDto>>() {
+			_dispatcher.execute(_restServiceFactory.getFavelistService().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -195,9 +196,9 @@ public class SongPresenter extends
 				}
 
 				@Override
-				public void onSuccess(List<FaveItemDto> faveList) {
+				public void onSuccess(FaveItemCollection faveList) {
 					playlistPresenter.setUserInfo("", hashtag, "");
-					loadedFavelist(id, faveList);
+					loadedFavelist(id, faveList.getItems());
 				}
 
 			});
@@ -295,7 +296,7 @@ public class SongPresenter extends
 		getView().setSongInfo(songProxy);
 
 		// Get any YouTube videos
-		_dispatcher.execute(_restServiceFactory.getSongService().getYouTubeSearchResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<List<YouTubeSearchResultDto>>() {
+		_dispatcher.execute(_restServiceFactory.getSongService().getYouTubeResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -304,8 +305,8 @@ public class SongPresenter extends
 			}
 
 			@Override
-			public void onSuccess(List<YouTubeSearchResultDto> result) {
-				youtubePresenter.setYouTubeVideos(result);
+			public void onSuccess(YouTubeSearchResultCollection result) {
+				youtubePresenter.setYouTubeVideos(result.getItems());
 				resizePlaylist();
 				getView().scrollYouTubeIntoView();
 			}

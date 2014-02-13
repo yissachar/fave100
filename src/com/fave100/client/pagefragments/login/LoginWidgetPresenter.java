@@ -145,7 +145,7 @@ public class LoginWidgetPresenter extends
 		}
 
 		LoadingIndicator.show();
-		_dispatcher.execute(_restServiceFactory.getAppUserService().login(getView().getUsername().trim(), getView().getPassword()), new AsyncCallback<LoginResultDto>() {
+		_dispatcher.execute(_restServiceFactory.getAppuserService().login(getView().getUsername().trim(), getView().getPassword()), new AsyncCallback<LoginResultDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -175,7 +175,7 @@ public class LoginWidgetPresenter extends
 	@Override
 	public void goToTwitterAuth() {
 		// Authenticate the user with Twitter
-		_dispatcher.execute(_restServiceFactory.getAppUserService().getTwitterAuthUrl(redirect), new AsyncCallback<StringResultDto>() {
+		_dispatcher.execute(_restServiceFactory.getAppuserService().getTwitterAuthUrl(redirect), new AsyncCallback<StringResultDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
