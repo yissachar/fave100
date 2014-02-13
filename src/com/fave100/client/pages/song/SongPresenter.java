@@ -123,7 +123,7 @@ public class SongPresenter extends
 
 		if (!id.isEmpty()) {
 			// Load the song from the datastore
-			_dispatcher.execute(_restServiceFactory.getSongService().getSong(id), new AsyncCallback<FaveItemDto>() {
+			_dispatcher.execute(_restServiceFactory.song().getSong(id), new AsyncCallback<FaveItemDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -153,7 +153,7 @@ public class SongPresenter extends
 			}
 			else {
 				// Get username and avatar from the datastore
-				_dispatcher.execute(_restServiceFactory.getAppuserService().getAppUser(username), new AsyncCallback<AppUserDto>() {
+				_dispatcher.execute(_restServiceFactory.appuser().getAppUser(username), new AsyncCallback<AppUserDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -171,7 +171,7 @@ public class SongPresenter extends
 			}
 
 			// Get the list for the requested user
-			_dispatcher.execute(_restServiceFactory.getFavelistService().getFaveList(username, hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.favelist().getFaveList(username, hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -188,7 +188,7 @@ public class SongPresenter extends
 		}
 		else {
 			// Get the master list for the hashtag
-			_dispatcher.execute(_restServiceFactory.getFavelistService().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.favelist().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -229,7 +229,7 @@ public class SongPresenter extends
 			public void onPlaylistSongChanged(final PlaylistSongChangedEvent event) {
 
 				// Load the song from the datastore
-				_dispatcher.execute(_restServiceFactory.getSongService().getSong(event.songID()), new AsyncCallback<FaveItemDto>() {
+				_dispatcher.execute(_restServiceFactory.song().getSong(event.songID()), new AsyncCallback<FaveItemDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -296,7 +296,7 @@ public class SongPresenter extends
 		getView().setSongInfo(songProxy);
 
 		// Get any YouTube videos
-		_dispatcher.execute(_restServiceFactory.getSongService().getYouTubeResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.song().getYouTubeResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

@@ -115,7 +115,7 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		_dispatcher.execute(_restServiceFactory.getFavelistService().addFaveListForCurrentUser(name), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.favelist().addFaveListForCurrentUser(name), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -175,7 +175,7 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		_dispatcher.execute(_restServiceFactory.getFavelistService().getHashtagAutocomplete(searchTerm), new AsyncCallback<StringResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.favelist().getHashtagAutocomplete(searchTerm), new AsyncCallback<StringResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -200,7 +200,7 @@ public class ListManagerPresenter extends
 
 			@Override
 			public void onOk() {
-				_dispatcher.execute(_restServiceFactory.getFavelistService().deleteFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
+				_dispatcher.execute(_restServiceFactory.favelist().deleteFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

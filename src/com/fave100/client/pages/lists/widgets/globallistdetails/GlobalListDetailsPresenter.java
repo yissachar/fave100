@@ -66,7 +66,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	public void setHashtag(final String hashtag) {
 		_hashtag = hashtag;
 		getView().setInfo(hashtag);
-		_dispatcher.execute(_restServiceFactory.getFavelistService().getTrendingFaveLists(), new AsyncCallback<StringResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.favelist().getTrendingFaveLists(), new AsyncCallback<StringResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

@@ -44,7 +44,7 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 	}
 
 	public void showWhylines(FaveItemDto song) {
-		_dispatcher.execute(_restServiceFactory.getWhylineService().getWhylinesForSong(song.getId()), new AsyncCallback<WhylineCollection>() {
+		_dispatcher.execute(_restServiceFactory.whyline().getWhylinesForSong(song.getId()), new AsyncCallback<WhylineCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -62,7 +62,7 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 			}
 		});
 
-		_dispatcher.execute(_restServiceFactory.getSongService().getFaveLists(song.getId()), new AsyncCallback<UserListResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.song().getFaveLists(song.getId()), new AsyncCallback<UserListResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

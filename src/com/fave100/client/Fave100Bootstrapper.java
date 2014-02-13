@@ -30,7 +30,7 @@ public class Fave100Bootstrapper implements Bootstrapper {
 	@Override
 	public void onBootstrap() {
 		// On first page load or page refresh, check for an existing logged in user
-		_dispatcher.execute(_restServiceFactory.getAppuserService().getLoggedInAppUser(), new AsyncCallback<AppUserDto>() {
+		_dispatcher.execute(_restServiceFactory.appuser().getLoggedInAppUser(), new AsyncCallback<AppUserDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
