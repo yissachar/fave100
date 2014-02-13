@@ -237,7 +237,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 			}
 
 			// Otherwise, request the info from the server
-			_dispatcher.execute(_restServiceFactory.getAppuserService().getAppUser(requestedUsername), new AsyncCallback<AppUserDto>() {
+			_dispatcher.execute(_restServiceFactory.appuser().getAppUser(requestedUsername), new AsyncCallback<AppUserDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -259,7 +259,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 				}
 			});
 
-			_dispatcher.execute(_restServiceFactory.getAppuserService().isFollowing(requestedUsername), new AsyncCallback<BooleanResultDto>() {
+			_dispatcher.execute(_restServiceFactory.appuser().isFollowing(requestedUsername), new AsyncCallback<BooleanResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

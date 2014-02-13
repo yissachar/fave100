@@ -167,7 +167,7 @@ public class FavelistPresenter extends
 		}
 		// Otherwise get it from the server if we are requesting a user's list
 		else if (user != null) {
-			_dispatcher.execute(_restServiceFactory.getFavelistService().getFaveList(user.getUsername(), hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.favelist().getFaveList(user.getUsername(), hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -189,7 +189,7 @@ public class FavelistPresenter extends
 		// No user, get the global list 
 		else {
 
-			_dispatcher.execute(_restServiceFactory.getFavelistService().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.favelist().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -254,7 +254,7 @@ public class FavelistPresenter extends
 		widgets.remove(index);
 		currentUser.getFaveList().remove(index);
 		// Send request for server to remove it
-		_dispatcher.execute(_restServiceFactory.getFavelistService().removeFaveItemForCurrentUser(hashtag, songId), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.favelist().removeFaveItemForCurrentUser(hashtag, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -270,7 +270,7 @@ public class FavelistPresenter extends
 
 	@Override
 	public void editWhyline(final String songId, final String whyline) {
-		_dispatcher.execute(_restServiceFactory.getFavelistService().editWhylineForCurrentUser(hashtag, whyline, songId), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.favelist().editWhylineForCurrentUser(hashtag, whyline, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -316,7 +316,7 @@ public class FavelistPresenter extends
 		}
 
 		// Save on server
-		_dispatcher.execute(_restServiceFactory.getFavelistService().rerankFaveItemForCurrentUser(hashtag, songId, newIndex), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.favelist().rerankFaveItemForCurrentUser(hashtag, songId, newIndex), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

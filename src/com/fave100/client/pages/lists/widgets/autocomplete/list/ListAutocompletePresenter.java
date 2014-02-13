@@ -88,7 +88,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			}
 		};
 
-		_dispatcher.execute(_restServiceFactory.getFavelistService().getHashtagAutocomplete(searchTerm), listAutocompleteReq);
+		_dispatcher.execute(_restServiceFactory.favelist().getHashtagAutocomplete(searchTerm), listAutocompleteReq);
 		_requests.add(listAutocompleteReq);
 	}
 

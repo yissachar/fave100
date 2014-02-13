@@ -118,7 +118,7 @@ public class CurrentUser extends AppUserDto {
 	}
 
 	public void logout() {
-		_dispatcher.execute(_restServiceFactory.getAppuserService().logout(), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.appuser().logout(), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -150,7 +150,7 @@ public class CurrentUser extends AppUserDto {
 			getFollowing().add(user);
 
 		// Add to server
-		_dispatcher.execute(_restServiceFactory.getAppuserService().followUser(user.getUsername()), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.appuser().followUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -172,7 +172,7 @@ public class CurrentUser extends AppUserDto {
 		getFollowing().remove(user);
 
 		// Remove from server
-		_dispatcher.execute(_restServiceFactory.getAppuserService().unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.appuser().unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -197,7 +197,7 @@ public class CurrentUser extends AppUserDto {
 
 	public void addSong(final String songId, final String hashtag, final String song, final String artist) {
 
-		_dispatcher.execute(_restServiceFactory.getFavelistService().addFaveItemForCurrentUser(hashtag, songId), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.favelist().addFaveItemForCurrentUser(hashtag, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -229,7 +229,7 @@ public class CurrentUser extends AppUserDto {
 
 		final String listName = name;
 
-		_dispatcher.execute(_restServiceFactory.getFavelistService().addFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.favelist().addFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
