@@ -21,19 +21,21 @@ import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.shared.Constants;
-import com.google.api.server.spi.config.ApiMethod;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 
-@Path("/" + ApiPaths.API_NAME + "/" + ApiPaths.API_VERSION + "/" + ApiPaths.SONG_ROOT)
+@Path("/" + ApiPaths.SONG_ROOT)
+@Api(value = "/" + ApiPaths.SONG_ROOT, description = "Operations on Songs")
 public class SongApi extends ApiBase {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}")
-	@ApiMethod(name = "song.getSong", path = ApiPaths.SONG_ROOT + "/{id}")
+	@ApiOperation(value = "Get a Song", response = FaveItem.class)
 	public FaveItem getSong(@Named("id") @PathParam("id") final String id) {
 		try {
 			final String lookupUrl = Constants.LOOKUP_URL + "id=" + id;
@@ -65,10 +67,10 @@ public class SongApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_YOUTUBE_SEARCH_RESULTS)
-	@ApiMethod(name = "song.getYouTubeSearchResults", path = ApiPaths.SONG_ROOT + ApiPaths.GET_YOUTUBE_SEARCH_RESULTS)
-	public List<YouTubeSearchResult> getYouTubeResults(
-			@Named("song") @QueryParam("song") final String song,
-			@Named("artist") @QueryParam("artist") final String artist) {
+	@ApiOperation(value = "Get a Song", response = YouTubeSearchResultCollection.class)
+	public YouTubeSearchResultCollection getYouTubeResults(
+			@QueryParam("song") final String song,
+			@QueryParam("artist") final String artist) {
 
 		try {
 			String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&maxResults=5&type=video&videoEmbeddable=true";
@@ -103,7 +105,7 @@ public class SongApi extends ApiBase {
 				youtubeResults.add(new YouTubeSearchResult(videoId, thumbnail));
 
 			}
-			return youtubeResults;
+			return new YouTubeSearchResultCollection(youtubeResults);
 		}
 		catch (final Exception e) {
 
@@ -114,8 +116,8 @@ public class SongApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("{id}/favelists")
-	@ApiMethod(name = "song.getFaveLists", path = ApiPaths.SONG_ROOT + "{id}/favelists")
-	public List<UserListResult> getFaveLists(@Named("id") @PathParam("id") final String id) {
+	@ApiOperation(value = "Get a Song", response = UserListResultCollection.class)
+	public UserListResultCollection getFaveLists(@Named("id") @PathParam("id") final String id) {
 		final List<UserListResult> userListResults = new ArrayList<>();
 
 		// Get up to 30 FaveLists containing the song
@@ -132,6 +134,6 @@ public class SongApi extends ApiBase {
 			UserListResult userListResult = new UserListResult(user.getUsername(), faveList.getHashtag(), avatar);
 			userListResults.add(userListResult);
 		}
-		return userListResults;
+		return new UserListResultCollection(userListResults);
 	}
 }

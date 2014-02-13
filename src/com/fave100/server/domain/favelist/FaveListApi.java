@@ -56,7 +56,7 @@ public class FaveListApi {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("{username}/{hashtag}")
+	@Path("/{username}/{hashtag}")
 	@ApiOperation(value = "Get a user's FaveList", response = FaveItemCollection.class)
 	public FaveItemCollection getFaveList(
 			@PathParam("username") final String username,
@@ -71,7 +71,7 @@ public class FaveListApi {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("{hashtag}")
+	@Path("/{hashtag}")
 	@ApiOperation(value = "Get a master FaveList", response = FaveItemCollection.class)
 	public FaveItemCollection getMasterFaveList(@PathParam("hashtag") final String hashtag) {
 		return new FaveItemCollection(ofy().load().type(Hashtag.class).id(hashtag.toLowerCase()).get().getList());
@@ -168,7 +168,8 @@ public class FaveListApi {
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.DELETE_FAVELIST)
-	public void deleteFaveListForCurrentUser(HttpServletRequest request, @QueryParam("list") final String listName) {
+	@ApiOperation(value = "Delete a FaveList")
+	public void deleteFaveListForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String listName) {
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
@@ -198,6 +199,7 @@ public class FaveListApi {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.ADD_FAVEITEM)
+	@ApiOperation(value = "Add a FaveItem")
 	public void addFaveItemForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID) {
 
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
@@ -237,6 +239,7 @@ public class FaveListApi {
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.REMOVE_FAVEITEM)
+	@ApiOperation(value = "Remove a FaveItem")
 	public void removeFaveItemForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID) {
 
 		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
@@ -272,6 +275,7 @@ public class FaveListApi {
 
 	@POST
 	@Path("rerank/{list}/{songId}/{newIndex}")
+	@ApiOperation(value = "Rerank a FaveItem")
 	public void rerankFaveItemForCurrentUser(@Context HttpServletRequest request, @PathParam("list") final String hashtag, @PathParam("songId") final String songID,
 			@PathParam("newIndex") final int newIndex) {
 
@@ -309,6 +313,7 @@ public class FaveListApi {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.EDIT_WHYLINE)
+	@ApiOperation(value = "Edit a WhyLine")
 	public void editWhylineForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID,
 			@QueryParam("whyline") final String whyline) {
 

@@ -102,7 +102,7 @@ public class RegisterPresenter extends
 			// username and create their account
 
 			// Make sure that the user is actually logged into Google
-			_dispatcher.execute(_restServiceFactory.getAppUserService().isGoogleLoggedIn(), new AsyncCallback<BooleanResultDto>() {
+			_dispatcher.execute(_restServiceFactory.getAppuserService().isGoogleUserLoggedIn(), new AsyncCallback<BooleanResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -113,7 +113,7 @@ public class RegisterPresenter extends
 				public void onSuccess(BooleanResultDto loggedIn) {
 					if (loggedIn.getValue()) {
 						// If user is logged in to Google, log them in to Fave100
-						_dispatcher.execute(_restServiceFactory.getAppUserService().loginWithGoogle(), new AsyncCallback<LoginResultDto>() {
+						_dispatcher.execute(_restServiceFactory.getAppuserService().loginWithGoogle(), new AsyncCallback<LoginResultDto>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -153,7 +153,7 @@ public class RegisterPresenter extends
 			final String oauth_verifier = placeRequest.getParameter("oauth_verifier", "");//Window.Location
 			//					.getParameter("oauth_verifier");
 
-			_dispatcher.execute(_restServiceFactory.getAppUserService().loginWithTwitter(oauth_verifier), new AsyncCallback<LoginResultDto>() {
+			_dispatcher.execute(_restServiceFactory.getAppuserService().loginWithTwitter(oauth_verifier), new AsyncCallback<LoginResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -183,7 +183,7 @@ public class RegisterPresenter extends
 		else if (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 			// Check if user alaready logged in through Facebook
 			LoadingIndicator.show();
-			_dispatcher.execute(_restServiceFactory.getAppUserService().loginWithFacebook(placeRequest.getParameter("code", "")), new AsyncCallback<LoginResultDto>() {
+			_dispatcher.execute(_restServiceFactory.getAppuserService().loginWithFacebook(placeRequest.getParameter("code", "")), new AsyncCallback<LoginResultDto>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -233,7 +233,7 @@ public class RegisterPresenter extends
 		if (validateThirdPartyFields(username)) {
 			if (provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
 				// Create Google-linked account
-				_dispatcher.execute(_restServiceFactory.getAppUserService().createAppUserFromGoogleAccount(username), new AsyncCallback<LoginResultDto>() {
+				_dispatcher.execute(_restServiceFactory.getAppuserService().createAppUserFromGoogleAccount(username), new AsyncCallback<LoginResultDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -251,7 +251,7 @@ public class RegisterPresenter extends
 				// Create Twitter-linked account
 				final String oauth_verifier = Window.Location.getParameter("oauth_verifier");
 
-				_dispatcher.execute(_restServiceFactory.getAppUserService().createAppUserFromTwitterAccount(username, oauth_verifier), new AsyncCallback<LoginResultDto>() {
+				_dispatcher.execute(_restServiceFactory.getAppuserService().createAppUserFromTwitterAccount(username, oauth_verifier), new AsyncCallback<LoginResultDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -272,7 +272,7 @@ public class RegisterPresenter extends
 				// Create Facebook linked account
 				final String state = Window.Location.getParameter("state");
 				final String code = Window.Location.getParameter("code");
-				_dispatcher.execute(_restServiceFactory.getAppUserService().createAppUserFromFacebookAccount(username, state, code, facebookRedirect), new AsyncCallback<LoginResultDto>() {
+				_dispatcher.execute(_restServiceFactory.getAppuserService().createAppUserFromFacebookAccount(username, state, code, facebookRedirect), new AsyncCallback<LoginResultDto>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

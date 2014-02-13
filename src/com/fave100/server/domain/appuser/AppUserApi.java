@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import javax.inject.Named;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Transport;
@@ -22,8 +21,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -39,12 +40,18 @@ import com.fave100.server.domain.LoginResult;
 import com.fave100.server.domain.Session;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.server.exceptions.AlreadyFollowingException;
+import com.fave100.server.exceptions.CannotFollowYourselfException;
+import com.fave100.server.exceptions.EmailIdAlreadyExistsException;
+import com.fave100.server.exceptions.FacebookIdAlreadyExistsException;
+import com.fave100.server.exceptions.GoogleIdAlreadyExistsException;
+import com.fave100.server.exceptions.InvalidLoginException;
+import com.fave100.server.exceptions.NotLoggedInException;
+import com.fave100.server.exceptions.TwitterIdAlreadyExistsException;
+import com.fave100.server.exceptions.UsernameAlreadyExistsException;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
 import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
-import com.google.api.server.spi.config.ApiMethod;
-import com.google.api.server.spi.config.ApiMethod.HttpMethod;
-import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
@@ -58,8 +65,11 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 
-@Path("/" + ApiPaths.API_NAME + "/" + ApiPaths.API_VERSION + "/" + ApiPaths.APPUSER_ROOT)
+@Path("/" + ApiPaths.APPUSER_ROOT)
+@Api(value = "/" + ApiPaths.APPUSER_ROOT, description = "Operations on Users")
 public class AppUserApi extends ApiBase {
 
 	private AppUserDao appUserDao;
@@ -72,11 +82,11 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_APPUSER)
-	@ApiMethod(name = "appUser.getAppUser", path = ApiPaths.APPUSER_ROOT + ApiPaths.GET_APPUSER)
-	public AppUser getAppUser(@Named("username") @QueryParam("username") final String username) throws NotFoundException {
+	@ApiOperation(value = "Get an AppUser", response = AppUser.class)
+	public AppUser getAppUser(@QueryParam("username") final String username) {
 		AppUser appUser = ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
 		if (appUser == null)
-			throw new NotFoundException("User not found");
+			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("User not found").build());
 
 		return appUser;
 	}
@@ -84,11 +94,11 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_APPUSER)
-	@ApiMethod(name = "appUser.createAppUser", path = ApiPaths.APPUSER_ROOT + ApiPaths.CREATE_APPUSER)
+	@ApiOperation(value = "Create an AppUser", response = LoginResult.class)
 	public LoginResult createAppUser(@Context final HttpServletRequest request,
-			@Named("username") @QueryParam("username") final String username,
-			@Named("password") @QueryParam("password") final String password,
-			@Named("email") @QueryParam("email") final String email) throws BadRequestException {
+			@QueryParam("username") final String username,
+			@QueryParam("password") final String password,
+			@QueryParam("email") final String email) {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name is already registered";
@@ -120,13 +130,7 @@ public class AppUserApi extends ApiBase {
 							// Store email address
 							final EmailID emailID = new EmailID(email, appUser);
 							ofy().save().entities(appUser, faveList, emailID).now();
-							// Automatically log in user
-							try {
-								return login(request, username, password);
-							}
-							catch (UnauthorizedException e) {
-								return null;
-							}
+							return login(request, username, password);
 						}
 						return null;
 					}
@@ -136,7 +140,12 @@ public class AppUserApi extends ApiBase {
 		}
 		// Username or email already exists
 		catch (final RuntimeException e) {
-			throw new BadRequestException(e.getMessage());
+			if (e.getMessage().equals(userExistsMsg)) {
+				throw new UsernameAlreadyExistsException();
+			}
+			else if (e.getMessage().equals(emailExistsMsg)) {
+				throw new EmailIdAlreadyExistsException();
+			}
 		}
 
 		return loginResult;
@@ -145,9 +154,8 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_APPUSER_FROM_GOOGLE_ACCOUNT)
-	@ApiMethod(name = "appUser.createAppUserFromGoogleAccount", path = ApiPaths.APPUSER_ROOT + ApiPaths.CREATE_APPUSER_FROM_GOOGLE_ACCOUNT)
-	public LoginResult createAppUserFromGoogleAccount(@Context final HttpServletRequest request,
-			@Named("username") @QueryParam("username") final String username) throws BadRequestException {
+	@ApiOperation(value = "Create an AppUser from Google", response = LoginResult.class)
+	public LoginResult createAppUserFromGoogleAccount(@Context final HttpServletRequest request, @QueryParam("username") final String username) {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name already exists";
@@ -183,7 +191,12 @@ public class AppUserApi extends ApiBase {
 		}
 		// User or Google ID already exists
 		catch (final RuntimeException e) {
-			throw new BadRequestException(e.getMessage());
+			if (e.getMessage().equals(userExistsMsg)) {
+				throw new UsernameAlreadyExistsException();
+			}
+			else if (e.getMessage().equals(googleIDMsg)) {
+				throw new GoogleIdAlreadyExistsException();
+			}
 		}
 
 		return loginResult;
@@ -192,10 +205,11 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_APPUSER_FROM_TWITTER_ACCOUNT)
-	@ApiMethod(name = "appUser.createAppUserFromTwitterAccount", path = ApiPaths.APPUSER_ROOT + ApiPaths.CREATE_APPUSER_FROM_TWITTER_ACCOUNT)
-	public LoginResult createAppUserFromTwitterAccount(@Context final HttpServletRequest request,
-			@Named("username") @QueryParam("username") final String username,
-			@Named("oauthVerifier") @QueryParam("oauthVerifier") final String oauth_verifier) throws BadRequestException {
+	@ApiOperation(value = "Create an AppUser from Twitter", response = LoginResult.class)
+	public LoginResult createAppUserFromTwitterAccount(
+			@Context final HttpServletRequest request,
+			@QueryParam("username") final String username,
+			@QueryParam("oauthVerifier") final String oauth_verifier) {
 
 		final Session session = SessionHelper.getSession(request);
 
@@ -234,7 +248,12 @@ public class AppUserApi extends ApiBase {
 		}
 		// User or Twitter ID already exists
 		catch (final RuntimeException e) {
-			throw new BadRequestException(e.getMessage());
+			if (e.getMessage().equals(userExistsMsg)) {
+				throw new UsernameAlreadyExistsException();
+			}
+			else if (e.getMessage().equals(twitterIDMsg)) {
+				throw new TwitterIdAlreadyExistsException();
+			}
 		}
 
 		return new LoginResult(newAppUser, session.getId());
@@ -243,12 +262,13 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_APPUSER_FROM_FACEBOOK_ACCOUNT)
-	@ApiMethod(name = "appUser.createAppUserFromFacebookAccount", path = ApiPaths.APPUSER_ROOT + ApiPaths.CREATE_APPUSER_FROM_FACEBOOK_ACCOUNT)
-	public LoginResult createAppUserFromFacebookAccount(@Context final HttpServletRequest request,
-			@Named("username") @QueryParam("username") final String username,
-			@Named("state") @QueryParam("state") final String state,
-			@Named("code") @QueryParam("code") final String code,
-			@Named("redirectUrl") @QueryParam("redirectUrl") final String redirectUrl) throws BadRequestException {
+	@ApiOperation(value = "Create an AppUser from Facebook", response = LoginResult.class)
+	public LoginResult createAppUserFromFacebookAccount(
+			@Context final HttpServletRequest request,
+			@QueryParam("username") final String username,
+			@QueryParam("state") final String state,
+			@QueryParam("code") final String code,
+			@QueryParam("redirectUrl") final String redirectUrl) {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 
@@ -287,7 +307,12 @@ public class AppUserApi extends ApiBase {
 		}
 		// User or Facebook ID already exists
 		catch (final RuntimeException e) {
-			throw new BadRequestException(e.getMessage());
+			if (e.getMessage().equals(userExistsMsg)) {
+				throw new UsernameAlreadyExistsException();
+			}
+			else if (e.getMessage().equals(facebookIDMsg)) {
+				throw new FacebookIdAlreadyExistsException();
+			}
 		}
 
 		return loginResult;
@@ -296,10 +321,11 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGIN)
-	@ApiMethod(name = "appUser.login", path = ApiPaths.APPUSER_ROOT + ApiPaths.LOGIN)
-	public LoginResult login(@Context HttpServletRequest request,
-			@Named("username") @QueryParam("username") final String username,
-			@Named("password") @QueryParam("password") final String password) throws UnauthorizedException {
+	@ApiOperation(value = "Login", response = LoginResult.class)
+	public LoginResult login(
+			@Context HttpServletRequest request,
+			@QueryParam("username") final String username,
+			@QueryParam("password") final String password) {
 
 		AppUser loggingInUser = null;
 		String errorMessage = "Invalid credentials";
@@ -310,7 +336,7 @@ public class AppUserApi extends ApiBase {
 			final EmailID emailID = EmailID.findEmailID(username);
 			// No email found
 			if (emailID == null)
-				throw new UnauthorizedException(errorMessage);
+				throw new InvalidLoginException();
 			// Email found, get corresponding user
 			loggingInUser = ofy().load().ref(emailID.getUser()).get();
 		}
@@ -323,7 +349,7 @@ public class AppUserApi extends ApiBase {
 			if (password == null || password.isEmpty()
 					|| !BCrypt.checkpw(password, loggingInUser.getPassword())) {
 				// Bad password
-				throw new UnauthorizedException(errorMessage);
+				throw new InvalidLoginException();
 			}
 			// Successful login - store session
 			session.setAttribute(AppUserDao.AUTH_USER, username);
@@ -331,7 +357,7 @@ public class AppUserApi extends ApiBase {
 		}
 		else {
 			// Bad username
-			throw new UnauthorizedException(errorMessage);
+			throw new InvalidLoginException();
 		}
 		return new LoginResult(loggingInUser, session.getId());
 	}
@@ -339,7 +365,7 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGIN_WITH_GOOGLE)
-	@ApiMethod(name = "appUser.loginWithGoogle", path = ApiPaths.APPUSER_ROOT + ApiPaths.LOGIN_WITH_GOOGLE)
+	@ApiOperation(value = "Login with Google", response = LoginResult.class)
 	public LoginResult loginWithGoogle(@Context HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 
@@ -362,8 +388,8 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGIN_WITH_TWITTER)
-	@ApiMethod(name = "appUser.loginWithTwitter", path = ApiPaths.APPUSER_ROOT + ApiPaths.LOGIN_WITH_TWITTER)
-	public LoginResult loginWithTwitter(@Context HttpServletRequest request, @Named("oauthVerifier") @QueryParam("oauthVerifier") final String oauth_verifier) {
+	@ApiOperation(value = "Login with Twitter", response = LoginResult.class)
+	public LoginResult loginWithTwitter(@Context HttpServletRequest request, @QueryParam("oauthVerifier") final String oauth_verifier) {
 		Session session = SessionHelper.getSession(request);
 
 		// Get the Twitter user
@@ -391,8 +417,8 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGIN_WITH_FACEBOOK)
-	@ApiMethod(name = "appUser.loginWithFacebook", path = ApiPaths.APPUSER_ROOT + ApiPaths.LOGIN_WITH_FACEBOOK)
-	public LoginResult loginWithFacebook(@Context HttpServletRequest request, @Named("code") @QueryParam("code") final String code) {
+	@ApiOperation(value = "Login with Facebook", response = LoginResult.class)
+	public LoginResult loginWithFacebook(@Context HttpServletRequest request, @QueryParam("code") final String code) {
 		// Get the Facebook user
 		final Long facebookUserId = appUserDao.getCurrentFacebookUserId(request, code);
 		Session session = SessionHelper.getSession(request);
@@ -419,7 +445,7 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGOUT)
-	@ApiMethod(name = "appUser.logout", path = ApiPaths.APPUSER_ROOT + ApiPaths.LOGOUT)
+	@ApiOperation(value = "Logout")
 	public void logout(@Context HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 		session.setAttribute(AppUserDao.AUTH_USER, null);
@@ -432,7 +458,7 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.LOGGED_IN_APPUSER)
-	@ApiMethod(name = "appUser.getLoggedInAppUser", path = ApiPaths.APPUSER_ROOT + ApiPaths.LOGGED_IN_APPUSER)
+	@ApiOperation(value = "Get logged in user", response = AppUser.class)
 	public AppUser getLoggedInAppUser(@Context HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
@@ -457,22 +483,23 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_FOLLOWING)
-	@ApiMethod(name = "appUser.getFollowing", path = ApiPaths.APPUSER_ROOT + ApiPaths.GET_FOLLOWING)
-	public FollowingResult getFollowing(@Context HttpServletRequest request,
-			@Named("username") @QueryParam("username") final String username,
-			@Named("index") @QueryParam("index") final int index) throws UnauthorizedException, NotFoundException, ForbiddenException {
+	@ApiOperation(value = "Get following", response = FollowingResult.class)
+	public FollowingResult getFollowing(
+			@Context HttpServletRequest request,
+			@QueryParam("username") final String username,
+			@QueryParam("index") final int index) {
 
 		// Only logged in users can see following		
 		final AppUser currentUser = getLoggedInAppUser(request);
 		if (currentUser == null)
-			throw new UnauthorizedException("Not logged in");
+			throw new NotLoggedInException();
 
 		final AppUser user = getAppUser(username);
 		if (user == null)
-			throw new NotFoundException("User does not exist");
+			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("User does not exist").build());
 
 		if (user.isFollowingPrivate() && !user.getId().equals(currentUser.getId()))
-			throw new ForbiddenException("List is private");
+			throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).entity("List is private").build());
 
 		final Following following = ofy().load().type(Following.class).id(username.toLowerCase()).get();
 		if (following != null && following.getFollowing() != null) {
@@ -488,10 +515,10 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.IS_FOLLOWING)
-	@ApiMethod(name = "appUser.isFollowing", path = ApiPaths.APPUSER_ROOT + ApiPaths.IS_FOLLOWING, httpMethod = HttpMethod.GET)
-	public BooleanResult isFollowing(@Context HttpServletRequest request, @Named("username") @QueryParam("username") final String username) throws UnauthorizedException {
+	@ApiOperation(value = "Is following", response = BooleanResult.class)
+	public BooleanResult isFollowing(@Context HttpServletRequest request, @QueryParam("username") final String username) {
 		if (!appUserDao.isAppUserLoggedIn(request))
-			throw new UnauthorizedException("Not logged in");
+			throw new NotLoggedInException();
 
 		Session session = SessionHelper.getSession(request);
 
@@ -509,7 +536,7 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.IS_GOOGLE_LOGGED_IN)
-	@ApiMethod(name = "appUser.isGoogleLoggedIn", path = ApiPaths.APPUSER_ROOT + ApiPaths.IS_GOOGLE_LOGGED_IN, httpMethod = HttpMethod.GET)
+	@ApiOperation(value = "Is google user logged in", response = BooleanResult.class)
 	public BooleanResult isGoogleUserLoggedIn() {
 		final UserService userService = UserServiceFactory.getUserService();
 		final User user = userService.getCurrentUser();
@@ -520,8 +547,8 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_GOOGLE_LOGIN_URL)
-	@ApiMethod(name = "appUser.getGoogleLoginURL", path = ApiPaths.APPUSER_ROOT + ApiPaths.GET_GOOGLE_LOGIN_URL)
-	public StringResult getGoogleLoginURL(@Named("destinationURL") @QueryParam("destinationURL") final String destinationURL) {
+	@ApiOperation(value = "Get Google login URL", response = StringResult.class)
+	public StringResult getGoogleLoginURL(@QueryParam("destinationURL") final String destinationURL) {
 		return new StringResult(UserServiceFactory.getUserService().createLoginURL(destinationURL));
 	}
 
@@ -529,14 +556,14 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_FACEBOOK_AUTH_URL)
-	@ApiMethod(name = "appUser.getFacebookAuthUrl", path = ApiPaths.APPUSER_ROOT + ApiPaths.GET_FACEBOOK_AUTH_URL)
-	public StringResult getFacebookAuthUrl(@Context HttpServletRequest request, @Named("redirectUrl") @QueryParam("redirectUrl") final String redirectUrl) throws BadRequestException {
+	@ApiOperation(value = "Get Facebook auth URL", response = StringResult.class)
+	public StringResult getFacebookAuthUrl(@Context HttpServletRequest request, @QueryParam("redirectUrl") final String redirectUrl) {
 		request.getSession().setAttribute("facebookRedirect", redirectUrl);
 		try {
 			return new StringResult("https://www.facebook.com/dialog/oauth?client_id=" + AppUserDao.FACEBOOK_APP_ID + "&display=page&redirect_uri=" + URLEncoder.encode(redirectUrl, "UTF-8"));
 		}
 		catch (UnsupportedEncodingException e) {
-			throw new BadRequestException("Unsupported encoding");
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Unsupported encoding").build());
 		}
 	}
 
@@ -544,7 +571,7 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.IS_APPUSER_LOGGED_IN)
-	@ApiMethod(name = "appUser.isAppUserLoggedIn", path = ApiPaths.APPUSER_ROOT + ApiPaths.IS_APPUSER_LOGGED_IN)
+	@ApiOperation(value = "Is app user logged in", response = BooleanResult.class)
 	public BooleanResult isAppUserLoggedIn(@Context HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 
@@ -556,8 +583,8 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.GET_TWITTER_AUTH_URL)
-	@ApiMethod(name = "appUser.getTwitterAuthUrl", path = ApiPaths.APPUSER_ROOT + ApiPaths.GET_TWITTER_AUTH_URL)
-	public StringResult getTwitterAuthUrl(@Context HttpServletRequest request, @Named("redirectUrl") final String redirectUrl) {
+	@ApiOperation(value = "Get Twitter auth URL", response = StringResult.class)
+	public StringResult getTwitterAuthUrl(@Context HttpServletRequest request, final String redirectUrl) {
 		final Twitter twitter = appUserDao.getTwitterInstance();
 		twitter.setOAuthConsumer(AppUserDao.TWITTER_CONSUMER_KEY, AppUserDao.TWITTER_CONSUMER_SECRET);
 
@@ -578,8 +605,8 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CREATE_BLOBSTORE_URL)
-	@ApiMethod(name = "appUser.createBlobstoreUrl", path = ApiPaths.APPUSER_ROOT + ApiPaths.CREATE_BLOBSTORE_URL)
-	public StringResult createBlobstoreUrl(@Named("successPath") final String successPath) {
+	@ApiOperation(value = "Get Twitter auth URL", response = StringResult.class)
+	public StringResult createBlobstoreUrl(final String successPath) {
 		final UploadOptions options = UploadOptions.Builder.withMaxUploadSizeBytes(Constants.MAX_AVATAR_SIZE);
 		return new StringResult(BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(successPath, options));
 	}
@@ -587,11 +614,11 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.USER_SETTINGS)
-	@ApiMethod(name = "appUser.getCurrentUserSettings", path = ApiPaths.APPUSER_ROOT + ApiPaths.USER_SETTINGS)
-	public UserInfo getCurrentUserSettings(@Context HttpServletRequest request) throws UnauthorizedException {
+	@ApiOperation(value = "Get current user settings", response = UserInfo.class)
+	public UserInfo getCurrentUserSettings(@Context HttpServletRequest request) {
 		final AppUser currentUser = getLoggedInAppUser(request);
 		if (currentUser == null)
-			throw new UnauthorizedException("Not logged in");
+			throw new NotLoggedInException();
 
 		return new UserInfo(currentUser);
 	}
@@ -599,8 +626,8 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.USER_SETTINGS)
-	@ApiMethod(name = "appUser.setUserInfo", path = ApiPaths.APPUSER_ROOT + ApiPaths.USER_SETTINGS)
-	public BooleanResult setUserInfo(HttpServletRequest request, final UserInfo userInfo) throws ForbiddenException {
+	@ApiOperation(value = "Set user info", response = BooleanResult.class)
+	public BooleanResult setUserInfo(@Context HttpServletRequest request, final UserInfo userInfo) {
 		final AppUser currentUser = getLoggedInAppUser(request);
 		if (currentUser == null)
 			return new BooleanResult(false);
@@ -641,7 +668,7 @@ public class AppUserApi extends ApiBase {
 		}
 		catch (final RuntimeException re) {
 			if (re.getCause() instanceof EmailIDAlreadyExistsException) {
-				throw new ForbiddenException("Email already exists");
+				throw new EmailIdAlreadyExistsException();
 			}
 		}
 
@@ -651,16 +678,16 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.FOLLOW)
-	@ApiMethod(name = "appUser.followUser", path = ApiPaths.APPUSER_ROOT + ApiPaths.FOLLOW)
-	public void followUser(@Context HttpServletRequest request, @Named("username") @QueryParam("username") final String username) throws UnauthorizedException, ForbiddenException {
+	@ApiOperation(value = "Follow user")
+	public void followUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
 		final AppUser currentUser = getLoggedInAppUser(request);
 
 		if (currentUser == null)
-			throw new UnauthorizedException("Not logged in");
+			throw new NotLoggedInException();
 
 		// Check if user trying to follow themselves
 		if (currentUser.getUsername().equals(username))
-			throw new ForbiddenException("You cannot follow yourself");
+			throw new CannotFollowYourselfException();
 
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
 		Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
@@ -671,7 +698,7 @@ public class AppUserApi extends ApiBase {
 
 		// Check if already following that user
 		if (following.getFollowing().contains(userRef))
-			throw new ForbiddenException("You are already following that user");
+			throw new AlreadyFollowingException();
 
 		following.getFollowing().add(userRef);
 		ofy().save().entity(following).now();
@@ -682,15 +709,12 @@ public class AppUserApi extends ApiBase {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.UNFOLLOW)
-	@ApiMethod(name = "appUser.unfollowUser", path = ApiPaths.APPUSER_ROOT + ApiPaths.UNFOLLOW)
-	public void unfollowUser(
-			@Context HttpServletRequest request,
-			@Named("username") @QueryParam("username") final String username)
-			throws UnauthorizedException {
+	@ApiOperation(value = "Unfollow user")
+	public void unfollowUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
 
 		final AppUser currentUser = getLoggedInAppUser(request);
 		if (currentUser == null)
-			throw new UnauthorizedException("Not logged in");
+			throw new NotLoggedInException();
 
 		final Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
 		if (following == null)
@@ -706,10 +730,8 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.EMAIL_PASSWORD_RESET)
-	@ApiMethod(name = "appUser.emailPasswordResetToken", path = ApiPaths.APPUSER_ROOT + ApiPaths.EMAIL_PASSWORD_RESET)
-	public BooleanResult emailPasswordResetToken(
-			@Named("username") @QueryParam("username") final String username,
-			@Named("emailAddress") @QueryParam("emailAddress") final String emailAddress) {
+	@ApiOperation(value = "Email password reset token", response = BooleanResult.class)
+	public BooleanResult emailPasswordResetToken(@QueryParam("username") final String username, @QueryParam("emailAddress") final String emailAddress) {
 
 		if (!username.isEmpty() && !emailAddress.isEmpty()) {
 			final AppUser appUser = appUserDao.findAppUser(username);
@@ -760,11 +782,9 @@ public class AppUserApi extends ApiBase {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(ApiPaths.CHANGE_PASSWORD)
-	@ApiMethod(name = "appUser.changePassword", path = ApiPaths.APPUSER_ROOT + ApiPaths.CHANGE_PASSWORD)
-	public BooleanResult changePassword(@Context HttpServletRequest request,
-			@Named("newPassoword") @QueryParam("newPassword") final String newPassword,
-			@Named("tokenOrPassword") @QueryParam("tokenOrPassword") final String tokenOrPassword)
-			throws UnauthorizedException {
+	@ApiOperation(value = "Change password", response = BooleanResult.class)
+	public BooleanResult changePassword(@Context HttpServletRequest request, @QueryParam("newPassword") final String newPassword,
+			@QueryParam("tokenOrPassword") final String tokenOrPassword) {
 
 		if (Validator.validatePassword(newPassword) != null || tokenOrPassword == null || tokenOrPassword.isEmpty()) {
 			// TODO: Shouldn't this be an exception instead??
@@ -802,7 +822,7 @@ public class AppUserApi extends ApiBase {
 				}
 			}
 			else {
-				throw new UnauthorizedException("Not logged in");
+				throw new NotLoggedInException();
 			}
 		}
 
