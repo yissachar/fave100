@@ -2,9 +2,6 @@ package com.fave100.server.domain;
 
 public class ApiPaths {
 
-	public static final String API_NAME = "fave100";
-	public static final String API_VERSION = "v1";
-
 	// FaveList paths
 	public static final String FAVELIST_ROOT = "favelist";
 	public static final String GET_HASHTAG_AUTOCOMPLETE = "/hashtagAutocomplete";
