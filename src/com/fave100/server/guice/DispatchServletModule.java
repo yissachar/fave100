@@ -1,7 +1,6 @@
 package com.fave100.server.guice;
 
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
-
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.fave100.server.api.AppUserApi;
 import com.fave100.server.api.FaveListApi;
 import com.fave100.server.api.SongApi;
