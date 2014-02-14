@@ -2,12 +2,9 @@ package com.fave100.server.domain.favelist;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fave100.server.domain.Whyline;
-import com.google.api.server.spi.config.AnnotationBoolean;
-import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Index;
@@ -71,13 +68,11 @@ public class FaveItem implements Serializable {
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Ref<Whyline> getWhylineRef() {
 		return whylineRef;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setWhylineRef(final Ref<Whyline> whylineRef) {
 		this.whylineRef = whylineRef;
 	}

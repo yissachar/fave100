@@ -6,13 +6,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.DatastoreObject;
-import com.google.api.server.spi.config.AnnotationBoolean;
-import com.google.api.server.spi.config.ApiResourceProperty;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
@@ -97,25 +94,21 @@ public class AppUser extends DatastoreObject {
 	// Getters and setters
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public String getUsernameID() {
 		return usernameID;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setUsernameID(final String usernameID) {
 		this.usernameID = usernameID;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public String getEmail() {
 		return email;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setEmail(final String email) {
 		this.email = email;
 	}
@@ -129,91 +122,76 @@ public class AppUser extends DatastoreObject {
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public String getId() {
 		return username;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public String getPassword() {
 		return password;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setPassword(final String password) {
 		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public String getAvatar() {
 		return avatar;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setAvatar(final String avatar) {
 		this.avatar = avatar;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public Date getJoinDate() {
 		return joinDate;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setJoinDate(final Date joinDate) {
 		this.joinDate = joinDate;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public static void setTwitterConsumerKey(final String key) {
 		AppUserDao.TWITTER_CONSUMER_KEY = key;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public static void setTwitterConsumerSecret(final String secret) {
 		AppUserDao.TWITTER_CONSUMER_SECRET = secret;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public static void setFacebookApiKey(final String key) {
 		AppUserDao.FACEBOOK_APP_ID = key;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public static void setFacebookApiSecret(final String secret) {
 		AppUserDao.FACEBOOK_APP_SECRET = secret;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public boolean isFollowingPrivate() {
 		return followingPrivate;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setFollowingPrivate(final boolean followingPrivate) {
 		this.followingPrivate = followingPrivate;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public boolean isFollowersPrivate() {
 		return followersPrivate;
 	}
 
 	@JsonIgnore
-	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setFollowersPrivate(final boolean followersPrivate) {
 		this.followersPrivate = followersPrivate;
 	}
