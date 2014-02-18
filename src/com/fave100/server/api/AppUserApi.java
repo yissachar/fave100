@@ -60,7 +60,6 @@ import com.fave100.server.exceptions.TwitterIdAlreadyExistsException;
 import com.fave100.server.exceptions.UsernameAlreadyExistsException;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
-import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
 import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
@@ -636,7 +635,7 @@ public class AppUserApi {
 						EmailID emailID = EmailID.findEmailID(email);
 						// Existing email for a different user, throw exception
 						if (emailID != null && !emailID.getEmailID().equals(currentUser.getEmail().toLowerCase())) {
-							throw new RuntimeException(new EmailIDAlreadyExistsException());
+							throw new RuntimeException(new EmailIdAlreadyExistsException());
 						}
 						else if (emailID == null) {
 							// No existing email, allow it to be changed
@@ -656,7 +655,7 @@ public class AppUserApi {
 			});
 		}
 		catch (final RuntimeException re) {
-			if (re.getCause() instanceof EmailIDAlreadyExistsException) {
+			if (re.getCause() instanceof EmailIdAlreadyExistsException) {
 				throw new EmailIdAlreadyExistsException();
 			}
 		}
