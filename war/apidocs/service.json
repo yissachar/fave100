@@ -3,15 +3,15 @@
   "swaggerVersion" : "1.2",
   "apis" : [ {
     "path" : "/whyline.{format}",
-    "description" : "Operations on Whylines"
+    "description" : "Operations about Whylines"
   }, {
-    "path" : "/song.{format}",
-    "description" : "Operations on Songs"
+    "path" : "/appuser.{format}",
+    "description" : "Operations on Users"
   }, {
     "path" : "/favelist.{format}",
     "description" : "Operations on FaveLists"
   }, {
-    "path" : "/appuser.{format}",
-    "description" : "Operations on Users"
+    "path" : "/song.{format}",
+    "description" : "Operations on Songs"
   } ]
 }

@@ -3,19 +3,21 @@ package com.fave100.server.api;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.Song;
@@ -33,6 +35,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 @Path("/" + ApiPaths.SONG_ROOT)
 @Produces(MediaType.APPLICATION_JSON)
@@ -40,9 +43,9 @@ import com.wordnik.swagger.annotations.ApiOperation;
 public class SongApi {
 
 	@GET
-	@Path("{id}")
-	@ApiOperation(value = "Get a Song", response = FaveItem.class)
-	public FaveItem getSong(@Named("id") @PathParam("id") final String id) {
+	@Path("/{id}")
+	@ApiOperation(value = "Find a song by ID", response = FaveItem.class)
+	public FaveItem getSong(@ApiParam(value = "ID of song to be fetched", required = true) @PathParam("id") final String id) {
 		try {
 			final String lookupUrl = Constants.LOOKUP_URL + "id=" + id;
 			final URL url = new URL(lookupUrl);
@@ -64,18 +67,17 @@ public class SongApi {
 			final FaveItem song = new FaveItem(jsonSong.get("song").getAsString(), jsonSong.get("artist").getAsString(), id);
 			return song;
 		}
-		catch (final Exception e) {
-			// TODO: Tell client that we failed
+		catch (final IOException e) {
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
-		return null;
 	}
 
 	@GET
 	@Path(ApiPaths.GET_YOUTUBE_SEARCH_RESULTS)
-	@ApiOperation(value = "Get a Song", response = YouTubeSearchResultCollection.class)
+	@ApiOperation(value = "Find YouTube videos for a song", response = YouTubeSearchResultCollection.class)
 	public YouTubeSearchResultCollection getYouTubeResults(
-			@QueryParam("song") final String song,
-			@QueryParam("artist") final String artist) {
+			@ApiParam(value = "The song title", required = true) @QueryParam("song") final String song,
+			@ApiParam(value = "The song artist", required = true) @QueryParam("artist") final String artist) {
 
 		try {
 			String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&maxResults=5&type=video&videoEmbeddable=true";
@@ -112,16 +114,15 @@ public class SongApi {
 			}
 			return new YouTubeSearchResultCollection(youtubeResults);
 		}
-		catch (final Exception e) {
-
+		catch (final IOException e) {
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
-		return null;
 	}
 
 	@GET
-	@Path("{id}/favelists")
-	@ApiOperation(value = "Get a Song", response = UserListResultCollection.class)
-	public UserListResultCollection getFaveLists(@Named("id") @PathParam("id") final String id) {
+	@Path("/{id}/favelists")
+	@ApiOperation(value = "Get a list of users who have this song in their FaveList", response = UserListResultCollection.class)
+	public UserListResultCollection getFaveLists(@ApiParam(value = "The song ID", required = true) @PathParam("id") final String id) {
 		final List<UserListResult> userListResults = new ArrayList<>();
 
 		// Get up to 30 FaveLists containing the song

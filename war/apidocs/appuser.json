@@ -73,48 +73,6 @@
       } ]
     } ]
   }, {
-    "path" : "/appuser/getAppUser",
-    "operations" : [ {
-      "method" : "GET",
-      "summary" : "Get an AppUser",
-      "notes" : "",
-      "type" : "AppUser",
-      "nickname" : "getAppUser",
-      "authorizations" : { },
-      "parameters" : [ {
-        "name" : "username",
-        "required" : false,
-        "type" : "string",
-        "paramType" : "query"
-      } ]
-    } ]
-  }, {
-    "path" : "/appuser/createAppUser",
-    "operations" : [ {
-      "method" : "POST",
-      "summary" : "Create an AppUser",
-      "notes" : "",
-      "type" : "LoginResult",
-      "nickname" : "createAppUser",
-      "authorizations" : { },
-      "parameters" : [ {
-        "name" : "username",
-        "required" : false,
-        "type" : "string",
-        "paramType" : "query"
-      }, {
-        "name" : "password",
-        "required" : false,
-        "type" : "string",
-        "paramType" : "query"
-      }, {
-        "name" : "email",
-        "required" : false,
-        "type" : "string",
-        "paramType" : "query"
-      } ]
-    } ]
-  }, {
     "path" : "/appuser/login",
     "operations" : [ {
       "method" : "POST",
@@ -133,6 +91,63 @@
         "required" : false,
         "type" : "string",
         "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/createAppUser",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Create an AppUser",
+      "notes" : "",
+      "type" : "LoginResult",
+      "nickname" : "createAppUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "description" : "The username",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "password",
+        "description" : "The password",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "email",
+        "description" : "The email",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query"
+      } ],
+      "responseMessages" : [ {
+        "code" : 403,
+        "message" : "A user with that name already exists"
+      }, {
+        "code" : 403,
+        "message" : "A user with that email address already exist"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/getAppUser",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Find a user by their username",
+      "notes" : "",
+      "type" : "AppUser",
+      "nickname" : "getAppUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "description" : "The username",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query"
+      } ],
+      "responseMessages" : [ {
+        "code" : 404,
+        "message" : "User not found"
       } ]
     } ]
   }, {

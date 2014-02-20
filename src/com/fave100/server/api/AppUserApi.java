@@ -75,6 +75,9 @@ import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 @Path("/" + ApiPaths.APPUSER_ROOT)
 @Produces(MediaType.APPLICATION_JSON)
@@ -90,11 +93,12 @@ public class AppUserApi {
 
 	@GET
 	@Path(ApiPaths.GET_APPUSER)
-	@ApiOperation(value = "Get an AppUser", response = AppUser.class)
-	public AppUser getAppUser(@QueryParam("username") final String username) {
+	@ApiOperation(value = "Find a user by their username", response = AppUser.class)
+	@ApiResponses(value = {@ApiResponse(code = 404, message = ApiExceptions.USER_NOT_FOUND)})
+	public AppUser getAppUser(@ApiParam(value = "The username", required = true) @QueryParam("username") final String username) {
 		AppUser appUser = ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
 		if (appUser == null)
-			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("User not found").build());
+			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(ApiExceptions.USER_NOT_FOUND).build());
 
 		return appUser;
 	}
@@ -102,10 +106,11 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER)
 	@ApiOperation(value = "Create an AppUser", response = LoginResult.class)
+	@ApiResponses(value = {@ApiResponse(code = 403, message = ApiExceptions.USERNAME_ALREADY_EXISTS), @ApiResponse(code = 403, message = ApiExceptions.EMAIL_ID_ALREADY_EXISTS)})
 	public LoginResult createAppUser(@Context final HttpServletRequest request,
-			@QueryParam("username") final String username,
-			@QueryParam("password") final String password,
-			@QueryParam("email") final String email) {
+			@ApiParam(value = "The username", required = true) @QueryParam("username") final String username,
+			@ApiParam(value = "The password", required = true) @QueryParam("password") final String password,
+			@ApiParam(value = "The email", required = true) @QueryParam("email") final String email) {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name is already registered";
