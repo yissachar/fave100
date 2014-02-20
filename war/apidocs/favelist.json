@@ -5,7 +5,7 @@
   "resourcePath" : "/favelist",
   "produces" : [ "application/json" ],
   "apis" : [ {
-    "path" : "/favelist/{username}/{hashtag}",
+    "path" : "/favelist/{username}/{list}",
     "operations" : [ {
       "method" : "GET",
       "summary" : "Get a user's FaveList",
@@ -15,18 +15,24 @@
       "authorizations" : { },
       "parameters" : [ {
         "name" : "username",
+        "description" : "The username",
         "required" : true,
         "type" : "string",
         "paramType" : "path"
       }, {
-        "name" : "hashtag",
+        "name" : "list",
+        "description" : "The list",
         "required" : true,
         "type" : "string",
         "paramType" : "path"
+      } ],
+      "responseMessages" : [ {
+        "code" : 404,
+        "message" : "FaveList not found"
       } ]
     } ]
   }, {
-    "path" : "/favelist/{hashtag}",
+    "path" : "/favelist/{list}",
     "operations" : [ {
       "method" : "GET",
       "summary" : "Get a master FaveList",
@@ -35,7 +41,8 @@
       "nickname" : "getMasterFaveList",
       "authorizations" : { },
       "parameters" : [ {
-        "name" : "hashtag",
+        "name" : "list",
+        "description" : "The list",
         "required" : true,
         "type" : "string",
         "paramType" : "path"
@@ -52,7 +59,8 @@
       "authorizations" : { },
       "parameters" : [ {
         "name" : "searchTerm",
-        "required" : false,
+        "description" : "The search term",
+        "required" : true,
         "type" : "string",
         "paramType" : "query"
       } ]
@@ -78,10 +86,24 @@
       "nickname" : "addFaveListForCurrentUser",
       "authorizations" : { },
       "parameters" : [ {
-        "name" : "hashtag",
-        "required" : false,
+        "name" : "listName",
+        "description" : "The list name",
+        "required" : true,
         "type" : "string",
         "paramType" : "query"
+      } ],
+      "responseMessages" : [ {
+        "code" : 400,
+        "message" : "The list name did not pass validation"
+      }, {
+        "code" : 401,
+        "message" : "You are not logged in"
+      }, {
+        "code" : 403,
+        "message" : "You can't have more than 100 lists"
+      }, {
+        "code" : 403,
+        "message" : "You already have a list with that name"
       } ]
     } ]
   }, {
@@ -98,6 +120,10 @@
         "required" : false,
         "type" : "string",
         "paramType" : "query"
+      } ],
+      "responseMessages" : [ {
+        "code" : 401,
+        "message" : "You are not logged in"
       } ]
     } ]
   }, {
@@ -110,7 +136,7 @@
       "nickname" : "addFaveItemForCurrentUser",
       "authorizations" : { },
       "parameters" : [ {
-        "name" : "list",
+        "name" : "listName",
         "required" : false,
         "type" : "string",
         "paramType" : "query"
@@ -119,6 +145,16 @@
         "required" : false,
         "type" : "string",
         "paramType" : "query"
+      } ],
+      "responseMessages" : [ {
+        "code" : 401,
+        "message" : "You are not logged in"
+      }, {
+        "code" : 403,
+        "message" : "You can't have more than 100 lists"
+      }, {
+        "code" : 403,
+        "message" : "That item is already in the list"
       } ]
     } ]
   }, {
@@ -140,6 +176,10 @@
         "required" : false,
         "type" : "string",
         "paramType" : "query"
+      } ],
+      "responseMessages" : [ {
+        "code" : 401,
+        "message" : "You are not logged in"
       } ]
     } ]
   }, {
@@ -167,6 +207,13 @@
         "type" : "integer",
         "format" : "int32",
         "paramType" : "path"
+      } ],
+      "responseMessages" : [ {
+        "code" : 400,
+        "message" : "Index out of range"
+      }, {
+        "code" : 401,
+        "message" : "You are not logged in"
       } ]
     } ]
   }, {
@@ -193,6 +240,13 @@
         "required" : false,
         "type" : "string",
         "paramType" : "query"
+      } ],
+      "responseMessages" : [ {
+        "code" : 400,
+        "message" : "WhyLine did not pass validation"
+      }, {
+        "code" : 401,
+        "message" : "You are not logged in"
       } ]
     } ]
   } ],

@@ -19,16 +19,17 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 @Path("/" + ApiPaths.WHYLINE_ROOT)
 @Produces(MediaType.APPLICATION_JSON)
-@Api(value = "/" + ApiPaths.WHYLINE_ROOT, description = "Operations on Whylines")
+@Api(value = "/" + ApiPaths.WHYLINE_ROOT, description = "Operations about Whylines")
 public class WhylineApi {
 
 	@GET
 	@Path(ApiPaths.GET_SONG_WHYLINES)
-	@ApiOperation(value = "Get whylines for the song", response = WhylineCollection.class)
-	public List<Whyline> getWhylinesForSong(@PathParam("id") final String id) {
+	@ApiOperation(value = "Get whylines for a song", response = WhylineCollection.class)
+	public List<Whyline> getWhylinesForSong(@ApiParam(value = "ID of the song", required = true) @PathParam("id") final String id) {
 		final List<Whyline> whylines = ofy().load().type(Whyline.class).filter("song", Ref.create(Key.create(Song.class, id))).limit(15).list();
 		// Get the users avatars 
 		// TODO: Should be a bulk query for efficiency

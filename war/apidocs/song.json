@@ -5,32 +5,34 @@
   "resourcePath" : "/song",
   "produces" : [ "application/json" ],
   "apis" : [ {
-    "path" : "/song{id}",
+    "path" : "/song/{id}",
     "operations" : [ {
       "method" : "GET",
-      "summary" : "Get a Song",
+      "summary" : "Find a song by ID",
       "notes" : "",
       "type" : "FaveItem",
       "nickname" : "getSong",
       "authorizations" : { },
       "parameters" : [ {
         "name" : "id",
+        "description" : "ID of song to be fetched",
         "required" : true,
         "type" : "string",
         "paramType" : "path"
       } ]
     } ]
   }, {
-    "path" : "/song{id}/favelists",
+    "path" : "/song/{id}/favelists",
     "operations" : [ {
       "method" : "GET",
-      "summary" : "Get a Song",
+      "summary" : "Get a list of users who have this song in their FaveList",
       "notes" : "",
       "type" : "UserListResultCollection",
       "nickname" : "getFaveLists",
       "authorizations" : { },
       "parameters" : [ {
         "name" : "id",
+        "description" : "The song ID",
         "required" : true,
         "type" : "string",
         "paramType" : "path"
@@ -40,19 +42,21 @@
     "path" : "/song/youtubeSearchResults",
     "operations" : [ {
       "method" : "GET",
-      "summary" : "Get a Song",
+      "summary" : "Find YouTube videos for a song",
       "notes" : "",
       "type" : "YouTubeSearchResultCollection",
       "nickname" : "getYouTubeResults",
       "authorizations" : { },
       "parameters" : [ {
         "name" : "song",
-        "required" : false,
+        "description" : "The song title",
+        "required" : true,
         "type" : "string",
         "paramType" : "query"
       }, {
         "name" : "artist",
-        "required" : false,
+        "description" : "The song artist",
+        "required" : true,
         "type" : "string",
         "paramType" : "query"
       } ]
@@ -118,13 +122,13 @@
     "UserListResult" : {
       "id" : "UserListResult",
       "properties" : {
+        "listName" : {
+          "type" : "string"
+        },
         "userName" : {
           "type" : "string"
         },
         "avatar" : {
-          "type" : "string"
-        },
-        "listName" : {
           "type" : "string"
         }
       }
