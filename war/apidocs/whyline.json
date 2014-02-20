@@ -1,0 +1,55 @@
+{
+  "apiVersion" : "v1",
+  "swaggerVersion" : "1.2",
+  "basePath" : "http://host:port/apis",
+  "resourcePath" : "/whyline",
+  "produces" : [ "application/json" ],
+  "apis" : [ {
+    "path" : "/whyline/song/{id}",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get whylines for the song",
+      "notes" : "",
+      "type" : "WhylineCollection",
+      "nickname" : "getWhylinesForSong",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "id",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path"
+      } ]
+    } ]
+  } ],
+  "models" : {
+    "WhylineCollection" : {
+      "id" : "WhylineCollection",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "Whyline"
+          }
+        }
+      }
+    },
+    "Whyline" : {
+      "id" : "Whyline",
+      "properties" : {
+        "whyline" : {
+          "type" : "string"
+        },
+        "username" : {
+          "type" : "string"
+        },
+        "avatar" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    }
+  }
+}

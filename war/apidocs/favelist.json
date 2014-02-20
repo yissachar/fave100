@@ -1,0 +1,257 @@
+{
+  "apiVersion" : "v1",
+  "swaggerVersion" : "1.2",
+  "basePath" : "http://host:port/apis",
+  "resourcePath" : "/favelist",
+  "produces" : [ "application/json" ],
+  "apis" : [ {
+    "path" : "/favelist/{username}/{hashtag}",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get a user's FaveList",
+      "notes" : "",
+      "type" : "FaveItemCollection",
+      "nickname" : "getFaveList",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path"
+      }, {
+        "name" : "hashtag",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path"
+      } ]
+    } ]
+  }, {
+    "path" : "/favelist/{hashtag}",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get a master FaveList",
+      "notes" : "",
+      "type" : "FaveItemCollection",
+      "nickname" : "getMasterFaveList",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "hashtag",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path"
+      } ]
+    } ]
+  }, {
+    "path" : "/favelist/hashtagAutocomplete",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get list name suggestions",
+      "notes" : "",
+      "type" : "StringResultCollection",
+      "nickname" : "getHashtagAutocomplete",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "searchTerm",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/favelist/trendingFaveLists",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get a list of trending FaveLists",
+      "notes" : "",
+      "type" : "StringResultCollection",
+      "nickname" : "getTrendingFaveLists",
+      "authorizations" : { },
+      "parameters" : [ ]
+    } ]
+  }, {
+    "path" : "/favelist/add",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Add a FaveList",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "addFaveListForCurrentUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "hashtag",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/favelist/delete",
+    "operations" : [ {
+      "method" : "DELETE",
+      "summary" : "Delete a FaveList",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "deleteFaveListForCurrentUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "list",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/favelist/item/add",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Add a FaveItem",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "addFaveItemForCurrentUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "list",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "songId",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/favelist/item/remove",
+    "operations" : [ {
+      "method" : "DELETE",
+      "summary" : "Remove a FaveItem",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "removeFaveItemForCurrentUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "list",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "songId",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/favelistrerank/{list}/{songId}/{newIndex}",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Rerank a FaveItem",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "rerankFaveItemForCurrentUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "list",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path"
+      }, {
+        "name" : "songId",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "path"
+      }, {
+        "name" : "newIndex",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "path"
+      } ]
+    } ]
+  }, {
+    "path" : "/favelist/item/whyline/edit",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Edit a WhyLine",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "editWhylineForCurrentUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "list",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "songId",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "whyline",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  } ],
+  "models" : {
+    "StringResult" : {
+      "id" : "StringResult",
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        }
+      }
+    },
+    "StringResultCollection" : {
+      "id" : "StringResultCollection",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "StringResult"
+          }
+        }
+      }
+    },
+    "FaveItem" : {
+      "id" : "FaveItem",
+      "description" : "",
+      "required" : [ "song" ],
+      "properties" : {
+        "song" : {
+          "type" : "string",
+          "description" : "The song name"
+        },
+        "artist" : {
+          "type" : "string"
+        },
+        "songID" : {
+          "type" : "string"
+        },
+        "whyline" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "FaveItemCollection" : {
+      "id" : "FaveItemCollection",
+      "description" : "",
+      "required" : [ "items" ],
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "description" : "A list of FaveItems",
+          "items" : {
+            "$ref" : "FaveItem"
+          }
+        }
+      }
+    }
+  }
+}

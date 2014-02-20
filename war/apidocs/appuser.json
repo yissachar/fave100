@@ -1,0 +1,501 @@
+{
+  "apiVersion" : "v1",
+  "swaggerVersion" : "1.2",
+  "basePath" : "http://host:port/apis",
+  "resourcePath" : "/appuser",
+  "produces" : [ "application/json" ],
+  "apis" : [ {
+    "path" : "/appuser/createAppUserFromGoogleAccount",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Create an AppUser from Google",
+      "notes" : "",
+      "type" : "LoginResult",
+      "nickname" : "createAppUserFromGoogleAccount",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/createAppUserFromTwitterAccount",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Create an AppUser from Twitter",
+      "notes" : "",
+      "type" : "LoginResult",
+      "nickname" : "createAppUserFromTwitterAccount",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "oauthVerifier",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/createAppUserFromFacebookAccount",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Create an AppUser from Facebook",
+      "notes" : "",
+      "type" : "LoginResult",
+      "nickname" : "createAppUserFromFacebookAccount",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "state",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "code",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "redirectUrl",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/getAppUser",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get an AppUser",
+      "notes" : "",
+      "type" : "AppUser",
+      "nickname" : "getAppUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/createAppUser",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Create an AppUser",
+      "notes" : "",
+      "type" : "LoginResult",
+      "nickname" : "createAppUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "password",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "email",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/login",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Login",
+      "notes" : "",
+      "type" : "LoginResult",
+      "nickname" : "login",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "password",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/logout",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Logout",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "logout",
+      "authorizations" : { },
+      "parameters" : [ ]
+    } ]
+  }, {
+    "path" : "/appuser/following",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get following",
+      "notes" : "",
+      "type" : "FollowingResult",
+      "nickname" : "getFollowing",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "index",
+        "required" : false,
+        "type" : "integer",
+        "format" : "int32",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/isFollowing",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Is following",
+      "notes" : "",
+      "type" : "BooleanResult",
+      "nickname" : "isFollowing",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/settings",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Set user info",
+      "notes" : "",
+      "type" : "BooleanResult",
+      "nickname" : "setUserInfo",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "body",
+        "required" : false,
+        "type" : "UserInfo",
+        "paramType" : "body"
+      } ]
+    }, {
+      "method" : "GET",
+      "summary" : "Get current user settings",
+      "notes" : "",
+      "type" : "UserInfo",
+      "nickname" : "getCurrentUserSettings",
+      "authorizations" : { },
+      "parameters" : [ ]
+    } ]
+  }, {
+    "path" : "/appuser/follow",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Follow user",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "followUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/unfollow",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Unfollow user",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "unfollowUser",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/loginWithGoogle",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Login with Google",
+      "notes" : "",
+      "type" : "LoginResult",
+      "nickname" : "loginWithGoogle",
+      "authorizations" : { },
+      "parameters" : [ ]
+    } ]
+  }, {
+    "path" : "/appuser/loginWithTwitter",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Login with Twitter",
+      "notes" : "",
+      "type" : "LoginResult",
+      "nickname" : "loginWithTwitter",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "oauthVerifier",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/loginWithFacebook",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Login with Facebook",
+      "notes" : "",
+      "type" : "LoginResult",
+      "nickname" : "loginWithFacebook",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "code",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/loggedInAppUser",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get logged in user",
+      "notes" : "",
+      "type" : "AppUser",
+      "nickname" : "getLoggedInAppUser",
+      "authorizations" : { },
+      "parameters" : [ ]
+    } ]
+  }, {
+    "path" : "/appuser/isLoggedIn",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Is app user logged in",
+      "notes" : "",
+      "type" : "BooleanResult",
+      "nickname" : "isAppUserLoggedIn",
+      "authorizations" : { },
+      "parameters" : [ ]
+    } ]
+  }, {
+    "path" : "/appuser/google/loggedin",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Is google user logged in",
+      "notes" : "",
+      "type" : "BooleanResult",
+      "nickname" : "isGoogleUserLoggedIn",
+      "authorizations" : { },
+      "parameters" : [ ]
+    } ]
+  }, {
+    "path" : "/appuser/google/loginUrl",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get Google login URL",
+      "notes" : "",
+      "type" : "StringResult",
+      "nickname" : "getGoogleLoginURL",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "destinationURL",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/facebook/authUrl",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get Facebook auth URL",
+      "notes" : "",
+      "type" : "StringResult",
+      "nickname" : "getFacebookAuthUrl",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "redirectUrl",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/twitter/authUrl",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Get Twitter auth URL",
+      "notes" : "",
+      "type" : "StringResult",
+      "nickname" : "getTwitterAuthUrl",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "body",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "body"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/createBlobstoreUrl",
+    "operations" : [ {
+      "method" : "POST",
+      "summary" : "Get Twitter auth URL",
+      "notes" : "",
+      "type" : "StringResult",
+      "nickname" : "createBlobstoreUrl",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "body",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "body"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/password/reset",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Email password reset token",
+      "notes" : "",
+      "type" : "BooleanResult",
+      "nickname" : "emailPasswordResetToken",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "username",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "emailAddress",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  }, {
+    "path" : "/appuser/password/change",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Change password",
+      "notes" : "",
+      "type" : "BooleanResult",
+      "nickname" : "changePassword",
+      "authorizations" : { },
+      "parameters" : [ {
+        "name" : "newPassword",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      }, {
+        "name" : "tokenOrPassword",
+        "required" : false,
+        "type" : "string",
+        "paramType" : "query"
+      } ]
+    } ]
+  } ],
+  "models" : {
+    "LoginResult" : {
+      "id" : "LoginResult",
+      "properties" : {
+        "appUser" : {
+          "$ref" : "AppUser"
+        },
+        "sessionId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "StringResult" : {
+      "id" : "StringResult",
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AppUser" : {
+      "id" : "AppUser",
+      "properties" : {
+        "username" : {
+          "type" : "string"
+        },
+        "hashtags" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "avatarImage" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "FollowingResult" : {
+      "id" : "FollowingResult",
+      "properties" : {
+        "following" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "AppUser"
+          }
+        },
+        "more" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "UserInfo" : {
+      "id" : "UserInfo",
+      "properties" : {
+        "email" : {
+          "type" : "string"
+        },
+        "followingPrivate" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "BooleanResult" : {
+      "id" : "BooleanResult",
+      "properties" : {
+        "value" : {
+          "type" : "boolean"
+        }
+      }
+    }
+  }
+}

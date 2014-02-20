@@ -85,8 +85,10 @@
 	  
 	<!-- Default page to serve -->
 	<welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>service.json</welcome-file>
 		<welcome-file>Fave100.html</welcome-file>
-	</welcome-file-list>
+	</welcome-file-list>        
 
 	<!--
 		This Guice listener hijacks all further filters and servlets. Extra
@@ -114,7 +116,7 @@
     <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
     <init-param>
       <param-name>services</param-name>
-      <param-value>com.fave100.server.domain.ApiBase,com.fave100.server.domain.SongApi,com.fave100.server.domain.WhylineApi,com.fave100.server.domain.appuser.AppUserApi,com.fave100.server.domain.favelist.FaveListApi</param-value>
+      <param-value>com.fave100.server.api.AppUserApi,com.fave100.server.api.FaveListApi,com.fave100.server.api.SongApi,com.fave100.server.api.WhylineApi</param-value>
     </init-param>
   </servlet>
 
