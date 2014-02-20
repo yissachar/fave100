@@ -291,7 +291,7 @@
                             </outputTemplate>
                             <useOutputFlatStructure>false</useOutputFlatStructure>
                             <outputPath>generated/strapdown.html</outputPath>
-                            <swaggerDirectory>generated/apidocs</swaggerDirectory>
+                            <swaggerDirectory>war/apidocs</swaggerDirectory>
                         </apiSource>
                     </apiSources>
                 </configuration>
