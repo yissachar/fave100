@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import com.fave100.server.SessionHelper;
 import com.fave100.server.domain.Session;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
+import com.fave100.shared.Constants;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -41,7 +43,16 @@ public class AvatarUploadServlet extends HttpServlet {
 			final BlobKey blobKey = bloblist.get(0);
 
 			if (blobKey != null) {
-				Session session = SessionHelper.getSession(req);
+				// Get session token from cookie
+				String sessionToken = "";
+				for (Cookie cookie : req.getCookies()) {
+					if (cookie.getName().equals(Constants.SESSION_HEADER)) {
+						sessionToken = cookie.getValue();
+					}
+				}
+
+				// Get user from session
+				Session session = SessionHelper.getSession(sessionToken);
 				final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
 				Objects.requireNonNull(username);
 				String avatar = "";

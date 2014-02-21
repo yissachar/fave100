@@ -17,7 +17,10 @@ public class SessionHelper {
 	public static Session getSession(HttpServletRequest request) {
 
 		String sessionId = request.getHeader(Constants.SESSION_HEADER);
+		return getSession(sessionId);
+	}
 
+	public static Session getSession(String sessionId) {
 		Session session = null;
 
 		// Retrieve the session from the datastore
@@ -35,6 +38,5 @@ public class SessionHelper {
 			session = new Session();
 
 		return session;
-
 	}
 }
