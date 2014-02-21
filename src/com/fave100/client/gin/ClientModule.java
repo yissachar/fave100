@@ -42,6 +42,7 @@ import com.fave100.client.pages.song.widgets.youtube.YouTubeView;
 import com.fave100.client.place.ClientPlaceManager;
 import com.fave100.client.place.DefaultPlace;
 import com.fave100.client.place.NameTokens;
+import com.fave100.shared.Constants;
 import com.gwtplatform.dispatch.rest.client.RestApplicationPath;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.GaAccount;
@@ -58,7 +59,7 @@ public class ClientModule extends AbstractPresenterModule {
 		install(new DefaultModule(ClientPlaceManager.class));
 		install(new TolerantRestDispatchAsyncModule.Builder().build());
 
-		bindConstant().annotatedWith(RestApplicationPath.class).to("/rest");
+		bindConstant().annotatedWith(RestApplicationPath.class).to(Constants.API_PATH);
 
 		// Google Analytics
 		bindConstant().annotatedWith(GaAccount.class).to("UA-39911495-1");

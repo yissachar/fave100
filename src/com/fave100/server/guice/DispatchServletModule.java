@@ -9,6 +9,7 @@ import com.fave100.server.filters.EncodingFilter;
 import com.fave100.server.servlets.HashtagBuilderServlet;
 import com.fave100.server.servlets.HashtagEnqueuerServlet;
 import com.fave100.server.servlets.PasswordCleanupServlet;
+import com.fave100.shared.Constants;
 import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
@@ -25,7 +26,7 @@ public class DispatchServletModule extends ServletModule {
 		bind(FaveListApi.class);
 		bind(SongApi.class);
 		bind(WhylineApi.class);
-		serve("/rest/*").with(GuiceContainer.class);
+		serve(Constants.API_PATH + "/*").with(GuiceContainer.class);
 
 		bind(RemoteApiServlet.class).in(Singleton.class);
 		serve("/remote_api").with(RemoteApiServlet.class);

@@ -15,4 +15,5 @@ public class Constants {
 	public static final int MAX_LISTS_PER_USER = 100;
 	public static final int MAX_USERNAME_LENGTH = 15;
 	public static final String SESSION_HEADER = "Fave100-Session";
+	public static final String API_PATH = "/api";
 }
