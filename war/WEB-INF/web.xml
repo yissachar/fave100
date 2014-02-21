@@ -111,18 +111,4 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-  <servlet>
-    <servlet-name>SystemServiceServlet</servlet-name>
-    <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
-    <init-param>
-      <param-name>services</param-name>
-      <param-value>com.fave100.server.api.AppUserApi,com.fave100.server.api.FaveListApi,com.fave100.server.api.SongApi,com.fave100.server.api.WhylineApi</param-value>
-    </init-param>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>SystemServiceServlet</servlet-name>
-    <url-pattern>/_ah/spi/*</url-pattern>
-  </servlet-mapping>
-
 </web-app>
