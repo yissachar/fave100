@@ -125,7 +125,7 @@ public class ProfilePresenter extends
 	private void setUploadAction() {
 		// Create the blobstore URL that the avatar will be uploaded to
 		// Need to recreate each time because session expires after successful upload
-		_dispatcher.execute(_restServiceFactory.appuser().createBlobstoreUrl("/avatarUpload"), new AsyncCallback<StringResultDto>() {
+		_dispatcher.execute(_restServiceFactory.appuser().createBlobstoreUrl(), new AsyncCallback<StringResultDto>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

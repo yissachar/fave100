@@ -24,6 +24,8 @@ import com.google.inject.Inject;
 @SuppressWarnings("serial")
 public class AvatarUploadServlet extends HttpServlet {
 
+	public static final String PATH = "/avatarUpload";
+
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
 	@Override

@@ -58,6 +58,7 @@ import com.fave100.server.exceptions.InvalidLoginException;
 import com.fave100.server.exceptions.NotLoggedInException;
 import com.fave100.server.exceptions.TwitterIdAlreadyExistsException;
 import com.fave100.server.exceptions.UsernameAlreadyExistsException;
+import com.fave100.server.servlets.AvatarUploadServlet;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
 import com.google.api.server.spi.response.ForbiddenException;
@@ -600,10 +601,10 @@ public class AppUserApi {
 
 	@POST
 	@Path(ApiPaths.CREATE_BLOBSTORE_URL)
-	@ApiOperation(value = "Get Twitter auth URL", response = StringResult.class)
-	public StringResult createBlobstoreUrl(final String successPath) {
+	@ApiOperation(value = "Create a blobstore upload URL", response = StringResult.class)
+	public StringResult createBlobstoreUrl() {
 		final UploadOptions options = UploadOptions.Builder.withMaxUploadSizeBytes(Constants.MAX_AVATAR_SIZE);
-		return new StringResult(BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(successPath, options));
+		return new StringResult(BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(AvatarUploadServlet.PATH, options));
 	}
 
 	@GET
