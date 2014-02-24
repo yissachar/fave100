@@ -8,7 +8,7 @@
 	<!-- Other module inherits                                      -->
   	<inherits name="com.gwtplatform.dispatch.rest.DispatchRest"/>
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
-	<inherits name="com.google.web.bindery.requestfactory.RequestFactory"/>
+  	<inherits name='com.google.gwt.logging.LoggingDisabled'/>
 	<inherits name='com.google.gwt.query.Query'/>
 
 	<!-- Specify the paths for translatable code                    -->
