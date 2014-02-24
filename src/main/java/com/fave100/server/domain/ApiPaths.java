@@ -43,6 +43,8 @@ public class ApiPaths {
 	// Song paths
 	public static final String SONG_ROOT = "song";
 	public static final String GET_YOUTUBE_SEARCH_RESULTS = "/youtubeSearchResults";
+	public static final String YOUTUBE_SEARCH_SONG_PARAM = "song";
+	public static final String YOUTUBE_SEARCH_ARTIST_PARAM = "artist";
 
 	// Whyline paths
 	public static final String WHYLINE_ROOT = "whyline";
