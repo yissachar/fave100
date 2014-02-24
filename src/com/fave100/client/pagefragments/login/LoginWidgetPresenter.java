@@ -5,6 +5,7 @@ import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
+import com.fave100.client.generated.entities.LoginCredentials;
 import com.fave100.client.generated.entities.LoginResult;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
@@ -145,7 +146,12 @@ public class LoginWidgetPresenter extends
 		}
 
 		LoadingIndicator.show();
-		_dispatcher.execute(_restServiceFactory.appuser().login(getView().getUsername().trim(), getView().getPassword()), new AsyncCallback<LoginResult>() {
+
+		LoginCredentials loginCredentials = new LoginCredentials();
+		loginCredentials.setUsername(getView().getUsername().trim());
+		loginCredentials.setPassword(getView().getPassword());
+
+		_dispatcher.execute(_restServiceFactory.appuser().login(loginCredentials), new AsyncCallback<LoginResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
