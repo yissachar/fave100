@@ -45,6 +45,7 @@ import com.fave100.server.domain.appuser.FacebookID;
 import com.fave100.server.domain.appuser.Following;
 import com.fave100.server.domain.appuser.FollowingResult;
 import com.fave100.server.domain.appuser.GoogleID;
+import com.fave100.server.domain.appuser.LoginCredentials;
 import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
 import com.fave100.server.domain.appuser.UserInfo;
@@ -143,7 +144,7 @@ public class AppUserApi {
 							// Store email address
 							final EmailID emailID = new EmailID(email, appUser);
 							ofy().save().entities(appUser, faveList, emailID).now();
-							return login(request, username, password);
+							return login(request, new LoginCredentials(username, password));
 						}
 						return null;
 					}
@@ -331,10 +332,10 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.LOGIN)
 	@ApiOperation(value = "Login", response = LoginResult.class)
-	public LoginResult login(
-			@Context HttpServletRequest request,
-			@QueryParam("username") final String username,
-			@QueryParam("password") final String password) {
+	public LoginResult login(@Context HttpServletRequest request, LoginCredentials loginCredentials) {
+
+		String username = loginCredentials.getUsername();
+		String password = loginCredentials.getPassword();
 
 		AppUser loggingInUser = null;
 		String errorMessage = "Invalid credentials";
