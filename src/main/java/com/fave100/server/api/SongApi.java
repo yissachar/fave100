@@ -81,8 +81,8 @@ public class SongApi {
 	@Path(ApiPaths.GET_YOUTUBE_SEARCH_RESULTS)
 	@ApiOperation(value = "Find YouTube videos for a song", response = YouTubeSearchResultCollection.class)
 	public static YouTubeSearchResultCollection getYouTubeResults(
-			@ApiParam(value = "The song title", required = true) @QueryParam("song") final String song,
-			@ApiParam(value = "The song artist", required = true) @QueryParam("artist") final String artist) {
+			@ApiParam(value = "The song title", required = true) @QueryParam(ApiPaths.YOUTUBE_SEARCH_SONG_PARAM) final String song,
+			@ApiParam(value = "The song artist", required = true) @QueryParam(ApiPaths.YOUTUBE_SEARCH_ARTIST_PARAM) final String artist) {
 
 		try {
 			String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&maxResults=5&type=video&videoEmbeddable=true";
