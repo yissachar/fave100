@@ -2,8 +2,8 @@ package com.fave100.client.pages.song.widgets.whyline;
 
 import java.util.List;
 
-import com.fave100.client.generated.entities.UserListResultDto;
-import com.fave100.client.generated.entities.WhylineDto;
+import com.fave100.client.generated.entities.UserListResult;
+import com.fave100.client.generated.entities.Whyline;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.song.widgets.whyline.userlisthoverhead.UserListHoverHead;
 import com.fave100.client.place.NameTokens;
@@ -28,17 +28,17 @@ public class WhylineView extends ViewWithUiHandlers<WhylineUiHandlers> implement
 	}
 
 	@Override
-	public void setWhylines(List<WhylineDto> whylines) {
+	public void setWhylines(List<Whyline> whylines) {
 		whylinePanel.clear();
-		for (WhylineDto whyline : whylines) {
+		for (Whyline whyline : whylines) {
 			whylinePanel.add(new WhylineWidget(whyline));
 		}
 	}
 
 	@Override
-	public void setUserLists(List<UserListResultDto> userLists) {
+	public void setUserLists(List<UserListResult> userLists) {
 		userListsPanel.clear();
-		for (UserListResultDto userList : userLists) {
+		for (UserListResult userList : userLists) {
 			String listPlaceToken = new ParameterTokenFormatter()
 					.toPlaceToken(new PlaceRequest.Builder()
 							.nameToken(NameTokens.lists)

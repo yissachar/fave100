@@ -8,8 +8,8 @@ import com.fave100.client.events.song.SongSelectedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
-import com.fave100.client.generated.entities.AppUserDto;
-import com.fave100.client.generated.entities.BooleanResultDto;
+import com.fave100.client.generated.entities.AppUser;
+import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
@@ -44,7 +44,7 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPresenter.MyProxy> implements ListUiHandlers {
 
 	public interface MyView extends BaseView, HasUiHandlers<ListUiHandlers> {
-		void setUserProfile(AppUserDto user);
+		void setUserProfile(AppUser user);
 
 		void showOwnPage();
 
@@ -76,7 +76,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 	private String requestedUsername;
 	private String _requestedHashtag;
 	private boolean isFollowing;
-	private AppUserDto requestedUser;
+	private AppUser requestedUser;
 	private final EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
@@ -237,7 +237,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 			}
 
 			// Otherwise, request the info from the server
-			_dispatcher.execute(_restServiceFactory.appuser().getAppUser(requestedUsername), new AsyncCallback<AppUserDto>() {
+			_dispatcher.execute(_restServiceFactory.appuser().getAppUser(requestedUsername), new AsyncCallback<AppUser>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -245,7 +245,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 				}
 
 				@Override
-				public void onSuccess(AppUserDto user) {
+				public void onSuccess(AppUser user) {
 					if (user != null) {
 						requestedUser = user;
 						if (!requestedUser.getHashtags().contains(_requestedHashtag))
@@ -259,7 +259,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 				}
 			});
 
-			_dispatcher.execute(_restServiceFactory.appuser().isFollowing(requestedUsername), new AsyncCallback<BooleanResultDto>() {
+			_dispatcher.execute(_restServiceFactory.appuser().isFollowing(requestedUsername), new AsyncCallback<BooleanResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -268,7 +268,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 				}
 
 				@Override
-				public void onSuccess(BooleanResultDto result) {
+				public void onSuccess(BooleanResult result) {
 					isFollowing = result.getValue();
 					getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
 					showPage();

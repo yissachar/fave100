@@ -1,6 +1,6 @@
 package com.fave100.client.events.favelist;
 
-import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.entities.FaveItem;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -23,9 +23,9 @@ public class FaveItemAddedEvent extends Event<FaveItemAddedEvent.Handler> {
 		return eventBus.addHandler(TYPE, handler);
 	}
 
-	private FaveItemDto faveItem;
+	private FaveItem faveItem;
 
-	public FaveItemAddedEvent(final FaveItemDto faveItem) {
+	public FaveItemAddedEvent(final FaveItem faveItem) {
 		this.faveItem = faveItem;
 	}
 
@@ -39,7 +39,7 @@ public class FaveItemAddedEvent extends Event<FaveItemAddedEvent.Handler> {
 		handler.onFaveItemAdded(this);
 	}
 
-	public FaveItemDto getFaveItemDto() {
+	public FaveItem getFaveItemDto() {
 		return faveItem;
 	}
 }

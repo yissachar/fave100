@@ -1,6 +1,6 @@
 package com.fave100.client.pages.song;
 
-import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.pages.BasePresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -78,7 +78,7 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	}
 
 	@Override
-	public void setSongInfo(final FaveItemDto song) {
+	public void setSongInfo(final FaveItem song) {
 		setSongTitle(song.getSong());
 		setArtistName(song.getArtist());
 	}

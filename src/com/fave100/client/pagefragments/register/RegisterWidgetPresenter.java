@@ -4,9 +4,9 @@ import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
-import com.fave100.client.generated.entities.AppUserDto;
-import com.fave100.client.generated.entities.LoginResultDto;
-import com.fave100.client.generated.entities.StringResultDto;
+import com.fave100.client.generated.entities.AppUser;
+import com.fave100.client.generated.entities.LoginResult;
+import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.rest.RestSessionDispatch;
@@ -122,7 +122,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 
 			// Create a new user with the username and password entered
 			LoadingIndicator.show();
-			_dispatcher.execute(_serviceFactory.appuser().createAppUser(username, email, password), new AsyncCallback<LoginResultDto>() {
+			_dispatcher.execute(_serviceFactory.appuser().createAppUser(username, email, password), new AsyncCallback<LoginResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -131,8 +131,8 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 				}
 
 				@Override
-				public void onSuccess(LoginResultDto loginResult) {
-					AppUserDto createdUser = loginResult.getAppUser();
+				public void onSuccess(LoginResult loginResult) {
+					AppUser createdUser = loginResult.getAppUser();
 					Cookies.setCookie(Constants.SESSION_HEADER, loginResult.getSessionId());
 					LoadingIndicator.hide();
 					_eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
@@ -154,7 +154,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 
 	@Override
 	public void goToTwitterAuth() {
-		_dispatcher.execute(_serviceFactory.appuser().getTwitterAuthUrl(redirect), new AsyncCallback<StringResultDto>() {
+		_dispatcher.execute(_serviceFactory.appuser().getTwitterAuthUrl(redirect), new AsyncCallback<StringResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -162,7 +162,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			}
 
 			@Override
-			public void onSuccess(StringResultDto url) {
+			public void onSuccess(StringResult url) {
 				Window.open(url.getValue(), "", "");
 			}
 		});

@@ -1,6 +1,6 @@
 package com.fave100.client.events.user;
 
-import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.AppUser;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -25,17 +25,17 @@ public class UserUnfollowedEvent extends Event<UserUnfollowedEvent.Handler> {
 	}
 
 	private String _exception = "";
-	private AppUserDto _user = null;
+	private AppUser _user = null;
 
 	public UserUnfollowedEvent() {
 	}
 
-	public UserUnfollowedEvent(final AppUserDto user, final String exception) {
+	public UserUnfollowedEvent(final AppUser user, final String exception) {
 		_user = user;
 		_exception = exception;
 	}
 
-	public UserUnfollowedEvent(final AppUserDto user) {
+	public UserUnfollowedEvent(final AppUser user) {
 		_user = user;
 	}
 
@@ -43,7 +43,7 @@ public class UserUnfollowedEvent extends Event<UserUnfollowedEvent.Handler> {
 		return _exception;
 	}
 
-	public AppUserDto getUser() {
+	public AppUser getUser() {
 		return _user;
 	}
 

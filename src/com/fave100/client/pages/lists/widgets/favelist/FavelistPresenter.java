@@ -9,9 +9,9 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
-import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.FaveItemCollection;
-import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
@@ -62,7 +62,7 @@ public class FavelistPresenter extends
 	private RestSessionDispatch _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	// The user whose favelist we are showing
-	private AppUserDto user;
+	private AppUser user;
 	// The currently logged in user
 	private CurrentUser currentUser;
 	private PlaceManager _placeManager;
@@ -120,7 +120,7 @@ public class FavelistPresenter extends
 			@Override
 			public void onFaveItemAdded(final FaveItemAddedEvent event) {
 				if (isEditable()) {
-					final FaveItemDto item = event.getFaveItemDto();
+					final FaveItem item = event.getFaveItemDto();
 					final FavePickWidget widget = new FavePickWidget(eventBus, item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername(), hashtag);
 					getView().addPick(widget);
 					widgets.add(widget);
@@ -206,10 +206,10 @@ public class FavelistPresenter extends
 		}
 	}
 
-	private void buildWidgets(final List<FaveItemDto> faveList) {
+	private void buildWidgets(final List<FaveItem> faveList) {
 		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 		int i = 1;
-		for (final FaveItemDto item : faveList) {
+		for (final FaveItem item : faveList) {
 			final String username = user != null ? user.getUsername() : "";
 			final FavePickWidget widget = new FavePickWidget(eventBus, item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, username, hashtag);
 			pickWidgets.add(widget);
@@ -281,9 +281,9 @@ public class FavelistPresenter extends
 			public void onSuccess(Void result) {
 				// Set client to match
 				for (int i = 0; i < currentUser.getFaveList().size(); i++) {
-					final FaveItemDto faveItem = currentUser.getFaveList().get(i);
+					final FaveItem faveItem = currentUser.getFaveList().get(i);
 					if (faveItem.getSongID().equals(songId)) {
-						FaveItemDto newfaveItem = new FaveItemDto();
+						FaveItem newfaveItem = new FaveItem();
 						newfaveItem.setSongID(songId);
 						newfaveItem.setId(songId);
 						newfaveItem.setWhyline(whyline);
@@ -326,7 +326,7 @@ public class FavelistPresenter extends
 			@Override
 			public void onSuccess(Void result) {
 				// If successfully saved on server, manually set client to match
-				final FaveItemDto toRerank = currentUser.getFaveList().get(currentIndex);
+				final FaveItem toRerank = currentUser.getFaveList().get(currentIndex);
 				currentUser.getFaveList().remove(toRerank);
 				currentUser.getFaveList().add(newIndex, toRerank);
 
@@ -354,11 +354,11 @@ public class FavelistPresenter extends
 
 	/* Getters and Setters */
 
-	public AppUserDto getUser() {
+	public AppUser getUser() {
 		return user;
 	}
 
-	public void setUser(final AppUserDto user) {
+	public void setUser(final AppUser user) {
 		this.user = user;
 	}
 

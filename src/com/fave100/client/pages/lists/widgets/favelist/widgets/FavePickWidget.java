@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.RankInputUnfocusEvent;
-import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.ItemAdded;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.ItemDeleted;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.RankChanged;
@@ -113,7 +113,7 @@ public class FavePickWidget extends Composite {
 	private List<HandlerRegistration> _whyLineMouseHandlers;
 	private Label _songPick;
 
-	public FavePickWidget(final EventBus eventBus, final FaveItemDto item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged, final ItemDeleted itemDeleted,
+	public FavePickWidget(final EventBus eventBus, final FaveItem item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged, final ItemDeleted itemDeleted,
 							final ItemAdded itemAdded, final String username, final String hashtag) {
 		_eventBus = eventBus;
 		_song = item.getSong();

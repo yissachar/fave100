@@ -1,6 +1,6 @@
 package com.fave100.client.pages.song.widgets.whyline;
 
-import com.fave100.client.generated.entities.WhylineDto;
+import com.fave100.client.generated.entities.Whyline;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.google.gwt.core.client.GWT;
@@ -25,7 +25,7 @@ public class WhylineWidget extends Composite {
 	@UiField Label whyline;
 	@UiField InlineHyperlink userLink;
 
-	public WhylineWidget(final WhylineDto whylineProxy) {
+	public WhylineWidget(final Whyline whylineProxy) {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		avatar.setUrl(whylineProxy.getAvatar());

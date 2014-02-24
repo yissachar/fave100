@@ -3,7 +3,7 @@ package com.fave100.client.pages.lists;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.shared.Constants;
@@ -151,7 +151,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	}-*/;
 
 	@Override
-	public void setUserProfile(final AppUserDto user) {
+	public void setUserProfile(final AppUser user) {
 		if (user == null) {
 			userProfile.setVisible(false);
 		}

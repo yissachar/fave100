@@ -7,8 +7,8 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
-import com.fave100.client.generated.entities.AppUserDto;
-import com.fave100.client.generated.entities.FollowingResultDto;
+import com.fave100.client.generated.entities.AppUser;
+import com.fave100.client.generated.entities.FollowingResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
@@ -50,7 +50,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 	EventBus _eventBus;
 	CurrentUser _currentUser;
 	RequestCache _requestCache;
-	AppUserDto _user;
+	AppUser _user;
 	private RestSessionDispatch _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	int listSize = 0;
@@ -88,7 +88,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 		});
 	}
 
-	public void setUser(final AppUserDto user) {
+	public void setUser(final AppUser user) {
 		_user = user;
 	}
 
@@ -109,15 +109,15 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 			}
 			// Otherwise fetch it
 			else {
-				final AsyncCallback<FollowingResultDto> followingReq = new AsyncCallback<FollowingResultDto>() {
+				final AsyncCallback<FollowingResult> followingReq = new AsyncCallback<FollowingResult>() {
 					@Override
 					public void onFailure(final Throwable caught) {
 						// Don't care
 					}
 
 					@Override
-					public void onSuccess(final FollowingResultDto followingResult) {
-						final List<AppUserDto> usersFollowing = followingResult.getFollowing();
+					public void onSuccess(final FollowingResult followingResult) {
+						final List<AppUser> usersFollowing = followingResult.getFollowing();
 						buildListItems(true, usersFollowing);
 						_currentUser.setFullListRetrieved(!followingResult.isMore());
 						if (!followingResult.isMore())
@@ -129,7 +129,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 			}
 		}
 		else {
-			_dispatcher.execute(_restServiceFactory.appuser().getFollowing(_user.getUsername(), 0), new AsyncCallback<FollowingResultDto>() {
+			_dispatcher.execute(_restServiceFactory.appuser().getFollowing(_user.getUsername(), 0), new AsyncCallback<FollowingResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -137,7 +137,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 				}
 
 				@Override
-				public void onSuccess(FollowingResultDto followingResult) {
+				public void onSuccess(FollowingResult followingResult) {
 					buildListItems(false, followingResult.getFollowing());
 					if (!followingResult.isMore())
 						getView().hideMoreFollowingButton();
@@ -149,17 +149,17 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 	}
 
 	public void clearLists() {
-		buildListItems(false, new ArrayList<AppUserDto>());
+		buildListItems(false, new ArrayList<AppUser>());
 	}
 
-	private void buildListItems(final boolean ownFollowing, final List<AppUserDto> usersFollowing) {
+	private void buildListItems(final boolean ownFollowing, final List<AppUser> usersFollowing) {
 		buildListItems(ownFollowing, usersFollowing, true);
 	}
 
-	private void buildListItems(final boolean ownFollowing, final List<AppUserDto> usersFollowing, final boolean reset) {
+	private void buildListItems(final boolean ownFollowing, final List<AppUser> usersFollowing, final boolean reset) {
 		final List<FlowPanel> listContainer = new ArrayList<FlowPanel>();
 		if (usersFollowing != null && usersFollowing.size() > 0) {
-			for (final AppUserDto user : usersFollowing) {
+			for (final AppUser user : usersFollowing) {
 				// Build list
 				final FlowPanel listItem = new FlowPanel();
 				final Image avatar = new Image(user.getAvatarImage());
@@ -200,7 +200,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 
 	@Override
 	public void getMoreFollowing() {
-		_dispatcher.execute(_restServiceFactory.appuser().getFollowing(_user.getUsername(), listSize), new AsyncCallback<FollowingResultDto>() {
+		_dispatcher.execute(_restServiceFactory.appuser().getFollowing(_user.getUsername(), listSize), new AsyncCallback<FollowingResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -208,8 +208,8 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 			}
 
 			@Override
-			public void onSuccess(FollowingResultDto followingResult) {
-				final List<AppUserDto> users = followingResult.getFollowing();
+			public void onSuccess(FollowingResult followingResult) {
+				final List<AppUser> users = followingResult.getFollowing();
 
 				if (!followingResult.isMore())
 					getView().hideMoreFollowingButton();

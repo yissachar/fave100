@@ -3,11 +3,11 @@ package com.fave100.client.pages.song.widgets.whyline;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fave100.client.generated.entities.FaveItemDto;
+import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.generated.entities.UserListResultCollection;
-import com.fave100.client.generated.entities.UserListResultDto;
+import com.fave100.client.generated.entities.UserListResult;
 import com.fave100.client.generated.entities.WhylineCollection;
-import com.fave100.client.generated.entities.WhylineDto;
+import com.fave100.client.generated.entities.Whyline;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,9 +19,9 @@ import com.gwtplatform.mvp.client.View;
 
 public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> implements WhylineUiHandlers {
 	public interface MyView extends View, HasUiHandlers<WhylineUiHandlers> {
-		void setWhylines(List<WhylineDto> whylines);
+		void setWhylines(List<Whyline> whylines);
 
-		void setUserLists(List<UserListResultDto> userLists);
+		void setUserLists(List<UserListResult> userLists);
 	}
 
 	private RestSessionDispatch _dispatcher;
@@ -39,11 +39,11 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 	@Override
 	public void onHide() {
 		super.onHide();
-		getView().setWhylines(new ArrayList<WhylineDto>());
-		getView().setUserLists(new ArrayList<UserListResultDto>());
+		getView().setWhylines(new ArrayList<Whyline>());
+		getView().setUserLists(new ArrayList<UserListResult>());
 	}
 
-	public void showWhylines(FaveItemDto song) {
+	public void showWhylines(FaveItem song) {
 		_dispatcher.execute(_restServiceFactory.whyline().getWhylinesForSong(song.getId()), new AsyncCallback<WhylineCollection>() {
 
 			@Override
