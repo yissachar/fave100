@@ -63,9 +63,14 @@ public class SongApi {
 
 			final JsonParser parser = new JsonParser();
 			final JsonElement jsonElement = parser.parse(content);
-			final JsonObject jsonSong = jsonElement.getAsJsonObject();
-			final FaveItem song = new FaveItem(jsonSong.get("song").getAsString(), jsonSong.get("artist").getAsString(), id);
-			return song;
+			try {
+				final JsonObject jsonSong = jsonElement.getAsJsonObject();
+				final FaveItem song = new FaveItem(jsonSong.get("song").getAsString(), jsonSong.get("artist").getAsString(), id);
+				return song;
+			}
+			catch (final IllegalStateException e) {
+				throw new WebApplicationException(Response.Status.NOT_FOUND);
+			}
 		}
 		catch (final IOException e) {
 			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
