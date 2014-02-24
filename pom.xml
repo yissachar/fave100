@@ -113,7 +113,7 @@
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
 			<artifactId>jackson-jaxrs-json-provider</artifactId>
 			<version>2.3.0</version>
-		</dependency>                  
+		</dependency>      
 		<!-- End Jersey -->
 
 		<!-- Swagger -->
@@ -230,6 +230,14 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
+		</dependency>
+		
+		<!-- Jersey -->    
+		<dependency>
+			<groupId>com.sun.jersey.jersey-test-framework</groupId>
+			<artifactId>jersey-test-framework-grizzly2</artifactId>
+			<version>${jersey.version}</version>
+	    	<scope>test</scope>
 		</dependency>
 
 	</dependencies>
