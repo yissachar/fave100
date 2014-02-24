@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.fave100.client.generated.entities.StringResultCollection;
-import com.fave100.client.generated.entities.StringResultDto;
+import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -81,7 +81,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 
 				_requests.clear();
 				List<String> suggestions = new ArrayList<>();
-				for (StringResultDto stringResult : result.getItems()) {
+				for (StringResult stringResult : result.getItems()) {
 					suggestions.add(stringResult.getValue());
 				}
 				setSuggestions(suggestions);

@@ -11,9 +11,9 @@ import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
-import com.fave100.client.generated.entities.AppUserDto;
-import com.fave100.client.generated.entities.FaveItemDto;
-import com.fave100.client.generated.entities.FollowingResultDto;
+import com.fave100.client.generated.entities.AppUser;
+import com.fave100.client.generated.entities.FaveItem;
+import com.fave100.client.generated.entities.FollowingResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
@@ -25,18 +25,18 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 
-public class CurrentUser extends AppUserDto {
+public class CurrentUser extends AppUser {
 
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private RestSessionDispatch _dispatcher;
 	private RestServiceFactory _restServiceFactory;
-	private AppUserDto appUser;
+	private AppUser appUser;
 	private String avatar = "";
-	private Map<String, List<FaveItemDto>> faveLists = new HashMap<String, List<FaveItemDto>>();
+	private Map<String, List<FaveItem>> faveLists = new HashMap<String, List<FaveItem>>();
 	private List<String> _hashtags = new ArrayList<String>();
 	private String _currentHashtag = Constants.DEFAULT_HASHTAG;
-	private FollowingResultDto followingResult;
+	private FollowingResult followingResult;
 	private boolean fullListRetrieved = false;
 
 	@Inject
@@ -59,14 +59,14 @@ public class CurrentUser extends AppUserDto {
 							_hashtags.add(Constants.DEFAULT_HASHTAG);
 							_hashtags.addAll(appUser.getHashtags());
 
-							final AsyncCallback<FollowingResultDto> followingReq = new AsyncCallback<FollowingResultDto>() {
+							final AsyncCallback<FollowingResult> followingReq = new AsyncCallback<FollowingResult>() {
 								@Override
 								public void onFailure(final Throwable caught) {
 									// TODO: What happens if fail?
 								}
 
 								@Override
-								public void onSuccess(final FollowingResultDto result) {
+								public void onSuccess(final FollowingResult result) {
 									followingResult = result;
 									fullListRetrieved = !result.isMore();
 								}
@@ -98,7 +98,7 @@ public class CurrentUser extends AppUserDto {
 		// Clear all state
 		appUser = null;
 		avatar = "";
-		faveLists = new HashMap<String, List<FaveItemDto>>();
+		faveLists = new HashMap<String, List<FaveItem>>();
 		followingResult = null;
 		fullListRetrieved = false;
 		_currentHashtag = Constants.DEFAULT_HASHTAG;
@@ -109,7 +109,7 @@ public class CurrentUser extends AppUserDto {
 		return appUser != null;
 	}
 
-	public void setAppUser(final AppUserDto appUser) {
+	public void setAppUser(final AppUser appUser) {
 		this.appUser = appUser;
 	}
 
@@ -134,11 +134,11 @@ public class CurrentUser extends AppUserDto {
 		});
 	}
 
-	public List<AppUserDto> getFollowing() {
+	public List<AppUser> getFollowing() {
 		return followingResult == null ? null : followingResult.getFollowing();
 	}
 
-	public void followUser(final AppUserDto user) {
+	public void followUser(final AppUser user) {
 		// Not logged in, redirect to login
 		if (!isLoggedIn()) {
 			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
@@ -167,7 +167,7 @@ public class CurrentUser extends AppUserDto {
 		});
 	}
 
-	public void unfollowUser(final AppUserDto user) {
+	public void unfollowUser(final AppUser user) {
 		// Remove from client
 		getFollowing().remove(user);
 
@@ -186,7 +186,7 @@ public class CurrentUser extends AppUserDto {
 		});
 	}
 
-	public void addMoreFollowing(final List<AppUserDto> users, final Boolean isMore) {
+	public void addMoreFollowing(final List<AppUser> users, final Boolean isMore) {
 		followingResult.getFollowing().addAll(users);
 		setFullListRetrieved(!isMore);
 	}
@@ -208,7 +208,7 @@ public class CurrentUser extends AppUserDto {
 			@Override
 			public void onSuccess(Void result) {
 				Notification.show("Song added");
-				final FaveItemDto item = new FaveItemDto();
+				final FaveItem item = new FaveItem();
 				item.setSong(song);
 				item.setArtist(artist);
 				item.setSongID(songId);
@@ -253,11 +253,11 @@ public class CurrentUser extends AppUserDto {
 		faveLists.remove(name);
 	}
 
-	public List<FaveItemDto> getFaveList() {
+	public List<FaveItem> getFaveList() {
 		return faveLists.get(_currentHashtag);
 	}
 
-	public void setFaveList(final List<FaveItemDto> favelist) {
+	public void setFaveList(final List<FaveItem> favelist) {
 		faveLists.put(_currentHashtag, favelist);
 	}
 
@@ -290,17 +290,17 @@ public class CurrentUser extends AppUserDto {
 		if (appUser == null || obj == null) {
 			return false;
 		}
-		else if (appUser == obj || appUser.equals(obj) || this.getUsername().equals(((AppUserDto)obj).getUsername())) {
+		else if (appUser == obj || appUser.equals(obj) || this.getUsername().equals(((AppUser)obj).getUsername())) {
 			return true;
 		}
 		return false;
 	}
 
-	public Map<String, List<FaveItemDto>> getFaveLists() {
+	public Map<String, List<FaveItem>> getFaveLists() {
 		return faveLists;
 	}
 
-	public void setFaveLists(final Map<String, List<FaveItemDto>> faveLists) {
+	public void setFaveLists(final Map<String, List<FaveItem>> faveLists) {
 		this.faveLists = faveLists;
 	}
 
@@ -312,7 +312,7 @@ public class CurrentUser extends AppUserDto {
 		this.fullListRetrieved = fullListRetrieved;
 	}
 
-	public AppUserDto getAppUser() {
+	public AppUser getAppUser() {
 		return appUser;
 	}
 

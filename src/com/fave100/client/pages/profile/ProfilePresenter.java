@@ -3,9 +3,9 @@ package com.fave100.client.pages.profile;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
-import com.fave100.client.generated.entities.BooleanResultDto;
-import com.fave100.client.generated.entities.StringResultDto;
-import com.fave100.client.generated.entities.UserInfoDto;
+import com.fave100.client.generated.entities.BooleanResult;
+import com.fave100.client.generated.entities.StringResult;
+import com.fave100.client.generated.entities.UserInfo;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
@@ -64,7 +64,7 @@ public class ProfilePresenter extends
 	private PlaceManager _placeManager;
 	private RestSessionDispatch _dispatcher;
 	private RestServiceFactory _restServiceFactory;
-	private UserInfoDto oldUserInfo = null;
+	private UserInfo oldUserInfo = null;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final CurrentUser currentUser,
@@ -102,7 +102,7 @@ public class ProfilePresenter extends
 	}
 
 	private void setEmail() {
-		_dispatcher.execute(_restServiceFactory.appuser().getCurrentUserSettings(), new AsyncCallback<UserInfoDto>() {
+		_dispatcher.execute(_restServiceFactory.appuser().getCurrentUserSettings(), new AsyncCallback<UserInfo>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -110,14 +110,14 @@ public class ProfilePresenter extends
 			}
 
 			@Override
-			public void onSuccess(UserInfoDto userInfo) {
+			public void onSuccess(UserInfo userInfo) {
 				populateFields(userInfo);
 				oldUserInfo = userInfo;
 			}
 		});
 	}
 
-	private void populateFields(final UserInfoDto userInfo) {
+	private void populateFields(final UserInfo userInfo) {
 		getView().setEmailValue(userInfo.getEmail());
 		getView().setFollowingPrivate(userInfo.isFollowingPrivate());
 	}
@@ -125,7 +125,7 @@ public class ProfilePresenter extends
 	private void setUploadAction() {
 		// Create the blobstore URL that the avatar will be uploaded to
 		// Need to recreate each time because session expires after successful upload
-		_dispatcher.execute(_restServiceFactory.appuser().createBlobstoreUrl(), new AsyncCallback<StringResultDto>() {
+		_dispatcher.execute(_restServiceFactory.appuser().createBlobstoreUrl(), new AsyncCallback<StringResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -133,7 +133,7 @@ public class ProfilePresenter extends
 			}
 
 			@Override
-			public void onSuccess(StringResultDto url) {
+			public void onSuccess(StringResult url) {
 				getView().createActionUrl(url.getValue());
 			}
 		});
@@ -151,7 +151,7 @@ public class ProfilePresenter extends
 	public void saveUserInfo(final String email, final boolean followingPrivate) {
 		getView().clearErrors();
 
-		final UserInfoDto userInfo = new UserInfoDto();
+		final UserInfo userInfo = new UserInfo();
 		userInfo.setEmail(email);
 		userInfo.setFollowingPrivate(followingPrivate);
 
@@ -162,7 +162,7 @@ public class ProfilePresenter extends
 		if (emailError == null) {
 
 			LoadingIndicator.show();
-			_dispatcher.execute(_restServiceFactory.appuser().setUserInfo(userInfo), new AsyncCallback<BooleanResultDto>() {
+			_dispatcher.execute(_restServiceFactory.appuser().setUserInfo(userInfo), new AsyncCallback<BooleanResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -171,7 +171,7 @@ public class ProfilePresenter extends
 				}
 
 				@Override
-				public void onSuccess(BooleanResultDto saved) {
+				public void onSuccess(BooleanResult saved) {
 					LoadingIndicator.hide();
 					if (saved.getValue()) {
 						oldUserInfo = userInfo;

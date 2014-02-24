@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.ListAddedEvent;
-import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.StringResultCollection;
-import com.fave100.client.generated.entities.StringResultDto;
+import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
@@ -53,7 +53,7 @@ public class ListManagerPresenter extends
 	@ContentSlot public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
 
 	private EventBus _eventBus;
-	private AppUserDto _user;
+	private AppUser _user;
 	private String _hashtag;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
@@ -185,7 +185,7 @@ public class ListManagerPresenter extends
 			@Override
 			public void onSuccess(StringResultCollection result) {
 				List<String> suggestions = new ArrayList<>();
-				for (StringResultDto stringResult : result.getItems()) {
+				for (StringResult stringResult : result.getItems()) {
 					suggestions.add(stringResult.getValue());
 				}
 				getView().refreshList(suggestions, _hashtag, ownList);
@@ -248,11 +248,11 @@ public class ListManagerPresenter extends
 
 	/* Getters and Setters */
 
-	public AppUserDto getUser() {
+	public AppUser getUser() {
 		return _user;
 	}
 
-	public void setUser(final AppUserDto user) {
+	public void setUser(final AppUser user) {
 		this._user = user;
 	}
 

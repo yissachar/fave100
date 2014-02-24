@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.StringResultCollection;
-import com.fave100.client.generated.entities.StringResultDto;
+import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.place.NameTokens;
@@ -77,7 +77,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 			@Override
 			public void onSuccess(StringResultCollection result) {
 				List<String> trending = new ArrayList<>();
-				for (StringResultDto stringResult : result.getItems()) {
+				for (StringResult stringResult : result.getItems()) {
 					trending.add(stringResult.getValue());
 				}
 				getView().setTrendingLists(trending);

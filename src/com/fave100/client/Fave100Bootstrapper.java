@@ -1,7 +1,7 @@
 package com.fave100.client;
 
 import com.fave100.client.events.user.CurrentUserChangedEvent;
-import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.resources.css.AppClientBundle;
 import com.fave100.client.rest.RestSessionDispatch;
@@ -30,7 +30,7 @@ public class Fave100Bootstrapper implements Bootstrapper {
 	@Override
 	public void onBootstrap() {
 		// On first page load or page refresh, check for an existing logged in user
-		_dispatcher.execute(_restServiceFactory.appuser().getLoggedInAppUser(), new AsyncCallback<AppUserDto>() {
+		_dispatcher.execute(_restServiceFactory.appuser().getLoggedInAppUser(), new AsyncCallback<AppUser>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -38,7 +38,7 @@ public class Fave100Bootstrapper implements Bootstrapper {
 			}
 
 			@Override
-			public void onSuccess(AppUserDto appUser) {
+			public void onSuccess(AppUser appUser) {
 				_eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 				_placeManager.revealCurrentPlace();
 			}

@@ -1,7 +1,7 @@
 package com.fave100.client.pages.passwordreset;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.generated.entities.BooleanResultDto;
+import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
@@ -112,7 +112,7 @@ public class PasswordResetPresenter
 
 	@Override
 	public void sendEmail(final String username, final String emailAddress) {
-		_dispatcher.execute(_restServiceFactory.appuser().emailPasswordResetToken(username, emailAddress), new AsyncCallback<BooleanResultDto>() {
+		_dispatcher.execute(_restServiceFactory.appuser().emailPasswordResetToken(username, emailAddress), new AsyncCallback<BooleanResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -120,7 +120,7 @@ public class PasswordResetPresenter
 			}
 
 			@Override
-			public void onSuccess(BooleanResultDto validInfo) {
+			public void onSuccess(BooleanResult validInfo) {
 				if (!validInfo.getValue()) {
 					// Warn user if invalid username or email
 					getView().showTokenError();
@@ -155,7 +155,7 @@ public class PasswordResetPresenter
 			passwordOrToken = currPassword;
 		}
 
-		_dispatcher.execute(_restServiceFactory.appuser().changePassword(newPassword, passwordOrToken), new AsyncCallback<BooleanResultDto>() {
+		_dispatcher.execute(_restServiceFactory.appuser().changePassword(newPassword, passwordOrToken), new AsyncCallback<BooleanResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -163,7 +163,7 @@ public class PasswordResetPresenter
 			}
 
 			@Override
-			public void onSuccess(BooleanResultDto pwdChanged) {
+			public void onSuccess(BooleanResult pwdChanged) {
 				if (!pwdChanged.getValue()) {
 					String errorMsg = "Incorrect password";
 					if (!token.isEmpty()) {

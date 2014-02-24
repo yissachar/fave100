@@ -1,7 +1,7 @@
 package com.fave100.client.events.user;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.generated.entities.AppUserDto;
+import com.fave100.client.generated.entities.AppUser;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -26,9 +26,9 @@ public class CurrentUserChangedEvent extends Event<CurrentUserChangedEvent.Handl
 		return eventBus.addHandler(TYPE, handler);
 	}
 
-	private final AppUserDto user;
+	private final AppUser user;
 
-	public CurrentUserChangedEvent(final AppUserDto user) {
+	public CurrentUserChangedEvent(final AppUser user) {
 		this.user = user;
 	}
 
@@ -37,7 +37,7 @@ public class CurrentUserChangedEvent extends Event<CurrentUserChangedEvent.Handl
 		return TYPE;
 	}
 
-	public AppUserDto getUser() {
+	public AppUser getUser() {
 		return user;
 	}
 

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fave100.client.generated.entities.FollowingResultDto;
-import com.fave100.client.generated.entities.StringResultDto;
+import com.fave100.client.generated.entities.FollowingResult;
+import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.AppuserService;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -57,16 +57,16 @@ public class RequestCache {
 		getLoginUrl(RequestType.FACEBOOK_LOGIN, redirect, callback);
 	}
 
-	public void getFollowingForCurrentUser(final String username, final AsyncCallback<FollowingResultDto> callback) {
+	public void getFollowingForCurrentUser(final String username, final AsyncCallback<FollowingResult> callback) {
 		final RequestType request = RequestType.FOLLOWING_CURRENT_USER;
-		final FollowingResultDto followingUsers = (FollowingResultDto)_results.get(request);
-		final List<AsyncCallback<FollowingResultDto>> callbacks = getOrCreateCallbacks(request);
+		final FollowingResult followingUsers = (FollowingResult)_results.get(request);
+		final List<AsyncCallback<FollowingResult>> callbacks = getOrCreateCallbacks(request);
 		final boolean reqRunning = (_runningRequests.get(request) != null) ? _runningRequests.get(request) : false;
 		// Add the callback to list of callbacks to notify		
 		callbacks.add(callback);
 		// If we already have the following users, return		
 		if (followingUsers != null) {
-			for (final AsyncCallback<FollowingResultDto> gCallback : callbacks) {
+			for (final AsyncCallback<FollowingResult> gCallback : callbacks) {
 				gCallback.onSuccess(followingUsers);
 			}
 			callbacks.clear();
@@ -76,7 +76,7 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (!reqRunning) {
 			_runningRequests.put(request, true);
-			_dispatcher.execute(_appUserService.getFollowing(username, 0), new AsyncCallback<FollowingResultDto>() {
+			_dispatcher.execute(_appUserService.getFollowing(username, 0), new AsyncCallback<FollowingResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -86,10 +86,10 @@ public class RequestCache {
 				}
 
 				@Override
-				public void onSuccess(FollowingResultDto followingResult) {
+				public void onSuccess(FollowingResult followingResult) {
 					_runningRequests.put(request, false);
 					_results.put(request, followingResult);
-					for (final AsyncCallback<FollowingResultDto> gCallback : callbacks) {
+					for (final AsyncCallback<FollowingResult> gCallback : callbacks) {
 						gCallback.onSuccess(followingResult);
 					}
 					callbacks.clear();
@@ -116,7 +116,7 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (!reqRunning) {
 			_runningRequests.put(request, true);
-			RestAction<StringResultDto> loginUrlReq = null;
+			RestAction<StringResult> loginUrlReq = null;
 			switch (request) {
 				case GOOGLE_LOGIN:
 					loginUrlReq = _appUserService.getGoogleLoginURL(redirect);
@@ -129,7 +129,7 @@ public class RequestCache {
 					return;
 			}
 
-			_dispatcher.execute(loginUrlReq, new AsyncCallback<StringResultDto>() {
+			_dispatcher.execute(loginUrlReq, new AsyncCallback<StringResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -139,7 +139,7 @@ public class RequestCache {
 				}
 
 				@Override
-				public void onSuccess(StringResultDto url) {
+				public void onSuccess(StringResult url) {
 					_runningRequests.put(request, false);
 					_results.put(request, url);
 					for (final AsyncCallback<String> gCallback : callbacks) {

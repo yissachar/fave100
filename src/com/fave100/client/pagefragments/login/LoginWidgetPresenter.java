@@ -4,9 +4,9 @@ import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
-import com.fave100.client.generated.entities.AppUserDto;
-import com.fave100.client.generated.entities.LoginResultDto;
-import com.fave100.client.generated.entities.StringResultDto;
+import com.fave100.client.generated.entities.AppUser;
+import com.fave100.client.generated.entities.LoginResult;
+import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
@@ -145,7 +145,7 @@ public class LoginWidgetPresenter extends
 		}
 
 		LoadingIndicator.show();
-		_dispatcher.execute(_restServiceFactory.appuser().login(getView().getUsername().trim(), getView().getPassword()), new AsyncCallback<LoginResultDto>() {
+		_dispatcher.execute(_restServiceFactory.appuser().login(getView().getUsername().trim(), getView().getPassword()), new AsyncCallback<LoginResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -159,8 +159,8 @@ public class LoginWidgetPresenter extends
 			}
 
 			@Override
-			public void onSuccess(LoginResultDto loginResult) {
-				AppUserDto appUser = loginResult.getAppUser();
+			public void onSuccess(LoginResult loginResult) {
+				AppUser appUser = loginResult.getAppUser();
 				Cookies.setCookie(Constants.SESSION_HEADER, loginResult.getSessionId());
 				LoadingIndicator.hide();
 				_eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
@@ -175,7 +175,7 @@ public class LoginWidgetPresenter extends
 	@Override
 	public void goToTwitterAuth() {
 		// Authenticate the user with Twitter
-		_dispatcher.execute(_restServiceFactory.appuser().getTwitterAuthUrl(redirect), new AsyncCallback<StringResultDto>() {
+		_dispatcher.execute(_restServiceFactory.appuser().getTwitterAuthUrl(redirect), new AsyncCallback<StringResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -183,7 +183,7 @@ public class LoginWidgetPresenter extends
 			}
 
 			@Override
-			public void onSuccess(StringResultDto url) {
+			public void onSuccess(StringResult url) {
 				Window.open(url.getValue(), "", "");
 			}
 		});
