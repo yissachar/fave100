@@ -29,7 +29,7 @@ public class WhylineApi {
 	@GET
 	@Path(ApiPaths.GET_SONG_WHYLINES)
 	@ApiOperation(value = "Get whylines for a song", response = WhylineCollection.class)
-	public List<Whyline> getWhylinesForSong(@ApiParam(value = "ID of the song", required = true) @PathParam("id") final String id) {
+	public static List<Whyline> getWhylinesForSong(@ApiParam(value = "ID of the song", required = true) @PathParam("id") final String id) {
 		final List<Whyline> whylines = ofy().load().type(Whyline.class).filter("song", Ref.create(Key.create(Song.class, id))).limit(15).list();
 		// Get the users avatars 
 		// TODO: Should be a bulk query for efficiency
