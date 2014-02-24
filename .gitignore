@@ -16,4 +16,4 @@ extras/
 *.api
 *.discovery
 endpoint-libs/
-src/com/fave100/client/generated/
+src/main/java/com/fave100/client/generated/
