@@ -41,11 +41,11 @@ public class AppUserDao {
 	private static TwitterFactory twitterFactory;
 
 	// Finder methods
-	public AppUser findAppUser(final String username) {
+	public static AppUser findAppUser(final String username) {
 		return ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
 	}
 
-	public AppUser findAppUserByGoogleId(final String googleID) {
+	public static AppUser findAppUserByGoogleId(final String googleID) {
 		final GoogleID gId = ofy().load().type(GoogleID.class).id(googleID).get();
 		if (gId != null) {
 			return ofy().load().ref(gId.getUser()).get();
@@ -55,7 +55,7 @@ public class AppUserDao {
 		}
 	}
 
-	public AppUser findAppUserByTwitterId(final long twitterID) {
+	public static AppUser findAppUserByTwitterId(final long twitterID) {
 		final TwitterID tId = ofy().load().type(TwitterID.class).id(twitterID).get();
 		if (tId != null) {
 			return ofy().load().ref(tId.getUser()).get();
@@ -65,7 +65,7 @@ public class AppUserDao {
 		}
 	}
 
-	public AppUser findAppUserByFacebookId(final long facebookID) {
+	public static AppUser findAppUserByFacebookId(final long facebookID) {
 		final FacebookID fId = ofy().load().type(FacebookID.class).id(facebookID).get();
 		if (fId != null) {
 			return ofy().load().ref(fId.getUser()).get();
@@ -75,7 +75,7 @@ public class AppUserDao {
 		}
 	}
 
-	public Twitter getTwitterInstance() {
+	public static Twitter getTwitterInstance() {
 		if (twitterFactory == null) {
 			twitterFactory = new TwitterFactory();
 		}
@@ -83,7 +83,7 @@ public class AppUserDao {
 	}
 
 	// Gets a Twitter user - not a Fave100 user
-	public twitter4j.User getTwitterUser(HttpServletRequest request, final String oauth_verifier) {
+	public static twitter4j.User getTwitterUser(HttpServletRequest request, final String oauth_verifier) {
 		Session session = SessionHelper.getSession(request);
 		final twitter4j.User user = (twitter4j.User)session.getAttribute("twitterUser");
 		if (user == null) {
@@ -111,7 +111,7 @@ public class AppUserDao {
 	}
 
 	// Gets the ID of a the current Facebook user - not a Fave100 user
-	public Long getCurrentFacebookUserId(HttpServletRequest request, final String code) {
+	public static Long getCurrentFacebookUserId(HttpServletRequest request, final String code) {
 		Session session = SessionHelper.getSession(request);
 
 		Long userID = (Long)session.getAttribute("facebookID");
@@ -163,7 +163,7 @@ public class AppUserDao {
 		return userID;
 	}
 
-	private String readURL(final URL url) throws IOException {
+	private static String readURL(final URL url) throws IOException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final InputStream is = url.openStream();
 		int r;
@@ -174,13 +174,13 @@ public class AppUserDao {
 	}
 
 	// Check if Fave100 user is logged in 
-	public Boolean isAppUserLoggedIn(HttpServletRequest request) {
+	public static Boolean isAppUserLoggedIn(HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 		final String username = (String)session.getAttribute(AUTH_USER);
 		return username != null;
 	}
 
-	public String createBlobstoreUrl(final String successPath) {
+	public static String createBlobstoreUrl(final String successPath) {
 		final UploadOptions options = UploadOptions.Builder.withMaxUploadSizeBytes(Constants.MAX_AVATAR_SIZE);
 		return BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(successPath, options);
 	}

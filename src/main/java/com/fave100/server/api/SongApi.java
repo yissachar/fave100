@@ -45,7 +45,7 @@ public class SongApi {
 	@GET
 	@Path("/{id}")
 	@ApiOperation(value = "Find a song by ID", response = FaveItem.class)
-	public FaveItem getSong(@ApiParam(value = "ID of song to be fetched", required = true) @PathParam("id") final String id) {
+	public static FaveItem getSong(@ApiParam(value = "ID of song to be fetched", required = true) @PathParam("id") final String id) {
 		try {
 			final String lookupUrl = Constants.LOOKUP_URL + "id=" + id;
 			final URL url = new URL(lookupUrl);
@@ -75,7 +75,7 @@ public class SongApi {
 	@GET
 	@Path(ApiPaths.GET_YOUTUBE_SEARCH_RESULTS)
 	@ApiOperation(value = "Find YouTube videos for a song", response = YouTubeSearchResultCollection.class)
-	public YouTubeSearchResultCollection getYouTubeResults(
+	public static YouTubeSearchResultCollection getYouTubeResults(
 			@ApiParam(value = "The song title", required = true) @QueryParam("song") final String song,
 			@ApiParam(value = "The song artist", required = true) @QueryParam("artist") final String artist) {
 
@@ -122,7 +122,7 @@ public class SongApi {
 	@GET
 	@Path("/{id}/favelists")
 	@ApiOperation(value = "Get a list of users who have this song in their FaveList", response = UserListResultCollection.class)
-	public UserListResultCollection getFaveLists(@ApiParam(value = "The song ID", required = true) @PathParam("id") final String id) {
+	public static UserListResultCollection getFaveLists(@ApiParam(value = "The song ID", required = true) @PathParam("id") final String id) {
 		final List<UserListResult> userListResults = new ArrayList<>();
 
 		// Get up to 30 FaveLists containing the song

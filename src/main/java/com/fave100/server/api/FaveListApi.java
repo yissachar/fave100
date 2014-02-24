@@ -36,7 +36,6 @@ import com.fave100.server.exceptions.FaveListSizeReachedException;
 import com.fave100.server.exceptions.NotLoggedInException;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
-import com.google.inject.Inject;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
 import com.wordnik.swagger.annotations.Api;
@@ -50,26 +49,15 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @Api(value = "/" + ApiPaths.FAVELIST_ROOT, description = "Operations on FaveLists")
 public class FaveListApi {
 
-	private FaveListDao _faveListDao;
-	private AppUserApi _appUserApi;
-	private SongApi _songApi;
-
-	@Inject
-	public FaveListApi(FaveListDao faveListDao, AppUserApi appUserApi, SongApi songApi) {
-		_faveListDao = faveListDao;
-		_appUserApi = appUserApi;
-		_songApi = songApi;
-	}
-
 	@GET
 	@Path("/{username}/{list}")
 	@ApiOperation(value = "Get a user's FaveList", response = FaveItemCollection.class)
 	@ApiResponses(value = {@ApiResponse(code = 404, message = ApiExceptions.FAVELIST_NOT_FOUND)})
-	public FaveItemCollection getFaveList(
+	public static FaveItemCollection getFaveList(
 			@ApiParam(value = "The username", required = true) @PathParam("username") final String username,
 			@ApiParam(value = "The list", required = true) @PathParam("list") final String list) {
 
-		final FaveList faveList = _faveListDao.findFaveList(username, list);
+		final FaveList faveList = FaveListDao.findFaveList(username, list);
 		if (faveList == null)
 			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(ApiExceptions.FAVELIST_NOT_FOUND).build());
 
@@ -79,14 +67,14 @@ public class FaveListApi {
 	@GET
 	@Path("/{list}")
 	@ApiOperation(value = "Get a master FaveList", response = FaveItemCollection.class)
-	public FaveItemCollection getMasterFaveList(@ApiParam(value = "The list", required = true) @PathParam("list") final String list) {
+	public static FaveItemCollection getMasterFaveList(@ApiParam(value = "The list", required = true) @PathParam("list") final String list) {
 		return new FaveItemCollection(ofy().load().type(Hashtag.class).id(list.toLowerCase()).get().getList());
 	}
 
 	@GET
 	@Path(ApiPaths.GET_HASHTAG_AUTOCOMPLETE)
 	@ApiOperation(value = "Get list name suggestions", response = StringResultCollection.class)
-	public StringResultCollection getHashtagAutocomplete(@ApiParam(value = "The search term", required = true) @QueryParam("searchTerm") final String searchTerm) {
+	public static StringResultCollection getHashtagAutocomplete(@ApiParam(value = "The search term", required = true) @QueryParam("searchTerm") final String searchTerm) {
 
 		final List<StringResult> names = new ArrayList<>();
 
@@ -105,7 +93,7 @@ public class FaveListApi {
 	@GET
 	@Path(ApiPaths.TRENDING_FAVELISTS)
 	@ApiOperation(value = "Get a list of trending FaveLists", response = StringResultCollection.class)
-	public StringResultCollection getTrendingFaveLists() {
+	public static StringResultCollection getTrendingFaveLists() {
 		// Nov 26 2013: Temporarily disabling proper trending in favor of hard-coded popular lists
 		//		List<Hashtag> hashtags = ofy().load().type(Hashtag.class).order("-zscore").limit(5).list();
 		//		List<String> trending = new ArrayList<>();
@@ -128,14 +116,14 @@ public class FaveListApi {
 	@ApiOperation(value = "Add a FaveList")
 	@ApiResponses(value = {@ApiResponse(code = 400, message = "The list name did not pass validation"), @ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN),
 							@ApiResponse(code = 403, message = ApiExceptions.FAVELIST_LIMIT_REACHED), @ApiResponse(code = 403, message = ApiExceptions.FAVELIST_ALREADY_EXISTS)})
-	public void addFaveListForCurrentUser(@Context HttpServletRequest request, @ApiParam(value = "The list name", required = true) @QueryParam("listName") final String listName) {
+	public static void addFaveListForCurrentUser(@Context HttpServletRequest request, @ApiParam(value = "The list name", required = true) @QueryParam("listName") final String listName) {
 
 		final String error = Validator.validateHashtag(listName);
 		if (error != null) {
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
 		}
 
-		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
+		final AppUser currentUser = AppUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
@@ -145,7 +133,7 @@ public class FaveListApi {
 
 		final String username = currentUser.getUsername();
 
-		if (_faveListDao.findFaveList(username, listName) != null)
+		if (FaveListDao.findFaveList(username, listName) != null)
 			throw new FaveListAlreadyExistsException();
 
 		currentUser.getHashtags().add(listName);
@@ -174,8 +162,8 @@ public class FaveListApi {
 	@Path(ApiPaths.DELETE_FAVELIST)
 	@ApiOperation(value = "Delete a FaveList")
 	@ApiResponses(value = {@ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN)})
-	public void deleteFaveListForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String listName) {
-		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
+	public static void deleteFaveListForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String listName) {
+		final AppUser currentUser = AppUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
@@ -206,20 +194,20 @@ public class FaveListApi {
 	@ApiOperation(value = "Add a FaveItem")
 	@ApiResponses(value = {@ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN), @ApiResponse(code = 403, message = ApiExceptions.FAVELIST_SIZE_REACHED),
 							@ApiResponse(code = 403, message = ApiExceptions.FAVEITEM_ALREADY_IN_LIST)})
-	public void addFaveItemForCurrentUser(@Context HttpServletRequest request, @QueryParam("listName") final String listName, @QueryParam("songId") final String songID) {
+	public static void addFaveItemForCurrentUser(@Context HttpServletRequest request, @QueryParam("listName") final String listName, @QueryParam("songId") final String songID) {
 
-		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
+		final AppUser currentUser = AppUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
-		final FaveList faveList = _faveListDao.findFaveList(currentUser.getUsername(), listName);
+		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), listName);
 
 		// Check FaveList size limit reached
 		if (faveList.getList().size() >= FaveListDao.MAX_FAVES)
 			throw new FaveListSizeReachedException();
 
 		// Get the song from Lucene lookup
-		final FaveItem newFaveItem = _songApi.getSong(songID);
+		final FaveItem newFaveItem = SongApi.getSong(songID);
 		if (newFaveItem == null)
 			return;
 
@@ -246,13 +234,13 @@ public class FaveListApi {
 	@Path(ApiPaths.REMOVE_FAVEITEM)
 	@ApiOperation(value = "Remove a FaveItem")
 	@ApiResponses(value = {@ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN)})
-	public void removeFaveItemForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID) {
+	public static void removeFaveItemForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID) {
 
-		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
+		final AppUser currentUser = AppUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
-		final FaveList faveList = _faveListDao.findFaveList(currentUser.getUsername(), hashtag);
+		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), hashtag);
 		if (faveList == null)
 			return;
 
@@ -283,14 +271,14 @@ public class FaveListApi {
 	@Path("rerank/{list}/{songId}/{newIndex}")
 	@ApiOperation(value = "Rerank a FaveItem")
 	@ApiResponses(value = {@ApiResponse(code = 400, message = ApiExceptions.INVALID_FAVELIST_INDEX), @ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN)})
-	public void rerankFaveItemForCurrentUser(@Context HttpServletRequest request, @PathParam("list") final String hashtag, @PathParam("songId") final String songID,
+	public static void rerankFaveItemForCurrentUser(@Context HttpServletRequest request, @PathParam("list") final String hashtag, @PathParam("songId") final String songID,
 			@PathParam("newIndex") final int newIndex) {
 
-		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
+		final AppUser currentUser = AppUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
-		final FaveList faveList = _faveListDao.findFaveList(currentUser.getUsername(), hashtag);
+		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), hashtag);
 		if (faveList == null)
 			return;
 
@@ -321,7 +309,7 @@ public class FaveListApi {
 	@Path(ApiPaths.EDIT_WHYLINE)
 	@ApiOperation(value = "Edit a WhyLine")
 	@ApiResponses(value = {@ApiResponse(code = 400, message = "WhyLine did not pass validation"), @ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN)})
-	public void editWhylineForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID,
+	public static void editWhylineForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID,
 			@QueryParam("whyline") final String whyline) {
 
 		Objects.requireNonNull(hashtag);
@@ -334,10 +322,10 @@ public class FaveListApi {
 			// Whyline does not meet validation
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(whyline).build());
 
-		final AppUser currentUser = _appUserApi.getLoggedInAppUser(request);
+		final AppUser currentUser = AppUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
-		final FaveList faveList = _faveListDao.findFaveList(currentUser.getUsername(), hashtag);
+		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), hashtag);
 		Objects.requireNonNull(faveList);
 
 		// Find the song to edit whyline

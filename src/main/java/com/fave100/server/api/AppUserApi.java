@@ -70,7 +70,6 @@ import com.google.appengine.api.blobstore.UploadOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.inject.Inject;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
@@ -86,18 +85,11 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @Api(value = "/" + ApiPaths.APPUSER_ROOT, description = "Operations on Users")
 public class AppUserApi {
 
-	private AppUserDao appUserDao;
-
-	@Inject
-	public AppUserApi(AppUserDao appUserDao) {
-		this.appUserDao = appUserDao;
-	}
-
 	@GET
 	@Path(ApiPaths.GET_APPUSER)
 	@ApiOperation(value = "Find a user by their username", response = AppUser.class)
 	@ApiResponses(value = {@ApiResponse(code = 404, message = ApiExceptions.USER_NOT_FOUND)})
-	public AppUser getAppUser(@ApiParam(value = "The username", required = true) @QueryParam("username") final String username) {
+	public static AppUser getAppUser(@ApiParam(value = "The username", required = true) @QueryParam("username") final String username) {
 		AppUser appUser = ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
 		if (appUser == null)
 			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(ApiExceptions.USER_NOT_FOUND).build());
@@ -109,7 +101,7 @@ public class AppUserApi {
 	@Path(ApiPaths.CREATE_APPUSER)
 	@ApiOperation(value = "Create an AppUser", response = LoginResult.class)
 	@ApiResponses(value = {@ApiResponse(code = 403, message = ApiExceptions.USERNAME_ALREADY_EXISTS), @ApiResponse(code = 403, message = ApiExceptions.EMAIL_ID_ALREADY_EXISTS)})
-	public LoginResult createAppUser(@Context final HttpServletRequest request,
+	public static LoginResult createAppUser(@Context final HttpServletRequest request,
 			@ApiParam(value = "The username", required = true) @QueryParam("username") final String username,
 			@ApiParam(value = "The password", required = true) @QueryParam("password") final String password,
 			@ApiParam(value = "The email", required = true) @QueryParam("email") final String email) {
@@ -122,7 +114,7 @@ public class AppUserApi {
 			loginResult = ofy().transact(new Work<LoginResult>() {
 				@Override
 				public LoginResult run() {
-					if (appUserDao.findAppUser(username) != null) {
+					if (AppUserDao.findAppUser(username) != null) {
 						// Username already exists
 						throw new RuntimeException(userExistsMsg);
 					}
@@ -168,7 +160,7 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_GOOGLE_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Google", response = LoginResult.class)
-	public LoginResult createAppUserFromGoogleAccount(@Context final HttpServletRequest request, @QueryParam("username") final String username) {
+	public static LoginResult createAppUserFromGoogleAccount(@Context final HttpServletRequest request, @QueryParam("username") final String username) {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name already exists";
@@ -180,7 +172,7 @@ public class AppUserApi {
 				public LoginResult run() {
 					final UserService userService = UserServiceFactory.getUserService();
 					final User user = userService.getCurrentUser();
-					if (appUserDao.findAppUser(username) != null) {
+					if (AppUserDao.findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
 					if (ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
@@ -218,7 +210,7 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_TWITTER_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Twitter", response = LoginResult.class)
-	public LoginResult createAppUserFromTwitterAccount(
+	public static LoginResult createAppUserFromTwitterAccount(
 			@Context final HttpServletRequest request,
 			@QueryParam("username") final String username,
 			@QueryParam("oauthVerifier") final String oauth_verifier) {
@@ -234,8 +226,8 @@ public class AppUserApi {
 			newAppUser = ofy().transact(new Work<AppUser>() {
 				@Override
 				public AppUser run() {
-					final twitter4j.User user = appUserDao.getTwitterUser(request, oauth_verifier);
-					if (appUserDao.findAppUser(username) != null) {
+					final twitter4j.User user = AppUserDao.getTwitterUser(request, oauth_verifier);
+					if (AppUserDao.findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
 					if (ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
@@ -274,7 +266,7 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_FACEBOOK_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Facebook", response = LoginResult.class)
-	public LoginResult createAppUserFromFacebookAccount(
+	public static LoginResult createAppUserFromFacebookAccount(
 			@Context final HttpServletRequest request,
 			@QueryParam("username") final String username,
 			@QueryParam("state") final String state,
@@ -291,9 +283,9 @@ public class AppUserApi {
 			loginResult = ofy().transact(new Work<LoginResult>() {
 				@Override
 				public LoginResult run() {
-					final Long userFacebookId = appUserDao.getCurrentFacebookUserId(request, code);
+					final Long userFacebookId = AppUserDao.getCurrentFacebookUserId(request, code);
 					if (userFacebookId != null) {
-						if (appUserDao.findAppUser(username) != null) {
+						if (AppUserDao.findAppUser(username) != null) {
 							throw new RuntimeException(userExistsMsg);
 						}
 						if (ofy().load().type(FacebookID.class).id(userFacebookId).get() != null) {
@@ -332,7 +324,7 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.LOGIN)
 	@ApiOperation(value = "Login", response = LoginResult.class)
-	public LoginResult login(@Context HttpServletRequest request, LoginCredentials loginCredentials) {
+	public static LoginResult login(@Context HttpServletRequest request, LoginCredentials loginCredentials) {
 
 		String username = loginCredentials.getUsername();
 		String password = loginCredentials.getPassword();
@@ -352,7 +344,7 @@ public class AppUserApi {
 		}
 		else {
 			// User trying to login with username
-			loggingInUser = appUserDao.findAppUser(username);
+			loggingInUser = AppUserDao.findAppUser(username);
 		}
 
 		if (loggingInUser != null) {
@@ -375,7 +367,7 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_GOOGLE)
 	@ApiOperation(value = "Login with Google", response = LoginResult.class)
-	public LoginResult loginWithGoogle(@Context HttpServletRequest request) {
+	public static LoginResult loginWithGoogle(@Context HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 
 		AppUser loggedInUser;
@@ -385,7 +377,7 @@ public class AppUserApi {
 		if (user == null)
 			return null;
 		// Find the corresponding Fave100 user
-		loggedInUser = appUserDao.findAppUserByGoogleId(user.getUserId());
+		loggedInUser = AppUserDao.findAppUserByGoogleId(user.getUserId());
 		if (loggedInUser != null) {
 			// Successful login - store session
 			session.setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
@@ -397,14 +389,14 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_TWITTER)
 	@ApiOperation(value = "Login with Twitter", response = LoginResult.class)
-	public LoginResult loginWithTwitter(@Context HttpServletRequest request, @QueryParam("oauthVerifier") final String oauth_verifier) {
+	public static LoginResult loginWithTwitter(@Context HttpServletRequest request, @QueryParam("oauthVerifier") final String oauth_verifier) {
 		Session session = SessionHelper.getSession(request);
 
 		// Get the Twitter user
-		final twitter4j.User twitterUser = appUserDao.getTwitterUser(request, oauth_verifier);
+		final twitter4j.User twitterUser = AppUserDao.getTwitterUser(request, oauth_verifier);
 		if (twitterUser != null) {
 			// Find the corresponding Fave100 user
-			final AppUser loggedInUser = appUserDao.findAppUserByTwitterId(twitterUser.getId());
+			final AppUser loggedInUser = AppUserDao.findAppUserByTwitterId(twitterUser.getId());
 			if (loggedInUser != null) {
 				// Successful login - store session
 				session.setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
@@ -425,13 +417,13 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_FACEBOOK)
 	@ApiOperation(value = "Login with Facebook", response = LoginResult.class)
-	public LoginResult loginWithFacebook(@Context HttpServletRequest request, @QueryParam("code") final String code) {
+	public static LoginResult loginWithFacebook(@Context HttpServletRequest request, @QueryParam("code") final String code) {
 		// Get the Facebook user
-		final Long facebookUserId = appUserDao.getCurrentFacebookUserId(request, code);
+		final Long facebookUserId = AppUserDao.getCurrentFacebookUserId(request, code);
 		Session session = SessionHelper.getSession(request);
 		if (facebookUserId != null) {
 			// Find the corresponding Fave100 user
-			final AppUser loggedInUser = appUserDao.findAppUserByFacebookId(facebookUserId);
+			final AppUser loggedInUser = AppUserDao.findAppUserByFacebookId(facebookUserId);
 			if (loggedInUser != null) {
 				// Successful login - store session				
 				session.setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
@@ -452,7 +444,7 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.LOGOUT)
 	@ApiOperation(value = "Logout")
-	public void logout(@Context HttpServletRequest request) {
+	public static void logout(@Context HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 		session.setAttribute(AppUserDao.AUTH_USER, null);
 		session.setAttribute("requestToken", null);
@@ -464,11 +456,11 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.LOGGED_IN_APPUSER)
 	@ApiOperation(value = "Get logged in user", response = AppUser.class)
-	public AppUser getLoggedInAppUser(@Context HttpServletRequest request) {
+	public static AppUser getLoggedInAppUser(@Context HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
 		if (username != null) {
-			return appUserDao.findAppUser(username);
+			return AppUserDao.findAppUser(username);
 		}
 		else {
 			return null;
@@ -488,7 +480,7 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.GET_FOLLOWING)
 	@ApiOperation(value = "Get following", response = FollowingResult.class)
-	public FollowingResult getFollowing(
+	public static FollowingResult getFollowing(
 			@Context HttpServletRequest request,
 			@QueryParam("username") final String username,
 			@QueryParam("index") final int index) {
@@ -519,8 +511,8 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.IS_FOLLOWING)
 	@ApiOperation(value = "Is following", response = BooleanResult.class)
-	public BooleanResult isFollowing(@Context HttpServletRequest request, @QueryParam("username") final String username) {
-		if (!appUserDao.isAppUserLoggedIn(request))
+	public static BooleanResult isFollowing(@Context HttpServletRequest request, @QueryParam("username") final String username) {
+		if (!AppUserDao.isAppUserLoggedIn(request))
 			throw new NotLoggedInException();
 
 		Session session = SessionHelper.getSession(request);
@@ -539,7 +531,7 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.IS_GOOGLE_LOGGED_IN)
 	@ApiOperation(value = "Is google user logged in", response = BooleanResult.class)
-	public BooleanResult isGoogleUserLoggedIn() {
+	public static BooleanResult isGoogleUserLoggedIn() {
 		final UserService userService = UserServiceFactory.getUserService();
 		final User user = userService.getCurrentUser();
 		return new BooleanResult(user != null);
@@ -549,7 +541,7 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.GET_GOOGLE_LOGIN_URL)
 	@ApiOperation(value = "Get Google login URL", response = StringResult.class)
-	public StringResult getGoogleLoginURL(@QueryParam("destinationURL") final String destinationURL) {
+	public static StringResult getGoogleLoginURL(@QueryParam("destinationURL") final String destinationURL) {
 		return new StringResult(UserServiceFactory.getUserService().createLoginURL(destinationURL));
 	}
 
@@ -557,7 +549,7 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.GET_FACEBOOK_AUTH_URL)
 	@ApiOperation(value = "Get Facebook auth URL", response = StringResult.class)
-	public StringResult getFacebookAuthUrl(@Context HttpServletRequest request, @QueryParam("redirectUrl") final String redirectUrl) {
+	public static StringResult getFacebookAuthUrl(@Context HttpServletRequest request, @QueryParam("redirectUrl") final String redirectUrl) {
 		request.getSession().setAttribute("facebookRedirect", redirectUrl);
 		try {
 			return new StringResult("https://www.facebook.com/dialog/oauth?client_id=" + AppUserDao.FACEBOOK_APP_ID + "&display=page&redirect_uri=" + URLEncoder.encode(redirectUrl, "UTF-8"));
@@ -571,7 +563,7 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.IS_APPUSER_LOGGED_IN)
 	@ApiOperation(value = "Is app user logged in", response = BooleanResult.class)
-	public BooleanResult isAppUserLoggedIn(@Context HttpServletRequest request) {
+	public static BooleanResult isAppUserLoggedIn(@Context HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 
 		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
@@ -582,8 +574,8 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.GET_TWITTER_AUTH_URL)
 	@ApiOperation(value = "Get Twitter auth URL", response = StringResult.class)
-	public StringResult getTwitterAuthUrl(@Context HttpServletRequest request, final String redirectUrl) {
-		final Twitter twitter = appUserDao.getTwitterInstance();
+	public static StringResult getTwitterAuthUrl(@Context HttpServletRequest request, final String redirectUrl) {
+		final Twitter twitter = AppUserDao.getTwitterInstance();
 		twitter.setOAuthConsumer(AppUserDao.TWITTER_CONSUMER_KEY, AppUserDao.TWITTER_CONSUMER_SECRET);
 
 		Session session = SessionHelper.getSession(request);
@@ -603,7 +595,7 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.CREATE_BLOBSTORE_URL)
 	@ApiOperation(value = "Create a blobstore upload URL", response = StringResult.class)
-	public StringResult createBlobstoreUrl() {
+	public static StringResult createBlobstoreUrl() {
 		final UploadOptions options = UploadOptions.Builder.withMaxUploadSizeBytes(Constants.MAX_AVATAR_SIZE);
 		return new StringResult(BlobstoreServiceFactory.getBlobstoreService().createUploadUrl(AvatarUploadServlet.PATH, options));
 	}
@@ -611,7 +603,7 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.USER_SETTINGS)
 	@ApiOperation(value = "Get current user settings", response = UserInfo.class)
-	public UserInfo getCurrentUserSettings(@Context HttpServletRequest request) {
+	public static UserInfo getCurrentUserSettings(@Context HttpServletRequest request) {
 		final AppUser currentUser = getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
@@ -622,7 +614,7 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.USER_SETTINGS)
 	@ApiOperation(value = "Set user info", response = BooleanResult.class)
-	public BooleanResult setUserInfo(@Context HttpServletRequest request, final UserInfo userInfo) {
+	public static BooleanResult setUserInfo(@Context HttpServletRequest request, final UserInfo userInfo) {
 		final AppUser currentUser = getLoggedInAppUser(request);
 		if (currentUser == null)
 			return new BooleanResult(false);
@@ -673,7 +665,7 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.FOLLOW)
 	@ApiOperation(value = "Follow user")
-	public void followUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
+	public static void followUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
 		final AppUser currentUser = getLoggedInAppUser(request);
 
 		if (currentUser == null)
@@ -703,7 +695,7 @@ public class AppUserApi {
 	@POST
 	@Path(ApiPaths.UNFOLLOW)
 	@ApiOperation(value = "Unfollow user")
-	public void unfollowUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
+	public static void unfollowUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
 
 		final AppUser currentUser = getLoggedInAppUser(request);
 		if (currentUser == null)
@@ -723,10 +715,10 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.EMAIL_PASSWORD_RESET)
 	@ApiOperation(value = "Email password reset token", response = BooleanResult.class)
-	public BooleanResult emailPasswordResetToken(@QueryParam("username") final String username, @QueryParam("emailAddress") final String emailAddress) {
+	public static BooleanResult emailPasswordResetToken(@QueryParam("username") final String username, @QueryParam("emailAddress") final String emailAddress) {
 
 		if (!username.isEmpty() && !emailAddress.isEmpty()) {
-			final AppUser appUser = appUserDao.findAppUser(username);
+			final AppUser appUser = AppUserDao.findAppUser(username);
 			if (appUser != null) {
 				// Make sure that Google, Twitter, Facebook users can't "forget password"
 				if (appUser.getPassword() == null || appUser.getPassword().isEmpty())
@@ -774,7 +766,7 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.CHANGE_PASSWORD)
 	@ApiOperation(value = "Change password", response = BooleanResult.class)
-	public BooleanResult changePassword(@Context HttpServletRequest request, @QueryParam("newPassword") final String newPassword,
+	public static BooleanResult changePassword(@Context HttpServletRequest request, @QueryParam("newPassword") final String newPassword,
 			@QueryParam("tokenOrPassword") final String tokenOrPassword) {
 
 		if (Validator.validatePassword(newPassword) != null || tokenOrPassword == null || tokenOrPassword.isEmpty()) {
