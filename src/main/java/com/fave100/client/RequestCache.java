@@ -99,7 +99,8 @@ public class RequestCache {
 	}
 
 	private void getLoginUrl(final RequestType request, final String redirect, final AsyncCallback<String> callback) {
-		final String loginUrl = ((String)_results.get(request));
+		StringResult result = ((StringResult)_results.get(request));
+		final String loginUrl = result != null ? result.getValue() : null;
 		final List<AsyncCallback<String>> callbacks = getOrCreateCallbacks(request);
 		final boolean reqRunning = (_runningRequests.get(request) != null) ? _runningRequests.get(request) : false;
 		// Add the callback to list of callbacks to notify		
