@@ -268,7 +268,7 @@ public class FaveListApi {
 	}
 
 	@POST
-	@Path("rerank/{list}/{songId}/{newIndex}")
+	@Path("/rerank/{list}/{songId}/{newIndex}")
 	@ApiOperation(value = "Rerank a FaveItem")
 	@ApiResponses(value = {@ApiResponse(code = 400, message = ApiExceptions.INVALID_FAVELIST_INDEX), @ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN)})
 	public static void rerankFaveItemForCurrentUser(@Context HttpServletRequest request, @PathParam("list") final String hashtag, @PathParam("songId") final String songID,
