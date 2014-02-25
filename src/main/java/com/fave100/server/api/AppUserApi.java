@@ -38,6 +38,7 @@ import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.LoginResult;
 import com.fave100.server.domain.Session;
 import com.fave100.server.domain.StringResult;
+import com.fave100.server.domain.UserRegistration;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
@@ -99,9 +100,11 @@ public class AppUserApi {
 	@ApiOperation(value = "Create an AppUser", response = LoginResult.class)
 	@ApiResponses(value = {@ApiResponse(code = 403, message = ApiExceptions.USERNAME_ALREADY_EXISTS), @ApiResponse(code = 403, message = ApiExceptions.EMAIL_ID_ALREADY_EXISTS)})
 	public static LoginResult createAppUser(@Context final HttpServletRequest request,
-			@ApiParam(value = "The username", required = true) @QueryParam("username") final String username,
-			@ApiParam(value = "The password", required = true) @QueryParam("password") final String password,
-			@ApiParam(value = "The email", required = true) @QueryParam("email") final String email) {
+			UserRegistration userRegistration) {
+
+		final String username = userRegistration.getUsername();
+		final String password = userRegistration.getPassword();
+		final String email = userRegistration.getEmail();
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name is already registered";
