@@ -128,7 +128,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			registration.setPassword(password);
 			registration.setEmail(email);
 
-			_dispatcher.execute(_serviceFactory.appuser().createAppUser(registration), new AsyncCallback<LoginResult>() {
+			_dispatcher.execute(_serviceFactory.user().createAppUser(registration), new AsyncCallback<LoginResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -160,7 +160,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 
 	@Override
 	public void goToTwitterAuth() {
-		_dispatcher.execute(_serviceFactory.appuser().getTwitterAuthUrl(redirect), new AsyncCallback<StringResult>() {
+		_dispatcher.execute(_serviceFactory.user().getTwitterAuthUrl(redirect), new AsyncCallback<StringResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

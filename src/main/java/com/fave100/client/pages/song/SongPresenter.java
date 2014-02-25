@@ -5,8 +5,8 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.song.PlaylistSongChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItem;
+import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.YouTubeSearchResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
@@ -153,7 +153,7 @@ public class SongPresenter extends
 			}
 			else {
 				// Get username and avatar from the datastore
-				_dispatcher.execute(_restServiceFactory.appuser().getAppUser(username), new AsyncCallback<AppUser>() {
+				_dispatcher.execute(_restServiceFactory.user().getAppUser(username), new AsyncCallback<AppUser>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

@@ -118,7 +118,7 @@ public class CurrentUser extends AppUser {
 	}
 
 	public void logout() {
-		_dispatcher.execute(_restServiceFactory.appuser().logout(), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().logout(), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -150,7 +150,7 @@ public class CurrentUser extends AppUser {
 			getFollowing().add(user);
 
 		// Add to server
-		_dispatcher.execute(_restServiceFactory.appuser().followUser(user.getUsername()), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().followUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -172,7 +172,7 @@ public class CurrentUser extends AppUser {
 		getFollowing().remove(user);
 
 		// Remove from server
-		_dispatcher.execute(_restServiceFactory.appuser().unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

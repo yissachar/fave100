@@ -14,8 +14,8 @@ public class ApiPaths {
 	public static final String EDIT_WHYLINE = "/item/whyline/edit";
 
 	// AppUser paths
-	public static final String APPUSER_ROOT = "appuser";
-	public static final String GET_APPUSER = "/getAppUser";
+	public static final String APPUSER_ROOT = "user";
+	public static final String GET_APPUSER = "/{username}";
 	public static final String CREATE_APPUSER = "/createAppUser";
 	public static final String CREATE_APPUSER_FROM_GOOGLE_ACCOUNT = "/createAppUserFromGoogleAccount";
 	public static final String CREATE_APPUSER_FROM_TWITTER_ACCOUNT = "/createAppUserFromTwitterAccount";
@@ -25,7 +25,6 @@ public class ApiPaths {
 	public static final String LOGIN_WITH_TWITTER = "/loginWithTwitter";
 	public static final String LOGIN_WITH_FACEBOOK = "/loginWithFacebook";
 	public static final String LOGOUT = "/logout";
-	public static final String LOGGED_IN_APPUSER = "/loggedInAppUser";
 	public static final String GET_FOLLOWING = "/following";
 	public static final String IS_FOLLOWING = "/isFollowing";
 	public static final String IS_GOOGLE_LOGGED_IN = "/google/loggedin";
