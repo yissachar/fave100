@@ -3,26 +3,18 @@ package com.fave100.server.api;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.junit.Test;
 
-import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.favelist.FaveItem;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
 
-public class SongApiTest extends AbstractJerseyTest {
-
-	private WebResource webResource = resource();
-
-	public SongApiTest() throws Exception {
-		super("com.fave100.server.api");
-	}
+public class SongApiTest {
 
 	@Test
 	public void shouldGetExistingSong() {
-		FaveItem faveItem = webResource.path(ApiPaths.SONG_ROOT + "/BbK4Ex").get(FaveItem.class);
+		FaveItem faveItem = SongApi.getSong("BbK4Ex");//webResource.path(ApiPaths.SONG_ROOT + "/BbK4Ex").get(FaveItem.class);
 		assertEquals(faveItem.getSong(), "Pangea");
 		assertEquals(faveItem.getArtist(), "Professor Kliq");
 	}
@@ -30,10 +22,10 @@ public class SongApiTest extends AbstractJerseyTest {
 	@Test
 	public void shouldNotGetNonExistingSong() {
 		try {
-			webResource.path(ApiPaths.SONG_ROOT + "/jqjqjqjqjqjqjqjq").get(FaveItem.class);
+			SongApi.getSong("jqjqjqjqjqjqjq");
 			fail("Must throw exception");
 		}
-		catch (UniformInterfaceException e) {
+		catch (WebApplicationException e) {
 			assertEquals(e.getResponse().getStatus(), Response.Status.NOT_FOUND.getStatusCode());
 		}
 	}
