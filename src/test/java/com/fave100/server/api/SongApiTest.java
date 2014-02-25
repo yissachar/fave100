@@ -11,21 +11,13 @@ import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.test.framework.JerseyTest;
-import com.sun.jersey.test.framework.spi.container.TestContainerFactory;
-import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestContainerFactory;
 
-public class SongApiTest extends JerseyTest {
+public class SongApiTest extends AbstractJerseyTest {
 
 	private WebResource webResource = resource();
 
 	public SongApiTest() throws Exception {
 		super("com.fave100.server.api");
-	}
-
-	@Override
-	protected TestContainerFactory getTestContainerFactory() {
-		return new GrizzlyWebTestContainerFactory();
 	}
 
 	@Test
