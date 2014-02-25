@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.fave100.client.generated.entities.FollowingResult;
 import com.fave100.client.generated.entities.StringResult;
-import com.fave100.client.generated.services.AppuserService;
+import com.fave100.client.generated.services.UserService;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -28,16 +28,16 @@ public class RequestCache {
 	}
 
 	private RestSessionDispatch _dispatcher;
-	private AppuserService _appUserService;
+	private UserService _userService;
 
 	private Map<RequestType, Boolean> _runningRequests = new HashMap<RequestType, Boolean>();
 	private Map<RequestType, Object> _callbacks = new HashMap<RequestType, Object>();
 	private Map<RequestType, Object> _results = new HashMap<RequestType, Object>();
 
 	@Inject
-	public RequestCache(RestSessionDispatch dispatcher, AppuserService appUserService) {
+	public RequestCache(RestSessionDispatch dispatcher, UserService userService) {
 		_dispatcher = dispatcher;
-		_appUserService = appUserService;
+		_userService = userService;
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (!reqRunning) {
 			_runningRequests.put(request, true);
-			_dispatcher.execute(_appUserService.getFollowing(username, 0), new AsyncCallback<FollowingResult>() {
+			_dispatcher.execute(_userService.getFollowing(username, 0), new AsyncCallback<FollowingResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -120,10 +120,10 @@ public class RequestCache {
 			RestAction<StringResult> loginUrlReq = null;
 			switch (request) {
 				case GOOGLE_LOGIN:
-					loginUrlReq = _appUserService.getGoogleLoginURL(redirect);
+					loginUrlReq = _userService.getGoogleLoginURL(redirect);
 					break;
 				case FACEBOOK_LOGIN:
-					loginUrlReq = _appUserService.getFacebookAuthUrl(redirect);
+					loginUrlReq = _userService.getFacebookAuthUrl(redirect);
 					break;
 				default:
 					// No request to fire

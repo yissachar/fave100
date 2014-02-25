@@ -129,7 +129,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 			}
 		}
 		else {
-			_dispatcher.execute(_restServiceFactory.appuser().getFollowing(_user.getUsername(), 0), new AsyncCallback<FollowingResult>() {
+			_dispatcher.execute(_restServiceFactory.user().getFollowing(_user.getUsername(), 0), new AsyncCallback<FollowingResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -200,7 +200,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 
 	@Override
 	public void getMoreFollowing() {
-		_dispatcher.execute(_restServiceFactory.appuser().getFollowing(_user.getUsername(), listSize), new AsyncCallback<FollowingResult>() {
+		_dispatcher.execute(_restServiceFactory.user().getFollowing(_user.getUsername(), listSize), new AsyncCallback<FollowingResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

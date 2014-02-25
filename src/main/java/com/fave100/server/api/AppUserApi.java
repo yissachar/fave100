@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -87,7 +88,7 @@ public class AppUserApi {
 	@Path(ApiPaths.GET_APPUSER)
 	@ApiOperation(value = "Find a user by their username", response = AppUser.class)
 	@ApiResponses(value = {@ApiResponse(code = 404, message = ApiExceptions.USER_NOT_FOUND)})
-	public static AppUser getAppUser(@ApiParam(value = "The username", required = true) @QueryParam("username") final String username) {
+	public static AppUser getAppUser(@ApiParam(value = "The username", required = true) @PathParam("username") final String username) {
 		AppUser appUser = ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
 		if (appUser == null)
 			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(ApiExceptions.USER_NOT_FOUND).build());
@@ -454,8 +455,8 @@ public class AppUserApi {
 	}
 
 	@GET
-	@Path(ApiPaths.LOGGED_IN_APPUSER)
-	@ApiOperation(value = "Get logged in user", response = AppUser.class)
+	@Path("")
+	@ApiOperation(value = "Get the current user", response = AppUser.class)
 	public static AppUser getLoggedInAppUser(@Context HttpServletRequest request) {
 		Session session = SessionHelper.getSession(request);
 		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
