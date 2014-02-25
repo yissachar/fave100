@@ -7,6 +7,7 @@ import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.LoginResult;
 import com.fave100.client.generated.entities.StringResult;
+import com.fave100.client.generated.entities.UserRegistration;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.rest.RestSessionDispatch;
@@ -122,7 +123,12 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 
 			// Create a new user with the username and password entered
 			LoadingIndicator.show();
-			_dispatcher.execute(_serviceFactory.appuser().createAppUser(username, email, password), new AsyncCallback<LoginResult>() {
+			UserRegistration registration = new UserRegistration();
+			registration.setUsername(username);
+			registration.setPassword(password);
+			registration.setEmail(email);
+
+			_dispatcher.execute(_serviceFactory.appuser().createAppUser(registration), new AsyncCallback<LoginResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
