@@ -64,6 +64,8 @@ import com.fave100.server.exceptions.UsernameAlreadyExistsException;
 import com.fave100.server.servlets.AvatarUploadServlet;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
+import com.google.api.server.spi.response.ForbiddenException;
+import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.blobstore.UploadOptions;
 import com.google.appengine.api.users.User;
@@ -575,7 +577,7 @@ public class AppUserApi {
 	@GET
 	@Path(ApiPaths.GET_TWITTER_AUTH_URL)
 	@ApiOperation(value = "Get Twitter auth URL", response = StringResult.class)
-	public static StringResult getTwitterAuthUrl(@Context HttpServletRequest request, final String redirectUrl) {
+	public static StringResult getTwitterAuthUrl(@Context HttpServletRequest request, @QueryParam("redirectUrl") final String redirectUrl) {
 		final Twitter twitter = AppUserDao.getTwitterInstance();
 		twitter.setOAuthConsumer(AppUserDao.TWITTER_CONSUMER_KEY, AppUserDao.TWITTER_CONSUMER_SECRET);
 
