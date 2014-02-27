@@ -1,12 +1,13 @@
 package com.fave100.client.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fave100.shared.FaveItemInterface;
 
 public class SongDto implements FaveItemInterface {
 
-	private String id;
-	private String song;
-	private String artist;
+	@JsonProperty("id") private String id;
+	@JsonProperty("song") private String song;
+	@JsonProperty("artist") private String artist;
 
 	@Override
 	public String getId() {
