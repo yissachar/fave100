@@ -10,8 +10,9 @@ import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.FaveItem;
+import com.fave100.client.generated.entities.FaveItemCollection;
+import com.fave100.client.generated.entities.WhylineEdit;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
@@ -270,7 +271,12 @@ public class FavelistPresenter extends
 
 	@Override
 	public void editWhyline(final String songId, final String whyline) {
-		_dispatcher.execute(_restServiceFactory.favelist().editWhylineForCurrentUser(hashtag, whyline, songId), new AsyncCallback<Void>() {
+		WhylineEdit whylineEdit = new WhylineEdit();
+		whylineEdit.setListName(hashtag);
+		whylineEdit.setSongId(songId);
+		whylineEdit.setWhyline(whyline);
+
+		_dispatcher.execute(_restServiceFactory.favelist().editWhylineForCurrentUser(whylineEdit), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
