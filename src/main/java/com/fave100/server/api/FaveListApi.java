@@ -23,6 +23,7 @@ import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.StringResultCollection;
 import com.fave100.server.domain.Whyline;
+import com.fave100.server.domain.WhylineEdit;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.server.domain.favelist.FaveItemCollection;
@@ -309,11 +310,14 @@ public class FaveListApi {
 	@Path(ApiPaths.EDIT_WHYLINE)
 	@ApiOperation(value = "Edit a WhyLine")
 	@ApiResponses(value = {@ApiResponse(code = 400, message = "WhyLine did not pass validation"), @ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN)})
-	public static void editWhylineForCurrentUser(@Context HttpServletRequest request, @QueryParam("list") final String hashtag, @QueryParam("songId") final String songID,
-			@QueryParam("whyline") final String whyline) {
+	public static void editWhylineForCurrentUser(@Context HttpServletRequest request, WhylineEdit whylineEdit) {
 
-		Objects.requireNonNull(hashtag);
-		Objects.requireNonNull(songID);
+		String listName = whylineEdit.getListName();
+		String songId = whylineEdit.getSongId();
+		String whyline = whylineEdit.getWhyline();
+
+		Objects.requireNonNull(listName);
+		Objects.requireNonNull(songId);
 		Objects.requireNonNull(whyline);
 
 		// First check that the whyline is valid
@@ -325,13 +329,13 @@ public class FaveListApi {
 		final AppUser currentUser = AppUserApi.getLoggedInAppUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
-		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), hashtag);
+		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), listName);
 		Objects.requireNonNull(faveList);
 
 		// Find the song to edit whyline
 		FaveItem faveItemToEdit = null;
 		for (final FaveItem faveItem : faveList.getList()) {
-			if (faveItem.getSongID().equals(songID)) {
+			if (faveItem.getSongID().equals(songId)) {
 				faveItemToEdit = faveItem;
 				break;
 			}
