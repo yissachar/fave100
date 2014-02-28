@@ -2,7 +2,7 @@ package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
-import com.fave100.client.generated.entities.BooleanResult;
+import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
@@ -101,7 +101,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 				if (!currentUser.isLoggedIn())
 					return;
 
-				_dispatcher.execute(_restServiceFactory.users().isAppUserLoggedIn(), new AsyncCallback<BooleanResult>() {
+				_dispatcher.execute(_restServiceFactory.user().getLoggedInUser(), new AsyncCallback<AppUser>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -109,8 +109,8 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 					}
 
 					@Override
-					public void onSuccess(BooleanResult loggedIn) {
-						if (!loggedIn.getValue())
+					public void onSuccess(AppUser user) {
+						if (user == null)
 							eventBus.fireEvent(new CurrentUserChangedEvent(null));
 					}
 				});
