@@ -102,7 +102,7 @@ public class ProfilePresenter extends
 	}
 
 	private void setEmail() {
-		_dispatcher.execute(_restServiceFactory.user().getCurrentUserSettings(), new AsyncCallback<UserInfo>() {
+		_dispatcher.execute(_restServiceFactory.account().getCurrentUserSettings(), new AsyncCallback<UserInfo>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -125,7 +125,7 @@ public class ProfilePresenter extends
 	private void setUploadAction() {
 		// Create the blobstore URL that the avatar will be uploaded to
 		// Need to recreate each time because session expires after successful upload
-		_dispatcher.execute(_restServiceFactory.user().createBlobstoreUrl(), new AsyncCallback<StringResult>() {
+		_dispatcher.execute(_restServiceFactory.account().createBlobstoreUrl(), new AsyncCallback<StringResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -162,7 +162,7 @@ public class ProfilePresenter extends
 		if (emailError == null) {
 
 			LoadingIndicator.show();
-			_dispatcher.execute(_restServiceFactory.user().setUserInfo(userInfo), new AsyncCallback<BooleanResult>() {
+			_dispatcher.execute(_restServiceFactory.account().setUserInfo(userInfo), new AsyncCallback<BooleanResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

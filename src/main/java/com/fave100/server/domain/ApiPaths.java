@@ -35,12 +35,16 @@ public class ApiPaths {
 	public static final String IS_FOLLOWING = "/isFollowing";
 	public static final String IS_GOOGLE_LOGGED_IN = "/google/loggedin";
 	public static final String IS_APPUSER_LOGGED_IN = "/isLoggedIn";
-	public static final String CREATE_BLOBSTORE_URL = "/createBlobstoreUrl";;
-	public static final String USER_SETTINGS = "/settings";
 	public static final String FOLLOW = "/follow";
 	public static final String UNFOLLOW = "/unfollow";
-	public static final String EMAIL_PASSWORD_RESET = "/password/reset";
-	public static final String CHANGE_PASSWORD = "/password/change";
+
+	// Account
+	public static final String ACCOUNT_ROOT = "account";
+	public static final String ACCOUNT_SETTINGS = "/settings";
+	public static final String CURRENT_USER = "/me";
+	public static final String CREATE_BLOBSTORE_URL = "/blobstore_url";
+	public static final String PASSWORD_RESET = "/password/reset";
+	public static final String PASSWORD_CHANGE = "/password/change";
 
 	// Song
 	public static final String SONG_ROOT = "song";

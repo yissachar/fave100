@@ -112,7 +112,7 @@ public class PasswordResetPresenter
 
 	@Override
 	public void sendEmail(final String username, final String emailAddress) {
-		_dispatcher.execute(_restServiceFactory.user().emailPasswordResetToken(username, emailAddress), new AsyncCallback<BooleanResult>() {
+		_dispatcher.execute(_restServiceFactory.account().emailPasswordResetToken(username, emailAddress), new AsyncCallback<BooleanResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -155,7 +155,7 @@ public class PasswordResetPresenter
 			passwordOrToken = currPassword;
 		}
 
-		_dispatcher.execute(_restServiceFactory.user().changePassword(newPassword, passwordOrToken), new AsyncCallback<BooleanResult>() {
+		_dispatcher.execute(_restServiceFactory.account().changePassword(newPassword, passwordOrToken), new AsyncCallback<BooleanResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
