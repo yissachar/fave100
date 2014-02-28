@@ -4,6 +4,7 @@ public class ApiPaths {
 
 	// FaveList
 	public static final String FAVELIST_ROOT = "favelist";
+	public static final String GET_MASTER_FAVELIST = "/{list}";
 
 	// Auth
 	public static final String AUTH_ROOT = "auth";
@@ -22,8 +23,9 @@ public class ApiPaths {
 
 	// Users
 	public static final String USERS_ROOT = "users";
-	public static final String GET_APPUSER = "/{username}";
-	public static final String GET_FOLLOWING = "/following";
+	public static final String GET_USER = "/{user}";
+	public static final String GET_USERS_FAVELIST = "/{user}/favelists/{list}";
+	public static final String GET_USERS_FOLLOWING = "/{user}/following";
 	public static final String IS_GOOGLE_LOGGED_IN = "/google/loggedin";
 	public static final String IS_APPUSER_LOGGED_IN = "/isLoggedIn";
 
