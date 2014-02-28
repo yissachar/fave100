@@ -16,12 +16,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fave100.server.SessionHelper;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
-import com.fave100.server.domain.Session;
 import com.fave100.server.domain.appuser.AppUser;
-import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.Following;
 import com.fave100.server.domain.appuser.FollowingResult;
 import com.fave100.server.domain.favelist.FaveItemCollection;
@@ -106,17 +103,6 @@ public class UsersApi {
 		final UserService userService = UserServiceFactory.getUserService();
 		final User user = userService.getCurrentUser();
 		return new BooleanResult(user != null);
-	}
-
-	// Check if Fave100 user is logged in 
-	@GET
-	@Path(ApiPaths.IS_APPUSER_LOGGED_IN)
-	@ApiOperation(value = "Is app user logged in", response = BooleanResult.class)
-	public static BooleanResult isAppUserLoggedIn(@Context HttpServletRequest request) {
-		Session session = SessionHelper.getSession(request);
-
-		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
-		return new BooleanResult(username != null);
 	}
 
 	@GET
