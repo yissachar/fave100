@@ -24,6 +24,9 @@ import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.Following;
 import com.fave100.server.domain.appuser.FollowingResult;
+import com.fave100.server.domain.favelist.FaveItemCollection;
+import com.fave100.server.domain.favelist.FaveList;
+import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.exceptions.NotLoggedInException;
 import com.fave100.shared.Constants;
 import com.google.api.server.spi.response.ForbiddenException;
@@ -44,10 +47,10 @@ import com.wordnik.swagger.annotations.ApiResponses;
 public class UsersApi {
 
 	@GET
-	@Path(ApiPaths.GET_APPUSER)
+	@Path(ApiPaths.GET_USER)
 	@ApiOperation(value = "Find a user by their username", response = AppUser.class)
 	@ApiResponses(value = {@ApiResponse(code = 404, message = ApiExceptions.USER_NOT_FOUND)})
-	public static AppUser getAppUser(@ApiParam(value = "The username", required = true) @PathParam("username") final String username) {
+	public static AppUser getAppUser(@ApiParam(value = "The username", required = true) @PathParam("user") final String username) {
 		AppUser appUser = ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
 		if (appUser == null)
 			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(ApiExceptions.USER_NOT_FOUND).build());
@@ -66,12 +69,9 @@ public class UsersApi {
 	 * @throws ForbiddenException
 	 */
 	@GET
-	@Path(ApiPaths.GET_FOLLOWING)
+	@Path(ApiPaths.GET_USERS_FOLLOWING)
 	@ApiOperation(value = "Get following", response = FollowingResult.class)
-	public static FollowingResult getFollowing(
-			@Context HttpServletRequest request,
-			@QueryParam("username") final String username,
-			@QueryParam("index") final int index) {
+	public static FollowingResult getFollowing(@Context HttpServletRequest request, @PathParam("user") final String username, @QueryParam("index") final int index) {
 
 		// Only logged in users can see following		
 		final AppUser currentUser = UserApi.getLoggedInUser(request);
@@ -117,5 +117,20 @@ public class UsersApi {
 
 		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
 		return new BooleanResult(username != null);
+	}
+
+	@GET
+	@Path(ApiPaths.GET_USERS_FAVELIST)
+	@ApiOperation(value = "Get a user's FaveList", response = FaveItemCollection.class)
+	@ApiResponses(value = {@ApiResponse(code = 404, message = ApiExceptions.FAVELIST_NOT_FOUND)})
+	public static FaveItemCollection getFaveList(
+			@ApiParam(value = "The username", required = true) @PathParam("user") final String username,
+			@ApiParam(value = "The list", required = true) @PathParam("list") final String list) {
+
+		final FaveList faveList = FaveListDao.findFaveList(username, list);
+		if (faveList == null)
+			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(ApiExceptions.FAVELIST_NOT_FOUND).build());
+
+		return new FaveItemCollection(faveList.getList());
 	}
 }
