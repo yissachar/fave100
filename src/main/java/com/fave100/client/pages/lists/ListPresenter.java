@@ -259,7 +259,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 				}
 			});
 
-			_dispatcher.execute(_restServiceFactory.users().isFollowing(requestedUsername), new AsyncCallback<BooleanResult>() {
+			_dispatcher.execute(_restServiceFactory.user().isFollowing(requestedUsername), new AsyncCallback<BooleanResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

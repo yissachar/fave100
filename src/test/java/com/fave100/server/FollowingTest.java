@@ -75,7 +75,7 @@ public class FollowingTest {
 		UserApi.getLoggedInUser(req);
 
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "john", "passpass31", "lemmings@example.com").getAppUser();
-		appUserApi.followUser(req, userToFollow.getUsername());
+		UserApi.followUser(req, userToFollow.getUsername());
 		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
@@ -92,8 +92,8 @@ public class FollowingTest {
 		AppUser userToFollow1 = appUserApi.createAppUser(TestHelper.newReq(), "bob", "passpass31", "followuser@example.com").getAppUser();
 		AppUser userToFollow2 = appUserApi.createAppUser(TestHelper.newReq(), "derek", "xcvb1sdf1", "anotheruser@example.com").getAppUser();
 
-		appUserApi.followUser(req, userToFollow1.getUsername());
-		appUserApi.followUser(req, userToFollow2.getUsername());
+		UserApi.followUser(req, userToFollow1.getUsername());
+		UserApi.followUser(req, userToFollow2.getUsername());
 
 		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
@@ -110,7 +110,7 @@ public class FollowingTest {
 		UserApi.getLoggedInUser(req);
 
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "MIKE", "bcv13zxcg", "foobar@example.com").getAppUser();
-		appUserApi.followUser(req, userToFollow.getUsername());
+		UserApi.followUser(req, userToFollow.getUsername());
 		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
@@ -126,13 +126,13 @@ public class FollowingTest {
 
 		// Follow
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "liam", "bv1xcvaw46", "booj@example.com").getAppUser();
-		appUserApi.followUser(req, userToFollow.getUsername());
+		UserApi.followUser(req, userToFollow.getUsername());
 		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 
 		// Unfollow
-		appUserApi.unfollowUser(req, userToFollow.getUsername());
+		UserApi.unfollowUser(req, userToFollow.getUsername());
 		followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 		assertTrue(followingResult.getFollowing().size() == 0);
 	}
@@ -146,13 +146,13 @@ public class FollowingTest {
 
 		// Follow
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "KRING", "awetzx14sva", "kiasd@example.com").getAppUser();
-		appUserApi.followUser(req, userToFollow.getUsername());
+		UserApi.followUser(req, userToFollow.getUsername());
 		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 
 		// Unfollow
-		appUserApi.unfollowUser(req, userToFollow.getUsername());
+		UserApi.unfollowUser(req, userToFollow.getUsername());
 		followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
 		assertTrue(followingResult.getFollowing().size() == 0);
 	}

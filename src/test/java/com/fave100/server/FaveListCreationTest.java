@@ -84,7 +84,7 @@ public class FaveListCreationTest {
 	public void faveListCreated() throws Exception {
 		// Create a favelist
 		String faveListName = "anewfavelist";
-		faveListApi.addFaveListForCurrentUser(req, faveListName);
+		UserApi.addFaveListForCurrentUser(req, faveListName);
 
 		// Favelist now exists in datastore
 		assertNotNull("Created faveList must exist in datastore", faveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
@@ -94,11 +94,11 @@ public class FaveListCreationTest {
 	public void faveListNameMustBeUniquePerUser() throws BadRequestException, UnauthorizedException, ForbiddenException {
 		// Create a favelist
 		String faveListName = "boo";
-		faveListApi.addFaveListForCurrentUser(req, faveListName);
+		UserApi.addFaveListForCurrentUser(req, faveListName);
 
 		// Attempt to add a second favelist with same name
 		try {
-			faveListApi.addFaveListForCurrentUser(req, faveListName);
+			UserApi.addFaveListForCurrentUser(req, faveListName);
 			fail("Exception not thrown");
 		}
 		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
@@ -112,7 +112,7 @@ public class FaveListCreationTest {
 		String faveListName = null;
 
 		try {
-			faveListApi.addFaveListForCurrentUser(req, faveListName);
+			UserApi.addFaveListForCurrentUser(req, faveListName);
 			fail("Exception not thrown");
 		}
 		catch (Exception e) {
@@ -126,7 +126,7 @@ public class FaveListCreationTest {
 		String faveListName = "";
 
 		try {
-			faveListApi.addFaveListForCurrentUser(req, faveListName);
+			UserApi.addFaveListForCurrentUser(req, faveListName);
 			fail("Exception not thrown");
 		}
 		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
@@ -147,7 +147,7 @@ public class FaveListCreationTest {
 		String faveListName = sb.toString();
 
 		try {
-			faveListApi.addFaveListForCurrentUser(req, faveListName);
+			UserApi.addFaveListForCurrentUser(req, faveListName);
 			fail("Exception not thrown");
 		}
 		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
@@ -166,10 +166,10 @@ public class FaveListCreationTest {
 		String name4 = "baz inga";
 
 		try {
-			faveListApi.addFaveListForCurrentUser(req, name1);
-			faveListApi.addFaveListForCurrentUser(req, name2);
-			faveListApi.addFaveListForCurrentUser(req, name3);
-			faveListApi.addFaveListForCurrentUser(req, name4);
+			UserApi.addFaveListForCurrentUser(req, name1);
+			UserApi.addFaveListForCurrentUser(req, name2);
+			UserApi.addFaveListForCurrentUser(req, name3);
+			UserApi.addFaveListForCurrentUser(req, name4);
 			fail("Exception not thrown");
 		}
 		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
@@ -210,7 +210,7 @@ public class FaveListCreationTest {
 		String faveListName = "101stlist";
 
 		try {
-			faveListApi.addFaveListForCurrentUser(req, faveListName);
+			UserApi.addFaveListForCurrentUser(req, faveListName);
 			fail("Exception not thrown");
 		}
 		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
@@ -232,7 +232,7 @@ public class FaveListCreationTest {
 	@Test
 	public void createdFaveListMustBeEmpty() throws BadRequestException, UnauthorizedException, ForbiddenException {
 		String faveListName = "booya";
-		faveListApi.addFaveListForCurrentUser(req, faveListName);
+		UserApi.addFaveListForCurrentUser(req, faveListName);
 
 		FaveList faveList = faveListDao.findFaveList(loggedInUser.getUsername(), faveListName);
 		assertEquals("A newly created FaveList must not have any FaveItems stored", 0, faveList.getList().size());
@@ -250,10 +250,10 @@ public class FaveListCreationTest {
 	@Test
 	public void faveListNameAlsoStoredInUser() throws BadRequestException, UnauthorizedException, ForbiddenException {
 		String firstfaveListName = "gret";
-		faveListApi.addFaveListForCurrentUser(req, firstfaveListName);
+		UserApi.addFaveListForCurrentUser(req, firstfaveListName);
 
 		String secondFaveListName = "thasdf";
-		faveListApi.addFaveListForCurrentUser(req, secondFaveListName);
+		UserApi.addFaveListForCurrentUser(req, secondFaveListName);
 
 		String msg = "User object must store FaveList name";
 		assertEquals(msg, 2, loggedInUser.getHashtags().size());

@@ -4,11 +4,6 @@ public class ApiPaths {
 
 	// FaveList
 	public static final String FAVELIST_ROOT = "favelist";
-	public static final String ADD_FAVELIST = "/add";
-	public static final String DELETE_FAVELIST = "/delete";
-	public static final String ADD_FAVEITEM = "/item/add";
-	public static final String REMOVE_FAVEITEM = "/item/remove";
-	public static final String EDIT_WHYLINE = "/item/whyline/edit";
 
 	// Auth
 	public static final String AUTH_ROOT = "auth";
@@ -25,20 +20,22 @@ public class ApiPaths {
 	public static final String GET_FACEBOOK_AUTH_URL = "/facebook/authUrl";
 	public static final String GET_TWITTER_AUTH_URL = "/twitter/authUrl";
 
-	// AppUser
+	// Users
 	public static final String USERS_ROOT = "users";
 	public static final String GET_APPUSER = "/{username}";
 	public static final String GET_FOLLOWING = "/following";
-	public static final String IS_FOLLOWING = "/isFollowing";
 	public static final String IS_GOOGLE_LOGGED_IN = "/google/loggedin";
 	public static final String IS_APPUSER_LOGGED_IN = "/isLoggedIn";
-	public static final String FOLLOW = "/follow";
-	public static final String UNFOLLOW = "/unfollow";
 
 	// User
 	public static final String USER_ROOT = "user";
-	public static final String USER_SETTINGS = "/settings";
 	public static final String CURRENT_USER = "";
+	public static final String USER_FAVELISTS = "/favelists/{list}";
+	public static final String USER_FAVEITEMS = "/favelists/{list}/items/{id}";
+	public static final String EDIT_RANK = "/favelists/{list}/items/{id}/rank";
+	public static final String EDIT_WHYLINE = "/favelists/{list}/items/{id}/whyline";
+	public static final String USER_FOLLOWING = "/following/{user}";
+	public static final String USER_SETTINGS = "/settings";
 	public static final String CREATE_BLOBSTORE_URL = "/blobstore_url";
 	public static final String PASSWORD_RESET = "/password/reset";
 	public static final String PASSWORD_CHANGE = "/password/change";
