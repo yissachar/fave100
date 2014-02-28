@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -88,7 +89,7 @@ public class SearchApi {
 	@GET
 	@Path(ApiPaths.SEARCH_FAVELISTS)
 	@ApiOperation(value = "Search for FaveLists", response = StringResultCollection.class)
-	public static StringResultCollection searchFaveLists(@ApiParam(value = "The search term", required = true) @QueryParam("searchTerm") final String searchTerm) {
+	public static StringResultCollection searchFaveLists(@ApiParam(value = "The search term", required = true) @PathParam("search_term") final String searchTerm) {
 
 		final List<StringResult> names = new ArrayList<>();
 
