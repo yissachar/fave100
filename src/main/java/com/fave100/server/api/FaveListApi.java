@@ -73,25 +73,6 @@ public class FaveListApi {
 	}
 
 	@GET
-	@Path(ApiPaths.GET_HASHTAG_AUTOCOMPLETE)
-	@ApiOperation(value = "Get list name suggestions", response = StringResultCollection.class)
-	public static StringResultCollection getHashtagAutocomplete(@ApiParam(value = "The search term", required = true) @QueryParam("searchTerm") final String searchTerm) {
-
-		final List<StringResult> names = new ArrayList<>();
-
-		if (searchTerm.isEmpty())
-			return new StringResultCollection(names);
-
-		// TODO: Need to sort by popularity
-		final List<Hashtag> hashtags = ofy().load().type(Hashtag.class).filter("id >=", searchTerm.toLowerCase()).filter("id <", searchTerm.toLowerCase() + "\uFFFD").limit(5).list();
-		for (final Hashtag hashtag : hashtags) {
-			names.add(new StringResult(hashtag.getName()));
-		}
-
-		return new StringResultCollection(names);
-	}
-
-	@GET
 	@Path(ApiPaths.TRENDING_FAVELISTS)
 	@ApiOperation(value = "Get a list of trending FaveLists", response = StringResultCollection.class)
 	public static StringResultCollection getTrendingFaveLists() {
