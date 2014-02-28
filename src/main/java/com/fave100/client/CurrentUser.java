@@ -118,7 +118,7 @@ public class CurrentUser extends AppUser {
 	}
 
 	public void logout() {
-		_dispatcher.execute(_restServiceFactory.user().logout(), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.auth().logout(), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
