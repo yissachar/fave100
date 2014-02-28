@@ -150,7 +150,7 @@ public class CurrentUser extends AppUser {
 			getFollowing().add(user);
 
 		// Add to server
-		_dispatcher.execute(_restServiceFactory.users().followUser(user.getUsername()), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().followUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -172,7 +172,7 @@ public class CurrentUser extends AppUser {
 		getFollowing().remove(user);
 
 		// Remove from server
-		_dispatcher.execute(_restServiceFactory.users().unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -197,7 +197,7 @@ public class CurrentUser extends AppUser {
 
 	public void addSong(final String songId, final String hashtag, final String song, final String artist) {
 
-		_dispatcher.execute(_restServiceFactory.favelist().addFaveItemForCurrentUser(hashtag, songId), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().addFaveItemForCurrentUser(hashtag, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -229,7 +229,7 @@ public class CurrentUser extends AppUser {
 
 		final String listName = name;
 
-		_dispatcher.execute(_restServiceFactory.favelist().addFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().addFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

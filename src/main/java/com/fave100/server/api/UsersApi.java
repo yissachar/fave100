@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -25,8 +24,6 @@ import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.Following;
 import com.fave100.server.domain.appuser.FollowingResult;
-import com.fave100.server.exceptions.AlreadyFollowingException;
-import com.fave100.server.exceptions.CannotFollowYourselfException;
 import com.fave100.server.exceptions.NotLoggedInException;
 import com.fave100.shared.Constants;
 import com.google.api.server.spi.response.ForbiddenException;
@@ -34,7 +31,6 @@ import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -100,23 +96,6 @@ public class UsersApi {
 		return new FollowingResult(new ArrayList<AppUser>(), false);
 	}
 
-	@GET
-	@Path(ApiPaths.IS_FOLLOWING)
-	@ApiOperation(value = "Is following", response = BooleanResult.class)
-	public static BooleanResult isFollowing(@Context HttpServletRequest request, @QueryParam("username") final String username) {
-		if (!AppUserDao.isAppUserLoggedIn(request))
-			throw new NotLoggedInException();
-
-		Session session = SessionHelper.getSession(request);
-
-		final String currentUserUsername = (String)session.getAttribute(AppUserDao.AUTH_USER);
-		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
-		final Following following = ofy().load().type(Following.class).id(currentUserUsername.toLowerCase()).get();
-
-		BooleanResult result = new BooleanResult(following != null && !following.getFollowing().isEmpty() && following.getFollowing().contains(userRef));
-		return result;
-	}
-
 	/*
 	 * Checks if the user is logged into Google (though not necessarily logged into Fave100)
 	 */
@@ -138,54 +117,5 @@ public class UsersApi {
 
 		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
 		return new BooleanResult(username != null);
-	}
-
-	@POST
-	@Path(ApiPaths.FOLLOW)
-	@ApiOperation(value = "Follow user")
-	public static void followUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
-		final AppUser currentUser = UserApi.getLoggedInUser(request);
-
-		if (currentUser == null)
-			throw new NotLoggedInException();
-
-		// Check if user trying to follow themselves
-		if (currentUser.getUsername().equals(username))
-			throw new CannotFollowYourselfException();
-
-		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
-		Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
-		if (following == null) {
-			following = new Following(currentUser.getId());
-			ofy().save().entity(following).now();
-		}
-
-		// Check if already following that user
-		if (following.getFollowing().contains(userRef))
-			throw new AlreadyFollowingException();
-
-		following.getFollowing().add(userRef);
-		ofy().save().entity(following).now();
-
-		return;
-	}
-
-	@POST
-	@Path(ApiPaths.UNFOLLOW)
-	@ApiOperation(value = "Unfollow user")
-	public static void unfollowUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
-
-		final AppUser currentUser = UserApi.getLoggedInUser(request);
-		if (currentUser == null)
-			throw new NotLoggedInException();
-
-		final Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
-		if (following == null)
-			return;
-
-		following.getFollowing().remove(Ref.create(Key.create(AppUser.class, username.toLowerCase())));
-		ofy().save().entity(following).now();
-
-		return;
 	}
 }

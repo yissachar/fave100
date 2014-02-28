@@ -6,8 +6,8 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.entities.StringResult;
+import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
@@ -115,7 +115,7 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		_dispatcher.execute(_restServiceFactory.favelist().addFaveListForCurrentUser(name), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().addFaveListForCurrentUser(name), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -200,7 +200,7 @@ public class ListManagerPresenter extends
 
 			@Override
 			public void onOk() {
-				_dispatcher.execute(_restServiceFactory.favelist().deleteFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
+				_dispatcher.execute(_restServiceFactory.user().deleteFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

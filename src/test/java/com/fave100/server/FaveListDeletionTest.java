@@ -77,10 +77,10 @@ public class FaveListDeletionTest {
 	public void faveListDeleted() throws BadRequestException, UnauthorizedException, ForbiddenException {
 		// Create a favelist
 		String faveListName = "favelisttodelete";
-		faveListApi.addFaveListForCurrentUser(req, faveListName);
+		UserApi.addFaveListForCurrentUser(req, faveListName);
 
 		// Delete it
-		faveListApi.deleteFaveListForCurrentUser(req, faveListName);
+		UserApi.deleteFaveListForCurrentUser(req, faveListName);
 
 		// Favelist no longer exists in datastore
 		assertNull("Deleted FaveList must no longer exist in datastore", faveListDao.findFaveList(loggedInUser.getUsername(), faveListName));

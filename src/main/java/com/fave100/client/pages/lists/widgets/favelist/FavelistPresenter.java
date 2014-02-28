@@ -255,7 +255,7 @@ public class FavelistPresenter extends
 		widgets.remove(index);
 		currentUser.getFaveList().remove(index);
 		// Send request for server to remove it
-		_dispatcher.execute(_restServiceFactory.favelist().removeFaveItemForCurrentUser(hashtag, songId), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().removeFaveItemForCurrentUser(hashtag, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -276,7 +276,7 @@ public class FavelistPresenter extends
 		whylineEdit.setSongId(songId);
 		whylineEdit.setWhyline(whyline);
 
-		_dispatcher.execute(_restServiceFactory.favelist().editWhylineForCurrentUser(whylineEdit), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().editWhylineForCurrentUser(whylineEdit), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -322,7 +322,7 @@ public class FavelistPresenter extends
 		}
 
 		// Save on server
-		_dispatcher.execute(_restServiceFactory.favelist().rerankFaveItemForCurrentUser(hashtag, songId, newIndex), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().rerankFaveItemForCurrentUser(hashtag, songId, newIndex), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
