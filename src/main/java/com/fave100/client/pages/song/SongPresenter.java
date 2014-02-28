@@ -171,7 +171,7 @@ public class SongPresenter extends
 			}
 
 			// Get the list for the requested user
-			_dispatcher.execute(_restServiceFactory.favelist().getFaveList(username, hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.users().getFaveList(username, hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

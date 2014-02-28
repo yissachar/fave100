@@ -168,7 +168,7 @@ public class FavelistPresenter extends
 		}
 		// Otherwise get it from the server if we are requesting a user's list
 		else if (user != null) {
-			_dispatcher.execute(_restServiceFactory.favelist().getFaveList(user.getUsername(), hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.users().getFaveList(user.getUsername(), hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
