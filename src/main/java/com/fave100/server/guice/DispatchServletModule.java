@@ -2,6 +2,7 @@ package com.fave100.server.guice;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.fave100.server.api.AppUserApi;
+import com.fave100.server.api.AuthApi;
 import com.fave100.server.api.FaveListApi;
 import com.fave100.server.api.SongApi;
 import com.fave100.server.api.WhylineApi;
@@ -23,6 +24,7 @@ public class DispatchServletModule extends ServletModule {
 		bind(JacksonJsonProvider.class).in(Singleton.class);
 
 		bind(AppUserApi.class);
+		bind(AuthApi.class);
 		bind(FaveListApi.class);
 		bind(SongApi.class);
 		bind(WhylineApi.class);
