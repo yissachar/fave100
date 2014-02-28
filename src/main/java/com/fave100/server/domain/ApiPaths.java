@@ -4,7 +4,6 @@ public class ApiPaths {
 
 	// FaveList
 	public static final String FAVELIST_ROOT = "favelist";
-	public static final String TRENDING_FAVELISTS = "/trendingFaveLists";
 	public static final String ADD_FAVELIST = "/add";
 	public static final String DELETE_FAVELIST = "/delete";
 	public static final String ADD_FAVEITEM = "/item/add";
@@ -56,5 +55,9 @@ public class ApiPaths {
 	public static final String GET_YOUTUBE_SEARCH_RESULTS = "/youtube";
 	public static final String YOUTUBE_SEARCH_SONG_PARAM = "song";
 	public static final String YOUTUBE_SEARCH_ARTIST_PARAM = "artist";
+
+	// Trending
+	public static final String TRENDING_ROOT = "trending";
+	public static final String TRENDING_FAVELISTS = "/favelists";
 
 }

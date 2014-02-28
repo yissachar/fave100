@@ -5,6 +5,7 @@ import com.fave100.server.api.AuthApi;
 import com.fave100.server.api.FaveListApi;
 import com.fave100.server.api.SearchApi;
 import com.fave100.server.api.SongApi;
+import com.fave100.server.api.TrendingApi;
 import com.fave100.server.api.UserApi;
 import com.fave100.server.api.UsersApi;
 import com.fave100.server.filters.EncodingFilter;
@@ -30,6 +31,7 @@ public class DispatchServletModule extends ServletModule {
 		bind(FaveListApi.class);
 		bind(SongApi.class);
 		bind(SearchApi.class);
+		bind(TrendingApi.class);
 		serve(Constants.API_PATH + "/*").with(GuiceContainer.class);
 
 		bind(RemoteApiServlet.class).in(Singleton.class);

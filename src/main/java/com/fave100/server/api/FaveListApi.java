@@ -20,8 +20,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fave100.server.domain.ApiPaths;
-import com.fave100.server.domain.StringResult;
-import com.fave100.server.domain.StringResultCollection;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.WhylineEdit;
 import com.fave100.server.domain.appuser.AppUser;
@@ -70,27 +68,6 @@ public class FaveListApi {
 	@ApiOperation(value = "Get a master FaveList", response = FaveItemCollection.class)
 	public static FaveItemCollection getMasterFaveList(@ApiParam(value = "The list", required = true) @PathParam("list") final String list) {
 		return new FaveItemCollection(ofy().load().type(Hashtag.class).id(list.toLowerCase()).get().getList());
-	}
-
-	@GET
-	@Path(ApiPaths.TRENDING_FAVELISTS)
-	@ApiOperation(value = "Get a list of trending FaveLists", response = StringResultCollection.class)
-	public static StringResultCollection getTrendingFaveLists() {
-		// Nov 26 2013: Temporarily disabling proper trending in favor of hard-coded popular lists
-		//		List<Hashtag> hashtags = ofy().load().type(Hashtag.class).order("-zscore").limit(5).list();
-		//		List<String> trending = new ArrayList<>();
-		//		for (Hashtag hashtag : hashtags) {
-		//			trending.add(hashtag.getName());
-		//		}
-		//		return trending;
-		List<StringResult> trending = new ArrayList<>();
-		trending.add(new StringResult("alltime"));
-		trending.add(new StringResult("2014"));
-		trending.add(new StringResult("2013"));
-		trending.add(new StringResult("2012"));
-		trending.add(new StringResult("dance"));
-		trending.add(new StringResult("classicrock"));
-		return new StringResultCollection(trending);
 	}
 
 	@POST
