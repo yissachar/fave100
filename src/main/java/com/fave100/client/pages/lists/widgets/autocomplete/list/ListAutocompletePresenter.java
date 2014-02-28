@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.entities.StringResult;
+import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -88,7 +88,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			}
 		};
 
-		_dispatcher.execute(_restServiceFactory.favelist().getHashtagAutocomplete(searchTerm), listAutocompleteReq);
+		_dispatcher.execute(_restServiceFactory.search().searchFaveLists(searchTerm), listAutocompleteReq);
 		_requests.add(listAutocompleteReq);
 	}
 

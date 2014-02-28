@@ -1,11 +1,12 @@
 package com.fave100.server.guice;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.fave100.server.api.UserApi;
-import com.fave100.server.api.UsersApi;
 import com.fave100.server.api.AuthApi;
 import com.fave100.server.api.FaveListApi;
+import com.fave100.server.api.SearchApi;
 import com.fave100.server.api.SongApi;
+import com.fave100.server.api.UserApi;
+import com.fave100.server.api.UsersApi;
 import com.fave100.server.filters.EncodingFilter;
 import com.fave100.server.servlets.HashtagBuilderServlet;
 import com.fave100.server.servlets.HashtagEnqueuerServlet;
@@ -28,6 +29,7 @@ public class DispatchServletModule extends ServletModule {
 		bind(UserApi.class);
 		bind(FaveListApi.class);
 		bind(SongApi.class);
+		bind(SearchApi.class);
 		serve(Constants.API_PATH + "/*").with(GuiceContainer.class);
 
 		bind(RemoteApiServlet.class).in(Singleton.class);

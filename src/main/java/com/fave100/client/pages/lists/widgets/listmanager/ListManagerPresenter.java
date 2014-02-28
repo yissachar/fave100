@@ -175,7 +175,7 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		_dispatcher.execute(_restServiceFactory.favelist().getHashtagAutocomplete(searchTerm), new AsyncCallback<StringResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.search().searchFaveLists(searchTerm), new AsyncCallback<StringResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
