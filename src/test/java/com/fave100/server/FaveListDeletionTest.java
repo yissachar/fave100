@@ -10,8 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fave100.server.api.AccountApi;
-import com.fave100.server.api.AppUserApi;
+import com.fave100.server.api.UserApi;
+import com.fave100.server.api.UsersApi;
 import com.fave100.server.api.FaveListApi;
 import com.fave100.server.api.SongApi;
 import com.fave100.server.domain.Whyline;
@@ -52,14 +52,14 @@ public class FaveListDeletionTest {
 		// Create a user
 		String username = "tester";
 		AppUserDao appUserDao = new AppUserDao();
-		AppUserApi appUserApi = new AppUserApi(appUserDao);
+		UsersApi appUserApi = new UsersApi(appUserDao);
 
 		req = TestHelper.newReq();
 
 		loggedInUser = appUserApi.createAppUser(req, username, "goodtests", "testuser@example.com").getAppUser();
 
-		AppUserApi mockAppUserApi = mock(AppUserApi.class);
-		when(AccountApi.getLoggedInUser(req)).thenReturn(loggedInUser);
+		UsersApi mockAppUserApi = mock(UsersApi.class);
+		when(UserApi.getLoggedInUser(req)).thenReturn(loggedInUser);
 
 		faveListDao = new FaveListDao();
 		faveListApi = new FaveListApi(faveListDao, mockAppUserApi, new SongApi());

@@ -153,7 +153,7 @@ public class SongPresenter extends
 			}
 			else {
 				// Get username and avatar from the datastore
-				_dispatcher.execute(_restServiceFactory.user().getAppUser(username), new AsyncCallback<AppUser>() {
+				_dispatcher.execute(_restServiceFactory.users().getAppUser(username), new AsyncCallback<AppUser>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

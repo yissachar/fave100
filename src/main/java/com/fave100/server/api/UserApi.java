@@ -44,10 +44,10 @@ import com.googlecode.objectify.VoidWork;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
-@Path("/" + ApiPaths.ACCOUNT_ROOT)
+@Path("/" + ApiPaths.USER_ROOT)
 @Produces(MediaType.APPLICATION_JSON)
-@Api(value = "/" + ApiPaths.ACCOUNT_ROOT, description = "Account operations")
-public class AccountApi {
+@Api(value = "/" + ApiPaths.USER_ROOT, description = "Account operations")
+public class UserApi {
 
 	@GET
 	@Path(ApiPaths.CURRENT_USER)
@@ -72,7 +72,7 @@ public class AccountApi {
 	}
 
 	@GET
-	@Path(ApiPaths.ACCOUNT_SETTINGS)
+	@Path(ApiPaths.USER_SETTINGS)
 	@ApiOperation(value = "Get current user settings", response = UserInfo.class)
 	public static UserInfo getCurrentUserSettings(@Context HttpServletRequest request) {
 		final AppUser currentUser = getLoggedInUser(request);
@@ -83,7 +83,7 @@ public class AccountApi {
 	}
 
 	@POST
-	@Path(ApiPaths.ACCOUNT_SETTINGS)
+	@Path(ApiPaths.USER_SETTINGS)
 	@ApiOperation(value = "Set user info", response = BooleanResult.class)
 	public static BooleanResult setUserInfo(@Context HttpServletRequest request, final UserInfo userInfo) {
 		final AppUser currentUser = getLoggedInUser(request);
