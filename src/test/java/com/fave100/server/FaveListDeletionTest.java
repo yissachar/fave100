@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fave100.server.api.AccountApi;
 import com.fave100.server.api.AppUserApi;
 import com.fave100.server.api.FaveListApi;
 import com.fave100.server.api.SongApi;
@@ -58,7 +59,7 @@ public class FaveListDeletionTest {
 		loggedInUser = appUserApi.createAppUser(req, username, "goodtests", "testuser@example.com").getAppUser();
 
 		AppUserApi mockAppUserApi = mock(AppUserApi.class);
-		when(mockAppUserApi.getLoggedInAppUser(req)).thenReturn(loggedInUser);
+		when(AccountApi.getLoggedInUser(req)).thenReturn(loggedInUser);
 
 		faveListDao = new FaveListDao();
 		faveListApi = new FaveListApi(faveListDao, mockAppUserApi, new SongApi());

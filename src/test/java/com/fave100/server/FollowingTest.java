@@ -1,7 +1,6 @@
 package com.fave100.server;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fave100.server.api.AccountApi;
 import com.fave100.server.api.AppUserApi;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
@@ -72,7 +72,7 @@ public class FollowingTest {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = appUserApi.createAppUser(req, "tester", "goodtests", "testuser@example.com").getAppUser();
-		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
+		AccountApi.getLoggedInUser(req);
 
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "john", "passpass31", "lemmings@example.com").getAppUser();
 		appUserApi.followUser(req, userToFollow.getUsername());
@@ -87,7 +87,7 @@ public class FollowingTest {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = appUserApi.createAppUser(req, "tester2", "goodtests", "testuser2@example.com").getAppUser();
-		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
+		AccountApi.getLoggedInUser(req);
 
 		AppUser userToFollow1 = appUserApi.createAppUser(TestHelper.newReq(), "bob", "passpass31", "followuser@example.com").getAppUser();
 		AppUser userToFollow2 = appUserApi.createAppUser(TestHelper.newReq(), "derek", "xcvb1sdf1", "anotheruser@example.com").getAppUser();
@@ -107,7 +107,7 @@ public class FollowingTest {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = appUserApi.createAppUser(req, "tester3", "goodtests", "testuser3@example.com").getAppUser();
-		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
+		AccountApi.getLoggedInUser(req);
 
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "MIKE", "bcv13zxcg", "foobar@example.com").getAppUser();
 		appUserApi.followUser(req, userToFollow.getUsername());
@@ -122,7 +122,7 @@ public class FollowingTest {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = appUserApi.createAppUser(req, "tester4", "goodtests", "testuser4@example.com").getAppUser();
-		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
+		AccountApi.getLoggedInUser(req);
 
 		// Follow
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "liam", "bv1xcvaw46", "booj@example.com").getAppUser();
@@ -142,7 +142,7 @@ public class FollowingTest {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = appUserApi.createAppUser(req, "tester5", "goodtests", "testuser5@example.com").getAppUser();
-		doReturn(loggedInUser).when(appUserApi).getLoggedInAppUser(req);
+		AccountApi.getLoggedInUser(req);
 
 		// Follow
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "KRING", "awetzx14sva", "kiasd@example.com").getAppUser();
