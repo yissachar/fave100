@@ -6,7 +6,6 @@ import com.fave100.server.api.AppUserApi;
 import com.fave100.server.api.AuthApi;
 import com.fave100.server.api.FaveListApi;
 import com.fave100.server.api.SongApi;
-import com.fave100.server.api.WhylineApi;
 import com.fave100.server.filters.EncodingFilter;
 import com.fave100.server.servlets.HashtagBuilderServlet;
 import com.fave100.server.servlets.HashtagEnqueuerServlet;
@@ -29,7 +28,6 @@ public class DispatchServletModule extends ServletModule {
 		bind(AccountApi.class);
 		bind(FaveListApi.class);
 		bind(SongApi.class);
-		bind(WhylineApi.class);
 		serve(Constants.API_PATH + "/*").with(GuiceContainer.class);
 
 		bind(RemoteApiServlet.class).in(Singleton.class);

@@ -6,7 +6,6 @@ public class ApiPaths {
 	public static final String FAVELIST_ROOT = "favelist";
 	public static final String GET_HASHTAG_AUTOCOMPLETE = "/hashtagAutocomplete";
 	public static final String TRENDING_FAVELISTS = "/trendingFaveLists";
-	public static final String GET_LISTS_CONTAINING_SONG = "/getListsContainingSong";
 	public static final String ADD_FAVELIST = "/add";
 	public static final String DELETE_FAVELIST = "/delete";
 	public static final String ADD_FAVEITEM = "/item/add";
@@ -47,13 +46,12 @@ public class ApiPaths {
 	public static final String PASSWORD_CHANGE = "/password/change";
 
 	// Song
-	public static final String SONG_ROOT = "song";
+	public static final String SONG_ROOT = "songs";
+	public static final String GET_SONG = "/{id}";
+	public static final String GET_SONG_FAVELISTS = "/{id}/favelists";
+	public static final String GET_SONG_WHYLINES = "/{id}/whylines";
 	public static final String GET_YOUTUBE_SEARCH_RESULTS = "/youtubeSearchResults";
 	public static final String YOUTUBE_SEARCH_SONG_PARAM = "song";
 	public static final String YOUTUBE_SEARCH_ARTIST_PARAM = "artist";
-
-	// Whyline
-	public static final String WHYLINE_ROOT = "whyline";
-	public static final String GET_SONG_WHYLINES = "/song/{id}";
 
 }

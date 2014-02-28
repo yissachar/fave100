@@ -23,6 +23,8 @@ import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.UserListResult;
 import com.fave100.server.domain.UserListResultCollection;
+import com.fave100.server.domain.Whyline;
+import com.fave100.server.domain.WhylineCollection;
 import com.fave100.server.domain.YouTubeSearchResult;
 import com.fave100.server.domain.YouTubeSearchResultCollection;
 import com.fave100.server.domain.appuser.AppUser;
@@ -33,6 +35,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -125,7 +129,7 @@ public class SongApi {
 	}
 
 	@GET
-	@Path("/{id}/favelists")
+	@Path(ApiPaths.GET_SONG_FAVELISTS)
 	@ApiOperation(value = "Get a list of users who have this song in their FaveList", response = UserListResultCollection.class)
 	public static UserListResultCollection getFaveLists(@ApiParam(value = "The song ID", required = true) @PathParam("id") final String id) {
 		final List<UserListResult> userListResults = new ArrayList<>();
@@ -145,5 +149,20 @@ public class SongApi {
 			userListResults.add(userListResult);
 		}
 		return new UserListResultCollection(userListResults);
+	}
+
+	@GET
+	@Path(ApiPaths.GET_SONG_WHYLINES)
+	@ApiOperation(value = "Get whylines for a song", response = WhylineCollection.class)
+	public static WhylineCollection getWhylines(@ApiParam(value = "ID of the song", required = true) @PathParam("id") final String id) {
+		final List<Whyline> whylines = ofy().load().type(Whyline.class).filter("song", Ref.create(Key.create(Song.class, id))).limit(15).list();
+		// Get the users avatars 
+		// TODO: Should be a bulk query for efficiency
+		for (final Whyline whyline : whylines) {
+			final AppUser user = ofy().load().type(AppUser.class).id(whyline.getUsername().toLowerCase()).get();
+			if (user != null)
+				whyline.setAvatar(user.getAvatarImage());
+		}
+		return new WhylineCollection(whylines);
 	}
 }

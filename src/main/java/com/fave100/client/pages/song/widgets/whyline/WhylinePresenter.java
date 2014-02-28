@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.generated.entities.FaveItem;
-import com.fave100.client.generated.entities.UserListResultCollection;
 import com.fave100.client.generated.entities.UserListResult;
-import com.fave100.client.generated.entities.WhylineCollection;
+import com.fave100.client.generated.entities.UserListResultCollection;
 import com.fave100.client.generated.entities.Whyline;
+import com.fave100.client.generated.entities.WhylineCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.rest.RestSessionDispatch;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -44,7 +44,7 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 	}
 
 	public void showWhylines(FaveItem song) {
-		_dispatcher.execute(_restServiceFactory.whyline().getWhylinesForSong(song.getId()), new AsyncCallback<WhylineCollection>() {
+		_dispatcher.execute(_restServiceFactory.songs().getWhylines(song.getId()), new AsyncCallback<WhylineCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -62,7 +62,7 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 			}
 		});
 
-		_dispatcher.execute(_restServiceFactory.song().getFaveLists(song.getId()), new AsyncCallback<UserListResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.songs().getFaveLists(song.getId()), new AsyncCallback<UserListResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
