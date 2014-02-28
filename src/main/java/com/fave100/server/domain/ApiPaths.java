@@ -17,9 +17,9 @@ public class ApiPaths {
 	public static final String LOGIN_WITH_TWITTER = "/loginWithTwitter";
 	public static final String LOGIN_WITH_FACEBOOK = "/loginWithFacebook";
 	public static final String LOGOUT = "/logout";
-	public static final String GET_GOOGLE_AUTH_URL = "/google/authUrl";
-	public static final String GET_FACEBOOK_AUTH_URL = "/facebook/authUrl";
-	public static final String GET_TWITTER_AUTH_URL = "/twitter/authUrl";
+	public static final String GET_GOOGLE_AUTH_URL = "url/google";
+	public static final String GET_FACEBOOK_AUTH_URL = "url/facebook";
+	public static final String GET_TWITTER_AUTH_URL = "url/twitter";
 
 	// Users
 	public static final String USERS_ROOT = "users";
