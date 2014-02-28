@@ -9,8 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fave100.server.api.AccountApi;
-import com.fave100.server.api.AppUserApi;
+import com.fave100.server.api.UserApi;
+import com.fave100.server.api.UsersApi;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
@@ -44,19 +44,19 @@ public class FollowingTest {
 	private final LocalServiceTestHelper helper =
 			new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100));
 	private AppUserDao appUserDao;
-	private AppUserApi appUserApi;
+	private UsersApi appUserApi;
 
 	@Before
 	public void setUp() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException, NotLoggedInException, UserNotFoundException {
 		helper.setUp();
 		// Create a user
 		appUserDao = new AppUserDao();
-		appUserApi = new AppUserApi(appUserDao);
+		appUserApi = new UsersApi(appUserDao);
 
 		AppUserDao mockAppUserDao = spy(new AppUserDao());
 		appUserDao = mockAppUserDao;
 
-		AppUserApi mockAppUserApi = spy(new AppUserApi(appUserDao));
+		UsersApi mockAppUserApi = spy(new UsersApi(appUserDao));
 		appUserApi = mockAppUserApi;
 	}
 
@@ -72,7 +72,7 @@ public class FollowingTest {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = appUserApi.createAppUser(req, "tester", "goodtests", "testuser@example.com").getAppUser();
-		AccountApi.getLoggedInUser(req);
+		UserApi.getLoggedInUser(req);
 
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "john", "passpass31", "lemmings@example.com").getAppUser();
 		appUserApi.followUser(req, userToFollow.getUsername());
@@ -87,7 +87,7 @@ public class FollowingTest {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = appUserApi.createAppUser(req, "tester2", "goodtests", "testuser2@example.com").getAppUser();
-		AccountApi.getLoggedInUser(req);
+		UserApi.getLoggedInUser(req);
 
 		AppUser userToFollow1 = appUserApi.createAppUser(TestHelper.newReq(), "bob", "passpass31", "followuser@example.com").getAppUser();
 		AppUser userToFollow2 = appUserApi.createAppUser(TestHelper.newReq(), "derek", "xcvb1sdf1", "anotheruser@example.com").getAppUser();
@@ -107,7 +107,7 @@ public class FollowingTest {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = appUserApi.createAppUser(req, "tester3", "goodtests", "testuser3@example.com").getAppUser();
-		AccountApi.getLoggedInUser(req);
+		UserApi.getLoggedInUser(req);
 
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "MIKE", "bcv13zxcg", "foobar@example.com").getAppUser();
 		appUserApi.followUser(req, userToFollow.getUsername());
@@ -122,7 +122,7 @@ public class FollowingTest {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = appUserApi.createAppUser(req, "tester4", "goodtests", "testuser4@example.com").getAppUser();
-		AccountApi.getLoggedInUser(req);
+		UserApi.getLoggedInUser(req);
 
 		// Follow
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "liam", "bv1xcvaw46", "booj@example.com").getAppUser();
@@ -142,7 +142,7 @@ public class FollowingTest {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = appUserApi.createAppUser(req, "tester5", "goodtests", "testuser5@example.com").getAppUser();
-		AccountApi.getLoggedInUser(req);
+		UserApi.getLoggedInUser(req);
 
 		// Follow
 		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "KRING", "awetzx14sva", "kiasd@example.com").getAppUser();

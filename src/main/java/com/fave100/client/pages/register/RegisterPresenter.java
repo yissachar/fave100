@@ -102,7 +102,7 @@ public class RegisterPresenter extends
 			// username and create their account
 
 			// Make sure that the user is actually logged into Google
-			_dispatcher.execute(_restServiceFactory.user().isGoogleUserLoggedIn(), new AsyncCallback<BooleanResult>() {
+			_dispatcher.execute(_restServiceFactory.users().isGoogleUserLoggedIn(), new AsyncCallback<BooleanResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

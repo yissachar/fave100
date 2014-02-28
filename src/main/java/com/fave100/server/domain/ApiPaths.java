@@ -28,7 +28,7 @@ public class ApiPaths {
 	public static final String GET_TWITTER_AUTH_URL = "/twitter/authUrl";
 
 	// AppUser
-	public static final String APPUSER_ROOT = "user";
+	public static final String USERS_ROOT = "users";
 	public static final String GET_APPUSER = "/{username}";
 	public static final String GET_FOLLOWING = "/following";
 	public static final String IS_FOLLOWING = "/isFollowing";
@@ -37,10 +37,10 @@ public class ApiPaths {
 	public static final String FOLLOW = "/follow";
 	public static final String UNFOLLOW = "/unfollow";
 
-	// Account
-	public static final String ACCOUNT_ROOT = "account";
-	public static final String ACCOUNT_SETTINGS = "/settings";
-	public static final String CURRENT_USER = "/me";
+	// User
+	public static final String USER_ROOT = "user";
+	public static final String USER_SETTINGS = "/settings";
+	public static final String CURRENT_USER = "";
 	public static final String CREATE_BLOBSTORE_URL = "/blobstore_url";
 	public static final String PASSWORD_RESET = "/password/reset";
 	public static final String PASSWORD_CHANGE = "/password/change";

@@ -42,10 +42,10 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
-@Path("/" + ApiPaths.APPUSER_ROOT)
+@Path("/" + ApiPaths.USERS_ROOT)
 @Produces(MediaType.APPLICATION_JSON)
-@Api(value = "/" + ApiPaths.APPUSER_ROOT, description = "Operations on Users")
-public class AppUserApi {
+@Api(value = "/" + ApiPaths.USERS_ROOT, description = "Operations on Users")
+public class UsersApi {
 
 	@GET
 	@Path(ApiPaths.GET_APPUSER)
@@ -78,7 +78,7 @@ public class AppUserApi {
 			@QueryParam("index") final int index) {
 
 		// Only logged in users can see following		
-		final AppUser currentUser = AccountApi.getLoggedInUser(request);
+		final AppUser currentUser = UserApi.getLoggedInUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
@@ -144,7 +144,7 @@ public class AppUserApi {
 	@Path(ApiPaths.FOLLOW)
 	@ApiOperation(value = "Follow user")
 	public static void followUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
-		final AppUser currentUser = AccountApi.getLoggedInUser(request);
+		final AppUser currentUser = UserApi.getLoggedInUser(request);
 
 		if (currentUser == null)
 			throw new NotLoggedInException();
@@ -175,7 +175,7 @@ public class AppUserApi {
 	@ApiOperation(value = "Unfollow user")
 	public static void unfollowUser(@Context HttpServletRequest request, @QueryParam("username") final String username) {
 
-		final AppUser currentUser = AccountApi.getLoggedInUser(request);
+		final AppUser currentUser = UserApi.getLoggedInUser(request);
 		if (currentUser == null)
 			throw new NotLoggedInException();
 

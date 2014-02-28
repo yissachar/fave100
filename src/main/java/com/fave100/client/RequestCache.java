@@ -76,7 +76,7 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (!reqRunning) {
 			_runningRequests.put(request, true);
-			_dispatcher.execute(_restServiceFactory.user().getFollowing(username, 0), new AsyncCallback<FollowingResult>() {
+			_dispatcher.execute(_restServiceFactory.users().getFollowing(username, 0), new AsyncCallback<FollowingResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

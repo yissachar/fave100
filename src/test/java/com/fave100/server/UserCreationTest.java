@@ -11,7 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fave100.server.api.AppUserApi;
+import com.fave100.server.api.UsersApi;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
@@ -35,13 +35,13 @@ public class UserCreationTest {
 	private final LocalServiceTestHelper helper =
 			new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100));
 	private AppUserDao appUserDao = null;
-	private AppUserApi appUserApi;
+	private UsersApi appUserApi;
 
 	@Before
 	public void setUp() {
 		helper.setUp();
 		appUserDao = new AppUserDao();
-		appUserApi = new AppUserApi(appUserDao);
+		appUserApi = new UsersApi(appUserDao);
 	}
 
 	@After

@@ -101,7 +101,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 				if (!currentUser.isLoggedIn())
 					return;
 
-				_dispatcher.execute(_restServiceFactory.user().isAppUserLoggedIn(), new AsyncCallback<BooleanResult>() {
+				_dispatcher.execute(_restServiceFactory.users().isAppUserLoggedIn(), new AsyncCallback<BooleanResult>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
