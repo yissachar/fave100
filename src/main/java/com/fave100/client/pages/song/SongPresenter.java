@@ -123,7 +123,7 @@ public class SongPresenter extends
 
 		if (!id.isEmpty()) {
 			// Load the song from the datastore
-			_dispatcher.execute(_restServiceFactory.song().getSong(id), new AsyncCallback<FaveItem>() {
+			_dispatcher.execute(_restServiceFactory.songs().getSong(id), new AsyncCallback<FaveItem>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -229,7 +229,7 @@ public class SongPresenter extends
 			public void onPlaylistSongChanged(final PlaylistSongChangedEvent event) {
 
 				// Load the song from the datastore
-				_dispatcher.execute(_restServiceFactory.song().getSong(event.songID()), new AsyncCallback<FaveItem>() {
+				_dispatcher.execute(_restServiceFactory.songs().getSong(event.songID()), new AsyncCallback<FaveItem>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -296,7 +296,7 @@ public class SongPresenter extends
 		getView().setSongInfo(songProxy);
 
 		// Get any YouTube videos
-		_dispatcher.execute(_restServiceFactory.song().getYouTubeResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
+		_dispatcher.execute(_restServiceFactory.songs().getYouTubeResults(songProxy.getSong(), songProxy.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
