@@ -188,7 +188,7 @@ public class SongPresenter extends
 		}
 		else {
 			// Get the master list for the hashtag
-			_dispatcher.execute(_restServiceFactory.favelist().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.favelists().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

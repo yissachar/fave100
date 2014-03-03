@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import com.fave100.server.api.UserApi;
 import com.fave100.server.api.UsersApi;
-import com.fave100.server.api.FaveListApi;
+import com.fave100.server.api.FaveListsApi;
 import com.fave100.server.api.SongApi;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
@@ -49,7 +49,7 @@ public class FaveListCreationTest {
 			new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100));
 	private AppUser loggedInUser;
 	private FaveListDao faveListDao;
-	private FaveListApi faveListApi;
+	private FaveListsApi faveListApi;
 	private HttpServletRequest req;
 
 	@Before
@@ -69,7 +69,7 @@ public class FaveListCreationTest {
 		when(UserApi.getLoggedInUser(req)).thenReturn(loggedInUser);
 
 		faveListDao = new FaveListDao();
-		faveListApi = new FaveListApi(faveListDao, mockAppUserApi, new SongApi());
+		faveListApi = new FaveListsApi(faveListDao, mockAppUserApi, new SongApi());
 	}
 
 	@After
