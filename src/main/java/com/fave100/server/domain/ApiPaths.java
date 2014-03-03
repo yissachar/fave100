@@ -9,24 +9,24 @@ public class ApiPaths {
 	// Auth
 	public static final String AUTH_ROOT = "auth";
 	public static final String REGISTER = "/register";
-	public static final String CREATE_APPUSER_FROM_GOOGLE_ACCOUNT = "/createAppUserFromGoogleAccount";
-	public static final String CREATE_APPUSER_FROM_TWITTER_ACCOUNT = "/createAppUserFromTwitterAccount";
-	public static final String CREATE_APPUSER_FROM_FACEBOOK_ACCOUNT = "/createAppUserFromFacebookAccount";
+	public static final String CREATE_APPUSER_FROM_GOOGLE_ACCOUNT = "/google/register";
+	public static final String CREATE_APPUSER_FROM_TWITTER_ACCOUNT = "/twitter/register";
+	public static final String CREATE_APPUSER_FROM_FACEBOOK_ACCOUNT = "/facebook/register";
 	public static final String LOGIN = "/login";
-	public static final String LOGIN_WITH_GOOGLE = "/loginWithGoogle";
-	public static final String LOGIN_WITH_TWITTER = "/loginWithTwitter";
-	public static final String LOGIN_WITH_FACEBOOK = "/loginWithFacebook";
+	public static final String LOGIN_WITH_GOOGLE = "/google/login";
+	public static final String LOGIN_WITH_TWITTER = "/twitter/login";
+	public static final String LOGIN_WITH_FACEBOOK = "/facebook/login";
 	public static final String LOGOUT = "/logout";
-	public static final String GET_GOOGLE_AUTH_URL = "url/google";
-	public static final String GET_FACEBOOK_AUTH_URL = "url/facebook";
-	public static final String GET_TWITTER_AUTH_URL = "url/twitter";
+	public static final String GET_GOOGLE_AUTH_URL = "/google/url";
+	public static final String GET_FACEBOOK_AUTH_URL = "facebook/url";
+	public static final String GET_TWITTER_AUTH_URL = "twitter/url";
+	public static final String IS_GOOGLE_LOGGED_IN = "/google/loggedin";
 
 	// Users
 	public static final String USERS_ROOT = "users";
 	public static final String GET_USER = "/{user}";
 	public static final String GET_USERS_FAVELIST = "/{user}/favelists/{list}";
 	public static final String GET_USERS_FOLLOWING = "/{user}/following";
-	public static final String IS_GOOGLE_LOGGED_IN = "/google/loggedin";
 	public static final String IS_APPUSER_LOGGED_IN = "/isLoggedIn";
 
 	// User

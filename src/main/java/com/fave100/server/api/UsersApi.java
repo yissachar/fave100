@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fave100.server.domain.ApiPaths;
-import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.Following;
 import com.fave100.server.domain.appuser.FollowingResult;
@@ -28,9 +27,6 @@ import com.fave100.server.exceptions.NotLoggedInException;
 import com.fave100.shared.Constants;
 import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.UnauthorizedException;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Ref;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -91,18 +87,6 @@ public class UsersApi {
 		}
 
 		return new FollowingResult(new ArrayList<AppUser>(), false);
-	}
-
-	/*
-	 * Checks if the user is logged into Google (though not necessarily logged into Fave100)
-	 */
-	@GET
-	@Path(ApiPaths.IS_GOOGLE_LOGGED_IN)
-	@ApiOperation(value = "Is google user logged in", response = BooleanResult.class)
-	public static BooleanResult isGoogleUserLoggedIn() {
-		final UserService userService = UserServiceFactory.getUserService();
-		final User user = userService.getCurrentUser();
-		return new BooleanResult(user != null);
 	}
 
 	@GET

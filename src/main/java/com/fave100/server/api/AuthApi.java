@@ -23,6 +23,7 @@ import twitter4j.auth.RequestToken;
 import com.fave100.server.SessionHelper;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
+import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.LoginResult;
 import com.fave100.server.domain.Session;
 import com.fave100.server.domain.StringResult;
@@ -457,6 +458,18 @@ public class AuthApi {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/*
+	 * Checks if the user is logged into Google (though not necessarily logged into Fave100)
+	 */
+	@GET
+	@Path(ApiPaths.IS_GOOGLE_LOGGED_IN)
+	@ApiOperation(value = "Is google user logged in", response = BooleanResult.class)
+	public static BooleanResult isGoogleUserLoggedIn() {
+		final UserService userService = UserServiceFactory.getUserService();
+		final User user = userService.getCurrentUser();
+		return new BooleanResult(user != null);
 	}
 
 }
