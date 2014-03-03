@@ -160,7 +160,7 @@ public class UserApi {
 	}
 
 	// Emails user a password reset token if they forget their password
-	@GET
+	@POST
 	@Path(ApiPaths.PASSWORD_RESET)
 	@ApiOperation(value = "Email password reset token", response = BooleanResult.class)
 	public static BooleanResult emailPasswordResetToken(@QueryParam("username") final String username, @QueryParam("emailAddress") final String emailAddress) {
@@ -211,7 +211,7 @@ public class UserApi {
 	}
 
 	// Allows a user to change their password provided they have a password reset token or the current password
-	@GET
+	@POST
 	@Path(ApiPaths.PASSWORD_CHANGE)
 	@ApiOperation(value = "Change password", response = BooleanResult.class)
 	public static BooleanResult changePassword(@Context HttpServletRequest request, @QueryParam("newPassword") final String newPassword,
