@@ -29,12 +29,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fave100.server.SessionHelper;
 import com.fave100.server.UrlBuilder;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
-import com.fave100.server.domain.Session;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.WhylineEdit;
@@ -79,8 +77,8 @@ public class UserApi {
 	@Path(ApiPaths.CURRENT_USER)
 	@ApiOperation(value = "Get the current user", response = AppUser.class)
 	public static AppUser getLoggedInUser(@Context HttpServletRequest request) {
-		Session session = SessionHelper.getSession(request);
-		final String username = (String)session.getAttribute(AppUserDao.AUTH_USER);
+		System.out.println("the thing is" + request.getSession().getAttribute(AppUserDao.AUTH_USER));
+		final String username = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
 		if (username != null) {
 			return AppUserDao.findAppUser(username);
 		}
@@ -278,6 +276,7 @@ public class UserApi {
 							@ApiResponse(code = 403, message = ApiExceptions.FAVELIST_LIMIT_REACHED), @ApiResponse(code = 403, message = ApiExceptions.FAVELIST_ALREADY_EXISTS)})
 	public static void addFaveListForCurrentUser(@Context HttpServletRequest request, @ApiParam(value = "The list name", required = true) @PathParam("list") final String listName) {
 
+		System.out.println("done");
 		final String error = Validator.validateHashtag(listName);
 		if (error != null) {
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
@@ -296,6 +295,7 @@ public class UserApi {
 		if (FaveListDao.findFaveList(username, listName) != null)
 			throw new FaveListAlreadyExistsException();
 
+		System.out.println("asf");
 		currentUser.getHashtags().add(listName);
 		final FaveList faveList = new FaveList(username, listName);
 		// Transaction to ensure no duplicate hashtags created
@@ -311,6 +311,7 @@ public class UserApi {
 				else {
 					hashtag = new Hashtag(listName, username);
 					ofy().save().entities(currentUser, faveList, hashtag).now();
+					System.out.println("done");
 				}
 			}
 		});
@@ -532,9 +533,7 @@ public class UserApi {
 		if (!AppUserDao.isAppUserLoggedIn(request))
 			throw new NotLoggedInException();
 
-		Session session = SessionHelper.getSession(request);
-
-		final String currentUserUsername = (String)session.getAttribute(AppUserDao.AUTH_USER);
+		final String currentUserUsername = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
 		final Following following = ofy().load().type(Following.class).id(currentUserUsername.toLowerCase()).get();
 

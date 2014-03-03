@@ -20,13 +20,11 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.RequestToken;
 
-import com.fave100.server.SessionHelper;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.FacebookRegistration;
 import com.fave100.server.domain.LoginResult;
-import com.fave100.server.domain.Session;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.TwitterRegistration;
 import com.fave100.server.domain.UserRegistration;
@@ -64,7 +62,7 @@ public class AuthApi {
 	@Path(ApiPaths.REGISTER)
 	@ApiOperation(value = "Register a user", response = LoginResult.class)
 	@ApiResponses(value = {@ApiResponse(code = 403, message = ApiExceptions.USERNAME_ALREADY_EXISTS), @ApiResponse(code = 403, message = ApiExceptions.EMAIL_ID_ALREADY_EXISTS)})
-	public static LoginResult createAppUser(@Context final HttpServletRequest request,
+	public static AppUser createAppUser(@Context final HttpServletRequest request,
 			UserRegistration userRegistration) {
 
 		final String username = userRegistration.getUsername();
@@ -74,11 +72,11 @@ public class AuthApi {
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name is already registered";
 		final String emailExistsMsg = "A user with that email is already registered";
-		LoginResult loginResult = null;
+		AppUser user = null;
 		try {
-			loginResult = ofy().transact(new Work<LoginResult>() {
+			user = ofy().transact(new Work<AppUser>() {
 				@Override
-				public LoginResult run() {
+				public AppUser run() {
 					if (AppUserDao.findAppUser(username) != null) {
 						// Username already exists
 						throw new RuntimeException(userExistsMsg);
@@ -119,22 +117,22 @@ public class AuthApi {
 			}
 		}
 
-		return loginResult;
+		return user;
 	}
 
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_GOOGLE_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Google", response = LoginResult.class)
-	public static LoginResult createAppUserFromGoogleAccount(@Context final HttpServletRequest request, final String username) {
+	public static AppUser createAppUserFromGoogleAccount(@Context final HttpServletRequest request, final String username) {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name already exists";
 		final String googleIDMsg = "There is already a Fave100 account associated with this Google ID";
-		LoginResult loginResult = null;
+		AppUser user = null;
 		try {
-			loginResult = ofy().transact(new Work<LoginResult>() {
+			user = ofy().transact(new Work<AppUser>() {
 				@Override
-				public LoginResult run() {
+				public AppUser run() {
 					final UserService userService = UserServiceFactory.getUserService();
 					final User user = userService.getCurrentUser();
 					if (AppUserDao.findAppUser(username) != null) {
@@ -169,19 +167,16 @@ public class AuthApi {
 			}
 		}
 
-		return loginResult;
+		return user;
 	}
 
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_TWITTER_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Twitter", response = LoginResult.class)
-	public static LoginResult createAppUserFromTwitterAccount(
-			@Context final HttpServletRequest request, TwitterRegistration registration) {
+	public static AppUser createAppUserFromTwitterAccount(@Context final HttpServletRequest request, TwitterRegistration registration) {
 
 		final String username = registration.getUsername();
 		final String oauth_verifier = registration.getOauthVerifier();
-
-		final Session session = SessionHelper.getSession(request);
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name already exists";
@@ -208,8 +203,7 @@ public class AuthApi {
 						// Create the TwitterID lookup
 						final TwitterID twitterID = new TwitterID(user.getId(), appUser);
 						ofy().save().entities(appUser, twitterID, faveList).now();
-						session.setAttribute(AppUserDao.AUTH_USER, username);
-						ofy().save().entity(session).now();
+						request.getSession().setAttribute(AppUserDao.AUTH_USER, username);
 						return appUser;
 					}
 					return null;
@@ -226,13 +220,13 @@ public class AuthApi {
 			}
 		}
 
-		return new LoginResult(newAppUser, session.getId());
+		return newAppUser;
 	}
 
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_FACEBOOK_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Facebook", response = LoginResult.class)
-	public static LoginResult createAppUserFromFacebookAccount(
+	public static AppUser createAppUserFromFacebookAccount(
 			@Context final HttpServletRequest request, FacebookRegistration registration) {
 
 		final String username = registration.getUsername();
@@ -243,11 +237,11 @@ public class AuthApi {
 		final String userExistsMsg = "A user with that name already exists";
 		final String facebookIDMsg = "There is already a Fave100 account associated with this Facebook ID";
 
-		LoginResult loginResult = null;
+		AppUser user = null;
 		try {
-			loginResult = ofy().transact(new Work<LoginResult>() {
+			user = ofy().transact(new Work<AppUser>() {
 				@Override
-				public LoginResult run() {
+				public AppUser run() {
 					final Long userFacebookId = AppUserDao.getCurrentFacebookUserId(request, code);
 					if (userFacebookId != null) {
 						if (AppUserDao.findAppUser(username) != null) {
@@ -283,20 +277,19 @@ public class AuthApi {
 			}
 		}
 
-		return loginResult;
+		return user;
 	}
 
 	@POST
 	@Path(ApiPaths.LOGIN)
 	@ApiOperation(value = "Login", response = LoginResult.class)
-	public static LoginResult login(@Context HttpServletRequest request, LoginCredentials loginCredentials) {
+	public static AppUser login(@Context HttpServletRequest request, LoginCredentials loginCredentials) {
 
 		String username = loginCredentials.getUsername();
 		String password = loginCredentials.getPassword();
 
 		AppUser loggingInUser = null;
 		String errorMessage = "Invalid credentials";
-		Session session = SessionHelper.getSession(request);
 
 		if (username.contains("@")) {
 			// User trying to login with email address
@@ -319,21 +312,19 @@ public class AuthApi {
 				throw new InvalidLoginException();
 			}
 			// Successful login - store session
-			session.setAttribute(AppUserDao.AUTH_USER, username);
-			ofy().save().entity(session);
+			request.getSession().setAttribute(AppUserDao.AUTH_USER, username);
 		}
 		else {
 			// Bad username
 			throw new InvalidLoginException();
 		}
-		return new LoginResult(loggingInUser, session.getId());
+		return loggingInUser;
 	}
 
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_GOOGLE)
 	@ApiOperation(value = "Login with Google", response = LoginResult.class)
-	public static LoginResult loginWithGoogle(@Context HttpServletRequest request) {
-		Session session = SessionHelper.getSession(request);
+	public static AppUser loginWithGoogle(@Context HttpServletRequest request) {
 
 		AppUser loggedInUser;
 		// Get the Google user
@@ -345,17 +336,15 @@ public class AuthApi {
 		loggedInUser = AppUserDao.findAppUserByGoogleId(user.getUserId());
 		if (loggedInUser != null) {
 			// Successful login - store session
-			session.setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
-			ofy().save().entity(session).now();
+			request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
 		}
-		return new LoginResult(loggedInUser, session.getId());
+		return loggedInUser;
 	}
 
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_TWITTER)
 	@ApiOperation(value = "Login with Twitter", response = LoginResult.class)
-	public static LoginResult loginWithTwitter(@Context HttpServletRequest request, final String oauth_verifier) {
-		Session session = SessionHelper.getSession(request);
+	public static AppUser loginWithTwitter(@Context HttpServletRequest request, final String oauth_verifier) {
 
 		// Get the Twitter user
 		final twitter4j.User twitterUser = AppUserDao.getTwitterUser(request, oauth_verifier);
@@ -364,8 +353,7 @@ public class AuthApi {
 			final AppUser loggedInUser = AppUserDao.findAppUserByTwitterId(twitterUser.getId());
 			if (loggedInUser != null) {
 				// Successful login - store session
-				session.setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
-				ofy().save().entity(session).now();
+				request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
 				final String twitterAvatar = twitterUser.getProfileImageURL();
 				if (loggedInUser.getAvatar() == null) {
 					// Update the user's avatar from Twitter
@@ -374,7 +362,7 @@ public class AuthApi {
 					ofy().save().entity(loggedInUser).now();
 				}
 			}
-			return new LoginResult(loggedInUser, session.getId());
+			return loggedInUser;
 		}
 		return null;
 	}
@@ -382,17 +370,15 @@ public class AuthApi {
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_FACEBOOK)
 	@ApiOperation(value = "Login with Facebook", response = LoginResult.class)
-	public static LoginResult loginWithFacebook(@Context HttpServletRequest request, final String code) {
+	public static AppUser loginWithFacebook(@Context HttpServletRequest request, final String code) {
 		// Get the Facebook user
 		final Long facebookUserId = AppUserDao.getCurrentFacebookUserId(request, code);
-		Session session = SessionHelper.getSession(request);
 		if (facebookUserId != null) {
 			// Find the corresponding Fave100 user
 			final AppUser loggedInUser = AppUserDao.findAppUserByFacebookId(facebookUserId);
 			if (loggedInUser != null) {
 				// Successful login - store session				
-				session.setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
-				ofy().save().entity(session).now();
+				request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
 				// TODO: Handle Facebook avatars
 				/*	final URL twitterAvatar =  twitterUser.getProfileImageURL();
 					if(loggedInUser.getAvatar() == null || !loggedInUser.getAvatar().equals(twitterAvatar.toString())) {
@@ -401,7 +387,7 @@ public class AuthApi {
 						ofy().save().entity(loggedInUser).now();
 					}*/
 			}
-			return new LoginResult(loggedInUser, session.getId());
+			return loggedInUser;
 		}
 		return null;
 	}
@@ -410,11 +396,9 @@ public class AuthApi {
 	@Path(ApiPaths.LOGOUT)
 	@ApiOperation(value = "Logout")
 	public static void logout(@Context HttpServletRequest request) {
-		Session session = SessionHelper.getSession(request);
-		session.setAttribute(AppUserDao.AUTH_USER, null);
-		session.setAttribute("requestToken", null);
-		session.setAttribute("twitterUser", null);
-		ofy().delete().entity(session).now();
+		request.getSession().setAttribute(AppUserDao.AUTH_USER, null);
+		request.getSession().setAttribute("requestToken", null);
+		request.getSession().setAttribute("twitterUser", null);
 		return;
 	}
 
@@ -448,12 +432,9 @@ public class AuthApi {
 		final Twitter twitter = AppUserDao.getTwitterInstance();
 		twitter.setOAuthConsumer(AppUserDao.TWITTER_CONSUMER_KEY, AppUserDao.TWITTER_CONSUMER_SECRET);
 
-		Session session = SessionHelper.getSession(request);
-
 		try {
 			final RequestToken requestToken = twitter.getOAuthRequestToken(redirectUrl);
-			session.setAttribute("requestToken", requestToken);
-			ofy().save().entity(session).now();
+			request.getSession().setAttribute("requestToken", requestToken);
 			return new StringResult(requestToken.getAuthenticationURL());
 		}
 		catch (final TwitterException e) {
