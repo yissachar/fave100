@@ -20,9 +20,7 @@ import twitter4j.auth.RequestToken;
 
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.server.SessionHelper;
 import com.fave100.server.UrlBuilder;
-import com.fave100.server.domain.Session;
 import com.fave100.shared.Constants;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.blobstore.UploadOptions;
@@ -84,13 +82,12 @@ public class AppUserDao {
 
 	// Gets a Twitter user - not a Fave100 user
 	public static twitter4j.User getTwitterUser(HttpServletRequest request, final String oauth_verifier) {
-		Session session = SessionHelper.getSession(request);
-		final twitter4j.User user = (twitter4j.User)session.getAttribute("twitterUser");
+		final twitter4j.User user = (twitter4j.User)request.getSession().getAttribute("twitterUser");
 		if (user == null) {
 			final Twitter twitter = getTwitterInstance();
 			twitter.setOAuthConsumer(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
 
-			final RequestToken requestToken = (RequestToken)session.getAttribute("requestToken");
+			final RequestToken requestToken = (RequestToken)request.getSession().getAttribute("requestToken");
 			try {
 				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
 				twitter.setOAuthAccessToken(accessToken);
@@ -112,11 +109,10 @@ public class AppUserDao {
 
 	// Gets the ID of a the current Facebook user - not a Fave100 user
 	public static Long getCurrentFacebookUserId(HttpServletRequest request, final String code) {
-		Session session = SessionHelper.getSession(request);
 
-		Long userID = (Long)session.getAttribute("facebookID");
+		Long userID = (Long)request.getSession().getAttribute("facebookID");
 		if (userID == null) {
-			String redirectUrl = (String)session.getAttribute("facebookRedirect");
+			String redirectUrl = (String)request.getSession().getAttribute("facebookRedirect");
 			if (redirectUrl == null) {
 				redirectUrl = new UrlBuilder(NameTokens.register).with("register", RegisterPresenter.PROVIDER_FACEBOOK).getUrl().replace("yissachar", "localhost");
 			}
@@ -175,8 +171,7 @@ public class AppUserDao {
 
 	// Check if Fave100 user is logged in 
 	public static Boolean isAppUserLoggedIn(HttpServletRequest request) {
-		Session session = SessionHelper.getSession(request);
-		final String username = (String)session.getAttribute(AUTH_USER);
+		final String username = (String)request.getSession().getAttribute(AUTH_USER);
 		return username != null;
 	}
 
