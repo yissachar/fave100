@@ -18,7 +18,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Path("/" + ApiPaths.FAVELIST_ROOT)
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "/" + ApiPaths.FAVELIST_ROOT, description = "Operations on FaveLists")
-public class FaveListApi {
+public class FaveListsApi {
 
 	@GET
 	@Path(ApiPaths.GET_MASTER_FAVELIST)

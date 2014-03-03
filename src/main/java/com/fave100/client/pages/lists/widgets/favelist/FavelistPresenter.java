@@ -190,7 +190,7 @@ public class FavelistPresenter extends
 		// No user, get the global list 
 		else {
 
-			_dispatcher.execute(_restServiceFactory.favelist().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.favelists().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

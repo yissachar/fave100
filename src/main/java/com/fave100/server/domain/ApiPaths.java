@@ -3,7 +3,7 @@ package com.fave100.server.domain;
 public class ApiPaths {
 
 	// FaveList
-	public static final String FAVELIST_ROOT = "favelist";
+	public static final String FAVELIST_ROOT = "favelists";
 	public static final String GET_MASTER_FAVELIST = "/{list}";
 
 	// Auth
