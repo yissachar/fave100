@@ -5,7 +5,9 @@ import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.BooleanResult;
+import com.fave100.client.generated.entities.FacebookRegistration;
 import com.fave100.client.generated.entities.LoginResult;
+import com.fave100.client.generated.entities.TwitterRegistration;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pages.BasePresenter;
@@ -251,7 +253,11 @@ public class RegisterPresenter extends
 				// Create Twitter-linked account
 				final String oauth_verifier = Window.Location.getParameter("oauth_verifier");
 
-				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromTwitterAccount(username, oauth_verifier), new AsyncCallback<LoginResult>() {
+				TwitterRegistration registration = new TwitterRegistration();
+				registration.setUsername(username);
+				registration.setOauthVerifier(oauth_verifier);
+
+				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromTwitterAccount(registration), new AsyncCallback<LoginResult>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -270,9 +276,11 @@ public class RegisterPresenter extends
 			}
 			else if (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 				// Create Facebook linked account
-				final String state = Window.Location.getParameter("state");
-				final String code = Window.Location.getParameter("code");
-				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromFacebookAccount(username, state, code, facebookRedirect), new AsyncCallback<LoginResult>() {
+				FacebookRegistration registration = new FacebookRegistration();
+				registration.setUsername(username);
+				registration.setCode(Window.Location.getParameter("state"));
+
+				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromFacebookAccount(registration), new AsyncCallback<LoginResult>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
