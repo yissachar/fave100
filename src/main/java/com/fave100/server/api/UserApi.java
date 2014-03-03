@@ -354,7 +354,7 @@ public class UserApi {
 	@ApiOperation(value = "Add a FaveItem")
 	@ApiResponses(value = {@ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN), @ApiResponse(code = 403, message = ApiExceptions.FAVELIST_SIZE_REACHED),
 							@ApiResponse(code = 403, message = ApiExceptions.FAVEITEM_ALREADY_IN_LIST)})
-	public static void addFaveItemForCurrentUser(@Context HttpServletRequest request, @PathParam("list") final String listName, @QueryParam("id") final String songID) {
+	public static void addFaveItemForCurrentUser(@Context HttpServletRequest request, @PathParam("list") final String listName, @PathParam("id") final String songID) {
 
 		final AppUser currentUser = getLoggedInUser(request);
 		if (currentUser == null)

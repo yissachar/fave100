@@ -24,9 +24,11 @@ import com.fave100.server.SessionHelper;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
+import com.fave100.server.domain.FacebookRegistration;
 import com.fave100.server.domain.LoginResult;
 import com.fave100.server.domain.Session;
 import com.fave100.server.domain.StringResult;
+import com.fave100.server.domain.TwitterRegistration;
 import com.fave100.server.domain.UserRegistration;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
@@ -123,7 +125,7 @@ public class AuthApi {
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_GOOGLE_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Google", response = LoginResult.class)
-	public static LoginResult createAppUserFromGoogleAccount(@Context final HttpServletRequest request, @QueryParam("username") final String username) {
+	public static LoginResult createAppUserFromGoogleAccount(@Context final HttpServletRequest request, final String username) {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name already exists";
@@ -174,9 +176,10 @@ public class AuthApi {
 	@Path(ApiPaths.CREATE_APPUSER_FROM_TWITTER_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Twitter", response = LoginResult.class)
 	public static LoginResult createAppUserFromTwitterAccount(
-			@Context final HttpServletRequest request,
-			@QueryParam("username") final String username,
-			@QueryParam("oauthVerifier") final String oauth_verifier) {
+			@Context final HttpServletRequest request, TwitterRegistration registration) {
+
+		final String username = registration.getUsername();
+		final String oauth_verifier = registration.getOauthVerifier();
 
 		final Session session = SessionHelper.getSession(request);
 
@@ -230,11 +233,10 @@ public class AuthApi {
 	@Path(ApiPaths.CREATE_APPUSER_FROM_FACEBOOK_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Facebook", response = LoginResult.class)
 	public static LoginResult createAppUserFromFacebookAccount(
-			@Context final HttpServletRequest request,
-			@QueryParam("username") final String username,
-			@QueryParam("state") final String state,
-			@QueryParam("code") final String code,
-			@QueryParam("redirectUrl") final String redirectUrl) {
+			@Context final HttpServletRequest request, FacebookRegistration registration) {
+
+		final String username = registration.getUsername();
+		final String code = registration.getCode();
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 
@@ -352,7 +354,7 @@ public class AuthApi {
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_TWITTER)
 	@ApiOperation(value = "Login with Twitter", response = LoginResult.class)
-	public static LoginResult loginWithTwitter(@Context HttpServletRequest request, @QueryParam("oauthVerifier") final String oauth_verifier) {
+	public static LoginResult loginWithTwitter(@Context HttpServletRequest request, final String oauth_verifier) {
 		Session session = SessionHelper.getSession(request);
 
 		// Get the Twitter user
@@ -380,7 +382,7 @@ public class AuthApi {
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_FACEBOOK)
 	@ApiOperation(value = "Login with Facebook", response = LoginResult.class)
-	public static LoginResult loginWithFacebook(@Context HttpServletRequest request, @QueryParam("code") final String code) {
+	public static LoginResult loginWithFacebook(@Context HttpServletRequest request, final String code) {
 		// Get the Facebook user
 		final Long facebookUserId = AppUserDao.getCurrentFacebookUserId(request, code);
 		Session session = SessionHelper.getSession(request);
