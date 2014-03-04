@@ -14,4 +14,5 @@ public class ApiExceptions {
 	public static final String FAVELIST_ALREADY_EXISTS = "You already have a list with that name";
 	public static final String FAVEITEM_ALREADY_IN_LIST = "That item is already in the list";
 	public static final String INVALID_FAVELIST_INDEX = "Index out of range";
+	public static final String DID_NOT_PASS_VALIDATION = "Did not pass validation";
 }
