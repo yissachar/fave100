@@ -1,22 +1,22 @@
 package com.fave100.server;
 
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.fave100.server.api.AuthApi;
 import com.fave100.server.api.UserApi;
-import com.fave100.server.api.UsersApi;
-import com.fave100.server.api.FaveListsApi;
-import com.fave100.server.api.SongApi;
+import com.fave100.server.domain.UserRegistration;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
-import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
@@ -29,6 +29,8 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(UserApi.class)
 public class FaveListDeletionTest {
 
 	static {
@@ -42,8 +44,6 @@ public class FaveListDeletionTest {
 	private final LocalServiceTestHelper helper =
 			new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100));
 	private AppUser loggedInUser;
-	private FaveListDao faveListDao;
-	private FaveListsApi faveListApi;
 	private HttpServletRequest req;
 
 	@Before
@@ -51,18 +51,13 @@ public class FaveListDeletionTest {
 		helper.setUp();
 		// Create a user
 		String username = "tester";
-		AppUserDao appUserDao = new AppUserDao();
-		UsersApi appUserApi = new UsersApi(appUserDao);
+
+		PowerMockito.spy(UserApi.class);
 
 		req = TestHelper.newReq();
 
-		loggedInUser = appUserApi.createAppUser(req, username, "goodtests", "testuser@example.com").getAppUser();
-
-		UsersApi mockAppUserApi = mock(UsersApi.class);
-		when(UserApi.getLoggedInUser(req)).thenReturn(loggedInUser);
-
-		faveListDao = new FaveListDao();
-		faveListApi = new FaveListsApi(faveListDao, mockAppUserApi, new SongApi());
+		loggedInUser = AuthApi.createAppUser(req, new UserRegistration(username, "goodtests", "testuser@example.com"));
+		PowerMockito.stub(PowerMockito.method(UserApi.class, TestHelper.GET_LOGGED_IN_USER_METHOD_NAME)).toReturn(loggedInUser);
 	}
 
 	@After
@@ -70,7 +65,6 @@ public class FaveListDeletionTest {
 		ObjectifyFilter.complete();
 		helper.tearDown();
 		loggedInUser = null;
-		faveListDao = null;
 	}
 
 	@Test
@@ -83,6 +77,6 @@ public class FaveListDeletionTest {
 		UserApi.deleteFaveListForCurrentUser(req, faveListName);
 
 		// Favelist no longer exists in datastore
-		assertNull("Deleted FaveList must no longer exist in datastore", faveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
+		assertNull("Deleted FaveList must no longer exist in datastore", FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
 	}
 }
