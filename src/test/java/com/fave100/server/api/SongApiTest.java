@@ -8,22 +8,23 @@ import javax.ws.rs.core.Response;
 
 import org.junit.Test;
 
+import com.fave100.server.TestHelper;
 import com.fave100.server.domain.favelist.FaveItem;
 
 public class SongApiTest {
 
 	@Test
-	public void shouldGetExistingSong() {
-		FaveItem faveItem = SongApi.getSong("BbK4Ex");//webResource.path(ApiPaths.SONG_ROOT + "/BbK4Ex").get(FaveItem.class);
+	public void should_find_existing_song() {
+		FaveItem faveItem = SongApi.getSong("BbK4Ex");
 		assertEquals(faveItem.getSong(), "Pangea");
 		assertEquals(faveItem.getArtist(), "Professor Kliq");
 	}
 
 	@Test
-	public void shouldNotGetNonExistingSong() {
+	public void should_not_find_non_existing_song() {
 		try {
 			SongApi.getSong("jqjqjqjqjqjqjq");
-			fail("Must throw exception");
+			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
 			assertEquals(e.getResponse().getStatus(), Response.Status.NOT_FOUND.getStatusCode());
