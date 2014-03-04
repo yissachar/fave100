@@ -6,6 +6,9 @@ public class UserRegistration {
 	private String password;
 	private String email;
 
+	public UserRegistration() {
+	}
+
 	public UserRegistration(String username, String password, String email) {
 		this.username = username;
 		this.password = password;
