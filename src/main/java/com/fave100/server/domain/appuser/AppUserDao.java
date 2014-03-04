@@ -40,6 +40,9 @@ public class AppUserDao {
 
 	// Finder methods
 	public static AppUser findAppUser(final String username) {
+		if (username == null || username.isEmpty())
+			return null;
+
 		return ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
 	}
 
