@@ -42,7 +42,7 @@ public class WhyLineApiTest {
 	}
 
 	@Test
-	public void shouldNotFindAnyWhyLines() {
+	public void should_not_find_whylines_if_they_do_not_exist() {
 		WhylineCollection whylineCollection = SongApi.getWhylines("BbK4Ex");
 		assertEquals(whylineCollection.getItems().size(), 0);
 	}

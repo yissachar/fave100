@@ -1,4 +1,4 @@
-package com.fave100.server;
+package com.fave100.server.api;
 
 import static org.junit.Assert.assertTrue;
 
@@ -12,9 +12,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.fave100.server.api.AuthApi;
-import com.fave100.server.api.UserApi;
-import com.fave100.server.api.UsersApi;
+import com.fave100.server.TestHelper;
 import com.fave100.server.domain.UserRegistration;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.EmailID;
@@ -22,10 +20,6 @@ import com.fave100.server.domain.appuser.Following;
 import com.fave100.server.domain.appuser.FollowingResult;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.Hashtag;
-import com.google.api.server.spi.response.BadRequestException;
-import com.google.api.server.spi.response.ForbiddenException;
-import com.google.api.server.spi.response.NotFoundException;
-import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
@@ -112,7 +106,7 @@ public class FollowingTest {
 	}
 
 	@Test
-	public void followUserCaseInsensitiveTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
+	public void should_follow_user_regardless_of_name_case() {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = AuthApi.createAppUser(req, new UserRegistration("tester3", "goodtests", "testuser3@example.com"));
@@ -127,7 +121,7 @@ public class FollowingTest {
 	}
 
 	@Test
-	public void unfollowUserTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
+	public void should_unfollow_user() {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = AuthApi.createAppUser(req, new UserRegistration("tester4", "goodtests", "testuser4@example.com"));
@@ -147,7 +141,7 @@ public class FollowingTest {
 	}
 
 	@Test
-	public void unfollowUserCaseInsensitiveTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
+	public void should_unfollow_user_regardless_of_name_case() {
 		HttpServletRequest req = TestHelper.newReq();
 
 		AppUser loggedInUser = AuthApi.createAppUser(req, new UserRegistration("tester5", "goodtests", "testuser5@example.com"));

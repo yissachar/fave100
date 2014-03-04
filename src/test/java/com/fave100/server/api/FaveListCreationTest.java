@@ -1,4 +1,4 @@
-package com.fave100.server;
+package com.fave100.server.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -21,6 +21,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.fave100.server.TestHelper;
 import com.fave100.server.api.AuthApi;
 import com.fave100.server.api.UserApi;
 import com.fave100.server.domain.UserRegistration;

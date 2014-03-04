@@ -1,4 +1,4 @@
-package com.fave100.server;
+package com.fave100.server.api;
 
 import static org.junit.Assert.assertNull;
 
@@ -12,8 +12,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.fave100.server.api.AuthApi;
-import com.fave100.server.api.UserApi;
+import com.fave100.server.TestHelper;
 import com.fave100.server.domain.UserRegistration;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
@@ -68,7 +67,7 @@ public class FaveListDeletionTest {
 	}
 
 	@Test
-	public void faveListDeleted() throws BadRequestException, UnauthorizedException, ForbiddenException {
+	public void should_delete_favelist() throws BadRequestException, UnauthorizedException, ForbiddenException {
 		// Create a favelist
 		String faveListName = "favelisttodelete";
 		UserApi.addFaveListForCurrentUser(req, faveListName);

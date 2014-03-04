@@ -1,4 +1,4 @@
-package com.fave100.server;
+package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 import static org.junit.Assert.assertEquals;
@@ -13,6 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fave100.server.TestHelper;
 import com.fave100.server.api.AuthApi;
 import com.fave100.server.domain.UserRegistration;
 import com.fave100.server.domain.appuser.AppUser;
