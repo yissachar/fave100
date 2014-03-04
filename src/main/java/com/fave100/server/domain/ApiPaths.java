@@ -31,7 +31,6 @@ public class ApiPaths {
 
 	// User
 	public static final String USER_ROOT = "user";
-	public static final String CURRENT_USER = "";
 	public static final String USER_FAVELISTS = "/favelists/{list}";
 	public static final String USER_FAVEITEMS = "/favelists/{list}/items/{id}";
 	public static final String EDIT_RANK = "/favelists/{list}/items/{id}/rank";
