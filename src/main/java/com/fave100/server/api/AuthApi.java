@@ -26,7 +26,6 @@ import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.FacebookRegistration;
-import com.fave100.server.domain.LoginResult;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.TwitterRegistration;
 import com.fave100.server.domain.UserRegistration;
@@ -62,7 +61,7 @@ public class AuthApi {
 
 	@POST
 	@Path(ApiPaths.REGISTER)
-	@ApiOperation(value = "Register a user", response = LoginResult.class)
+	@ApiOperation(value = "Register a user", response = AppUser.class)
 	@ApiResponses(value = {@ApiResponse(code = 400, message = ApiExceptions.DID_NOT_PASS_VALIDATION), @ApiResponse(code = 403, message = ApiExceptions.USERNAME_ALREADY_EXISTS),
 							@ApiResponse(code = 403, message = ApiExceptions.EMAIL_ID_ALREADY_EXISTS)})
 	public static AppUser createAppUser(@Context final HttpServletRequest request, UserRegistration userRegistration) {
@@ -149,7 +148,7 @@ public class AuthApi {
 
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_GOOGLE_ACCOUNT)
-	@ApiOperation(value = "Create an AppUser from Google", response = LoginResult.class)
+	@ApiOperation(value = "Create an AppUser from Google", response = AppUser.class)
 	public static AppUser createAppUserFromGoogleAccount(@Context final HttpServletRequest request, final String username) {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
@@ -199,7 +198,7 @@ public class AuthApi {
 
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_TWITTER_ACCOUNT)
-	@ApiOperation(value = "Create an AppUser from Twitter", response = LoginResult.class)
+	@ApiOperation(value = "Create an AppUser from Twitter", response = AppUser.class)
 	public static AppUser createAppUserFromTwitterAccount(@Context final HttpServletRequest request, TwitterRegistration registration) {
 
 		final String username = registration.getUsername();
@@ -252,7 +251,7 @@ public class AuthApi {
 
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_FACEBOOK_ACCOUNT)
-	@ApiOperation(value = "Create an AppUser from Facebook", response = LoginResult.class)
+	@ApiOperation(value = "Create an AppUser from Facebook", response = AppUser.class)
 	public static AppUser createAppUserFromFacebookAccount(
 			@Context final HttpServletRequest request, FacebookRegistration registration) {
 
@@ -309,7 +308,7 @@ public class AuthApi {
 
 	@POST
 	@Path(ApiPaths.LOGIN)
-	@ApiOperation(value = "Login", response = LoginResult.class)
+	@ApiOperation(value = "Login", response = AppUser.class)
 	public static AppUser login(@Context HttpServletRequest request, LoginCredentials loginCredentials) {
 
 		String username = loginCredentials.getUsername();
@@ -350,7 +349,7 @@ public class AuthApi {
 
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_GOOGLE)
-	@ApiOperation(value = "Login with Google", response = LoginResult.class)
+	@ApiOperation(value = "Login with Google", response = AppUser.class)
 	public static AppUser loginWithGoogle(@Context HttpServletRequest request) {
 
 		AppUser loggedInUser;
@@ -370,7 +369,7 @@ public class AuthApi {
 
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_TWITTER)
-	@ApiOperation(value = "Login with Twitter", response = LoginResult.class)
+	@ApiOperation(value = "Login with Twitter", response = AppUser.class)
 	public static AppUser loginWithTwitter(@Context HttpServletRequest request, final String oauth_verifier) {
 
 		// Get the Twitter user
@@ -396,7 +395,7 @@ public class AuthApi {
 
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_FACEBOOK)
-	@ApiOperation(value = "Login with Facebook", response = LoginResult.class)
+	@ApiOperation(value = "Login with Facebook", response = AppUser.class)
 	public static AppUser loginWithFacebook(@Context HttpServletRequest request, final String code) {
 		// Get the Facebook user
 		final Long facebookUserId = AppUserDao.getCurrentFacebookUserId(request, code);
