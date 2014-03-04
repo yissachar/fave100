@@ -4,6 +4,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -69,6 +71,8 @@ public class AuthApi {
 		final String password = userRegistration.getPassword();
 		final String email = userRegistration.getEmail();
 
+		final List<String> errors = new ArrayList<>();
+
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name is already registered";
 		final String emailExistsMsg = "A user with that email is already registered";
@@ -86,10 +90,20 @@ public class AuthApi {
 						throw new RuntimeException(emailExistsMsg);
 					}
 					else {
-						if (Validator.validateUsername(username) == null
-								&& Validator.validatePassword(password) == null
-								&& Validator.validateEmail(email) == null) {
+						String usernameErrors = Validator.validateUsername(username);
+						String passwordErrors = Validator.validatePassword(password);
+						String emailErrors = Validator.validateEmail(email);
 
+						if (usernameErrors != null)
+							errors.add(usernameErrors);
+
+						if (passwordErrors != null)
+							errors.add(passwordErrors);
+
+						if (emailErrors != null)
+							errors.add(emailErrors);
+
+						if (errors.size() == 0) {
 							// Everything passes validation, create the user
 							final AppUser appUser = new AppUser(username);
 							appUser.setPassword(password);
@@ -118,7 +132,15 @@ public class AuthApi {
 				throw new EmailIdAlreadyExistsException();
 			}
 			else if (e.getMessage().equals(ApiExceptions.DID_NOT_PASS_VALIDATION)) {
-				throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(ApiExceptions.DID_NOT_PASS_VALIDATION).build());
+				StringBuilder sb = new StringBuilder();
+				sb.append(ApiExceptions.DID_NOT_PASS_VALIDATION);
+				sb.append(":");
+				for (String error : errors) {
+					sb.append(error);
+					sb.append("\n");
+				}
+
+				throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(sb.toString()).build());
 			}
 		}
 
