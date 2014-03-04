@@ -276,7 +276,6 @@ public class UserApi {
 							@ApiResponse(code = 403, message = ApiExceptions.FAVELIST_LIMIT_REACHED), @ApiResponse(code = 403, message = ApiExceptions.FAVELIST_ALREADY_EXISTS)})
 	public static void addFaveListForCurrentUser(@Context HttpServletRequest request, @ApiParam(value = "The list name", required = true) @PathParam("list") final String listName) {
 
-		System.out.println("done");
 		final String error = Validator.validateHashtag(listName);
 		if (error != null) {
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
@@ -295,7 +294,6 @@ public class UserApi {
 		if (FaveListDao.findFaveList(username, listName) != null)
 			throw new FaveListAlreadyExistsException();
 
-		System.out.println("asf");
 		currentUser.getHashtags().add(listName);
 		final FaveList faveList = new FaveList(username, listName);
 		// Transaction to ensure no duplicate hashtags created
@@ -311,7 +309,6 @@ public class UserApi {
 				else {
 					hashtag = new Hashtag(listName, username);
 					ofy().save().entities(currentUser, faveList, hashtag).now();
-					System.out.println("done");
 				}
 			}
 		});
