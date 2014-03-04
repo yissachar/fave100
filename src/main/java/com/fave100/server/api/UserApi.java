@@ -77,7 +77,6 @@ public class UserApi {
 	@Path(ApiPaths.CURRENT_USER)
 	@ApiOperation(value = "Get the current user", response = AppUser.class)
 	public static AppUser getLoggedInUser(@Context HttpServletRequest request) {
-		System.out.println("the thing is" + request.getSession().getAttribute(AppUserDao.AUTH_USER));
 		final String username = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
 		if (username != null) {
 			return AppUserDao.findAppUser(username);
