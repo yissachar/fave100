@@ -1,27 +1,27 @@
 package com.fave100.server;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.spy;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.fave100.server.api.AuthApi;
 import com.fave100.server.api.UserApi;
 import com.fave100.server.api.UsersApi;
+import com.fave100.server.domain.UserRegistration;
 import com.fave100.server.domain.appuser.AppUser;
-import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.appuser.Following;
 import com.fave100.server.domain.appuser.FollowingResult;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.Hashtag;
-import com.fave100.shared.exceptions.user.EmailIDAlreadyExistsException;
-import com.fave100.shared.exceptions.user.NotLoggedInException;
-import com.fave100.shared.exceptions.user.UserNotFoundException;
-import com.fave100.shared.exceptions.user.UsernameAlreadyExistsException;
 import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.NotFoundException;
@@ -31,6 +31,8 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(UserApi.class)
 public class FollowingTest {
 
 	static {
@@ -43,59 +45,66 @@ public class FollowingTest {
 
 	private final LocalServiceTestHelper helper =
 			new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100));
-	private AppUserDao appUserDao;
-	private UsersApi appUserApi;
+	private AppUser loggedInUser;
+	private HttpServletRequest req;
 
 	@Before
-	public void setUp() throws UsernameAlreadyExistsException, EmailIDAlreadyExistsException, NotLoggedInException, UserNotFoundException {
+	public void setUp() {
 		helper.setUp();
-		// Create a user
-		appUserDao = new AppUserDao();
-		appUserApi = new UsersApi(appUserDao);
 
-		AppUserDao mockAppUserDao = spy(new AppUserDao());
-		appUserDao = mockAppUserDao;
+		PowerMockito.spy(UserApi.class);
 
-		UsersApi mockAppUserApi = spy(new UsersApi(appUserDao));
-		appUserApi = mockAppUserApi;
+		req = TestHelper.newReq();
+
+		UserRegistration registration = new UserRegistration();
+		registration.setUsername("tester");
+		registration.setPassword("goodtests");
+		registration.setEmail("testuser@example.com");
+
+		loggedInUser = AuthApi.createAppUser(req, registration);
 	}
 
 	@After
 	public void tearDown() {
 		ObjectifyFilter.complete();
 		helper.tearDown();
-		appUserDao = null;
+		loggedInUser = null;
 	}
 
 	@Test
-	public void followUserTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
+	public void should_follow_user() {
 		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser loggedInUser = appUserApi.createAppUser(req, "tester", "goodtests", "testuser@example.com").getAppUser();
-		UserApi.getLoggedInUser(req);
+		UserRegistration registration = new UserRegistration();
+		registration.setUsername("john");
+		registration.setPassword("passpass31");
+		registration.setEmail("lemmings@example.com");
 
-		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "john", "passpass31", "lemmings@example.com").getAppUser();
+		AppUser userToFollow = AuthApi.createAppUser(TestHelper.newReq(), registration);
+		PowerMockito.stub(PowerMockito.method(UserApi.class, TestHelper.GET_LOGGED_IN_USER_METHOD_NAME)).toReturn(loggedInUser);
+
 		UserApi.followUser(req, userToFollow.getUsername());
-		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
+
+		FollowingResult followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 		assertTrue(followingResult.getFollowing().contains(userToFollow));
 	}
 
 	@Test
-	public void followMultipleUsersTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
+	public void should_follow_multiple_users() {
 		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser loggedInUser = appUserApi.createAppUser(req, "tester2", "goodtests", "testuser2@example.com").getAppUser();
-		UserApi.getLoggedInUser(req);
+		AppUser loggedInUser = AuthApi.createAppUser(req, new UserRegistration("tester2", "goodtests", "testuser2@example.com"));
+		PowerMockito.stub(PowerMockito.method(UserApi.class, TestHelper.GET_LOGGED_IN_USER_METHOD_NAME)).toReturn(loggedInUser);
 
-		AppUser userToFollow1 = appUserApi.createAppUser(TestHelper.newReq(), "bob", "passpass31", "followuser@example.com").getAppUser();
-		AppUser userToFollow2 = appUserApi.createAppUser(TestHelper.newReq(), "derek", "xcvb1sdf1", "anotheruser@example.com").getAppUser();
+		AppUser userToFollow1 = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("bob", "passpass31", "followuser@example.com"));
+		AppUser userToFollow2 = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("derek", "xcvb1sdf1", "anotheruser@example.com"));
 
 		UserApi.followUser(req, userToFollow1.getUsername());
 		UserApi.followUser(req, userToFollow2.getUsername());
 
-		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		FollowingResult followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 2);
 		assertTrue(followingResult.getFollowing().contains(userToFollow1));
@@ -106,12 +115,12 @@ public class FollowingTest {
 	public void followUserCaseInsensitiveTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
 		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser loggedInUser = appUserApi.createAppUser(req, "tester3", "goodtests", "testuser3@example.com").getAppUser();
-		UserApi.getLoggedInUser(req);
+		AppUser loggedInUser = AuthApi.createAppUser(req, new UserRegistration("tester3", "goodtests", "testuser3@example.com"));
+		PowerMockito.stub(PowerMockito.method(UserApi.class, TestHelper.GET_LOGGED_IN_USER_METHOD_NAME)).toReturn(loggedInUser);
 
-		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "MIKE", "bcv13zxcg", "foobar@example.com").getAppUser();
+		AppUser userToFollow = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("MIKE", "bcv13zxcg", "foobar@example.com"));
 		UserApi.followUser(req, userToFollow.getUsername());
-		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		FollowingResult followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 		assertTrue(followingResult.getFollowing().contains(userToFollow));
@@ -121,19 +130,19 @@ public class FollowingTest {
 	public void unfollowUserTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
 		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser loggedInUser = appUserApi.createAppUser(req, "tester4", "goodtests", "testuser4@example.com").getAppUser();
-		UserApi.getLoggedInUser(req);
+		AppUser loggedInUser = AuthApi.createAppUser(req, new UserRegistration("tester4", "goodtests", "testuser4@example.com"));
+		PowerMockito.stub(PowerMockito.method(UserApi.class, TestHelper.GET_LOGGED_IN_USER_METHOD_NAME)).toReturn(loggedInUser);
 
 		// Follow
-		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "liam", "bv1xcvaw46", "booj@example.com").getAppUser();
+		AppUser userToFollow = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("liam", "bv1xcvaw46", "booj@example.com"));
 		UserApi.followUser(req, userToFollow.getUsername());
-		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		FollowingResult followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 
 		// Unfollow
 		UserApi.unfollowUser(req, userToFollow.getUsername());
-		followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
 		assertTrue(followingResult.getFollowing().size() == 0);
 	}
 
@@ -141,19 +150,19 @@ public class FollowingTest {
 	public void unfollowUserCaseInsensitiveTest() throws BadRequestException, ForbiddenException, UnauthorizedException, NotFoundException {
 		HttpServletRequest req = TestHelper.newReq();
 
-		AppUser loggedInUser = appUserApi.createAppUser(req, "tester5", "goodtests", "testuser5@example.com").getAppUser();
-		UserApi.getLoggedInUser(req);
+		AppUser loggedInUser = AuthApi.createAppUser(req, new UserRegistration("tester5", "goodtests", "testuser5@example.com"));
+		PowerMockito.stub(PowerMockito.method(UserApi.class, TestHelper.GET_LOGGED_IN_USER_METHOD_NAME)).toReturn(loggedInUser);
 
 		// Follow
-		AppUser userToFollow = appUserApi.createAppUser(TestHelper.newReq(), "KRING", "awetzx14sva", "kiasd@example.com").getAppUser();
+		AppUser userToFollow = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("KRING", "awetzx14sva", "kiasd@example.com"));
 		UserApi.followUser(req, userToFollow.getUsername());
-		FollowingResult followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		FollowingResult followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 
 		// Unfollow
 		UserApi.unfollowUser(req, userToFollow.getUsername());
-		followingResult = appUserApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
 		assertTrue(followingResult.getFollowing().size() == 0);
 	}
 }

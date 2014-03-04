@@ -4,25 +4,27 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.fave100.server.api.AuthApi;
 import com.fave100.server.api.UserApi;
-import com.fave100.server.api.UsersApi;
-import com.fave100.server.api.FaveListsApi;
-import com.fave100.server.api.SongApi;
+import com.fave100.server.domain.UserRegistration;
 import com.fave100.server.domain.appuser.AppUser;
-import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
@@ -36,6 +38,8 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(UserApi.class)
 public class FaveListCreationTest {
 
 	static {
@@ -48,28 +52,23 @@ public class FaveListCreationTest {
 	private final LocalServiceTestHelper helper =
 			new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100));
 	private AppUser loggedInUser;
-	private FaveListDao faveListDao;
-	private FaveListsApi faveListApi;
 	private HttpServletRequest req;
 
 	@Before
 	public void setUp() throws BadRequestException {
 		helper.setUp();
-		// Create a user
-		String username = "tester";
-		AppUserDao appUserDao = new AppUserDao();
 
-		UsersApi appUserApi = new UsersApi(appUserDao);
+		PowerMockito.spy(UserApi.class);
 
 		req = TestHelper.newReq();
 
-		loggedInUser = appUserApi.createAppUser(req, username, "goodtests", "testuser@example.com").getAppUser();
+		UserRegistration registration = new UserRegistration();
+		registration.setUsername("tester");
+		registration.setPassword("goodtests");
+		registration.setEmail("testuser@example.com");
 
-		UsersApi mockAppUserApi = mock(UsersApi.class);
-		when(UserApi.getLoggedInUser(req)).thenReturn(loggedInUser);
-
-		faveListDao = new FaveListDao();
-		faveListApi = new FaveListsApi(faveListDao, mockAppUserApi, new SongApi());
+		loggedInUser = AuthApi.createAppUser(req, registration);
+		PowerMockito.stub(PowerMockito.method(UserApi.class, TestHelper.GET_LOGGED_IN_USER_METHOD_NAME)).toReturn(loggedInUser);
 	}
 
 	@After
@@ -77,21 +76,20 @@ public class FaveListCreationTest {
 		ObjectifyFilter.complete();
 		helper.tearDown();
 		loggedInUser = null;
-		faveListDao = null;
 	}
 
 	@Test
-	public void faveListCreated() throws Exception {
+	public void should_create_favelist() throws Exception {
 		// Create a favelist
 		String faveListName = "anewfavelist";
 		UserApi.addFaveListForCurrentUser(req, faveListName);
 
 		// Favelist now exists in datastore
-		assertNotNull("Created faveList must exist in datastore", faveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
+		assertNotNull("Created faveList must exist in datastore", FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
 	}
 
 	@Test
-	public void faveListNameMustBeUniquePerUser() throws BadRequestException, UnauthorizedException, ForbiddenException {
+	public void should_not_create_favelist_with_duplicate_name_per_user() {
 		// Create a favelist
 		String faveListName = "boo";
 		UserApi.addFaveListForCurrentUser(req, faveListName);
@@ -99,45 +97,43 @@ public class FaveListCreationTest {
 		// Attempt to add a second favelist with same name
 		try {
 			UserApi.addFaveListForCurrentUser(req, faveListName);
-			fail("Exception not thrown");
+			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
-		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
-			// Success!
+		catch (WebApplicationException e) {
+			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
 		}
 	}
 
 	@Test
-	public void faveListNameMustNotBeNull() {
+	public void should_not_create_favelist_with_null_name() {
 		// Create a favelist with null name
 		String faveListName = null;
 
 		try {
 			UserApi.addFaveListForCurrentUser(req, faveListName);
-			fail("Exception not thrown");
+			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
-		catch (Exception e) {
-			// Success!
+		catch (WebApplicationException e) {
+			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
 		}
 	}
 
 	@Test
-	public void faveListNameMustNotBeEmpty() {
+	public void should_not_create_favelist_with_empty_name() {
 		// Create a favelist with empty name
 		String faveListName = "";
 
 		try {
 			UserApi.addFaveListForCurrentUser(req, faveListName);
-			fail("Exception not thrown");
+			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
-		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
-			// Success!
+		catch (WebApplicationException e) {
+			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
 		}
-
-		assertNull("FaveList with empty name must not be created", faveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
 	}
 
 	@Test
-	public void faveListNameMustNotBeTooLong() {
+	public void should_not_create_favelist_with_name_that_is_too_long() {
 		// Create a favelist with a name that is too long
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Constants.MAX_HASHTAG_LENGTH + 1; i++) {
@@ -148,17 +144,15 @@ public class FaveListCreationTest {
 
 		try {
 			UserApi.addFaveListForCurrentUser(req, faveListName);
-			fail("Exception not thrown");
+			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
-		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
-			// Success!
+		catch (WebApplicationException e) {
+			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
 		}
-
-		assertNull("FaveList with a name that is too long must not be created", faveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
 	}
 
 	@Test
-	public void faveListNameMustOnlyConsistOfLettersAndNumbers() {
+	public void should_not_create_favelist_with_non_alphanumeric_name() {
 		// Create favelists with special chars and spaces
 		String name1 = "foo%";
 		String name2 = "^bar";
@@ -170,21 +164,15 @@ public class FaveListCreationTest {
 			UserApi.addFaveListForCurrentUser(req, name2);
 			UserApi.addFaveListForCurrentUser(req, name3);
 			UserApi.addFaveListForCurrentUser(req, name4);
-			fail("Exception not thrown");
+			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
-		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
-			// Success!
+		catch (WebApplicationException e) {
+			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
 		}
-
-		String msg = "FaveList with a name that is too long must not be created";
-		assertNull(msg, faveListDao.findFaveList(loggedInUser.getUsername(), name1));
-		assertNull(msg, faveListDao.findFaveList(loggedInUser.getUsername(), name2));
-		assertNull(msg, faveListDao.findFaveList(loggedInUser.getUsername(), name3));
-		assertNull(msg, faveListDao.findFaveList(loggedInUser.getUsername(), name4));
 	}
 
 	@Test
-	public void mustNotCreateTooManyFaveLists() {
+	public void should_not_create_favelist_if_list_limit_reached() {
 		// Alphabet for naming lists
 		char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z'};
 		// Store used faveListNames to avoid creating list with duplicate name
@@ -211,13 +199,13 @@ public class FaveListCreationTest {
 
 		try {
 			UserApi.addFaveListForCurrentUser(req, faveListName);
-			fail("Exception not thrown");
+			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
-		catch (BadRequestException | UnauthorizedException | ForbiddenException e) {
-			// Success!
+		catch (WebApplicationException e) {
+			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
 		}
 
-		assertNull("Cannot create more than " + Constants.MAX_LISTS_PER_USER + " lists per user", faveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
+		assertNull("Cannot create more than " + Constants.MAX_LISTS_PER_USER + " lists per user", FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
 	}
 
 	/**
@@ -230,11 +218,11 @@ public class FaveListCreationTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void createdFaveListMustBeEmpty() throws BadRequestException, UnauthorizedException, ForbiddenException {
+	public void should_create_favelist_that_is_empty() {
 		String faveListName = "booya";
 		UserApi.addFaveListForCurrentUser(req, faveListName);
 
-		FaveList faveList = faveListDao.findFaveList(loggedInUser.getUsername(), faveListName);
+		FaveList faveList = FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName);
 		assertEquals("A newly created FaveList must not have any FaveItems stored", 0, faveList.getList().size());
 	}
 
@@ -248,7 +236,7 @@ public class FaveListCreationTest {
 	 * @throws BadRequestException
 	 */
 	@Test
-	public void faveListNameAlsoStoredInUser() throws BadRequestException, UnauthorizedException, ForbiddenException {
+	public void should_store_favelist_name_in_user_profile() {
 		String firstfaveListName = "gret";
 		UserApi.addFaveListForCurrentUser(req, firstfaveListName);
 
