@@ -74,7 +74,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 public class UserApi {
 
 	@GET
-	@Path(ApiPaths.CURRENT_USER)
 	@ApiOperation(value = "Get the current user", response = AppUser.class)
 	public static AppUser getLoggedInUser(@Context HttpServletRequest request) {
 		final String username = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
