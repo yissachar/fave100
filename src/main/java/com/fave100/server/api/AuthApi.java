@@ -61,9 +61,9 @@ public class AuthApi {
 	@POST
 	@Path(ApiPaths.REGISTER)
 	@ApiOperation(value = "Register a user", response = LoginResult.class)
-	@ApiResponses(value = {@ApiResponse(code = 403, message = ApiExceptions.USERNAME_ALREADY_EXISTS), @ApiResponse(code = 403, message = ApiExceptions.EMAIL_ID_ALREADY_EXISTS)})
-	public static AppUser createAppUser(@Context final HttpServletRequest request,
-			UserRegistration userRegistration) {
+	@ApiResponses(value = {@ApiResponse(code = 400, message = ApiExceptions.DID_NOT_PASS_VALIDATION), @ApiResponse(code = 403, message = ApiExceptions.USERNAME_ALREADY_EXISTS),
+							@ApiResponse(code = 403, message = ApiExceptions.EMAIL_ID_ALREADY_EXISTS)})
+	public static AppUser createAppUser(@Context final HttpServletRequest request, UserRegistration userRegistration) {
 
 		final String username = userRegistration.getUsername();
 		final String password = userRegistration.getPassword();
@@ -101,7 +101,9 @@ public class AuthApi {
 							ofy().save().entities(appUser, faveList, emailID).now();
 							return AuthApi.login(request, new LoginCredentials(username, password));
 						}
-						return null;
+						else {
+							throw new RuntimeException(ApiExceptions.DID_NOT_PASS_VALIDATION);
+						}
 					}
 				}
 			});
@@ -114,6 +116,9 @@ public class AuthApi {
 			}
 			else if (e.getMessage().equals(emailExistsMsg)) {
 				throw new EmailIdAlreadyExistsException();
+			}
+			else if (e.getMessage().equals(ApiExceptions.DID_NOT_PASS_VALIDATION)) {
+				throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(ApiExceptions.DID_NOT_PASS_VALIDATION).build());
 			}
 		}
 
