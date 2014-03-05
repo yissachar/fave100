@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +25,6 @@ import com.fave100.server.domain.favelist.FaveRankerWrapper;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
-import com.google.inject.Inject;
 import com.googlecode.objectify.cmd.Query;
 
 /**
@@ -33,13 +34,16 @@ import com.googlecode.objectify.cmd.Query;
  * @author yissachar.radcliffe
  * 
  */
+@Singleton
 @SuppressWarnings("serial")
 public class HashtagBuilderServlet extends HttpServlet
 {
 	public static String HASHTAG_BUILDER_URL = "/tasks/hashtags";
 	public static String HASHTAG_PARAM = "hashtag";
 
-	@Inject FaveListDao faveListDao;
+	@Inject
+	public HashtagBuilderServlet() {
+	}
 
 	@Override
 	public void doPost(final HttpServletRequest req, final HttpServletResponse res)
@@ -131,7 +135,7 @@ public class HashtagBuilderServlet extends HttpServlet
 			int i = 1;
 			for (final FaveItem faveItem : faveList.getList()) {
 				final FaveRankerWrapper faveHolder = new FaveRankerWrapper(faveItem);
-				final double score = faveListDao.calculateItemScore(i);
+				final double score = FaveListDao.calculateItemScore(i);
 				final double newVal = (all.get(faveHolder) != null) ? all.get(faveHolder) + score : score;
 				all.put(faveHolder, newVal);
 				i++;

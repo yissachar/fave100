@@ -5,6 +5,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,11 +26,16 @@ import com.googlecode.objectify.cmd.Query;
  * @author yissachar.radcliffe
  * 
  */
+@Singleton
 @SuppressWarnings("serial")
 public class HashtagEnqueuerServlet extends HttpServlet
 {
 	public static String HASHTAG_ENQUEUER_URL = "/cron/hashtags";
 	public static String CURSOR_PARAM = "cursor";
+
+	@Inject
+	public HashtagEnqueuerServlet() {
+	}
 
 	@Override
 	public void doGet(final HttpServletRequest req, final HttpServletResponse res)

@@ -5,6 +5,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +22,16 @@ import com.googlecode.objectify.cmd.QueryKeys;
  * @author yissachar.radcliffe
  * 
  */
+@Singleton
 @SuppressWarnings("serial")
-public class PasswordCleanupServlet extends HttpServlet
-{
+public class PasswordCleanupServlet extends HttpServlet {
+
+	@Inject
+	public PasswordCleanupServlet() {
+	}
+
 	@Override
-	public void doGet(final HttpServletRequest req, final HttpServletResponse res)
-			throws ServletException, IOException {
+	public void doGet(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
 
 		// Load up to 100 expired PwdResetToken entity keys and delete them
 		final QueryKeys<PwdResetToken> keys = ofy().load()

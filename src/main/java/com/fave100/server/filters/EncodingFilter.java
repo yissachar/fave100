@@ -2,6 +2,8 @@ package com.fave100.server.filters;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -9,9 +11,14 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+@Singleton
 public class EncodingFilter implements Filter {
 
 	private String encoding = "utf-8";
+
+	@Inject
+	public EncodingFilter() {
+	}
 
 	@Override
 	public void doFilter(final ServletRequest request,

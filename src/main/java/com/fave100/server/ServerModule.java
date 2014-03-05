@@ -1,8 +1,17 @@
-package com.fave100.server.guice;
+package com.fave100.server;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-import com.fave100.server.UrlBuilder;
+import javax.inject.Singleton;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.fave100.server.api.AuthApi;
+import com.fave100.server.api.FaveListsApi;
+import com.fave100.server.api.SearchApi;
+import com.fave100.server.api.SongApi;
+import com.fave100.server.api.TrendingApi;
+import com.fave100.server.api.UserApi;
+import com.fave100.server.api.UsersApi;
 import com.fave100.server.domain.APIKey;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
@@ -15,11 +24,41 @@ import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.Hashtag;
+import com.fave100.server.filters.EncodingFilter;
+import com.fave100.server.servlets.HashtagBuilderServlet;
+import com.fave100.server.servlets.HashtagEnqueuerServlet;
+import com.fave100.server.servlets.PasswordCleanupServlet;
 import com.google.appengine.api.utils.SystemProperty;
-import com.google.inject.servlet.ServletModule;
+import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
+import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
+import com.leacox.dagger.jersey.DaggerContainer;
+import com.leacox.dagger.servlet.ServletModule;
 
-public class ServerModule extends ServletModule {
+import dagger.Module;
+import dagger.Provides;
+
+@Module(
+		injects = {
+					DaggerContainer.class,
+					UsersApi.class,
+					AuthApi.class,
+					AuthApi.class,
+					UserApi.class,
+					FaveListsApi.class,
+					SongApi.class,
+					SearchApi.class,
+					TrendingApi.class,
+					JacksonJsonProvider.class,
+					RemoteApiServlet.class,
+					PasswordCleanupServlet.class,
+					ObjectifyFilter.class,
+					EncodingFilter.class,
+					HashtagBuilderServlet.class,
+					HashtagEnqueuerServlet.class
+		},
+		includes = ServletModule.class)
+public class ServerModule {
 
 	static {
 		// Must manually register all datastore entities
@@ -49,5 +88,23 @@ public class ServerModule extends ServletModule {
 
 		// Let the UrlBuilder know what URLs to build
 		UrlBuilder.isDevMode = (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development);
+	}
+
+	@Provides
+	@Singleton
+	JacksonJsonProvider provideJacksonJsonProvider() {
+		return new JacksonJsonProvider();
+	}
+
+	@Provides
+	@Singleton
+	RemoteApiServlet provideRemoteApiServlet() {
+		return new RemoteApiServlet();
+	}
+
+	@Provides
+	@Singleton
+	ObjectifyFilter provideObjectifyFilter() {
+		return new ObjectifyFilter();
 	}
 }
