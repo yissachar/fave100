@@ -33,6 +33,7 @@
 	<a href="#codeRepos">Code Repositories</a><br>
 	<a href="#upgradeAE-GWT">Upgrading AppEngine and GWT version</a><br>
 	<a href="#testingAvatarUpload">Testing Avatar Upload Locally</a><br>
+	<a href="#refactoringGwtSwagger">Refactoring Generated GWT Swagger Client</a><br>
 
 	<a name="devEnvironment"/>
 	<h2>Setting Up Development Environment</h2>
@@ -201,7 +202,12 @@
 			<b>AppEngine Deduper</b>
 			<a href="https://bitbucket.org/yissachar/fave100-appengine-dedupe/src">https://bitbucket.org/yissachar/fave100-appengine-dedupe/src</a>
 			<p>For iterating through all AppEngine entities and de-duping any songs that point to a duplicate.</p>
-		</li>		
+		</li>	
+		<li>
+			<b>GWT Swagger Client Generator</b>
+			<a href="https://github.com/yissachar/fave100-gwt-endpoint-client-generator">https://github.com/yissachar/fave100-gwt-endpoint-client-generator</a>
+			<p>For building the GWT client from the Swagger descriptor documents</p>
+		</li>	
 	</ul>
 
 	<a name="upgradeAE-GWT"/>
@@ -222,6 +228,10 @@
 		<li>The URL must be the name of your computer and not 127.0.0.1. Additionally, ensure that the URL host of the dev server matches the URL that the avatar upload is being POSTed to, otherwise they will not share sessions and the avatar upload will fail.</li>
 		<li>In dev mode, you cannot change an avatar locally once it has been uploaded, due to a bug with the dev server, which locks images. Instead use hosted mode to perform this operation.</li>
 	</ol>
+
+	<a name="refactoringGwtSwagger"></a>
+	<h2>Refactoring Generated GWT Swagger Client</h2>
+	<p>Any changed you make to the generated GWT Swagger client will be lost the next time the client is generated. To get around this, you must first refactor the client to the state you want, and then change the client generator so that it produces the equivalent output.</p>
 
 	</div>
 </body>
