@@ -5,6 +5,7 @@ war/WEB-INF/classes/
 war/WEB-INF/appengine-generated/
 war/WEB-INF/deploy/
 war/WEB-INF/lib/
+war/apidocs/
 .settings/
 .factorypath
 target/
@@ -12,3 +13,7 @@ target/
 extras/
 .staging/
 /test-classes
+*.api
+*.discovery
+endpoint-libs/
+src/main/java/com/fave100/client/generated/
