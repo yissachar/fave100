@@ -44,6 +44,8 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 
 	@UiField ListStyle style;
 	@UiField HTMLPanel userContainer;
+	@UiField Label tagline;
+	@UiField HTMLPanel userPageSideBar;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel globalListDetailsContainer;
 	@UiField HTMLPanel listManager;
@@ -154,12 +156,16 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	public void setUserProfile(final AppUser user) {
 		if (user == null) {
 			userProfile.setVisible(false);
+			tagline.setVisible(true);
+			setSidebarPosition(false);
 		}
 		else {
 			userProfile.setVisible(true);
 			avatar.setUrl(user.getAvatarImage());
 			username.setText(user.getUsername());
 			profileLink.setText(user.getUsername());
+			tagline.setVisible(false);
+			setSidebarPosition(true);
 		}
 	}
 
@@ -246,6 +252,21 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		else {
 			userPageFaveList.setVisible(true);
 			followingContainer.setVisible(true);
+		}
+	}
+
+	@Override
+	public void setSidebarPosition(boolean fixed) {
+		String userPageSideBarStyle = "userPageSideBarFixed";
+		String userPageFaveListStyle = "userPageFaveList";
+
+		if (fixed) {
+			userPageSideBar.addStyleName(userPageSideBarStyle);
+			userPageFaveList.addStyleName(userPageFaveListStyle);
+		}
+		else {
+			userPageSideBar.removeStyleName(userPageSideBarStyle);
+			userPageFaveList.removeStyleName(userPageFaveListStyle);
 		}
 	}
 }
