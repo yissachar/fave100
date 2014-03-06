@@ -45,7 +45,7 @@
 					<g:HTMLPanel ui:field="slide1">
 						<g:Image ui:field="imgSlide1"></g:Image>
 						<g:HTMLPanel ui:styleName="{style.description}">
-							<p>Fave100 is a music discovery site that asks the simple question: if you could only recommend 100 songs, what would they be? And, in what order?</p>
+							<p>Fave100 is a music discovery site that asks the simple question: if you could only recommend 5, 10, 50 or even 100 songs, what would they be? And, in what order?</p>
 							<p>Our Home Page displays the all-time Fave100 based on everyone’s lists so far. You can also create other lists based on genre (e.g. classicrock), 
 								year (e.g 2013), event (e.g. micksparty) or whatever else comes to mind.
 							</p>
