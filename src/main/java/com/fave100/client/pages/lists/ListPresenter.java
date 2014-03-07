@@ -57,6 +57,8 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 		void setFollowCTA(boolean show, boolean starred);
 
 		void setMobileView(boolean reset);
+
+		void setSidebarPosition(boolean fixed);
 	}
 
 	@ProxyCodeSplit
@@ -112,6 +114,13 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 				else {
 					widget.removeStyleName(getView().getFixedSearchStyle());
 					songAutocomplete.getView().showBackToTop(false);
+				}
+
+				if (event.getScrollTop() >= 50 || requestedUser != null) {
+					getView().setSidebarPosition(true);
+				}
+				else {
+					getView().setSidebarPosition(false);
 				}
 			}
 		});

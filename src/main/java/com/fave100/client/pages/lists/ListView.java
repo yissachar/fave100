@@ -31,6 +31,9 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		implements ListPresenter.MyView {
 
+	private final static String USER_PAGE_SIDE_BAR_FIXED_STYLE = "userPageSideBarFixed";
+	private final static String USER_PAGE_FAVE_LIST_STYLE = "userPageFaveList";
+
 	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, ListView> {
@@ -44,6 +47,8 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 
 	@UiField ListStyle style;
 	@UiField HTMLPanel userContainer;
+	@UiField Label tagline;
+	@UiField HTMLPanel userPageSideBar;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel globalListDetailsContainer;
 	@UiField HTMLPanel listManager;
@@ -154,12 +159,16 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	public void setUserProfile(final AppUser user) {
 		if (user == null) {
 			userProfile.setVisible(false);
+			tagline.setVisible(true);
+			setSidebarPosition(false);
 		}
 		else {
 			userProfile.setVisible(true);
 			avatar.setUrl(user.getAvatarImage());
 			username.setText(user.getUsername());
 			profileLink.setText(user.getUsername());
+			tagline.setVisible(false);
+			setSidebarPosition(true);
 		}
 	}
 
@@ -246,6 +255,18 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		else {
 			userPageFaveList.setVisible(true);
 			followingContainer.setVisible(true);
+		}
+	}
+
+	@Override
+	public void setSidebarPosition(boolean fixed) {
+		if (fixed) {
+			userPageSideBar.addStyleName(USER_PAGE_SIDE_BAR_FIXED_STYLE);
+			userPageFaveList.addStyleName(USER_PAGE_FAVE_LIST_STYLE);
+		}
+		else {
+			userPageSideBar.removeStyleName(USER_PAGE_SIDE_BAR_FIXED_STYLE);
+			userPageFaveList.removeStyleName(USER_PAGE_FAVE_LIST_STYLE);
 		}
 	}
 }
