@@ -22,8 +22,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.fave100.server.TestHelper;
-import com.fave100.server.api.AuthApi;
-import com.fave100.server.api.UserApi;
 import com.fave100.server.domain.UserRegistration;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.EmailID;
@@ -31,9 +29,6 @@ import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.fave100.shared.Constants;
-import com.google.api.server.spi.response.BadRequestException;
-import com.google.api.server.spi.response.ForbiddenException;
-import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
@@ -56,7 +51,7 @@ public class FaveListCreationTest {
 	private HttpServletRequest req;
 
 	@Before
-	public void setUp() throws BadRequestException {
+	public void setUp() {
 		helper.setUp();
 
 		PowerMockito.spy(UserApi.class);
