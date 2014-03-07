@@ -8,6 +8,15 @@
 	ui:generateLocales='default'>
 
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.ListView.ListStyle">
+		.tagline {
+			font-size: 18px;
+			background-color: #fff;
+			padding: 10px;
+			margin-bottom: 10px;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+				
 		.userProfile{
 			display: block;
 			width: 100%;			
@@ -32,7 +41,7 @@
 		.username {	
 			color: PRIMARY_COLOR;
 			display: block;
-			width: 140px;
+			width: 139px;
 			font-size: 1.4em;
 			vertical-align: top;
 			word-wrap: break-word;
@@ -111,7 +120,10 @@
 		<div class="container">
 			<div class="content row">
 				<g:HTMLPanel ui:field="userContainer">
-					<g:HTMLPanel styleName="userPageSideBar col span_3">
+				
+					<g:Label ui:field="tagline" ui:styleName="{style.tagline}">Building the ultimate crowd-sourced playlists</g:Label>
+					
+					<g:HTMLPanel ui:field="userPageSideBar" styleName="userPageSideBar col span_3">
 						<g:HTMLPanel ui:field="globalListDetailsContainer"/>								
 						<g:FlowPanel ui:field="userProfile" styleName="{style.userProfile}">
 							<g:Image styleName="{style.avatar}" ui:field="avatar"/>
@@ -135,7 +147,7 @@
 						
 					</g:HTMLPanel>
 					
-					<g:HTMLPanel ui:field="userPageFaveList" ui:styleName="userPageFaveList col span_9">		
+					<g:HTMLPanel ui:field="userPageFaveList" ui:styleName="col span_9">		
 						<g:HTMLPanel ui:field="songAutocomplete" ui:styleName="{style.songSearchContainer}"/>	
 						<g:HTMLPanel ui:field="faveListContainer" styleName="{style.faveListContainer}">
 							<g:HTMLPanel ui:field="favelist"/>									
