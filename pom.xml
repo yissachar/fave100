@@ -10,13 +10,13 @@
 	<name>gwt-maven-archetype-project</name>
 
 	<properties>
-		<!-- convenience to define GWT version in one place -->
 		<gwt.version>2.6.0</gwt.version>
 		<appengine.version>1.8.9</appengine.version>
 		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
 		<gwtp.version>1.1.1</gwtp.version>
 		<jersey.version>1.18</jersey.version>
 		<powermock.version>1.5.4</powermock.version>
+		<war.path>src/main/webapp/</war.path>
 		<!-- tell the compiler we can use 1.7 -->
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
@@ -52,24 +52,6 @@
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
 			<version>${appengine.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-labs</artifactId>
-			<version>${appengine.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-stubs</artifactId>
-			<version>${appengine.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-testing</artifactId>
-			<version>${appengine.version}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -122,7 +104,7 @@
 			<groupId>com.wordnik</groupId>
 			<artifactId>swagger-annotations</artifactId>
 			<version>1.3.2</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Objectify -->
@@ -165,15 +147,10 @@
 
 		<!-- GWT -->
 		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-servlet</artifactId>
-			<version>${gwt.version}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>com.google.gwt.inject</groupId>
 			<artifactId>gin</artifactId>
 			<version>2.1.2</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- End GWT -->
 
@@ -205,6 +182,7 @@
 			<groupId>com.googlecode.gwtquery</groupId>
 			<artifactId>gwtquery</artifactId>
 			<version>1.3.2</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- GSS Resource -->
@@ -248,6 +226,21 @@
 			<version>${powermock.version}</version>
 			<scope>test</scope>
 		</dependency>
+				
+		<!-- AppEngine -->
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-stubs</artifactId>
+			<version>${appengine.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-testing</artifactId>
+			<version>${appengine.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 
@@ -257,7 +250,20 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<webXml>${project.basedir}\war\WEB-INF\web.xml</webXml>
+					<webXml>${war.path}\WEB-INF\web.xml</webXml>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>${appengine.version}</version>
+				<configuration>
+					<appId>${appengine-app-id}</appId>
+					<version>${appengine-app-version}</version>
+					<oauth2>false</oauth2>
+					<noCookies>true</noCookies>
+					<passin>true</passin>
 				</configuration>
 			</plugin>
 
@@ -269,6 +275,49 @@
 					<source>1.7</source>
 					<target>1.7</target>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<delete>
+									<fileset dir="${war.path}/WEB-INF/lib" includes="*" />
+								</delete>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${war.path}/WEB-INF/lib</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+							<includeScope>runtime</includeScope>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
@@ -309,7 +358,7 @@
 							</outputTemplate>
 							<useOutputFlatStructure>false</useOutputFlatStructure>
 							<outputPath>generated/strapdown.html</outputPath>
-							<swaggerDirectory>war/apidocs</swaggerDirectory>
+							<swaggerDirectory>${war.path}/apidocs</swaggerDirectory>
 						</apiSource>
 					</apiSources>
 				</configuration>
@@ -373,6 +422,27 @@
 										</versionRange>
 										<goals>
 											<goal>generate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-dependency-plugin
+										</artifactId>
+										<versionRange>
+											[2.8,)
+										</versionRange>
+										<goals>
+											<goal>
+												copy-dependencies
+											</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
