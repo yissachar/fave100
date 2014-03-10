@@ -4,4 +4,6 @@ import com.google.gwt.resources.client.GssResource;
 
 public interface GlobalStyle extends GssResource {
 
+	int SIDE_BAR_WIDTH();
+
 }
