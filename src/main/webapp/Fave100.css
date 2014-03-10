@@ -418,8 +418,13 @@ footer {
 	}
 	
 	.userPageSideBar {
-		width: 240px;
+		margin-left: 0;	
+		width: 239px;
+	}
+	
+	.userPageSideBarFixed {
 		position: fixed;
+		top: 80px;
 	}	
 	
 	.userPageFaveList {
