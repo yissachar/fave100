@@ -25,8 +25,6 @@ import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.exceptions.NotLoggedInException;
 import com.fave100.shared.Constants;
-import com.google.api.server.spi.response.ForbiddenException;
-import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Ref;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;

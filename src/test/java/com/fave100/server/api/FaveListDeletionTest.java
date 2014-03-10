@@ -20,9 +20,6 @@ import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.domain.favelist.Hashtag;
-import com.google.api.server.spi.response.BadRequestException;
-import com.google.api.server.spi.response.ForbiddenException;
-import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
@@ -46,7 +43,7 @@ public class FaveListDeletionTest {
 	private HttpServletRequest req;
 
 	@Before
-	public void setUp() throws BadRequestException {
+	public void setUp() {
 		helper.setUp();
 		// Create a user
 		String username = "tester";
@@ -67,7 +64,7 @@ public class FaveListDeletionTest {
 	}
 
 	@Test
-	public void should_delete_favelist() throws BadRequestException, UnauthorizedException, ForbiddenException {
+	public void should_delete_favelist() {
 		// Create a favelist
 		String faveListName = "favelisttodelete";
 		UserApi.addFaveListForCurrentUser(req, faveListName);
