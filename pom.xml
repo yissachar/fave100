@@ -334,7 +334,7 @@
 								src/main/resources/api-doc-template.mustache
 							</outputTemplate>
 							<useOutputFlatStructure>false</useOutputFlatStructure>
-							<outputPath>generated/strapdown.html</outputPath>
+							<outputPath>${war.path}/apidocs/docs.html</outputPath>
 							<swaggerDirectory>${war.path}/apidocs</swaggerDirectory>
 						</apiSource>
 					</apiSources>
