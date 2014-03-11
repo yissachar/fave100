@@ -3,7 +3,6 @@ package com.fave100.server.domain.favelist;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fave100.server.domain.DatastoreObject;
 import com.fave100.server.domain.appuser.AppUser;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
@@ -12,7 +11,7 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
-public class FaveList extends DatastoreObject {
+public class FaveList {
 
 	@Id private String id;
 	private Ref<AppUser> user;

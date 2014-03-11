@@ -9,7 +9,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fave100.server.bcrypt.BCrypt;
-import com.fave100.server.domain.DatastoreObject;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
@@ -25,7 +24,7 @@ import com.googlecode.objectify.annotation.Id;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AppUser extends DatastoreObject {
+public class AppUser {
 
 	// Store a case-sensitive username field, as well as lowercase username lookup
 	@Id private String usernameID;
