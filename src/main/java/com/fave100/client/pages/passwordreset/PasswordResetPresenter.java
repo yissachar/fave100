@@ -6,7 +6,7 @@ import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Validator;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -16,9 +16,9 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 /**
  * Allows users to change their password or request a password reset token
@@ -48,7 +48,7 @@ public class PasswordResetPresenter
 
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private EventBus _eventBus;
 	private String token;
@@ -60,7 +60,7 @@ public class PasswordResetPresenter
 
 	@Inject
 	public PasswordResetPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager,
-									final CurrentUser currentUser, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+									final CurrentUser currentUser, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view, proxy);
 		_placeManager = placeManager;
 		_currentUser = currentUser;
