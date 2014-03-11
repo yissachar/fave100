@@ -12,17 +12,17 @@
 		}
 		
 		.hashtagLabel {
-			font-size: 56px;
-			text-align: right;
-			margin-left: -100%;
+			float: right;
 			text-overflow: ellipsis;
 			overflow: hidden;
+			display: inline-block;
 		}		
 		
 		.contributeCTA {
 			float: right;
 			cursor: pointer;
 			margin-bottom: 10px;
+			clear: both;
 		}
 		
 		.trendingHeader {

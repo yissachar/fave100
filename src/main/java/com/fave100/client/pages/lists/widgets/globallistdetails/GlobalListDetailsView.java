@@ -6,6 +6,7 @@ import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.shared.Constants;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -24,6 +25,8 @@ import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsUiHandlers> implements GlobalListDetailsPresenter.MyView {
+
+	private final static int LIST_NAME_FONT_SIZE = 56;
 
 	private final Widget widget;
 
@@ -80,6 +83,13 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	@Override
 	public void setInfo(final String hashtag) {
 		hashtagLabel.setText(hashtag);
+		// Shrink the list name until it fits into the sidebar
+		int fontSize = LIST_NAME_FONT_SIZE;
+		do {
+			hashtagLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
+			fontSize--;
+		} while (hashtagLabel.getElement().getClientWidth() > style.SIDE_BAR_WIDTH());
+
 	}
 
 	@Override
