@@ -48,8 +48,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.common.client.ClientUrlUtils;
+import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class FavePickWidget extends Composite {
 
@@ -139,7 +140,7 @@ public class FavePickWidget extends Composite {
 
 		song.setText(getSong());
 		if (_username.isEmpty()) {
-			song.setHref("#" + new ParameterTokenFormatter()
+			song.setHref("#" + new ParameterTokenFormatter(new ClientUrlUtils())
 					.toPlaceToken(new PlaceRequest.Builder()
 							.nameToken(NameTokens.song)
 							.with(SongPresenter.ID_PARAM, getSongID())
@@ -147,7 +148,7 @@ public class FavePickWidget extends Composite {
 							.build()));
 		}
 		else {
-			song.setHref("#" + new ParameterTokenFormatter()
+			song.setHref("#" + new ParameterTokenFormatter(new ClientUrlUtils())
 					.toPlaceToken(new PlaceRequest.Builder()
 							.nameToken(NameTokens.song)
 							.with(SongPresenter.ID_PARAM, getSongID())

@@ -7,7 +7,7 @@ import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Utils;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -24,8 +24,8 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 /**
  * Top navigation bar that will be included on every page.
@@ -50,12 +50,12 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	private EventBus eventBus;
 	private CurrentUser currentUser;
 	private PlaceManager placeManager;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 
 	@Inject
 	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser,
-							final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+							final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		this.eventBus = eventBus;
 		this.currentUser = currentUser;

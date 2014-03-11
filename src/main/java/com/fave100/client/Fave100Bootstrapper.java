@@ -4,11 +4,11 @@ import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.resources.css.AppClientBundle;
-import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Utils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.Bootstrapper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
@@ -16,11 +16,11 @@ public class Fave100Bootstrapper implements Bootstrapper {
 
 	private PlaceManager _placeManager;
 	private EventBus _eventBus;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 
 	@Inject
-	public Fave100Bootstrapper(final PlaceManager placeManager, final EventBus eventBus, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+	public Fave100Bootstrapper(final PlaceManager placeManager, final EventBus eventBus, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		_placeManager = placeManager;
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;

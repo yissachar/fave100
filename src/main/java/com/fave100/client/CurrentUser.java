@@ -17,19 +17,19 @@ import com.fave100.client.generated.entities.FollowingResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.rest.RestSessionDispatch;
 import com.fave100.shared.Constants;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class CurrentUser extends AppUser {
 
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private AppUser appUser;
 	private String avatar = "";
@@ -41,7 +41,7 @@ public class CurrentUser extends AppUser {
 
 	@Inject
 	public CurrentUser(final EventBus eventBus, final PlaceManager placeManager, final RequestCache requestCache,
-						final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+						final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;

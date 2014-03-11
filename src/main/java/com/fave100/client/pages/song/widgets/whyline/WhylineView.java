@@ -12,8 +12,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class WhylineView extends ViewWithUiHandlers<WhylineUiHandlers> implements WhylinePresenter.MyView {
 	public interface Binder extends UiBinder<FlowPanel, WhylineView> {
@@ -22,9 +22,13 @@ public class WhylineView extends ViewWithUiHandlers<WhylineUiHandlers> implement
 	@UiField FlowPanel whylinePanel;
 	@UiField FlowPanel userListsPanel;
 
+	private ParameterTokenFormatter _parameterTokenFormatter;
+
 	@Inject
-	WhylineView(Binder binder) {
+	WhylineView(Binder binder, ParameterTokenFormatter parameterTokenFormatter) {
 		initWidget(binder.createAndBindUi(this));
+		_parameterTokenFormatter = parameterTokenFormatter;
+
 	}
 
 	@Override
@@ -39,7 +43,7 @@ public class WhylineView extends ViewWithUiHandlers<WhylineUiHandlers> implement
 	public void setUserLists(List<UserListResult> userLists) {
 		userListsPanel.clear();
 		for (UserListResult userList : userLists) {
-			String listPlaceToken = new ParameterTokenFormatter()
+			String listPlaceToken = _parameterTokenFormatter
 					.toPlaceToken(new PlaceRequest.Builder()
 							.nameToken(NameTokens.lists)
 							.with(ListPresenter.USER_PARAM, userList.getUserName())
