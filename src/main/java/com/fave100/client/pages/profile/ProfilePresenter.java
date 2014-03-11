@@ -10,7 +10,7 @@ import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Validator;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -62,13 +62,13 @@ public class ProfilePresenter extends
 	private EventBus _eventBus;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private UserInfo oldUserInfo = null;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final CurrentUser currentUser,
-							final PlaceManager placeManager, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+							final PlaceManager placeManager, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_currentUser = currentUser;

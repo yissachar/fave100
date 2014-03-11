@@ -20,8 +20,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		TopBarPresenter.MyView {
@@ -45,11 +45,12 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiField InlineLabel logOutButton;
 	@UiField InlineLabel loginButton;
 	@UiField Label notification;
+	private ParameterTokenFormatter _parameterTokenFormatter;
 
 	@Inject
-	public TopBarView(final Binder binder) {
-
+	public TopBarView(final Binder binder, ParameterTokenFormatter parameterTokenFormatter) {
 		widget = binder.createAndBindUi(this);
+		_parameterTokenFormatter = parameterTokenFormatter;
 		Notification.init(notification);
 		LoadingIndicator.init(loadingIndicator);
 		loggedInContainer.setVisible(false);
@@ -75,13 +76,13 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		loggedInContainer.setVisible(true);
 		loginButton.setVisible(false);
 		logOutButton.setVisible(true);
-		final String userPlace = new ParameterTokenFormatter()
+		final String userPlace = _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
 						.with(ListPresenter.USER_PARAM, username)
 						.build());
 		listLink.setTargetHistoryToken(userPlace);
-		final String listPlace = new ParameterTokenFormatter()
+		final String listPlace = _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
 						.with(ListPresenter.LIST_PARAM, Constants.DEFAULT_HASHTAG)
@@ -95,7 +96,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		loggedInContainer.setVisible(false);
 		loginButton.setVisible(true);
 		logOutButton.setVisible(false);
-		final String listPlace = new ParameterTokenFormatter()
+		final String listPlace = _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
 						.with(ListPresenter.LIST_PARAM, Constants.DEFAULT_HASHTAG)

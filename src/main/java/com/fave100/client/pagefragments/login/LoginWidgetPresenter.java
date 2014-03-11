@@ -10,7 +10,7 @@ import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -20,7 +20,7 @@ import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 /**
  * A {@link PresenterWidget} that displays native and third party login options.
@@ -55,13 +55,13 @@ public class LoginWidgetPresenter extends
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private RequestCache _requestCache;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private String redirect;
 
 	@Inject
 	public LoginWidgetPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RequestCache requestCache,
-								final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+								final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_placeManager = placeManager;

@@ -19,7 +19,7 @@ import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetail
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -37,9 +37,9 @@ import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPresenter.MyProxy> implements ListUiHandlers {
 
@@ -82,7 +82,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 	private final EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private boolean _ownPage = false;
 	@Inject SongAutocompletePresenter songAutocomplete;
@@ -93,7 +93,7 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 
 	@Inject
 	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser,
-							final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+							final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_placeManager = placeManager;

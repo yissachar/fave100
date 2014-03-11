@@ -11,8 +11,9 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.common.client.ClientUrlUtils;
+import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class WhylineWidget extends Composite {
 
@@ -32,7 +33,7 @@ public class WhylineWidget extends Composite {
 
 		whyline.setText(whylineProxy.getWhyline());
 
-		final String userPlace = new ParameterTokenFormatter()
+		final String userPlace = new ParameterTokenFormatter(new ClientUrlUtils())
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
 						.with(ListPresenter.USER_PARAM, whylineProxy.getUsername())

@@ -9,7 +9,7 @@ import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -21,8 +21,8 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetailsPresenter.MyView> implements GlobalListDetailsUiHandlers {
 
@@ -46,7 +46,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private String _hashtag;
 	@Inject GlobalListAutocompletePresenter listAutocomplete;
@@ -54,7 +54,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 
 	@Inject
 	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
-										final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+										final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		_currentUser = currentUser;
 		_placeManager = placeManager;

@@ -12,12 +12,10 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
-
-	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, PlaylistView> {
 	}
@@ -28,9 +26,13 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 	@UiField Anchor _hashtag;
 	@UiField FlowPanel playlistContainer;
 
+	private final Widget widget;
+	private ParameterTokenFormatter _parameterTokenFormatter;
+
 	@Inject
-	public PlaylistView(final Binder binder) {
+	public PlaylistView(final Binder binder, ParameterTokenFormatter parameterTokenFormatter) {
 		widget = binder.createAndBindUi(this);
+		_parameterTokenFormatter = parameterTokenFormatter;
 	}
 
 	@Override
@@ -69,13 +71,13 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 	@Override
 	public void setUrls(final String username, final String hashtag) {
 		// Set URL to user's list
-		_username.setHref("#" + new ParameterTokenFormatter()
+		_username.setHref("#" + _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
 						.with(ListPresenter.USER_PARAM, username)
 						.with(ListPresenter.LIST_PARAM, hashtag)
 						.build()));
-		_hashtag.setHref("#" + new ParameterTokenFormatter()
+		_hashtag.setHref("#" + _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
 						.with(ListPresenter.LIST_PARAM, hashtag)
