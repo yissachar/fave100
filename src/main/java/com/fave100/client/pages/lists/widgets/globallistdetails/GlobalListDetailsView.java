@@ -20,8 +20,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsUiHandlers> implements GlobalListDetailsPresenter.MyView {
 
@@ -42,9 +42,12 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	@UiField FlowPanel trendingLists;
 	@UiField Anchor aboutLink;
 
+	private ParameterTokenFormatter _parameterTokenFormatter;
+
 	@Inject
-	public GlobalListDetailsView(final Binder binder) {
+	public GlobalListDetailsView(final Binder binder, ParameterTokenFormatter parameterTokenFormatter) {
 		widget = binder.createAndBindUi(this);
+		_parameterTokenFormatter = parameterTokenFormatter;
 	}
 
 	@Override
@@ -84,7 +87,7 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 		trendingLists.clear();
 		for (String list : lists) {
 			InlineHyperlink link = new InlineHyperlink();
-			link.setTargetHistoryToken(new ParameterTokenFormatter()
+			link.setTargetHistoryToken(_parameterTokenFormatter
 					.toPlaceToken(new PlaceRequest.Builder()
 							.nameToken(NameTokens.lists)
 							.with(ListPresenter.LIST_PARAM, list)

@@ -17,7 +17,7 @@ import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Constants;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -27,7 +27,7 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class FavelistPresenter extends
 		PresenterWidget<FavelistPresenter.MyView>
@@ -60,7 +60,7 @@ public class FavelistPresenter extends
 	}
 
 	private EventBus eventBus;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	// The user whose favelist we are showing
 	private AppUser user;
@@ -101,7 +101,7 @@ public class FavelistPresenter extends
 	};
 
 	@Inject
-	public FavelistPresenter(final EventBus eventBus, final MyView view, RestSessionDispatch dispatcher, RestServiceFactory restServiceFactory,
+	public FavelistPresenter(final EventBus eventBus, final MyView view, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
 								final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
 		this.eventBus = eventBus;

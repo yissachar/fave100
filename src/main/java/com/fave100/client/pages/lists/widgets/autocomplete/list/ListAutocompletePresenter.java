@@ -7,7 +7,7 @@ import java.util.List;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -29,7 +29,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 	}
 
 	protected EventBus _eventBus;
-	protected RestSessionDispatch _dispatcher;
+	protected RestDispatchAsync _dispatcher;
 	protected RestServiceFactory _restServiceFactory;
 	protected List<String> _suggestions;
 	protected String _lastSearch;
@@ -38,7 +38,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 	private int _maxSelection = -1;
 
 	@Inject
-	public ListAutocompletePresenter(final EventBus eventBus, final MyView view, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+	public ListAutocompletePresenter(final EventBus eventBus, final MyView view, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;

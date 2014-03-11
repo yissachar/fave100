@@ -9,7 +9,7 @@ import com.fave100.client.generated.entities.UserListResultCollection;
 import com.fave100.client.generated.entities.Whyline;
 import com.fave100.client.generated.entities.WhylineCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -24,11 +24,11 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 		void setUserLists(List<UserListResult> userLists);
 	}
 
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 
 	@Inject
-	WhylinePresenter(final EventBus eventBus, final MyView view, final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+	WhylinePresenter(final EventBus eventBus, final MyView view, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;

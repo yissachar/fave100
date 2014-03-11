@@ -14,7 +14,7 @@ import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -27,8 +27,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
-import com.gwtplatform.mvp.client.proxy.ParameterTokenFormatter;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPresenter.MyView>
 		implements UsersFollowingUiHandlers {
@@ -51,19 +51,21 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 	CurrentUser _currentUser;
 	RequestCache _requestCache;
 	AppUser _user;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
+	private ParameterTokenFormatter _parameterTokenFormatter;
 	int listSize = 0;
 
 	@Inject
 	public UsersFollowingPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final RequestCache requestCache,
-									final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+									final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory, ParameterTokenFormatter parameterTokenFormatter) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_currentUser = currentUser;
 		_requestCache = requestCache;
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
+		_parameterTokenFormatter = parameterTokenFormatter;
 		getView().setUiHandlers(this);
 	}
 
@@ -165,7 +167,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 				final Image avatar = new Image(user.getAvatarImage());
 				listItem.add(avatar);
 				final Anchor listAnchor = new Anchor(user.getUsername());
-				listAnchor.setHref("#" + new ParameterTokenFormatter()
+				listAnchor.setHref("#" + _parameterTokenFormatter
 						.toPlaceToken(new PlaceRequest.Builder()
 								.nameToken(NameTokens.lists)
 								.with(ListPresenter.USER_PARAM, user.getUsername())

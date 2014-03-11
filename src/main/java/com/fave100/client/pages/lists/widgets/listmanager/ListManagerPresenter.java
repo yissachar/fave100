@@ -11,7 +11,7 @@ import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
-import com.fave100.client.rest.RestSessionDispatch;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.client.widgets.alert.AlertCallback;
 import com.fave100.client.widgets.alert.AlertPresenter;
 import com.fave100.shared.Constants;
@@ -26,8 +26,8 @@ import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class ListManagerPresenter extends
 		PresenterWidget<ListManagerPresenter.MyView>
@@ -57,7 +57,7 @@ public class ListManagerPresenter extends
 	private String _hashtag;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private RestSessionDispatch _dispatcher;
+	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private boolean _globalList = false;
 	@Inject AddListAutocompletePresenter autocomplete;
@@ -65,7 +65,7 @@ public class ListManagerPresenter extends
 
 	@Inject
 	public ListManagerPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
-								final RestSessionDispatch dispatcher, final RestServiceFactory restServiceFactory) {
+								final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view);
 		view.setUiHandlers(ListManagerPresenter.this);
 		_eventBus = eventBus;
