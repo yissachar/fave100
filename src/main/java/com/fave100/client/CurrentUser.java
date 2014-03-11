@@ -266,11 +266,6 @@ public class CurrentUser extends AppUser {
 	}
 
 	@Override
-	public int getVersion() {
-		return (appUser == null) ? null : appUser.getVersion();
-	}
-
-	@Override
 	public String getUsername() {
 		return (appUser == null) ? null : appUser.getUsername();
 	}
