@@ -111,7 +111,7 @@
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
 			<artifactId>objectify</artifactId>
-			<version>4.0b2</version>
+			<version>4.0</version>
 		</dependency>
 
 		<!-- GSON -->
