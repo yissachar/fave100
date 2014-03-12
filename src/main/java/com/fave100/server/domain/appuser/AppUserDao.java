@@ -10,8 +10,6 @@ import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.scribe.oauth.OAuthService;
-
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -35,7 +33,6 @@ public class AppUserDao {
 	public static String FACEBOOK_APP_ID = "";
 	public static String FACEBOOK_APP_SECRET = "";
 	public static final String AUTH_USER = "loggedIn";
-	private static OAuthService facebookOAuthservice;
 	private static TwitterFactory twitterFactory;
 
 	// Finder methods
