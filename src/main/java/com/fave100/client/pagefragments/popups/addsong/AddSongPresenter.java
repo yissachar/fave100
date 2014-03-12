@@ -12,7 +12,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
 public class AddSongPresenter extends PresenterWidget<AddSongPresenter.MyView> implements AddSongUiHandlers {
 	public interface MyView extends PopupView, HasUiHandlers<AddSongUiHandlers> {
@@ -21,17 +20,15 @@ public class AddSongPresenter extends PresenterWidget<AddSongPresenter.MyView> i
 
 	private EventBus _eventBus;
 	private CurrentUser _currentUser;
-	private PlaceManager _placeManager;
 	private String _songToAddId;
 	private String _songToAddName;
 	private String _songToAddArtist;
 
 	@Inject
-	AddSongPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, PlaceManager placeManager) {
+	AddSongPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_currentUser = currentUser;
-		_placeManager = placeManager;
 		getView().setUiHandlers(this);
 	}
 

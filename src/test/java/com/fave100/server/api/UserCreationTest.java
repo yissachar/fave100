@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.fave100.server.TestHelper;
-import com.fave100.server.api.AuthApi;
 import com.fave100.server.domain.UserRegistration;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
@@ -75,15 +74,13 @@ public class UserCreationTest {
 
 	@Test
 	public void should_not_register_user_with_empty_username() {
-		AppUser appUser = null;
-
 		UserRegistration registration = new UserRegistration();
 		registration.setUsername("");
 		registration.setPassword("security");
 		registration.setEmail("testuser@example.com");
 
 		try {
-			appUser = AuthApi.createAppUser(TestHelper.newReq(), registration);
+			AuthApi.createAppUser(TestHelper.newReq(), registration);
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
@@ -93,7 +90,6 @@ public class UserCreationTest {
 
 	@Test
 	public void should_not_register_user_with_username_that_is_too_long() {
-		AppUser appUser = null;
 
 		String username = "";
 		for (int i = 0; i < Constants.MAX_USERNAME_LENGTH + 1; i++) {
@@ -106,7 +102,7 @@ public class UserCreationTest {
 		registration.setEmail("testuser@example.com");
 
 		try {
-			appUser = AuthApi.createAppUser(TestHelper.newReq(), registration);
+			AuthApi.createAppUser(TestHelper.newReq(), registration);
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
