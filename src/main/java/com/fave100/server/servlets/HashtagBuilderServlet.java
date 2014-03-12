@@ -69,7 +69,7 @@ public class HashtagBuilderServlet extends HttpServlet
 		}
 
 		// Calculate the zcore to determine top trending lists
-		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).get();
+		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).now();
 		hashtagEntity.setZscore(calculateZscore(hashtagEntity.getSlidingListCount(), listCount));
 		hashtagEntity.addListCount(listCount);
 		hashtagEntity.setList(master);

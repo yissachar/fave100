@@ -43,13 +43,13 @@ public class AppUserDao {
 		if (username == null || username.isEmpty())
 			return null;
 
-		return ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
+		return ofy().load().type(AppUser.class).id(username.toLowerCase()).now();
 	}
 
 	public static AppUser findAppUserByGoogleId(final String googleID) {
-		final GoogleID gId = ofy().load().type(GoogleID.class).id(googleID).get();
+		final GoogleID gId = ofy().load().type(GoogleID.class).id(googleID).now();
 		if (gId != null) {
-			return ofy().load().ref(gId.getUser()).get();
+			return ofy().load().ref(gId.getUser()).now();
 		}
 		else {
 			return null;
@@ -57,9 +57,9 @@ public class AppUserDao {
 	}
 
 	public static AppUser findAppUserByTwitterId(final long twitterID) {
-		final TwitterID tId = ofy().load().type(TwitterID.class).id(twitterID).get();
+		final TwitterID tId = ofy().load().type(TwitterID.class).id(twitterID).now();
 		if (tId != null) {
-			return ofy().load().ref(tId.getUser()).get();
+			return ofy().load().ref(tId.getUser()).now();
 		}
 		else {
 			return null;
@@ -67,9 +67,9 @@ public class AppUserDao {
 	}
 
 	public static AppUser findAppUserByFacebookId(final long facebookID) {
-		final FacebookID fId = ofy().load().type(FacebookID.class).id(facebookID).get();
+		final FacebookID fId = ofy().load().type(FacebookID.class).id(facebookID).now();
 		if (fId != null) {
-			return ofy().load().ref(fId.getUser()).get();
+			return ofy().load().ref(fId.getUser()).now();
 		}
 		else {
 			return null;

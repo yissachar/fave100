@@ -28,7 +28,7 @@ public class GoogleID {
 	}
 
 	public static GoogleID findGoogleID(final String id) {
-		return ofy().load().type(GoogleID.class).id(id).get();
+		return ofy().load().type(GoogleID.class).id(id).now();
 	}
 
 	/* Getters and setters */

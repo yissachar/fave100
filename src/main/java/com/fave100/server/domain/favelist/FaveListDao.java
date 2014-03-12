@@ -10,7 +10,7 @@ public class FaveListDao {
 	public static final int MAX_FAVES = 100;
 
 	public static FaveList findFaveList(final String id) {
-		return ofy().load().type(FaveList.class).id(id).get();
+		return ofy().load().type(FaveList.class).id(id).now();
 	}
 
 	public static FaveList findFaveList(final String username, final String hashtag) {
