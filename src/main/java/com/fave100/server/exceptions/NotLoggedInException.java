@@ -5,6 +5,7 @@ import javax.ws.rs.core.Response;
 
 import com.fave100.server.api.ApiExceptions;
 
+@SuppressWarnings("serial")
 public class NotLoggedInException extends WebApplicationException {
 
 	public NotLoggedInException() {

@@ -5,6 +5,7 @@ import javax.ws.rs.core.Response;
 
 import com.fave100.server.api.ApiExceptions;
 
+@SuppressWarnings("serial")
 public class EmailIdAlreadyExistsException extends WebApplicationException {
 
 	public EmailIdAlreadyExistsException() {
