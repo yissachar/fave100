@@ -298,7 +298,7 @@ public class UserApi {
 		ofy().transact(new VoidWork() {
 			@Override
 			public void vrun() {
-				Hashtag hashtag = ofy().load().type(Hashtag.class).id(listName).get();
+				Hashtag hashtag = ofy().load().type(Hashtag.class).id(listName).now();
 				// Hashtag already exists, add it to user's lists
 				if (hashtag != null) {
 					ofy().save().entities(currentUser, faveList).now();
@@ -326,7 +326,7 @@ public class UserApi {
 		currentUser.getHashtags().remove(listName);
 		ofy().save().entity(currentUser).now();
 
-		FaveList listToDelete = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveListDao.SEPERATOR_TOKEN + listName.toLowerCase()).get();
+		FaveList listToDelete = ofy().load().type(FaveList.class).id(currentUser.getUsername().toLowerCase() + FaveListDao.SEPERATOR_TOKEN + listName.toLowerCase()).now();
 
 		// Get associated WhyLines and mark for deletion
 		List<Ref<Whyline>> whylinesToDelete = new ArrayList<>();
@@ -511,7 +511,7 @@ public class UserApi {
 		}
 		else {
 			// Just modify the existing Whyline entity
-			final Whyline whylineEntity = (Whyline)ofy().load().value(currentWhyline).get();
+			final Whyline whylineEntity = (Whyline)ofy().load().value(currentWhyline).now();
 			whylineEntity.setWhyline(whyline);
 			ofy().save().entity(whylineEntity).now();
 		}
@@ -530,7 +530,7 @@ public class UserApi {
 
 		final String currentUserUsername = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
-		final Following following = ofy().load().type(Following.class).id(currentUserUsername.toLowerCase()).get();
+		final Following following = ofy().load().type(Following.class).id(currentUserUsername.toLowerCase()).now();
 
 		BooleanResult result = new BooleanResult(following != null && !following.getFollowing().isEmpty() && following.getFollowing().contains(userRef));
 		return result;
@@ -550,7 +550,7 @@ public class UserApi {
 			throw new CannotFollowYourselfException();
 
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
-		Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
+		Following following = ofy().load().type(Following.class).id(currentUser.getId()).now();
 		if (following == null) {
 			following = new Following(currentUser.getId());
 			ofy().save().entity(following).now();
@@ -575,7 +575,7 @@ public class UserApi {
 		if (currentUser == null)
 			throw new NotLoggedInException();
 
-		final Following following = ofy().load().type(Following.class).id(currentUser.getId()).get();
+		final Following following = ofy().load().type(Following.class).id(currentUser.getId()).now();
 		if (following == null)
 			return;
 

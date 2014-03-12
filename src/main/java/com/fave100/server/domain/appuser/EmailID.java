@@ -29,7 +29,7 @@ public class EmailID {
 	}
 
 	public static EmailID findEmailID(final String id) {
-		return ofy().load().type(EmailID.class).id(id.toLowerCase()).get();
+		return ofy().load().type(EmailID.class).id(id.toLowerCase()).now();
 	}
 
 	/* Getters and Setters */

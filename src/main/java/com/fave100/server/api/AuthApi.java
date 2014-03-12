@@ -84,7 +84,7 @@ public class AuthApi {
 						// Username already exists
 						throw new RuntimeException(userExistsMsg);
 					}
-					else if (ofy().load().type(EmailID.class).id(email).get() != null) {
+					else if (ofy().load().type(EmailID.class).id(email).now() != null) {
 						// Email address already exists
 						throw new RuntimeException(emailExistsMsg);
 					}
@@ -164,7 +164,7 @@ public class AuthApi {
 					if (AppUserDao.findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
-					if (ofy().load().type(GoogleID.class).id(user.getUserId()).get() != null) {
+					if (ofy().load().type(GoogleID.class).id(user.getUserId()).now() != null) {
 						throw new RuntimeException(googleIDMsg);
 					}
 					if (Validator.validateUsername(username) == null) {
@@ -217,7 +217,7 @@ public class AuthApi {
 					if (AppUserDao.findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
-					if (ofy().load().type(TwitterID.class).id(user.getId()).get() != null) {
+					if (ofy().load().type(TwitterID.class).id(user.getId()).now() != null) {
 						throw new RuntimeException(twitterIDMsg);
 					}
 					if (Validator.validateUsername(username) == null) {
@@ -273,7 +273,7 @@ public class AuthApi {
 						if (AppUserDao.findAppUser(username) != null) {
 							throw new RuntimeException(userExistsMsg);
 						}
-						if (ofy().load().type(FacebookID.class).id(userFacebookId).get() != null) {
+						if (ofy().load().type(FacebookID.class).id(userFacebookId).now() != null) {
 							throw new RuntimeException(facebookIDMsg);
 						}
 						if (Validator.validateUsername(username) == null) {
@@ -324,7 +324,7 @@ public class AuthApi {
 			if (emailID == null)
 				throw new InvalidLoginException();
 			// Email found, get corresponding user
-			loggingInUser = ofy().load().ref(emailID.getUser()).get();
+			loggingInUser = ofy().load().ref(emailID.getUser()).now();
 		}
 		else {
 			// User trying to login with username

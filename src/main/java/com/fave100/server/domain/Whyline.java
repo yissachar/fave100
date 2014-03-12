@@ -43,7 +43,7 @@ public class Whyline extends DatastoreObject {
 	}
 
 	public static Whyline findWhyline(final Long id) {
-		return ofy().load().type(Whyline.class).id(id).get();
+		return ofy().load().type(Whyline.class).id(id).now();
 	}
 
 	public static List<Whyline> getWhylinesForSong(final String id) {
@@ -51,7 +51,7 @@ public class Whyline extends DatastoreObject {
 		// Get the users avatars 
 		// TODO: Should be a bulk query for efficiency
 		for (final Whyline whyline : whylines) {
-			final AppUser user = ofy().load().type(AppUser.class).id(whyline.getUsername().toLowerCase()).get();
+			final AppUser user = ofy().load().type(AppUser.class).id(whyline.getUsername().toLowerCase()).now();
 			if (user != null)
 				whyline.setAvatar(user.getAvatarImage());
 		}

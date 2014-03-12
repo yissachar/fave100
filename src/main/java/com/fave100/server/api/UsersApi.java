@@ -25,6 +25,8 @@ import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.exceptions.NotLoggedInException;
 import com.fave100.shared.Constants;
+import com.google.api.server.spi.response.ForbiddenException;
+import com.google.api.server.spi.response.UnauthorizedException;
 import com.googlecode.objectify.Ref;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -42,7 +44,7 @@ public class UsersApi {
 	@ApiOperation(value = "Find a user by their username", response = AppUser.class)
 	@ApiResponses(value = {@ApiResponse(code = 404, message = ApiExceptions.USER_NOT_FOUND)})
 	public static AppUser getAppUser(@ApiParam(value = "The username", required = true) @PathParam("user") final String username) {
-		AppUser appUser = ofy().load().type(AppUser.class).id(username.toLowerCase()).get();
+		AppUser appUser = ofy().load().type(AppUser.class).id(username.toLowerCase()).now();
 		if (appUser == null)
 			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(ApiExceptions.USER_NOT_FOUND).build());
 
@@ -76,7 +78,7 @@ public class UsersApi {
 		if (user.isFollowingPrivate() && !user.getId().equals(currentUser.getId()))
 			throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).entity("List is private").build());
 
-		final Following following = ofy().load().type(Following.class).id(username.toLowerCase()).get();
+		final Following following = ofy().load().type(Following.class).id(username.toLowerCase()).now();
 		if (following != null && following.getFollowing() != null) {
 			List<Ref<AppUser>> users = following.getFollowing();
 			users = users.subList(index, Math.min(index + Constants.MORE_FOLLOWING_INC, following.getFollowing().size()));
