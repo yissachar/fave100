@@ -11,6 +11,8 @@ import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.services.RestServiceFactory;
+import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
+import com.fave100.client.pagefragments.popups.addsong.register.RegisterPopupPresenter;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompletePresenter;
@@ -19,7 +21,6 @@ import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetail
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.client.place.NameTokens;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -31,6 +32,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -44,11 +46,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPresenter.MyProxy> implements ListUiHandlers {
 
 	public interface MyView extends BaseView, HasUiHandlers<ListUiHandlers> {
-		void setUserProfile(AppUser user);
-
-		void showOwnPage();
-
-		void showOtherPage();
+		void setPageDetails(AppUser requestedUser, CurrentUser currentUser);
 
 		String getFixedSearchStyle();
 
@@ -57,8 +55,6 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 		void setFollowCTA(boolean show, boolean starred);
 
 		void setMobileView(boolean reset);
-
-		void setSidebarPosition(boolean fixed);
 	}
 
 	@ProxyCodeSplit
@@ -90,6 +86,8 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 	@Inject UsersFollowingPresenter usersFollowing;
 	@Inject ListManagerPresenter listManager;
 	@Inject GlobalListDetailsPresenter globalListDetails;
+	@Inject AboutPopupPresenter aboutPresenter;
+	@Inject RegisterPopupPresenter registerPresenter;
 
 	@Inject
 	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser,
@@ -114,13 +112,6 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 				else {
 					widget.removeStyleName(getView().getFixedSearchStyle());
 					songAutocomplete.getView().showBackToTop(false);
-				}
-
-				if (event.getScrollTop() >= 50 || requestedUser != null) {
-					getView().setSidebarPosition(true);
-				}
-				else {
-					getView().setSidebarPosition(false);
 				}
 			}
 		});
@@ -287,14 +278,13 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 	}
 
 	private void showPage() {
-		getView().setUserProfile(requestedUser);
+		getView().setPageDetails(requestedUser, _currentUser);
+
 		_ownPage = _currentUser.isLoggedIn() && _currentUser.equals(requestedUser);
 		if (_ownPage) {
-			getView().showOwnPage();
 			getView().setFollowCTA(false, isFollowing);
 		}
 		else {
-			getView().showOtherPage();
 			getView().setFollowCTA(_currentUser.isLoggedIn(), isFollowing);
 		}
 
@@ -345,6 +335,16 @@ public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPrese
 	public boolean isOwnPage() {
 		return _ownPage;
 	}
+
+	@Override
+	public void showRegister() {
+		addToPopupSlot(registerPresenter);
+	}
+
+	@Override
+	public void showTour() {
+		addToPopupSlot(aboutPresenter);
+	}
 }
 
 interface ListUiHandlers extends UiHandlers {
@@ -353,4 +353,8 @@ interface ListUiHandlers extends UiHandlers {
 	void followUser();
 
 	boolean isOwnPage();
+
+	void showRegister();
+
+	void showTour();
 }

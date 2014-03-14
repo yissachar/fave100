@@ -43,7 +43,6 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	@UiField Anchor contributeCTA;
 	@UiField HTMLPanel listAutocomplete;
 	@UiField FlowPanel trendingLists;
-	@UiField Anchor aboutLink;
 
 	private ParameterTokenFormatter _parameterTokenFormatter;
 
@@ -73,11 +72,6 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	@UiHandler("contributeCTA")
 	void onContributeClick(ClickEvent event) {
 		getUiHandlers().contributeToList();
-	}
-
-	@UiHandler("aboutLink")
-	void onAboutClick(ClickEvent event) {
-		getUiHandlers().showAbout();
 	}
 
 	@Override

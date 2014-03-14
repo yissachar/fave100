@@ -9,12 +9,12 @@ import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.UserRegistration;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.place.NameTokens;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Validator;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -43,6 +43,8 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		void clearNativeErrors();
 
 		void setUsernameFocus();
+
+		void setShortNames(boolean isShort);
 	}
 
 	private EventBus _eventBus;
@@ -199,6 +201,10 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			valid = false;
 		}
 		return valid;
+	}
+
+	public void setShortNames(boolean isShort) {
+		getView().setShortNames(isShort);
 	}
 }
 
