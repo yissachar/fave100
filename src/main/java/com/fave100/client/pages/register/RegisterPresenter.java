@@ -13,13 +13,13 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Validator;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -72,7 +72,6 @@ public class RegisterPresenter extends
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private String provider;
-	private String facebookRedirect;
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager,

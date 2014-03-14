@@ -315,7 +315,6 @@ public class AuthApi {
 		String password = loginCredentials.getPassword();
 
 		AppUser loggingInUser = null;
-		String errorMessage = "Invalid credentials";
 
 		if (username.contains("@")) {
 			// User trying to login with email address

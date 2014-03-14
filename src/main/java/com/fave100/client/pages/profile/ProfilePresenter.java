@@ -10,17 +10,16 @@ import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Validator;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 /**
@@ -59,20 +58,16 @@ public class ProfilePresenter extends
 	public interface MyProxy extends ProxyPlace<ProfilePresenter> {
 	}
 
-	private EventBus _eventBus;
 	private CurrentUser _currentUser;
-	private PlaceManager _placeManager;
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private UserInfo oldUserInfo = null;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final CurrentUser currentUser,
-							final PlaceManager placeManager, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+							final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
 		super(eventBus, view, proxy);
-		_eventBus = eventBus;
 		_currentUser = currentUser;
-		_placeManager = placeManager;
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
 		getView().setUiHandlers(this);
