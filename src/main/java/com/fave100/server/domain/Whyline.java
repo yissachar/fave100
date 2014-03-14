@@ -17,7 +17,7 @@ import com.googlecode.objectify.condition.PojoIf;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Whyline extends DatastoreObject {
+public class Whyline {
 
 	// Lets us know whether or not to index song
 	static class WhylineCheck extends PojoIf<Whyline> {
