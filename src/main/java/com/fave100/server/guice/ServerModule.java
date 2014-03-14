@@ -36,15 +36,15 @@ public class ServerModule extends ServletModule {
 		ObjectifyService.register(PwdResetToken.class);
 		ObjectifyService.register(Hashtag.class);
 
-		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").get();
+		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").now();
 		AppUser.setFacebookApiKey(facebookApiKey.getKey().trim());
 		AppUser.setFacebookApiSecret(facebookApiKey.getSecret().trim());
 
-		final APIKey twitterApiKey = ofy().load().type(APIKey.class).id("twitter").get();
+		final APIKey twitterApiKey = ofy().load().type(APIKey.class).id("twitter").now();
 		AppUser.setTwitterConsumerKey(twitterApiKey.getKey().trim());
 		AppUser.setTwitterConsumerSecret(twitterApiKey.getSecret().trim());
 
-		final APIKey youtubeApiKey = ofy().load().type(APIKey.class).id("youtube").get();
+		final APIKey youtubeApiKey = ofy().load().type(APIKey.class).id("youtube").now();
 		Song.setYoutubeApiKey(youtubeApiKey.getKey().trim());
 
 		// Let the UrlBuilder know what URLs to build

@@ -24,6 +24,6 @@ public class FaveListsApi {
 	@Path(ApiPaths.GET_MASTER_FAVELIST)
 	@ApiOperation(value = "Get a master FaveList", response = FaveItemCollection.class)
 	public static FaveItemCollection getMasterFaveList(@ApiParam(value = "The list", required = true) @PathParam("list") final String list) {
-		return new FaveItemCollection(ofy().load().type(Hashtag.class).id(list.toLowerCase()).get().getList());
+		return new FaveItemCollection(ofy().load().type(Hashtag.class).id(list.toLowerCase()).now().getList());
 	}
 }

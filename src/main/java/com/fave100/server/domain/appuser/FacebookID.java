@@ -29,7 +29,7 @@ public class FacebookID {
 	}
 
 	public static FacebookID findFacebookID(final Long id) {
-		return ofy().load().type(FacebookID.class).id(id).get();
+		return ofy().load().type(FacebookID.class).id(id).now();
 	}
 
 	/* Getters and Setters */
