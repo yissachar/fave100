@@ -1,10 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	xmlns:w='urn:import:com.fave100.client.widgets.lightbox'>
-
-	<ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+			 xmlns:w='urn:import:com.fave100.client.widgets.lightbox'>
+			
+    <ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
 	
 		.header {
 			display: block;
@@ -18,33 +17,33 @@
 			margin: 0 auto;
 		}
 		
-		.innerLoginBox {
+		.innerRegisterBox {
 			padding: 15px;
 		}
 		
-		.registerLinkContainer {
+		.loginLinkContainer {
 			padding: 10px;
 			text-align: center;
-		}
+		}		
+		
 	</ui:style>
 	
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
-			
-	<w:LightBox>
-		<w:content width="50%" height="100%">	
+    
+    <w:LightBox>
+		<w:content width="70%" height="100%">	
 			<g:HTMLPanel>
 				<g:SimplePanel ui:styleName="{style.header}">
 					<g:Image resource="{img.logo}"/>
 				</g:SimplePanel>
-				<g:HTMLPanel ui:field="loginContainer" ui:styleName="{style.innerLoginBox}"/>
-				<g:SimplePanel ui:styleName="{style.registerLinkContainer}">
-					<g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}">
-						Don't have an account? Register
+				<g:HTMLPanel ui:field="registerContainer" ui:styleName="{style.innerRegisterBox}"/>
+				<g:SimplePanel ui:styleName="{style.loginLinkContainer}">
+					<g:InlineHyperlink targetHistoryToken="{nameTokens.getLogin}">
+						Already have an account? Login
 					</g:InlineHyperlink>
 				</g:SimplePanel>
 			</g:HTMLPanel>
 			</w:content>
 	</w:LightBox>
-	
 </ui:UiBinder>

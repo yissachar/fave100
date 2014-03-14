@@ -218,6 +218,7 @@ public class RegisterPresenter extends
 	public void onReveal() {
 		super.onReveal();
 		getView().clearFields();
+		registerContainer.setShortNames(false);
 		setInSlot(REGISTER_SLOT, registerContainer);
 	}
 
