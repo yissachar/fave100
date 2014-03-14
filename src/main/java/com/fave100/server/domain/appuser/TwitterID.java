@@ -29,7 +29,7 @@ public class TwitterID {
 	}
 
 	public static TwitterID findTwitterID(final Long id) {
-		return ofy().load().type(TwitterID.class).id(id).get();
+		return ofy().load().type(TwitterID.class).id(id).now();
 	}
 
 	/* Getters and Setters */

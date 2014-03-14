@@ -38,7 +38,7 @@ public class PwdResetToken {
 	}
 
 	public static PwdResetToken findPwdResetToken(final String token) {
-		return ofy().load().type(PwdResetToken.class).id(token).get();
+		return ofy().load().type(PwdResetToken.class).id(token).now();
 	}
 
 	/* Getters and setters */

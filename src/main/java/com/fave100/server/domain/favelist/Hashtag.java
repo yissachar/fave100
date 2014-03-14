@@ -42,7 +42,7 @@ public class Hashtag {
 	}
 
 	public static Hashtag findHashtag(final String id) {
-		return ofy().load().type(Hashtag.class).id(id).get();
+		return ofy().load().type(Hashtag.class).id(id).now();
 	}
 
 	public void addListCount(int listCount) {

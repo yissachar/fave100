@@ -108,7 +108,7 @@ public class SongApi {
 		// Get the users avatars 
 		// TODO: Should be a bulk query for efficiency
 		for (final Whyline whyline : whylines) {
-			final AppUser user = ofy().load().type(AppUser.class).id(whyline.getUsername().toLowerCase()).get();
+			final AppUser user = ofy().load().type(AppUser.class).id(whyline.getUsername().toLowerCase()).now();
 			if (user != null)
 				whyline.setAvatar(user.getAvatarImage());
 		}
