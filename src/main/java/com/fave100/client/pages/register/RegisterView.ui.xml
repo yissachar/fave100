@@ -2,6 +2,7 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:w='urn:import:com.fave100.client.widgets'
 	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
@@ -86,7 +87,7 @@
 						<g:FormPanel ui:field="thirdPartyRegisterForm">
 							<g:HTMLPanel ui:styleName="registerContainer {style.thirdPartyUsernamePrompt}">
 								<span>Please enter a username to complete the registration process</span>
-								<g:TextBox ui:field="thirdPartyUsernameField"/>
+								<w:FaveTextBox ui:field="thirdPartyUsernameField"/>
 								<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					
 								<g:SubmitButton ui:field="thirdPartyUsernameSubmitButton">Submit</g:SubmitButton>
 							</g:HTMLPanel>

@@ -2,7 +2,8 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	xmlns:w='urn:import:com.fave100.client.widgets.helpbubble'
+	xmlns:w='urn:import:com.fave100.client.widgets'
+	xmlns:wh='urn:import:com.fave100.client.widgets.helpbubble'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -132,7 +133,7 @@
 	
 	<g:HTMLPanel>
 		<div class="{style.searchArea}">
-			<g:TextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
+			<w:FaveTextBox ui:field="searchBox" ui:styleName="{style.searchBox}"/>
 			<g:HTMLPanel ui:styleName="{style.searchBoxDetails}">				
 				<g:HTMLPanel ui:field="searchLoadingIndicator" ui:styleName="{style.searchLoadingIndicator}">
 					<g:Image resource="{img.searchLoadingIndicator}" />
@@ -143,7 +144,7 @@
 			<g:FocusPanel ui:field="backToTopButton" ui:styleName="{style.backToTopButton}">
 				<g:Image resource="{img.upArrow}" ></g:Image>
 			</g:FocusPanel>
-			<w:HelpBubble ui:field="helpBubble" ui:styleName="{style.helpBubble}"/>
+			<wh:HelpBubble ui:field="helpBubble" ui:styleName="{style.helpBubble}"/>
 		</div>		
 		<g:HTMLPanel ui:field="resultsArea" ui:styleName="{style.resultsArea} autocompleteResultsArea">
 			<g:FocusPanel ui:field="eventCatcher">

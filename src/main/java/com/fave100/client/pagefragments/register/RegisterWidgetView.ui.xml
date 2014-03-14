@@ -59,12 +59,12 @@
 			<g:HTMLPanel styleName="{style.registerForm} {style.nativeRegisterForm}">	
 				<div class="{style.field}">				
 					<g:Label>Username</g:Label>					
-					<g:TextBox ui:field="usernameField"/>
+					<my:FaveTextBox ui:field="usernameField"/>
 					<span class="{style.statusMessage} error" ui:field="usernameStatusMessage"/>
 				</div>
 				<div class="{style.field}">
 					<g:Label>Email</g:Label>					
-					<g:TextBox ui:field="emailField"/>
+					<my:FaveTextBox ui:field="emailField"/>
 					<span class="{style.statusMessage} error" ui:field="emailStatusMessage"/>
 				</div>
 				<div class="{style.field}">

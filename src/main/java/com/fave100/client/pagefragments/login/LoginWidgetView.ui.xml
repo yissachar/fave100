@@ -47,7 +47,7 @@
 			<g:HTMLPanel styleName="nativeLoginBox">
 				<div class="{style.field}">
 					<g:Label>Username</g:Label>
-					<g:TextBox ui:field="usernameInput" />
+					<my:FaveTextBox ui:field="usernameInput"/>
 				</div>
 				<div class="{style.field}">
 					<g:Label>Password</g:Label>
