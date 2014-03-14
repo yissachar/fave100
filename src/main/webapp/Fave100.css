@@ -177,37 +177,10 @@ footer {
 	overflow-y: hidden;
 }
 
-.itemHeader {
-	color: #FFF;
-	background: #5eaae5;
-	border: 1px solid #555;
-	padding: 10px;
-}
-
-.itemHeader a {
-	color: #FFF;	
-}
-
 .inputStatusMessage {
 	display: block;
 	font-size: 0.7em;
 	margin-bottom: 5px;
-}
-
-/* Standard Form */
-
-.standardForm {
-	display: block;
-	background-color: #EAEAEA;
-	border: 1px solid #999;
-	padding: 20px;
-	box-shadow: 1px 1px 5px #FFF inset;
-}
-
-.standardForm input{
-	height: 23px;
-	width: 290px;
-	margin: 13px 0;
 }
 
 /* Fave List */
@@ -296,18 +269,6 @@ footer {
 	display: none;
 }
 
-/* Side notification */
-.sideNotification{
-	position: absolute;
-	background-color: #FFF;
-	border: 1px solid #000;
-	padding: 8px;
-	font-size: 1.4em;
-	max-width: 350px;
-	z-index: 99999;
-	color: #548F2F;	
-}
-
 /* Login container */
 
 .loginDivider {
@@ -335,75 +296,6 @@ footer {
 		
 .fullLoginPage .nativeLoginBox input {
 	width: 100%;	
-}
-
-/* Login light box */
-
-.loginLightBox {
-	background: #FFF;
-	border: 1px solid #555;
-}
-
-.loginLightBox .thirdPartyLoginBox a {
-	margin: 5px 0;
-	font-size: 80%;
-}
-
-.loginLightBox input {
-	margin: 7px 0;
-	width: 100%;
-}
-
-.loginLightBox .nativeLoginBox {
-	float: left;
-}
-
-.loginLightBox .thirdPartyLoginBox {
-	float: right;
-}
-
-.loginLightBoxContainer {
-	position: fixed;
-	width: 100%;
-	top: 15%;
-	left: 0;
-	z-index: 100000;
-}
-
-.lightBoxBackground {
-	position: fixed;
-	top: 0;
-	left: -25%;
-	width: 125%;
-	height: 100%;
-	opacity: .40;
-	background-color: #000;
-	z-index: 99999; 
-}
-
-.loginLightBox { 
-	position: relative;
-	width: 50%;
-	margin: 0 auto;
-	min-width: 250px;
-	max-width: 800px;
-	z-index: 100000;
-}
-
-.lightBoxHeader {
-	display: block;
-	background-color: #5eaae5;
-	padding: 6px 0;
-	border-bottom: 1px solid #555;
-}
-
-.lightBoxHeader img {
-	display: block;
-	margin: 0 auto;
-}
-
-.innerLoginBox {	
-	padding: 15px;
 }
 
 .profileForm {
@@ -452,10 +344,6 @@ footer {
 }
 .errorInput:not(:focus){
 	border: 1px solid #D54545 !important; 
-}
-
-.invisiSpan {
-	visibility: hidden;
 }
 
 .hoverHidden {
