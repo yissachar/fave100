@@ -43,6 +43,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -71,7 +72,7 @@ public class FavePickWidget extends Composite {
 
 	@UiField HTMLPanel container;
 	@UiField FavePickWidgetStyle style;
-	@UiField HorizontalPanel mainPanel;
+	@UiField Panel mainPanel;
 	@UiField SimplePanel rankPanel;
 	@UiField Anchor song;
 	@UiField InlineLabel artist;

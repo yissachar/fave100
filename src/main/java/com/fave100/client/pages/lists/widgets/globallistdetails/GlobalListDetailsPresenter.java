@@ -7,14 +7,13 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.place.NameTokens;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -50,7 +49,6 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	private RestServiceFactory _restServiceFactory;
 	private String _hashtag;
 	@Inject GlobalListAutocompletePresenter listAutocomplete;
-	@Inject AboutPopupPresenter aboutPresenter;
 
 	@Inject
 	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
@@ -105,19 +103,12 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 		else {
 			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 		}
-
 	}
 
-	@Override
-	public void showAbout() {
-		addToPopupSlot(aboutPresenter);
-	}
 }
 
 interface GlobalListDetailsUiHandlers extends UiHandlers {
 
 	void contributeToList();
-
-	void showAbout();
 
 }

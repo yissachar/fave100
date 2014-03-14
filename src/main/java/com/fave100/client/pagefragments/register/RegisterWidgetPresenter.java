@@ -43,6 +43,8 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		void clearNativeErrors();
 
 		void setUsernameFocus();
+
+		void setShortNames(boolean isShort);
 	}
 
 	private EventBus _eventBus;
@@ -199,6 +201,10 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			valid = false;
 		}
 		return valid;
+	}
+
+	public void setShortNames(boolean isShort) {
+		getView().setShortNames(isShort);
 	}
 }
 

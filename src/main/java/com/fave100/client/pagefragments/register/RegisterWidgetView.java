@@ -120,4 +120,18 @@ public class RegisterWidgetView extends ViewWithUiHandlers<RegisterWidgetUiHandl
 	public void setUsernameFocus() {
 		usernameField.setFocus(true);
 	}
+
+	@Override
+	public void setShortNames(boolean isShort) {
+		if (isShort) {
+			registerWithGoogleButton.setText("Google");
+			registerWithTwitterButton.setText("Twitter");
+			registerWithFacebookButton.setText("Facebook");
+		}
+		else {
+			registerWithGoogleButton.setText("Register in with Google");
+			registerWithTwitterButton.setText("Register in with Twitter");
+			registerWithFacebookButton.setText("Register in with Facebook");
+		}
+	}
 }
