@@ -68,4 +68,7 @@ public interface ImageResources extends ClientBundle {
 	@Source("right-arrow.png")
 	ImageResource rightArrow();
 
+	@Source("corey.jpg")
+	ImageResource corey();
+
 }

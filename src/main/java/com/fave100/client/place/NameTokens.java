@@ -2,6 +2,8 @@ package com.fave100.client.place;
 
 public class NameTokens {
 
+	public static final String about = "about";
+
 	public static final String register = "register";
 	public static final String lists = "lists";
 	public static final String login = "login";
@@ -32,4 +34,9 @@ public class NameTokens {
 	public static String getPasswordreset() {
 		return passwordreset;
 	}
+
+	public static String getAbout() {
+		return about;
+	}
+
 }

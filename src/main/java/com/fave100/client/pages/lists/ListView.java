@@ -3,6 +3,7 @@ package com.fave100.client.pages.lists;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.resources.css.GlobalStyle;
@@ -23,6 +24,7 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -47,7 +49,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 
 	@UiField ListStyle style;
 	@UiField HTMLPanel userContainer;
-	@UiField Label tagline;
+	@UiField Panel tagline;
 	@UiField HTMLPanel userPageSideBar;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel globalListDetailsContainer;
@@ -142,6 +144,16 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		listManager.setVisible(false);
 	}
 
+	@UiHandler("registerLink")
+	void onRegisterLinkClick(final ClickEvent event) {
+		getUiHandlers().showRegister();
+	}
+
+	@UiHandler("tourLink")
+	void onTourLinkClick(final ClickEvent event) {
+		getUiHandlers().showTour();
+	}
+
 	private void setSelected(final Label label) {
 		mobileShowList.removeStyleName(style.selected());
 		mobileShowFollowing.removeStyleName(style.selected());
@@ -156,24 +168,34 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	}-*/;
 
 	@Override
-	public void setUserProfile(final AppUser user) {
-		if (user == null) {
+	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser) {
+		if (requestedUser == null) {
 			userProfile.setVisible(false);
-			tagline.setVisible(true);
-			setSidebarPosition(false);
+
+			// Only show call action to users who are not logged in
+			if (!currentUser.isLoggedIn()) {
+				tagline.setVisible(true);
+			}
+			else {
+				tagline.setVisible(false);
+			}
 		}
 		else {
 			userProfile.setVisible(true);
-			avatar.setUrl(user.getAvatarImage());
-			username.setText(user.getUsername());
-			profileLink.setText(user.getUsername());
-			tagline.setVisible(false);
-			setSidebarPosition(true);
+			avatar.setUrl(requestedUser.getAvatarImage());
+			username.setText(requestedUser.getUsername());
+			profileLink.setText(requestedUser.getUsername());
+		}
+
+		if (currentUser.isLoggedIn() && currentUser.equals(requestedUser)) {
+			showOwnPage();
+		}
+		else {
+			showOtherPage();
 		}
 	}
 
-	@Override
-	public void showOwnPage() {
+	private void showOwnPage() {
 		userContainer.setVisible(true);
 		userNotFound.setVisible(false);
 		username.setVisible(false);
@@ -181,8 +203,7 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		songAutocomplete.setVisible(true);
 	}
 
-	@Override
-	public void showOtherPage() {
+	private void showOtherPage() {
 		userContainer.setVisible(true);
 		userNotFound.setVisible(false);
 		username.setVisible(true);
@@ -255,18 +276,6 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 		else {
 			userPageFaveList.setVisible(true);
 			followingContainer.setVisible(true);
-		}
-	}
-
-	@Override
-	public void setSidebarPosition(boolean fixed) {
-		if (fixed) {
-			userPageSideBar.addStyleName(USER_PAGE_SIDE_BAR_FIXED_STYLE);
-			userPageFaveList.addStyleName(USER_PAGE_FAVE_LIST_STYLE);
-		}
-		else {
-			userPageSideBar.removeStyleName(USER_PAGE_SIDE_BAR_FIXED_STYLE);
-			userPageFaveList.removeStyleName(USER_PAGE_FAVE_LIST_STYLE);
 		}
 	}
 }

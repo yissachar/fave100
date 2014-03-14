@@ -29,6 +29,10 @@
 			margin-bottom: 10px;
 		}
 		
+		.passwordConfirm {
+			max-width: 20px;
+		}
+		
 		.statusMessage {
 			display: block;
 			font-size: 0.75em;
@@ -72,7 +76,7 @@
 					<g:PasswordTextBox ui:field="passwordField" />
 				</div>
 				<div class="{style.field}">
-					<g:Label>Confirm password</g:Label>
+					<g:Label ui:styleName="{style.passwordConfirm}">Confirm password</g:Label>
 					<g:PasswordTextBox ui:field="passwordRepeatField" />
 					<span class="{style.statusMessage} error" ui:field="passwordStatusMessage"/>
 				</div>
