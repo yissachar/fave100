@@ -15,6 +15,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
+import twitter4j.conf.ConfigurationBuilder;
 
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
@@ -75,7 +76,9 @@ public class AppUserDao {
 
 	public static Twitter getTwitterInstance() {
 		if (twitterFactory == null) {
-			twitterFactory = new TwitterFactory();
+			ConfigurationBuilder cb = new ConfigurationBuilder();
+			cb.setUseSSL(true);
+			twitterFactory = new TwitterFactory(cb.build());
 		}
 		return twitterFactory.getInstance();
 	}
