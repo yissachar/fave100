@@ -11,15 +11,17 @@ import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.client.widgets.alert.AlertCallback;
 import com.fave100.client.widgets.alert.AlertPresenter;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
+import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -115,11 +117,18 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		_dispatcher.execute(_restServiceFactory.user().addFaveListForCurrentUser(name), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().addFaveListForCurrentUser(name), new RestCallback<Void>() {
+
+			@Override
+			public void setResponse(Response response) {
+				if (response.getStatusCode() >= 400) {
+					getView().showError(response.getText());
+				}
+			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				getView().showError(caught.getMessage());
+				// Already handled in setResponse
 			}
 
 			@Override

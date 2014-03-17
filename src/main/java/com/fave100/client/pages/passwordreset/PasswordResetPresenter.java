@@ -7,10 +7,12 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
+import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -153,11 +155,18 @@ public class PasswordResetPresenter
 			passwordOrToken = currPassword;
 		}
 
-		_dispatcher.execute(_restServiceFactory.user().changePassword(newPassword, passwordOrToken), new AsyncCallback<BooleanResult>() {
+		_dispatcher.execute(_restServiceFactory.user().changePassword(newPassword, passwordOrToken), new RestCallback<BooleanResult>() {
+
+			@Override
+			public void setResponse(Response response) {
+				if (response.getStatusCode() >= 400) {
+					getView().showPwdError(response.getText(), false);
+				}
+			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				getView().showPwdError(caught.getMessage(), false);
+				// Already handled in setResponse
 			}
 
 			@Override
