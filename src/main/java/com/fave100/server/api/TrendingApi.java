@@ -34,9 +34,9 @@ public class TrendingApi {
 		trending.add(new StringResult("alltime"));
 		trending.add(new StringResult("2014"));
 		trending.add(new StringResult("2013"));
-		trending.add(new StringResult("2012"));
-		trending.add(new StringResult("dance"));
-		trending.add(new StringResult("classicrock"));
+		trending.add(new StringResult("driving"));
+		trending.add(new StringResult("running"));
+		trending.add(new StringResult("wedding"));
 		return new StringResultCollection(trending);
 	}
 
