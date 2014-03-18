@@ -18,10 +18,12 @@ import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
+import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
@@ -150,14 +152,21 @@ public class CurrentUser extends AppUser {
 			getFollowing().add(user);
 
 		// Add to server
-		_dispatcher.execute(_restServiceFactory.user().followUser(user.getUsername()), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().followUser(user.getUsername()), new RestCallback<Void>() {
+
+			@Override
+			public void setResponse(Response response) {
+				if (response.getStatusCode() >= 400) {
+					// Roll back
+					getFollowing().remove(user);
+					final String errorMsg = response.getText();
+					_eventBus.fireEvent(new UserUnfollowedEvent(user, errorMsg));
+				}
+			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// Roll back
-				getFollowing().remove(user);
-				final String errorMsg = caught.getMessage();
-				_eventBus.fireEvent(new UserUnfollowedEvent(user, errorMsg));
+				// Already handled in setResponse
 			}
 
 			@Override
@@ -197,12 +206,19 @@ public class CurrentUser extends AppUser {
 
 	public void addSong(final String songId, final String hashtag, final String song, final String artist) {
 
-		_dispatcher.execute(_restServiceFactory.user().addFaveItemForCurrentUser(hashtag, songId), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().addFaveItemForCurrentUser(hashtag, songId), new RestCallback<Void>() {
+
+			@Override
+			public void setResponse(Response response) {
+				if (response.getStatusCode() >= 400) {
+					// TODO: If not logged in, redirect to login page
+					Notification.show(response.getText());
+				}
+			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO: If not logged in, redirect to login page
-				Notification.show(caught.getMessage());
+				// Already handled in setResponse
 			}
 
 			@Override

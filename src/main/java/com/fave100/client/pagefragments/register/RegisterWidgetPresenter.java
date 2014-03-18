@@ -10,11 +10,13 @@ import com.fave100.client.generated.entities.UserRegistration;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
+import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -127,17 +129,24 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			registration.setPassword(password);
 			registration.setEmail(email);
 
-			_dispatcher.execute(_serviceFactory.auth().createAppUser(registration), new AsyncCallback<AppUser>() {
+			_dispatcher.execute(_serviceFactory.auth().createAppUser(registration), new RestCallback<AppUser>() {
+
+				@Override
+				public void setResponse(Response response) {
+					LoadingIndicator.hide();
+
+					if (response.getStatusCode() >= 400) {
+						getView().setNativeUsernameError(response.getText());
+					}
+				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					LoadingIndicator.hide();
-					getView().setNativeUsernameError(caught.getMessage());
+					// Already handled in setResponse
 				}
 
 				@Override
 				public void onSuccess(AppUser createdUser) {
-					LoadingIndicator.hide();
 					_eventBus.fireEvent(new CurrentUserChangedEvent(createdUser));
 					if (createdUser != null) {
 						appUserCreated();

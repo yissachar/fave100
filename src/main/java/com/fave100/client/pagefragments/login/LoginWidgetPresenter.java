@@ -10,11 +10,13 @@ import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
+import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -148,22 +150,23 @@ public class LoginWidgetPresenter extends
 		loginCredentials.setUsername(getView().getUsername().trim());
 		loginCredentials.setPassword(getView().getPassword());
 
-		_dispatcher.execute(_restServiceFactory.auth().login(loginCredentials), new AsyncCallback<AppUser>() {
+		_dispatcher.execute(_restServiceFactory.auth().login(loginCredentials), new RestCallback<AppUser>() {
+
+			@Override
+			public void setResponse(Response response) {
+				LoadingIndicator.hide();
+
+				if (response.getStatusCode() >= 400)
+					getView().setError(response.getText());
+			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				LoadingIndicator.hide();
-				//				String errorMsg = "An error occurred";
-				//				if (failure.getExceptionType().equals(
-				//						IncorrectLoginException.class.getName())) {
-				//					errorMsg = "Username or password incorrect";
-				//				}
-				getView().setError(caught.getMessage());
+				// Error already handled in setResponse
 			}
 
 			@Override
 			public void onSuccess(AppUser appUser) {
-				LoadingIndicator.hide();
 				_eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 				Notification.show("Logged in successfully");
 				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.lists).with(ListPresenter.USER_PARAM, appUser.getUsername()).build());
