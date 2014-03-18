@@ -205,13 +205,19 @@ public class FavePickWidget extends Composite {
 					public void onKeyDown(final KeyDownEvent event) {
 						final int keyCode = event.getNativeKeyCode();
 						// Only allow numbers and special keys
-						if ((!((keyCode > 46 && keyCode < 58)) && !((keyCode > 95 && keyCode < 108))) && (keyCode != (char)KeyCodes.KEY_TAB)
-								&& (keyCode != (char)KeyCodes.KEY_BACKSPACE)
-								&& (keyCode != (char)KeyCodes.KEY_ESCAPE)
-								&& (keyCode != (char)KeyCodes.KEY_DELETE) && (keyCode != (char)KeyCodes.KEY_ENTER)
-								&& (keyCode != (char)KeyCodes.KEY_HOME) && (keyCode != (char)KeyCodes.KEY_END)
-								&& (keyCode != (char)KeyCodes.KEY_LEFT) && (keyCode != (char)KeyCodes.KEY_UP)
-								&& (keyCode != (char)KeyCodes.KEY_RIGHT) && (keyCode != (char)KeyCodes.KEY_DOWN)) {
+						if (event.getNativeEvent().getShiftKey() ||
+								((!((keyCode >= 48 && keyCode <= 57)) && !((keyCode >= 96 && keyCode <= 105)))
+										&& (keyCode != (char)KeyCodes.KEY_TAB)
+										&& (keyCode != (char)KeyCodes.KEY_BACKSPACE)
+										&& (keyCode != (char)KeyCodes.KEY_ESCAPE)
+										&& (keyCode != (char)KeyCodes.KEY_DELETE)
+										&& (keyCode != (char)KeyCodes.KEY_ENTER)
+										&& (keyCode != (char)KeyCodes.KEY_HOME)
+										&& (keyCode != (char)KeyCodes.KEY_END)
+										&& (keyCode != (char)KeyCodes.KEY_UP)
+										&& (keyCode != (char)KeyCodes.KEY_DOWN)
+										&& (keyCode != (char)KeyCodes.KEY_LEFT)
+										&& (keyCode != (char)KeyCodes.KEY_RIGHT))) {
 
 							event.preventDefault();
 							event.stopPropagation();
