@@ -133,10 +133,10 @@ public class AuthApi {
 			else if (e.getMessage().equals(ApiExceptions.DID_NOT_PASS_VALIDATION)) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(ApiExceptions.DID_NOT_PASS_VALIDATION);
-				sb.append(":");
+				sb.append(':');
 				for (String error : errors) {
 					sb.append(error);
-					sb.append("\n");
+					sb.append('\n');
 				}
 
 				throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(sb.toString()).build());
