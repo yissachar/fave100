@@ -19,6 +19,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
+import com.fave100.server.SessionAttributes;
 import com.fave100.server.UrlBuilder;
 import com.fave100.shared.Constants;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -33,7 +34,6 @@ public class AppUserDao {
 	public static String TWITTER_CONSUMER_SECRET = "";
 	public static String FACEBOOK_APP_ID = "";
 	public static String FACEBOOK_APP_SECRET = "";
-	public static final String AUTH_USER = "loggedIn";
 	private static TwitterFactory twitterFactory;
 
 	// Finder methods
@@ -85,17 +85,17 @@ public class AppUserDao {
 
 	// Gets a Twitter user - not a Fave100 user
 	public static twitter4j.User getTwitterUser(HttpServletRequest request, final String oauth_verifier) {
-		final twitter4j.User user = (twitter4j.User)request.getSession().getAttribute("twitterUser");
+		final twitter4j.User user = (twitter4j.User)request.getSession().getAttribute(SessionAttributes.TWITTER_USER);
 		if (user == null) {
 			final Twitter twitter = getTwitterInstance();
 			twitter.setOAuthConsumer(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
 
-			final RequestToken requestToken = (RequestToken)request.getSession().getAttribute("requestToken");
+			final RequestToken requestToken = (RequestToken)request.getSession().getAttribute(SessionAttributes.REQUEST_TOKEN);
 			try {
 				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
 				twitter.setOAuthAccessToken(accessToken);
 				final twitter4j.User twitterUser = twitter.verifyCredentials();
-				request.getSession().setAttribute("twitterUser", twitterUser);
+				request.getSession().setAttribute(SessionAttributes.TWITTER_USER, twitterUser);
 				return twitterUser;
 			}
 			catch (final TwitterException e1) {
@@ -113,9 +113,9 @@ public class AppUserDao {
 	// Gets the ID of a the current Facebook user - not a Fave100 user
 	public static Long getCurrentFacebookUserId(HttpServletRequest request, final String code) {
 
-		Long userID = (Long)request.getSession().getAttribute("facebookID");
+		Long userID = (Long)request.getSession().getAttribute(SessionAttributes.FACEBOOK_ID);
 		if (userID == null) {
-			String redirectUrl = (String)request.getSession().getAttribute("facebookRedirect");
+			String redirectUrl = (String)request.getSession().getAttribute(SessionAttributes.FACEBOOK_REDIRECT);
 			if (redirectUrl == null) {
 				redirectUrl = new UrlBuilder(NameTokens.register).with("register", RegisterPresenter.PROVIDER_FACEBOOK).getUrl().replace("yissachar", "localhost");
 			}
@@ -148,7 +148,7 @@ public class AppUserDao {
 					final JsonElement graphElement = parser.parse(response);
 					final JsonObject graphObject = graphElement.getAsJsonObject();
 					userID = graphObject.get("id").getAsLong();
-					request.getSession().setAttribute("facebookID", userID);
+					request.getSession().setAttribute(SessionAttributes.FACEBOOK_ID, userID);
 				}
 				else {
 					throw new RuntimeException("Access token and expires not found");
@@ -174,7 +174,7 @@ public class AppUserDao {
 
 	// Check if Fave100 user is logged in 
 	public static Boolean isAppUserLoggedIn(HttpServletRequest request) {
-		final String username = (String)request.getSession().getAttribute(AUTH_USER);
+		final String username = (String)request.getSession().getAttribute(SessionAttributes.AUTH_USER);
 		return username != null;
 	}
 

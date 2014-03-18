@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fave100.server.SessionAttributes;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -40,7 +41,7 @@ public class AvatarUploadServlet extends HttpServlet {
 
 			if (blobKey != null) {
 				// Get user from session
-				final String username = (String)req.getSession().getAttribute(AppUserDao.AUTH_USER);
+				final String username = (String)req.getSession().getAttribute(SessionAttributes.AUTH_USER);
 				Objects.requireNonNull(username);
 				String avatar = "";
 
