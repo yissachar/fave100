@@ -1,7 +1,5 @@
 package com.fave100.server.domain.favelist;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,10 +37,6 @@ public class Hashtag {
 		this.name = name;
 		this.setCreatedBy(Ref.create(Key.create(AppUser.class, createdBy)));
 		setDateCreated(new Date());
-	}
-
-	public static Hashtag findHashtag(final String id) {
-		return ofy().load().type(Hashtag.class).id(id).now();
 	}
 
 	public void addListCount(int listCount) {

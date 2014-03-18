@@ -1,12 +1,7 @@
 package com.fave100.server.domain;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
-
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fave100.server.domain.appuser.AppUser;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
@@ -40,22 +35,6 @@ public class Whyline {
 		this.whyline = whyline;
 		this.song = Ref.create(Key.create(Song.class, songID));
 		this.username = username;
-	}
-
-	public static Whyline findWhyline(final Long id) {
-		return ofy().load().type(Whyline.class).id(id).now();
-	}
-
-	public static List<Whyline> getWhylinesForSong(final String id) {
-		final List<Whyline> whylines = ofy().load().type(Whyline.class).filter("song", Ref.create(Key.create(Song.class, id))).limit(15).list();
-		// Get the users avatars 
-		// TODO: Should be a bulk query for efficiency
-		for (final Whyline whyline : whylines) {
-			final AppUser user = ofy().load().type(AppUser.class).id(whyline.getUsername().toLowerCase()).now();
-			if (user != null)
-				whyline.setAvatar(user.getAvatarImage());
-		}
-		return whylines;
 	}
 
 	/* Getters and Setters */
