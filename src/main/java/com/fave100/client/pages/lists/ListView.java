@@ -169,15 +169,14 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 
 	@Override
 	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser) {
+		tagline.setVisible(false);
+
 		if (requestedUser == null) {
 			userProfile.setVisible(false);
 
 			// Only show call action to users who are not logged in
 			if (!currentUser.isLoggedIn()) {
 				tagline.setVisible(true);
-			}
-			else {
-				tagline.setVisible(false);
 			}
 		}
 		else {
