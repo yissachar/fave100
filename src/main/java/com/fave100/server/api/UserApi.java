@@ -29,6 +29,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fave100.server.SessionAttributes;
 import com.fave100.server.UrlBuilder;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
@@ -76,7 +77,7 @@ public class UserApi {
 	@GET
 	@ApiOperation(value = "Get the current user", response = AppUser.class)
 	public static AppUser getLoggedInUser(@Context HttpServletRequest request) {
-		final String username = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
+		final String username = (String)request.getSession().getAttribute(SessionAttributes.AUTH_USER);
 		if (username != null) {
 			return AppUserDao.findAppUser(username);
 		}
@@ -528,7 +529,7 @@ public class UserApi {
 		if (!AppUserDao.isAppUserLoggedIn(request))
 			throw new NotLoggedInException();
 
-		final String currentUserUsername = (String)request.getSession().getAttribute(AppUserDao.AUTH_USER);
+		final String currentUserUsername = (String)request.getSession().getAttribute(SessionAttributes.AUTH_USER);
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
 		final Following following = ofy().load().type(Following.class).id(currentUserUsername.toLowerCase()).now();
 
