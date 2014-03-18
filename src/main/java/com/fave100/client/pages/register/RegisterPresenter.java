@@ -15,11 +15,13 @@ import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
+import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -226,11 +228,18 @@ public class RegisterPresenter extends
 		if (validateThirdPartyFields(username)) {
 			if (provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
 				// Create Google-linked account
-				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromGoogleAccount(username), new AsyncCallback<AppUser>() {
+				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromGoogleAccount(username), new RestCallback<AppUser>() {
+
+					@Override
+					public void setResponse(Response response) {
+						if (response.getStatusCode() >= 400) {
+							getView().setThirdPartyUsernameError(response.getText());
+						}
+					}
 
 					@Override
 					public void onFailure(Throwable caught) {
-						getView().setThirdPartyUsernameError(caught.getMessage());
+						// Already handled in setResponse
 					}
 
 					@Override
@@ -248,11 +257,18 @@ public class RegisterPresenter extends
 				registration.setUsername(username);
 				registration.setOauthVerifier(oauth_verifier);
 
-				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromTwitterAccount(registration), new AsyncCallback<AppUser>() {
+				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromTwitterAccount(registration), new RestCallback<AppUser>() {
+
+					@Override
+					public void setResponse(Response response) {
+						if (response.getStatusCode() >= 400) {
+							getView().setThirdPartyUsernameError(response.getText());
+						}
+					}
 
 					@Override
 					public void onFailure(Throwable caught) {
-						getView().setThirdPartyUsernameError(caught.getMessage());
+						// Already handled in setResponse
 					}
 
 					@Override
@@ -269,11 +285,18 @@ public class RegisterPresenter extends
 				registration.setUsername(username);
 				registration.setCode(Window.Location.getParameter("state"));
 
-				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromFacebookAccount(registration), new AsyncCallback<AppUser>() {
+				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromFacebookAccount(registration), new RestCallback<AppUser>() {
+
+					@Override
+					public void setResponse(Response response) {
+						if (response.getStatusCode() >= 400) {
+							getView().setThirdPartyUsernameError(response.getText());
+						}
+					}
 
 					@Override
 					public void onFailure(Throwable caught) {
-						getView().setThirdPartyUsernameError(caught.getMessage());
+						// Already handled in setResponse
 					}
 
 					@Override

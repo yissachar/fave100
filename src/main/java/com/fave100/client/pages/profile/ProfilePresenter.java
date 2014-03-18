@@ -11,10 +11,12 @@ import com.fave100.client.pages.BasePresenter;
 import com.fave100.client.pages.BaseView;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
+import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -157,17 +159,24 @@ public class ProfilePresenter extends
 		if (emailError == null) {
 
 			LoadingIndicator.show();
-			_dispatcher.execute(_restServiceFactory.user().setUserInfo(userInfo), new AsyncCallback<BooleanResult>() {
+			_dispatcher.execute(_restServiceFactory.user().setUserInfo(userInfo), new RestCallback<BooleanResult>() {
+
+				@Override
+				public void setResponse(Response response) {
+					LoadingIndicator.hide();
+
+					if (response.getStatusCode() >= 400) {
+						getView().setEmailError(response.getText());
+					}
+				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					LoadingIndicator.hide();
-					getView().setEmailError(caught.getMessage());
+					// Already handled in setResponse
 				}
 
 				@Override
 				public void onSuccess(BooleanResult saved) {
-					LoadingIndicator.hide();
 					if (saved.getValue()) {
 						oldUserInfo = userInfo;
 						populateFields(userInfo);
