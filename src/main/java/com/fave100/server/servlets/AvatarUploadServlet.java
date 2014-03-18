@@ -44,8 +44,7 @@ public class AvatarUploadServlet extends HttpServlet {
 				Objects.requireNonNull(username);
 				String avatar = "";
 
-				AppUserDao appUserDao = new AppUserDao();
-				final AppUser currentUser = appUserDao.findAppUser(username);
+				final AppUser currentUser = AppUserDao.findAppUser(username);
 				// TODO: Jul-17-2013 Why do we assume the avatar is a blobkey? Can't it be a link to a Twitter avatar, in which case blob delete will fail??
 				if (currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
 					BlobstoreServiceFactory.getBlobstoreService().delete(new BlobKey(currentUser.getAvatar()));
