@@ -5,13 +5,11 @@ import java.util.List;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.client.resources.css.GlobalStyle;
-import com.fave100.shared.Constants;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -34,7 +32,6 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	}
 
 	interface Style extends GlobalStyle {
-		String mobile();
 	}
 
 	@UiField Style style;
@@ -98,13 +95,6 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 							.build()));
 			link.setText(list);
 			trendingLists.add(link);
-		}
-
-		if (Window.getClientWidth() <= Constants.MOBILE_WIDTH_PX) {
-			container.addStyleName(style.mobile());
-		}
-		else {
-			container.removeStyleName(style.mobile());
 		}
 	}
 
