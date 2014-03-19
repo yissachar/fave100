@@ -1,7 +1,7 @@
 package com.fave100.client.pages.song;
 
 import com.fave100.client.generated.entities.FaveItem;
-import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.PageView;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -12,9 +12,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class SongView extends ViewWithUiHandlers<SongUiHandlers>
+public class SongView extends PageView<SongUiHandlers>
 		implements SongPresenter.MyView {
 
 	private final Widget widget;
@@ -22,7 +21,6 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	public interface Binder extends UiBinder<Widget, SongView> {
 	}
 
-	@UiField HTMLPanel topBar;
 	@UiField Label songTitle;
 	@UiField Label artistName;
 	@UiField Button addToFave100Button;
@@ -44,14 +42,6 @@ public class SongView extends ViewWithUiHandlers<SongUiHandlers>
 	@Override
 	public void setInSlot(final Object slot, final IsWidget content) {
 		super.setInSlot(slot, content);
-
-		if (content == null)
-			return;
-
-		if (slot == BasePresenter.TOP_BAR_SLOT) {
-			topBar.clear();
-			topBar.add(content);
-		}
 
 		if (slot == SongPresenter.YOUTUBE_SLOT) {
 			youTubeWidget.clear();

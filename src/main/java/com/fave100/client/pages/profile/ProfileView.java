@@ -2,7 +2,7 @@ package com.fave100.client.pages.profile;
 
 import static com.google.gwt.query.client.GQuery.$;
 
-import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.PageView;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -15,17 +15,14 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
+public class ProfileView extends PageView<ProfileUiHandlers>
 		implements ProfilePresenter.MyView {
 
 	private final Widget widget;
@@ -33,7 +30,6 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	public interface Binder extends UiBinder<Widget, ProfileView> {
 	}
 
-	@UiField HTMLPanel topBar;
 	@UiField FormPanel profileForm;
 	@UiField TextBox emailInput;
 	@UiField CheckBox followingPrivate;
@@ -53,17 +49,6 @@ public class ProfileView extends ViewWithUiHandlers<ProfileUiHandlers>
 	@Override
 	public Widget asWidget() {
 		return widget;
-	}
-
-	@Override
-	public void setInSlot(final Object slot, final IsWidget content) {
-		if (slot == BasePresenter.TOP_BAR_SLOT) {
-			topBar.clear();
-			if (content != null) {
-				topBar.add(content);
-			}
-		}
-		super.setInSlot(slot, content);
 	}
 
 	@Override

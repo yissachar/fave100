@@ -1,5 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+			 xmlns:p='urn:import:com.fave100.client.pages'
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
              
     <ui:style>    	
@@ -16,10 +17,10 @@
     
 	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>
              
-    <g:HTMLPanel styleName="wrap">
-		<g:HTMLPanel ui:field="topBar"/>
-		<div class="container">
-			<div class="content row">
+   <p:Page ui:field="page">
+		<p:content>
+			<g:FlowPanel>
+			
 				<g:HTMLPanel ui:styleName="col span_3">
 					<g:Image resource="{img.corey}"/>
 					<g:Label ui:styleName="{style.coreyName}">Corey</g:Label>
@@ -35,15 +36,15 @@
 					It was a true labor of love - it took me hours to collate the countdown then record every last song on over 30 90-minute cassette tapes (remember those?). 
 					I even used a mixer to overlap the songs. At the time, we had been going out for two years, so the 730 number meant 1 song for every day of our love. 
 					Lists were definitely my thing.</p>
-
+	
 					<p>Over the past 10 years, I have discovered so much great music by reading other people's lists online - lists from publications like Pitchfork and 
 					Rolling Stone, lists from celebrities and lists from random internet users. The fact that someone actually picked and ranked the songs means that 
 					those picks are more qualified and meaningful than robot-generated recommendations.</p>
-
+	
 					<p>And so here we are in 2014 with the birth of Fave100. I am asking everyone online with a love of music to share their list. 
 					Not only will this create an amazing array of individual lists (that you can listen to at anytime), but Fave100 has the technology 
 					to calculate aggregate lists based on everyone's lists, all in near-real-time.</p>
-
+	
 					<p>So, what are you waiting for? Get your list on!</p>
 					
 					<p>P. S. Check out my current <a href="http://www.fave100.com/#lists;u=coreyw">alltime</a> list, as well as 
@@ -52,8 +53,9 @@
 					
 					<p>P. P. S. You can also check out my <a href="http://www.favenation.com/">FaveNation blog</a>.</p>
 				</g:HTMLPanel>
-			</div>
-		</div>
-	</g:HTMLPanel>
+				
+			</g:FlowPanel>
+		</p:content>
+	</p:Page>
 	
 </ui:UiBinder>
