@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.PageView;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -27,10 +27,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class ListView extends ViewWithUiHandlers<ListUiHandlers>
+public class ListView extends PageView<ListUiHandlers>
 		implements ListPresenter.MyView {
 
 	private final static String USER_PAGE_SIDE_BAR_FIXED_STYLE = "userPageSideBarFixed";
@@ -62,7 +61,6 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 	@UiField InlineHyperlink profileLink;
 	@UiField Image avatar;
 	@UiField InlineLabel username;
-	@UiField HTMLPanel topBar;
 	@UiField HTMLPanel songAutocomplete;
 	@UiField HTMLPanel favelist;
 	@UiField Label userNotFound;
@@ -82,19 +80,18 @@ public class ListView extends ViewWithUiHandlers<ListUiHandlers>
 
 	@Override
 	public void setInSlot(final Object slot, final IsWidget content) {
+		super.setInSlot(slot, content);
+
 		HTMLPanel slotPanel = getPanelForSlot(slot);
 
 		if (slotPanel != null && content != null) {
 			slotPanel.clear();
 			slotPanel.add(content);
 		}
-
-		super.setInSlot(slot, content);
 	}
 
 	private HTMLPanel getPanelForSlot(Object slot) {
 		Map<Type<RevealContentHandler<?>>, HTMLPanel> slotMap = new HashMap<Type<RevealContentHandler<?>>, HTMLPanel>();
-		slotMap.put(BasePresenter.TOP_BAR_SLOT, topBar);
 		slotMap.put(ListPresenter.AUTOCOMPLETE_SLOT, songAutocomplete);
 		slotMap.put(ListPresenter.FAVELIST_SLOT, favelist);
 		slotMap.put(ListPresenter.STARRED_LISTS_SLOT, followingContainer);

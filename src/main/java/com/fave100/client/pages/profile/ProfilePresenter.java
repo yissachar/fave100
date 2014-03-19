@@ -7,8 +7,7 @@ import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.UserInfo;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.BaseView;
+import com.fave100.client.pages.PagePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
 import com.google.gwt.http.client.Response;
@@ -19,6 +18,7 @@ import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
@@ -31,10 +31,10 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
  * 
  */
 public class ProfilePresenter extends
-		BasePresenter<ProfilePresenter.MyView, ProfilePresenter.MyProxy>
+		PagePresenter<ProfilePresenter.MyView, ProfilePresenter.MyProxy>
 		implements ProfileUiHandlers {
 
-	public interface MyView extends BaseView, HasUiHandlers<ProfileUiHandlers> {
+	public interface MyView extends View, HasUiHandlers<ProfileUiHandlers> {
 		void createActionUrl(String url);
 
 		void setEmailValue(String val);

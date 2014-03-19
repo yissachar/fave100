@@ -2,7 +2,7 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
+	xmlns:p='urn:import:com.fave100.client.pages'
 	xmlns:wp='urn:import:com.fave100.client.pages.song.widgets.playlist'
 	xmlns:wyt='urn:import:com.fave100.client.pages.song.widgets.youtube'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
@@ -62,28 +62,28 @@
 		
 	</ui:style>
 	
-	<g:HTMLPanel styleName="wrap">
-		<g:HTMLPanel ui:field="topBar"/>
-		<div class="container">
-			<div class="content">
-				<div class="{style.songContainer}">
-					<div class="{style.songHeader}">
-						<div class="{style.songDetails}">
-							<g:Label ui:field="songTitle" styleName="{style.songTitle}"/>
-							<g:Label ui:field="artistName"/>
-						</div>
-						<g:Button ui:field="addToFave100Button" styleName="{style.addToFave100Button}">+Fave100</g:Button>
+	<p:Page ui:field="page">
+		<p:content>	
+			<g:HTMLPanel ui:styleName="{style.songContainer}">
+			
+				<div class="{style.songHeader}">
+					<div class="{style.songDetails}">
+						<g:Label ui:field="songTitle" styleName="{style.songTitle}"/>
+						<g:Label ui:field="artistName"/>
 					</div>
-					<div class="row">
-						<g:HTMLPanel ui:field="songContainer" styleName="{style.songBody} col span_7">
-							<g:HTMLPanel ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>			
-							<g:HTMLPanel ui:field="whylineWidget" styleName="{style.whylineWidget}"></g:HTMLPanel>			
-						</g:HTMLPanel>
-						<g:HTMLPanel ui:field="playlistPanel" ui:styleName="{style.sideBar} col songSidebar"/>
-					</div>									
-				</div>				
-			</div>	
-		</div>
-		<pf:Footer/>
-	</g:HTMLPanel>
+					<g:Button ui:field="addToFave100Button" styleName="{style.addToFave100Button}">+Fave100</g:Button>
+				</div>
+				
+				<div class="row">
+					<g:HTMLPanel ui:field="songContainer" styleName="{style.songBody} col span_7">
+						<g:HTMLPanel ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>			
+						<g:HTMLPanel ui:field="whylineWidget" styleName="{style.whylineWidget}"></g:HTMLPanel>			
+					</g:HTMLPanel>
+					<g:HTMLPanel ui:field="playlistPanel" ui:styleName="{style.sideBar} col songSidebar"/>
+				</div>		
+											
+			</g:HTMLPanel>
+		</p:content>
+	</p:Page>
+	
 </ui:UiBinder>

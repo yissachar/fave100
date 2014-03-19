@@ -3,8 +3,7 @@ package com.fave100.client.pages.passwordreset;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.BaseView;
+import com.fave100.client.pages.PagePresenter;
 import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
 import com.google.gwt.http.client.Response;
@@ -15,6 +14,7 @@ import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
@@ -30,10 +30,10 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
  */
 public class PasswordResetPresenter
 		extends
-		BasePresenter<PasswordResetPresenter.MyView, PasswordResetPresenter.MyProxy>
+		PagePresenter<PasswordResetPresenter.MyView, PasswordResetPresenter.MyProxy>
 		implements PasswordResetUiHandlers {
 
-	public interface MyView extends BaseView,
+	public interface MyView extends View,
 			HasUiHandlers<PasswordResetUiHandlers> {
 		void showPwdChangeForm(Boolean requireOldPwd);
 

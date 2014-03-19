@@ -3,6 +3,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:w='urn:import:com.fave100.client.widgets'
+	xmlns:p='urn:import:com.fave100.client.pages'
 	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
@@ -73,33 +74,33 @@
 	</ui:style>
 
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
-	<g:HTMLPanel ui:styleName="wrap">
-		<g:HTMLPanel ui:field="topBar"/>
-		<div class="container">
-			<div class="container">
-				<div class="content">		    	
-					<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
-					    <h1 class="row">Registration</h1>
-					    <g:HTMLPanel ui:field="registerWidget"></g:HTMLPanel>
-					</g:HTMLPanel>
-					
-					<g:HTMLPanel ui:field="thirdPartyUsernamePrompt" styleName="{style.thirdPartyUsernamePrompt}">
-						<g:FormPanel ui:field="thirdPartyRegisterForm">
-							<g:HTMLPanel ui:styleName="registerContainer {style.thirdPartyUsernamePrompt}">
-								<span>Please enter a username to complete the registration process</span>
-								<w:FaveTextBox ui:field="thirdPartyUsernameField"/>
-								<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					
-								<g:SubmitButton ui:field="thirdPartyUsernameSubmitButton">Submit</g:SubmitButton>
-							</g:HTMLPanel>
-						</g:FormPanel>
-					</g:HTMLPanel>
-					
-					<p id="alreadyHaveAccountPrompt">					   
-					    <g:InlineHyperlink targetHistoryToken="{nameTokens.getLogin}">Already have an account? Log in</g:InlineHyperlink>
-					</p>
-				</div>	
-			</div>
-		</div>
-		<pf:Footer/>
-	</g:HTMLPanel>
+	
+	<p:Page ui:field="page">
+		<p:content>	
+			<g:HTMLPanel>
+			
+				<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
+				    <h1 class="row">Registration</h1>
+				    <g:HTMLPanel ui:field="registerWidget"></g:HTMLPanel>
+				</g:HTMLPanel>
+				
+				<g:HTMLPanel ui:field="thirdPartyUsernamePrompt" styleName="{style.thirdPartyUsernamePrompt}">
+					<g:FormPanel ui:field="thirdPartyRegisterForm">
+						<g:HTMLPanel ui:styleName="registerContainer {style.thirdPartyUsernamePrompt}">
+							<span>Please enter a username to complete the registration process</span>
+							<w:FaveTextBox ui:field="thirdPartyUsernameField"/>
+							<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					
+							<g:SubmitButton ui:field="thirdPartyUsernameSubmitButton">Submit</g:SubmitButton>
+						</g:HTMLPanel>
+					</g:FormPanel>
+				</g:HTMLPanel>
+				
+				<p id="alreadyHaveAccountPrompt">					   
+				    <g:InlineHyperlink targetHistoryToken="{nameTokens.getLogin}">Already have an account? Log in</g:InlineHyperlink>
+				</p>	
+			
+			</g:HTMLPanel>
+		</p:content>
+	</p:Page>
+	
 </ui:UiBinder>

@@ -13,8 +13,7 @@ import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.pagefragments.popups.addsong.register.RegisterPopupPresenter;
-import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.BaseView;
+import com.fave100.client.pages.PagePresenter;
 import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompletePresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
@@ -35,6 +34,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
@@ -43,9 +43,9 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
-public class ListPresenter extends BasePresenter<ListPresenter.MyView, ListPresenter.MyProxy> implements ListUiHandlers {
+public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPresenter.MyProxy> implements ListUiHandlers {
 
-	public interface MyView extends BaseView, HasUiHandlers<ListUiHandlers> {
+	public interface MyView extends View, HasUiHandlers<ListUiHandlers> {
 		void setPageDetails(AppUser requestedUser, CurrentUser currentUser);
 
 		String getFixedSearchStyle();
