@@ -84,27 +84,19 @@ public class AppUserDao {
 	}
 
 	// Gets a Twitter user - not a Fave100 user
-	public static twitter4j.User getTwitterUser(HttpServletRequest request, final String oauth_verifier) {
+	public static twitter4j.User getTwitterUser(HttpServletRequest request, final String oauth_verifier) throws TwitterException, IllegalStateException {
 		final twitter4j.User user = (twitter4j.User)request.getSession().getAttribute("twitterUser");
 		if (user == null) {
 			final Twitter twitter = getTwitterInstance();
 			twitter.setOAuthConsumer(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
 
 			final RequestToken requestToken = (RequestToken)request.getSession().getAttribute("requestToken");
-			try {
-				final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
-				twitter.setOAuthAccessToken(accessToken);
-				final twitter4j.User twitterUser = twitter.verifyCredentials();
-				request.getSession().setAttribute("twitterUser", twitterUser);
-				return twitterUser;
-			}
-			catch (final TwitterException e1) {
-				e1.printStackTrace();
-			}
-			catch (final Exception e) {
-				e.printStackTrace();
-			}
-			return null;
+
+			final AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, oauth_verifier);
+			twitter.setOAuthAccessToken(accessToken);
+			final twitter4j.User twitterUser = twitter.verifyCredentials();
+			request.getSession().setAttribute("twitterUser", twitterUser);
+			return twitterUser;
 		}
 		return user;
 

@@ -6,6 +6,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -24,7 +26,6 @@ import twitter4j.auth.RequestToken;
 
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
-import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.FacebookRegistration;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.TwitterRegistration;
@@ -41,6 +42,8 @@ import com.fave100.server.exceptions.EmailIdAlreadyExistsException;
 import com.fave100.server.exceptions.FacebookIdAlreadyExistsException;
 import com.fave100.server.exceptions.GoogleIdAlreadyExistsException;
 import com.fave100.server.exceptions.InvalidLoginException;
+import com.fave100.server.exceptions.NotLoggedInException;
+import com.fave100.server.exceptions.OauthNotLoggedInException;
 import com.fave100.server.exceptions.TwitterIdAlreadyExistsException;
 import com.fave100.server.exceptions.UsernameAlreadyExistsException;
 import com.fave100.shared.Constants;
@@ -207,19 +210,30 @@ public class AuthApi {
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name already exists";
 		final String twitterIDMsg = "There is already a Fave100 account associated with this Twitter ID";
+		final String twitterErrorMsg = "Not logged in to Twitter";
 
 		AppUser newAppUser = null;
 		try {
 			newAppUser = ofy().transact(new Work<AppUser>() {
 				@Override
 				public AppUser run() {
-					final twitter4j.User user = AppUserDao.getTwitterUser(request, oauth_verifier);
+					twitter4j.User user;
+					try {
+						user = AppUserDao.getTwitterUser(request, oauth_verifier);
+					}
+					catch (TwitterException | IllegalStateException e) {
+						Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
+						throw new RuntimeException(twitterErrorMsg);
+					}
+
 					if (AppUserDao.findAppUser(username) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
+
 					if (ofy().load().type(TwitterID.class).id(user.getId()).now() != null) {
 						throw new RuntimeException(twitterIDMsg);
 					}
+
 					if (Validator.validateUsername(username) == null) {
 						// Create the user
 						final AppUser appUser = new AppUser(username);
@@ -243,6 +257,9 @@ public class AuthApi {
 			}
 			else if (e.getMessage().equals(twitterIDMsg)) {
 				throw new TwitterIdAlreadyExistsException();
+			}
+			else if (e.getMessage().equals(twitterErrorMsg)) {
+				throw new OauthNotLoggedInException("Twitter");
 			}
 		}
 
@@ -351,18 +368,20 @@ public class AuthApi {
 	@ApiOperation(value = "Login with Google", response = AppUser.class)
 	public static AppUser loginWithGoogle(@Context HttpServletRequest request) {
 
-		AppUser loggedInUser;
 		// Get the Google user
 		final UserService userService = UserServiceFactory.getUserService();
 		final User user = userService.getCurrentUser();
 		if (user == null)
-			return null;
+			throw new OauthNotLoggedInException("Google");
+
 		// Find the corresponding Fave100 user
-		loggedInUser = AppUserDao.findAppUserByGoogleId(user.getUserId());
-		if (loggedInUser != null) {
-			// Successful login - store session
-			request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
-		}
+		AppUser loggedInUser = AppUserDao.findAppUserByGoogleId(user.getUserId());
+		if (loggedInUser == null)
+			throw new NotLoggedInException();
+
+		// Successful login - store session
+		request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+
 		return loggedInUser;
 	}
 
@@ -372,24 +391,35 @@ public class AuthApi {
 	public static AppUser loginWithTwitter(@Context HttpServletRequest request, final StringResult oauth_verifier) {
 
 		// Get the Twitter user
-		final twitter4j.User twitterUser = AppUserDao.getTwitterUser(request, oauth_verifier.getValue());
-		if (twitterUser != null) {
-			// Find the corresponding Fave100 user
-			final AppUser loggedInUser = AppUserDao.findAppUserByTwitterId(twitterUser.getId());
-			if (loggedInUser != null) {
-				// Successful login - store session
-				request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
-				final String twitterAvatar = twitterUser.getProfileImageURL();
-				if (loggedInUser.getAvatar() == null) {
-					// Update the user's avatar from Twitter
-					// TODO: Verify that twitter avatars work properly
-					loggedInUser.setAvatar(twitterAvatar);
-					ofy().save().entity(loggedInUser).now();
-				}
-			}
-			return loggedInUser;
+		twitter4j.User twitterUser;
+		try {
+			twitterUser = AppUserDao.getTwitterUser(request, oauth_verifier.getValue());
 		}
-		return null;
+		catch (TwitterException | IllegalStateException e) {
+			Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage());
+			throw new OauthNotLoggedInException("Twitter");
+		}
+
+		if (twitterUser == null)
+			throw new NotLoggedInException();
+
+		// Find the corresponding Fave100 user
+		final AppUser loggedInUser = AppUserDao.findAppUserByTwitterId(twitterUser.getId());
+		if (loggedInUser == null)
+			throw new NotLoggedInException();
+
+		// Successful login - store session
+		request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+		final String twitterAvatar = twitterUser.getProfileImageURL();
+
+		// Update the user's avatar from Twitter
+		// TODO: Verify that twitter avatars work properly
+		if (loggedInUser.getAvatar() == null) {
+			loggedInUser.setAvatar(twitterAvatar);
+			ofy().save().entity(loggedInUser).now();
+		}
+
+		return loggedInUser;
 	}
 
 	@POST
@@ -398,23 +428,18 @@ public class AuthApi {
 	public static AppUser loginWithFacebook(@Context HttpServletRequest request, final StringResult code) {
 		// Get the Facebook user
 		final Long facebookUserId = AppUserDao.getCurrentFacebookUserId(request, code.getValue());
-		if (facebookUserId != null) {
-			// Find the corresponding Fave100 user
-			final AppUser loggedInUser = AppUserDao.findAppUserByFacebookId(facebookUserId);
-			if (loggedInUser != null) {
-				// Successful login - store session				
-				request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
-				// TODO: Handle Facebook avatars
-				/*	final URL twitterAvatar =  twitterUser.getProfileImageURL();
-					if(loggedInUser.getAvatar() == null || !loggedInUser.getAvatar().equals(twitterAvatar.toString())) {
-						// Update the user's avatar from Twitter
-						loggedInUser.setAvatar(twitterAvatar.toString());
-						ofy().save().entity(loggedInUser).now();
-					}*/
-			}
-			return loggedInUser;
-		}
-		return null;
+		if (facebookUserId == null)
+			throw new OauthNotLoggedInException("acebook");
+
+		// Find the corresponding Fave100 user
+		final AppUser loggedInUser = AppUserDao.findAppUserByFacebookId(facebookUserId);
+		if (loggedInUser == null)
+			throw new NotLoggedInException();
+
+		// Successful login - store session				
+		request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+		// TODO: Handle Facebook avatars
+		return loggedInUser;
 	}
 
 	@POST
@@ -466,18 +491,6 @@ public class AuthApi {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	/*
-	 * Checks if the user is logged into Google (though not necessarily logged into Fave100)
-	 */
-	@GET
-	@Path(ApiPaths.IS_GOOGLE_LOGGED_IN)
-	@ApiOperation(value = "Is google user logged in", response = BooleanResult.class)
-	public static BooleanResult isGoogleUserLoggedIn() {
-		final UserService userService = UserServiceFactory.getUserService();
-		final User user = userService.getCurrentUser();
-		return new BooleanResult(user != null);
 	}
 
 }
