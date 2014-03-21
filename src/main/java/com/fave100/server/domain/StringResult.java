@@ -11,6 +11,9 @@ public class StringResult {
 
 	private String value;
 
+	public StringResult() {
+	}
+
 	public StringResult(String value) {
 		setValue(value);
 	}
