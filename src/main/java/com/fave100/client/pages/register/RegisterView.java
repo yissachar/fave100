@@ -1,6 +1,6 @@
 package com.fave100.client.pages.register;
 
-import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.PageView;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -12,9 +12,8 @@ import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
+public class RegisterView extends PageView<RegisterUiHandlers>
 		implements RegisterPresenter.MyView {
 
 	private final Widget widget;
@@ -22,7 +21,6 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
 	public interface Binder extends UiBinder<Widget, RegisterView> {
 	}
 
-	@UiField HTMLPanel topBar;
 	@UiField HTMLPanel registerContainer;
 	@UiField HTMLPanel registerWidget;
 	@UiField SpanElement thirdPartyUsernameStatusMessage;
@@ -43,13 +41,6 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
 	@Override
 	public void setInSlot(final Object slot, final IsWidget content) {
 		super.setInSlot(slot, content);
-
-		if (slot == BasePresenter.TOP_BAR_SLOT) {
-			topBar.clear();
-			if (content != null) {
-				topBar.add(content);
-			}
-		}
 
 		if (slot == RegisterPresenter.REGISTER_SLOT) {
 			registerWidget.clear();

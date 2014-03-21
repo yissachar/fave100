@@ -6,6 +6,7 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.AsyncCallFailEvent;
 import com.gwtplatform.mvp.client.proxy.AsyncCallFailHandler;
@@ -13,7 +14,7 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
-public abstract class BasePresenter<V extends BaseView, Proxy_ extends Proxy<?>>
+public abstract class PagePresenter<V extends View, Proxy_ extends Proxy<?>>
 		extends Presenter<V, Proxy_>
 		implements AsyncCallFailHandler {
 
@@ -21,7 +22,7 @@ public abstract class BasePresenter<V extends BaseView, Proxy_ extends Proxy<?>>
 
 	@Inject protected TopBarPresenter topBar;
 
-	protected BasePresenter(final EventBus eventBus, final V view, final Proxy_ proxy) {
+	protected PagePresenter(final EventBus eventBus, final V view, final Proxy_ proxy) {
 		super(eventBus, view, proxy);
 
 	}

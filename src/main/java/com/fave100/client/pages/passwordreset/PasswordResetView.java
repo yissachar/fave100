@@ -1,27 +1,22 @@
 package com.fave100.client.pages.passwordreset;
 
-import com.fave100.client.pages.BasePresenter;
+import com.fave100.client.pages.PageView;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class PasswordResetView extends
-		ViewWithUiHandlers<PasswordResetUiHandlers> implements
-		PasswordResetPresenter.MyView {
+public class PasswordResetView extends PageView<PasswordResetUiHandlers>
+		implements PasswordResetPresenter.MyView {
 
 	private final Widget widget;
-	@UiField HTMLPanel topBar;
 	@UiField FormPanel sendTokenForm;
 	@UiField TextBox usernameInput;
 	@UiField TextBox emailInput;
@@ -47,16 +42,6 @@ public class PasswordResetView extends
 	@Override
 	public Widget asWidget() {
 		return widget;
-	}
-
-	@Override
-	public void setInSlot(final Object slot, final IsWidget content) {
-		if (slot == BasePresenter.TOP_BAR_SLOT) {
-			topBar.clear();
-			if (content != null) {
-				topBar.add(content);
-			}
-		}
 	}
 
 	@UiHandler("sendTokenForm")

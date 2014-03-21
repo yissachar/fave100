@@ -2,12 +2,13 @@ package com.fave100.client.pages.login;
 
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
-import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.BaseView;
+import com.fave100.client.pages.PagePresenter;
 import com.fave100.client.place.NameTokens;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.HasUiHandlers;
+import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
@@ -22,9 +23,9 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
  * 
  */
 public class LoginPresenter extends
-		BasePresenter<LoginPresenter.MyView, LoginPresenter.MyProxy> {
+		PagePresenter<LoginPresenter.MyView, LoginPresenter.MyProxy> {
 
-	public interface MyView extends BaseView {
+	public interface MyView extends View, HasUiHandlers<LoginUiHandlers> {
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
