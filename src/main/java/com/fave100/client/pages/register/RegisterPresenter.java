@@ -16,7 +16,6 @@ import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -74,6 +73,8 @@ public class RegisterPresenter extends
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private String provider;
+	private String _oauthVerifier;
+	private String _state;
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager,
@@ -95,7 +96,10 @@ public class RegisterPresenter extends
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 
+		_state = placeRequest.getParameter("state", "");
 		provider = placeRequest.getParameter("provider", "");
+		_oauthVerifier = placeRequest.getParameter("oauth_verifier", "");
+
 		if (provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
 			// The user is being redirected back to the register page after
 			// signing in to their 3rd party account - prompt them for a
@@ -148,10 +152,8 @@ public class RegisterPresenter extends
 
 			LoadingIndicator.show();
 			// First see if they are already logged in
-			final String oauth_verifier = placeRequest.getParameter("oauth_verifier", "");//Window.Location
-			//					.getParameter("oauth_verifier");
 
-			_dispatcher.execute(_restServiceFactory.auth().loginWithTwitter(oauth_verifier), new AsyncCallback<AppUser>() {
+			_dispatcher.execute(_restServiceFactory.auth().loginWithTwitter(_oauthVerifier), new AsyncCallback<AppUser>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -251,11 +253,10 @@ public class RegisterPresenter extends
 			}
 			else if (provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
 				// Create Twitter-linked account
-				final String oauth_verifier = Window.Location.getParameter("oauth_verifier");
 
 				TwitterRegistration registration = new TwitterRegistration();
 				registration.setUsername(username);
-				registration.setOauthVerifier(oauth_verifier);
+				registration.setOauthVerifier(_oauthVerifier);
 
 				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromTwitterAccount(registration), new RestCallback<AppUser>() {
 
@@ -283,7 +284,7 @@ public class RegisterPresenter extends
 				// Create Facebook linked account
 				FacebookRegistration registration = new FacebookRegistration();
 				registration.setUsername(username);
-				registration.setCode(Window.Location.getParameter("state"));
+				registration.setCode(_state);
 
 				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromFacebookAccount(registration), new RestCallback<AppUser>() {
 
