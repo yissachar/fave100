@@ -39,18 +39,10 @@
 			margin-bottom: 10px;
 		}
 		
-		.statusMessage{
-			display: block;
+		.statusMessage {
 			font-size: 0.75em;
-			margin: 5px 0;
-			float: left;
 		}
-		
-		.registerButton {
-			margin-top: 15px;
-			width: 100%;
-		}
-		
+				
 		.thirdPartyLinks, .thirdPartyLinks a {
 			width: 100%;
 		}
@@ -63,7 +55,16 @@
 		
 		.thirdPartyUsernamePrompt {
 			margin: 50px auto 0;
-			width: 300px;
+			width: 100%;
+			text-align: center;
+		}
+		
+		.thirdPartyUsernameInput {
+			margin: 10px 0;
+		}
+		
+		.submitButton {
+			margin-top: 15px;
 		}
 
 		#alreadyHaveAccountPrompt {
@@ -77,8 +78,8 @@
 	
 	<p:Page ui:field="page">
 		<p:content>	
-			<g:HTMLPanel>
-			
+			<g:HTMLPanel>	
+			    	
 				<g:HTMLPanel ui:field="registerContainer" styleName="{style.registerContainer}">
 				    <h1 class="row">Registration</h1>
 				    <g:HTMLPanel ui:field="registerWidget"></g:HTMLPanel>
@@ -87,18 +88,22 @@
 				<g:HTMLPanel ui:field="thirdPartyUsernamePrompt" styleName="{style.thirdPartyUsernamePrompt}">
 					<g:FormPanel ui:field="thirdPartyRegisterForm">
 						<g:HTMLPanel ui:styleName="registerContainer {style.thirdPartyUsernamePrompt}">
-							<span>Please enter a username to complete the registration process</span>
-							<w:FaveTextBox ui:field="thirdPartyUsernameField"/>
-							<span class="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage"/>					
-							<g:SubmitButton ui:field="thirdPartyUsernameSubmitButton">Submit</g:SubmitButton>
+							<g:Label>Please enter a username to complete the registration process:</g:Label>
+							<g:SimplePanel>
+								<w:FaveTextBox ui:field="thirdPartyUsernameField" ui:styleName="{style.thirdPartyUsernameInput}"/>									
+							</g:SimplePanel>
+							<g:SimplePanel>
+								<g:InlineLabel ui:styleName="{style.statusMessage} error" ui:field="thirdPartyUsernameStatusMessage" />
+							</g:SimplePanel>
+							<g:SubmitButton ui:field="thirdPartyUsernameSubmitButton" ui:styleName="{style.submitButton}">Submit</g:SubmitButton>
 						</g:HTMLPanel>
 					</g:FormPanel>
 				</g:HTMLPanel>
 				
 				<p id="alreadyHaveAccountPrompt">					   
 				    <g:InlineHyperlink targetHistoryToken="{nameTokens.getLogin}">Already have an account? Log in</g:InlineHyperlink>
-				</p>	
-			
+				</p>
+				
 			</g:HTMLPanel>
 		</p:content>
 	</p:Page>
