@@ -6,4 +6,6 @@ public interface GlobalStyle extends GssResource {
 
 	int SIDE_BAR_WIDTH();
 
+	String mobile();
+
 }

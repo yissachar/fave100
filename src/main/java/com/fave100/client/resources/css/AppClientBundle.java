@@ -9,7 +9,7 @@ public interface AppClientBundle extends ClientBundle {
 	public static final AppClientBundle INSTANCE = GWT.create(AppClientBundle.class);
 
 	@Source("global.css")
-	public CssResource getGlobalCss();
+	public GlobalStyle getGlobalCss();
 
 	@Source("mobile-override.css")
 	public CssResource getMobileCss();

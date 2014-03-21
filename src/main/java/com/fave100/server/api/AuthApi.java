@@ -24,6 +24,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.RequestToken;
 
+import com.fave100.server.SessionAttributes;
 import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.FacebookRegistration;
@@ -136,10 +137,10 @@ public class AuthApi {
 			else if (e.getMessage().equals(ApiExceptions.DID_NOT_PASS_VALIDATION)) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(ApiExceptions.DID_NOT_PASS_VALIDATION);
-				sb.append(":");
+				sb.append(':');
 				for (String error : errors) {
 					sb.append(error);
-					sb.append("\n");
+					sb.append('\n');
 				}
 
 				throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(sb.toString()).build());
@@ -243,7 +244,7 @@ public class AuthApi {
 						// Create the TwitterID lookup
 						final TwitterID twitterID = new TwitterID(user.getId(), appUser);
 						ofy().save().entities(appUser, twitterID, faveList).now();
-						request.getSession().setAttribute(AppUserDao.AUTH_USER, username);
+						request.getSession().setAttribute(SessionAttributes.AUTH_USER, username);
 						return appUser;
 					}
 					return null;
@@ -354,7 +355,7 @@ public class AuthApi {
 				throw new InvalidLoginException();
 			}
 			// Successful login - store session
-			request.getSession().setAttribute(AppUserDao.AUTH_USER, username);
+			request.getSession().setAttribute(SessionAttributes.AUTH_USER, username);
 		}
 		else {
 			// Bad username
@@ -380,7 +381,7 @@ public class AuthApi {
 			throw new NotLoggedInException();
 
 		// Successful login - store session
-		request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+		request.getSession().setAttribute(SessionAttributes.AUTH_USER, loggedInUser.getUsername());
 
 		return loggedInUser;
 	}
@@ -409,7 +410,7 @@ public class AuthApi {
 			throw new NotLoggedInException();
 
 		// Successful login - store session
-		request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+		request.getSession().setAttribute(SessionAttributes.AUTH_USER, loggedInUser.getUsername());
 		final String twitterAvatar = twitterUser.getProfileImageURL();
 
 		// Update the user's avatar from Twitter
@@ -428,6 +429,7 @@ public class AuthApi {
 	public static AppUser loginWithFacebook(@Context HttpServletRequest request, final StringResult code) {
 		// Get the Facebook user
 		final Long facebookUserId = AppUserDao.getCurrentFacebookUserId(request, code.getValue());
+
 		if (facebookUserId == null)
 			throw new OauthNotLoggedInException("acebook");
 
@@ -437,7 +439,7 @@ public class AuthApi {
 			throw new NotLoggedInException();
 
 		// Successful login - store session				
-		request.getSession().setAttribute(AppUserDao.AUTH_USER, loggedInUser.getUsername());
+		request.getSession().setAttribute(SessionAttributes.AUTH_USER, loggedInUser.getUsername());
 		// TODO: Handle Facebook avatars
 		return loggedInUser;
 	}
@@ -446,9 +448,9 @@ public class AuthApi {
 	@Path(ApiPaths.LOGOUT)
 	@ApiOperation(value = "Logout")
 	public static void logout(@Context HttpServletRequest request) {
-		request.getSession().setAttribute(AppUserDao.AUTH_USER, null);
-		request.getSession().setAttribute("requestToken", null);
-		request.getSession().setAttribute("twitterUser", null);
+		request.getSession().setAttribute(SessionAttributes.AUTH_USER, null);
+		request.getSession().setAttribute(SessionAttributes.REQUEST_TOKEN, null);
+		request.getSession().setAttribute(SessionAttributes.TWITTER_USER, null);
 		return;
 	}
 
@@ -465,7 +467,7 @@ public class AuthApi {
 	@Path(ApiPaths.GET_FACEBOOK_AUTH_URL)
 	@ApiOperation(value = "Get Facebook auth URL", response = StringResult.class)
 	public static StringResult getFacebookAuthUrl(@Context HttpServletRequest request, @QueryParam("redirectUrl") final String redirectUrl) {
-		request.getSession().setAttribute("facebookRedirect", redirectUrl);
+		request.getSession().setAttribute(SessionAttributes.FACEBOOK_REDIRECT, redirectUrl);
 		try {
 			return new StringResult("https://www.facebook.com/dialog/oauth?client_id=" + AppUserDao.FACEBOOK_APP_ID + "&display=page&redirect_uri=" + URLEncoder.encode(redirectUrl, "UTF-8"));
 		}
@@ -484,7 +486,7 @@ public class AuthApi {
 
 		try {
 			final RequestToken requestToken = twitter.getOAuthRequestToken(redirectUrl);
-			request.getSession().setAttribute("requestToken", requestToken);
+			request.getSession().setAttribute(SessionAttributes.REQUEST_TOKEN, requestToken);
 			return new StringResult(requestToken.getAuthenticationURL());
 		}
 		catch (final TwitterException e) {

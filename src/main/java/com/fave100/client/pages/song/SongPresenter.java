@@ -10,13 +10,11 @@ import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.YouTubeSearchResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
-import com.fave100.client.pages.BasePresenter;
-import com.fave100.client.pages.BaseView;
+import com.fave100.client.pages.PagePresenter;
 import com.fave100.client.pages.song.widgets.playlist.PlaylistPresenter;
 import com.fave100.client.pages.song.widgets.whyline.WhylinePresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.place.NameTokens;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -27,8 +25,10 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
@@ -45,10 +45,10 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
  * 
  */
 public class SongPresenter extends
-		BasePresenter<SongPresenter.MyView, SongPresenter.MyProxy> implements
+		PagePresenter<SongPresenter.MyView, SongPresenter.MyProxy> implements
 		SongUiHandlers {
 
-	public interface MyView extends BaseView, HasUiHandlers<SongUiHandlers> {
+	public interface MyView extends View, HasUiHandlers<SongUiHandlers> {
 		void setSongInfo(FaveItem song);
 
 		void scrollYouTubeIntoView();
