@@ -7,7 +7,7 @@
 	ui:generateLocales='default'>
 
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView.Style">
-		.mobile {
+		.mobile .container {
 			padding: 10px;
 		}
 		
@@ -47,7 +47,7 @@
 		}
 	</ui:style>
 	
-	<g:FlowPanel ui:field="container">
+	<g:FlowPanel ui:field="container" ui:styleName="{style.container}">
 		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
 		<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 		<g:HTMLPanel ui:field="listAutocomplete"/>
