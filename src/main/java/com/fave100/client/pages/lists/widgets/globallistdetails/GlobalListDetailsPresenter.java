@@ -61,9 +61,15 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 		getView().setUiHandlers(this);
 	}
 
-	public void setHashtag(final String hashtag) {
-		_hashtag = hashtag;
-		getView().setInfo(hashtag);
+	@Override
+	public void onReveal() {
+		super.onReveal();
+		setInSlot(LIST_AUTOCOMPLETE_SLOT, listAutocomplete);
+		render();
+	}
+
+	private void render() {
+		getView().setInfo(_hashtag);
 		_dispatcher.execute(_restServiceFactory.trending().getTrendingFaveLists(), new AsyncCallback<StringResultCollection>() {
 
 			@Override
@@ -83,16 +89,10 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 		});
 
 		// Hide contribute if user already has it
-		if (_currentUser.isLoggedIn() && (_currentUser.getHashtags().contains(hashtag) || hashtag.equals(Constants.DEFAULT_HASHTAG)))
+		if (_currentUser.isLoggedIn() && (_currentUser.getHashtags().contains(_hashtag) || _hashtag.equals(Constants.DEFAULT_HASHTAG)))
 			getView().hideContributeCTA();
 		else
 			getView().showContributeCTA();
-	}
-
-	@Override
-	public void onReveal() {
-		super.onReveal();
-		setInSlot(LIST_AUTOCOMPLETE_SLOT, listAutocomplete);
 	}
 
 	@Override
@@ -103,6 +103,11 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 		else {
 			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 		}
+	}
+
+	public void setHashtag(final String hashtag) {
+		_hashtag = hashtag;
+		render();
 	}
 
 }
