@@ -6,6 +6,7 @@ import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.entities.FacebookRegistration;
+import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.TwitterRegistration;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
@@ -75,6 +76,7 @@ public class RegisterPresenter extends
 	private String provider;
 	private String _oauthVerifier;
 	private String _state;
+	private String _code;
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager,
@@ -96,6 +98,7 @@ public class RegisterPresenter extends
 	public void prepareFromRequest(final PlaceRequest placeRequest) {
 		super.prepareFromRequest(placeRequest);
 
+		_code = placeRequest.getParameter("code", "");
 		_state = placeRequest.getParameter("state", "");
 		provider = placeRequest.getParameter("provider", "");
 		_oauthVerifier = placeRequest.getParameter("oauth_verifier", "");
@@ -153,7 +156,10 @@ public class RegisterPresenter extends
 			LoadingIndicator.show();
 			// First see if they are already logged in
 
-			_dispatcher.execute(_restServiceFactory.auth().loginWithTwitter(_oauthVerifier), new AsyncCallback<AppUser>() {
+			StringResult _oauthVerifierWrapper = new StringResult();
+			_oauthVerifierWrapper.setValue(_oauthVerifier);
+
+			_dispatcher.execute(_restServiceFactory.auth().loginWithTwitter(_oauthVerifierWrapper), new AsyncCallback<AppUser>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -181,7 +187,11 @@ public class RegisterPresenter extends
 		else if (provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 			// Check if user alaready logged in through Facebook
 			LoadingIndicator.show();
-			_dispatcher.execute(_restServiceFactory.auth().loginWithFacebook(placeRequest.getParameter("code", "")), new AsyncCallback<AppUser>() {
+
+			StringResult codeWrapper = new StringResult();
+			codeWrapper.setValue(_code);
+
+			_dispatcher.execute(_restServiceFactory.auth().loginWithFacebook(codeWrapper), new AsyncCallback<AppUser>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -230,7 +240,11 @@ public class RegisterPresenter extends
 		if (validateThirdPartyFields(username)) {
 			if (provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
 				// Create Google-linked account
-				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromGoogleAccount(username), new RestCallback<AppUser>() {
+
+				StringResult usernameWrapper = new StringResult();
+				usernameWrapper.setValue(username);
+
+				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromGoogleAccount(usernameWrapper), new RestCallback<AppUser>() {
 
 					@Override
 					public void setResponse(Response response) {

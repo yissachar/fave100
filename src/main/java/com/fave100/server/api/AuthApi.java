@@ -149,7 +149,7 @@ public class AuthApi {
 	@POST
 	@Path(ApiPaths.CREATE_APPUSER_FROM_GOOGLE_ACCOUNT)
 	@ApiOperation(value = "Create an AppUser from Google", response = AppUser.class)
-	public static AppUser createAppUserFromGoogleAccount(@Context final HttpServletRequest request, final String username) {
+	public static AppUser createAppUserFromGoogleAccount(@Context final HttpServletRequest request, final StringResult username) {
 
 		// TODO: Verify that transaction working and will stop duplicate usernames/googleID completely
 		final String userExistsMsg = "A user with that name already exists";
@@ -161,18 +161,18 @@ public class AuthApi {
 				public AppUser run() {
 					final UserService userService = UserServiceFactory.getUserService();
 					final User user = userService.getCurrentUser();
-					if (AppUserDao.findAppUser(username) != null) {
+					if (AppUserDao.findAppUser(username.getValue()) != null) {
 						throw new RuntimeException(userExistsMsg);
 					}
 					if (ofy().load().type(GoogleID.class).id(user.getUserId()).now() != null) {
 						throw new RuntimeException(googleIDMsg);
 					}
-					if (Validator.validateUsername(username) == null) {
+					if (Validator.validateUsername(username.getValue()) == null) {
 						// Create the user
-						final AppUser appUser = new AppUser(username);
+						final AppUser appUser = new AppUser(username.getValue());
 						appUser.setEmail(user.getEmail());
 						// Create the user's list
-						final FaveList faveList = new FaveList(username, Constants.DEFAULT_HASHTAG);
+						final FaveList faveList = new FaveList(username.getValue(), Constants.DEFAULT_HASHTAG);
 						// Create the GoogleID lookup
 						final GoogleID googleID = new GoogleID(user.getUserId(), appUser);
 						ofy().save().entities(appUser, googleID, faveList).now();
@@ -285,7 +285,7 @@ public class AuthApi {
 							// Create the Facebook lookup
 							final FacebookID facebookID = new FacebookID(userFacebookId, appUser);
 							ofy().save().entities(appUser, facebookID, faveList).now();
-							return AuthApi.loginWithFacebook(request, code);
+							return AuthApi.loginWithFacebook(request, new StringResult(code));
 						}
 						return null;
 					}
@@ -369,10 +369,10 @@ public class AuthApi {
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_TWITTER)
 	@ApiOperation(value = "Login with Twitter", response = AppUser.class)
-	public static AppUser loginWithTwitter(@Context HttpServletRequest request, final String oauth_verifier) {
+	public static AppUser loginWithTwitter(@Context HttpServletRequest request, final StringResult oauth_verifier) {
 
 		// Get the Twitter user
-		final twitter4j.User twitterUser = AppUserDao.getTwitterUser(request, oauth_verifier);
+		final twitter4j.User twitterUser = AppUserDao.getTwitterUser(request, oauth_verifier.getValue());
 		if (twitterUser != null) {
 			// Find the corresponding Fave100 user
 			final AppUser loggedInUser = AppUserDao.findAppUserByTwitterId(twitterUser.getId());
@@ -395,9 +395,9 @@ public class AuthApi {
 	@POST
 	@Path(ApiPaths.LOGIN_WITH_FACEBOOK)
 	@ApiOperation(value = "Login with Facebook", response = AppUser.class)
-	public static AppUser loginWithFacebook(@Context HttpServletRequest request, final String code) {
+	public static AppUser loginWithFacebook(@Context HttpServletRequest request, final StringResult code) {
 		// Get the Facebook user
-		final Long facebookUserId = AppUserDao.getCurrentFacebookUserId(request, code);
+		final Long facebookUserId = AppUserDao.getCurrentFacebookUserId(request, code.getValue());
 		if (facebookUserId != null) {
 			// Find the corresponding Fave100 user
 			final AppUser loggedInUser = AppUserDao.findAppUserByFacebookId(facebookUserId);
