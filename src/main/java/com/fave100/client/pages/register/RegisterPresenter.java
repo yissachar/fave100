@@ -167,9 +167,15 @@ public class RegisterPresenter extends
 	@Override
 	public void onReveal() {
 		super.onReveal();
-		getView().clearFields();
 		registerContainer.setShortNames(false);
 		setInSlot(REGISTER_SLOT, registerContainer);
+	}
+
+	@Override
+	protected void onHide() {
+		super.onHide();
+		getView().clearFields();
+		getView().clearThirdPartyErrors();
 	}
 
 	@Override
