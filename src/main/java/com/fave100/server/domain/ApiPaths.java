@@ -20,7 +20,6 @@ public class ApiPaths {
 	public static final String GET_GOOGLE_AUTH_URL = "/google/url";
 	public static final String GET_FACEBOOK_AUTH_URL = "/facebook/url";
 	public static final String GET_TWITTER_AUTH_URL = "/twitter/url";
-	public static final String IS_GOOGLE_LOGGED_IN = "/google/loggedin";
 
 	// Users
 	public static final String USERS_ROOT = "users";

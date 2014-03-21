@@ -7,9 +7,7 @@ import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.client.place.NameTokens;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.fave100.shared.Utils;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -18,6 +16,7 @@ import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -166,16 +165,26 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	}-*/;
 
 	public void googleCallback() {
-		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_GOOGLE).build());
+		placeManager.revealPlace(new PlaceRequest.Builder()
+				.nameToken(NameTokens.register)
+				.with(RegisterPresenter.PROVIDER_PARAM, RegisterPresenter.PROVIDER_GOOGLE)
+				.build());
 	}
 
 	public void twitterCallback(final String verifier) {
-		GWT.log("Oauth from top bar: " + verifier);
-		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_TWITTER).with("oauth_verifier", verifier).build());
+		placeManager.revealPlace(new PlaceRequest.Builder()
+				.nameToken(NameTokens.register)
+				.with(RegisterPresenter.PROVIDER_PARAM, RegisterPresenter.PROVIDER_TWITTER)
+				.with(RegisterPresenter.OAUTH_VERIFIER_PARAM, verifier)
+				.build());
 	}
 
 	public void facebookCallback(final String code) {
-		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).with("provider", RegisterPresenter.PROVIDER_FACEBOOK).with("code", code).build());
+		placeManager.revealPlace(new PlaceRequest.Builder()
+				.nameToken(NameTokens.register)
+				.with(RegisterPresenter.PROVIDER_PARAM, RegisterPresenter.PROVIDER_FACEBOOK)
+				.with(RegisterPresenter.CODE_PARAM, code)
+				.build());
 	}
 }
 
