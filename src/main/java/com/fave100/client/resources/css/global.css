@@ -41,3 +41,5 @@ input:hover, select:hover {
 input:focus, select:focus {
 	border-color: #5A9DE8;
 }
+
+@external mobile;

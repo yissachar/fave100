@@ -29,6 +29,9 @@ import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.fave100.shared.Constants;
+import com.google.api.server.spi.response.BadRequestException;
+import com.google.api.server.spi.response.ForbiddenException;
+import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
@@ -133,7 +136,7 @@ public class FaveListCreationTest {
 		// Create a favelist with a name that is too long
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < Constants.MAX_HASHTAG_LENGTH + 1; i++) {
-			sb.append("a");
+			sb.append('a');
 		}
 
 		String faveListName = sb.toString();

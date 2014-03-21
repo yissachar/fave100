@@ -2,6 +2,7 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:p='urn:import:com.fave100.client.pages'
 	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
@@ -130,10 +131,10 @@
 	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>
 	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens"/>
 	
-	<g:HTMLPanel styleName="wrap">
-		<g:HTMLPanel ui:field="topBar"/>
-		<div class="container">
-			<div class="content row">
+	<p:Page ui:field="page">
+		<p:content>
+			<g:FlowPanel>
+			
 				<g:HTMLPanel ui:field="userContainer">
 					
 					<g:HTMLPanel ui:field="userPageSideBar" styleName="userPageSideBar col span_3">
@@ -177,10 +178,12 @@
 							<g:HTMLPanel ui:field="favelist"/>									
 						</g:HTMLPanel>						
 					</g:HTMLPanel>
+					
 				</g:HTMLPanel>
 				<g:Label ui:field="userNotFound">That user does not exist.</g:Label>
-			</div>
-		</div>
-		<pf:Footer/>
-	</g:HTMLPanel>
+				
+			</g:FlowPanel>
+		</p:content>
+	</p:Page>
+	
 </ui:UiBinder>

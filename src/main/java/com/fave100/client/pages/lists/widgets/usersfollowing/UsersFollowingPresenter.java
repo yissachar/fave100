@@ -10,11 +10,9 @@ import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.FollowingResult;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.pages.BaseView;
 import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
 import com.fave100.client.place.NameTokens;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -24,16 +22,18 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
+import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPresenter.MyView>
 		implements UsersFollowingUiHandlers {
 
-	public interface MyView extends BaseView, HasUiHandlers<UsersFollowingUiHandlers> {
+	public interface MyView extends View, HasUiHandlers<UsersFollowingUiHandlers> {
 		void setFollowing(List<FlowPanel> lists);
 
 		void addFollowing(List<FlowPanel> lists);

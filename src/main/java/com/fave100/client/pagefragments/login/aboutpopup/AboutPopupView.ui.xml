@@ -2,7 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:w="urn:import:com.fave100.client.widgets.lightbox">
-    <ui:style>		
+             
+    <ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">		
 		.slides {
 			overflow: hidden;
 			padding: 15px;
@@ -12,28 +13,41 @@
 			float: left;			
 		}
 		
+		.mobile .slides img {
+			display: none;
+		}
+		
 		.description p {
-			margin-left: 515px;
+				margin-left: 515px;
 			padding: 7px;
+		}
+		
+		.mobile .description p {
+			margin-left: 0;
 		}
 		
 		.nav {
 			margin-top: 10px;
 			position: absolute;
 			bottom: 15px;
-			width: 96%;
+			width: 100%;
+			display: table;
 		}
 				
 		.arrows {
 			position: relative;
 			top: 20px;
+			display: table-cell;
+		}
+		
+		.rightArrow {
+			float: right;
 		}
 		
 		.pageNumLabel {
 			font-size: 1.4em;
-			width: 86%;
 			text-align: center;
-			display: inline-block;
+			display: table-cell;
 		}
     </ui:style>
     
@@ -86,7 +100,7 @@
 				<g:FlowPanel ui:styleName="{style.nav}">
 					<g:Image ui:field="leftArrow" ui:styleName="{style.arrows}" url="{img.leftArrow.getSafeUri.asString}" pixelSize="50, 50"></g:Image>
 					<g:InlineLabel ui:field="pageNumLabel" ui:styleName="{style.pageNumLabel}"></g:InlineLabel>
-					<g:Image ui:field="rightArrow" ui:styleName="{style.arrows}" url="{img.rightArrow.getSafeUri.asString}" pixelSize="50, 50"></g:Image>
+					<g:Image ui:field="rightArrow" ui:styleName="{style.arrows} {style.rightArrow}" url="{img.rightArrow.getSafeUri.asString}" pixelSize="50, 50"></g:Image>
 				</g:FlowPanel>
 			</g:FlowPanel>
 			
