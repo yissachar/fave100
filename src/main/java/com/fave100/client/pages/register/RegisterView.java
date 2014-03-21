@@ -1,13 +1,13 @@
 package com.fave100.client.pages.register;
 
 import com.fave100.client.pages.BasePresenter;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,7 +25,7 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
 	@UiField HTMLPanel topBar;
 	@UiField HTMLPanel registerContainer;
 	@UiField HTMLPanel registerWidget;
-	@UiField SpanElement thirdPartyUsernameStatusMessage;
+	@UiField Label thirdPartyUsernameStatusMessage;
 	@UiField TextBox thirdPartyUsernameField;
 	@UiField HTMLPanel thirdPartyUsernamePrompt;
 	@UiField SubmitButton thirdPartyUsernameSubmitButton;;
@@ -84,12 +84,13 @@ public class RegisterView extends ViewWithUiHandlers<RegisterUiHandlers>
 
 	@Override
 	public void setThirdPartyUsernameError(final String error) {
-		thirdPartyUsernameStatusMessage.setInnerText(error);
+		thirdPartyUsernameStatusMessage.setText(error);
 		thirdPartyUsernameField.addStyleName("errorInput");
 	}
 
 	@Override
 	public void clearThirdPartyErrors() {
+		thirdPartyUsernameStatusMessage.setText("");
 		thirdPartyUsernameField.removeStyleName("errorInput");
 	}
 }
