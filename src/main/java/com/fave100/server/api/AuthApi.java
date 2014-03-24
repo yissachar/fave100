@@ -431,7 +431,7 @@ public class AuthApi {
 		final Long facebookUserId = AppUserDao.getCurrentFacebookUserId(request, code.getValue());
 
 		if (facebookUserId == null)
-			throw new OauthNotLoggedInException("acebook");
+			throw new OauthNotLoggedInException("Facebook");
 
 		// Find the corresponding Fave100 user
 		final AppUser loggedInUser = AppUserDao.findAppUserByFacebookId(facebookUserId);
