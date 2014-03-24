@@ -29,9 +29,6 @@ import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.fave100.shared.Constants;
-import com.google.api.server.spi.response.BadRequestException;
-import com.google.api.server.spi.response.ForbiddenException;
-import com.google.api.server.spi.response.UnauthorizedException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
@@ -209,12 +206,6 @@ public class FaveListCreationTest {
 
 	/**
 	 * When a FaveList is first created, it should not have any FaveItems stored
-	 * 
-	 * @throws ForbiddenException
-	 * @throws UnauthorizedException
-	 * @throws BadRequestException
-	 * 
-	 * @throws Exception
 	 */
 	@Test
 	public void should_create_favelist_that_is_empty() {
@@ -229,10 +220,6 @@ public class FaveListCreationTest {
 	 * When a FaveList is created, the name of the list is also stored in the User object. We
 	 * denormalize this for better performance so as not to have to perform N FaveList fetches
 	 * to retrieve a list of FaveList names for a user.
-	 * 
-	 * @throws ForbiddenException
-	 * @throws UnauthorizedException
-	 * @throws BadRequestException
 	 */
 	@Test
 	public void should_store_favelist_name_in_user_profile() {
