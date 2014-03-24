@@ -188,8 +188,12 @@ public class FavePickWidget extends Composite {
 		rankPanel.clear();
 		rankPanel.addStyleName(style.rank());
 
-		if (_rank >= 100)
+		if (_rank >= 100) {
 			rankPanel.addStyleName(style.rankThreeDigit());
+		}
+		else {
+			rankPanel.removeStyleName(style.rankThreeDigit());
+		}
 
 		_songPick = new Label(Integer.toString(_rank));
 		rankPanel.setWidget(_songPick);
@@ -209,8 +213,14 @@ public class FavePickWidget extends Composite {
 				final TextBox rankText = new TextBox();
 				rankText.addStyleName(style.rankEditTextBox());
 				rankText.addStyleName(style.rank());
-				if (_rank >= 100)
+
+				if (_rank >= 100) {
 					rankText.addStyleName(style.rankThreeDigit());
+				}
+				else {
+					rankText.removeStyleName(style.rankThreeDigit());
+				}
+
 				rankText.setText(_songPick.getText());
 				rankText.addKeyDownHandler(new KeyDownHandler() {
 
