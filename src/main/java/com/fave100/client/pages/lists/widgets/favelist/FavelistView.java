@@ -38,7 +38,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	}
 
 	@UiField FavelistStyle style;
-	@UiField FlowPanel favelist;
+	@UiField FlowPanel faveList;
 	@UiField Label noItemsMessage;
 
 	@Inject
@@ -55,7 +55,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	@Override
 	public void setList(final List<FavePickWidget> widgets) {
 		hideNoItemsMessage();
-		favelist.clear();
+		faveList.clear();
 
 		if (widgets == null || widgets.size() == 0) {
 			noItemsMessage.setVisible(true);
@@ -63,13 +63,13 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 		}
 
 		for (final FavePickWidget widget : widgets) {
-			favelist.add(widget);
+			faveList.add(widget);
 		}
 	}
 
 	@Override
 	public void addPick(final FavePickWidget widget) {
-		favelist.add(widget);
+		faveList.add(widget);
 		hideNoItemsMessage();
 
 		if (this.asWidget().getElement().getClientHeight() + widget.getElement().getClientHeight() > Window.getClientHeight())
@@ -78,9 +78,9 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 
 	@Override
 	public void swapPicks(final int indexA, final int indexB) {
-		final Widget widget = favelist.getWidget(indexA);
-		favelist.remove(widget);
-		favelist.insert(widget, indexB);
+		final Widget widget = faveList.getWidget(indexA);
+		faveList.remove(widget);
+		faveList.insert(widget, indexB);
 	}
 
 	@Override
