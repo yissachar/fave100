@@ -183,92 +183,6 @@ footer {
 	margin-bottom: 5px;
 }
 
-/* Fave List */
-
-
-.faveList > div:first-child {	
-	border-top: 2px solid #ddd;
-}
-
-.favelistWhyline:hover:empty:before {
-	content: "Click here to enter a WhyLine";
-	text-decoration: italics;
-}
-
-.unselectable, .draggedFaveListItem{	
-  	-moz-user-select: none;
-  	-khtml-user-select: none;
-  	-webkit-user-select: none;
-  	user-select: none;
-}
-
-.rank {
-	font-size: 40px;	
-}
-
-.rank > div {
-	margin-top: 2px;
-}
-
-.rankThreeDigit {
-	font-size: 30px;
-}
-
-.rankThreeDigit > div {
-	margin-top: 5px;
-}
-
-.rankEditPanel:hover {
-	border-radius: 0px;
-	cursor: pointer;
-}
-
-.rankEditTextBox {
-	border-radius: 0px;
-	background: red;
-	color: #444;
-	border: 3px #444 solid;
-	background-color: #fff;
-	-webkit-box-shadow: 0 px 2 px 4 px #000000; /* Saf3-4 */
-	-moz-box-shadow: 0 px 2 px 4 px #000000; /* FF3.5 - 3.6 */
-	box-shadow: 0 px 2 px 4 px #000000;
-	/* Opera 10.5, IE9, FF4+, Chrome 10+ */
-	display: inline-block;
-	padding: 2px 2 px 2 px 2 px;
-	margin: -3px;
-	font-family: arial;
-	width: 62px;
-	height: 60px;
-	text-align: center;
-	
-}
-
-.whyLinePanelEmpty {
-	white-space: pre;
-}
-.whyLinePanel:hover {
-	border: 3px #ddd dotted;
-	cursor: pointer;
-	margin: -3px;
-}
-
-.whyLineTextBox {
-	margin: -3px;
-	width: 100%;
-}
-
-.faveList > div:hover .hoverHidden {
-	display: block;
-}
-
-.faveList > div:first-child .rankUpArrow {
-	display: none;
-}
-
-.faveList > div:last-child .rankDownArrow {
-	display: none;
-}
-
 /* Login container */
 
 .loginDivider {
@@ -281,7 +195,6 @@ footer {
 	font-size: 1.9em;
 	text-align: center;
 }
-
 
 .fullLoginPage .nativeLoginBox {
 	width: 100%;
@@ -335,10 +248,11 @@ footer {
 		
 }
 
-.error{
+.error {
 	color: #D54545 !important;
 }
-.errorInput:not(:focus){
+
+.errorInput:not(:focus) {
 	border: 1px solid #D54545 !important; 
 }
 

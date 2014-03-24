@@ -55,12 +55,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class FavePickWidget extends Composite {
 
-	private static final String RANK = "rank";
-	private static final String RANK_THREE_DIGIT = "rankThreeDigit";
-	private static final String RANK_EDIT_PANEL = "rankEditPanel";
-	private static final String RANK_EDIT_TEXT_BOX = "rankEditTextBox";
 	private static final String CLICK_TO_ENTER_WHY_LINE = "Click to enter WhyLine";
-	private static final String WHY_LINE_EDIT_HOVER = "whyLinePanel";
 	private static Binder uiBinder = GWT.create(Binder.class);
 
 	public interface Binder extends UiBinder<Widget, FavePickWidget> {
@@ -68,6 +63,20 @@ public class FavePickWidget extends Composite {
 
 	public interface FavePickWidgetStyle extends GlobalStyle {
 		String hoverPanel();
+
+		String whyLinePanel();
+
+		String whyLineTextBox();
+
+		String whyLinePanelEmpty();
+
+		String rank();
+
+		String rankEditPanel();
+
+		String rankEditTextBox();
+
+		String rankThreeDigit();
 	}
 
 	@UiField HTMLPanel container;
@@ -104,6 +113,7 @@ public class FavePickWidget extends Composite {
 			((HasText)event.getSource()).setText(CLICK_TO_ENTER_WHY_LINE);
 		}
 	};
+
 	private final MouseOutHandler _whyLineEmptyMouseOut = new MouseOutHandler() {
 
 		@Override
@@ -115,8 +125,8 @@ public class FavePickWidget extends Composite {
 	private List<HandlerRegistration> _whyLineMouseHandlers;
 	private Label _songPick;
 
-	public FavePickWidget(final EventBus eventBus, final FaveItem item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged, final ItemDeleted itemDeleted,
-							final ItemAdded itemAdded, final String username, final String hashtag) {
+	public FavePickWidget(final EventBus eventBus, final FaveItem item, final int rank, final boolean editable, final WhyLineChanged whyLineChanged, final RankChanged rankChanged,
+							final ItemDeleted itemDeleted, final ItemAdded itemAdded, final String username, final String hashtag) {
 		_eventBus = eventBus;
 		_song = item.getSong();
 		_artist = item.getArtist();
@@ -176,28 +186,31 @@ public class FavePickWidget extends Composite {
 
 	private void setupRankPanel() {
 		rankPanel.clear();
-		rankPanel.addStyleName(RANK);
+		rankPanel.addStyleName(style.rank());
+
 		if (_rank >= 100)
-			rankPanel.addStyleName(RANK_THREE_DIGIT);
+			rankPanel.addStyleName(style.rankThreeDigit());
+
 		_songPick = new Label(Integer.toString(_rank));
 		rankPanel.setWidget(_songPick);
+
 		if (_editable)
 			setupRankEdit();
 	}
 
 	private void setupRankEdit() {
-		rankPanel.addStyleName(RANK_EDIT_PANEL);
+		rankPanel.addStyleName(style.rankEditPanel());
 		_songPick.setTitle("Click to change rank");
 		_songPick.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(final ClickEvent event) {
-				rankPanel.removeStyleName(RANK_EDIT_PANEL);
+				rankPanel.removeStyleName(style.rankEditPanel());
 				final TextBox rankText = new TextBox();
-				rankText.addStyleName(RANK_EDIT_TEXT_BOX);
-				rankText.addStyleName(RANK);
+				rankText.addStyleName(style.rankEditTextBox());
+				rankText.addStyleName(style.rank());
 				if (_rank >= 100)
-					rankText.addStyleName(RANK_THREE_DIGIT);
+					rankText.addStyleName(style.rankThreeDigit());
 				rankText.setText(_songPick.getText());
 				rankText.addKeyDownHandler(new KeyDownHandler() {
 
@@ -268,7 +281,7 @@ public class FavePickWidget extends Composite {
 	}
 
 	private void initEmptyWhyLine(final Label whyLine) {
-		whyLine.addStyleName("whyLinePanelEmpty");
+		whyLine.addStyleName(style.whyLinePanelEmpty());
 		whyLine.setText(" "); //setting this so white-space: pre will always have spacing for why line
 		_whyLineMouseHandlers = new ArrayList<HandlerRegistration>();
 		_whyLineMouseHandlers.add(whyLine.addMouseOverHandler(_whyLineEmptyMouseOver));
@@ -276,17 +289,17 @@ public class FavePickWidget extends Composite {
 	}
 
 	private void setupWhyLineEdit(final Label whyLine) {
-		whyLinePanel.addStyleName(WHY_LINE_EDIT_HOVER);
+		whyLinePanel.addStyleName(style.whyLinePanel());
 		whyLine.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(final ClickEvent event) {
 				removeMouseHandlers();
 
-				whyLinePanel.removeStyleName(WHY_LINE_EDIT_HOVER);
+				whyLinePanel.removeStyleName(style.whyLinePanel());
 				final TextBox txtBox = new TextBox();
 				txtBox.setMaxLength(Constants.MAX_WHYLINE_LENGTH);
-				txtBox.addStyleName("whyLineTextBox");
+				txtBox.addStyleName(style.whyLineTextBox());
 				if (whyLine.getText().equals(CLICK_TO_ENTER_WHY_LINE))
 					txtBox.setValue("");
 				else
@@ -340,7 +353,7 @@ public class FavePickWidget extends Composite {
 					if (!txtBox.getValue().trim().equals(getWhyline())) {
 						_whyLineCallback.onChange(getSongID(), txtBox.getValue());
 						setWhyline(txtBox.getValue());
-						whyLine.removeStyleName("whyLinePanelEmpty");
+						whyLine.removeStyleName(style.whyLinePanelEmpty());
 					}
 
 					if (txtBox.getValue().isEmpty()) {
@@ -352,7 +365,7 @@ public class FavePickWidget extends Composite {
 				}
 				whyLinePanel.clear();
 				whyLinePanel.setWidget(whyLine);
-				whyLinePanel.addStyleName(WHY_LINE_EDIT_HOVER);
+				whyLinePanel.addStyleName(style.whyLinePanel());
 			}
 
 		});
