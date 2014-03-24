@@ -1,13 +1,14 @@
 package com.fave100.client.pages.lists.widgets.listmanager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.widgets.autocomplete.list.ListAutocompletePresenter;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 
 public class AddListAutocompletePresenter extends ListAutocompletePresenter {
 
@@ -34,9 +35,16 @@ public class AddListAutocompletePresenter extends ListAutocompletePresenter {
 
 	@Override
 	public void setSuggestions(List<String> suggestions) {
-		if (!suggestions.contains(_lastSearch)) {
+		// Compare lower case suggestions to determine if in list already or not
+		List<String> lcSuggestions = new ArrayList<>();
+		for (String suggestion : suggestions) {
+			lcSuggestions.add(suggestion.toLowerCase());
+		}
+
+		if (_lastSearch != null && !lcSuggestions.contains(_lastSearch.toLowerCase())) {
 			suggestions.add(NEW_LIST_PROMPT + _lastSearch);
 		}
+
 		super.setSuggestions(suggestions);
 	}
 
