@@ -45,7 +45,7 @@ public class ProfilePresenter extends
 
 		void clearErrors();
 
-		void setFormStatusMessage(String message);
+		void setProfileSaveMessage(String message, boolean error);
 
 		void setAvatarImg(String src);
 
@@ -180,10 +180,10 @@ public class ProfilePresenter extends
 					if (saved.getValue()) {
 						oldUserInfo = userInfo;
 						populateFields(userInfo);
-						getView().setFormStatusMessage("Profile saved");
+						getView().setProfileSaveMessage("Profile saved", false);
 					}
 					else {
-						getView().setFormStatusMessage("Error: Profile not saved");
+						getView().setProfileSaveMessage("Error: Profile not saved", true);
 					}
 				}
 			});
