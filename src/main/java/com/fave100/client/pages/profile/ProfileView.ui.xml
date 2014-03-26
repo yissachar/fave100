@@ -3,26 +3,81 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:w='urn:import:com.fave100.client.widgets'
-	xmlns:p='urn:import:com.fave100.client.pages'
-	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
-	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	ui:generateLocales='default'>
+	xmlns:p='urn:import:com.fave100.client.pages'>
 
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
 		.pageTitle {
-			margin: 10px;
+			margin-top: 10px;
+			margin-bottom: 35px;			
 			text-align: center;
+		}
+				
+		button {
+			width: 130px;
 		}
 		
 		.formStatusMessage {
-			display: inline-block;
 			margin-left: 10px;
 		}
 		
+		.profileDetails {
+			float: left;
+		}
+		
+		.profileDetails > * {
+			margin-bottom: 20px;
+		}
+		
+		.profileDetails input[type=text] {
+			width: 300px;
+		}
+		
+		.profileDetails input[type=checkbox] {
+			margin-top: 5px;
+			float: right;
+		}
+		
+		.fieldLabel {
+			font-weight: bold;
+			margin-right: 20px;
+			display: inline-block;
+			width: 100px;
+		}
+		
+		.profileSaveButton {			
+			display: block;
+			margin: 0 auto;
+		}
+		
+		.avatarUpload {
+			float: right;
+			background-color: FADED_LIGHT_BG;
+			padding: 15px;
+		}
+		
+		.mobile .avatarUpload {
+			float: left;
+			margin-top: 30px;
+		}
+		
 		.avatarImg {
+			float: left;
 			width: 80px;
 			height: 80px;
+			margin-right: 20px;
+		}
+		
+		.avatarText {
+			overflow: hidden;
+		}
+		
+		.avatarText > * {
+			float: left;
+			margin-bottom: 10px;
+		}
+		
+		.avatarSubmitButton {			
+			clear: both;
 		}
 	</ui:style>
 		
@@ -34,30 +89,38 @@
 			
 				<h2 class="{style.pageTitle}">Profile</h2>
 				
-				<g:HTMLPanel styleName="registerContainer profileForm">
-							
-					<g:Label>Email</g:Label>					
-					<w:FaveTextBox  ui:field="emailInput"/>
-					<g:Label styleName="error inputStatusMessage" ui:field="emailStatusMessage"/>
-					<g:Hyperlink targetHistoryToken="{nameTokens.getPasswordreset}">Change your password</g:Hyperlink>
-					<h4>Privacy</h4>
-					<g:InlineLabel>Hide users that you are following:</g:InlineLabel>
-					<g:CheckBox ui:field="followingPrivate"/>
-					<br/>
+				<g:HTMLPanel ui:styleName="{style.profileDetails}">
+					<g:FlowPanel>
+						<g:InlineLabel ui:styleName="{style.fieldLabel}">Email</g:InlineLabel>					
+						<w:FaveTextBox  ui:field="emailInput"/>
+						<g:Label styleName="error inputStatusMessage" ui:field="emailStatusMessage"/>
+					</g:FlowPanel>
 					
-					<g:Button ui:field="profileSaveButton">Save</g:Button>
+					<g:FlowPanel>
+						<g:InlineLabel ui:styleName="{style.fieldLabel}">Password</g:InlineLabel>	
+						<g:InlineHyperlink targetHistoryToken="{nameTokens.getPasswordreset}">Change</g:InlineHyperlink>
+					</g:FlowPanel>
 					
-					<g:FormPanel method="POST" encoding="multipart/form-data" ui:field="profileForm">
-						<g:HTMLPanel>						
-							<g:Label>Avatar</g:Label>
-							<g:Image ui:field="avatarImg" ui:styleName="{style.avatarImg}"/>
+					<g:FlowPanel>
+						<g:InlineLabel ui:styleName="{style.fieldLabel}">Privacy</g:InlineLabel>
+						<g:CheckBox ui:field="followingPrivate">Hide users that you are following</g:CheckBox>
+					</g:FlowPanel>
+					
+					<g:Button ui:field="profileSaveButton" ui:styleName="{style.profileSaveButton}">Save</g:Button>
+					<w:FadeText ui:field="profileSaveMessage"/>
+				</g:HTMLPanel>
+				
+				<g:FormPanel method="POST" encoding="multipart/form-data" ui:field="profileForm" ui:styleName="{style.avatarUpload}">
+					<g:HTMLPanel>						
+						<g:Image ui:field="avatarImg" ui:styleName="{style.avatarImg}"/>
+						<g:FlowPanel ui:styleName="{style.avatarText}">
+							<g:Label ui:field="avatarLabel">Upload an avatar</g:Label>
 							<g:FileUpload ui:field="avatarUpload" name="avatar" />
-							<g:SubmitButton ui:field="avatarSubmitButton">Upload</g:SubmitButton>
-							<g:Label ui:field="formStatusMessage" ui:styleName="{style.formStatusMessage}"/>
-						</g:HTMLPanel>
-					</g:FormPanel>
-					
-				</g:HTMLPanel>	
+							<g:SubmitButton ui:field="avatarSubmitButton" ui:styleName="{style.avatarSubmitButton}">Upload</g:SubmitButton>
+							<w:FadeText ui:field="avatarStatusMessage" ui:styleName="{style.formStatusMessage}"/>
+						</g:FlowPanel>
+					</g:HTMLPanel>
+				</g:FormPanel>
 				
 			</g:HTMLPanel>
 		</p:content>		
