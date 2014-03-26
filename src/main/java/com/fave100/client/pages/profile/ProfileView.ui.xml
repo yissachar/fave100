@@ -33,8 +33,11 @@
 		}
 		
 		.profileDetails input[type=checkbox] {
-			margin-top: 5px;
-			float: right;
+			margin-right: 10px;
+		}
+		
+		.profileDetails input[type=checkbox] > * {
+			vertical-align: middle;
 		}
 		
 		.fieldLabel {
@@ -43,7 +46,7 @@
 			display: inline-block;
 			width: 100px;
 		}
-		
+				
 		.profileSaveButton {			
 			display: block;
 			margin: 0 auto;
