@@ -1,8 +1,7 @@
 package com.fave100.client.pages.profile;
 
-import static com.google.gwt.query.client.GQuery.$;
-
 import com.fave100.client.pages.PageView;
+import com.fave100.client.widgets.FadeText;
 import com.fave100.shared.Constants;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,16 +33,19 @@ public class ProfileView extends PageView<ProfileUiHandlers>
 	@UiField TextBox emailInput;
 	@UiField CheckBox followingPrivate;
 	@UiField Button profileSaveButton;
+	@UiField FadeText profileSaveMessage;
 	@UiField Image avatarImg;
+	@UiField Label avatarLabel;
 	@UiField FileUpload avatarUpload;
 	@UiField Label emailStatusMessage;
-	@UiField Label formStatusMessage;
+	@UiField FadeText avatarStatusMessage;
 	@UiField SubmitButton avatarSubmitButton;
 
 	@Inject
 	public ProfileView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		avatarSubmitButton.setEnabled(false);
+		avatarLabel.setText("Upload an avatar (max size " + (Constants.MAX_AVATAR_SIZE / 1024) + "KB)");
 	}
 
 	@Override
@@ -79,7 +81,7 @@ public class ProfileView extends PageView<ProfileUiHandlers>
 		if (results != null) {
 			if (results.contains("413 Request Entity Too Large")) {
 				// File too large for upload
-				setFormStatusMessage("File too large. Max size is " + Constants.MAX_AVATAR_SIZE / 1024 + " KB", 4000, true);
+				setAvatarUploadMessage("File too large. Max size is " + Constants.MAX_AVATAR_SIZE / 1024 + " KB", true);
 			}
 			else {
 				results = results.replace("<pre>", "").replace("</pre>", "");
@@ -87,6 +89,7 @@ public class ProfileView extends PageView<ProfileUiHandlers>
 				final RegExp urlValidator = RegExp.compile("^((ftp|http|https)://[\\w@.\\-\\_]+(:\\d{1,5})?(/[\\w#!:.?+=&%@!\\_\\-/]+)*){1}$");
 				if (urlValidator.exec(results) != null) {
 					getUiHandlers().setUserAvatar(results);
+					setAvatarUploadMessage("Saved", false);
 				}
 			}
 		}
@@ -119,25 +122,17 @@ public class ProfileView extends PageView<ProfileUiHandlers>
 	}
 
 	@Override
-	public void setFormStatusMessage(final String message) {
-		setFormStatusMessage(message, 1000, false);
+	public void setProfileSaveMessage(final String message, final boolean error) {
+		profileSaveMessage.setText(message, error);
 	}
 
-	public void setFormStatusMessage(final String message, final int delay, final boolean error) {
-		if (error) {
-			formStatusMessage.addStyleName("error");
-		}
-		else {
-			formStatusMessage.removeStyleName("error");
-		}
-		formStatusMessage.setText(message);
-		formStatusMessage.setVisible(true);
-		$(formStatusMessage).delay(delay).fadeOut(1500);
+	public void setAvatarUploadMessage(final String message, final boolean error) {
+		avatarStatusMessage.setText(message, error);
 	}
 
 	@Override
 	public void clearErrors() {
-		formStatusMessage.setText("");
+		avatarStatusMessage.setText("");
 		emailInput.removeStyleName("errorInput");
 		emailStatusMessage.setText("");
 	}
