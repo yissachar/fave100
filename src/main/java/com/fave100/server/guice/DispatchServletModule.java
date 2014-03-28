@@ -1,7 +1,11 @@
 package com.fave100.server.guice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.fave100.server.api.AuthApi;
+import com.fave100.server.api.CacheFilterFactory;
 import com.fave100.server.api.FaveListsApi;
 import com.fave100.server.api.SearchApi;
 import com.fave100.server.api.SongApi;
@@ -18,6 +22,7 @@ import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFilter;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.sun.jersey.spi.container.ResourceFilters;
 
 public class DispatchServletModule extends ServletModule {
 
@@ -32,7 +37,10 @@ public class DispatchServletModule extends ServletModule {
 		bind(SongApi.class);
 		bind(SearchApi.class);
 		bind(TrendingApi.class);
-		serve(Constants.API_PATH + "/*").with(GuiceContainer.class);
+
+		Map<String, String> params = new HashMap<>();
+		params.put(ResourceFilters.class.getName(), CacheFilterFactory.class.getName());
+		serve(Constants.API_PATH + "/*").with(GuiceContainer.class, params);
 
 		bind(RemoteApiServlet.class).in(Singleton.class);
 		serve("/remote_api").with(RemoteApiServlet.class);
