@@ -89,7 +89,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 		});
 
 		// Hide contribute if user already has it
-		if (_currentUser.isLoggedIn() && (_currentUser.getHashtags().contains(_hashtag) || _hashtag.equals(Constants.DEFAULT_HASHTAG)))
+		if (_currentUser.isLoggedIn() && _hashtag != null && (_currentUser.getHashtags().contains(_hashtag) || _hashtag.equals(Constants.DEFAULT_HASHTAG)))
 			getView().hideContributeCTA();
 		else
 			getView().showContributeCTA();
