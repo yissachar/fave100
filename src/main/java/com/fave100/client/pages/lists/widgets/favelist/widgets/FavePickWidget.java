@@ -108,6 +108,8 @@ public class FavePickWidget extends Composite {
 	private HelpBubble whylineHelpBubble;
 	private HelpBubble rankHelpBubble;
 	private ImageResources resources = GWT.create(ImageResources.class);
+	// Keep track of how many times user re-ranks with arrows and prompt them to use re-rank box instead
+	private int arrowRankCount = 0;
 
 	private final MouseOverHandler _whyLineEmptyMouseOver = new MouseOverHandler() {
 
@@ -278,6 +280,7 @@ public class FavePickWidget extends Composite {
 					final int _currentRank = _rank;
 					_rank = Integer.parseInt(rankText.getText());
 					_rankCallback.onChange(getSongID(), _currentRank - 1, _rank - 1);
+					arrowRankCount = 0;
 					if (rankHelpBubble != null) {
 						rankHelpBubble.setVisible(false);
 					}
@@ -395,7 +398,7 @@ public class FavePickWidget extends Composite {
 			upButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
-					_rankCallback.onChange(getSongID(), _rank - 1, _rank - 2);
+					arrowRankChange(_rank - 2);
 				}
 			});
 			upButton.addStyleName("rankUpArrow");
@@ -405,7 +408,7 @@ public class FavePickWidget extends Composite {
 			downButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
-					_rankCallback.onChange(getSongID(), _rank - 1, _rank);
+					arrowRankChange(_rank);
 				}
 			});
 			downButton.addStyleName("rankDownArrow");
@@ -442,6 +445,16 @@ public class FavePickWidget extends Composite {
 			});
 			hoverPanel.add(addButton);
 		}
+	}
+
+	private void arrowRankChange(int newIndex) {
+		arrowRankCount++;
+		if (arrowRankCount >= 3) {
+			arrowRankCount = 0;
+			showRankWhylineHelpBubble();
+		}
+
+		_rankCallback.onChange(getSongID(), _rank - 1, newIndex);
 	}
 
 	public void showWhylineHelpBubble() {
