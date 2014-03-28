@@ -1,11 +1,18 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateLocales='default'>
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' 
+	ui:generateLocales='default'>
 
 	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget.FavePickWidgetStyle">
 		.mainPanel {
 			width:100%;
+		}
+		
+		@external hoverHidden;
+		
+		.mainPanel:hover .hoverHidden {
+			display: block;
 		}
 		
 		.mainPanel tr {
@@ -18,23 +25,38 @@
 		
 		.rank {
 			border-radius: 99px;
-			-moz-border-radius: 99px;
-			-webkit-border-radius: 99px;
-			background: red;
 			color: #444;
 			border: 3px #444 solid;
 			background-color: #fff;
-			-webkit-box-shadow: 0 px 2 px 4 px #000000; /* Saf3-4 */
-			-moz-box-shadow: 0 px 2 px 4 px #000000; /* FF3.5 - 3.6 */
-			box-shadow: 0 px 2 px 4 px #000000;
-			/* Opera 10.5, IE9, FF4+, Chrome 10+ */
 			display: inline-block;
-			padding: 2px 2 px 2 px 2 px;
 			margin: 3px;
 			font-family: arial;
+			font-size: 40px;
 			width: 62px;
 			height: 60px;
 			text-align: center;
+		}
+		
+		.rankEditTextBox {
+			border-radius: 0px;
+			margin: -3px;	
+		}
+				
+		.rank > div {
+			margin-top: 2px;
+		}
+		
+		.rankEditPanel:hover {
+			border-radius: 0px;
+			cursor: pointer;
+		}
+				
+		.rankThreeDigit {
+			font-size: 30px;
+		}
+		
+		.rankThreeDigit > div {
+			margin-top: 5px;
 		}
 		
 		.song {
@@ -51,6 +73,21 @@
 			font-style: italic;
 			font-color: #eee;
 		}
+				
+		.whyLinePanel:hover {
+			border: 3px #ddd dotted;
+			cursor: pointer;
+			margin: -3px;
+		}
+		
+		.whyLinePanelEmpty {
+			white-space: pre;
+		}
+		
+		.whyLineTextBox {
+			margin: -3px;
+			width: 100%;
+		}
 		
 		.hoverPanel td {
 			padding: 0px;
@@ -61,8 +98,9 @@
 		}	
 	</ui:style>
 
-	<g:HTMLPanel ui:field="container">
+	<g:HTMLPanel ui:field="container">	
 		<g:HorizontalPanel spacing="0" ui:styleName="{style.mainPanel}" verticalAlignment="middle" ui:field="mainPanel">
+		
 			<g:cell width="10%">
 				<g:SimplePanel ui:field="rankPanel" ui:styleName="{style.rank}"></g:SimplePanel>
 			</g:cell>
@@ -77,11 +115,8 @@
 			</g:cell>
 
 			<g:HorizontalPanel ui:field="hoverPanel" ui:styleName="hoverHidden {style.hoverPanel}" verticalAlignment="middle"/>
+			
 		</g:HorizontalPanel>
 	</g:HTMLPanel>
 
-
-
 </ui:UiBinder>
-
-
