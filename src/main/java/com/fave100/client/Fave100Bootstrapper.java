@@ -20,6 +20,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 public class Fave100Bootstrapper implements Bootstrapper {
 
 	private static final String MOBILE_STYLE = AppClientBundle.INSTANCE.getGlobalCss().mobile();
+	private static final String NON_MOBILE_STYLE = AppClientBundle.INSTANCE.getGlobalCss().nonMobile();
 
 	private PlaceManager _placeManager;
 	private EventBus _eventBus;
@@ -70,9 +71,11 @@ public class Fave100Bootstrapper implements Bootstrapper {
 	private void determineMobileStyle() {
 		if (Window.getClientWidth() > Constants.MOBILE_WIDTH_PX) {
 			RootPanel.get().removeStyleName(MOBILE_STYLE);
+			RootPanel.get().addStyleName(NON_MOBILE_STYLE);
 		}
 		else {
 			RootPanel.get().addStyleName(MOBILE_STYLE);
+			RootPanel.get().removeStyleName(NON_MOBILE_STYLE);
 		}
 	}
 }
