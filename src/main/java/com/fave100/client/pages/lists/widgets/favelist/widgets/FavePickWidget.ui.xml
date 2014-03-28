@@ -7,20 +7,23 @@
 	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget.FavePickWidgetStyle">
 		.mainPanel {
 			width:100%;
+			display: table;
+		}
+		
+		.mainPanel > * {
+			display: table-cell;
 		}
 		
 		@external hoverHidden;
 		
 		.mainPanel:hover .hoverHidden {
-			display: block;
+			display: table;
 		}
 		
-		.mainPanel tr {
-			padding: 10px 0;
-		}
-		
-		.mainPanel td {
-			padding: 0 20px 0 0;
+		.rankContainer {
+			width: 7%;
+			display: table-cell;
+			vertical-align: middle;
 		}
 		
 		.rank {
@@ -59,6 +62,17 @@
 			margin-top: 5px;
 		}
 		
+		.songDetails {
+			width: 81%;
+			display: table-cell;
+			padding: 0 15px;
+		}
+		
+		.songDetails > * {
+			float: left;
+			clear: both;
+		}
+		
 		.song {
 			font-size: 25px;
 			font-weight: bold;
@@ -72,6 +86,7 @@
 			font-weight: 11px;
 			font-style: italic;
 			font-color: #eee;
+			width: 100%;
 		}
 				
 		.whyLinePanel:hover {
@@ -89,34 +104,46 @@
 			width: 100%;
 		}
 		
-		.hoverPanel td {
-			padding: 0px;
+		.hoverPanelContainer {
+			width: 10%;
+			vertical-align: middle;
+		}
+		
+		.hoverPanel > * {
+			display: table-cell;
 		}
 		
 		.hoverPanel img {
 			cursor: pointer;
 		}	
+		
+		.hoverPanelDeleteButton {
+			vertical-align: middle;
+		}
+		
+		.arrowPanel {
+			width: 25px;
+		}
 	</ui:style>
 
 	<g:HTMLPanel ui:field="container">	
-		<g:HorizontalPanel spacing="0" ui:styleName="{style.mainPanel}" verticalAlignment="middle" ui:field="mainPanel">
+		<g:FlowPanel ui:styleName="{style.mainPanel}" ui:field="mainPanel">
 		
-			<g:cell width="10%">
+			<g:SimplePanel ui:styleName="{style.rankContainer}">
 				<g:SimplePanel ui:field="rankPanel" ui:styleName="{style.rank}"></g:SimplePanel>
-			</g:cell>
+			</g:SimplePanel>
 
-			<g:cell width="80%">
-				<g:VerticalPanel width="100%" >
-					<g:Anchor ui:field="song" ui:styleName="{style.song}"></g:Anchor>
-					<g:InlineLabel ui:field="artist" ui:styleName="{style.artist}"></g:InlineLabel>
-					<g:SimplePanel ui:field="whyLinePanel" ui:styleName="{style.whyLine}"></g:SimplePanel>
-				</g:VerticalPanel>
-
-			</g:cell>
-
-			<g:HorizontalPanel ui:field="hoverPanel" ui:styleName="hoverHidden {style.hoverPanel}" verticalAlignment="middle"/>
+			<g:FlowPanel ui:styleName="{style.songDetails}">
+				<g:Anchor ui:field="song" ui:styleName="{style.song}"></g:Anchor>
+				<g:InlineLabel ui:field="artist" ui:styleName="{style.artist}"></g:InlineLabel>
+				<g:SimplePanel ui:field="whyLinePanel" ui:styleName="{style.whyLine}"></g:SimplePanel>
+			</g:FlowPanel>
 			
-		</g:HorizontalPanel>
+			<g:SimplePanel ui:styleName="{style.hoverPanelContainer}">
+				<g:FlowPanel ui:field="hoverPanel" ui:styleName="hoverHidden {style.hoverPanel}" />
+			</g:SimplePanel>
+			
+		</g:FlowPanel>
 	</g:HTMLPanel>
 
 </ui:UiBinder>
