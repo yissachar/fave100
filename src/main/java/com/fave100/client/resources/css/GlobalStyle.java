@@ -8,4 +8,6 @@ public interface GlobalStyle extends GssResource {
 
 	String mobile();
 
+	String error();
+
 }

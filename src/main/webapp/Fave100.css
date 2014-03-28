@@ -136,6 +136,7 @@ button:disabled{
 	color: #999;
 	background: #e0e0e0; 
 	border: 1px solid #AAA;
+	text-shadow: #777 0 0 0;
 }
 
 button:disabled:hover{
@@ -209,12 +210,6 @@ footer {
 		
 .fullLoginPage .nativeLoginBox input {
 	width: 100%;	
-}
-
-.profileForm {
-	width: 300px;
-	margin: 0 auto;
-	float: none;
 }
 
 @media ( min-width : 769px ) {
