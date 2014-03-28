@@ -17,8 +17,6 @@ import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
-import com.fave100.client.pages.register.RegisterPresenter;
-import com.fave100.client.place.NameTokens;
 import com.fave100.server.SessionAttributes;
 import com.fave100.server.UrlBuilder;
 import com.fave100.shared.Constants;
@@ -110,7 +108,7 @@ public class AppUserDao {
 		if (userID == null) {
 			String redirectUrl = (String)request.getSession().getAttribute(SessionAttributes.FACEBOOK_REDIRECT);
 			if (redirectUrl == null) {
-				redirectUrl = new UrlBuilder(NameTokens.register).with("register", RegisterPresenter.PROVIDER_FACEBOOK).getUrl().replace("yissachar", "localhost");
+				redirectUrl = new UrlBuilder("").getUrl();
 			}
 			try {
 				final String authURL = "https://graph.facebook.com/oauth/access_token?client_id=" + FACEBOOK_APP_ID + "&redirect_uri="
