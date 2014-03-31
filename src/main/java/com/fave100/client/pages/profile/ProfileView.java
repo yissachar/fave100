@@ -79,8 +79,8 @@ public class ProfileView extends PageView<ProfileUiHandlers>
 		// TODO: Is there any more robust way of checking for 413 error?
 		String results = event.getResults();
 		if (results != null) {
-			if (results.contains("413 Request Entity Too Large")) {
-				// File too large for upload
+			// Check if file too large for upload
+			if (results.contains("Request Entity Too Large")) {
 				setAvatarUploadMessage("File too large. Max size is " + Constants.MAX_AVATAR_SIZE / 1024 + " KB", true);
 			}
 			else {
