@@ -146,11 +146,6 @@ public class ListView extends PageView<ListUiHandlers>
 		getUiHandlers().showRegister();
 	}
 
-	@UiHandler("tourLink")
-	void onTourLinkClick(final ClickEvent event) {
-		getUiHandlers().showTour();
-	}
-
 	private void setSelected(final Label label) {
 		mobileShowList.removeStyleName(style.selected());
 		mobileShowFollowing.removeStyleName(style.selected());

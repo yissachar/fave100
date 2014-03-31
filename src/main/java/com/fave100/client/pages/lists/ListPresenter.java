@@ -11,7 +11,6 @@ import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.pagefragments.login.aboutpopup.AboutPopupPresenter;
 import com.fave100.client.pagefragments.popups.addsong.register.RegisterPopupPresenter;
 import com.fave100.client.pages.PagePresenter;
 import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompletePresenter;
@@ -86,7 +85,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	@Inject UsersFollowingPresenter usersFollowing;
 	@Inject ListManagerPresenter listManager;
 	@Inject GlobalListDetailsPresenter globalListDetails;
-	@Inject AboutPopupPresenter aboutPresenter;
 	@Inject RegisterPopupPresenter registerPresenter;
 
 	@Inject
@@ -341,10 +339,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		addToPopupSlot(registerPresenter);
 	}
 
-	@Override
-	public void showTour() {
-		addToPopupSlot(aboutPresenter);
-	}
 }
 
 interface ListUiHandlers extends UiHandlers {
@@ -355,6 +349,4 @@ interface ListUiHandlers extends UiHandlers {
 	boolean isOwnPage();
 
 	void showRegister();
-
-	void showTour();
 }
