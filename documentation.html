@@ -45,16 +45,7 @@
 		<li>Install <a href="https://github.com/ArcBees/gwtp-eclipse-plugin">GWTP Eclipse Plugin</a></li>
 		<li>Install <a href="http://msysgit.github.io">Git</a></li>
 		<li>Install <a href="https://code.google.com/p/gitextensions">Git Extensions</a></li>
-		<li>Clone Fave100 project: git clone https://github.com/yissachar/fave100</li>
-		<li>
-			<p>Enable Eclipse Annotation Processing:</p>
-			<ul>
-				<li>
-				Project->Properties->Java Compiler->Annotation Processing: Enable all check marks
-				</li>
-				<li>Project->Properties->Java Compiler->Annotation Processing->Factory Path: add external JAR, broswe to GWT SDK location and select requestfactory-apt.jar</li>
-			</ul>
-		</li>
+		<li>Clone Fave100 project: git clone https://github.com/yissachar/fave100</li>		
 		<li>
 			<p>Remove JDO/JPA: Project->Properties->Google->App Engine</p>
 			<ul>
@@ -62,7 +53,6 @@
 				<li>Uncheck use Datanucleus JDO/JPA</li>
 			</ul>
 		</li>	
-		<li>Edit Ant build.xml configuration to point to correct SDK locations. Do not push changes to Git!</li>	
 	</ol>
 
 	<a name="musicbrainzVM"/>
@@ -133,7 +123,7 @@
 	<a name="updatingSongs"/>
 	<h2>Updating Song Database</h2>
 	<ol>
-		<li>Verify that the latest Musicbrainz dump exists in /mnt/postgres/dumps/. The <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">Musicbrainz server</a> is scanned daily with the <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/5749173c03b6be3c8c15300c03086e315385385e/updateMusicbrainz.py?at=master">updateMusicbrainz.py script</a> and new dumps are downloaded when found.</li>
+		<li>Verify that the latest Musicbrainz dump exists in /home/musicbrainz/dumps/. The <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">Musicbrainz server</a> is scanned daily with the <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/5749173c03b6be3c8c15300c03086e315385385e/updateMusicbrainz.py?at=master">updateMusicbrainz.py script</a> and new dumps are downloaded when found.</li>
 		<li>Backup up autocomplete_search.* tables through PGAdmin 3 GUI</li>
 		<li>Drop the Musicbrainz database: On VM run "sudo su - postgres" and then "dropdb musicbrainz"</li>
 		<li>Create and import new data dump with command: "/home/musicbrainz/musicbrainz-server/admin/InitDb.pl --createdb --import /home/musicbrainz/dumps/DATE/mbdump --echo"</li>
@@ -164,7 +154,7 @@
 	</ul>
 
 	<h4>GWTP Client</h4>
-	<p>Manages all client-side actions and display. Interfaces with AppEngine Server through RequestFactory and with Lucene Song Server through JSONP</p>
+	<p>Manages all client-side actions and display. Interfaces with AppEngine through a REST API and with Lucene Song Server through JSONP</p>
 
 	<h4>AppEngine Server</h4>
 	<p>AppEngine manages storage for all entities aside from Songs. For example, AppUser, Favelist, FaveItem, etc. are all AppEngine Datastore entities. Song entities are managed through references to their unique integer ID and retrieved through Lucene.</p>
@@ -214,11 +204,15 @@
 	<h2>Upgrading AppEngine and GWT version</h2>
 
 	<ol>
-		<li>Find the latest <a href="https://developers.google.com/eclipse/docs/download">Google Plugin for Eclipse</a></li>
-		<li>In Eclipse Help->Install new software, install the plugin</li>
+		<li>
+			<p>Find the latest SDKs from their download sites:</p>
+			<ul>
+				<li><a href="https://developers.google.com/appengine/downloads">AppEngine</a></li>
+				<li><a href="http://www.gwtproject.org/download.html">GWT</a></li>
+			</ul>
+		</li>
+		<li>In Eclipse set the SDKs to the new version</li>
 		<li>In Maven pom.xml update gwt.version and appengine.version properties</li>
-		<li>In ANT build.xml run configuration update AppEngineDir and GwtDir arguments</li>
-		<li>Run build.xml</li>
 	</ol>
 	
 	<a name="testingAvatarUpload"/>
