@@ -46,6 +46,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	public FavelistView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		hideNoItemsMessage();
+		setListFound(true);
 	}
 
 	@Override
