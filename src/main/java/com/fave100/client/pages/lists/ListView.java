@@ -32,9 +32,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 public class ListView extends PageView<ListUiHandlers>
 		implements ListPresenter.MyView {
 
-	private final static String USER_PAGE_SIDE_BAR_FIXED_STYLE = "userPageSideBarFixed";
-	private final static String USER_PAGE_FAVE_LIST_STYLE = "userPageFaveList";
-
 	private final Widget widget;
 
 	public interface Binder extends UiBinder<Widget, ListView> {
