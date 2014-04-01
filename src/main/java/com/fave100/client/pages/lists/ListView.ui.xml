@@ -191,7 +191,7 @@
 								<g:InlineLabel> - </g:InlineLabel>
 								<g:InlineHyperlink targetHistoryToken="{nameTokens.getAbout}">Why Fave100?</g:InlineHyperlink>
 								<g:InlineLabel> - </g:InlineLabel>
-								<g:Anchor ui:field="tourLink">Take a Tour</g:Anchor>
+								<g:InlineHyperlink targetHistoryToken="{nameTokens.getTour}">Take a Tour</g:InlineHyperlink>
 							</g:FlowPanel>
 						</g:FlowPanel>
 							
