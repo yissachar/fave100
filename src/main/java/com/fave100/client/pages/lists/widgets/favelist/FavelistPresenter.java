@@ -16,8 +16,8 @@ import com.fave100.client.generated.entities.WhylineEdit;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
-import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
+import com.fave100.shared.place.NameTokens;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -43,6 +43,8 @@ public class FavelistPresenter extends
 		void swapPicks(int indexA, int indexB);
 
 		void hideNoItemsMessage();
+
+		void setListFound(boolean found);
 	}
 
 	public interface WhyLineChanged {
@@ -174,7 +176,7 @@ public class FavelistPresenter extends
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO: Alert user about fail
+					getView().setListFound(false);
 				}
 
 				@Override
@@ -196,7 +198,7 @@ public class FavelistPresenter extends
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO: Alert user about fail
+					getView().setListFound(false);
 				}
 
 				@Override
