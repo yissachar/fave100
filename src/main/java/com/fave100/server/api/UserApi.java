@@ -160,7 +160,7 @@ public class UserApi {
 	@POST
 	@Path(ApiPaths.PASSWORD_RESET)
 	@ApiOperation(value = "Email password reset token", response = BooleanResult.class)
-	public static BooleanResult emailPasswordResetToken(@QueryParam("username") final String username, @QueryParam("emailAddress") final String emailAddress) {
+	public static BooleanResult emailPasswordResetToken(@Context HttpServletRequest req, @QueryParam("username") final String username, @QueryParam("emailAddress") final String emailAddress) {
 
 		if (!username.isEmpty() && !emailAddress.isEmpty()) {
 			final AppUser appUser = AppUserDao.findAppUser(username);
@@ -185,7 +185,7 @@ public class UserApi {
 						msg.setSubject("Fave100 Password Change");
 						// TODO: wording?
 						String msgBody = "To change your Fave100 password, please visit the following URL and change your password within 24 hours.";
-						final String pwdResetPlace = new UrlBuilder("passwordreset").with("token", pwdResetToken.getToken()).getUrl();
+						final String pwdResetPlace = new UrlBuilder("passwordreset", req).with("token", pwdResetToken.getToken()).build();
 						msgBody += pwdResetPlace;
 						msg.setText(msgBody);
 

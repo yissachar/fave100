@@ -23,7 +23,7 @@ public class UserRedirectServlet extends HttpServlet {
 			res.sendError(404);
 
 		String userName = req.getRequestURI().substring(lastSlashPos + 1, req.getRequestURI().length());
-		res.sendRedirect(new UrlBuilder(NameTokens.lists).with(PlaceParams.USER_PARAM, userName).getUrl());
+		res.sendRedirect(new UrlBuilder(NameTokens.lists, req).with(PlaceParams.USER_PARAM, userName).build());
 
 	}
 }
