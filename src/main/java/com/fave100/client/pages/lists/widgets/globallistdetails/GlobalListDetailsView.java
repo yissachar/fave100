@@ -2,9 +2,9 @@ package com.fave100.client.pages.lists.widgets.globallistdetails;
 
 import java.util.List;
 
-import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.place.NameTokens;
 import com.fave100.client.resources.css.GlobalStyle;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -91,7 +91,7 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 			link.setTargetHistoryToken(_parameterTokenFormatter
 					.toPlaceToken(new PlaceRequest.Builder()
 							.nameToken(NameTokens.lists)
-							.with(ListPresenter.LIST_PARAM, list)
+							.with(PlaceParams.LIST_PARAM, list)
 							.build()));
 			link.setText(list);
 			trendingLists.add(link);

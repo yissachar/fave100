@@ -1,4 +1,4 @@
-package com.fave100.client.place;
+package com.fave100.shared.place;
 
 public class NameTokens {
 

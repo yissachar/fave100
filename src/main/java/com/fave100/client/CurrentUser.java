@@ -15,9 +15,9 @@ import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.generated.entities.FollowingResult;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -257,8 +257,8 @@ public class CurrentUser extends AppUser {
 				getHashtags().add(listName);
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(ListPresenter.LIST_PARAM, listName)
-						.with(ListPresenter.USER_PARAM, getUsername())
+						.with(PlaceParams.LIST_PARAM, listName)
+						.with(PlaceParams.USER_PARAM, getUsername())
 						.build());
 			}
 		});

@@ -17,7 +17,7 @@ public class UrlBuilder {
 	public UrlBuilder(final String placeToken) {
 		url = "";
 		if (isDevMode) {
-			url += "http://yissachar:8888/Fave100.html?gwt.codesvr=127.0.0.1:9997";
+			url += "http://yissachar81:8888/Fave100.html?gwt.codesvr=127.0.0.1:9997";
 		}
 		else {
 			url += "http://www.fave100.com/";
