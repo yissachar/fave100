@@ -2,6 +2,9 @@
 @def SIDE_BAR_WIDTH 239px;
 @def FADED_LIGHT_BG #eee;
 
+@external mobile;
+@external nonMobile;
+
 * {
 	margin: 0px;
 	padding: 0px;
@@ -42,8 +45,6 @@ input[type=text]:hover, select:hover {
 input[type=text]:focus, select:focus {
 	border-color: #5A9DE8;
 }
-
-@external mobile;
 
 .error {
 	color: #D54545 !important;
