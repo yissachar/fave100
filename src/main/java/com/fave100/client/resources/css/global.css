@@ -21,7 +21,7 @@ body {
 }
 
 a {
-	color: #343;
+	color: PRIMARY_COLOR;
 	text-decoration: none;
 	outline: none;
 }
