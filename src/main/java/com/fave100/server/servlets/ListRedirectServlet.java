@@ -23,7 +23,7 @@ public class ListRedirectServlet extends HttpServlet {
 			res.sendError(404);
 
 		String listName = req.getRequestURI().substring(lastSlashPos + 1, req.getRequestURI().length());
-		res.sendRedirect(new UrlBuilder(NameTokens.lists).with(PlaceParams.LIST_PARAM, listName).getUrl());
+		res.sendRedirect(new UrlBuilder(NameTokens.lists, req).with(PlaceParams.LIST_PARAM, listName).build());
 
 	}
 }

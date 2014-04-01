@@ -2,7 +2,6 @@ package com.fave100.server.guice;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-import com.fave100.server.UrlBuilder;
 import com.fave100.server.domain.APIKey;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
@@ -15,7 +14,6 @@ import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.Hashtag;
-import com.google.appengine.api.utils.SystemProperty;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -46,8 +44,5 @@ public class ServerModule extends ServletModule {
 
 		final APIKey youtubeApiKey = ofy().load().type(APIKey.class).id("youtube").now();
 		Song.setYoutubeApiKey(youtubeApiKey.getKey().trim());
-
-		// Let the UrlBuilder know what URLs to build
-		UrlBuilder.isDevMode = (SystemProperty.environment.value() == SystemProperty.Environment.Value.Development);
 	}
 }
