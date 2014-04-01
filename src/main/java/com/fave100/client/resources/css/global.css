@@ -30,16 +30,16 @@ a:hover {
 	text-decoration: underline;
 }
 
-input, select {
+input[type=text], select {
 	padding: 4px;	
 	border: 1px solid #AAA;
 }
 
-input:hover, select:hover {
+input[type=text]:hover, select:hover {
 	border-color: #666;
 }
 
-input:focus, select:focus {
+input[type=text]:focus, select:focus {
 	border-color: #5A9DE8;
 }
 
