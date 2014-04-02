@@ -82,7 +82,7 @@
 						<g:HTMLPanel ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>			
 						<g:HTMLPanel ui:field="whylineWidget" styleName="{style.whylineWidget}"></g:HTMLPanel>			
 					</g:HTMLPanel>
-					<g:HTMLPanel ui:field="playlistPanel" ui:styleName="{style.sideBar} col"/>
+					<g:HTMLPanel ui:field="playlistPanel" ui:styleName="{style.sideBar}"/>
 				</div>		
 											
 			</g:HTMLPanel>
