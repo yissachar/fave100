@@ -12,10 +12,6 @@
 			font-size: 1.05em;
 		}
 		
-		.faveList a {
-			color: PRIMARY_COLOR;	
-		}
-		
 		.faveList button {
 			float: right;
 		}

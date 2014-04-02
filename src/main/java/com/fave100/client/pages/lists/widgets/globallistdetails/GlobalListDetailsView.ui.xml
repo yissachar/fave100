@@ -36,7 +36,6 @@
 		}
 				
 		.trendingList a {
-			color: PRIMARY_COLOR;
 			display: block;
 			clear: both;
 		}

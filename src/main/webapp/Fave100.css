@@ -33,30 +33,27 @@
 	width: 100%;
 }
 
-@media ( min-width : 769px ) {
-	.col {
-		margin-left: 2%;
-	}
+.nonMobile .col {
+	margin-left: 2%;
 }
 
 /* RESET MARGINS */
 .col:first-child { margin-left: 0; } /* all browsers except IE6 and lower */
 
 /* COLUMN WIDTH ON DISPLAYS +768px */
-@media ( min-width : 769px ) {
-	.span_1 { width: 6.5%; }
-	.span_2 { width: 15.0%; }
-	.span_3 { width: 23.5%; }
-	.span_4 { width: 32.0%; }
-	.span_5 { width: 40.5%; }
-	.span_6 { width: 49.0%; }
-	.span_7 { width: 57.5%; }
-	.span_8 { width: 66.0%; }
-	.span_9 { width: 74.5%; }
-	.span_10 { width: 83.0%; }
-	.span_11 { width: 91.5%; }
-	.span_12 { width: 100%; }
-}
+.nonMobile .span_1 { width: 6.5%; }
+.nonMobile .span_2 { width: 15.0%; }
+.nonMobile .span_3 { width: 23.5%; }
+.nonMobile .span_4 { width: 32.0%; }
+.nonMobile .span_5 { width: 40.5%; }
+.nonMobile .span_6 { width: 49.0%; }
+.nonMobile .span_7 { width: 57.5%; }
+.nonMobile .span_8 { width: 66.0%; }
+.nonMobile .span_9 { width: 74.5%; }
+.nonMobile .span_10 { width: 83.0%; }
+.nonMobile .span_11 { width: 91.5%; }
+.nonMobile .span_12 { width: 100%; }
+
 
 @font-face {
   font-family: 'Source Sans Pro';
@@ -210,37 +207,6 @@ footer {
 		
 .fullLoginPage .nativeLoginBox input {
 	width: 100%;	
-}
-
-@media ( min-width : 769px ) {
-	.songSidebar {
-		width: 42.5%;
-	}
-	
-	.userPageSideBar {
-		position: fixed;
-		margin-left: 0;	
-		width: 239px;
-	}
-	
-	.userPageFaveList {
-		margin-left: 260px;
-	}
-	
-	.responsiveUserTabOptions {
-		display: none;
-	}
-}
-
-@media ( max-width : 768px ) {	
-	.userPageSideBar {
-		position: relative;
-	}	
-	
-	.userPageFaveList {
-		margin-left: 0;
-	}
-		
 }
 
 .error {
