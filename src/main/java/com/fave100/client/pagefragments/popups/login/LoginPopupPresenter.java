@@ -26,11 +26,6 @@ public class LoginPopupPresenter extends PresenterWidget<LoginPopupPresenter.MyV
 	}
 
 	@Override
-	protected void onBind() {
-		super.onBind();
-	}
-
-	@Override
 	protected void onReveal() {
 		super.onReveal();
 		setInSlot(LOGIN_SLOT, loginContainer);

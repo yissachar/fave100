@@ -52,8 +52,7 @@ public class CurrentUser extends AppUser {
 		CurrentUserChangedEvent.register(eventBus,
 				new CurrentUserChangedEvent.Handler() {
 					@Override
-					public void onCurrentUserChanged(
-							final CurrentUserChangedEvent event) {
+					public void onCurrentUserChanged(final CurrentUserChangedEvent event) {
 						setAppUser(event.getUser());
 						if (appUser != null) {
 							avatar = appUser.getAvatarImage();
@@ -301,7 +300,7 @@ public class CurrentUser extends AppUser {
 		if (appUser == null || obj == null) {
 			return false;
 		}
-		else if (appUser == obj || appUser.equals(obj) || this.getUsername().equals(((AppUser)obj).getUsername())) {
+		else if (appUser == obj || this == obj || appUser.equals(obj) || this.getUsername().equals(((AppUser)obj).getUsername())) {
 			return true;
 		}
 		return false;

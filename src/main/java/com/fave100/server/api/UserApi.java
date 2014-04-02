@@ -29,9 +29,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.fave100.server.SessionAttributes;
 import com.fave100.server.UrlBuilder;
-import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.StringResult;
@@ -254,7 +255,7 @@ public class UserApi {
 			}
 		}
 
-		if (appUser != null && changePwd == true) {
+		if (appUser != null && changePwd) {
 			// Change the password
 			appUser.setPassword(newPassword);
 			ofy().save().entity(appUser).now();

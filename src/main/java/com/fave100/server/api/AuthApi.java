@@ -20,12 +20,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.RequestToken;
 
 import com.fave100.server.SessionAttributes;
-import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.FacebookRegistration;
 import com.fave100.server.domain.StringResult;
