@@ -160,11 +160,6 @@ public class RegisterPresenter extends
 	}
 
 	@Override
-	protected void onBind() {
-		super.onBind();
-	}
-
-	@Override
 	public void onReveal() {
 		super.onReveal();
 		registerContainer.setShortNames(false);

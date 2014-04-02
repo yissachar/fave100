@@ -76,11 +76,6 @@ public class PasswordResetPresenter
 	}
 
 	@Override
-	protected void onBind() {
-		super.onBind();
-	}
-
-	@Override
 	public boolean useManualReveal() {
 		return true;
 	}
