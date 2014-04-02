@@ -38,7 +38,7 @@ public class TrendingApi {
 		trending.add(new StringResult("running"));
 		trending.add(new StringResult("wedding"));
 		trending.add(new StringResult("dance"));
-		trending.add(new StringResult("tvthemes"));
+		trending.add(new StringResult("tvsongs"));
 		trending.add(new StringResult("classicrock"));
 		trending.add(new StringResult("moviesongs"));
 		trending.add(new StringResult("onehitwonders"));
