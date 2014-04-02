@@ -9,6 +9,24 @@
 	ui:generateLocales='default'>
 
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.ListView.ListStyle">
+		.mobile .userPageSideBar {
+			position: relative;
+		}	
+		
+		.nonMobile .userPageSideBar {
+			position: fixed;
+			margin-left: 0;	
+			width: 239px;
+		}
+		
+		.mobile .userPageFaveList {
+			margin-left: 0;
+		}
+		
+		.nonMobile .userPageFaveList {
+			margin-left: 260px;
+		}
+	
 		.tagline {
 			font-size: 18px;
 			margin-bottom: 10px;
@@ -90,11 +108,15 @@
 			box-shadow: 0 0 8px #666;
 		}
 		
+		.nonMobile .responsiveUserTabOptions {
+			display: none;
+		}
+		
 		.responsiveUserTabOptions {
 			width: 100%;
 			background-color: #f0f0f0;
 			margin-bottom: 15px;
-		}
+		}		
 		
 		.responsiveUserTabOptions > span {
 			width: 50%;
@@ -137,7 +159,7 @@
 			
 				<g:HTMLPanel ui:field="userContainer">
 					
-					<g:HTMLPanel ui:field="userPageSideBar" styleName="userPageSideBar col span_3">
+					<g:HTMLPanel ui:field="userPageSideBar" styleName="{style.userPageSideBar} col span_3">
 						<g:HTMLPanel ui:field="globalListDetailsContainer"/>								
 						<g:FlowPanel ui:field="userProfile" styleName="{style.userProfile}">
 							<g:Image styleName="{style.avatar}" ui:field="avatar"/>
@@ -151,7 +173,7 @@
 							</g:FlowPanel>				
 						</g:FlowPanel>
 						
-						<g:FlowPanel ui:styleName="responsiveUserTabOptions {style.responsiveUserTabOptions}">
+						<g:FlowPanel ui:styleName="{style.responsiveUserTabOptions}">
 							<g:InlineLabel ui:field="mobileShowList">List</g:InlineLabel>							
 							<g:InlineLabel ui:field="mobileShowFollowing">Following</g:InlineLabel>
 						</g:FlowPanel>
@@ -161,7 +183,7 @@
 						
 					</g:HTMLPanel>
 					
-					<g:HTMLPanel ui:field="userPageFaveList" ui:styleName="userPageFaveList col span_9">
+					<g:HTMLPanel ui:field="userPageFaveList" ui:styleName="{style.userPageFaveList} col span_9">
 						<g:FlowPanel ui:field="tagline" ui:styleName="{style.tagline}">
 							<g:Label ui:styleName="{style.taglineCTA}">Share your favorite songs.</g:Label>
 							<g:FlowPanel ui:styleName="{style.taglineLinks}">
@@ -169,7 +191,7 @@
 								<g:InlineLabel> - </g:InlineLabel>
 								<g:InlineHyperlink targetHistoryToken="{nameTokens.getAbout}">Why Fave100?</g:InlineHyperlink>
 								<g:InlineLabel> - </g:InlineLabel>
-								<g:Anchor ui:field="tourLink">Take a Tour</g:Anchor>
+								<g:InlineHyperlink targetHistoryToken="{nameTokens.getTour}">Take a Tour</g:InlineHyperlink>
 							</g:FlowPanel>
 						</g:FlowPanel>
 							
