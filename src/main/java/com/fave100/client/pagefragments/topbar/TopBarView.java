@@ -2,11 +2,11 @@ package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
-import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.place.NameTokens;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.ImageHyperlink;
 import com.fave100.shared.Constants;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -79,13 +79,13 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		final String userPlace = _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(ListPresenter.USER_PARAM, username)
+						.with(PlaceParams.USER_PARAM, username)
 						.build());
 		listLink.setTargetHistoryToken(userPlace);
 		final String listPlace = _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(ListPresenter.LIST_PARAM, Constants.DEFAULT_HASHTAG)
+						.with(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG)
 						.build());
 		logoLink.setTargetHistoryToken(listPlace);
 		usernameLabel.setText(username);
@@ -99,7 +99,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		final String listPlace = _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(ListPresenter.LIST_PARAM, Constants.DEFAULT_HASHTAG)
+						.with(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG)
 						.build());
 		logoLink.setTargetHistoryToken(listPlace);
 	}

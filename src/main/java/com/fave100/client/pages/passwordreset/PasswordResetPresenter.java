@@ -4,8 +4,8 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.PagePresenter;
-import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
+import com.fave100.shared.place.NameTokens;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -73,11 +73,6 @@ public class PasswordResetPresenter
 	@Override
 	protected void revealInParent() {
 		RevealRootContentEvent.fire(this, this);
-	}
-
-	@Override
-	protected void onBind() {
-		super.onBind();
 	}
 
 	@Override

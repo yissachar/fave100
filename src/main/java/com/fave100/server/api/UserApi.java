@@ -29,9 +29,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.fave100.server.SessionAttributes;
 import com.fave100.server.UrlBuilder;
-import com.fave100.server.bcrypt.BCrypt;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.StringResult;
@@ -160,7 +161,7 @@ public class UserApi {
 	@POST
 	@Path(ApiPaths.PASSWORD_RESET)
 	@ApiOperation(value = "Email password reset token", response = BooleanResult.class)
-	public static BooleanResult emailPasswordResetToken(@QueryParam("username") final String username, @QueryParam("emailAddress") final String emailAddress) {
+	public static BooleanResult emailPasswordResetToken(@Context HttpServletRequest req, @QueryParam("username") final String username, @QueryParam("emailAddress") final String emailAddress) {
 
 		if (!username.isEmpty() && !emailAddress.isEmpty()) {
 			final AppUser appUser = AppUserDao.findAppUser(username);
@@ -185,7 +186,7 @@ public class UserApi {
 						msg.setSubject("Fave100 Password Change");
 						// TODO: wording?
 						String msgBody = "To change your Fave100 password, please visit the following URL and change your password within 24 hours.";
-						final String pwdResetPlace = new UrlBuilder("passwordreset").with("token", pwdResetToken.getToken()).getUrl();
+						final String pwdResetPlace = new UrlBuilder("passwordreset", req).with("token", pwdResetToken.getToken()).build();
 						msgBody += pwdResetPlace;
 						msg.setText(msgBody);
 
@@ -254,7 +255,7 @@ public class UserApi {
 			}
 		}
 
-		if (appUser != null && changePwd == true) {
+		if (appUser != null && changePwd) {
 			// Change the password
 			appUser.setPassword(newPassword);
 			ofy().save().entity(appUser).now();

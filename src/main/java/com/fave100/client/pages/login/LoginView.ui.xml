@@ -27,7 +27,7 @@
 		}
 	</ui:style>
 
-	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
+	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens" />
 	
 	<p:Page ui:field="page">
 		<p:content>		
