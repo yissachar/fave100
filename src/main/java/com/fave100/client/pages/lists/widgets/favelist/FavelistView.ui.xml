@@ -64,6 +64,10 @@
 			min-height: 20px;
 			cursor: pointer;
 		}
+		
+		.invisible {
+			visibility: hidden;
+		}
 	</ui:style>
 	
 	<g:FlowPanel>
