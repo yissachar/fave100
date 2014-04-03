@@ -28,7 +28,7 @@
 		}
 	</ui:style>
 	
-	<ui:with type="com.fave100.client.place.NameTokens" field="nameTokens" />
+	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens" />
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
 			
 	<w:LightBox>

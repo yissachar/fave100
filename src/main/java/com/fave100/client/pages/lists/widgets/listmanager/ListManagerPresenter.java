@@ -9,12 +9,12 @@ import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.place.NameTokens;
 import com.fave100.client.widgets.alert.AlertCallback;
 import com.fave100.client.widgets.alert.AlertPresenter;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -169,8 +169,8 @@ public class ListManagerPresenter extends
 
 		_placeManager.revealPlace(new PlaceRequest.Builder()
 				.nameToken(NameTokens.lists)
-				.with(ListPresenter.USER_PARAM, _user.getUsername())
-				.with(ListPresenter.LIST_PARAM, list)
+				.with(PlaceParams.USER_PARAM, _user.getUsername())
+				.with(PlaceParams.LIST_PARAM, list)
 				.build());
 	}
 

@@ -2,8 +2,8 @@ package com.fave100.client.pages.song.widgets.playlist;
 
 import java.util.List;
 
-import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.place.NameTokens;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -74,13 +74,13 @@ public class PlaylistView extends ViewImpl implements PlaylistPresenter.MyView {
 		_username.setHref("#" + _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(ListPresenter.USER_PARAM, username)
-						.with(ListPresenter.LIST_PARAM, hashtag)
+						.with(PlaceParams.USER_PARAM, username)
+						.with(PlaceParams.LIST_PARAM, hashtag)
 						.build()));
 		_hashtag.setHref("#" + _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(ListPresenter.LIST_PARAM, hashtag)
+						.with(PlaceParams.LIST_PARAM, hashtag)
 						.build()));
 	}
 

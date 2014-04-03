@@ -18,8 +18,9 @@ import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
-import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -66,9 +67,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	@ContentSlot public static final Type<RevealContentHandler<?>> STARRED_LISTS_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot public static final Type<RevealContentHandler<?>> LIST_MANAGER_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot public static final Type<RevealContentHandler<?>> GLOBAL_LIST_DETAILS_SLOT = new Type<RevealContentHandler<?>>();
-
-	public static final String USER_PARAM = "u";
-	public static final String LIST_PARAM = "list";
 
 	private String requestedUsername;
 	private String _requestedHashtag;
@@ -172,7 +170,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 			public void onListChanged(final ListChangedEvent event) {
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(ListPresenter.LIST_PARAM, event.getList())
+						.with(PlaceParams.LIST_PARAM, event.getList())
 						.build());
 			}
 		});
@@ -209,8 +207,8 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		requestedUser = null;
 		isFollowing = false;
 		// Use parameters to determine what to reveal on page
-		requestedUsername = placeRequest.getParameter(USER_PARAM, "");
-		_requestedHashtag = placeRequest.getParameter(LIST_PARAM, Constants.DEFAULT_HASHTAG);
+		requestedUsername = placeRequest.getParameter(PlaceParams.USER_PARAM, "");
+		_requestedHashtag = placeRequest.getParameter(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG);
 		// Possible combinations:
 		// Blank user, blank list => global fave100 list
 		// List only => global list for that hashtag
@@ -239,21 +237,16 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub					
+					getView().showUserNotFound();
+					getProxy().manualReveal(ListPresenter.this);
 				}
 
 				@Override
 				public void onSuccess(AppUser user) {
-					if (user != null) {
-						requestedUser = user;
-						if (!requestedUser.getHashtags().contains(_requestedHashtag))
-							_requestedHashtag = Constants.DEFAULT_HASHTAG;
-						showPage();
-					}
-					else {
-						getView().showUserNotFound();
-						getProxy().manualReveal(ListPresenter.this);
-					}
+					requestedUser = user;
+					if (!requestedUser.getHashtags().contains(_requestedHashtag))
+						_requestedHashtag = Constants.DEFAULT_HASHTAG;
+					showPage();
 				}
 			});
 

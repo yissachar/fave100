@@ -13,12 +13,12 @@ import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.ItemDel
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.RankChanged;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter.WhyLineChanged;
 import com.fave100.client.pages.song.SongPresenter;
-import com.fave100.client.place.NameTokens;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.resources.img.ImageResources;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.fave100.shared.Constants;
 import com.fave100.shared.Validator;
+import com.fave100.shared.place.NameTokens;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;

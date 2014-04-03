@@ -10,9 +10,9 @@ import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.FollowingResult;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.pages.lists.ListPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
-import com.fave100.client.place.NameTokens;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -170,7 +170,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 				listAnchor.setHref("#" + _parameterTokenFormatter
 						.toPlaceToken(new PlaceRequest.Builder()
 								.nameToken(NameTokens.lists)
-								.with(ListPresenter.USER_PARAM, user.getUsername())
+								.with(PlaceParams.USER_PARAM, user.getUsername())
 								.build()));
 				listAnchor.addStyleName(getView().getStyle().listLink());
 				listItem.add(listAnchor);

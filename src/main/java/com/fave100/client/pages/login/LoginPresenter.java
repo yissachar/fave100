@@ -3,7 +3,7 @@ package com.fave100.client.pages.login;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pages.PagePresenter;
-import com.fave100.client.place.NameTokens;
+import com.fave100.shared.place.NameTokens;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
