@@ -97,4 +97,10 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 		listNotFound.setVisible(!found);
 		faveList.setVisible(found);
 	}
+
+	@Override
+	public void clearState() {
+		hideNoItemsMessage();
+		listNotFound.setVisible(false);
+	}
 }

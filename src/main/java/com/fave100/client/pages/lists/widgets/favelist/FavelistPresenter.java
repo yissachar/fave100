@@ -45,6 +45,8 @@ public class FavelistPresenter extends
 		void hideNoItemsMessage();
 
 		void setListFound(boolean found);
+
+		void clearState();
 	}
 
 	public interface WhyLineChanged {
@@ -158,7 +160,7 @@ public class FavelistPresenter extends
 	}
 
 	public void refreshFavelist(final boolean ownList) {
-		getView().hideNoItemsMessage();
+		getView().clearState();
 
 		if (hashtag == null) {
 			hashtag = Constants.DEFAULT_HASHTAG;
@@ -177,8 +179,6 @@ public class FavelistPresenter extends
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO: Alert user about fail
-					getView().setList(null);
 					getView().setListFound(false);
 				}
 
@@ -201,8 +201,6 @@ public class FavelistPresenter extends
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO: Alert user about fail
-					getView().setList(null);
 					getView().setListFound(false);
 				}
 
