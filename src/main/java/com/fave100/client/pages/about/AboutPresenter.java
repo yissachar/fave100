@@ -1,7 +1,7 @@
 package com.fave100.client.pages.about;
 
 import com.fave100.client.pages.PagePresenter;
-import com.fave100.client.place.NameTokens;
+import com.fave100.shared.place.NameTokens;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;

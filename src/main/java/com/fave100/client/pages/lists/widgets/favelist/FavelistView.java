@@ -40,11 +40,13 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	@UiField FavelistStyle style;
 	@UiField FlowPanel faveList;
 	@UiField Label noItemsMessage;
+	@UiField Label listNotFound;
 
 	@Inject
 	public FavelistView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		hideNoItemsMessage();
+		setListFound(true);
 	}
 
 	@Override
@@ -54,8 +56,9 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 
 	@Override
 	public void setList(final List<FavePickWidget> widgets) {
-		final int currentHeight = faveList.getOffsetHeight();
+		setListFound(true);
 
+		hideNoItemsMessage();
 		faveList.clear();
 
 		if (widgets == null || widgets.size() == 0) {
@@ -63,17 +66,9 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 			return;
 		}
 
-		hideNoItemsMessage();
-
-		// Ensure the height remains the same to prevent scrollbar flickering
-		faveList.setHeight(currentHeight + "px");
-
 		for (final FavePickWidget widget : widgets) {
 			faveList.add(widget);
 		}
-
-		// Restore the natural height now that all elements have been added
-		faveList.setHeight("auto");
 	}
 
 	@Override
@@ -95,5 +90,11 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	@Override
 	public void hideNoItemsMessage() {
 		noItemsMessage.setVisible(false);
+	}
+
+	@Override
+	public void setListFound(boolean found) {
+		listNotFound.setVisible(!found);
+		faveList.setVisible(found);
 	}
 }

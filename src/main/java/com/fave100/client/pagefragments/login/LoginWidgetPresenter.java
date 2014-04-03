@@ -8,8 +8,8 @@ import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.LoginCredentials;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.place.NameTokens;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -169,7 +169,7 @@ public class LoginWidgetPresenter extends
 			public void onSuccess(AppUser appUser) {
 				_eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 				Notification.show("Logged in successfully");
-				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.lists).with(ListPresenter.USER_PARAM, appUser.getUsername()).build());
+				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.lists).with(PlaceParams.USER_PARAM, appUser.getUsername()).build());
 			}
 		});
 	}
