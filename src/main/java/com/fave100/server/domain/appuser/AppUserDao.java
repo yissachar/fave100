@@ -108,7 +108,7 @@ public class AppUserDao {
 		if (userID == null) {
 			String redirectUrl = (String)request.getSession().getAttribute(SessionAttributes.FACEBOOK_REDIRECT);
 			if (redirectUrl == null) {
-				redirectUrl = new UrlBuilder("").getUrl();
+				redirectUrl = new UrlBuilder("", request).build();
 			}
 			try {
 				final String authURL = "https://graph.facebook.com/oauth/access_token?client_id=" + FACEBOOK_APP_ID + "&redirect_uri="

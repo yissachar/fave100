@@ -40,11 +40,13 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	@UiField FavelistStyle style;
 	@UiField FlowPanel faveList;
 	@UiField Label noItemsMessage;
+	@UiField Label listNotFound;
 
 	@Inject
 	public FavelistView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		hideNoItemsMessage();
+		setListFound(true);
 	}
 
 	@Override
@@ -54,6 +56,8 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 
 	@Override
 	public void setList(final List<FavePickWidget> widgets) {
+		setListFound(true);
+
 		hideNoItemsMessage();
 		faveList.clear();
 
@@ -86,5 +90,11 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	@Override
 	public void hideNoItemsMessage() {
 		noItemsMessage.setVisible(false);
+	}
+
+	@Override
+	public void setListFound(boolean found) {
+		listNotFound.setVisible(!found);
+		faveList.setVisible(found);
 	}
 }
