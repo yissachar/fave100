@@ -141,6 +141,14 @@
 			<artifactId>guice-servlet</artifactId>
 			<version>3.0</version>
 		</dependency>
+		
+		<!--  Bcrypt -->
+		<dependency>
+			<groupId>org.mindrot</groupId>
+			<artifactId>jbcrypt</artifactId>
+			<version>0.3m</version>
+		</dependency>
+		            
 
 		<!-- End Server -->
 		<!-- Begin Client -->
@@ -251,6 +259,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<webXml>${war.path}\WEB-INF\web.xml</webXml>
+					<packagingExcludes>WEB-INF/classes/com/fave100/client/**/*</packagingExcludes>
 				</configuration>
 			</plugin>
 
@@ -274,6 +283,9 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<excludes>
+						<exclude>com/fave100/client/**/*</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 

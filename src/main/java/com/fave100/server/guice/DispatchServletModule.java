@@ -15,7 +15,9 @@ import com.fave100.server.api.UsersApi;
 import com.fave100.server.filters.EncodingFilter;
 import com.fave100.server.servlets.HashtagBuilderServlet;
 import com.fave100.server.servlets.HashtagEnqueuerServlet;
+import com.fave100.server.servlets.ListRedirectServlet;
 import com.fave100.server.servlets.PasswordCleanupServlet;
+import com.fave100.server.servlets.UserRedirectServlet;
 import com.fave100.shared.Constants;
 import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
 import com.google.inject.Singleton;
@@ -42,8 +44,14 @@ public class DispatchServletModule extends ServletModule {
 		params.put(ResourceFilters.class.getName(), CacheFilterFactory.class.getName());
 		serve(Constants.API_PATH + "/*").with(GuiceContainer.class, params);
 
+		bind(ListRedirectServlet.class).in(Singleton.class);
+		serveRegex("^/[^/]+$").with(ListRedirectServlet.class);
+
+		bind(UserRedirectServlet.class).in(Singleton.class);
+		serveRegex("^/u/[^/]+$").with(UserRedirectServlet.class);
+
 		bind(RemoteApiServlet.class).in(Singleton.class);
-		serve("/remote_api").with(RemoteApiServlet.class);
+		serve("/remote_api/").with(RemoteApiServlet.class);
 
 		bind(PasswordCleanupServlet.class).in(Singleton.class);
 		serve("/cron/pwdcleanup").with(PasswordCleanupServlet.class);
