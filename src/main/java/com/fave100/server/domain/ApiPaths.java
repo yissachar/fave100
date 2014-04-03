@@ -1,6 +1,10 @@
 package com.fave100.server.domain;
 
-public class ApiPaths {
+public final class ApiPaths {
+
+	// Prevent instantiation
+	private ApiPaths() {
+	}
 
 	// FaveList
 	public static final String FAVELIST_ROOT = "favelists";

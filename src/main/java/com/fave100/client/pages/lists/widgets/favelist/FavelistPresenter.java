@@ -124,27 +124,29 @@ public class FavelistPresenter extends
 		FaveItemAddedEvent.register(eventBus, new FaveItemAddedEvent.Handler() {
 			@Override
 			public void onFaveItemAdded(final FaveItemAddedEvent event) {
-				if (isEditable()) {
-					final FaveItem item = event.getFaveItemDto();
-					final FavePickWidget widget = new FavePickWidget(eventBus, item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername(), hashtag);
-					getView().addPick(widget);
-					widgets.add(widget);
+				if (!isEditable())
+					return;
 
-					final int listSize = currentUser.getFaveLists().get(currentUser.getCurrentHashtag()).size();
-					if (listSize == 1) {
-						// Only one song in list, focus whyline for convenience
-						widget.focusWhyline();
-						// Show help bubble if on default list
-						if (currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG))
-							widget.showWhylineHelpBubble();
+				final FaveItem item = event.getFaveItemDto();
+				final FavePickWidget widget = new FavePickWidget(eventBus, item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername(), hashtag);
+				getView().addPick(widget);
+				widgets.add(widget);
+
+				final int listSize = currentUser.getFaveLists().get(currentUser.getCurrentHashtag()).size();
+				if (listSize == 1) {
+					// Only one song in list, focus whyline for convenience
+					widget.focusWhyline();
+					// Show help bubble if on default list
+					if (currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG)) {
+						widget.showWhylineHelpBubble();
 					}
-					else if (listSize > 1) {
-						// Focus rank for easy rank changing
-						widget.focusRank();
-						// Show help bubble if on default list
-						if (currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG) && listSize == 2) {
-							widget.showRankWhylineHelpBubble();
-						}
+				}
+				else if (listSize > 1) {
+					// Focus rank for easy rank changing
+					widget.focusRank();
+					// Show help bubble if on default list
+					if (currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG) && listSize == 2) {
+						widget.showRankWhylineHelpBubble();
 					}
 				}
 			}
