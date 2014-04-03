@@ -56,7 +56,7 @@ public class AddSongView extends PopupViewWithUiHandlers<AddSongUiHandlers> impl
 		for (int i = 0; i < checkboxContainer.getWidgetCount(); i++) {
 			Widget widget = checkboxContainer.getWidget(i);
 			if (widget instanceof CheckBox) {
-				if (((CheckBox)widget).getValue() == true)
+				if (((CheckBox)widget).getValue())
 					selectedLists.add(((CheckBox)widget).getFormValue());
 			}
 		}
