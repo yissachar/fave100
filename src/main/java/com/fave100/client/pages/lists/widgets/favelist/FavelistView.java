@@ -54,7 +54,8 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 
 	@Override
 	public void setList(final List<FavePickWidget> widgets) {
-		hideNoItemsMessage();
+		final int currentHeight = faveList.getOffsetHeight();
+
 		faveList.clear();
 
 		if (widgets == null || widgets.size() == 0) {
@@ -62,9 +63,17 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 			return;
 		}
 
+		hideNoItemsMessage();
+
+		// Ensure the height remains the same to prevent scrollbar flickering
+		faveList.setHeight(currentHeight + "px");
+
 		for (final FavePickWidget widget : widgets) {
 			faveList.add(widget);
 		}
+
+		// Restore the natural height now that all elements have been added
+		faveList.setHeight("auto");
 	}
 
 	@Override
