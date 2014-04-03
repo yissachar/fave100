@@ -154,7 +154,6 @@ public class FavelistPresenter extends
 	}
 
 	public void refreshFavelist(final boolean ownList) {
-		getView().setList(null);
 		getView().hideNoItemsMessage();
 
 		if (hashtag == null) {
@@ -175,6 +174,7 @@ public class FavelistPresenter extends
 				@Override
 				public void onFailure(Throwable caught) {
 					// TODO: Alert user about fail
+					getView().setList(null);
 				}
 
 				@Override
@@ -197,6 +197,7 @@ public class FavelistPresenter extends
 				@Override
 				public void onFailure(Throwable caught) {
 					// TODO: Alert user about fail
+					getView().setList(null);
 				}
 
 				@Override
