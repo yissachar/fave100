@@ -1,8 +1,8 @@
 package com.fave100.client.pages.song.widgets.whyline;
 
 import com.fave100.client.generated.entities.Whyline;
-import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.place.NameTokens;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -36,7 +36,7 @@ public class WhylineWidget extends Composite {
 		final String userPlace = new ParameterTokenFormatter(new ClientUrlUtils())
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(ListPresenter.USER_PARAM, whylineProxy.getUsername())
+						.with(PlaceParams.USER_PARAM, whylineProxy.getUsername())
 						.build());
 		userLink.setTargetHistoryToken(userPlace);
 		userLink.setText(whylineProxy.getUsername());

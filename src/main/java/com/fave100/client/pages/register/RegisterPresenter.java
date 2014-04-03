@@ -10,9 +10,9 @@ import com.fave100.client.generated.entities.TwitterRegistration;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pages.PagePresenter;
-import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Validator;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -160,11 +160,6 @@ public class RegisterPresenter extends
 	}
 
 	@Override
-	protected void onBind() {
-		super.onBind();
-	}
-
-	@Override
 	public void onReveal() {
 		super.onReveal();
 		registerContainer.setShortNames(false);
@@ -242,7 +237,7 @@ public class RegisterPresenter extends
 
 	private void goToUserPage(final String username) {
 		getProxy().manualRevealFailed();
-		final PlaceRequest place = new PlaceRequest.Builder().nameToken(NameTokens.lists).with(ListPresenter.USER_PARAM, username).build();
+		final PlaceRequest place = new PlaceRequest.Builder().nameToken(NameTokens.lists).with(PlaceParams.USER_PARAM, username).build();
 		placeManager.revealPlace(place);
 	}
 }

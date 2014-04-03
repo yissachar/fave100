@@ -15,9 +15,9 @@ import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.generated.entities.FollowingResult;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.fave100.client.pages.lists.ListPresenter;
-import com.fave100.client.place.NameTokens;
 import com.fave100.shared.Constants;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -52,8 +52,7 @@ public class CurrentUser extends AppUser {
 		CurrentUserChangedEvent.register(eventBus,
 				new CurrentUserChangedEvent.Handler() {
 					@Override
-					public void onCurrentUserChanged(
-							final CurrentUserChangedEvent event) {
+					public void onCurrentUserChanged(final CurrentUserChangedEvent event) {
 						setAppUser(event.getUser());
 						if (appUser != null) {
 							avatar = appUser.getAvatarImage();
@@ -257,8 +256,8 @@ public class CurrentUser extends AppUser {
 				getHashtags().add(listName);
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(ListPresenter.LIST_PARAM, listName)
-						.with(ListPresenter.USER_PARAM, getUsername())
+						.with(PlaceParams.LIST_PARAM, listName)
+						.with(PlaceParams.USER_PARAM, getUsername())
 						.build());
 			}
 		});
@@ -301,7 +300,7 @@ public class CurrentUser extends AppUser {
 		if (appUser == null || obj == null) {
 			return false;
 		}
-		else if (appUser == obj || appUser.equals(obj) || this.getUsername().equals(((AppUser)obj).getUsername())) {
+		else if (appUser == obj || this == obj || appUser.equals(obj) || this.getUsername().equals(((AppUser)obj).getUsername())) {
 			return true;
 		}
 		return false;
