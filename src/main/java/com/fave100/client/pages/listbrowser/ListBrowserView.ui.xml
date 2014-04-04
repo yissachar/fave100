@@ -1,0 +1,51 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+			 xmlns:p='urn:import:com.fave100.client.pages'>
+			 
+			 
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pages.listbrowser.ListBrowserView.ListBrowserStyle">
+	
+		.heading {
+			text-align: center;
+			margin-bottom: 30px;
+		}
+		
+		.listContainer {
+			overflow: hidden;
+		}
+		
+		.listContainer a {	
+			float: left;
+			width: 25%;
+			text-align: center;
+		}
+		
+		.listContainer .clear {
+			clear: both;
+		}		
+		
+		.letterHeading {
+			font-size: 30px;
+			font-weight: bold;
+			clear: both;
+		}
+		
+		.nameContainer {
+			clear: both;
+		}
+	</ui:style>
+          
+    <p:Page ui:field="page">
+		<p:content>	   
+		    <g:HTMLPanel>
+		    
+		    	<h1 class="{style.heading}">Lists</h1>
+		    	<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
+		    	<g:Label ui:field="errorMsg" ui:styleName="{style.error}"/>
+		    	
+		    </g:HTMLPanel>
+	    </p:content>
+	</p:Page>
+	
+</ui:UiBinder>
