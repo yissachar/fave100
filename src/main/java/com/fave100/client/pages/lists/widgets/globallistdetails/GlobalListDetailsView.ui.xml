@@ -46,11 +46,14 @@
 		}
 	</ui:style>
 	
+	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens"/>
+	
 	<g:FlowPanel ui:field="container" ui:styleName="{style.container}">
 		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
 		<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 		<g:HTMLPanel ui:field="listAutocomplete"/>
 		<g:Label ui:styleName="{style.trendingHeader}">Featured Lists</g:Label>
 		<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />
+		<g:Hyperlink targetHistoryToken="{nameTokens.getAlllists}">View all lists</g:Hyperlink>
 	</g:FlowPanel>
 </ui:UiBinder>

@@ -12,6 +12,7 @@ import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pagefragments.register.RegisterWidgetView;
 import com.fave100.client.pagefragments.topbar.TopBarModule;
 import com.fave100.client.pages.about.AboutModule;
+import com.fave100.client.pages.listbrowser.ListBrowserModule;
 import com.fave100.client.pages.lists.ListModule;
 import com.fave100.client.pages.lists.widgets.autocomplete.list.ListAutocompleteModule;
 import com.fave100.client.pages.login.LoginPresenter;
@@ -49,6 +50,7 @@ public class ClientModule extends AbstractPresenterModule {
 		install(new TourModule());
 		install(new AboutModule());
 		install(new AlertModule());
+		install(new ListBrowserModule());
 		install(new ListAutocompleteModule());
 
 		install(new DefaultModule(ClientPlaceManager.class));
