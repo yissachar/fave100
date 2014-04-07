@@ -63,7 +63,7 @@ public class ListBrowserView extends PageView<ListBrowserUiHandlers> implements 
 				// Starting letter not a number, leave as is
 			}
 
-			if (!buckets.containsKey(startingLetter)) {
+			if (!buckets.containsKey(startingLetter.toUpperCase())) {
 				buckets.put(startingLetter.toUpperCase(), new ArrayList<StringResult>());
 			}
 
