@@ -25,6 +25,8 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Api(value = "/" + ApiPaths.FAVELIST_ROOT, description = "Operations on FaveLists")
 public class FaveListsApi {
 
+	public static final int QUALITY_LIST_SIZE = 10;
+
 	@GET
 	@Path(ApiPaths.GET_LIST_NAMES)
 	@ApiOperation(value = "Get FaveList names", response = StringResultCollection.class)
@@ -33,7 +35,10 @@ public class FaveListsApi {
 
 		List<StringResult> listNames = new ArrayList<>();
 		for (Hashtag masterList : masterLists) {
-			listNames.add(new StringResult(masterList.getName()));
+			// Only add if the list has enough picks to qualify as a "quality" list
+			if (masterList.getList().size() >= QUALITY_LIST_SIZE) {
+				listNames.add(new StringResult(masterList.getName()));
+			}
 		}
 
 		return new StringResultCollection(listNames);
