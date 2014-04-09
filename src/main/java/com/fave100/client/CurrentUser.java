@@ -40,6 +40,7 @@ public class CurrentUser extends AppUser {
 	private String _currentHashtag = Constants.DEFAULT_HASHTAG;
 	private FollowingResult followingResult;
 	private boolean fullListRetrieved = false;
+	private AfterLoginAction _afterLoginAction;
 
 	@Inject
 	public CurrentUser(final EventBus eventBus, final PlaceManager placeManager, final RequestCache requestCache,
@@ -74,6 +75,11 @@ public class CurrentUser extends AppUser {
 
 							};
 							requestCache.getFollowingForCurrentUser(getUsername(), followingReq);
+
+							if (_afterLoginAction != null) {
+								_afterLoginAction.doAction();
+								setAfterLoginAction(null);
+							}
 						}
 						else {
 							// User not logged in
@@ -95,8 +101,8 @@ public class CurrentUser extends AppUser {
 		});
 	}
 
+	// Clear all state
 	private void resetState() {
-		// Clear all state
 		appUser = null;
 		avatar = "";
 		faveLists = new HashMap<String, List<FaveItem>>();
@@ -104,6 +110,7 @@ public class CurrentUser extends AppUser {
 		fullListRetrieved = false;
 		_currentHashtag = Constants.DEFAULT_HASHTAG;
 		_hashtags = new ArrayList<String>();
+		setAfterLoginAction(null);
 	}
 
 	public boolean isLoggedIn() {
@@ -332,6 +339,14 @@ public class CurrentUser extends AppUser {
 
 	public void setCurrentHashtag(final String currentHashtag) {
 		this._currentHashtag = currentHashtag;
+	}
+
+	public AfterLoginAction getAfterLoginAction() {
+		return _afterLoginAction;
+	}
+
+	public void setAfterLoginAction(AfterLoginAction afterLoginAction) {
+		_afterLoginAction = afterLoginAction;
 	}
 
 }

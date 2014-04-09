@@ -101,6 +101,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 			_currentUser.addFaveList(_hashtag);
 		}
 		else {
+			_currentUser.setAfterLoginAction(new AddListAfterLoginAction(_currentUser, _hashtag));
 			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 		}
 	}
