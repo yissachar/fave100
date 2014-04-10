@@ -17,6 +17,7 @@ import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.WhylineEdit;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
+import com.fave100.client.pages.lists.widgets.favelist.widgets.AddSongAfterLoginAction;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.shared.Constants;
@@ -206,16 +207,17 @@ public class FavelistPresenter extends
 	}
 
 	@Override
-	public void addSong(final String songID, final String song, final String artist, boolean forceAddToCurrentList) {
+	public void addSong(final String songId, final String song, final String artist, boolean forceAddToCurrentList) {
 		if (!_currentUser.isLoggedIn()) {
+			_currentUser.setAfterLoginAction(new AddSongAfterLoginAction(this, songId, song, artist));
 			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 		}
 		else {
 			if (_currentUser.getHashtags().size() == 1 || forceAddToCurrentList) {
-				_currentUser.addSong(songID, song, artist);
+				_currentUser.addSong(songId, song, artist);
 			}
 			else {
-				_addSongPresenter.setSongToAddId(songID);
+				_addSongPresenter.setSongToAddId(songId);
 				_addSongPresenter.setSongToAddName(song);
 				_addSongPresenter.setSongToAddArtist(artist);
 				addToPopupSlot(_addSongPresenter);
