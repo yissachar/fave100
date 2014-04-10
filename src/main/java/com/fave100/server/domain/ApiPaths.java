@@ -8,6 +8,7 @@ public final class ApiPaths {
 
 	// FaveList
 	public static final String FAVELIST_ROOT = "favelists";
+	public static final String GET_LIST_NAMES = "/names";
 	public static final String GET_MASTER_FAVELIST = "/{list}";
 
 	// Auth

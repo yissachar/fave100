@@ -1,5 +1,6 @@
 package com.fave100.client.pages.login;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pages.PagePresenter;
@@ -30,6 +31,7 @@ public class LoginPresenter extends
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
 
+	private CurrentUser _currentUser;
 	@Inject private LoginWidgetPresenter loginContainer;
 
 	@ProxyCodeSplit
@@ -39,14 +41,21 @@ public class LoginPresenter extends
 	}
 
 	@Inject
-	public LoginPresenter(final EventBus eventBus, final MyView view,
-							final MyProxy proxy) {
+	public LoginPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, CurrentUser currentUser) {
 		super(eventBus, view, proxy);
+		_currentUser = currentUser;
 	}
 
 	@Override
 	protected void onReveal() {
 		super.onReveal();
 		setInSlot(LOGIN_SLOT, loginContainer);
+	}
+
+	@Override
+	protected void onHide() {
+		super.onHide();
+		_currentUser.setAfterLoginAction(null);
+
 	}
 }
