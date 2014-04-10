@@ -19,6 +19,7 @@ import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetail
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.shared.Constants;
+import com.fave100.shared.Utils;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -329,7 +330,12 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 	@Override
 	public void showRegister() {
-		addToPopupSlot(registerPresenter);
+		if (Utils.isTouchDevice()) {
+			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).build());
+		}
+		else {
+			addToPopupSlot(registerPresenter);
+		}
 	}
 
 }
