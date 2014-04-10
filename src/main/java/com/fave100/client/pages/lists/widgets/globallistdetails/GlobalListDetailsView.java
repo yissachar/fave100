@@ -99,16 +99,6 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	}
 
 	@Override
-	public void hideContributeCTA() {
-		contributeCTA.setVisible(false);
-	}
-
-	@Override
-	public void showContributeCTA() {
-		contributeCTA.setVisible(true);
-	}
-
-	@Override
 	public void show() {
 		widget.setVisible(true);
 	}
