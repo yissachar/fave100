@@ -16,9 +16,11 @@
 		}
 		
 		.listContainer a {	
+			margin: 5px 0;
+			text-align: center;
 			float: left;
 			width: 25%;
-			text-align: center;
+			min-width: 200px;
 		}
 		
 		.listContainer .clear {
