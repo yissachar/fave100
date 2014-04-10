@@ -94,6 +94,7 @@
 		<li>Run command "logout"</li>
 		<li>Run command "cd /home/musicbrainz/"</li>
 		<li>Run command "sudo mkdir dumps"</li>
+		<li>Run command "sudo mkdir sql-backups"</li>
 		<li>Run command "sudo git clone https://yissachar@bitbucket.org/yissachar/fave100-autocomplete.git"</li>
 		<li>Run command "cd fave100-autocomplete"</li>
 		<li>Run command "sudo vi MUSICBRAINZ_LATEST" and save file (blank file)</li>
@@ -123,15 +124,11 @@
 	<a name="updatingSongs"/>
 	<h2>Updating Song Database</h2>
 	<ol>
-		<li>Verify that the latest Musicbrainz dump exists in /home/musicbrainz/dumps/. The <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">Musicbrainz server</a> is scanned daily with the <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/5749173c03b6be3c8c15300c03086e315385385e/updateMusicbrainz.py?at=master">updateMusicbrainz.py script</a> and new dumps are downloaded when found.</li>
-		<li>Backup up autocomplete_search.* tables through PGAdmin 3 GUI</li>
-		<li>Drop the Musicbrainz database: On VM run "sudo su - postgres" and then "dropdb musicbrainz"</li>
-		<li>Create and import new data dump with command: "/home/musicbrainz/musicbrainz-server/admin/InitDb.pl --createdb --import /home/musicbrainz/dumps/DATE/mbdump --echo"</li>
-		<li>Restore backed_up autocomplete_search.* tables with command: psql -h {{VM IP_ADDRESS}} -U musicbrainz -d musicbrainz -f /path/to/backup</li>
-		<li>Rebuild the Fave100 tables with the new Musicbrainz data by running <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src">RebuildSQL.bat {{VM IP_ADDRESS}}</a>. This script assumes the availability of "psql" command. The script will take a couple of hours to run (assuming the VM has at least 4GB of RAM).</li>		
+		<li>Verify that the latest Musicbrainz dump exists in /home/musicbrainz/dumps/. The <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">Musicbrainz server</a> is scanned daily with the <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/5749173c03b6be3c8c15300c03086e315385385e/updateMusicbrainz.py?at=master">updateMusicbrainz.py script</a> and new dumps are downloaded when found. Once a new dump is downloaded, it is loaded into the SQL database automatically.</li>
+		<li>Backup up autocomplete_search.* tables to shared storage (e.g. \\broadview\web-dev\) through PGAdmin 3 GUI</li>
 		<li>Run the <a href="https://github.com/hellofornow/fave100-tomcat/blob/master/src/main/java/com/caseware/fave100/Index.java">Lucene Indexer</a> to build a Lucene index from the PostgreSQL autocomplete_search song database.</li>
-		<li>Copy resulting index into <a href="https://github.com/hellofornow/fave100-tomcat">Fave100 Tomcat</a> resources. Build Fave-100 Tomcat (clean tomcat:deploy).</li>
-		<li>Deploy the resulting WAR to Jelastic</li>
+		<li>From <a href="https://github.com/hellofornow/fave100-tomcat">Fave100 Tomcat</a> build the search WAR: "clean install" and then deploy it locally and run the unit tests "clean tomcat:deploy".</li>
+		<li>If it passes the test, deploy the resulting WAR to Jelastic</li>
 	</ol>
 
 	<a name="dedupeSongs"/>
