@@ -9,6 +9,7 @@ import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -30,10 +31,6 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 		void setInfo(String hashtag);
 
 		void setTrendingLists(List<String> lists);
-
-		void hideContributeCTA();
-
-		void showContributeCTA();
 
 		void show();
 
@@ -87,21 +84,26 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 				getView().setTrendingLists(trending);
 			}
 		});
-
-		// Hide contribute if user already has it
-		if (_currentUser.isLoggedIn() && _hashtag != null && (_currentUser.getHashtags().contains(_hashtag) || _hashtag.equals(Constants.DEFAULT_HASHTAG)))
-			getView().hideContributeCTA();
-		else
-			getView().showContributeCTA();
 	}
 
 	@Override
 	public void contributeToList() {
 		if (_currentUser.isLoggedIn()) {
-			_currentUser.addFaveList(_hashtag);
+			// If user already has that list, switch to it
+			if (_currentUser.getHashtags().contains(_hashtag) || _hashtag.equals(Constants.DEFAULT_HASHTAG)) {
+				_placeManager.revealPlace(new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(PlaceParams.USER_PARAM, _currentUser.getUsername())
+						.with(PlaceParams.LIST_PARAM, _hashtag)
+						.build());
+			}
+			// Otherwise create the list for them
+			else {
+				_currentUser.addFaveList(_hashtag);
+			}
 		}
 		else {
-			_currentUser.setAfterLoginAction(new AddListAfterLoginAction(_currentUser, _hashtag));
+			_currentUser.setAfterLoginAction(new AddListAfterLoginAction(this, _hashtag));
 			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 		}
 	}
