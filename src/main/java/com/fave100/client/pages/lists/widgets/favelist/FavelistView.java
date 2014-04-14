@@ -35,6 +35,8 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 		String songLink();
 
 		String whyline();
+
+		String invisible();
 	}
 
 	@UiField FavelistStyle style;
@@ -60,6 +62,7 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 
 		hideNoItemsMessage();
 		faveList.clear();
+		faveList.removeStyleName(style.invisible());
 
 		if (widgets == null || widgets.size() == 0) {
 			noItemsMessage.setVisible(true);
@@ -102,5 +105,6 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 	public void clearState() {
 		hideNoItemsMessage();
 		listNotFound.setVisible(false);
+		faveList.addStyleName(style.invisible());
 	}
 }
