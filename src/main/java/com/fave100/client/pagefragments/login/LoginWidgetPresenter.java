@@ -167,9 +167,9 @@ public class LoginWidgetPresenter extends
 
 			@Override
 			public void onSuccess(AppUser appUser) {
-				_eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
-				Notification.show("Logged in successfully");
 				_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.lists).with(PlaceParams.USER_PARAM, appUser.getUsername()).build());
+				Notification.show("Logged in successfully");
+				_eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
 			}
 		});
 	}
