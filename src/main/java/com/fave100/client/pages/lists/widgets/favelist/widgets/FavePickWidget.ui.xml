@@ -26,42 +26,33 @@
 			vertical-align: middle;
 		}
 		
+		.rankPanel {			
+			margin: 3px;
+		}
+		
 		.rank {
 			border-radius: 99px;
 			color: #444;
-			border: 3px #444 solid;
+			border: 3px #444 solid !important;
 			background-color: #fff;
 			display: inline-block;
-			margin: 3px;
 			font-family: arial;
 			font-size: 40px;
 			width: 62px;
 			height: 60px;
 			text-align: center;
-		}
-		
-		.rankEditTextBox {
-			border-radius: 0px;
-			margin: -3px;	
+			padding: 0px !important;
 		}
 				
 		.rank > div {
 			margin-top: 2px;
 		}
-		
-		.rankEditPanel:hover {
-			border-radius: 0px;
-			cursor: pointer;
-		}
 				
 		.rankThreeDigit {
 			font-size: 30px;
+			line-height: 48px;
 		}
-		
-		.rankThreeDigit > div {
-			margin-top: 5px;
-		}
-		
+				
 		.songDetails {
 			width: 81%;
 			display: table-cell;
@@ -88,21 +79,6 @@
 			font-color: #eee;
 			width: 100%;
 		}
-				
-		.whyLinePanel:hover {
-			border: 3px #ddd dotted;
-			cursor: pointer;
-			margin: -3px;
-		}
-		
-		.whyLinePanelEmpty {
-			white-space: pre;
-		}
-		
-		.whyLineTextBox {
-			margin: -3px;
-			width: 100%;
-		}
 		
 		.hoverPanelContainer {
 			width: 10%;
@@ -117,20 +93,14 @@
 			cursor: pointer;
 		}	
 		
-		.hoverPanelDeleteButton {
-			vertical-align: middle;
-		}
 		
-		.arrowPanel {
-			width: 25px;
-		}
 	</ui:style>
 
 	<g:HTMLPanel ui:field="container">	
-		<g:FlowPanel ui:styleName="{style.mainPanel}" ui:field="mainPanel">
+		<g:FlowPanel ui:styleName="{style.mainPanel}">
 		
 			<g:SimplePanel ui:styleName="{style.rankContainer}">
-				<g:SimplePanel ui:field="rankPanel" ui:styleName="{style.rank}"></g:SimplePanel>
+				<g:SimplePanel ui:field="rankPanel" ui:styleName="{style.rankPanel}"/>
 			</g:SimplePanel>
 
 			<g:FlowPanel ui:styleName="{style.songDetails}">

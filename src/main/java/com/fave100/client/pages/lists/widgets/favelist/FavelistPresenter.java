@@ -3,7 +3,9 @@ package com.fave100.client.pages.lists.widgets.favelist;
 import static com.google.gwt.query.client.GQuery.$;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
@@ -17,6 +19,7 @@ import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.AddSongAfterLoginAction;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
+import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.google.gwt.http.client.Response;
@@ -24,12 +27,14 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.common.client.ClientUrlUtils;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class FavelistPresenter extends
@@ -50,71 +55,26 @@ public class FavelistPresenter extends
 		void clearState();
 	}
 
-	public interface WhyLineChanged {
-		void onChange(String songID, String whyLine);
-	}
-
-	public interface RankChanged {
-		void onChange(String songID, int currentIndex, int newIndex);
-	}
-
-	public interface ItemDeleted {
-		void onDeleted(String songID, int index);
-	}
-
-	public interface ItemAdded {
-		void onAdded(String songID, String song, String artist);
-	}
-
-	private EventBus eventBus;
+	private EventBus _eventBus;
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	// The user whose favelist we are showing
-	private AppUser user;
+	private AppUser _user;
 	// The currently logged in user
-	private CurrentUser currentUser;
+	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	// The list to work with
-	private String hashtag;
-	private List<FavePickWidget> widgets;
-	@Inject private AddSongPresenter addSongPresenter;
-
-	private WhyLineChanged _whyLineChanged = new WhyLineChanged() {
-		@Override
-		public void onChange(final String songID, final String whyLine) {
-			editWhyline(songID, whyLine);
-		}
-	};
-
-	private RankChanged _rankChanged = new RankChanged() {
-		@Override
-		public void onChange(final String songID, final int currentIndex, final int newIndex) {
-			changeSongPosition(songID, currentIndex, newIndex);
-		}
-	};
-
-	private ItemDeleted _itemDeleted = new ItemDeleted() {
-		@Override
-		public void onDeleted(final String songID, final int index) {
-			removeSong(songID, index);
-		}
-	};
-
-	private ItemAdded _itemAdded = new ItemAdded() {
-		@Override
-		public void onAdded(final String songID, final String song, final String artist) {
-			addSong(songID, song, artist, false);
-		}
-	};
+	private String _hashtag;
+	private List<FavePickWidget> _widgets;
+	@Inject private AddSongPresenter _addSongPresenter;
 
 	@Inject
 	public FavelistPresenter(final EventBus eventBus, final MyView view, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
 								final PlaceManager placeManager, final CurrentUser currentUser) {
 		super(eventBus, view);
-		this.eventBus = eventBus;
+		_eventBus = eventBus;
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
-		this.currentUser = currentUser;
+		_currentUser = currentUser;
 		_placeManager = placeManager;
 		getView().setUiHandlers(this);
 	}
@@ -124,23 +84,23 @@ public class FavelistPresenter extends
 		super.onBind();
 
 		// Update FaveList when it changes
-		FaveItemAddedEvent.register(eventBus, new FaveItemAddedEvent.Handler() {
+		FaveItemAddedEvent.register(_eventBus, new FaveItemAddedEvent.Handler() {
 			@Override
 			public void onFaveItemAdded(final FaveItemAddedEvent event) {
 				if (!isEditable())
 					return;
 
 				final FaveItem item = event.getFaveItemDto();
-				final FavePickWidget widget = new FavePickWidget(eventBus, item, widgets.size() + 1, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, user.getUsername(), hashtag);
+				final FavePickWidget widget = new FavePickWidget(_eventBus, item, _widgets.size() + 1, isEditable(), buildPickUrl(item.getSongID()), FavelistPresenter.this);
 				getView().addPick(widget);
-				widgets.add(widget);
+				_widgets.add(widget);
 
-				final int listSize = currentUser.getFaveLists().get(currentUser.getCurrentHashtag()).size();
+				final int listSize = _currentUser.getFaveLists().get(_currentUser.getCurrentHashtag()).size();
 				if (listSize == 1) {
 					// Only one song in list, focus whyline for convenience
 					widget.focusWhyline();
 					// Show help bubble if on default list
-					if (currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG)) {
+					if (_currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG)) {
 						widget.showWhylineHelpBubble();
 					}
 				}
@@ -148,7 +108,7 @@ public class FavelistPresenter extends
 					// Focus rank for easy rank changing
 					widget.focusRank();
 					// Show help bubble if on default list
-					if (currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG) && listSize == 2) {
+					if (_currentUser.getCurrentHashtag().equals(Constants.DEFAULT_HASHTAG) && listSize == 2) {
 						widget.showRankWhylineHelpBubble();
 					}
 				}
@@ -157,26 +117,26 @@ public class FavelistPresenter extends
 	}
 
 	public void clearFavelist() {
-		getView().setList(null);
+		getView().clearState();
 	}
 
 	public void refreshFavelist(final boolean ownList) {
 		getView().clearState();
 
-		if (hashtag == null) {
-			hashtag = Constants.DEFAULT_HASHTAG;
+		if (_hashtag == null) {
+			_hashtag = Constants.DEFAULT_HASHTAG;
 		}
 
-		final String hashtagPerRequest = hashtag;
+		final String hashtagPerRequest = _hashtag;
 
 		// Get the FaveList locally if possible 
-		if (ownList && currentUser.getFaveList() != null) {
-			buildWidgets(currentUser.getFaveList());
+		if (ownList && _currentUser.getFaveList() != null) {
+			buildWidgets(_currentUser.getFaveList());
 			return;
 		}
 		// Otherwise get it from the server if we are requesting a user's list
-		else if (user != null) {
-			_dispatcher.execute(_restServiceFactory.users().getFaveList(user.getUsername(), hashtag), new AsyncCallback<FaveItemCollection>() {
+		else if (_user != null) {
+			_dispatcher.execute(_restServiceFactory.users().getFaveList(_user.getUsername(), _hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -186,9 +146,9 @@ public class FavelistPresenter extends
 				@Override
 				public void onSuccess(FaveItemCollection result) {
 					// Make sure user still not null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
-					if (user != null && hashtagPerRequest.equals(hashtag)) {
+					if (_user != null && hashtagPerRequest.equals(_hashtag)) {
 						if (ownList)
-							currentUser.setFaveList(result.getItems());
+							_currentUser.setFaveList(result.getItems());
 						buildWidgets(result.getItems());
 					}
 				}
@@ -198,7 +158,7 @@ public class FavelistPresenter extends
 		// No user, get the global list 
 		else {
 
-			_dispatcher.execute(_restServiceFactory.favelists().getMasterFaveList(hashtag), new AsyncCallback<FaveItemCollection>() {
+			_dispatcher.execute(_restServiceFactory.favelists().getMasterFaveList(_hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -208,7 +168,7 @@ public class FavelistPresenter extends
 				@Override
 				public void onSuccess(FaveItemCollection result) {
 					// Make sure user still null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
-					if (user == null && hashtagPerRequest.equals(hashtag))
+					if (_user == null && hashtagPerRequest.equals(_hashtag))
 						buildWidgets(result.getItems());
 				}
 			});
@@ -219,33 +179,48 @@ public class FavelistPresenter extends
 		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 		int i = 1;
 		for (final FaveItem item : faveList) {
-			final String username = user != null ? user.getUsername() : "";
-			final FavePickWidget widget = new FavePickWidget(eventBus, item, i, isEditable(), _whyLineChanged, _rankChanged, _itemDeleted, _itemAdded, username, hashtag);
+			final FavePickWidget widget = new FavePickWidget(_eventBus, item, i, isEditable(), buildPickUrl(item.getSongID()), this);
 			pickWidgets.add(widget);
 			i++;
 		}
-		widgets = pickWidgets;
+		_widgets = pickWidgets;
 
 		getView().setList(pickWidgets);
 		Window.scrollTo(0, 0);
-		eventBus.fireEvent(new FaveListSizeChangedEvent(faveList.size()));
+		_eventBus.fireEvent(new FaveListSizeChangedEvent(faveList.size()));
+	}
+
+	private String buildPickUrl(String songId) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(SongPresenter.ID_PARAM, songId);
+		params.put(SongPresenter.LIST_PARAM, getHashtag());
+
+		if (_user != null) {
+			params.put(SongPresenter.USER_PARAM, getUser().getUsername());
+		}
+
+		return "#" + new ParameterTokenFormatter(new ClientUrlUtils())
+				.toPlaceToken(new PlaceRequest.Builder()
+						.nameToken(NameTokens.song)
+						.with(params)
+						.build());
 	}
 
 	@Override
 	public void addSong(final String songId, final String song, final String artist, boolean forceAddToCurrentList) {
-		if (!currentUser.isLoggedIn()) {
-			currentUser.setAfterLoginAction(new AddSongAfterLoginAction(this, songId, song, artist));
+		if (!_currentUser.isLoggedIn()) {
+			_currentUser.setAfterLoginAction(new AddSongAfterLoginAction(this, songId, song, artist));
 			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
 		}
 		else {
-			if (currentUser.getHashtags().size() == 1 || forceAddToCurrentList) {
-				currentUser.addSong(songId, song, artist);
+			if (_currentUser.getHashtags().size() == 1 || forceAddToCurrentList) {
+				_currentUser.addSong(songId, song, artist);
 			}
 			else {
-				addSongPresenter.setSongToAddId(songId);
-				addSongPresenter.setSongToAddName(song);
-				addSongPresenter.setSongToAddArtist(artist);
-				addToPopupSlot(addSongPresenter);
+				_addSongPresenter.setSongToAddId(songId);
+				_addSongPresenter.setSongToAddName(song);
+				_addSongPresenter.setSongToAddArtist(artist);
+				addToPopupSlot(_addSongPresenter);
 			}
 		}
 	}
@@ -258,13 +233,13 @@ public class FavelistPresenter extends
 		}
 
 		// Re-rank on client
-		for (int i = index + 1; i < widgets.size(); i++) {
-			widgets.get(i).setRank(i);
+		for (int i = index + 1; i < _widgets.size(); i++) {
+			_widgets.get(i).setRank(i);
 		}
-		widgets.remove(index);
-		currentUser.getFaveList().remove(index);
+		_widgets.remove(index);
+		_currentUser.getFaveList().remove(index);
 		// Send request for server to remove it
-		_dispatcher.execute(_restServiceFactory.user().removeFaveItemForCurrentUser(hashtag, songId), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().removeFaveItemForCurrentUser(_hashtag, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -281,7 +256,7 @@ public class FavelistPresenter extends
 	@Override
 	public void editWhyline(final String songId, final String whyline) {
 		WhylineEdit whylineEdit = new WhylineEdit();
-		whylineEdit.setListName(hashtag);
+		whylineEdit.setListName(_hashtag);
 		whylineEdit.setSongId(songId);
 		whylineEdit.setWhyline(whyline);
 
@@ -302,8 +277,8 @@ public class FavelistPresenter extends
 			@Override
 			public void onSuccess(Void result) {
 				// Set client to match
-				for (int i = 0; i < currentUser.getFaveList().size(); i++) {
-					final FaveItem faveItem = currentUser.getFaveList().get(i);
+				for (int i = 0; i < _currentUser.getFaveList().size(); i++) {
+					final FaveItem faveItem = _currentUser.getFaveList().get(i);
 					if (faveItem.getSongID().equals(songId)) {
 						FaveItem newfaveItem = new FaveItem();
 						newfaveItem.setSongID(songId);
@@ -312,8 +287,8 @@ public class FavelistPresenter extends
 						newfaveItem.setArtist(faveItem.getArtist());
 						newfaveItem.setSong(faveItem.getSong());
 
-						currentUser.getFaveList().add(i, newfaveItem);
-						currentUser.getFaveList().remove(faveItem);
+						_currentUser.getFaveList().add(i, newfaveItem);
+						_currentUser.getFaveList().remove(faveItem);
 					}
 				}
 			}
@@ -332,13 +307,13 @@ public class FavelistPresenter extends
 			return;
 
 		// If index out of range, refresh with correct values
-		if (newIndex < 0 || newIndex >= currentUser.getFaveList().size()) {
-			widgets.get(currentIndex).setRank(currentIndex + 1);
+		if (newIndex < 0 || newIndex >= _currentUser.getFaveList().size()) {
+			_widgets.get(currentIndex).setRank(currentIndex + 1);
 			return;
 		}
 
 		// Save on server
-		_dispatcher.execute(_restServiceFactory.user().rerankFaveItemForCurrentUser(hashtag, songId, newIndex), new AsyncCallback<Void>() {
+		_dispatcher.execute(_restServiceFactory.user().rerankFaveItemForCurrentUser(_hashtag, songId, newIndex), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -348,48 +323,48 @@ public class FavelistPresenter extends
 			@Override
 			public void onSuccess(Void result) {
 				// If successfully saved on server, manually set client to match
-				final FaveItem toRerank = currentUser.getFaveList().get(currentIndex);
-				currentUser.getFaveList().remove(toRerank);
-				currentUser.getFaveList().add(newIndex, toRerank);
+				final FaveItem toRerank = _currentUser.getFaveList().get(currentIndex);
+				_currentUser.getFaveList().remove(toRerank);
+				_currentUser.getFaveList().add(newIndex, toRerank);
 
 				// And then manually update the widget view to match
-				FavePickWidget pickToRank = widgets.get(currentIndex);
-				widgets.remove(pickToRank);
-				widgets.add(newIndex, pickToRank);
+				FavePickWidget pickToRank = _widgets.get(currentIndex);
+				_widgets.remove(pickToRank);
+				_widgets.add(newIndex, pickToRank);
 				int i = 1;
-				for (final FavePickWidget widget : widgets) {
+				for (final FavePickWidget widget : _widgets) {
 					widget.setRank(i);
 					i++;
 				}
 				getView().swapPicks(currentIndex, newIndex);
 				// Because of complications from the floating search, it is better to try to scroll the previous widget
 				if (newIndex < currentIndex && newIndex - 1 >= 0)
-					pickToRank = widgets.get(newIndex - 1);
+					pickToRank = _widgets.get(newIndex - 1);
 				$(pickToRank).scrollIntoView(true);
 			}
 		});
 	}
 
 	private boolean isEditable() {
-		return currentUser.isLoggedIn() && currentUser.equals(user);
+		return _currentUser.isLoggedIn() && _currentUser.equals(_user);
 	}
 
 	/* Getters and Setters */
 
 	public AppUser getUser() {
-		return user;
+		return _user;
 	}
 
 	public void setUser(final AppUser user) {
-		this.user = user;
+		this._user = user;
 	}
 
 	public String getHashtag() {
-		return hashtag;
+		return _hashtag;
 	}
 
 	public void setHashtag(final String hashtag) {
-		this.hashtag = hashtag;
+		this._hashtag = hashtag;
 	}
 
 }
