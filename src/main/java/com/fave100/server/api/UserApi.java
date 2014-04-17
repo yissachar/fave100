@@ -23,7 +23,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -35,6 +34,8 @@ import com.fave100.server.SessionAttributes;
 import com.fave100.server.UrlBuilder;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
+import com.fave100.server.domain.EmailPasswordResetDetails;
+import com.fave100.server.domain.PasswordChangeDetails;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.WhylineEdit;
@@ -161,7 +162,10 @@ public class UserApi {
 	@POST
 	@Path(ApiPaths.PASSWORD_RESET)
 	@ApiOperation(value = "Email password reset token", response = BooleanResult.class)
-	public static BooleanResult emailPasswordResetToken(@Context HttpServletRequest req, @QueryParam("username") final String username, @QueryParam("emailAddress") final String emailAddress) {
+	public static BooleanResult emailPasswordResetToken(@Context HttpServletRequest req, EmailPasswordResetDetails emailPasswordResetDetails) {
+
+		String username = emailPasswordResetDetails.getUsername();
+		String emailAddress = emailPasswordResetDetails.getEmailAddress();
 
 		if (!username.isEmpty() && !emailAddress.isEmpty()) {
 			final AppUser appUser = AppUserDao.findAppUser(username);
@@ -212,8 +216,10 @@ public class UserApi {
 	@POST
 	@Path(ApiPaths.PASSWORD_CHANGE)
 	@ApiOperation(value = "Change password", response = BooleanResult.class)
-	public static BooleanResult changePassword(@Context HttpServletRequest request, @QueryParam("newPassword") final String newPassword,
-			@QueryParam("tokenOrPassword") final String tokenOrPassword) {
+	public static BooleanResult changePassword(@Context HttpServletRequest request, PasswordChangeDetails passwordChangeDetails) {
+
+		String newPassword = passwordChangeDetails.getNewPassword();
+		String tokenOrPassword = passwordChangeDetails.getTokenOrPassword();
 
 		if (Validator.validatePassword(newPassword) != null || tokenOrPassword == null || tokenOrPassword.isEmpty()) {
 			// TODO: Shouldn't this be an exception instead??
