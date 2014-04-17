@@ -2,6 +2,8 @@ package com.fave100.client.pages.passwordreset;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.BooleanResult;
+import com.fave100.client.generated.entities.EmailPasswordResetDetails;
+import com.fave100.client.generated.entities.PasswordChangeDetails;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.PagePresenter;
 import com.fave100.shared.Validator;
@@ -107,7 +109,11 @@ public class PasswordResetPresenter
 
 	@Override
 	public void sendEmail(final String username, final String emailAddress) {
-		_dispatcher.execute(_restServiceFactory.user().emailPasswordResetToken(username, emailAddress), new AsyncCallback<BooleanResult>() {
+		EmailPasswordResetDetails emailPasswordResetDetails = new EmailPasswordResetDetails();
+		emailPasswordResetDetails.setUsername(username);
+		emailPasswordResetDetails.setEmailAddress(emailAddress);
+
+		_dispatcher.execute(_restServiceFactory.user().emailPasswordResetToken(emailPasswordResetDetails), new AsyncCallback<BooleanResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -129,8 +135,7 @@ public class PasswordResetPresenter
 	}
 
 	@Override
-	public void changePassword(final String newPassword,
-			final String newPasswordRepeat, final String currPassword) {
+	public void changePassword(final String newPassword, final String newPasswordRepeat, final String currPassword) {
 
 		// Set error message if newPassword doesn't validate
 		final String errorMsg = Validator.validatePassword(newPassword);
@@ -150,7 +155,11 @@ public class PasswordResetPresenter
 			passwordOrToken = currPassword;
 		}
 
-		_dispatcher.execute(_restServiceFactory.user().changePassword(newPassword, passwordOrToken), new RestCallback<BooleanResult>() {
+		PasswordChangeDetails passwordChangeDetails = new PasswordChangeDetails();
+		passwordChangeDetails.setNewPassword(newPassword);
+		passwordChangeDetails.setTokenOrPassword(passwordOrToken);
+
+		_dispatcher.execute(_restServiceFactory.user().changePassword(passwordChangeDetails), new RestCallback<BooleanResult>() {
 
 			@Override
 			public void setResponse(Response response) {
