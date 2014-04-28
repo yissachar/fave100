@@ -80,12 +80,7 @@ public class UserApi {
 	@ApiOperation(value = "Get the current user", response = AppUser.class)
 	public static AppUser getLoggedInUser(@Context HttpServletRequest request) {
 		final String username = (String)request.getSession().getAttribute(SessionAttributes.AUTH_USER);
-		if (username != null) {
-			return AppUserDao.findAppUser(username);
-		}
-		else {
-			return null;
-		}
+		return AppUserDao.findAppUser(username);
 	}
 
 	@POST
@@ -99,21 +94,14 @@ public class UserApi {
 	@GET
 	@Path(ApiPaths.USER_SETTINGS)
 	@ApiOperation(value = "Get current user settings", response = UserInfo.class)
-	public static UserInfo getCurrentUserSettings(@Context HttpServletRequest request) {
-		final AppUser currentUser = getLoggedInUser(request);
-		if (currentUser == null)
-			throw new NotLoggedInException();
-
+	public static UserInfo getCurrentUserSettings(@LoggedInUser AppUser currentUser) {
 		return new UserInfo(currentUser);
 	}
 
 	@POST
 	@Path(ApiPaths.USER_SETTINGS)
 	@ApiOperation(value = "Set user info", response = BooleanResult.class)
-	public static BooleanResult setUserInfo(@Context HttpServletRequest request, final UserInfo userInfo) {
-		final AppUser currentUser = getLoggedInUser(request);
-		if (currentUser == null)
-			return new BooleanResult(false);
+	public static BooleanResult setUserInfo(@LoggedInUser final AppUser currentUser, final UserInfo userInfo) {
 		try {
 			ofy().transact(new VoidWork() {
 				@Override
@@ -280,16 +268,12 @@ public class UserApi {
 	@ApiOperation(value = "Add a FaveList")
 	@ApiResponses(value = {@ApiResponse(code = 400, message = "The list name did not pass validation"), @ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN),
 							@ApiResponse(code = 403, message = ApiExceptions.FAVELIST_LIMIT_REACHED), @ApiResponse(code = 403, message = ApiExceptions.FAVELIST_ALREADY_EXISTS)})
-	public static void addFaveListForCurrentUser(@Context HttpServletRequest request, @ApiParam(value = "The list name", required = true) @PathParam("list") final String listName) {
+	public static void addFaveListForCurrentUser(@LoggedInUser final AppUser currentUser, @ApiParam(value = "The list name", required = true) @PathParam("list") final String listName) {
 
 		final String error = Validator.validateHashtag(listName);
 		if (error != null) {
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
 		}
-
-		final AppUser currentUser = getLoggedInUser(request);
-		if (currentUser == null)
-			throw new NotLoggedInException();
 
 		// -1 because #alltime is a default list not stored in the hashtags list
 		if (currentUser.getHashtags().size() >= Constants.MAX_LISTS_PER_USER - 1)
@@ -326,11 +310,7 @@ public class UserApi {
 	@Path(ApiPaths.USER_FAVELISTS)
 	@ApiOperation(value = "Delete a FaveList")
 	@ApiResponses(value = {@ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN)})
-	public static void deleteFaveListForCurrentUser(@Context HttpServletRequest request, @PathParam("list") final String listName) {
-		final AppUser currentUser = getLoggedInUser(request);
-		if (currentUser == null)
-			throw new NotLoggedInException();
-
+	public static void deleteFaveListForCurrentUser(@LoggedInUser AppUser currentUser, @PathParam("list") final String listName) {
 		currentUser.getHashtags().remove(listName);
 		ofy().save().entity(currentUser).now();
 
@@ -358,12 +338,7 @@ public class UserApi {
 	@ApiOperation(value = "Add a FaveItem")
 	@ApiResponses(value = {@ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN), @ApiResponse(code = 403, message = ApiExceptions.FAVELIST_SIZE_REACHED),
 							@ApiResponse(code = 403, message = ApiExceptions.FAVEITEM_ALREADY_IN_LIST)})
-	public static void addFaveItemForCurrentUser(@Context HttpServletRequest request, @PathParam("list") final String listName, @PathParam("id") final String songID) {
-
-		final AppUser currentUser = getLoggedInUser(request);
-		if (currentUser == null)
-			throw new NotLoggedInException();
-
+	public static void addFaveItemForCurrentUser(@LoggedInUser AppUser currentUser, @PathParam("list") final String listName, @PathParam("id") final String songID) {
 		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), listName);
 
 		// Check FaveList size limit reached
@@ -398,12 +373,7 @@ public class UserApi {
 	@Path(ApiPaths.USER_FAVEITEMS)
 	@ApiOperation(value = "Remove a FaveItem")
 	@ApiResponses(value = {@ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN)})
-	public static void removeFaveItemForCurrentUser(@Context HttpServletRequest request, @PathParam("list") final String hashtag, @PathParam("id") final String songID) {
-
-		final AppUser currentUser = getLoggedInUser(request);
-		if (currentUser == null)
-			throw new NotLoggedInException();
-
+	public static void removeFaveItemForCurrentUser(@LoggedInUser AppUser currentUser, @PathParam("list") final String hashtag, @PathParam("id") final String songID) {
 		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), hashtag);
 		if (faveList == null)
 			return;
@@ -435,12 +405,8 @@ public class UserApi {
 	@Path(ApiPaths.EDIT_RANK)
 	@ApiOperation(value = "Rerank a FaveItem")
 	@ApiResponses(value = {@ApiResponse(code = 400, message = ApiExceptions.INVALID_FAVELIST_INDEX), @ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN)})
-	public static void rerankFaveItemForCurrentUser(@Context HttpServletRequest request, @PathParam("list") final String hashtag, @PathParam("id") final String songID,
+	public static void rerankFaveItemForCurrentUser(@LoggedInUser AppUser currentUser, @PathParam("list") final String hashtag, @PathParam("id") final String songID,
 			final Integer newIndex) {
-
-		final AppUser currentUser = getLoggedInUser(request);
-		if (currentUser == null)
-			throw new NotLoggedInException();
 
 		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), hashtag);
 		if (faveList == null)
@@ -473,7 +439,7 @@ public class UserApi {
 	@Path(ApiPaths.EDIT_WHYLINE)
 	@ApiOperation(value = "Edit a WhyLine")
 	@ApiResponses(value = {@ApiResponse(code = 400, message = "WhyLine did not pass validation"), @ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN)})
-	public static void editWhylineForCurrentUser(@Context HttpServletRequest request, WhylineEdit whylineEdit) {
+	public static void editWhylineForCurrentUser(@LoggedInUser AppUser currentUser, WhylineEdit whylineEdit) {
 
 		String listName = whylineEdit.getListName();
 		String songId = whylineEdit.getSongId();
@@ -489,9 +455,6 @@ public class UserApi {
 			// Whyline does not meet validation
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(whyline).build());
 
-		final AppUser currentUser = getLoggedInUser(request);
-		if (currentUser == null)
-			throw new NotLoggedInException();
 		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), listName);
 		Objects.requireNonNull(faveList);
 
@@ -547,11 +510,7 @@ public class UserApi {
 	@PUT
 	@Path(ApiPaths.USER_FOLLOWING)
 	@ApiOperation(value = "Follow user")
-	public static void followUser(@Context HttpServletRequest request, @PathParam("user") final String username) {
-		final AppUser currentUser = getLoggedInUser(request);
-
-		if (currentUser == null)
-			throw new NotLoggedInException();
+	public static void followUser(@LoggedInUser AppUser currentUser, @PathParam("user") final String username) {
 
 		// Check if user trying to follow themselves
 		if (currentUser.getUsername().equals(username))
@@ -577,11 +536,7 @@ public class UserApi {
 	@DELETE
 	@Path(ApiPaths.USER_FOLLOWING)
 	@ApiOperation(value = "Unfollow user")
-	public static void unfollowUser(@Context HttpServletRequest request, @PathParam("user") final String username) {
-
-		final AppUser currentUser = getLoggedInUser(request);
-		if (currentUser == null)
-			throw new NotLoggedInException();
+	public static void unfollowUser(@LoggedInUser AppUser currentUser, @PathParam("user") final String username) {
 
 		final Following following = ofy().load().type(Following.class).id(currentUser.getId()).now();
 		if (following == null)
