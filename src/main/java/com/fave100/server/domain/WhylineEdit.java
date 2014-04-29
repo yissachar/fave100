@@ -6,6 +6,15 @@ public class WhylineEdit {
 	private String songId;
 	private String whyline;
 
+	public WhylineEdit() {
+	}
+
+	public WhylineEdit(String listName, String songId, String whyline) {
+		this.listName = listName;
+		this.songId = songId;
+		this.whyline = whyline;
+	}
+
 	public String getListName() {
 		return listName;
 	}
