@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({FaveListCreationTest.class, FaveListDeletionTest.class, FollowingTest.class, SongApiTest.class, UserCreationTest.class, WhyLineApiTest.class})
+@SuiteClasses({SongApiTest.class, AuthApiTest.class, FaveListsApiTest.class, SearchApiTest.class, UsersApiTest.class,
+				UserApiTest.class, TrendingApiTest.class})
 public class ApiTestSuite {
 
 }

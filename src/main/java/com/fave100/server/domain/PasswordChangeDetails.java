@@ -5,6 +5,14 @@ public class PasswordChangeDetails {
 	private String newPassword;
 	private String tokenOrPassword;
 
+	public PasswordChangeDetails() {
+	}
+
+	public PasswordChangeDetails(String newPassword, String tokenOrPassword) {
+		this.newPassword = newPassword;
+		this.tokenOrPassword = tokenOrPassword;
+	}
+
 	public String getNewPassword() {
 		return newPassword;
 	}
