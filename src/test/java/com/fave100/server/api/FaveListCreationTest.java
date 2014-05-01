@@ -78,7 +78,7 @@ public class FaveListCreationTest {
 	public void should_create_favelist() throws Exception {
 		// Create a favelist
 		String faveListName = "anewfavelist";
-		UserApi.addFaveListForCurrentUser(req, faveListName);
+		UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), faveListName);
 
 		// Favelist now exists in datastore
 		assertNotNull("Created faveList must exist in datastore", FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
@@ -88,11 +88,11 @@ public class FaveListCreationTest {
 	public void should_not_create_favelist_with_duplicate_name_per_user() {
 		// Create a favelist
 		String faveListName = "boo";
-		UserApi.addFaveListForCurrentUser(req, faveListName);
+		UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), faveListName);
 
 		// Attempt to add a second favelist with same name
 		try {
-			UserApi.addFaveListForCurrentUser(req, faveListName);
+			UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), faveListName);
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
@@ -106,7 +106,7 @@ public class FaveListCreationTest {
 		String faveListName = null;
 
 		try {
-			UserApi.addFaveListForCurrentUser(req, faveListName);
+			UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), faveListName);
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
@@ -120,7 +120,7 @@ public class FaveListCreationTest {
 		String faveListName = "";
 
 		try {
-			UserApi.addFaveListForCurrentUser(req, faveListName);
+			UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), faveListName);
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
@@ -139,7 +139,7 @@ public class FaveListCreationTest {
 		String faveListName = sb.toString();
 
 		try {
-			UserApi.addFaveListForCurrentUser(req, faveListName);
+			UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), faveListName);
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
@@ -156,10 +156,10 @@ public class FaveListCreationTest {
 		String name4 = "baz inga";
 
 		try {
-			UserApi.addFaveListForCurrentUser(req, name1);
-			UserApi.addFaveListForCurrentUser(req, name2);
-			UserApi.addFaveListForCurrentUser(req, name3);
-			UserApi.addFaveListForCurrentUser(req, name4);
+			UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), name1);
+			UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), name2);
+			UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), name3);
+			UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), name4);
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
@@ -194,7 +194,7 @@ public class FaveListCreationTest {
 		String faveListName = "101stlist";
 
 		try {
-			UserApi.addFaveListForCurrentUser(req, faveListName);
+			UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), faveListName);
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
@@ -210,7 +210,7 @@ public class FaveListCreationTest {
 	@Test
 	public void should_create_favelist_that_is_empty() {
 		String faveListName = "booya";
-		UserApi.addFaveListForCurrentUser(req, faveListName);
+		UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), faveListName);
 
 		FaveList faveList = FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName);
 		assertEquals("A newly created FaveList must not have any FaveItems stored", 0, faveList.getList().size());
@@ -224,10 +224,10 @@ public class FaveListCreationTest {
 	@Test
 	public void should_store_favelist_name_in_user_profile() {
 		String firstfaveListName = "gret";
-		UserApi.addFaveListForCurrentUser(req, firstfaveListName);
+		UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), firstfaveListName);
 
 		String secondFaveListName = "thasdf";
-		UserApi.addFaveListForCurrentUser(req, secondFaveListName);
+		UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), secondFaveListName);
 
 		String msg = "User object must store FaveList name";
 		assertEquals(msg, 2, loggedInUser.getHashtags().size());
