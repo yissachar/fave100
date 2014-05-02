@@ -45,8 +45,8 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
  * 
  */
 public class SongPresenter extends
-		PagePresenter<SongPresenter.MyView, SongPresenter.MyProxy> implements
-		SongUiHandlers {
+		PagePresenter<SongPresenter.MyView, SongPresenter.MyProxy>
+		implements SongUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<SongUiHandlers> {
 		void setSongInfo(FaveItem song);

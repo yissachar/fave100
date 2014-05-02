@@ -15,9 +15,11 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.Bootstrapper;
+import com.gwtplatform.mvp.client.proxy.AsyncCallFailEvent;
+import com.gwtplatform.mvp.client.proxy.AsyncCallFailHandler;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
-public class Fave100Bootstrapper implements Bootstrapper {
+public class Fave100Bootstrapper implements Bootstrapper, AsyncCallFailHandler {
 
 	private static final String MOBILE_STYLE = AppClientBundle.INSTANCE.getGlobalCss().mobile();
 	private static final String NON_MOBILE_STYLE = AppClientBundle.INSTANCE.getGlobalCss().nonMobile();
@@ -33,6 +35,7 @@ public class Fave100Bootstrapper implements Bootstrapper {
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
+		_eventBus.addHandler(AsyncCallFailEvent.getType(), this);
 	}
 
 	@Override
@@ -77,5 +80,12 @@ public class Fave100Bootstrapper implements Bootstrapper {
 			RootPanel.get().addStyleName(MOBILE_STYLE);
 			RootPanel.get().removeStyleName(NON_MOBILE_STYLE);
 		}
+	}
+
+	// When a new version of the app is deployed, old async JS fragments will be lost but the app will still attempt to load them
+	// This handler will automatically reload the page when an async JS fragment is not loaded properly
+	@Override
+	public void onAsyncCallFail(AsyncCallFailEvent asyncCallFailEvent) {
+		Window.Location.reload();
 	}
 }
