@@ -1,6 +1,5 @@
 package com.fave100.client.pagefragments.register;
 
-import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
@@ -123,7 +122,6 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		if (validateFields(username, email, password, passwordRepeat)) {
 
 			// Create a new user with the username and password entered
-			LoadingIndicator.show();
 			UserRegistration registration = new UserRegistration();
 			registration.setUsername(username);
 			registration.setPassword(password);
@@ -133,8 +131,6 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 
 				@Override
 				public void setResponse(Response response) {
-					LoadingIndicator.hide();
-
 					if (response.getStatusCode() >= 400) {
 						getView().setNativeUsernameError(response.getText());
 					}

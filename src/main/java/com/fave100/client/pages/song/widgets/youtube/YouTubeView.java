@@ -88,6 +88,13 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 		}
 	}-*/;
 
+	@Override
+	public native void stopVideo() /*-{
+		if ($wnd.player) {
+			$wnd.player.stopVideo();
+		}
+	}-*/;
+
 	// Load YouTube iframe API async
 	public native void createIframeScript(YouTubeView widget, String videoID) /*-{
 		var player;
@@ -122,7 +129,8 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 				videoId : videoID,
 				playerVars : {
 					wmode : 'transparent',
-					autoplay : 1
+					autoplay : 1,
+					playsinline : 1
 				},
 				events : {
 					'onStateChange' : $wnd.onPlayerStateChange,

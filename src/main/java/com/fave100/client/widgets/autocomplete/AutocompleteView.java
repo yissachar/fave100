@@ -1,4 +1,4 @@
-package com.fave100.client.pages.lists.widgets.autocomplete.list;
+package com.fave100.client.widgets.autocomplete;
 
 import java.util.List;
 
@@ -20,23 +20,23 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiHandlers> implements ListAutocompletePresenter.MyView {
-	public interface Binder extends UiBinder<HTMLPanel, ListAutocompleteView> {
+public class AutocompleteView extends ViewWithUiHandlers<AutocompleteUiHandlers> implements AutocompletePresenter.MyView {
+
+	public interface Binder extends UiBinder<HTMLPanel, AutocompleteView> {
 	}
 
-	interface ListAutocompleteStyle extends GlobalStyle {
+	interface AutocompleteStyle extends GlobalStyle {
 		String selected();
 	}
 
 	@UiField TextBox searchBox;
 	@UiField FlowPanel resultsPanel;
 	@UiField Label noResultsMsg;
-	@UiField ListAutocompleteStyle style;
+	@UiField AutocompleteStyle style;
 
 	@Inject
-	ListAutocompleteView(final Binder binder) {
+	AutocompleteView(final Binder binder) {
 		initWidget(binder.createAndBindUi(this));
-		searchBox.getElement().setAttribute("placeholder", "Search lists...");
 	}
 
 	@UiHandler("searchBox")
@@ -53,7 +53,7 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 		}
 		else if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()) {
 			// Enter key pressed, add currently selected song to favelist
-			getUiHandlers().listSelected();
+			getUiHandlers().suggestionSelected();
 		}
 		else if (KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()) {
 			// Escape key, cancel search
@@ -75,28 +75,35 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 		resultsPanel.clear();
 		resultsPanel.setVisible(true);
 		noResultsMsg.setVisible(false);
+
 		if (suggestions == null || suggestions.size() == 0) {
 			resultsPanel.setVisible(false);
-			if (suggestions != null)
+
+			if (suggestions != null) {
 				noResultsMsg.setVisible(true);
+			}
+
 			return;
 		}
 
 		for (final String suggestion : suggestions) {
-			final Label listName = new Label(suggestion);
-			listName.addMouseOverHandler(new MouseOverHandler() {
+			final Label suggestionLabel = new Label(suggestion);
+
+			suggestionLabel.addMouseOverHandler(new MouseOverHandler() {
 				@Override
 				public void onMouseOver(final MouseOverEvent event) {
-					getUiHandlers().setSelection(resultsPanel.getWidgetIndex(listName), false);
+					getUiHandlers().setSelection(resultsPanel.getWidgetIndex(suggestionLabel), false);
 				}
 			});
-			listName.addMouseDownHandler(new MouseDownHandler() {
+
+			suggestionLabel.addMouseDownHandler(new MouseDownHandler() {
 				@Override
 				public void onMouseDown(final MouseDownEvent event) {
-					getUiHandlers().listSelected();
+					getUiHandlers().suggestionSelected();
 				}
 			});
-			resultsPanel.add(listName);
+
+			resultsPanel.add(suggestionLabel);
 		}
 	}
 
@@ -105,8 +112,10 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 		for (int i = 0; i < resultsPanel.getWidgetCount(); i++) {
 			resultsPanel.getWidget(i).getElement().removeClassName(style.selected());
 		}
-		if (selection >= 0 && resultsPanel.getWidgetCount() > 0)
+
+		if (selection >= 0 && resultsPanel.getWidgetCount() > 0) {
 			resultsPanel.getWidget(selection).getElement().addClassName(style.selected());
+		}
 	}
 
 	@Override
@@ -118,5 +127,10 @@ public class ListAutocompleteView extends ViewWithUiHandlers<ListAutocompleteUiH
 	@Override
 	public void setFocus(boolean focus) {
 		searchBox.setFocus(focus);
+	}
+
+	@Override
+	public void setPlaceholder(String placeholder) {
+		searchBox.getElement().setAttribute("placeholder", placeholder);
 	}
 }

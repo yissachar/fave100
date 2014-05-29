@@ -11,10 +11,10 @@ import com.fave100.client.pagefragments.popups.login.LoginPopupView;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pagefragments.register.RegisterWidgetView;
 import com.fave100.client.pagefragments.topbar.TopBarModule;
+import com.fave100.client.pages.MainModule;
 import com.fave100.client.pages.about.AboutModule;
 import com.fave100.client.pages.listbrowser.ListBrowserModule;
 import com.fave100.client.pages.lists.ListModule;
-import com.fave100.client.pages.lists.widgets.autocomplete.list.ListAutocompleteModule;
 import com.fave100.client.pages.login.LoginPresenter;
 import com.fave100.client.pages.login.LoginView;
 import com.fave100.client.pages.passwordreset.PasswordResetPresenter;
@@ -28,6 +28,7 @@ import com.fave100.client.pages.tour.TourModule;
 import com.fave100.client.place.ClientPlaceManager;
 import com.fave100.client.place.DefaultPlace;
 import com.fave100.client.widgets.alert.AlertModule;
+import com.fave100.client.widgets.autocomplete.AutocompleteModule;
 import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.gwtplatform.dispatch.rest.client.RestApplicationPath;
@@ -43,6 +44,7 @@ public class ClientModule extends AbstractPresenterModule {
 
 	@Override
 	protected void configure() {
+		install(new MainModule());
 		// Page and widget modules
 		install(new SongModule());
 		install(new TopBarModule());
@@ -51,7 +53,7 @@ public class ClientModule extends AbstractPresenterModule {
 		install(new AboutModule());
 		install(new AlertModule());
 		install(new ListBrowserModule());
-		install(new ListAutocompleteModule());
+		install(new AutocompleteModule());
 
 		install(new DefaultModule(ClientPlaceManager.class));
 		install(new RestDispatchAsyncModule.Builder().build());

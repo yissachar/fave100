@@ -3,9 +3,7 @@ package com.fave100.client.pages.lists.widgets.favelist;
 import static com.google.gwt.query.client.GQuery.$;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Notification;
@@ -16,10 +14,10 @@ import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.WhylineEdit;
 import com.fave100.client.generated.services.RestServiceFactory;
+import com.fave100.client.pagefragments.playlist.PlaylistPresenter;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.AddSongAfterLoginAction;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
-import com.fave100.client.pages.song.SongPresenter;
 import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.google.gwt.http.client.Response;
@@ -27,14 +25,12 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.common.client.ClientUrlUtils;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class FavelistPresenter extends
@@ -63,19 +59,21 @@ public class FavelistPresenter extends
 	// The currently logged in user
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
+	private PlaylistPresenter _playlistPresenter;
 	private String _hashtag;
 	private List<FavePickWidget> _widgets;
 	@Inject private AddSongPresenter _addSongPresenter;
 
 	@Inject
 	public FavelistPresenter(final EventBus eventBus, final MyView view, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
-								final PlaceManager placeManager, final CurrentUser currentUser) {
+								final PlaceManager placeManager, final CurrentUser currentUser, PlaylistPresenter playlistPresenter) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
+		_playlistPresenter = playlistPresenter;
 		getView().setUiHandlers(this);
 	}
 
@@ -91,7 +89,7 @@ public class FavelistPresenter extends
 					return;
 
 				final FaveItem item = event.getFaveItemDto();
-				final FavePickWidget widget = new FavePickWidget(_eventBus, item, _widgets.size() + 1, isEditable(), buildPickUrl(item.getSongID()), FavelistPresenter.this);
+				final FavePickWidget widget = new FavePickWidget(_eventBus, item, _widgets.size() + 1, isEditable(), FavelistPresenter.this);
 				getView().addPick(widget);
 				_widgets.add(widget);
 
@@ -179,7 +177,7 @@ public class FavelistPresenter extends
 		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 		int i = 1;
 		for (final FaveItem item : faveList) {
-			final FavePickWidget widget = new FavePickWidget(_eventBus, item, i, isEditable(), buildPickUrl(item.getSongID()), this);
+			final FavePickWidget widget = new FavePickWidget(_eventBus, item, i, isEditable(), this);
 			pickWidgets.add(widget);
 			i++;
 		}
@@ -188,22 +186,6 @@ public class FavelistPresenter extends
 		getView().setList(pickWidgets);
 		Window.scrollTo(0, 0);
 		_eventBus.fireEvent(new FaveListSizeChangedEvent(faveList.size()));
-	}
-
-	private String buildPickUrl(String songId) {
-		Map<String, String> params = new HashMap<String, String>();
-		params.put(SongPresenter.ID_PARAM, songId);
-		params.put(SongPresenter.LIST_PARAM, getHashtag());
-
-		if (_user != null) {
-			params.put(SongPresenter.USER_PARAM, getUser().getUsername());
-		}
-
-		return "#" + new ParameterTokenFormatter(new ClientUrlUtils())
-				.toPlaceToken(new PlaceRequest.Builder()
-						.nameToken(NameTokens.song)
-						.with(params)
-						.build());
 	}
 
 	@Override
@@ -343,6 +325,16 @@ public class FavelistPresenter extends
 				$(pickToRank).scrollIntoView(true);
 			}
 		});
+	}
+
+	@Override
+	public void playSong(String songId) {
+		List<FaveItem> faveItems = new ArrayList<>();
+		for (FavePickWidget widget : _widgets) {
+			faveItems.add(widget.getFaveItem());
+		}
+
+		_playlistPresenter.playSong(songId, _hashtag, _user != null ? _user.getUsername() : "", faveItems);
 	}
 
 	private boolean isEditable() {

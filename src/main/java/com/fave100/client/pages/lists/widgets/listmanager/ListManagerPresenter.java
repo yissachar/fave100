@@ -6,8 +6,6 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.generated.entities.StringResult;
-import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.widgets.alert.AlertCallback;
 import com.fave100.client.widgets.alert.AlertPresenter;
@@ -175,35 +173,6 @@ public class ListManagerPresenter extends
 	}
 
 	@Override
-	public void getGlobalAutocomplete(final String searchTerm) {
-		final boolean ownList = _currentUser != null && _currentUser.equals(_user);
-
-		if (searchTerm.isEmpty()) {
-			final List<String> emptyList = new ArrayList<String>();
-			getView().refreshList(emptyList, _hashtag, ownList);
-			return;
-		}
-
-		_dispatcher.execute(_restServiceFactory.search().searchFaveLists(searchTerm), new AsyncCallback<StringResultCollection>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub				
-			}
-
-			@Override
-			public void onSuccess(StringResultCollection result) {
-				List<String> suggestions = new ArrayList<>();
-				for (StringResult stringResult : result.getItems()) {
-					suggestions.add(stringResult.getValue());
-				}
-				getView().refreshList(suggestions, _hashtag, ownList);
-
-			}
-		});
-	}
-
-	@Override
 	public void deleteList(final String listName) {
 		alertPresenter.setAlertCallback(new AlertCallback() {
 
@@ -283,8 +252,6 @@ interface ListManagerUiHandlers extends UiHandlers {
 	void setGlobalList(boolean global);
 
 	boolean isGlobalList();
-
-	void getGlobalAutocomplete(String searchTerm);
 
 	void refreshUsersLists();
 

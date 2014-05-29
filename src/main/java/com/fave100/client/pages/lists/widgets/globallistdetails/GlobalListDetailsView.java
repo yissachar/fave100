@@ -12,9 +12,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -38,7 +36,6 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	@UiField FlowPanel container;
 	@UiField Label hashtagLabel;
 	@UiField Anchor contributeCTA;
-	@UiField HTMLPanel listAutocomplete;
 	@UiField FlowPanel trendingLists;
 
 	private ParameterTokenFormatter _parameterTokenFormatter;
@@ -54,18 +51,6 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 		return widget;
 	}
 
-	@Override
-	public void setInSlot(final Object slot, final IsWidget content) {
-
-		if (slot == GlobalListDetailsPresenter.LIST_AUTOCOMPLETE_SLOT) {
-			listAutocomplete.clear();
-			if (content != null) {
-				listAutocomplete.add(content);
-			}
-		}
-		super.setInSlot(slot, content);
-	}
-
 	@UiHandler("contributeCTA")
 	void onContributeClick(ClickEvent event) {
 		getUiHandlers().contributeToList();
@@ -79,7 +64,7 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 		do {
 			hashtagLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
 			fontSize--;
-		} while (hashtagLabel.getElement().getClientWidth() > style.SIDE_BAR_WIDTH());
+		} while (hashtagLabel.getElement().getClientWidth() > widget.getOffsetWidth());
 
 	}
 

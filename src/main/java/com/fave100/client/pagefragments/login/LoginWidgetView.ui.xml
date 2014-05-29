@@ -40,7 +40,6 @@
 	</ui:style>
 
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens" />
-	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>
 	
 	<g:HTMLPanel ui:styleName="row">
 		<g:FormPanel ui:field="loginForm" ui:styleName="{style.loginForm} col span_5">
@@ -62,9 +61,9 @@
 		<div class="loginDivider col span_2" >or</div>
 		<div class="thirdPartyLoginBox col span_5">
 			<div class="{style.thirdPartyLinks}">
-				<my:SocialButton ui:field="signInWithGoogleButton" img="{img.gPlusIcon}" text="Sign in with Google" style="googleSocialLogo"></my:SocialButton>
-				<my:SocialButton ui:field="signInWithTwitterButton" img="{img.twitterLogo}" text="Sign in with Twitter" style="twitterSocialLogo"></my:SocialButton>
-				<my:SocialButton ui:field="signInWithFacebookButton" img="{img.fbLogo}" text="Sign in with Facebook" style="facebookSocialLogo"></my:SocialButton>				
+				<my:SocialButton ui:field="signInWithGoogleButton" text="Sign in with Google" style="googleSocialLogo" iconStyle="fa fa-lg fa-google-plus"></my:SocialButton>
+				<my:SocialButton ui:field="signInWithTwitterButton" text="Sign in with Twitter" style="twitterSocialLogo" iconStyle="fa fa-lg fa-twitter"></my:SocialButton>
+				<my:SocialButton ui:field="signInWithFacebookButton" text="Sign in with Facebook" style="facebookSocialLogo" iconStyle="fa fa-lg fa-facebook"></my:SocialButton>				
 			</div>
 		</div>
 	</g:HTMLPanel>

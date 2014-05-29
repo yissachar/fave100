@@ -12,9 +12,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class FadeText extends Composite {
 
-	public static final int SLOW = 3500;
-	public static final int NORMAL = 1500;
-	public static final int FAST = 500;
+	public static final int SLOW = 4500;
+	public static final int NORMAL = 2500;
+	public static final int FAST = 1500;
 
 	private static FadeTextUiBinder uiBinder = GWT.create(FadeTextUiBinder.class);
 

@@ -54,6 +54,7 @@ public final class ApiPaths {
 	// Search
 	public static final String SEARCH_ROOT = "search";
 	public static final String SEARCH_FAVELISTS = "/favelists/{search_term}";
+	public static final String SEARCH_USERS = "/users/{search_term}";
 	public static final String GET_YOUTUBE_SEARCH_RESULTS = "/youtube";
 	public static final String YOUTUBE_SEARCH_SONG_PARAM = "song";
 	public static final String YOUTUBE_SEARCH_ARTIST_PARAM = "artist";

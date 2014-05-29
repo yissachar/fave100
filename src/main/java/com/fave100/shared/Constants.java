@@ -10,6 +10,7 @@ public class Constants {
 	public static final int MAX_HASHTAG_LENGTH = 20;
 	public static final int MAX_STARRED_LISTS = 50;
 	public static final int MOBILE_WIDTH_PX = 768;
+	public static final int MEDIUM_DISPLAY_WIDTH_PX = 1000;
 	public static final int MORE_FOLLOWING_INC = 5;
 	public static final int MAX_LISTS_PER_USER = 100;
 	public static final int MAX_ITEMS_PER_LIST = 100;

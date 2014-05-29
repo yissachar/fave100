@@ -14,9 +14,6 @@ public interface ImageResources extends ClientBundle {
 	@Source("logo-large.png")
 	ImageResource logoLarge();
 
-	@Source("loading-indicator.gif")
-	ImageResource loadingIndicator();
-
 	@Source("add.png")
 	ImageResource add();
 
@@ -37,15 +34,6 @@ public interface ImageResources extends ClientBundle {
 
 	@Source("triangle.png")
 	ImageResource triangle();
-
-	@Source("g-plus-icon.png")
-	ImageResource gPlusIcon();
-
-	@Source("twitter_logo_white.png")
-	ImageResource twitterLogo();
-
-	@Source("fb_logo.png")
-	ImageResource fbLogo();
 
 	@Source("/about/about_screen_1.png")
 	ImageResource aboutScreen1();

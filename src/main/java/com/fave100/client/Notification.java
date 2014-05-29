@@ -19,6 +19,7 @@ public class Notification {
 
 	public static void init(final Label _label) {
 		label = _label;
+		label.setVisible(false);
 	}
 
 	public static void show(final String message) {

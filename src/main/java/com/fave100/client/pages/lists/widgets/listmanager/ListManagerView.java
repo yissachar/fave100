@@ -1,8 +1,8 @@
 package com.fave100.client.pages.lists.widgets.listmanager;
 
-import java.util.Iterator;
 import java.util.List;
 
+import com.fave100.client.Utils;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -89,36 +88,20 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 			final ClickHandler clickHandler = new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
-					boolean shouldHide = true;
+
 					final Element target = Element.as(event.getNativeEvent().getEventTarget());
 
-					if (widgetContainsElement(currentListContainer, target))
-						shouldHide = false;
+					boolean shouldHide = Utils.widgetContainsElement(currentListContainer, target)
+							|| Utils.widgetContainsElement(addListContainer, target)
+							|| Utils.widgetContainsElement(autocomplete, target);
 
-					if (widgetContainsElement(addListContainer, target))
-						shouldHide = false;
-
-					if (widgetContainsElement(autocomplete, target))
-						shouldHide = false;
-
-					if (shouldHide)
+					if (shouldHide) {
 						hideDropdown();
+					}
 				}
 			};
 			rootClickHandler = RootPanel.get().addDomHandler(clickHandler, ClickEvent.getType());
 		}
-	}
-
-	private boolean widgetContainsElement(final Widget widget, final Element element) {
-		if (widget instanceof HasWidgets) {
-			final Iterator<Widget> iter = ((HasWidgets)widget).iterator();
-			while (iter.hasNext()) {
-				final Widget child = iter.next();
-				if ((child != widget && widgetContainsElement(child, element)) || element.equals(child.getElement()) || element.equals(widget.getElement()))
-					return true;
-			}
-		}
-		return element.equals(widget.getElement());
 	}
 
 	@UiHandler("addHashtagButton")

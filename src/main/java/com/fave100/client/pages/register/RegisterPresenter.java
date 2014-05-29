@@ -1,6 +1,5 @@
 package com.fave100.client.pages.register;
 
-import com.fave100.client.LoadingIndicator;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.generated.entities.AppUser;
@@ -112,14 +111,12 @@ public class RegisterPresenter extends
 
 			@Override
 			public void onFailure(Throwable caught) {
-				LoadingIndicator.hide();
 				getView().showThirdPartyUsernamePrompt();
 				getProxy().manualReveal(RegisterPresenter.this);
 			}
 
 			@Override
 			public void onSuccess(AppUser user) {
-				LoadingIndicator.hide();
 				eventBus.fireEvent(new CurrentUserChangedEvent(user));
 				goToUserPage(user.getUsername());
 			}
@@ -128,26 +125,16 @@ public class RegisterPresenter extends
 		// The user is being redirected back to the register page after signing in to their 3rd party account 
 		// prompt them for a username and create their account
 		if (_provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
-
-			LoadingIndicator.show();
-
 			_dispatcher.execute(_restServiceFactory.auth().loginWithGoogle(), loginCallback);
-
 		}
 		else if (_provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
-
-			LoadingIndicator.show();
-
 			// First see if they are already logged in
 			StringResult _oauthVerifierWrapper = new StringResult();
 			_oauthVerifierWrapper.setValue(_oauthVerifier);
 
 			_dispatcher.execute(_restServiceFactory.auth().loginWithTwitter(_oauthVerifierWrapper), loginCallback);
-
 		}
 		else if (_provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
-			LoadingIndicator.show();
-
 			StringResult codeWrapper = new StringResult();
 			codeWrapper.setValue(_code);
 

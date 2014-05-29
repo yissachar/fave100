@@ -1,6 +1,5 @@
 package com.fave100.client.pagefragments.login;
 
-import com.fave100.client.LoadingIndicator;
 import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
@@ -144,8 +143,6 @@ public class LoginWidgetPresenter extends
 			return;
 		}
 
-		LoadingIndicator.show();
-
 		LoginCredentials loginCredentials = new LoginCredentials();
 		loginCredentials.setUsername(getView().getUsername().trim());
 		loginCredentials.setPassword(getView().getPassword());
@@ -154,10 +151,9 @@ public class LoginWidgetPresenter extends
 
 			@Override
 			public void setResponse(Response response) {
-				LoadingIndicator.hide();
-
-				if (response.getStatusCode() >= 400)
+				if (response.getStatusCode() >= 400) {
 					getView().setError(response.getText());
+				}
 			}
 
 			@Override

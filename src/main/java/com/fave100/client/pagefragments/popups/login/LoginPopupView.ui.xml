@@ -13,9 +13,11 @@
 			border-bottom: 1px solid #555;
 		}
 		
-		.header img {
-			display: block;
-			margin: 0 auto;
+		.title {
+			color: #fff;
+			text-align: center;
+			padding: 5px;
+			font-size: 25px;
 		}
 		
 		.innerLoginBox {
@@ -35,7 +37,7 @@
 		<w:content width="50%" height="100%">	
 			<g:HTMLPanel>
 				<g:SimplePanel ui:styleName="{style.header}">
-					<g:Image resource="{img.logo}"/>
+					<g:Label ui:styleName="{style.title}">Log in</g:Label>
 				</g:SimplePanel>
 				<g:HTMLPanel ui:field="loginContainer" ui:styleName="{style.innerLoginBox}"/>
 				<g:SimplePanel ui:styleName="{style.registerLinkContainer}">

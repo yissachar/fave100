@@ -18,14 +18,16 @@
 		
 		.faveList > div {
 			overflow: hidden;
-			border: 2px solid #ddd;
-			border-top: none;
+			border-top: 1px solid #ddd;
 			background-color: #FFF;	
-			padding: 12px 3px;
 		}
 		
-		.faveList > div:first-child {	
-			border-top: 2px solid #ddd;
+		.faveList > div.even {
+			background-color: #f4f4f4;
+		}
+		
+		.faveList > div:last {
+			border-bottom: 0px;
 		}
 		
 		@external rankUpArrow;

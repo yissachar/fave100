@@ -8,7 +8,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>		
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">	
 		.loginContainer h1 {
 			text-align: center;
 		}		
@@ -31,7 +31,7 @@
 	
 	<p:Page ui:field="page">
 		<p:content>		
-			<g:HTMLPanel>
+			<g:HTMLPanel ui:styleName="{style.paddedMainPage}">
 			
 				<g:HTMLPanel styleName="{style.loginContainer}">
 					<h1 class="row">Sign In</h1>

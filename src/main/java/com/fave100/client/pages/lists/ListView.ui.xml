@@ -3,34 +3,52 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:p='urn:import:com.fave100.client.pages'
-	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'
-	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	ui:generateLocales='default'>
+	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'>
 
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.ListView.ListStyle">
-		.mobile .userPageSideBar {
-			position: relative;
-		}	
-		
-		.nonMobile .userPageSideBar {
+		.userPageSideBar {
+			background-color: MAIN_BACKGROUND;
+			padding-top: 10px;
+			padding-left: 10px;
+			padding-right: 15px;
+			width: 19%;
 			position: fixed;
-			margin-left: 0;	
-			width: 239px;
+			left: 0;
+			margin-left: 0;
+			overflow-y: auto;
+			transition: left RESIZE_TRANSITION_TIME;
+			-webkit-transition: left RESIZE_TRANSITION_TIME;
 		}
 		
-		.mobile .userPageFaveList {
+		.smallDisplay .userPageSideBar, .mediumDisplay .userPageSideBar {
+			width: 200px;
+			left: -200px;
+		}
+				
+		.smallDisplay .hoverSideBar .userPageSideBar, .mediumDisplay .hoverSideBar .userPageSideBar {
+			left: 0;
+			box-shadow: 1px 1px 5px 1px #777;
+		}	
+		
+		.userPageFaveList {
+			transition: margin-left RESIZE_TRANSITION_TIME;
+			-webkit-transition: margin-left RESIZE_TRANSITION_TIME;
+		}
+		
+		.smallDisplay .userPageFaveList, .mediumDisplay .userPageFaveList {
 			margin-left: 0;
 		}
 		
-		.nonMobile .userPageFaveList {
-			margin-left: 260px;
+		.largeDisplay .userPageFaveList {
+			width: 73%;
+			margin-left: 27%;
 		}
 	
 		.tagline {
 			font-size: 18px;
-			margin-bottom: 10px;
-			text-align: center;
+			padding-top: 15px;
+			padding-bottom: 10px;
+			text-align: center;			
 		}
 		
 		.taglineCTA {
@@ -51,23 +69,17 @@
 			cursor: pointer;
 		}
 				
-		.userProfile{
+		.userProfile {
 			display: block;
 			width: 100%;			
-			overflow: hidden;
-			border: 1px solid #999;			
-			background-color: #fff;
+			overflow: hidden;		
 			padding: 5px;
 			color: PRIMARY_COLOR;
 		}
 		
-		.userDetails {
-			float: left;
-		}
-		
 		.avatar {
-			float: left;
-			margin-right: 8px;
+			display: block;
+			margin: 0 auto;
 			width: 80px;
 			height: 80px;
 		}
@@ -75,7 +87,9 @@
 		.username {	
 			color: PRIMARY_COLOR;
 			display: block;
-			width: 139px;
+			width: 100%;
+			margin-top: 10px;
+			text-align: center;
 			font-size: 1.4em;
 			vertical-align: top;
 			word-wrap: break-word;
@@ -87,61 +101,16 @@
 		}
 		
 		.followButton {
-			width: 65%;
+			width: 85%;
 			display: block;
 			margin: 0 auto;
 			text-align: center;
 		}
-				
-		.songSearchContainer {			
-			display: block;
-			margin: 0 auto;
-			margin-bottom: 20px;
-			width: 80%;
-			overflow: hidden;
-		}
-		
 		.fixedSearch {
 			position: fixed;
 			width: 608px;
 			margin-top: -26px;
 			box-shadow: 0 0 8px #666;
-		}
-		
-		.nonMobile .responsiveUserTabOptions {
-			display: none;
-		}
-		
-		.responsiveUserTabOptions {
-			width: 100%;
-			background-color: #f0f0f0;
-			margin-bottom: 15px;
-		}		
-		
-		.responsiveUserTabOptions > span {
-			width: 50%;
-			display: inline-block;
-			text-align: center;
-			font-size: 1.3em;
-			padding: 5px;
-			background-color: PRIMARY_COLOR;
-			color: #fff;
-			border-right: 1px solid #fff;
-		}
-		
-		.responsiveUserTabOptions > span:last-child {
-			border-right: 0px;
-		}		
-		
-		.responsiveUserTabOptions > span:hover {
-			background-color: #fff;
-			color: PRIMARY_COLOR;
-			cursor: pointer;
-		}
-				
-		.responsiveUserTabOptions .selected {
-			background-color: #fff;
-			color: PRIMARY_COLOR;
 		}
 		
 		.faveListContainer {
@@ -159,13 +128,13 @@
 			
 				<g:HTMLPanel ui:field="userContainer">
 					
-					<g:HTMLPanel ui:field="userPageSideBar" styleName="{style.userPageSideBar} col span_3">
+					<g:HTMLPanel ui:field="userPageSideBar" styleName="{style.userPageSideBar}">
 						<g:HTMLPanel ui:field="globalListDetailsContainer"/>								
 						<g:FlowPanel ui:field="userProfile" styleName="{style.userProfile}">
 							<g:Image styleName="{style.avatar}" ui:field="avatar"/>
-							<g:FlowPanel styleName="{style.userDetails}">
-								<g:InlineLabel ui:styleName="{style.username}" ui:field="username"/>
-								<g:InlineHyperlink targetHistoryToken="{nameTokens.getProfile}"  ui:styleName="{style.username}"  ui:field="profileLink"/>
+							<g:FlowPanel>
+								<g:Label ui:styleName="{style.username}" ui:field="username"/>
+								<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}"  ui:styleName="{style.username}"  ui:field="profileLink"/>
 								<!--  Follow button -->
 								<g:FocusPanel ui:field="followCTAcontainer" ui:styleName="{style.followCTAcontainer}">									
 									<g:InlineLabel ui:field="followCTA" ui:styleName="button {style.followButton}"/>
@@ -173,17 +142,12 @@
 							</g:FlowPanel>				
 						</g:FlowPanel>
 						
-						<g:FlowPanel ui:styleName="{style.responsiveUserTabOptions}">
-							<g:InlineLabel ui:field="mobileShowList">List</g:InlineLabel>							
-							<g:InlineLabel ui:field="mobileShowFollowing">Following</g:InlineLabel>
-						</g:FlowPanel>
-						
 						<g:HTMLPanel ui:field="listManager"/>
 						<g:HTMLPanel ui:field="followingContainer"/>
 						
 					</g:HTMLPanel>
 					
-					<g:HTMLPanel ui:field="userPageFaveList" ui:styleName="{style.userPageFaveList} col span_9">
+					<g:HTMLPanel ui:field="userPageFaveList" ui:styleName="{style.userPageFaveList}">
 						<g:FlowPanel ui:field="tagline" ui:styleName="{style.tagline}">
 							<g:Label ui:styleName="{style.taglineCTA}">Share your favorite songs.</g:Label>
 							<g:FlowPanel ui:styleName="{style.taglineLinks}">
@@ -195,7 +159,6 @@
 							</g:FlowPanel>
 						</g:FlowPanel>
 							
-						<g:HTMLPanel ui:field="songAutocomplete" ui:styleName="{style.songSearchContainer}"/>	
 						<g:HTMLPanel ui:field="faveListContainer" styleName="{style.faveListContainer}">
 							<g:HTMLPanel ui:field="favelist"/>									
 						</g:HTMLPanel>						
