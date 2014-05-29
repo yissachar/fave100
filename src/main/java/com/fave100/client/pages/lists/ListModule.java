@@ -1,7 +1,5 @@
 package com.fave100.client.pages.lists;
 
-import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompletePresenter;
-import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompleteView;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistView;
 import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
@@ -19,7 +17,6 @@ public class ListModule extends AbstractPresenterModule {
 		bindPresenter(ListPresenter.class, ListPresenter.MyView.class, ListView.class, ListPresenter.MyProxy.class);
 		bindPresenterWidget(UsersFollowingPresenter.class, UsersFollowingPresenter.MyView.class, UsersFollowingView.class);
 		bindSingletonPresenterWidget(FavelistPresenter.class, FavelistPresenter.MyView.class, FavelistView.class);
-		bindSingletonPresenterWidget(SongAutocompletePresenter.class, SongAutocompletePresenter.MyView.class, SongAutocompleteView.class);
 		bindSingletonPresenterWidget(ListManagerPresenter.class, ListManagerPresenter.MyView.class, ListManagerView.class);
 		bindSingletonPresenterWidget(GlobalListDetailsPresenter.class, GlobalListDetailsPresenter.MyView.class, GlobalListDetailsView.class);
 	}

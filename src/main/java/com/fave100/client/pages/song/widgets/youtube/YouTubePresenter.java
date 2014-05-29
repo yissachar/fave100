@@ -18,6 +18,8 @@ public class YouTubePresenter extends PresenterWidget<YouTubePresenter.MyView>
 		void setVideoData(List<YouTubeSearchResult> videos);
 
 		void clearVideo();
+
+		void stopVideo();
 	}
 
 	private EventBus _eventBus;
@@ -37,6 +39,10 @@ public class YouTubePresenter extends PresenterWidget<YouTubePresenter.MyView>
 
 	public void clearVideo() {
 		getView().clearVideo();
+	}
+
+	public void stopVideo() {
+		getView().stopVideo();
 	}
 
 	@Override

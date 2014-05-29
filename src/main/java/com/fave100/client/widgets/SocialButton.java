@@ -5,7 +5,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
@@ -14,7 +13,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -27,16 +25,16 @@ public class SocialButton extends Composite implements HasClickHandlers {
 
 	@UiField FocusPanel focusPanel;
 	@UiField HTMLPanel buttonContainer;
-	@UiField Image imgIcon;
+	@UiField Icon icon;
 	@UiField InlineLabel buttonLabel;
 	private String href = "";
 
 	@UiConstructor
-	public SocialButton(ImageResource img, String text, String style) {
+	public SocialButton(String text, String style, String iconStyle) {
 		initWidget(uiBinder.createAndBindUi(this));
-		imgIcon.setResource(img);
 		buttonLabel.setText(text);
 		buttonContainer.addStyleName(style);
+		icon.addStyleName(iconStyle);
 	}
 
 	@UiHandler("focusPanel")

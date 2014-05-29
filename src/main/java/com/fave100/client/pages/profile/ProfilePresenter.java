@@ -1,7 +1,6 @@
 package com.fave100.client.pages.profile;
 
 import com.fave100.client.CurrentUser;
-import com.fave100.client.LoadingIndicator;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.entities.StringResult;
@@ -158,13 +157,10 @@ public class ProfilePresenter extends
 		final String emailError = Validator.validateEmail(userInfo.getEmail());
 		if (emailError == null) {
 
-			LoadingIndicator.show();
 			_dispatcher.execute(_restServiceFactory.user().setUserInfo(userInfo), new RestCallback<BooleanResult>() {
 
 				@Override
 				public void setResponse(Response response) {
-					LoadingIndicator.hide();
-
 					if (response.getStatusCode() >= 400) {
 						getView().setEmailError(response.getText());
 					}

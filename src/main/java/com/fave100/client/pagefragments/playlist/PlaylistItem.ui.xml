@@ -2,11 +2,12 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
-	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.song.widgets.playlist.PlaylistItem.PlaylistStyle">
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.playlist.PlaylistItem.PlaylistStyle">
 		.container {
 			border-top: 1px solid #AAA;
 			padding: 5px;
 			overflow: hidden;
+			background-color:  MAIN_BACKGROUND;
 		}
 				
 		.container:hover {
@@ -51,11 +52,11 @@
 	
 	<g:FocusPanel ui:field="focusPanel">
 		<g:HTMLPanel ui:field="container" ui:styleName="{style.container}">
-			<g:Label ui:field="_rank" ui:styleName="{style.rank}"/>
+			<g:Label ui:field="rankText" ui:styleName="{style.rank}"/>
 			<g:HTMLPanel ui:styleName="{style.detailContainer}">
-				<g:Label ui:field="_song" ui:styleName="{style.song}"/>
-				<g:Label ui:field="_artist" ui:styleName="{style.artist}"/>
-				<g:Label ui:field="_whyline" ui:styleName="{style.whyline}"/>
+				<g:Label ui:field="songText" ui:styleName="{style.song}"/>
+				<g:Label ui:field="artistText" ui:styleName="{style.artist}"/>
+				<g:Label ui:field="whylineText" ui:styleName="{style.whyline}"/>
 			</g:HTMLPanel>
 		</g:HTMLPanel>
 	</g:FocusPanel>

@@ -1,9 +1,10 @@
 package com.fave100.client.pages.lists;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.Utils;
 import com.fave100.client.entities.SongDto;
+import com.fave100.client.events.favelist.HideSideBarEvent;
 import com.fave100.client.events.favelist.ListChangedEvent;
-import com.fave100.client.events.favelist.RankInputUnfocusEvent;
 import com.fave100.client.events.song.SongSelectedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
@@ -13,23 +14,15 @@ import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.register.RegisterPopupPresenter;
 import com.fave100.client.pages.PagePresenter;
-import com.fave100.client.pages.lists.widgets.autocomplete.song.SongAutocompletePresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
 import com.fave100.shared.Constants;
-import com.fave100.shared.Utils;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ScrollEvent;
-import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
@@ -55,7 +48,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 		void setFollowCTA(boolean show, boolean starred);
 
-		void setMobileView(boolean reset);
+		void toggleSideBar();
 	}
 
 	@ProxyCodeSplit
@@ -79,7 +72,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private boolean _ownPage = false;
-	@Inject SongAutocompletePresenter songAutocomplete;
 	@Inject FavelistPresenter favelist;
 	@Inject UsersFollowingPresenter usersFollowing;
 	@Inject ListManagerPresenter listManager;
@@ -96,29 +88,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
 		getView().setUiHandlers(this);
-
-		Window.addWindowScrollHandler(new ScrollHandler() {
-			@Override
-			public void onWindowScroll(final ScrollEvent event) {
-				final Widget widget = songAutocomplete.asWidget();
-				if (event.getScrollTop() >= 26 && Window.getClientWidth() > Constants.MOBILE_WIDTH_PX) {
-					songAutocomplete.getView().hideHelp();
-					songAutocomplete.getView().showBackToTop(true);
-					widget.addStyleName(getView().getFixedSearchStyle());
-				}
-				else {
-					widget.removeStyleName(getView().getFixedSearchStyle());
-					songAutocomplete.getView().showBackToTop(false);
-				}
-			}
-		});
-
-		Window.addResizeHandler(new ResizeHandler() {
-			@Override
-			public void onResize(final ResizeEvent event) {
-				getView().setMobileView(false);
-			}
-		});
 	}
 
 	@Override
@@ -159,13 +128,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 					}
 				});
 
-		RankInputUnfocusEvent.register(_eventBus, new RankInputUnfocusEvent.Handler() {
-			@Override
-			public void onRankInputUnfocus(final RankInputUnfocusEvent event) {
-				songAutocomplete.setFocus();
-			}
-		});
-
 		ListChangedEvent.register(_eventBus, new ListChangedEvent.Handler() {
 			@Override
 			public void onListChanged(final ListChangedEvent event) {
@@ -175,12 +137,19 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 						.build());
 			}
 		});
+
+		HideSideBarEvent.register(_eventBus, new HideSideBarEvent.Handler() {
+
+			@Override
+			public void onHideSideBar(HideSideBarEvent event) {
+				getView().toggleSideBar();
+			}
+		});
 	}
 
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		setInSlot(AUTOCOMPLETE_SLOT, songAutocomplete);
 		setInSlot(FAVELIST_SLOT, favelist);
 		setInSlot(STARRED_LISTS_SLOT, usersFollowing);
 		setInSlot(LIST_MANAGER_SLOT, listManager);
@@ -277,7 +246,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 			getView().setFollowCTA(false, isFollowing);
 		}
 		else {
-			getView().setFollowCTA(_currentUser.isLoggedIn(), isFollowing);
+			getView().setFollowCTA(true, isFollowing);
 		}
 
 		favelist.setUser(requestedUser);
@@ -302,8 +271,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 				globalListDetails.setHashtag(_requestedHashtag);
 			}
 		}
-
-		getView().setMobileView(true);
 
 		getProxy().manualReveal(ListPresenter.this);
 	}

@@ -6,9 +6,11 @@ public interface GlobalStyle extends GssResource {
 
 	int SIDE_BAR_WIDTH();
 
-	String mobile();
+	String smallDisplay();
 
-	String nonMobile();
+	String mediumDisplay();
+
+	String largeDisplay();
 
 	String error();
 

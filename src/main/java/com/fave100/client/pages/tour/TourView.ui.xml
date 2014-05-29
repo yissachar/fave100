@@ -50,7 +50,7 @@
     
     <p:Page ui:field="page">
 		<p:content>
-			<g:HTMLPanel ui:styleName="{style.container}">
+			<g:HTMLPanel ui:styleName="{style.container} {style.paddedMainPage}">
 						
 						<h1>Ranking your music has never been easier</h1>
 			

@@ -1,0 +1,156 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:w='urn:import:com.fave100.client.widgets'>
+             
+    <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchView.UnifiedSearchStyle">  		
+		.currentSearchTypeContainer {
+			float: left;
+			border: 1px solid #444;
+			border-right: 0;
+			background-color: #fff;
+			cursor: pointer;
+		}
+		
+		.currentSearchTypeContainer i {
+			float: right;
+		}
+		
+		.currentSearchTypeSelector {
+			background-color: #F7E5B2;
+			padding: 3px;
+			font-size: 15px;
+			height: 20px;
+			line-height: 12px;
+			margin-left: 2px;
+			margin-top: 2px;
+			border-radius: 1px;			
+		}
+		
+    	.searchBox {
+			float: left;
+			width: 350px;
+			border: 1px solid #444 !important;
+			border-left: 0px !important;
+			padding: 0px !important;
+    	}
+    	
+    	.smallDisplay .searchBox {
+			width: 200px;
+    	}
+    	
+    	.currentSearchTypeContainer, .searchBox {			
+			height: 26px;
+    	}
+    	
+    	.dropDownContainer {
+			position: relative;
+			clear: both;
+    	}
+    	
+		.listDropdown {
+			position: absolute;
+			border: 1px solid #444;
+			border-top: 0;
+			background-color: #fff;
+		}
+		
+		.listDropdown > * {
+			padding: 6px;
+			cursor: default;
+		}
+		
+		.listDropdown > *:hover {
+			background-color: PRIMARY_COLOR;
+			color: HIGHLIGHT_COLOR;
+		}
+		
+		.currentSearchTypeContainer, .listDropdown {
+			width: 75px;
+		}
+		
+		.searchResults {
+			position: absolute;
+			border: 1px solid #444;
+			border-top: 0;
+			background-color: #fff;
+			cursor: pointer;
+			width: 425px;
+		}
+		
+		.smallDisplay .searchResults {
+			width: 275px;
+		}
+		    	
+    	.searchSuggestionsContainer:empty {
+			border-bottom: 0;
+    	}
+		
+		.searchSuggestionsContainer > * {
+			padding: 8px;
+		}
+		
+		.searchSuggestionsContainer .selected {
+			background-color: PRIMARY_COLOR;
+			color: HIGHLIGHT_COLOR;
+		}
+		
+		.searchSuggestionsContainer .song {
+			font-size: 16px;
+		}
+		
+		.searchSuggestionsContainer .artist {
+			font-size: 14px;
+			font-style: italic;
+		}
+		
+		.buttonContainer {
+			width: 100%;
+		}
+		
+		.buttonContainer > * {
+			color: #fff;
+			background-color: PRIMARY_COLOR;
+			width: 50px;
+			text-align: center;
+		}
+		
+		.previousButton {
+			float: left;
+		}
+		
+		.nextButton {
+			float: right;
+		}
+    </ui:style>
+    
+    <g:HTMLPanel>
+    
+    	<g:FocusPanel ui:field="currentSearchTypeContainer" ui:styleName="{style.currentSearchTypeContainer} {style.unselectable}">
+			<g:FlowPanel ui:styleName="{style.currentSearchTypeSelector}">
+				<g:InlineLabel ui:field="currentSearchType">Songs</g:InlineLabel>
+				<w:Icon ui:styleName="fa fa-caret-down"/>
+			</g:FlowPanel>
+		</g:FocusPanel>
+		
+    	<w:FaveTextBox ui:field="searchBox" ui:styleName="{style.searchBox}" />
+    	
+    	<g:FlowPanel ui:styleName="{style.dropDownContainer}">
+    			
+			<g:FlowPanel ui:field="listDropdown" ui:styleName="{style.listDropdown}">
+				<g:Label ui:field="songsType">Songs</g:Label>
+				<g:Label ui:field="usersType">Users</g:Label>
+				<g:Label ui:field="listsType">Lists</g:Label>
+			</g:FlowPanel>
+			
+			<g:FlowPanel ui:styleName="{style.searchResults}">
+				<g:FlowPanel ui:field="searchSuggestionsContainer" ui:styleName="{style.searchSuggestionsContainer}"/>
+				<g:FlowPanel ui:field="buttonContainer" ui:styleName="{style.buttonContainer}">
+					<w:Icon ui:field="previousButton" ui:styleName="fa fa-2x fa-caret-left {style.previousButton}" />
+					<w:Icon ui:field="nextButton" ui:styleName="fa fa-2x fa-caret-right {style.nextButton}" />
+				</g:FlowPanel>
+			</g:FlowPanel>
+			
+		</g:FlowPanel>
+    	
+    </g:HTMLPanel>
+</ui:UiBinder>

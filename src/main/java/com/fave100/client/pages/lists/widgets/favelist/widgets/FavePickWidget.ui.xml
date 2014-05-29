@@ -8,6 +8,7 @@
 		.mainPanel {
 			width:100%;
 			display: table;
+			padding: 12px 3px;
 		}
 		
 		.mainPanel > * {
@@ -28,6 +29,7 @@
 		
 		.rankPanel {			
 			margin: 3px;
+			height: 73px;
 		}
 		
 		.rank {
@@ -65,18 +67,26 @@
 		}
 		
 		.song {
-			font-size: 25px;
+			font-size: 19px;
 			font-weight: bold;
+			cursor: pointer;
+		}
+		
+		.song:hover {
+			color: HIGHLIGHT_COLOR;
+			text-decoration: none;
 		}
 		
 		.artist {
-			font-size: 20px;
+			font-size: 17px;
+			color: #777;
 		}
 		
 		.whyLine {
 			font-weight: 11px;
 			font-style: italic;
 			font-color: #eee;
+			font-size: 15px;
 			width: 100%;
 		}
 		
@@ -89,10 +99,9 @@
 			display: table-cell;
 		}
 		
-		.hoverPanel img {
+		.hoverPanel img, .hoverPanel i {
 			cursor: pointer;
-		}	
-		
+		}			
 		
 	</ui:style>
 

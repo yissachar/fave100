@@ -1,23 +1,26 @@
-package com.fave100.client.pages.lists.widgets.autocomplete.list;
+package com.fave100.client.widgets.autocomplete;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fave100.client.CurrentUser;
+import com.fave100.client.generated.entities.CursoredSearchResult;
 import com.fave100.client.generated.entities.StringResult;
-import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.services.RestServiceFactory;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
+import com.gwtplatform.dispatch.rest.shared.RestAction;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
-public class ListAutocompletePresenter extends PresenterWidget<ListAutocompletePresenter.MyView> implements ListAutocompleteUiHandlers {
+public class AutocompletePresenter extends PresenterWidget<AutocompletePresenter.MyView> implements AutocompleteUiHandlers {
 
-	public interface MyView extends View, HasUiHandlers<ListAutocompleteUiHandlers> {
+	public interface MyView extends View, HasUiHandlers<AutocompleteUiHandlers> {
 
 		void setSuggestions(List<String> suggestions);
 
@@ -26,29 +29,37 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 		void clearSearch();
 
 		void setFocus(boolean focused);
+
+		void setPlaceholder(String placeholder);
 	}
 
 	protected EventBus _eventBus;
+	protected PlaceManager _placeManager;
 	protected RestDispatchAsync _dispatcher;
 	protected RestServiceFactory _restServiceFactory;
+	protected CurrentUser _currentUser;
 	protected List<String> _suggestions;
 	protected String _lastSearch;
-	private final List<AsyncCallback<StringResultCollection>> _requests;
+	protected RestAction<CursoredSearchResult> _action;
+	private final List<AsyncCallback<CursoredSearchResult>> _requests;
 	private int _selection = 0;
 	private int _maxSelection = -1;
 
 	@Inject
-	public ListAutocompletePresenter(final EventBus eventBus, final MyView view, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+	public AutocompletePresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RestDispatchAsync dispatcher,
+									final RestServiceFactory restServiceFactory, final CurrentUser currentUser) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;
+		_placeManager = placeManager;
 		_restServiceFactory = restServiceFactory;
-		_requests = new LinkedList<AsyncCallback<StringResultCollection>>();
+		_currentUser = currentUser;
+		_requests = new LinkedList<AsyncCallback<CursoredSearchResult>>();
 		getAutocompleteResults("");
 		getView().setUiHandlers(this);
 	}
 
-	// Get global lists matching a search term
+	// Get suggestions matching a search term
 	@Override
 	public void getAutocompleteResults(String searchTerm) {
 		// Don't bother going to the server a second time for the same term
@@ -64,7 +75,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			return;
 		}
 
-		final AsyncCallback<StringResultCollection> listAutocompleteReq = new AsyncCallback<StringResultCollection>() {
+		final AsyncCallback<CursoredSearchResult> autocompleteReq = new AsyncCallback<CursoredSearchResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -72,7 +83,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 			}
 
 			@Override
-			public void onSuccess(StringResultCollection result) {
+			public void onSuccess(CursoredSearchResult result) {
 				if (_requests.indexOf(this) != _requests.size() - 1
 						|| _requests.indexOf(this) == -1) {
 					_requests.remove(this);
@@ -81,15 +92,15 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 
 				_requests.clear();
 				List<String> suggestions = new ArrayList<>();
-				for (StringResult stringResult : result.getItems()) {
+				for (StringResult stringResult : result.getSearchResults().getItems()) {
 					suggestions.add(stringResult.getValue());
 				}
 				setSuggestions(suggestions);
 			}
 		};
 
-		_dispatcher.execute(_restServiceFactory.search().searchFaveLists(searchTerm), listAutocompleteReq);
-		_requests.add(listAutocompleteReq);
+		_dispatcher.execute(_action, autocompleteReq);
+		_requests.add(autocompleteReq);
 	}
 
 	// Set the currently selected list
@@ -103,7 +114,7 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 
 	// Dispatch a list selected event and hide current results
 	@Override
-	public void listSelected() {
+	public void suggestionSelected() {
 		if (getSelection() < 0)
 			return;
 
@@ -116,6 +127,10 @@ public class ListAutocompletePresenter extends PresenterWidget<ListAutocompleteP
 		getView().setSuggestions(suggestions);
 		setMaxSelection(suggestions == null ? 0 : suggestions.size() - 1);
 		setSelection(0);
+	}
+
+	public void setPlaceholder(String placeholder) {
+		getView().setPlaceholder(placeholder);
 	}
 
 	/* Getters and Setters */

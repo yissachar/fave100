@@ -1,9 +1,25 @@
-@def PRIMARY_COLOR #5eaae5;
+@def PRIMARY_COLOR #504E57;
+@def HIGHLIGHT_COLOR #D9A927;
+@def LIST_HIGHLIGHT_COLOR #E35F6C;
 @def SIDE_BAR_WIDTH 239px;
-@def FADED_LIGHT_BG #eee;
+@def FADED_LIGHT_BG #f1f1f1;
+@def MAIN_BACKGROUND #FaFaFa;
+@def RESIZE_TRANSITION_TIME 0.6s;
 
-@external mobile;
-@external nonMobile;
+@external smallDisplay;
+@external mediumDisplay;
+@external largeDisplay;
+@external fa;
+
+::selection {
+  background: HIGHLIGHT_COLOR;
+  color: #fff;
+}
+
+::-moz-selection {
+  background: HIGHLIGHT_COLOR;
+  color: #fff;
+}
 
 * {
 	margin: 0px;
@@ -17,9 +33,9 @@ html {
 }
 
 body {
-	background-color: #F9F9F9;
-	font-family: "Source Sans Pro", Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
-	color: #454;
+	background-color: MAIN_BACKGROUND;
+	font-family: "Arimo", Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+	color: PRIMARY_COLOR;
 	height: 100%;
 }
 
@@ -42,7 +58,7 @@ input[type=number],
 input[type=color],
 input[type=email],
 select {
-	padding: 4px;	
+	padding: 6px;	
 	border: 1px solid #AAA;
 }
 
@@ -67,9 +83,21 @@ input[type=number]:focus,
 input[type=color]:focus,
 input[type=email]:focus,
 select:focus {
-	border-color: #5A9DE8;
+	border-color: HIGHLIGHT_COLOR;
+}
+
+.paddedMainPage {
+	padding: 15px;	
 }
 
 .error {
 	color: #D54545 !important;
+}
+
+.unselectable {
+	-webkit-user-select: none;        
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 }

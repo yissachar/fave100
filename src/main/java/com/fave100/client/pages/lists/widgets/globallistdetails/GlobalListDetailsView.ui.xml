@@ -1,32 +1,28 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	ui:generateLocales='default'>
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView.Style">
-		.mobile .container {
+		.smallDisplay .container {
 			padding: 10px;
 		}
 		
 		.hashtagLabel {
-			float: right;
 			text-overflow: ellipsis;
-			overflow: hidden;
 			display: inline-block;
+			overflow: hidden;
 		}		
 		
 		.contributeCTA {
-			float: right;
+			display: block;
 			cursor: pointer;
-			margin-bottom: 10px;
-			clear: both;
+			margin-bottom: 20px;
 		}
 		
 		.trendingHeader {
-			margin: 15px 0;
+			margin-top: 25px;
+			margin-bottom: 5px;
 			font-size: 1.1em;
 		}
 		
@@ -36,13 +32,33 @@
 		}
 				
 		.trendingList a {
-			display: block;
 			clear: both;
+			padding: 5px;
+			float: left;
+			width: 100%;
+			color: LIST_HIGHLIGHT_COLOR;
+			font-size: 18px;
+			-webkit-transition: font-size 0.7s, padding 0.7s;
+			transition: font-size 0.7s, padding 0.7s;
 		}
 		
-		.mobile .trendingList a {
+		.trendingList a:hover {
+			padding: 8px;
+			font-size: 22px;
+			text-decoration: none;
+			color: HIGHLIGHT_COLOR;
+			background-color: PRIMARY_COLOR;
+		}
+		
+		.smallDisplay .trendingList a {
 			display: inline-block;
 			margin-right: 5px;
+		}
+		
+		.viewAllLink {
+			float: left;
+			margin-top: 15px;
+			margin-bottom: 20px;
 		}
 	</ui:style>
 	
@@ -51,9 +67,8 @@
 	<g:FlowPanel ui:field="container" ui:styleName="{style.container}">
 		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
 		<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
-		<g:HTMLPanel ui:field="listAutocomplete"/>
 		<g:Label ui:styleName="{style.trendingHeader}">Featured Lists</g:Label>
 		<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />
-		<g:Hyperlink targetHistoryToken="{nameTokens.getAlllists}">View all lists</g:Hyperlink>
+		<g:Hyperlink targetHistoryToken="{nameTokens.getAlllists}" ui:styleName="{style.viewAllLink}">View all lists</g:Hyperlink>
 	</g:FlowPanel>
 </ui:UiBinder>

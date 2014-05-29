@@ -10,7 +10,6 @@ import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -19,9 +18,7 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetailsPresenter.MyView> implements GlobalListDetailsUiHandlers {
@@ -38,14 +35,11 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 
 	}
 
-	@ContentSlot public static final Type<RevealContentHandler<?>> LIST_AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
-
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private String _hashtag;
-	@Inject GlobalListAutocompletePresenter listAutocomplete;
 
 	@Inject
 	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
@@ -61,7 +55,6 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	@Override
 	public void onReveal() {
 		super.onReveal();
-		setInSlot(LIST_AUTOCOMPLETE_SLOT, listAutocomplete);
 		render();
 	}
 

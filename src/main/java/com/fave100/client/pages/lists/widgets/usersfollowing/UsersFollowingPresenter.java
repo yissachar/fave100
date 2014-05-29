@@ -15,6 +15,7 @@ import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -27,6 +28,8 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
@@ -46,6 +49,8 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 
 		void hide();
 	}
+
+	@ContentSlot public static final Type<RevealContentHandler<?>> USER_AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
 
 	EventBus _eventBus;
 	CurrentUser _currentUser;
@@ -99,15 +104,15 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 		getView().setFollowing(null);
 		listSize = 0;
 
-		boolean ownFollowing = false;
-		if (_currentUser.isLoggedIn())
-			ownFollowing = _user.getUsername().equals(_currentUser.getUsername());
+		boolean ownFollowing = _currentUser.isLoggedIn() && _user.getUsername().equals(_currentUser.getUsername());
+
 		if (ownFollowing) {
 			// If we already have the current user list, display it
 			if (_currentUser.getFollowing() != null && _currentUser.getFollowing().size() > 0) {
 				buildListItems(true, _currentUser.getFollowing());
-				if (_currentUser.isFullListRetrieved())
+				if (_currentUser.isFullListRetrieved()) {
 					getView().hideMoreFollowingButton();
+				}
 			}
 			// Otherwise fetch it
 			else {
@@ -122,8 +127,9 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 						final List<AppUser> usersFollowing = followingResult.getFollowing();
 						buildListItems(true, usersFollowing);
 						_currentUser.setFullListRetrieved(!followingResult.isMore());
-						if (!followingResult.isMore())
+						if (!followingResult.isMore()) {
 							getView().hideMoreFollowingButton();
+						}
 					}
 
 				};

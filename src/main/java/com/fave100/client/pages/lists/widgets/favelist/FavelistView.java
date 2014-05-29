@@ -37,6 +37,8 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 		String whyline();
 
 		String invisible();
+
+		String even();
 	}
 
 	@UiField FavelistStyle style;
@@ -69,8 +71,13 @@ public class FavelistView extends ViewWithUiHandlers<FavelistUiHandlers>
 			return;
 		}
 
+		int i = 0;
 		for (final FavePickWidget widget : widgets) {
 			faveList.add(widget);
+			if (i % 2 == 0) {
+				widget.addStyleName(style.even());
+			}
+			i++;
 		}
 	}
 

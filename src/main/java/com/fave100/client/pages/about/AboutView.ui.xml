@@ -3,15 +3,19 @@
 			 xmlns:p='urn:import:com.fave100.client.pages'
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
              
-    <ui:style>    	
+    <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">	    	
     	.coreyName {
 			font-size: 20px;
     	}
     	
     	.aboutFave100 p {
 			margin-bottom: 10px;
-			font-size: 18px;
+			font-size: 16px;
 			line-height: 30px;
+    	}
+    	
+    	.aboutFave100 a {
+			color: HIGHLIGHT_COLOR;
     	}
     </ui:style>
     
@@ -19,7 +23,7 @@
              
    <p:Page ui:field="page">
 		<p:content>
-			<g:FlowPanel>
+			<g:FlowPanel ui:styleName="{style.paddedMainPage}">
 			
 				<g:HTMLPanel ui:styleName="col span_3">
 					<g:Image resource="{img.corey}"/>

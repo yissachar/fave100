@@ -10,6 +10,7 @@ import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
@@ -19,6 +20,8 @@ public class WhylineView extends ViewWithUiHandlers<WhylineUiHandlers> implement
 	public interface Binder extends UiBinder<FlowPanel, WhylineView> {
 	}
 
+	@UiField Panel userListsContainer;
+	@UiField Panel whylineContainer;
 	@UiField FlowPanel whylinePanel;
 	@UiField FlowPanel userListsPanel;
 
@@ -33,6 +36,7 @@ public class WhylineView extends ViewWithUiHandlers<WhylineUiHandlers> implement
 
 	@Override
 	public void setWhylines(List<Whyline> whylines) {
+		whylineContainer.setVisible(whylines.size() > 0);
 		whylinePanel.clear();
 		for (Whyline whyline : whylines) {
 			whylinePanel.add(new WhylineWidget(whyline));
@@ -41,6 +45,7 @@ public class WhylineView extends ViewWithUiHandlers<WhylineUiHandlers> implement
 
 	@Override
 	public void setUserLists(List<UserListResult> userLists) {
+		userListsContainer.setVisible(userLists.size() > 0);
 		userListsPanel.clear();
 		for (UserListResult userList : userLists) {
 			String listPlaceToken = _parameterTokenFormatter

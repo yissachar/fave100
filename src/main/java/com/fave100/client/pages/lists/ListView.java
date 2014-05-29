@@ -7,10 +7,11 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.pages.PageView;
 import com.fave100.client.resources.css.GlobalStyle;
-import com.fave100.shared.Constants;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -19,9 +20,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -40,7 +40,7 @@ public class ListView extends PageView<ListUiHandlers>
 	interface ListStyle extends GlobalStyle {
 		String fixedSearch();
 
-		String selected();
+		String hoverSideBar();
 	}
 
 	@UiField ListStyle style;
@@ -55,19 +55,26 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiField HTMLPanel userPageFaveList;
 	@UiField HTMLPanel followingContainer;
 	@UiField FlowPanel userProfile;
-	@UiField InlineHyperlink profileLink;
+	@UiField Hyperlink profileLink;
 	@UiField Image avatar;
-	@UiField InlineLabel username;
-	@UiField HTMLPanel songAutocomplete;
+	@UiField Label username;
 	@UiField HTMLPanel favelist;
 	@UiField Label userNotFound;
-	@UiField Label mobileShowList;
-	@UiField Label mobileShowFollowing;
 	private boolean following;
 
 	@Inject
 	public ListView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+
+		Window.addResizeHandler(new ResizeHandler() {
+
+			@Override
+			public void onResize(ResizeEvent event) {
+				resize();
+			}
+		});
+
+		resize();
 	}
 
 	@Override
@@ -89,7 +96,6 @@ public class ListView extends PageView<ListUiHandlers>
 
 	private HTMLPanel getPanelForSlot(Object slot) {
 		Map<Type<RevealContentHandler<?>>, HTMLPanel> slotMap = new HashMap<Type<RevealContentHandler<?>>, HTMLPanel>();
-		slotMap.put(ListPresenter.AUTOCOMPLETE_SLOT, songAutocomplete);
 		slotMap.put(ListPresenter.FAVELIST_SLOT, favelist);
 		slotMap.put(ListPresenter.STARRED_LISTS_SLOT, followingContainer);
 		slotMap.put(ListPresenter.LIST_MANAGER_SLOT, listManager);
@@ -122,32 +128,9 @@ public class ListView extends PageView<ListUiHandlers>
 		}
 	}
 
-	@UiHandler("mobileShowList")
-	void onMobileShowListClick(final ClickEvent event) {
-		setSelected(mobileShowList);
-		userPageFaveList.setVisible(true);
-		followingContainer.setVisible(false);
-		listManager.setVisible(true);
-	}
-
-	@UiHandler("mobileShowFollowing")
-	void onMobileShowFollowingClick(final ClickEvent event) {
-		setSelected(mobileShowFollowing);
-		userPageFaveList.setVisible(false);
-		followingContainer.setVisible(true);
-		listManager.setVisible(false);
-	}
-
 	@UiHandler("registerLink")
 	void onRegisterLinkClick(final ClickEvent event) {
 		getUiHandlers().showRegister();
-	}
-
-	private void setSelected(final Label label) {
-		mobileShowList.removeStyleName(style.selected());
-		mobileShowFollowing.removeStyleName(style.selected());
-
-		label.addStyleName(style.selected());
 	}
 
 	public native void nativeRenderShare() /*-{
@@ -183,12 +166,15 @@ public class ListView extends PageView<ListUiHandlers>
 		}
 	}
 
+	private void resize() {
+		userPageSideBar.setHeight((Window.getClientHeight() - 50) + "px");
+	}
+
 	private void showOwnPage() {
 		userContainer.setVisible(true);
 		userNotFound.setVisible(false);
 		username.setVisible(false);
 		profileLink.setVisible(true);
-		songAutocomplete.setVisible(true);
 	}
 
 	private void showOtherPage() {
@@ -196,7 +182,6 @@ public class ListView extends PageView<ListUiHandlers>
 		userNotFound.setVisible(false);
 		username.setVisible(true);
 		profileLink.setVisible(false);
-		songAutocomplete.setVisible(false);
 	}
 
 	@Override
@@ -230,40 +215,12 @@ public class ListView extends PageView<ListUiHandlers>
 	}
 
 	@Override
-	public void setMobileView(final boolean reset) {
-		if (Window.getClientWidth() <= Constants.MOBILE_WIDTH_PX) {
-			if (reset) {
-				mobileShowList.removeStyleName(style.selected());
-				mobileShowFollowing.removeStyleName(style.selected());
-			}
-
-			if (mobileShowList.getStyleName().contains(style.selected())) {
-				userPageFaveList.setVisible(true);
-				followingContainer.setVisible(false);
-			}
-			else if (mobileShowFollowing.getStyleName().contains(style.selected())) {
-				userPageFaveList.setVisible(false);
-				followingContainer.setVisible(true);
-			}
-
-			else {
-				setSelected(mobileShowList);
-				userPageFaveList.setVisible(true);
-				followingContainer.setVisible(false);
-			}
-
-			if (getUiHandlers().isOwnPage()) {
-				mobileShowFollowing.setVisible(true);
-				mobileShowList.setVisible(true);
-			}
-			else {
-				mobileShowFollowing.setVisible(false);
-				mobileShowList.setVisible(false);
-			}
+	public void toggleSideBar() {
+		if (userContainer.getStyleName().contains(style.hoverSideBar())) {
+			userContainer.removeStyleName(style.hoverSideBar());
 		}
 		else {
-			userPageFaveList.setVisible(true);
-			followingContainer.setVisible(true);
+			userContainer.addStyleName(style.hoverSideBar());
 		}
 	}
 }

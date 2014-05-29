@@ -1,4 +1,4 @@
-package com.fave100.client.pages.song.widgets.playlist;
+package com.fave100.client.pagefragments.playlist;
 
 import com.fave100.client.events.song.PlaylistSongChangedEvent;
 import com.fave100.client.resources.css.GlobalStyle;
@@ -29,12 +29,15 @@ public class PlaylistItem extends Composite {
 
 	@UiField FocusPanel focusPanel;
 	@UiField HTMLPanel container;
-	@UiField Label _rank;
-	@UiField Label _song;
-	@UiField Label _artist;
-	@UiField Label _whyline;
+	@UiField Label rankText;
+	@UiField Label songText;
+	@UiField Label artistText;
+	@UiField Label whylineText;
 	@UiField PlaylistStyle style;
+	private int _rank;
 	private String _songID;
+	private String _list;
+	private String _username;
 	private EventBus eventBus;
 	private boolean _currentlyPlaying;
 
@@ -45,26 +48,39 @@ public class PlaylistItem extends Composite {
 
 	@UiHandler("focusPanel")
 	void onClick(final ClickEvent event) {
-		eventBus.fireEvent(new PlaylistSongChangedEvent(_songID));
+		eventBus.fireEvent(new PlaylistSongChangedEvent(_songID, songText.getText(), artistText.getText(), _list, _username, null));
+	}
+
+	public int getRank() {
+		return _rank;
 	}
 
 	public void setRank(final int rank) {
-		_rank.setText(String.valueOf(rank));
-		if (rank == 100) {
-			_rank.addStyleName(style.oneHundredth());
+		_rank = rank;
+		rankText.setText(String.valueOf(_rank));
+		if (_rank == 100) {
+			rankText.addStyleName(style.oneHundredth());
 		}
 	}
 
 	public void setSong(final String song) {
-		_song.setText(song);
+		songText.setText(song);
 	}
 
 	public void setArtist(final String artist) {
-		_artist.setText(artist);
+		artistText.setText(artist);
 	}
 
 	public void setWhyline(final String whyline) {
-		_whyline.setText(whyline);
+		whylineText.setText(whyline);
+	}
+
+	public void setList(final String list) {
+		_list = list;
+	}
+
+	public void setUsername(final String username) {
+		_username = username;
 	}
 
 	public void setSongID(final String songID) {
@@ -73,6 +89,22 @@ public class PlaylistItem extends Composite {
 
 	public String getSongID() {
 		return _songID;
+	}
+
+	public String getSong() {
+		return songText.getText();
+	}
+
+	public String getArtist() {
+		return artistText.getText();
+	}
+
+	public String getList() {
+		return _list;
+	}
+
+	public String getUsername() {
+		return _username;
 	}
 
 	public void setCurrentlyPlaying(final boolean playing) {

@@ -56,8 +56,6 @@
 		}
 	</ui:style>
 	
-	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>
-
 	<g:HTMLPanel ui:styleName="row">
 		<g:FormPanel ui:field="registerForm" ui:styleName="col span_5">				
 			<g:HTMLPanel styleName="{style.registerForm} {style.nativeRegisterForm}">	
@@ -88,9 +86,9 @@
 		<div class="loginDivider col span_2">or</div>				
 		<div class="{style.registerForm} col span_5">		
 			<div class="{style.thirdPartyLinks}">	
-				<my:SocialButton ui:field="registerWithGoogleButton" img="{img.gPlusIcon}" text="Register with Google" style="googleSocialLogo"></my:SocialButton>
-				<my:SocialButton ui:field="registerWithTwitterButton" img="{img.twitterLogo}" text="Register with Twitter" style="twitterSocialLogo"></my:SocialButton>
-				<my:SocialButton ui:field="registerWithFacebookButton" img="{img.fbLogo}" text="Register with Facebook" style="facebookSocialLogo"></my:SocialButton>
+				<my:SocialButton ui:field="registerWithGoogleButton" text="Register with Google" style="googleSocialLogo" iconStyle="fa fa-lg fa-google-plus"></my:SocialButton>
+				<my:SocialButton ui:field="registerWithTwitterButton" text="Register with Twitter" style="twitterSocialLogo" iconStyle="fa fa-lg fa-twitter"></my:SocialButton>
+				<my:SocialButton ui:field="registerWithFacebookButton" text="Register with Facebook" style="facebookSocialLogo" iconStyle="fa fa-lg fa-facebook"></my:SocialButton>
 			</div>
 		</div>
 	</g:HTMLPanel>

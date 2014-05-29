@@ -2,48 +2,43 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	xmlns:w='urn:import:com.fave100.client.widgets'
-	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	ui:generateLocales='default'>
+	xmlns:w='urn:import:com.fave100.client.widgets'>
 
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">		
 		
-		.topNavSticky {
-			background-color: PRIMARY_COLOR;			
+		.menuBar {
+			color: #fff;
+			padding-left: 10px;
+			cursor: pointer;
+		}
+		
+		.topNavSticky {			
 			height: 50px;
-			margin-bottom: 25px;
 			width: 1px;
 		}
 		
 		.topNav {
 			background-color: PRIMARY_COLOR;			
 			height: 50px;
-			border-bottom: 1px solid #555;			
+			border-bottom: 1px solid #000;			
 			position: fixed;
 			top: 0;
 			width: 100%;
 			z-index: 99998;
+			display: table;
 		}
 		
-		.topNav > ul{
-			list-style-type: none;	
-			float: right;		
-			height: 100%;
-			position: relative;
+		.topNav > * {
+			display: table-cell;
+			vertical-align: middle;
 		}
 		
-		.topNav li{
-			display: inline-block;			
+		.userContainer {
 			height: 100%;
-			vertical-align: top;
 			cursor: pointer;
-			float: right;
-		}	
-		
-		.topNav li:hover {
-			background-color: #FFFFFF; 
-		}				
+			position: relative;
+			color: #fff;
+		}
 		
 		.topNav li > a, .topNav li > span {
 			color: #FFF;
@@ -51,57 +46,85 @@
 			text-decoration: none;
 			padding: 0 6px;
 			font-size: 1.2em;
-			line-height: 2.56em;
-		}
-		
-		.topNav li:hover > a, .topNav li:hover > span {
-			color: PRIMARY_COLOR;
 		}
 		
 		.topBarDropShadow {
 			box-shadow: 0px 1px 2px #444;
 		}
 		
-		.loadingIndicator {
-			position: absolute;
-			margin-left: 486px;
-			display: block;
-
-		}
-		
-		.subTopContainer{
-			display: block;
-			width: 960px;
-			margin: 0 auto;
-		}
-		
 		.notification {
 			position: absolute;
-			margin-left: 510px;
-			margin-top: 10px;
+			top: 55px;
+			width: 100%;
+			margin: 0 auto;
 			text-align: center;
+			z-index: 99997;
+		}
+		
+		.notificationText {
+			display: inline-block;			
+			padding: 6px;
+			border-radius: 3px;
+			border: 1px solid #aaa;
+			background-color: #F7E5B2;
+		}
+				
+		.faveLogo {		
+			float: left;
+			font-size: 35px;
+			font-weight: bold;
+			line-height: 47px;
+			padding-left: 15px;
+		}		
+		
+		.logoFaveText {
 			color: #FFF;
 		}
 		
-		.faveLogo {		
-			float: left;
-			border: none;
-			padding-left: 3px;
-		}		
+		.logo100Text {
+			color: HIGHLIGHT_COLOR;
+		}
+		
+		.logoFaveText:hover, .logo100Text:hover {
+			text-decoration: none;
+		}
 		
 		.faveLogo:hover {
 			cursor: pointer;
 		}
-						
+		
+		.smallDisplay .unifiedSearchContainer {
+			background-color: FADED_LIGHT_BG;
+			position: fixed;
+			width: 300px;
+			height: 100%;
+			right: -400px;
+			top: 51px;
+			overflow-y: auto;
+			transition: right RESIZE_TRANSITION_TIME;
+			-webkit-transition: right RESIZE_TRANSITION_TIME;
+		}
+				
+		.smallDisplay .floatingSearch.unifiedSearchContainer {
+			right: 0px;
+			box-shadow: -1px -1px 5px 1px #777;
+			padding: 12px;
+		}
+		
+		.unifiedSearch {	
+			position: relative;
+			z-index: 99999;
+		}
+		
+		.searchToggle {
+			color: #fff;
+			cursor: pointer;
+		}
+					
 		.userInfo {
-			float: left;
 			padding: 0 5px;
 			margin-top: 12px;
 	  	}
-	  	
-	  	.userInfo:hover {
-			background-color: #FFFFFF;
-		} 
 	  	
 	  	.userAvatar {
 			width: 40px;
@@ -116,9 +139,10 @@
 				
 		.dropDown {
 			display: none;
-			clear: both;
 			margin-top: 5px;
 			background-color: #fff;
+			position: absolute;
+			width: 100%;
 		}
 		
 		.dropDownElement, .dropDown a {			
@@ -129,24 +153,28 @@
 		
 		.dropDownElement:hover, .dropDown a:hover {
 			background-color: PRIMARY_COLOR;
-			color: #fff;
+			color: HIGHLIGHT_COLOR;
 			text-decoration: none;			
 		}
 		
-		.loggedInContainer:hover .dropDown {
+		.loggedInContainer {			
+			position: relative;
+		}
+		
+		.loggedInContainer:hover .dropDown, .userContainer:hover .dropDown {
 			display: block;
 		}
 		
-		.loggedInContainer:hover {
-			border: 1px solid #bbb;
+		.userContainer:hover {
+			background-color: #777;
 		}
 		
-		.loggedInContainer:hover .userInfo {						
-			border-bottom: 1px solid #bbb;
-		}
-		
-		.loggedInContainer:hover .usernameLabel {
-			color: PRIMARY_COLOR;
+		.loginButton {
+			display: inline-block;
+			height: 100%;
+			width: 100%;
+			text-align: center;
+			line-height: 50px;
 		}
 				
 	</ui:style>
@@ -161,27 +189,41 @@
 			 when the browser is at 0, 0.
 		 -->
 		<div class="{style.topNavSticky}"/>
-		<g:HTMLPanel ui:styleName="{style.topNav}" ui:field="topBar">
-			<div class="container">
-				<w:ImageHyperlink ui:field="logoLink" targetHistoryToken="{nameTokens.getLists}" styleName="{style.faveLogo}" resource="{img.logo}"/>		
-				<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" resource="{img.loadingIndicator}"/>			
-				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
-				<ul>						
-					<li>		
-						<g:FlowPanel ui:field="loggedInContainer" ui:styleName="{style.loggedInContainer}">				
-							<g:FlowPanel ui:field="userInfo" ui:styleName="{style.userInfo}">
-								<g:InlineLabel ui:field="usernameLabel" ui:styleName="{style.usernameLabel}"/>
-							</g:FlowPanel>
-							<g:FlowPanel ui:styleName="{style.dropDown}">
-								<g:Hyperlink ui:field="listLink">My List</g:Hyperlink>
-								<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}">Settings</g:Hyperlink>
-								<g:InlineLabel ui:styleName="{style.dropDownElement}" ui:field="logOutButton">Sign out</g:InlineLabel>
-							</g:FlowPanel>
-						</g:FlowPanel>
-						<g:InlineLabel ui:field="loginButton">Sign in</g:InlineLabel>						
-					</li>			
-				</ul>
-			</div>
-		</g:HTMLPanel>			
+	    			   
+		<g:SimplePanel ui:styleName="{style.notification}">
+			<g:Label ui:field="notification" ui:styleName="{style.notificationText}"/>
+		</g:SimplePanel>	
+		
+		<g:HTMLPanel ui:field="topBar" ui:styleName="{style.topNav}">
+		
+			<w:Icon ui:field="menuBar" ui:styleName="fa fa-bars fa-2x {style.menuBar} {style.unselectable}" />
+			
+			<g:FlowPanel ui:styleName="{style.faveLogo}">
+				<g:InlineHyperlink ui:field="logoFaveText" ui:styleName="{style.logoFaveText}">Fave</g:InlineHyperlink>
+				<g:InlineHyperlink ui:field="logo100Text" ui:styleName="{style.logo100Text}">100</g:InlineHyperlink>
+			</g:FlowPanel>	
+				
+			<g:SimplePanel ui:field="unifiedSearchContainer" ui:styleName="{style.unifiedSearchContainer}">
+				<g:HTMLPanel ui:field="unifiedSearch" ui:styleName="{style.unifiedSearch}"/>
+			</g:SimplePanel>			
+			
+			<w:Icon ui:field="searchToggle" ui:styleName="fa fa-search fa-2x {style.searchToggle} {style.unselectable}" />
+								
+			<g:FlowPanel ui:styleName="{style.userContainer}">		
+				<g:FlowPanel ui:field="loggedInContainer" ui:styleName="{style.loggedInContainer}">				
+					<g:FlowPanel ui:field="userInfo" ui:styleName="{style.userInfo}">
+						<g:InlineLabel ui:field="usernameLabel" ui:styleName="{style.usernameLabel}"/>
+					</g:FlowPanel>
+					<g:FlowPanel ui:styleName="{style.dropDown}">
+						<g:Hyperlink ui:field="listLink">My List</g:Hyperlink>
+						<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}">Settings</g:Hyperlink>
+						<g:InlineLabel ui:styleName="{style.dropDownElement}" ui:field="logOutButton">Sign out</g:InlineLabel>
+					</g:FlowPanel>
+				</g:FlowPanel>
+				<g:InlineLabel ui:field="loginButton" ui:styleName="{style.loginButton}">Sign in</g:InlineLabel>	
+			</g:FlowPanel>
+			
+		</g:HTMLPanel>
+				
 	</g:HTMLPanel>
 </ui:UiBinder>

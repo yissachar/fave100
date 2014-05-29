@@ -49,7 +49,6 @@ public class FavePickWidget extends Composite {
 	private FaveItem _faveItem;
 	private String _whyLine;
 	private int _rank;
-	private String _url;
 	private final boolean _editable;
 	private FavelistUiHandlers _uiHandlers;
 	private FavePickRankInput _favePickRankInput;
@@ -58,14 +57,13 @@ public class FavePickWidget extends Composite {
 	private HelpBubble rankHelpBubble;
 	private ImageResources resources = GWT.create(ImageResources.class);
 
-	public FavePickWidget(final EventBus eventBus, final FaveItem item, final int rank, final boolean editable, final String url, final FavelistUiHandlers uiHandlers) {
+	public FavePickWidget(final EventBus eventBus, final FaveItem item, final int rank, final boolean editable, final FavelistUiHandlers uiHandlers) {
 		_eventBus = eventBus;
 		_faveItem = item;
 		_whyLine = _faveItem.getWhyline();
 		_rank = rank;
 		_editable = editable;
 		_uiHandlers = uiHandlers;
-		_url = url;
 
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -76,7 +74,14 @@ public class FavePickWidget extends Composite {
 		setupRankPanel();
 
 		song.setText(getSong());
-		song.setHref(_url);
+
+		song.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				_uiHandlers.playSong(getSongID());
+			}
+		});
 
 		artist.setText(getArtist());
 
@@ -125,6 +130,7 @@ public class FavePickWidget extends Composite {
 
 	private void setupHoverPanel() {
 		hoverPanel.clear();
+
 		if (_editable) {
 			FavePickRerankPanel rerankPanel = new FavePickRerankPanel(this, _uiHandlers);
 			hoverPanel.add(rerankPanel);
@@ -217,5 +223,9 @@ public class FavePickWidget extends Composite {
 
 	public String getWhyLine() {
 		return _whyLine;
+	}
+
+	public FaveItem getFaveItem() {
+		return _faveItem;
 	}
 }

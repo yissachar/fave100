@@ -45,13 +45,13 @@ public class DispatchServletModule extends ServletModule {
 		serve(Constants.API_PATH + "/*").with(GuiceContainer.class, params);
 
 		bind(ListRedirectServlet.class).in(Singleton.class);
-		serveRegex("^/[^/]+$").with(ListRedirectServlet.class);
+		serveRegex("^/l/[^/]+$").with(ListRedirectServlet.class);
 
 		bind(UserRedirectServlet.class).in(Singleton.class);
 		serveRegex("^/u/[^/]+$").with(UserRedirectServlet.class);
 
 		bind(RemoteApiServlet.class).in(Singleton.class);
-		serve("/remote_api/").with(RemoteApiServlet.class);
+		serve("/remote_api").with(RemoteApiServlet.class);
 
 		bind(PasswordCleanupServlet.class).in(Singleton.class);
 		serve("/cron/pwdcleanup").with(PasswordCleanupServlet.class);
