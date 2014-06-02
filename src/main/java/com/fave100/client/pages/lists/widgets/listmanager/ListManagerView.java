@@ -91,9 +91,9 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 					final Element target = Element.as(event.getNativeEvent().getEventTarget());
 
-					boolean shouldHide = Utils.widgetContainsElement(currentListContainer, target)
-							|| Utils.widgetContainsElement(addListContainer, target)
-							|| Utils.widgetContainsElement(autocomplete, target);
+					boolean shouldHide = !Utils.widgetContainsElement(currentListContainer, target)
+							&& !Utils.widgetContainsElement(addListContainer, target)
+							&& !Utils.widgetContainsElement(autocomplete, target);
 
 					if (shouldHide) {
 						hideDropdown();
