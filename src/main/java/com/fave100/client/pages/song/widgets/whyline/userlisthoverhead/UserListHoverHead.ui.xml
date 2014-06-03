@@ -8,24 +8,23 @@
 			display: inline;
 		}
 		
-		.details{
+		.details {
 		    background-color: #f8f8f8;
 		    border: 1px solid #aaa;
 		    border-radius: 3px;
-		    height: 50px;
 		    width: 160px;
 		    box-shadow: 0 0 4px #999;
 		    margin: 0 auto;
 		    position: absolute;
 		    text-align: center;
-		    top: -62px;
+		    top: -50%;
 		    left: -65px;
 		    display: none;
-		    padding: 0 20px;
+		    padding: 10px;
 			z-index: 10000;		
 		}
 		
-		.details:after{
+		.details:after {
 		    content: '';
 		    position: absolute;
 		    bottom: -6px;
@@ -41,7 +40,7 @@
 		    transform: rotate(45deg);
 		}
 		
-		.container:hover .details{
+		.container:hover .details {
 		    display: block;
 		}
 	</ui:style>
@@ -51,7 +50,7 @@
 			<g:Image ui:field="avatarImage"/>		
 			<g:FlowPanel ui:field="details" ui:styleName="{style.details}">		
 				<g:Label ui:field="userNameLabel"/>
-				<g:Hyperlink ui:field="listNameLink"/>
+				<g:FlowPanel ui:field="listContainer"/>
 			</g:FlowPanel>
 		</g:HTMLPanel>
 	</g:HTMLPanel>

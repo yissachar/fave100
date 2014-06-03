@@ -1,6 +1,9 @@
 package com.fave100.client.pages.song.widgets.whyline;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fave100.client.generated.entities.UserListResult;
 import com.fave100.client.generated.entities.Whyline;
@@ -47,14 +50,35 @@ public class WhylineView extends ViewWithUiHandlers<WhylineUiHandlers> implement
 	public void setUserLists(List<UserListResult> userLists) {
 		userListsContainer.setVisible(userLists.size() > 0);
 		userListsPanel.clear();
+
+		HashMap<UserListResult, List<String>> userListMap = new HashMap<>();
+		HashMap<String, UserListResult> nameToUserListMap = new HashMap<>();
+
 		for (UserListResult userList : userLists) {
-			String listPlaceToken = _parameterTokenFormatter
-					.toPlaceToken(new PlaceRequest.Builder()
-							.nameToken(NameTokens.lists)
-							.with(PlaceParams.USER_PARAM, userList.getUserName())
-							.with(PlaceParams.LIST_PARAM, userList.getListName())
-							.build());
-			userListsPanel.add(new UserListHoverHead(userList.getUserName(), userList.getListName(), listPlaceToken, userList.getAvatar()));
+
+			if (nameToUserListMap.containsKey(userList.getUserName()) && userListMap.containsKey(nameToUserListMap.get(userList.getUserName()))) {
+				userListMap.get(nameToUserListMap.get(userList.getUserName())).add(userList.getListName());
+			}
+			else {
+				List<String> allLists = new ArrayList<>();
+				allLists.add(userList.getListName());
+				userListMap.put(userList, allLists);
+				nameToUserListMap.put(userList.getUserName(), userList);
+			}
+		}
+
+		for (Map.Entry<UserListResult, List<String>> userListEntry : userListMap.entrySet()) {
+			Map<String, String> listPlaces = new HashMap<>();
+			for (String list : userListEntry.getValue()) {
+				String listPlaceToken = _parameterTokenFormatter
+						.toPlaceToken(new PlaceRequest.Builder()
+								.nameToken(NameTokens.lists)
+								.with(PlaceParams.USER_PARAM, userListEntry.getKey().getUserName())
+								.with(PlaceParams.LIST_PARAM, list)
+								.build());
+				listPlaces.put(list, listPlaceToken);
+			}
+			userListsPanel.add(new UserListHoverHead(userListEntry.getKey().getUserName(), listPlaces, userListEntry.getKey().getAvatar()));
 		}
 
 	}
