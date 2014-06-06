@@ -97,6 +97,11 @@
 			font-weight: bold;
 		}
 		
+		.userDetails {
+			max-width: 250px;
+			margin: 0 auto;
+		}
+		
 		.followCTAcontainer {
 			margin-top: 20px;			
 		}
@@ -143,8 +148,10 @@
 							</g:FlowPanel>				
 						</g:FlowPanel>
 						
-						<g:HTMLPanel ui:field="listManager"/>
-						<g:HTMLPanel ui:field="followingContainer"/>
+						<g:FlowPanel ui:styleName="{style.userDetails}">
+							<g:HTMLPanel ui:field="listManager"/>
+							<g:HTMLPanel ui:field="followingContainer"/>
+						</g:FlowPanel>
 						
 					</g:HTMLPanel>
 					
