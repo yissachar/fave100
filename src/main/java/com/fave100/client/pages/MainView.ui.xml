@@ -21,7 +21,7 @@
     <g:FlowPanel>	
 		<g:SimplePanel ui:field="topBar"/>	  
     	<g:SimplePanel ui:field="main" ui:styleName="{style.main}"/>    	
-			<g:HTMLPanel ui:field="playlist"/>
+		<g:HTMLPanel ui:field="playlist"/>
     </g:FlowPanel>
     
 </ui:UiBinder>

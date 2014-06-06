@@ -8,6 +8,10 @@
 			display: inline;
 		}
 		
+		.avatar {
+			border-radius: 4px;
+		}
+		
 		.details {
 		    background-color: #f8f8f8;
 		    border: 1px solid #aaa;
@@ -47,7 +51,7 @@
 	
 	<g:HTMLPanel >
 		<g:HTMLPanel ui:styleName="{style.container}">
-			<g:Image ui:field="avatarImage"/>		
+			<g:Image ui:field="avatarImage" ui:styleName="{style.avatar}"/>		
 			<g:FlowPanel ui:field="details" ui:styleName="{style.details}">		
 				<g:Label ui:field="userNameLabel"/>
 				<g:FlowPanel ui:field="listContainer"/>

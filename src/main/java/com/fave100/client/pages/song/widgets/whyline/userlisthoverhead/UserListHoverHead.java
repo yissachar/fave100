@@ -43,7 +43,7 @@ public class UserListHoverHead extends Composite {
 		avatarImage.setUrl(avatar);
 
 		// TODO: Jun 3, 2014 Should find a better way to set top than hardcoded values
-		details.getElement().getStyle().setTop(-(60 + 20 * listPlaces.size()), Unit.PX);
+		details.getElement().getStyle().setTop(-(57 + 20 * listPlaces.size()), Unit.PX);
 
 	}
 

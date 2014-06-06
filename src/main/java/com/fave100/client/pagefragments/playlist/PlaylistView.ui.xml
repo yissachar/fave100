@@ -95,7 +95,7 @@
 	    		<g:InlineLabel ui:field="artistName" ui:styleName="{style.artistName}"/>
     		</g:FlowPanel>
     		
-    		<g:Button ui:field="addSongButton" ui:styleName="{style.addSongButton}">Add song</g:Button>
+    		<g:Button ui:field="addSongButton" ui:styleName="{style.addSongButton}">Add to list</g:Button>
     		
 	    	<g:FlowPanel ui:field="playlistControls" ui:styleName="{style.playlistControls}">
 	    		<w:Icon ui:field="previousButton" ui:styleName="fa fa-lg fa-backward {style.previousButton}"/>
