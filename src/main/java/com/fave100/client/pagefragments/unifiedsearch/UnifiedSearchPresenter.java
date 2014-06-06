@@ -10,6 +10,7 @@ import com.fave100.client.generated.entities.CursoredSearchResult;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.playlist.PlaylistPresenter;
+import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
@@ -43,7 +44,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	private int _maxSelection = 0;
 	private String _lastSearchTerm = "";
 	private String _cursor;
-	private SearchType _searchType = SearchType.SONGS;
+	private SearchType _searchType = SearchType.BROWSE_SONGS;
 	private final List<AsyncCallback<?>> _currentRequests = new ArrayList<>();
 	private List<?> _currentSuggestions;
 	private List<?> _cachedSuggestions = new ArrayList<>();
@@ -51,6 +52,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private PlaylistPresenter _playlistPresenter;
+	@Inject AddSongPresenter _addSongPresenter;
 
 	@Inject
 	UnifiedSearchPresenter(EventBus eventBus, MyView view, PlaceManager placeManager, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
@@ -79,7 +81,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 			if (numCachedPages > _page || (numCachedPages > 0 && numCachedPages == _page && _cachedSuggestions.size() % SELECTIONS_PER_PAGE > 0)) {
 				_currentSuggestions = _cachedSuggestions.subList(_page * SELECTIONS_PER_PAGE, Math.min((_page + 1) * SELECTIONS_PER_PAGE, _cachedSuggestions.size()));
 
-				if (_searchType == SearchType.SONGS) {
+				if (_searchType == SearchType.BROWSE_SONGS || _searchType == SearchType.ADD_SONGS) {
 					getView().setSongSuggestions((List<SongDto>)_currentSuggestions);
 				}
 				else {
@@ -95,12 +97,13 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		}
 		else if (!cached) {
 			switch (_searchType) {
-				case SONGS:
+				case BROWSE_SONGS:
+				case ADD_SONGS:
 					getSongSearchResults(searchTerm);
 					break;
 
-				case USERS:
-				case LISTS:
+				case BROWSE_USERS:
+				case BROWSE_LISTS:
 					getStringSearchResults(searchTerm);
 					break;
 
@@ -149,10 +152,10 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 			}
 		};
 
-		if (_searchType == SearchType.USERS) {
+		if (_searchType == SearchType.BROWSE_USERS) {
 			_dispatcher.execute(_restServiceFactory.search().searchUsers(searchTerm, _cursor), searchReq);
 		}
-		else if (_searchType == SearchType.LISTS) {
+		else if (_searchType == SearchType.BROWSE_LISTS) {
 			_dispatcher.execute(_restServiceFactory.search().searchFaveLists(searchTerm, _cursor), searchReq);
 		}
 
@@ -273,12 +276,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	@Override
 	public void selectSuggestion() {
 		switch (_searchType) {
-			case SONGS:
-				SongDto song = (SongDto)_currentSuggestions.get(getSelection());
-				_playlistPresenter.playSong(song.getId(), song.getSong(), song.getArtist());
-				break;
-
-			case USERS:
+			case BROWSE_USERS:
 				String username = (String)_currentSuggestions.get(getSelection());
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
@@ -286,12 +284,25 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 						.build());
 				break;
 
-			case LISTS:
+			case BROWSE_LISTS:
 				String list = (String)_currentSuggestions.get(getSelection());
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
 						.with(PlaceParams.LIST_PARAM, list)
 						.build());
+				break;
+
+			case BROWSE_SONGS:
+				SongDto song = (SongDto)_currentSuggestions.get(getSelection());
+				_playlistPresenter.playSong(song.getId(), song.getSong(), song.getArtist());
+				break;
+
+			case ADD_SONGS:
+				SongDto songToAdd = (SongDto)_currentSuggestions.get(getSelection());
+				_addSongPresenter.setSongToAddId(songToAdd.getId());
+				_addSongPresenter.setSongToAddName(songToAdd.getSong());
+				_addSongPresenter.setSongToAddArtist(songToAdd.getArtist());
+				addToPopupSlot(_addSongPresenter);
 				break;
 
 			default:
