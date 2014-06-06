@@ -31,7 +31,7 @@
 			width: 350px;
 			border: 1px solid #444 !important;
 			border-left: 0px !important;
-			padding: 0px !important;
+			padding: 2px !important;
     	}
     	
     	.smallDisplay .searchBox {
@@ -65,7 +65,7 @@
 		}
 		
 		.currentSearchTypeContainer, .listDropdown {
-			width: 75px;
+			width: 115px;
 		}
 		
 		.searchResults {
@@ -74,7 +74,7 @@
 			border-top: 0;
 			background-color: #fff;
 			cursor: pointer;
-			width: 425px;
+			width: 465px;
 		}
 		
 		.smallDisplay .searchResults {
@@ -127,7 +127,7 @@
     
     	<g:FocusPanel ui:field="currentSearchTypeContainer" ui:styleName="{style.currentSearchTypeContainer} {style.unselectable}">
 			<g:FlowPanel ui:styleName="{style.currentSearchTypeSelector}">
-				<g:InlineLabel ui:field="currentSearchType">Songs</g:InlineLabel>
+				<g:InlineLabel ui:field="currentSearchType">Browse songs</g:InlineLabel>
 				<w:Icon ui:styleName="fa fa-caret-down"/>
 			</g:FlowPanel>
 		</g:FocusPanel>
@@ -137,9 +137,10 @@
     	<g:FlowPanel ui:styleName="{style.dropDownContainer}">
     			
 			<g:FlowPanel ui:field="listDropdown" ui:styleName="{style.listDropdown}">
-				<g:Label ui:field="songsType">Songs</g:Label>
-				<g:Label ui:field="usersType">Users</g:Label>
-				<g:Label ui:field="listsType">Lists</g:Label>
+				<g:Label ui:field="browseUsersType">Browse users</g:Label>
+				<g:Label ui:field="browseListsType">Browse lists</g:Label>
+				<g:Label ui:field="browseSongsType">Browse songs</g:Label>
+				<g:Label ui:field="addSongsType">Add songs</g:Label>
 			</g:FlowPanel>
 			
 			<g:FlowPanel ui:styleName="{style.searchResults}">

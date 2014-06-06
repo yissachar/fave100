@@ -48,9 +48,10 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiField FocusPanel currentSearchTypeContainer;
 	@UiField Label currentSearchType;
 	@UiField Panel listDropdown;
-	@UiField Label songsType;
-	@UiField Label usersType;
-	@UiField Label listsType;
+	@UiField Label browseUsersType;
+	@UiField Label browseListsType;
+	@UiField Label browseSongsType;
+	@UiField Label addSongsType;
 	@UiField TextBox searchBox;
 	@UiField FlowPanel searchSuggestionsContainer;
 	@UiField FlowPanel buttonContainer;
@@ -80,7 +81,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	UnifiedSearchView(Binder binder) {
 		initWidget(binder.createAndBindUi(this));
 		listDropdown.setVisible(false);
-		songsType.setVisible(false);
+		browseSongsType.setVisible(false);
 		buttonContainer.setVisible(false);
 
 		ClickHandler clickHandler = new ClickHandler() {
@@ -106,29 +107,35 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		}
 	}
 
-	@UiHandler("songsType")
-	void onSongsTypeClick(ClickEvent event) {
-		setSelectedSearchType(songsType);
+	@UiHandler("browseUsersType")
+	void onBrowseUsersTypeClick(ClickEvent event) {
+		setSelectedSearchType(browseUsersType);
 	}
 
-	@UiHandler("usersType")
-	void onUsersTypeClick(ClickEvent event) {
-		setSelectedSearchType(usersType);
+	@UiHandler("browseListsType")
+	void onBrowseListsTypeClick(ClickEvent event) {
+		setSelectedSearchType(browseListsType);
 	}
 
-	@UiHandler("listsType")
-	void onListsTypeClick(ClickEvent event) {
-		setSelectedSearchType(listsType);
+	@UiHandler("browseSongsType")
+	void onBrowseSongsTypeClick(ClickEvent event) {
+		setSelectedSearchType(browseSongsType);
+	}
+
+	@UiHandler("addSongsType")
+	void onAddSongsTypeClick(ClickEvent event) {
+		setSelectedSearchType(addSongsType);
 	}
 
 	private void setSelectedSearchType(Label label) {
 		currentSearchType.setText(label.getText());
-		songsType.setVisible(true);
-		usersType.setVisible(true);
-		listsType.setVisible(true);
+		browseSongsType.setVisible(true);
+		browseUsersType.setVisible(true);
+		browseListsType.setVisible(true);
+		addSongsType.setVisible(true);
 		label.setVisible(false);
 		listDropdown.setVisible(false);
-		getUiHandlers().setSearchType(SearchType.valueOf(label.getText().toUpperCase()));
+		getUiHandlers().setSearchType(SearchType.valueOf(label.getText().toUpperCase().replace(" ", "_")));
 	}
 
 	@UiHandler("searchBox")
