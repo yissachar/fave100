@@ -9,26 +9,29 @@
 			overflow: hidden;
 		}
 		
-		.whyline {
-			font-style: italic;
-			font-size: 1.1em;
-		}
-		
 		.avatar {
 			max-width: 35px;
 			max-height: 35px;
 			float: left;
 			margin-right: 6px;
-		}
-		
-		.userLink {
-			font-size: 1.2em;
-			color: PRIMARY_COLOR;
-		}
+			border-radius: 4px;
+		}		
 		
 		.whylineDetails {
 			float: left;
 			width: 80%;
+		}
+		
+		.userLink {
+			font-size: 16px;
+			color: HIGHLIGHT_COLOR;
+			line-height: 12px;
+			vertical-align: top;
+		}
+		
+		.whyline {
+			font-style: italic;
+			font-size: 14px;
 		}
 			
 	</ui:style>
