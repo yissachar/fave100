@@ -132,7 +132,7 @@
     
     	<g:FocusPanel ui:field="currentSearchTypeContainer" ui:styleName="{style.currentSearchTypeContainer} {style.unselectable}">
 			<g:FlowPanel ui:styleName="{style.currentSearchTypeSelector}">
-				<g:InlineLabel ui:field="currentSearchType">Browse songs</g:InlineLabel>
+				<g:InlineLabel ui:field="currentSearchType">Search songs</g:InlineLabel>
 				<w:Icon ui:styleName="fa fa-caret-down"/>
 			</g:FlowPanel>
 		</g:FocusPanel>
