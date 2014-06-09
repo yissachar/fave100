@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:w='urn:import:com.fave100.client.widgets'>
              
-    <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchView.UnifiedSearchStyle">  		
+    <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchView.UnifiedSearchStyle">	
 		.currentSearchTypeContainer {
 			float: left;
 			border: 1px solid #444;
@@ -112,6 +112,11 @@
 			background-color: PRIMARY_COLOR;
 			width: 50px;
 			text-align: center;
+		}
+		
+		.buttonContainer .disabled {
+			color: #eee;
+			background-color: #888;
 		}
 		
 		.previousButton {

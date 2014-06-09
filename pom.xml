@@ -26,9 +26,13 @@
 	<repositories>
 		<!-- temporary repo for gss.gwt snapshot -->
 		<repository>
-			<id>site</id>
-			<url>http://gwtquery-plugins.googlecode.com/svn/mavenrepo</url>
-		</repository>
+	        <id>sonatype.snapshots</id>
+	        <name>Sonatype snapshot repository</name>
+	        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+	        <snapshots>
+	           <enabled>true</enabled>
+	        </snapshots>
+	    </repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -195,11 +199,11 @@
 
 		<!-- GSS Resource -->
 		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gssresource</artifactId>
-			<version>1.0-20131219.102520-2</version>
-			<scope>provided</scope>
-		</dependency>
+	        <groupId>com.github.jdramaix</groupId>
+	        <artifactId>gssresource</artifactId>
+	        <version>1.0-SNAPSHOT</version>
+	        <scope>provided</scope>
+	    </dependency>
 
 		<!-- End Client -->
 		<!-- Begin Test -->
