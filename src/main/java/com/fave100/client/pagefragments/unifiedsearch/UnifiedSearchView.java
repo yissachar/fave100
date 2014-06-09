@@ -59,6 +59,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiField Icon nextButton;
 	private Timer searchTimer;
 	private HandlerRegistration rootClickHandler = null;
+	private boolean _userIsLoggedIn;
 
 	private MouseOutHandler suggestionMouseOutHandler = new MouseOutHandler() {
 
@@ -101,6 +102,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 	@UiHandler("currentSearchTypeContainer")
 	void onCurrentSearchTypeClick(ClickEvent event) {
+		addSongsType.setVisible(_userIsLoggedIn);
 		if (listDropdown.isVisible()) {
 			listDropdown.setVisible(false);
 		}
@@ -134,7 +136,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		searchSongsType.setVisible(true);
 		searchUsersType.setVisible(true);
 		searchListsType.setVisible(true);
-		addSongsType.setVisible(true);
+		addSongsType.setVisible(_userIsLoggedIn);
 		label.setVisible(false);
 		listDropdown.setVisible(false);
 		getUiHandlers().setSearchType(SearchType.valueOf(label.getText().toUpperCase().replace(" ", "_")));
@@ -305,5 +307,13 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		previousButton.setEnabled(getUiHandlers().getPage() > 0);
 		nextButton.setEnabled(resultsSize == UnifiedSearchPresenter.SELECTIONS_PER_PAGE);
 		buttonContainer.setVisible(previousButton.isEnabled() || nextButton.isEnabled());
+	}
+
+	@Override
+	public void setUserLoggedIn(boolean loggedIn) {
+		_userIsLoggedIn = loggedIn;
+		if (currentSearchType.getText().equals(addSongsType.getText())) {
+			setSelectedSearchType(searchSongsType);
+		}
 	}
 }

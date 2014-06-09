@@ -6,6 +6,7 @@ import java.util.List;
 import com.fave100.client.entities.SearchResult;
 import com.fave100.client.entities.SearchResultMapper;
 import com.fave100.client.entities.SongDto;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.CursoredSearchResult;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
@@ -35,6 +36,8 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		void setSongSuggestions(List<SongDto> songs);
 
 		void setStringSuggestions(List<String> suggestions);
+
+		void setUserLoggedIn(boolean loggedIn);
 	}
 
 	public final static int SELECTIONS_PER_PAGE = 5;
@@ -48,6 +51,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	private final List<AsyncCallback<?>> _currentRequests = new ArrayList<>();
 	private List<?> _currentSuggestions;
 	private List<?> _cachedSuggestions = new ArrayList<>();
+	private EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
@@ -58,12 +62,25 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	UnifiedSearchPresenter(EventBus eventBus, MyView view, PlaceManager placeManager, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
 							PlaylistPresenter playlistPresenter) {
 		super(eventBus, view);
+		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
 		_playlistPresenter = playlistPresenter;
 
 		getView().setUiHandlers(this);
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+		CurrentUserChangedEvent.register(_eventBus, new CurrentUserChangedEvent.Handler() {
+
+			@Override
+			public void onCurrentUserChanged(CurrentUserChangedEvent event) {
+				getView().setUserLoggedIn(event.getUser() != null);
+			}
+		});
 	}
 
 	@Override
