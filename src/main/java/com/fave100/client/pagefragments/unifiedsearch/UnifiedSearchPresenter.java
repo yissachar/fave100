@@ -44,7 +44,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	private int _maxSelection = 0;
 	private String _lastSearchTerm = "";
 	private String _cursor;
-	private SearchType _searchType = SearchType.BROWSE_SONGS;
+	private SearchType _searchType = SearchType.SEARCH_SONGS;
 	private final List<AsyncCallback<?>> _currentRequests = new ArrayList<>();
 	private List<?> _currentSuggestions;
 	private List<?> _cachedSuggestions = new ArrayList<>();
@@ -81,7 +81,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 			if (numCachedPages > _page || (numCachedPages > 0 && numCachedPages == _page && _cachedSuggestions.size() % SELECTIONS_PER_PAGE > 0)) {
 				_currentSuggestions = _cachedSuggestions.subList(_page * SELECTIONS_PER_PAGE, Math.min((_page + 1) * SELECTIONS_PER_PAGE, _cachedSuggestions.size()));
 
-				if (_searchType == SearchType.BROWSE_SONGS || _searchType == SearchType.ADD_SONGS) {
+				if (_searchType == SearchType.SEARCH_SONGS || _searchType == SearchType.ADD_SONGS) {
 					getView().setSongSuggestions((List<SongDto>)_currentSuggestions);
 				}
 				else {
@@ -97,13 +97,13 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		}
 		else if (!cached) {
 			switch (_searchType) {
-				case BROWSE_SONGS:
+				case SEARCH_SONGS:
 				case ADD_SONGS:
 					getSongSearchResults(searchTerm);
 					break;
 
-				case BROWSE_USERS:
-				case BROWSE_LISTS:
+				case SEARCH_USERS:
+				case SEARCH_LISTS:
 					getStringSearchResults(searchTerm);
 					break;
 
@@ -152,10 +152,10 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 			}
 		};
 
-		if (_searchType == SearchType.BROWSE_USERS) {
+		if (_searchType == SearchType.SEARCH_USERS) {
 			_dispatcher.execute(_restServiceFactory.search().searchUsers(searchTerm, _cursor), searchReq);
 		}
-		else if (_searchType == SearchType.BROWSE_LISTS) {
+		else if (_searchType == SearchType.SEARCH_LISTS) {
 			_dispatcher.execute(_restServiceFactory.search().searchFaveLists(searchTerm, _cursor), searchReq);
 		}
 
@@ -276,7 +276,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	@Override
 	public void selectSuggestion() {
 		switch (_searchType) {
-			case BROWSE_USERS:
+			case SEARCH_USERS:
 				String username = (String)_currentSuggestions.get(getSelection());
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
@@ -284,7 +284,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 						.build());
 				break;
 
-			case BROWSE_LISTS:
+			case SEARCH_LISTS:
 				String list = (String)_currentSuggestions.get(getSelection());
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
@@ -292,7 +292,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 						.build());
 				break;
 
-			case BROWSE_SONGS:
+			case SEARCH_SONGS:
 				SongDto song = (SongDto)_currentSuggestions.get(getSelection());
 				_playlistPresenter.playSong(song.getId(), song.getSong(), song.getArtist());
 				break;
