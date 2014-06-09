@@ -38,13 +38,9 @@
 			width: 100%;
 			color: LIST_HIGHLIGHT_COLOR;
 			font-size: 18px;
-			-webkit-transition: font-size 0.7s, padding 0.7s;
-			transition: font-size 0.7s, padding 0.7s;
 		}
 		
 		.trendingList a:hover {
-			padding: 8px;
-			font-size: 22px;
 			text-decoration: none;
 			color: HIGHLIGHT_COLOR;
 			background-color: PRIMARY_COLOR;
