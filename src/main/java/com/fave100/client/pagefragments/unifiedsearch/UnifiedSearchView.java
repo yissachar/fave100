@@ -205,12 +205,16 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 	@UiHandler("previousButton")
 	void onPreviousButtonClick(ClickEvent event) {
-		getUiHandlers().decrementPage();
+		if (previousButton.isEnabled()) {
+			getUiHandlers().decrementPage();
+		}
 	}
 
 	@UiHandler("nextButton")
 	void onNextButtonClick(ClickEvent event) {
-		getUiHandlers().incrementPage();
+		if (nextButton.isEnabled()) {
+			getUiHandlers().incrementPage();
+		}
 	}
 
 	private void moveCursorToEnd() {
@@ -296,8 +300,8 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	}
 
 	private void setButtons(int resultsSize) {
-		previousButton.setVisible(getUiHandlers().getPage() > 0);
-		nextButton.setVisible(resultsSize == UnifiedSearchPresenter.SELECTIONS_PER_PAGE);
-		buttonContainer.setVisible(true);
+		previousButton.setEnabled(getUiHandlers().getPage() > 0);
+		nextButton.setEnabled(resultsSize == UnifiedSearchPresenter.SELECTIONS_PER_PAGE);
+		buttonContainer.setVisible(previousButton.isEnabled() || nextButton.isEnabled());
 	}
 }

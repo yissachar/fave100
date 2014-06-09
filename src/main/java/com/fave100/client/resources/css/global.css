@@ -10,6 +10,7 @@
 @external mediumDisplay;
 @external largeDisplay;
 @external fa;
+@external disabled;
 
 ::selection {
   background: HIGHLIGHT_COLOR;
@@ -100,4 +101,7 @@ select:focus {
 	-ms-user-select: none;
 	-o-user-select: none;
 	user-select: none;
+}
+
+.disabled {
 }

@@ -14,4 +14,6 @@ public interface GlobalStyle extends GssResource {
 
 	String error();
 
+	String disabled();
+
 }
