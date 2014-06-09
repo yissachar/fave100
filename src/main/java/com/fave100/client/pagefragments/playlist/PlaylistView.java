@@ -80,12 +80,16 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 
 	@UiHandler("previousButton")
 	void onPreviousClick(final ClickEvent event) {
-		getUiHandlers().previousSong();
+		if (previousButton.isEnabled()) {
+			getUiHandlers().previousSong();
+		}
 	}
 
 	@UiHandler("nextButton")
 	void onNextClick(final ClickEvent event) {
-		getUiHandlers().nextSong();
+		if (nextButton.isEnabled()) {
+			getUiHandlers().nextSong();
+		}
 	}
 
 	@UiHandler("addSongButton")
@@ -130,8 +134,8 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 		byUserText.setVisible(!username.isEmpty());
 		this.listName.setVisible(!listName.isEmpty());
 
-		previousButton.setVisible(_playingItem.getRank() != 1);
-		nextButton.setVisible(_playingItem.getRank() != playlistItems.size());
+		previousButton.setEnabled(_playingItem.getRank() != 1);
+		nextButton.setEnabled(_playingItem.getRank() != playlistItems.size());
 
 		playlistItemsPanel.clear();
 		for (PlaylistItem playlistItem : playlistItems) {
