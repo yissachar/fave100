@@ -89,8 +89,10 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			@Override
 			public void onClick(ClickEvent event) {
 				Element target = Element.as(event.getNativeEvent().getEventTarget());
-				if (!Utils.widgetContainsElement(buttonContainer, target) && !Utils.widgetContainsElement(searchBox, target)) {
+				if (!Utils.widgetContainsElement(buttonContainer, target) && !Utils.widgetContainsElement(searchBox, target)
+						&& !Utils.widgetContainsElement(currentSearchTypeContainer, target)) {
 					clearSearchResults();
+					listDropdown.setVisible(false);
 				}
 			}
 		};
