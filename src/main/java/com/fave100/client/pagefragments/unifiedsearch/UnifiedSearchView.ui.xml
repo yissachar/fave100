@@ -16,7 +16,7 @@
 		}
 		
 		.currentSearchTypeSelector {
-			background-color: #F7E5B2;
+			background-color: #FFEECE;
 			padding: 3px;
 			font-size: 15px;
 			height: 20px;
