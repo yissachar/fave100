@@ -1,8 +1,8 @@
 package com.fave100.client.pagefragments.unifiedsearch;
 
 public enum SearchType {
-	BROWSE_USERS,
-	BROWSE_LISTS,
-	BROWSE_SONGS,
+	SEARCH_USERS,
+	SEARCH_LISTS,
+	SEARCH_SONGS,
 	ADD_SONGS
 }

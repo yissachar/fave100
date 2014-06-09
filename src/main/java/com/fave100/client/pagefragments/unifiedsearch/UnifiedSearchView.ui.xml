@@ -137,9 +137,9 @@
     	<g:FlowPanel ui:styleName="{style.dropDownContainer}">
     			
 			<g:FlowPanel ui:field="listDropdown" ui:styleName="{style.listDropdown}">
-				<g:Label ui:field="browseUsersType">Browse users</g:Label>
-				<g:Label ui:field="browseListsType">Browse lists</g:Label>
-				<g:Label ui:field="browseSongsType">Browse songs</g:Label>
+				<g:Label ui:field="searchUsersType">Search users</g:Label>
+				<g:Label ui:field="searchListsType">Search lists</g:Label>
+				<g:Label ui:field="searchSongsType">Search songs</g:Label>
 				<g:Label ui:field="addSongsType">Add songs</g:Label>
 			</g:FlowPanel>
 			
