@@ -6,7 +6,6 @@ import java.util.List;
 import com.fave100.client.entities.SearchResult;
 import com.fave100.client.entities.SearchResultMapper;
 import com.fave100.client.entities.SongDto;
-import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.CursoredSearchResult;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
@@ -37,7 +36,9 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 		void setStringSuggestions(List<String> suggestions);
 
-		void setUserLoggedIn(boolean loggedIn);
+		void setSongTypeSuggestions(List<SearchType> suggestions);
+
+		void setSelectedSearchType(SearchType searchType);
 	}
 
 	public final static int SELECTIONS_PER_PAGE = 5;
@@ -47,11 +48,10 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	private int _maxSelection = 0;
 	private String _lastSearchTerm = "";
 	private String _cursor;
-	private SearchType _searchType = SearchType.SEARCH_SONGS;
+	private SearchType _searchType = SearchType.SONGS;
 	private final List<AsyncCallback<?>> _currentRequests = new ArrayList<>();
 	private List<?> _currentSuggestions;
 	private List<?> _cachedSuggestions = new ArrayList<>();
-	private EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
@@ -62,7 +62,6 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	UnifiedSearchPresenter(EventBus eventBus, MyView view, PlaceManager placeManager, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
 							PlaylistPresenter playlistPresenter) {
 		super(eventBus, view);
-		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
@@ -74,13 +73,6 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	@Override
 	protected void onBind() {
 		super.onBind();
-		CurrentUserChangedEvent.register(_eventBus, new CurrentUserChangedEvent.Handler() {
-
-			@Override
-			public void onCurrentUserChanged(CurrentUserChangedEvent event) {
-				getView().setUserLoggedIn(event.getUser() != null);
-			}
-		});
 	}
 
 	@Override
@@ -93,12 +85,12 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 		boolean cached = false;
 
-		if (_cachedSuggestions != null && searchTerm.equals(_lastSearchTerm)) {
+		if (_cachedSuggestions != null && searchTerm.equals(_lastSearchTerm) && _searchType != null) {
 			int numCachedPages = _cachedSuggestions.size() / SELECTIONS_PER_PAGE;
 			if (numCachedPages > _page || (numCachedPages > 0 && numCachedPages == _page && _cachedSuggestions.size() % SELECTIONS_PER_PAGE > 0)) {
 				_currentSuggestions = _cachedSuggestions.subList(_page * SELECTIONS_PER_PAGE, Math.min((_page + 1) * SELECTIONS_PER_PAGE, _cachedSuggestions.size()));
 
-				if (_searchType == SearchType.SEARCH_SONGS || _searchType == SearchType.ADD_SONGS) {
+				if (_searchType == SearchType.SONGS) {
 					getView().setSongSuggestions((List<SongDto>)_currentSuggestions);
 				}
 				else {
@@ -111,16 +103,19 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 		if (searchTerm.isEmpty()) {
 			clearSearchResults();
+
+			if (_searchType == null) {
+				getSongTypeSuggestions();
+			}
 		}
-		else if (!cached) {
+		else if (!cached && _searchType != null) {
 			switch (_searchType) {
-				case SEARCH_SONGS:
-				case ADD_SONGS:
+				case SONGS:
 					getSongSearchResults(searchTerm);
 					break;
 
-				case SEARCH_USERS:
-				case SEARCH_LISTS:
+				case USERS:
+				case LISTS:
 					getStringSearchResults(searchTerm);
 					break;
 
@@ -128,7 +123,6 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 					break;
 			}
 		}
-
 		_lastSearchTerm = searchTerm;
 	}
 
@@ -169,14 +163,26 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 			}
 		};
 
-		if (_searchType == SearchType.SEARCH_USERS) {
+		if (_searchType == SearchType.USERS) {
 			_dispatcher.execute(_restServiceFactory.search().searchUsers(searchTerm, _cursor), searchReq);
 		}
-		else if (_searchType == SearchType.SEARCH_LISTS) {
+		else if (_searchType == SearchType.LISTS) {
 			_dispatcher.execute(_restServiceFactory.search().searchFaveLists(searchTerm, _cursor), searchReq);
 		}
 
 		_currentRequests.add(searchReq);
+	}
+
+	private void getSongTypeSuggestions() {
+		_selection = -1;
+		_currentRequests.clear();
+		List<SearchType> suggestions = new ArrayList<>();
+		suggestions.add(SearchType.SONGS);
+		suggestions.add(SearchType.USERS);
+		suggestions.add(SearchType.LISTS);
+		_currentSuggestions = suggestions;
+		getView().setSongTypeSuggestions(suggestions);
+		_maxSelection = suggestions.size() - 1;
 	}
 
 	private void doFailure(AsyncCallback<?> request) {
@@ -285,15 +291,20 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		}
 	}
 
-	@Override
 	public void setSearchType(SearchType searchType) {
 		_searchType = searchType;
+		getView().setSelectedSearchType(searchType);
 	}
 
 	@Override
 	public void selectSuggestion() {
+		if (_searchType == null) {
+			setSearchType(((List<SearchType>)_currentSuggestions).get(_selection));
+			return;
+		}
+
 		switch (_searchType) {
-			case SEARCH_USERS:
+			case USERS:
 				String username = (String)_currentSuggestions.get(getSelection());
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
@@ -301,7 +312,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 						.build());
 				break;
 
-			case SEARCH_LISTS:
+			case LISTS:
 				String list = (String)_currentSuggestions.get(getSelection());
 				_placeManager.revealPlace(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
@@ -309,17 +320,9 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 						.build());
 				break;
 
-			case SEARCH_SONGS:
+			case SONGS:
 				SongDto song = (SongDto)_currentSuggestions.get(getSelection());
 				_playlistPresenter.playSong(song.getId(), song.getSong(), song.getArtist());
-				break;
-
-			case ADD_SONGS:
-				SongDto songToAdd = (SongDto)_currentSuggestions.get(getSelection());
-				_addSongPresenter.setSongToAddId(songToAdd.getId());
-				_addSongPresenter.setSongToAddName(songToAdd.getSong());
-				_addSongPresenter.setSongToAddArtist(songToAdd.getArtist());
-				addToPopupSlot(_addSongPresenter);
 				break;
 
 			default:
