@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -45,21 +46,17 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	}
 
 	@UiField UnifiedSearchStyle style;
-	@UiField FocusPanel currentSearchTypeContainer;
 	@UiField Label currentSearchType;
-	@UiField Panel listDropdown;
-	@UiField Label searchUsersType;
-	@UiField Label searchListsType;
-	@UiField Label searchSongsType;
-	@UiField Label addSongsType;
+	@UiField Panel currentSearchTypeContainer;
+	@UiField Icon removeSearchTypeButton;
 	@UiField TextBox searchBox;
+	@UiField Panel searchResults;
 	@UiField FlowPanel searchSuggestionsContainer;
 	@UiField FlowPanel buttonContainer;
 	@UiField Icon previousButton;
 	@UiField Icon nextButton;
 	private Timer searchTimer;
 	private HandlerRegistration rootClickHandler = null;
-	private boolean _userIsLoggedIn;
 
 	private MouseOutHandler suggestionMouseOutHandler = new MouseOutHandler() {
 
@@ -81,9 +78,8 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@Inject
 	UnifiedSearchView(Binder binder) {
 		initWidget(binder.createAndBindUi(this));
-		listDropdown.setVisible(false);
-		searchSongsType.setVisible(false);
 		buttonContainer.setVisible(false);
+		searchResults.setVisible(false);
 
 		ClickHandler clickHandler = new ClickHandler() {
 
@@ -93,59 +89,34 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 				if (!Utils.widgetContainsElement(buttonContainer, target) && !Utils.widgetContainsElement(searchBox, target)
 						&& !Utils.widgetContainsElement(currentSearchTypeContainer, target)) {
 					clearSearchResults();
-					listDropdown.setVisible(false);
 				}
 			}
 		};
 		rootClickHandler = RootPanel.get().addDomHandler(clickHandler, ClickEvent.getType());
 	}
 
-	@UiHandler("currentSearchTypeContainer")
-	void onCurrentSearchTypeClick(ClickEvent event) {
-		addSongsType.setVisible(_userIsLoggedIn);
-		if (listDropdown.isVisible()) {
-			listDropdown.setVisible(false);
-		}
-		else {
-			listDropdown.setVisible(true);
-		}
-	}
-
-	@UiHandler("searchUsersType")
-	void onSearchUsersTypeClick(ClickEvent event) {
-		setSelectedSearchType(searchUsersType);
-	}
-
-	@UiHandler("searchListsType")
-	void onSearchListsTypeClick(ClickEvent event) {
-		setSelectedSearchType(searchListsType);
-	}
-
-	@UiHandler("searchSongsType")
-	void onSearchSongsTypeClick(ClickEvent event) {
-		setSelectedSearchType(searchSongsType);
-	}
-
-	@UiHandler("addSongsType")
-	void onAddSongsTypeClick(ClickEvent event) {
-		setSelectedSearchType(addSongsType);
-	}
-
-	private void setSelectedSearchType(Label label) {
-		currentSearchType.setText(label.getText());
-		searchSongsType.setVisible(true);
-		searchUsersType.setVisible(true);
-		searchListsType.setVisible(true);
-		addSongsType.setVisible(_userIsLoggedIn);
-		label.setVisible(false);
-		listDropdown.setVisible(false);
-		getUiHandlers().setSearchType(SearchType.valueOf(label.getText().toUpperCase().replace(" ", "_")));
+	@UiHandler("removeSearchTypeButton")
+	void onRemoveSearchTypeClick(ClickEvent event) {
+		getSongTypeSuggestions();
 	}
 
 	@UiHandler("searchBox")
 	void onSearchFocus(FocusEvent event) {
-		listDropdown.setVisible(false);
-		searchSuggestionsContainer.setVisible(true);
+		if (!currentSearchTypeContainer.isVisible()) {
+			searchResults.setVisible(true);
+			getSongTypeSuggestions();
+		}
+	}
+
+	@UiHandler("searchBox")
+	void onKeyDown(final KeyDownEvent event) {
+		if (!currentSearchTypeContainer.isVisible()) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		else if (KeyCodes.KEY_BACKSPACE == event.getNativeKeyCode() && searchBox.getText().equals("")) {
+			getSongTypeSuggestions();
+		}
 	}
 
 	@UiHandler("searchBox")
@@ -179,7 +150,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		else if (KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()) {
 			clearSearchResults();
 		}
-		else {
+		else if (currentSearchTypeContainer.isVisible()) {
 			// Otherwise search for song
 			final String searchTerm = searchBox.getText().trim();
 
@@ -228,7 +199,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	private void clearSearchResults() {
 		searchBox.setText("");
 		searchSuggestionsContainer.clear();
-		searchSuggestionsContainer.setVisible(false);
+		searchResults.setVisible(false);
 		buttonContainer.setVisible(false);
 		getUiHandlers().clearSearchResults();
 	}
@@ -244,6 +215,30 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		if (selection >= 0 && widgetCount > 0) {
 			searchSuggestionsContainer.getWidget(selection).addStyleName(style.selected());
 		}
+	}
+
+	@Override
+	public void setSelectedSearchType(SearchType searchType) {
+		if (searchType == null)
+			return;
+
+		String searchText = "";
+		switch (searchType) {
+			case SONGS:
+				searchText = "Songs";
+				break;
+			case USERS:
+				searchText = "Users";
+				break;
+			case LISTS:
+				searchText = "Lists";
+
+			default:
+				break;
+		}
+
+		currentSearchType.setText(searchText);
+		currentSearchTypeContainer.setVisible(true);
 	}
 
 	@Override
@@ -266,7 +261,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 				public void onMouseOver(MouseOverEvent event) {
 					getUiHandlers().setSelection(searchSuggestionsContainer.getWidgetIndex(eventCatcherPanel));
 					refreshSelection();
-
 				}
 			});
 
@@ -290,7 +284,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 				public void onMouseOver(MouseOverEvent event) {
 					getUiHandlers().setSelection(searchSuggestionsContainer.getWidgetIndex(suggestionLabel));
 					refreshSelection();
-
 				}
 			});
 
@@ -303,17 +296,55 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		setButtons(suggestions.size());
 	}
 
+	@Override
+	public void setSongTypeSuggestions(List<SearchType> suggestions) {
+		searchSuggestionsContainer.clear();
+		searchSuggestionsContainer.setVisible(true);
+
+		for (SearchType suggestion : suggestions) {
+			String prompt = "";
+			switch (suggestion) {
+				case SONGS:
+					prompt = "Search songs";
+					break;
+				case USERS:
+					prompt = "Search users";
+					break;
+				case LISTS:
+					prompt = "Search lists";
+
+				default:
+					break;
+			}
+			final Label suggestionLabel = new Label(prompt);
+			suggestionLabel.addMouseOverHandler(new MouseOverHandler() {
+
+				@Override
+				public void onMouseOver(MouseOverEvent event) {
+					getUiHandlers().setSelection(searchSuggestionsContainer.getWidgetIndex(suggestionLabel));
+					refreshSelection();
+				}
+			});
+
+			suggestionLabel.addMouseOutHandler(suggestionMouseOutHandler);
+			suggestionLabel.addClickHandler(suggestionsClickHandler);
+
+			searchSuggestionsContainer.add(suggestionLabel);
+		}
+
+		setButtons(suggestions.size());
+	}
+
+	private void getSongTypeSuggestions() {
+		currentSearchTypeContainer.setVisible(false);
+		getUiHandlers().setSearchType(null);
+		getUiHandlers().getSearchResults("");
+	}
+
 	private void setButtons(int resultsSize) {
 		previousButton.setEnabled(getUiHandlers().getPage() > 0);
 		nextButton.setEnabled(resultsSize == UnifiedSearchPresenter.SELECTIONS_PER_PAGE);
 		buttonContainer.setVisible(previousButton.isEnabled() || nextButton.isEnabled());
-	}
-
-	@Override
-	public void setUserLoggedIn(boolean loggedIn) {
-		_userIsLoggedIn = loggedIn;
-		if (currentSearchType.getText().equals(addSongsType.getText())) {
-			setSelectedSearchType(searchSongsType);
-		}
+		searchResults.setVisible(resultsSize > 0);
 	}
 }
