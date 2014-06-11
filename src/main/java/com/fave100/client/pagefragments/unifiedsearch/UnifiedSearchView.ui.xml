@@ -64,6 +64,11 @@
 			margin-top: 4px;
     	}
     	
+    	.searchLoadingIndicator {
+			float: right;
+			margin-top: 6px;
+    	}
+    	
     	.smallDisplay .searchBox {
 			width: 200px;
     	}
@@ -160,6 +165,8 @@
 		}
     </ui:style>
     
+	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
+    
     <g:HTMLPanel>
 		
 		<g:FlowPanel ui:styleName="{style.searchContainer}">
@@ -168,7 +175,10 @@
 				<w:Icon ui:field="removeSearchTypeButton" ui:styleName="fa fa-times {style.removeSearchTypeButton}" />
 			</g:FlowPanel>
     		<w:FaveTextBox ui:field="searchBox" ui:styleName="{style.searchBox}" />
-			<w:Icon ui:styleName="fa fa-search {style.searchIndicator}" />
+			<w:Icon ui:field="searchIndicator" ui:styleName="fa fa-search {style.searchIndicator}" />
+			<g:SimplePanel ui:field="searchLoadingIndicator" ui:styleName="{style.searchLoadingIndicator}">
+				<g:Image resource="{img.searchLoadingIndicator}"></g:Image>
+			</g:SimplePanel>
     	</g:FlowPanel>
     	
     	<g:FlowPanel ui:styleName="{style.dropDownContainer}">

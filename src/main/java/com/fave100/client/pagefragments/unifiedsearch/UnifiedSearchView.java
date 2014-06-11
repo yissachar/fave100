@@ -50,6 +50,8 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiField Panel currentSearchTypeContainer;
 	@UiField Icon removeSearchTypeButton;
 	@UiField TextBox searchBox;
+	@UiField Icon searchIndicator;
+	@UiField Panel searchLoadingIndicator;
 	@UiField Panel searchResults;
 	@UiField FlowPanel searchSuggestionsContainer;
 	@UiField FlowPanel buttonContainer;
@@ -81,6 +83,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		initWidget(binder.createAndBindUi(this));
 		buttonContainer.setVisible(false);
 		searchResults.setVisible(false);
+		searchLoadingIndicator.setVisible(false);
 
 		ClickHandler clickHandler = new ClickHandler() {
 
@@ -167,9 +170,12 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			searchTimer = new Timer() {
 				@Override
 				public void run() {
-					//searchLoadingIndicator.setVisible(true);
-					//inlineSearchCount.setText("");
-					searchSuggestionsContainer.setVisible(true);
+					if (searchTerm.trim().length() <= 2 && currentSearchType.getText().equals("Songs")) {
+						return;
+					}
+
+					searchIndicator.setVisible(false);
+					searchLoadingIndicator.setVisible(true);
 					getUiHandlers().getSearchResults(searchTerm);
 				}
 			};
@@ -201,7 +207,8 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		searchBox.setText("");
 		searchSuggestionsContainer.clear();
 		searchResults.setVisible(false);
-		buttonContainer.setVisible(false);
+		searchIndicator.setVisible(true);
+		searchLoadingIndicator.setVisible(false);
 		getUiHandlers().clearSearchResults();
 	}
 
@@ -245,6 +252,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@Override
 	public void setSongSuggestions(List<SongDto> songs) {
 		searchSuggestionsContainer.clear();
+
 		for (SongDto song : songs) {
 			final FocusPanel eventCatcherPanel = new FocusPanel();
 			FlowPanel panel = new FlowPanel();
@@ -281,6 +289,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@Override
 	public void setStringSuggestions(List<String> suggestions) {
 		searchSuggestionsContainer.clear();
+
 		for (String suggestion : suggestions) {
 			final Label suggestionLabel = new Label(suggestion);
 			suggestionLabel.addMouseOverHandler(new MouseOverHandler() {
@@ -308,7 +317,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@Override
 	public void setSongTypeSuggestions(List<SearchType> suggestions) {
 		searchSuggestionsContainer.clear();
-		searchSuggestionsContainer.setVisible(true);
 
 		for (SearchType suggestion : suggestions) {
 			String prompt = "";
@@ -347,6 +355,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	private void getSongTypeSuggestions() {
 		currentSearchTypeContainer.setVisible(false);
 		getUiHandlers().setSearchType(null);
+		searchResults.setVisible(true);
 		getUiHandlers().getSearchResults("");
 	}
 
@@ -354,6 +363,8 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		previousButton.setEnabled(getUiHandlers().getPage() > 0);
 		nextButton.setEnabled(resultsSize == UnifiedSearchPresenter.SELECTIONS_PER_PAGE);
 		buttonContainer.setVisible(previousButton.isEnabled() || nextButton.isEnabled());
+		searchIndicator.setVisible(true);
+		searchLoadingIndicator.setVisible(false);
 		searchResults.setVisible(true);
 	}
 }
