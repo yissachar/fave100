@@ -180,7 +180,6 @@
 	</ui:style>
 
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens"/>
-	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
 	
 	<g:HTMLPanel>		
 		<!-- We will hide the topNavSticky element behind the real top nav in order to get a sticky header effect
