@@ -3,6 +3,7 @@ package com.fave100.client.pagefragments.unifiedsearch;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.entities.SearchResult;
 import com.fave100.client.entities.SearchResultMapper;
 import com.fave100.client.entities.SongDto;
@@ -48,6 +49,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	private int _maxSelection = 0;
 	private String _lastSearchTerm = "";
 	private String _cursor;
+	private boolean _addMode;
 	private SearchType _searchType = SearchType.SONGS;
 	private final List<AsyncCallback<?>> _currentRequests = new ArrayList<>();
 	private List<?> _currentSuggestions;
@@ -56,16 +58,18 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private PlaylistPresenter _playlistPresenter;
+	private CurrentUser _currentUser;
 	@Inject AddSongPresenter _addSongPresenter;
 
 	@Inject
 	UnifiedSearchPresenter(EventBus eventBus, MyView view, PlaceManager placeManager, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
-							PlaylistPresenter playlistPresenter) {
+							PlaylistPresenter playlistPresenter, CurrentUser currentUser) {
 		super(eventBus, view);
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
 		_playlistPresenter = playlistPresenter;
+		_currentUser = currentUser;
 
 		getView().setUiHandlers(this);
 	}
@@ -321,12 +325,69 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 				break;
 
 			case SONGS:
+
 				SongDto song = (SongDto)_currentSuggestions.get(getSelection());
-				_playlistPresenter.playSong(song.getId(), song.getSong(), song.getArtist());
+				if (_addMode && _currentUser.isLoggedIn()) {
+					PlaceRequest currentPlace = _placeManager.getCurrentPlaceRequest();
+
+					if (_currentUser.getHashtags().size() == 1) {
+						_currentUser.addSong(song.getId(), Constants.DEFAULT_HASHTAG, song.getSong(), song.getArtist());
+					}
+					else if (currentPlace.getNameToken().equals(NameTokens.lists)
+							&& currentPlace.getParameter(PlaceParams.USER_PARAM, "").equals(_currentUser.getUsername())) {
+
+						_currentUser.addSong(song.getId(), currentPlace.getParameter(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG), song.getSong(), song.getArtist());
+					}
+					else {
+						_addSongPresenter.setSongToAddId(song.getId());
+						_addSongPresenter.setSongToAddName(song.getSong());
+						_addSongPresenter.setSongToAddArtist(song.getArtist());
+						addToPopupSlot(_addSongPresenter);
+					}
+				}
+				else {
+					_playlistPresenter.playSong(song.getId(), song.getSong(), song.getArtist());
+				}
 				break;
 
 			default:
 				break;
 		}
+	}
+
+	@Override
+	public void setAddMode(boolean addMode) {
+		_addMode = addMode;
+	}
+
+	@Override
+	public String getHelpText() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("You are currently in ");
+		sb.append(_addMode ? "add" : "browse");
+		sb.append(" mode. Selecting a song will ");
+		if (_addMode) {
+			PlaceRequest currentPlace = _placeManager.getCurrentPlaceRequest();
+			if (_currentUser.getHashtags().size() == 1) {
+				sb.append("add it your ");
+				sb.append(Constants.DEFAULT_HASHTAG);
+				sb.append(" list");
+			}
+			else if (currentPlace.getNameToken().equals(NameTokens.lists)
+					&& currentPlace.getParameter(PlaceParams.USER_PARAM, "").equals(_currentUser.getUsername())) {
+				sb.append("add it your ");
+				sb.append(currentPlace.getParameter(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG));
+				sb.append(" list");
+			}
+			else {
+				sb.append("prompt you to add it to one of your lists");
+			}
+			sb.append(".");
+		}
+		else {
+			sb.append("will stop the currently playing song and start playing the selected song.");
+		}
+
+		return sb.toString();
 	}
 }
