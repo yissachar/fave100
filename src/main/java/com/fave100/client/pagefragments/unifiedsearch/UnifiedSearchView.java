@@ -57,7 +57,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiField Panel searchLoadingIndicator;
 	@UiField Panel searchResults;
 	@UiField FlowPanel searchSuggestionsContainer;
-	@UiField FocusPanel modePanel;
+	@UiField Panel modePanel;
 	@UiField Label addModeOption;
 	@UiField Label browseModeOption;
 	@UiField Label helpText;
@@ -83,6 +83,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		@Override
 		public void onClick(ClickEvent event) {
 			getUiHandlers().selectSuggestion();
+			searchBox.setFocus(true);
 		}
 	};
 
@@ -93,7 +94,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		searchResults.setVisible(false);
 		searchLoadingIndicator.setVisible(false);
 		modePanel.setVisible(false);
-		helpText.setVisible(false);
 
 		ClickHandler clickHandler = new ClickHandler() {
 
@@ -202,17 +202,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		refreshSelection();
 	}
 
-	@UiHandler("modePanel")
-	void onModePanelMouseOver(MouseOverEvent event) {
-		helpText.setVisible(true);
-		refreshHelpText();
-	}
-
-	@UiHandler("modePanel")
-	void onModePanelMouseOut(MouseOutEvent event) {
-		helpText.setVisible(false);
-	}
-
 	@UiHandler("addModeOption")
 	void onAddModeOptionClick(ClickEvent event) {
 		addModeOption.addStyleName(style.selected());
@@ -252,6 +241,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	}
 
 	private void clearSearchResults() {
+		modePanel.setVisible(false);
 		searchBox.setText("");
 		searchSuggestionsContainer.clear();
 		searchResults.setVisible(false);
@@ -416,5 +406,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		searchIndicator.setVisible(true);
 		searchLoadingIndicator.setVisible(false);
 		searchResults.setVisible(true);
+		refreshHelpText();
 	}
 }
