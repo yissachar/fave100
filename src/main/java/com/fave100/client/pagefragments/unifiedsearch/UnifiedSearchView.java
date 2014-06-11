@@ -55,6 +55,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiField FlowPanel buttonContainer;
 	@UiField Icon previousButton;
 	@UiField Icon nextButton;
+	private Label _noResultsLabel = new Label("No results found");
 	private Timer searchTimer;
 	private HandlerRegistration rootClickHandler = null;
 
@@ -270,6 +271,10 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			searchSuggestionsContainer.add(eventCatcherPanel);
 		}
 
+		if (songs.size() == 0) {
+			searchSuggestionsContainer.add(_noResultsLabel);
+		}
+
 		setButtons(songs.size());
 	}
 
@@ -291,6 +296,10 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			suggestionLabel.addClickHandler(suggestionsClickHandler);
 
 			searchSuggestionsContainer.add(suggestionLabel);
+		}
+
+		if (suggestions.size() == 0) {
+			searchSuggestionsContainer.add(_noResultsLabel);
 		}
 
 		setButtons(suggestions.size());
@@ -345,6 +354,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		previousButton.setEnabled(getUiHandlers().getPage() > 0);
 		nextButton.setEnabled(resultsSize == UnifiedSearchPresenter.SELECTIONS_PER_PAGE);
 		buttonContainer.setVisible(previousButton.isEnabled() || nextButton.isEnabled());
-		searchResults.setVisible(resultsSize > 0);
+		searchResults.setVisible(true);
 	}
 }
