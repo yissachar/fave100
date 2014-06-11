@@ -37,6 +37,10 @@
 			padding: 0 10px;
 		}
 		
+		.searchContainer.selected {
+			border-color: HIGHLIGHT_COLOR;
+		}
+		
 		.currentSearchType {
 			font-size: 12px;
 			background-color: #f0f0f0;
@@ -57,6 +61,10 @@
 			padding: 0 0 !important;
 			margin-left: 5px;
 			width: 75%;
+    	}
+    	
+    	.searchBox:focus {
+			outline: none;
     	}
     	
     	.searchIndicator {
@@ -126,6 +134,10 @@
 			padding: 8px;
 		}
 		
+		.searchSuggestionsContainer > *:focus {
+			outline: none;
+		}
+		
 		.searchSuggestionsContainer .selected {
 			background-color: FADED_LIGHT_BG;
 			color: LIST_HIGHLIGHT_COLOR;
@@ -138,6 +150,40 @@
 		.searchSuggestionsContainer .artist {
 			font-size: 14px;
 			font-style: italic;
+		}
+		
+		.modePanel {
+			padding: 12px 5px;
+			background-color: FADED_LIGHT_BG;
+		}
+		
+		.modePanel:focus {
+			outline: none;
+		}
+		
+		.modeOption {
+			padding: 5px;		
+			border: 1px solid #aaa;
+		}
+		
+		.modeOption:hover {
+			background-color: FADED_LIGHT_BG;
+			color: LIST_HIGHLIGHT_COLOR;
+		}
+		
+		.modeOption.selected {
+			background-color: PRIMARY_COLOR;
+			color: HIGHLIGHT_COLOR;
+		}
+				
+		.addModeOption {
+			border-right: 0px solid #aaa;
+			margin-left: 10px;
+		}
+		
+		.helpText {
+			font-size: 12px;
+			margin-top: 15px;
 		}
 		
 		.buttonContainer {
@@ -169,7 +215,7 @@
     
     <g:HTMLPanel>
 		
-		<g:FlowPanel ui:styleName="{style.searchContainer}">
+		<g:FlowPanel ui:field="searchContainer" ui:styleName="{style.searchContainer}">
 			<g:FlowPanel ui:field="currentSearchTypeContainer" ui:styleName="{style.currentSearchType}">
 				<g:InlineLabel ui:field="currentSearchType">Songs</g:InlineLabel>
 				<w:Icon ui:field="removeSearchTypeButton" ui:styleName="fa fa-times {style.removeSearchTypeButton}" />
@@ -185,13 +231,21 @@
 			
 			<g:FlowPanel ui:field="searchResults" ui:styleName="{style.searchResults}">
 				<g:FlowPanel ui:field="searchSuggestionsContainer" ui:styleName="{style.searchSuggestionsContainer}"/>
+				<g:FocusPanel ui:field="modePanel" ui:styleName="{style.modePanel}">
+					<g:FlowPanel>
+						<g:InlineLabel>Mode:</g:InlineLabel>
+						<g:InlineLabel ui:field="addModeOption" ui:styleName="{style.modeOption} {style.addModeOption}">Add</g:InlineLabel>
+						<g:InlineLabel ui:field="browseModeOption" ui:styleName="{style.modeOption} {style.selected}">Browse</g:InlineLabel>
+						<g:Label ui:field="helpText" ui:styleName="{style.helpText}" />
+					</g:FlowPanel>
+				</g:FocusPanel>
 				<g:FlowPanel ui:field="buttonContainer" ui:styleName="{style.buttonContainer}">
 					<w:Icon ui:field="previousButton" ui:styleName="fa fa-2x fa-caret-left {style.previousButton}" />
 					<w:Icon ui:field="nextButton" ui:styleName="fa fa-2x fa-caret-right {style.nextButton}" />
 				</g:FlowPanel>
 			</g:FlowPanel>
 			
-		</g:FlowPanel>
+		</g:FlowPanel>		
     	
     </g:HTMLPanel>
 </ui:UiBinder>

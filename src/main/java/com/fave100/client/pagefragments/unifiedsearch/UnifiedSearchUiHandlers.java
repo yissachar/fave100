@@ -26,4 +26,8 @@ public interface UnifiedSearchUiHandlers extends UiHandlers {
 	void setSearchType(SearchType searchType);
 
 	void selectSuggestion();
+
+	void setAddMode(boolean addMode);
+
+	String getHelpText();
 }
