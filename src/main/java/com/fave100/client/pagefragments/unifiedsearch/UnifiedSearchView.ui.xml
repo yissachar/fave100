@@ -157,10 +157,6 @@
 			background-color: FADED_LIGHT_BG;
 		}
 		
-		.modePanel:focus {
-			outline: none;
-		}
-		
 		.modeOption {
 			padding: 5px;		
 			border: 1px solid #aaa;
@@ -231,14 +227,12 @@
 			
 			<g:FlowPanel ui:field="searchResults" ui:styleName="{style.searchResults}">
 				<g:FlowPanel ui:field="searchSuggestionsContainer" ui:styleName="{style.searchSuggestionsContainer}"/>
-				<g:FocusPanel ui:field="modePanel" ui:styleName="{style.modePanel}">
-					<g:FlowPanel>
-						<g:InlineLabel>Mode:</g:InlineLabel>
-						<g:InlineLabel ui:field="addModeOption" ui:styleName="{style.modeOption} {style.addModeOption}">Add</g:InlineLabel>
-						<g:InlineLabel ui:field="browseModeOption" ui:styleName="{style.modeOption} {style.selected}">Browse</g:InlineLabel>
-						<g:Label ui:field="helpText" ui:styleName="{style.helpText}" />
-					</g:FlowPanel>
-				</g:FocusPanel>
+				<g:FlowPanel ui:field="modePanel" ui:styleName="{style.modePanel}">
+					<g:InlineLabel>Mode:</g:InlineLabel>
+					<g:InlineLabel ui:field="addModeOption" ui:styleName="{style.modeOption} {style.addModeOption}">Add</g:InlineLabel>
+					<g:InlineLabel ui:field="browseModeOption" ui:styleName="{style.modeOption} {style.selected}">Browse</g:InlineLabel>
+					<g:Label ui:field="helpText" ui:styleName="{style.helpText}" />
+				</g:FlowPanel>
 				<g:FlowPanel ui:field="buttonContainer" ui:styleName="{style.buttonContainer}">
 					<w:Icon ui:field="previousButton" ui:styleName="fa fa-2x fa-caret-left {style.previousButton}" />
 					<w:Icon ui:field="nextButton" ui:styleName="fa fa-2x fa-caret-right {style.nextButton}" />
