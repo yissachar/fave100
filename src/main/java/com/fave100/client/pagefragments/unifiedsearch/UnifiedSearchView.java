@@ -8,6 +8,7 @@ import com.fave100.client.entities.SongDto;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.Icon;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -30,6 +31,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -57,13 +59,11 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiField Panel searchLoadingIndicator;
 	@UiField Panel searchResults;
 	@UiField FlowPanel searchSuggestionsContainer;
+	@UiField Label loadMoreButton;
 	@UiField Panel modePanel;
 	@UiField Label addModeOption;
 	@UiField Label browseModeOption;
 	@UiField Label helpText;
-	@UiField FlowPanel buttonContainer;
-	@UiField Icon previousButton;
-	@UiField Icon nextButton;
 	private Label _noResultsLabel = new Label("No results found");
 	private Timer searchTimer;
 	private HandlerRegistration rootClickHandler = null;
@@ -90,19 +90,20 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@Inject
 	UnifiedSearchView(Binder binder) {
 		initWidget(binder.createAndBindUi(this));
-		buttonContainer.setVisible(false);
 		searchResults.setVisible(false);
 		searchLoadingIndicator.setVisible(false);
 		modePanel.setVisible(false);
+		loadMoreButton.setVisible(false);
 
 		ClickHandler clickHandler = new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				Element target = Element.as(event.getNativeEvent().getEventTarget());
-				if (!Utils.widgetContainsElement(buttonContainer, target) && !Utils.widgetContainsElement(searchBox, target)
+				if (!Utils.widgetContainsElement(searchBox, target)
 						&& !Utils.widgetContainsElement(currentSearchTypeContainer, target)
-						&& !Utils.widgetContainsElement(modePanel, target)) {
+						&& !Utils.widgetContainsElement(modePanel, target)
+						&& !Utils.widgetContainsElement(loadMoreButton, target)) {
 					clearSearchResults();
 				}
 			}
@@ -151,18 +152,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			else if (event.isUpArrow()) {
 				getUiHandlers().decrementSelection();
 			}
-			else if (event.isRightArrow()) {
-				if (getUiHandlers().getSelection() >= 0) {
-					getUiHandlers().incrementPage();
-					moveCursorToEnd();
-				}
-			}
-			else if (event.isLeftArrow()) {
-				if (getUiHandlers().getSelection() >= 0) {
-					getUiHandlers().decrementPage();
-					moveCursorToEnd();
-				}
-			}
 		}
 		else if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()) {
 			getUiHandlers().selectSuggestion();
@@ -202,6 +191,11 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		refreshSelection();
 	}
 
+	@UiHandler("loadMoreButton")
+	void onLoadMoreButtonClick(ClickEvent event) {
+		getUiHandlers().loadMore();
+	}
+
 	@UiHandler("addModeOption")
 	void onAddModeOptionClick(ClickEvent event) {
 		addModeOption.addStyleName(style.selected());
@@ -218,26 +212,8 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		refreshHelpText();
 	}
 
-	@UiHandler("previousButton")
-	void onPreviousButtonClick(ClickEvent event) {
-		if (previousButton.isEnabled()) {
-			getUiHandlers().decrementPage();
-		}
-	}
-
-	@UiHandler("nextButton")
-	void onNextButtonClick(ClickEvent event) {
-		if (nextButton.isEnabled()) {
-			getUiHandlers().incrementPage();
-		}
-	}
-
 	private void refreshHelpText() {
 		helpText.setText(getUiHandlers().getHelpText());
-	}
-
-	private void moveCursorToEnd() {
-		searchBox.setCursorPos(searchBox.getText().length());
 	}
 
 	private void clearSearchResults() {
@@ -247,6 +223,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		searchResults.setVisible(false);
 		searchIndicator.setVisible(true);
 		searchLoadingIndicator.setVisible(false);
+		loadMoreButton.setVisible(false);
 		getUiHandlers().clearSearchResults();
 	}
 
@@ -259,7 +236,9 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		}
 
 		if (selection >= 0 && widgetCount > 0) {
-			searchSuggestionsContainer.getWidget(selection).addStyleName(style.selected());
+			Widget selectedWidget = searchSuggestionsContainer.getWidget(selection);
+			selectedWidget.addStyleName(style.selected());
+			selectedWidget.getElement().scrollIntoView();
 		}
 	}
 
@@ -288,8 +267,8 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	}
 
 	@Override
-	public void setSongSuggestions(List<SongDto> songs) {
-		searchSuggestionsContainer.clear();
+	public void setSongSuggestions(List<SongDto> songs, boolean loadMore) {
+		setupSearchContainer(loadMore);
 
 		for (SongDto song : songs) {
 			final FocusPanel eventCatcherPanel = new FocusPanel();
@@ -319,16 +298,16 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 		modePanel.setVisible(songs.size() > 0 && _currentUser.isLoggedIn());
 
-		if (songs.size() == 0) {
+		if (songs.size() == 0 && !loadMore) {
 			searchSuggestionsContainer.add(_noResultsLabel);
 		}
 
-		setButtons(songs.size());
+		showSuggestions(songs.size());
 	}
 
 	@Override
-	public void setStringSuggestions(List<String> suggestions) {
-		searchSuggestionsContainer.clear();
+	public void setStringSuggestions(List<String> suggestions, boolean loadMore) {
+		setupSearchContainer(loadMore);
 
 		for (String suggestion : suggestions) {
 			final Label suggestionLabel = new Label(suggestion);
@@ -347,11 +326,23 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			searchSuggestionsContainer.add(suggestionLabel);
 		}
 
-		if (suggestions.size() == 0) {
+		if (suggestions.size() == 0 && !loadMore) {
 			searchSuggestionsContainer.add(_noResultsLabel);
 		}
 
-		setButtons(suggestions.size());
+		showSuggestions(suggestions.size());
+	}
+
+	private void setupSearchContainer(boolean loadMore) {
+		if (loadMore) {
+			if (searchSuggestionsContainer.getWidgetCount() == UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
+				searchSuggestionsContainer.getElement().getStyle().setHeight(searchSuggestionsContainer.getOffsetHeight(), Unit.PX);
+			}
+		}
+		else {
+			searchSuggestionsContainer.clear();
+			searchSuggestionsContainer.getElement().getStyle().setProperty("height", "initial");
+		}
 	}
 
 	@Override
@@ -389,7 +380,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			searchSuggestionsContainer.add(suggestionLabel);
 		}
 
-		setButtons(suggestions.size());
+		showSuggestions(suggestions.size());
 	}
 
 	private void getSongTypeSuggestions() {
@@ -399,10 +390,15 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		getUiHandlers().getSearchResults("");
 	}
 
-	private void setButtons(int resultsSize) {
-		previousButton.setEnabled(getUiHandlers().getPage() > 0);
-		nextButton.setEnabled(resultsSize == UnifiedSearchPresenter.SELECTIONS_PER_PAGE);
-		buttonContainer.setVisible(previousButton.isEnabled() || nextButton.isEnabled());
+	private void showSuggestions(int resultsSize) {
+		loadMoreButton.setVisible(resultsSize > 0);
+		if (resultsSize == UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
+			loadMoreButton.setText("Load more results");
+		}
+		else {
+			loadMoreButton.setText("Loaded " + getUiHandlers().getTotalResults() + " results");
+		}
+
 		searchIndicator.setVisible(true);
 		searchLoadingIndicator.setVisible(false);
 		searchResults.setVisible(true);

@@ -17,11 +17,7 @@ public interface UnifiedSearchUiHandlers extends UiHandlers {
 
 	void decrementSelection();
 
-	int getPage();
-
-	void incrementPage();
-
-	void decrementPage();
+	void loadMore();
 
 	void setSearchType(SearchType searchType);
 
@@ -30,4 +26,6 @@ public interface UnifiedSearchUiHandlers extends UiHandlers {
 	void setAddMode(boolean addMode);
 
 	String getHelpText();
+
+	int getTotalResults();
 }

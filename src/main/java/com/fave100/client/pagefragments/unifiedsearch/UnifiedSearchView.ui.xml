@@ -125,6 +125,10 @@
 		.smallDisplay .searchResults {
 			width: 275px;
 		}
+		
+		.searchSuggestionsContainer {
+			overflow-y: auto;
+		}
 		    	
     	.searchSuggestionsContainer:empty {
 			border-bottom: 0;
@@ -150,6 +154,11 @@
 		.searchSuggestionsContainer .artist {
 			font-size: 14px;
 			font-style: italic;
+		}
+		
+		.loadMoreButton {
+			padding: 5px;
+			text-align: center;
 		}
 		
 		.modePanel {
@@ -227,15 +236,12 @@
 			
 			<g:FlowPanel ui:field="searchResults" ui:styleName="{style.searchResults}">
 				<g:FlowPanel ui:field="searchSuggestionsContainer" ui:styleName="{style.searchSuggestionsContainer}"/>
+				<g:Label ui:field="loadMoreButton" ui:styleName="{style.loadMoreButton}" />
 				<g:FlowPanel ui:field="modePanel" ui:styleName="{style.modePanel}">
 					<g:InlineLabel>Mode:</g:InlineLabel>
 					<g:InlineLabel ui:field="addModeOption" ui:styleName="{style.modeOption} {style.addModeOption}">Add</g:InlineLabel>
 					<g:InlineLabel ui:field="browseModeOption" ui:styleName="{style.modeOption} {style.selected}">Browse</g:InlineLabel>
 					<g:Label ui:field="helpText" ui:styleName="{style.helpText}" />
-				</g:FlowPanel>
-				<g:FlowPanel ui:field="buttonContainer" ui:styleName="{style.buttonContainer}">
-					<w:Icon ui:field="previousButton" ui:styleName="fa fa-2x fa-caret-left {style.previousButton}" />
-					<w:Icon ui:field="nextButton" ui:styleName="fa fa-2x fa-caret-right {style.nextButton}" />
 				</g:FlowPanel>
 			</g:FlowPanel>
 			
