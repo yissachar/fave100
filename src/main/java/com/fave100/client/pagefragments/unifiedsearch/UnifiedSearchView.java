@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -30,6 +31,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -58,9 +60,9 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiField Icon searchIndicator;
 	@UiField Panel searchLoadingIndicator;
 	@UiField Panel searchResults;
-	@UiField FlowPanel searchSuggestionsContainer;
+	@UiField ScrollPanel searchSuggestionsContainer;
 	@UiField FlowPanel searchSuggestions;
-	@UiField Label loadMoreButton;
+	@UiField Label loadedAllLabel;
 	@UiField Panel loadMoreLoadingIndicator;
 	@UiField Panel modePanel;
 	@UiField Label addModeOption;
@@ -103,7 +105,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 				if (!Utils.widgetContainsElement(searchBox, target)
 						&& !Utils.widgetContainsElement(currentSearchTypeContainer, target)
 						&& !Utils.widgetContainsElement(modePanel, target)
-						&& !Utils.widgetContainsElement(loadMoreButton, target)) {
+						&& !Utils.widgetContainsElement(loadedAllLabel, target)) {
 					clearSearchResults();
 				}
 			}
@@ -147,12 +149,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		if (KeyUpEvent.isArrow(event.getNativeKeyCode())) {
 
 			if (event.isDownArrow()) {
-				if (getUiHandlers().getSelection() + 1 > getUiHandlers().getMaxSelection()) {
-					loadMore();
-				}
-				else {
-					getUiHandlers().incrementSelection();
-				}
+				getUiHandlers().incrementSelection();
 			}
 			else if (event.isUpArrow()) {
 				getUiHandlers().decrementSelection();
@@ -185,8 +182,10 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 						return;
 					}
 
+					_loadedAllResults = false;
 					searchIndicator.setVisible(false);
 					searchLoadingIndicator.setVisible(true);
+					resetHeight();
 					getUiHandlers().getSearchResults(searchTerm);
 				}
 			};
@@ -196,9 +195,12 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		refreshSelection();
 	}
 
-	@UiHandler("loadMoreButton")
-	void onLoadMoreButtonClick(ClickEvent event) {
-		loadMore();
+	@UiHandler("searchSuggestionsContainer")
+	void onSearchScroll(ScrollEvent event) {
+		Element elem = searchSuggestionsContainer.getElement();
+		if (elem.getScrollTop() + elem.getOffsetHeight() == elem.getScrollHeight()) {
+			loadMore();
+		}
 	}
 
 	@UiHandler("addModeOption")
@@ -223,7 +225,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 		getUiHandlers().loadMore();
 		loadMoreLoadingIndicator.setVisible(true);
-		loadMoreButton.setVisible(false);
 	}
 
 	private void refreshHelpText() {
@@ -238,8 +239,9 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		searchResults.setVisible(false);
 		searchIndicator.setVisible(true);
 		searchLoadingIndicator.setVisible(false);
-		loadMoreButton.setVisible(false);
+		loadedAllLabel.setVisible(false);
 		loadMoreLoadingIndicator.setVisible(false);
+		resetHeight();
 	}
 
 	private void clearSearchResults() {
@@ -259,8 +261,8 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			Widget selectedWidget = searchSuggestions.getWidget(selection);
 			selectedWidget.addStyleName(style.selected());
 			selectedWidget.getElement().scrollIntoView();
-			if (searchSuggestions.getWidgetIndex(selectedWidget) == searchSuggestions.getWidgetCount() - 1) {
-				loadMoreButton.getElement().scrollIntoView();
+			if (_loadedAllResults && searchSuggestions.getWidgetIndex(selectedWidget) == searchSuggestions.getWidgetCount() - 1) {
+				loadedAllLabel.getElement().scrollIntoView();
 			}
 		}
 	}
@@ -319,10 +321,14 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			searchSuggestions.add(eventCatcherPanel);
 		}
 
-		modePanel.setVisible(songs.size() > 0 && _currentUser.isLoggedIn());
+		modePanel.setVisible(getUiHandlers().getTotalResults() > 0 && _currentUser.isLoggedIn());
 
 		if (songs.size() == 0 && !loadMore) {
 			searchSuggestions.add(_noResultsLabel);
+		}
+
+		if (!loadMore) {
+			loadMore();
 		}
 
 		showSuggestions(songs.size(), true);
@@ -351,6 +357,10 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 		if (suggestions.size() == 0 && !loadMore) {
 			searchSuggestions.add(_noResultsLabel);
+		}
+
+		if (!loadMore) {
+			loadMore();
 		}
 
 		showSuggestions(suggestions.size(), true);
@@ -395,13 +405,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	}
 
 	private void setupSearchContainer(boolean loadMore) {
-		if (loadMore) {
-			if (searchSuggestions.getWidgetCount() == UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
-				int totalHeight = searchSuggestions.getOffsetHeight() + loadMoreButton.getOffsetHeight() + loadMoreLoadingIndicator.getOffsetHeight();
-				searchSuggestionsContainer.getElement().getStyle().setHeight(totalHeight, Unit.PX);
-			}
-		}
-		else {
+		if (!loadMore) {
 			searchSuggestions.clear();
 			searchSuggestionsContainer.getElement().getStyle().setProperty("height", "initial");
 		}
@@ -415,14 +419,14 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	}
 
 	private void showSuggestions(int resultsSize, boolean showLoadMore) {
-		loadMoreButton.setVisible(resultsSize > 0 && showLoadMore);
-		if (resultsSize == UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
-			loadMoreButton.setText("Load more results");
-			_loadedAllResults = false;
+		loadedAllLabel.setVisible(false);
+		if (resultsSize != UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
+			loadedAllLabel.setVisible(showLoadMore && getUiHandlers().getTotalResults() > 0);
+			loadedAllLabel.setText("Loaded " + getUiHandlers().getTotalResults() + " result" + (getUiHandlers().getTotalResults() > 1 ? "s" : ""));
+			_loadedAllResults = true;
 		}
 		else {
-			loadMoreButton.setText("Loaded " + getUiHandlers().getTotalResults() + " result" + (getUiHandlers().getTotalResults() > 1 ? "s" : ""));
-			_loadedAllResults = true;
+			_loadedAllResults = false;
 		}
 
 		searchIndicator.setVisible(true);
@@ -431,5 +435,18 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		loadMoreLoadingIndicator.setVisible(false);
 		refreshHelpText();
 		refreshSelection();
+
+		if (searchSuggestions.getWidgetCount() == UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
+			int totalHeight = 0;
+			for (int i = 0; i < UnifiedSearchPresenter.SELECTIONS_PER_PAGE; i++) {
+				totalHeight += searchSuggestions.getWidget(i).getOffsetHeight();
+			}
+			searchSuggestionsContainer.getElement().getStyle().setHeight(totalHeight, Unit.PX);
+		}
+	}
+
+	private void resetHeight() {
+		searchSuggestions.getElement().setScrollTop(0);
+		searchSuggestionsContainer.getElement().getStyle().setProperty("height", "initial");
 	}
 }
