@@ -130,28 +130,28 @@
 			overflow-y: auto;
 		}
 		    	
-    	.searchSuggestionsContainer:empty {
+    	.searchSuggestions:empty {
 			border-bottom: 0;
     	}
 		
-		.searchSuggestionsContainer > * {
+		.searchSuggestions > * {
 			padding: 8px;
 		}
 		
-		.searchSuggestionsContainer > *:focus {
+		.searchSuggestions > *:focus {
 			outline: none;
 		}
 		
-		.searchSuggestionsContainer .selected {
+		.searchSuggestions .selected {
 			background-color: FADED_LIGHT_BG;
 			color: LIST_HIGHLIGHT_COLOR;
 		}
 		
-		.searchSuggestionsContainer .song {
+		.searchSuggestions .song {
 			font-size: 16px;
 		}
 		
-		.searchSuggestionsContainer .artist {
+		.searchSuggestions .artist {
 			font-size: 14px;
 			font-style: italic;
 		}
@@ -159,6 +159,16 @@
 		.loadMoreButton {
 			padding: 5px;
 			text-align: center;
+			text-decoration: underline;
+		}
+		
+		.loadMoreIndicator {
+			padding: 5px;
+		}
+		
+		.loadMoreIndicator img {
+			display: block;
+			margin: 0 auto;
 		}
 		
 		.modePanel {
@@ -235,8 +245,14 @@
     	<g:FlowPanel ui:styleName="{style.dropDownContainer}">
 			
 			<g:FlowPanel ui:field="searchResults" ui:styleName="{style.searchResults}">
-				<g:FlowPanel ui:field="searchSuggestionsContainer" ui:styleName="{style.searchSuggestionsContainer}"/>
-				<g:Label ui:field="loadMoreButton" ui:styleName="{style.loadMoreButton}" />
+				<g:FlowPanel ui:field="searchSuggestionsContainer" ui:styleName="{style.searchSuggestionsContainer}">
+					<g:FlowPanel ui:field="searchSuggestions"  ui:styleName="{style.searchSuggestions}"/>
+					<g:Label ui:field="loadMoreButton" ui:styleName="{style.loadMoreButton}" />
+					<g:SimplePanel ui:field="loadMoreLoadingIndicator" ui:styleName="{style.loadMoreIndicator}">
+						<g:Image resource="{img.searchLoadingIndicator}"></g:Image>
+					</g:SimplePanel>
+				</g:FlowPanel>
+				
 				<g:FlowPanel ui:field="modePanel" ui:styleName="{style.modePanel}">
 					<g:InlineLabel>Mode:</g:InlineLabel>
 					<g:InlineLabel ui:field="addModeOption" ui:styleName="{style.modeOption} {style.addModeOption}">Add</g:InlineLabel>

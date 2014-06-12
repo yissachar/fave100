@@ -214,7 +214,6 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 			for (StringResult stringResult : ((CursoredSearchResult)result).getSearchResults().getItems()) {
 				suggestions.add(stringResult.getValue());
 			}
-			getView().setStringSuggestions(suggestions, loadMore);
 			results = suggestions;
 
 			if (loadMore) {
@@ -223,6 +222,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 			else {
 				_currentSuggestions = results;
 			}
+			getView().setStringSuggestions(suggestions, loadMore);
 
 			_cursor = ((CursoredSearchResult)result).getCursor();
 		}
@@ -245,15 +245,17 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 	@Override
 	public void setSelection(int position) {
-		if (position > _maxSelection) {
-			loadMore();
-		}
-		else if (position >= 0 && position <= _maxSelection) {
+		if (position >= 0 && position <= _maxSelection) {
 			_selection = position;
 		}
 		else if (position < 0) {
 			deselect();
 		}
+	}
+
+	@Override
+	public int getMaxSelection() {
+		return _maxSelection;
 	}
 
 	@Override
