@@ -159,7 +159,6 @@
 		.loadMoreButton {
 			padding: 5px;
 			text-align: center;
-			text-decoration: underline;
 		}
 		
 		.loadMoreIndicator {
@@ -245,13 +244,15 @@
     	<g:FlowPanel ui:styleName="{style.dropDownContainer}">
 			
 			<g:FlowPanel ui:field="searchResults" ui:styleName="{style.searchResults}">
-				<g:FlowPanel ui:field="searchSuggestionsContainer" ui:styleName="{style.searchSuggestionsContainer}">
-					<g:FlowPanel ui:field="searchSuggestions"  ui:styleName="{style.searchSuggestions}"/>
-					<g:Label ui:field="loadMoreButton" ui:styleName="{style.loadMoreButton}" />
-					<g:SimplePanel ui:field="loadMoreLoadingIndicator" ui:styleName="{style.loadMoreIndicator}">
-						<g:Image resource="{img.searchLoadingIndicator}"></g:Image>
-					</g:SimplePanel>
-				</g:FlowPanel>
+				<g:ScrollPanel ui:field="searchSuggestionsContainer" ui:styleName="{style.searchSuggestionsContainer}">
+					<g:FlowPanel>
+						<g:FlowPanel ui:field="searchSuggestions"  ui:styleName="{style.searchSuggestions}"/>
+						<g:Label ui:field="loadedAllLabel" ui:styleName="{style.loadMoreButton}" />
+						<g:SimplePanel ui:field="loadMoreLoadingIndicator" ui:styleName="{style.loadMoreIndicator}">
+							<g:Image resource="{img.searchLoadingIndicator}"></g:Image>
+						</g:SimplePanel>
+					</g:FlowPanel>
+				</g:ScrollPanel>
 				
 				<g:FlowPanel ui:field="modePanel" ui:styleName="{style.modePanel}">
 					<g:InlineLabel>Mode:</g:InlineLabel>

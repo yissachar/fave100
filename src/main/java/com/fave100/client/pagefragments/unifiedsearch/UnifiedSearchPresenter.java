@@ -80,6 +80,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 	@Override
 	public void getSearchResults(String searchTerm) {
+		clearSearchResults();
 		getSearchResults(searchTerm, false);
 	}
 
@@ -163,7 +164,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	}
 
 	private void getSongTypeSuggestions() {
-		_selection = -1;
+		deselect();
 		_currentRequests.clear();
 		List<SearchType> suggestions = new ArrayList<>();
 		suggestions.add(SearchType.SONGS);
@@ -283,6 +284,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 	public void setSearchType(SearchType searchType) {
 		_searchType = searchType;
+		clearSearchResults();
 		getView().setSelectedSearchType(searchType);
 	}
 
