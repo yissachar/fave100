@@ -36,19 +36,27 @@
 			overflow: hidden;
 		}
 		
+		.songDetails {
+			text-align: center;
+		}
+		
 		.songName {
 			font-size: 25px;
 			display: block;
+			color: LIST_HIGHLIGHT_COLOR;
 		}
 		
 		.artistName {
 			font-size: 18px;
 			display: block;
+			margin-top: 5px;
 			margin-bottom: 15px;
 		}
 		
 		.addSongButton {
 			width: 130px;
+			display: block;
+			margin: 0 auto;
 		}
 		
 		.playlistItems {
@@ -94,7 +102,7 @@
     
 	    <g:HTMLPanel ui:field="playlist" ui:styleName="{style.playlist}">
 		    			    
-    		<g:FlowPanel>
+    		<g:FlowPanel ui:styleName="{style.songDetails}">
 	    		<g:InlineLabel ui:field="songName" ui:styleName="{style.songName}" />
 	    		<g:InlineLabel ui:field="artistName" ui:styleName="{style.artistName}"/>
     		</g:FlowPanel>
