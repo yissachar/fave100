@@ -2,8 +2,11 @@ package com.fave100.client.pages;
 
 import javax.inject.Inject;
 
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -21,6 +24,19 @@ public class MainView extends ViewImpl implements MainPresenter.MyView {
 	@Inject
 	MainView(Binder uiBinder) {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		resize();
+		Window.addResizeHandler(new ResizeHandler() {
+
+			@Override
+			public void onResize(ResizeEvent event) {
+				resize();
+			}
+		});
+	}
+
+	private void resize() {
+		main.setHeight((Window.getClientHeight() - 50) + "px");
 	}
 
 	@Override
