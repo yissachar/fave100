@@ -33,9 +33,9 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresenter.MyView> implements UnifiedSearchUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<UnifiedSearchUiHandlers> {
-		void setSongSuggestions(List<SongDto> songs);
+		void setSongSuggestions(List<SongDto> songs, boolean loadMore);
 
-		void setStringSuggestions(List<String> suggestions);
+		void setStringSuggestions(List<String> suggestions, boolean loadMore);
 
 		void setSongTypeSuggestions(List<SearchType> suggestions);
 
@@ -53,7 +53,6 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	private SearchType _searchType = SearchType.SONGS;
 	private final List<AsyncCallback<?>> _currentRequests = new ArrayList<>();
 	private List<?> _currentSuggestions;
-	private List<?> _cachedSuggestions = new ArrayList<>();
 	private PlaceManager _placeManager;
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
@@ -81,28 +80,14 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 	@Override
 	public void getSearchResults(String searchTerm) {
+		getSearchResults(searchTerm, false);
+	}
+
+	public void getSearchResults(String searchTerm, boolean loadMore) {
 		searchTerm = searchTerm.trim();
 
 		if (!searchTerm.equals(_lastSearchTerm)) {
 			clearSearchResults();
-		}
-
-		boolean cached = false;
-
-		if (_cachedSuggestions != null && searchTerm.equals(_lastSearchTerm) && _searchType != null) {
-			int numCachedPages = _cachedSuggestions.size() / SELECTIONS_PER_PAGE;
-			if (numCachedPages > _page || (numCachedPages > 0 && numCachedPages == _page && _cachedSuggestions.size() % SELECTIONS_PER_PAGE > 0)) {
-				_currentSuggestions = _cachedSuggestions.subList(_page * SELECTIONS_PER_PAGE, Math.min((_page + 1) * SELECTIONS_PER_PAGE, _cachedSuggestions.size()));
-
-				if (_searchType == SearchType.SONGS) {
-					getView().setSongSuggestions((List<SongDto>)_currentSuggestions);
-				}
-				else {
-					getView().setStringSuggestions((List<String>)_currentSuggestions);
-				}
-				_maxSelection = _currentSuggestions.size() - 1;
-				cached = true;
-			}
 		}
 
 		if (searchTerm.isEmpty()) {
@@ -112,15 +97,15 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 				getSongTypeSuggestions();
 			}
 		}
-		else if (!cached && _searchType != null) {
+		else if (_searchType != null) {
 			switch (_searchType) {
 				case SONGS:
-					getSongSearchResults(searchTerm);
+					getSongSearchResults(searchTerm, loadMore);
 					break;
 
 				case USERS:
 				case LISTS:
-					getStringSearchResults(searchTerm);
+					getStringSearchResults(searchTerm, loadMore);
 					break;
 
 				default:
@@ -130,7 +115,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		_lastSearchTerm = searchTerm;
 	}
 
-	private void getSongSearchResults(final String searchTerm) {
+	private void getSongSearchResults(final String searchTerm, final boolean loadMore) {
 		if (searchTerm.length() <= 2) {
 			clearSearchResults();
 			return;
@@ -145,7 +130,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 			@Override
 			public void onSuccess(final JavaScriptObject jsObject) {
-				doSuccess(searchTerm, this, jsObject);
+				doSuccess(searchTerm, this, jsObject, loadMore);
 			}
 		};
 		_currentRequests.add(autocompleteReq);
@@ -153,7 +138,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		jsonp.requestObject(url, autocompleteReq);
 	}
 
-	private void getStringSearchResults(final String searchTerm) {
+	private void getStringSearchResults(final String searchTerm, final boolean loadMore) {
 		final AsyncCallback<CursoredSearchResult> searchReq = new AsyncCallback<CursoredSearchResult>() {
 
 			@Override
@@ -163,7 +148,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 			@Override
 			public void onSuccess(CursoredSearchResult result) {
-				doSuccess(searchTerm, this, result);
+				doSuccess(searchTerm, this, result, loadMore);
 			}
 		};
 
@@ -193,8 +178,10 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		_currentRequests.remove(request);
 	}
 
-	private void doSuccess(String searchTerm, AsyncCallback<?> request, Object result) {
-		_selection = -1;
+	private void doSuccess(String searchTerm, AsyncCallback<?> request, Object result, boolean loadMore) {
+		if (!loadMore) {
+			_selection = -1;
+		}
 
 		// If it's not the latest request, remove it
 		if (_currentRequests.indexOf(request) != _currentRequests.size() - 1 || _currentRequests.indexOf(request) == -1) {
@@ -204,14 +191,22 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 		_currentRequests.clear();
 
-		List<?> results = null;
+		List<?> results = new ArrayList<>();
+
 		if (result instanceof JavaScriptObject) {
 
 			final JSONObject obj = new JSONObject((JavaScriptObject)result);
 			SearchResultMapper mapper = GWT.create(SearchResultMapper.class);
 			SearchResult searchResult = mapper.read(obj.toString());
 			results = searchResult.getResults();
-			getView().setSongSuggestions((List<SongDto>)results);
+
+			if (loadMore) {
+				((List<SongDto>)_currentSuggestions).addAll((List<SongDto>)results);
+			}
+			else {
+				_currentSuggestions = searchResult.getResults();
+			}
+			getView().setSongSuggestions((List<SongDto>)results, loadMore);
 		}
 		else if (result instanceof CursoredSearchResult) {
 
@@ -219,20 +214,20 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 			for (StringResult stringResult : ((CursoredSearchResult)result).getSearchResults().getItems()) {
 				suggestions.add(stringResult.getValue());
 			}
-			getView().setStringSuggestions(suggestions);
+			getView().setStringSuggestions(suggestions, loadMore);
 			results = suggestions;
+
+			if (loadMore) {
+				((List<String>)_currentSuggestions).addAll(suggestions);
+			}
+			else {
+				_currentSuggestions = results;
+			}
 
 			_cursor = ((CursoredSearchResult)result).getCursor();
 		}
 
-		_currentSuggestions = results;
-
-		if (_cachedSuggestions == null) {
-			_cachedSuggestions = new ArrayList<>();
-		}
-		((ArrayList<Object>)_cachedSuggestions).addAll((ArrayList<Object>)_currentSuggestions);
-
-		_maxSelection = results.size() - 1;
+		_maxSelection = _currentSuggestions.size() - 1;
 	}
 
 	@Override
@@ -241,7 +236,6 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		_maxSelection = 0;
 		deselect();
 		_cursor = null;
-		_cachedSuggestions = null;
 	}
 
 	@Override
@@ -251,7 +245,10 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 
 	@Override
 	public void setSelection(int position) {
-		if (position >= 0 && position <= _maxSelection) {
+		if (position > _maxSelection) {
+			loadMore();
+		}
+		else if (position >= 0 && position <= _maxSelection) {
 			_selection = position;
 		}
 		else if (position < 0) {
@@ -275,23 +272,10 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	}
 
 	@Override
-	public int getPage() {
-		return _page;
-	}
-
-	@Override
-	public void incrementPage() {
-		if (_currentSuggestions.size() == SELECTIONS_PER_PAGE) {
+	public void loadMore() {
+		if (_currentSuggestions.size() % SELECTIONS_PER_PAGE == 0) {
 			_page++;
-			getSearchResults(_lastSearchTerm);
-		}
-	}
-
-	@Override
-	public void decrementPage() {
-		if (_page > 0) {
-			_page--;
-			getSearchResults(_lastSearchTerm);
+			getSearchResults(_lastSearchTerm, true);
 		}
 	}
 
@@ -389,5 +373,10 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		}
 
 		return sb.toString();
+	}
+
+	@Override
+	public int getTotalResults() {
+		return _currentSuggestions.size();
 	}
 }
