@@ -59,7 +59,9 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiField Panel searchLoadingIndicator;
 	@UiField Panel searchResults;
 	@UiField FlowPanel searchSuggestionsContainer;
+	@UiField FlowPanel searchSuggestions;
 	@UiField Label loadMoreButton;
+	@UiField Panel loadMoreLoadingIndicator;
 	@UiField Panel modePanel;
 	@UiField Label addModeOption;
 	@UiField Label browseModeOption;
@@ -67,6 +69,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	private Label _noResultsLabel = new Label("No results found");
 	private Timer searchTimer;
 	private HandlerRegistration rootClickHandler = null;
+	private boolean _loadedAllResults;
 	@Inject CurrentUser _currentUser;
 
 	private MouseOutHandler suggestionMouseOutHandler = new MouseOutHandler() {
@@ -90,10 +93,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@Inject
 	UnifiedSearchView(Binder binder) {
 		initWidget(binder.createAndBindUi(this));
-		searchResults.setVisible(false);
-		searchLoadingIndicator.setVisible(false);
-		modePanel.setVisible(false);
-		loadMoreButton.setVisible(false);
+		clearSearchResultsNoUiHandlers();
 
 		ClickHandler clickHandler = new ClickHandler() {
 
@@ -147,7 +147,12 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		if (KeyUpEvent.isArrow(event.getNativeKeyCode())) {
 
 			if (event.isDownArrow()) {
-				getUiHandlers().incrementSelection();
+				if (getUiHandlers().getSelection() + 1 > getUiHandlers().getMaxSelection()) {
+					loadMore();
+				}
+				else {
+					getUiHandlers().incrementSelection();
+				}
 			}
 			else if (event.isUpArrow()) {
 				getUiHandlers().decrementSelection();
@@ -193,7 +198,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 	@UiHandler("loadMoreButton")
 	void onLoadMoreButtonClick(ClickEvent event) {
-		getUiHandlers().loadMore();
+		loadMore();
 	}
 
 	@UiHandler("addModeOption")
@@ -212,33 +217,51 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		refreshHelpText();
 	}
 
+	private void loadMore() {
+		if (_loadedAllResults)
+			return;
+
+		getUiHandlers().loadMore();
+		loadMoreLoadingIndicator.setVisible(true);
+		loadMoreButton.setVisible(false);
+	}
+
 	private void refreshHelpText() {
 		helpText.setText(getUiHandlers().getHelpText());
 	}
 
-	private void clearSearchResults() {
+	// UI handlers are not available in constructor so call without
+	private void clearSearchResultsNoUiHandlers() {
 		modePanel.setVisible(false);
 		searchBox.setText("");
-		searchSuggestionsContainer.clear();
+		searchSuggestions.clear();
 		searchResults.setVisible(false);
 		searchIndicator.setVisible(true);
 		searchLoadingIndicator.setVisible(false);
 		loadMoreButton.setVisible(false);
+		loadMoreLoadingIndicator.setVisible(false);
+	}
+
+	private void clearSearchResults() {
+		clearSearchResultsNoUiHandlers();
 		getUiHandlers().clearSearchResults();
 	}
 
 	private void refreshSelection() {
 		int selection = getUiHandlers().getSelection();
-		int widgetCount = searchSuggestionsContainer.getWidgetCount();
+		int widgetCount = searchSuggestions.getWidgetCount();
 
 		for (int i = 0; i < widgetCount; i++) {
-			searchSuggestionsContainer.getWidget(i).getElement().removeClassName(style.selected());
+			searchSuggestions.getWidget(i).getElement().removeClassName(style.selected());
 		}
 
 		if (selection >= 0 && widgetCount > 0) {
-			Widget selectedWidget = searchSuggestionsContainer.getWidget(selection);
+			Widget selectedWidget = searchSuggestions.getWidget(selection);
 			selectedWidget.addStyleName(style.selected());
 			selectedWidget.getElement().scrollIntoView();
+			if (searchSuggestions.getWidgetIndex(selectedWidget) == searchSuggestions.getWidgetCount() - 1) {
+				loadMoreButton.getElement().scrollIntoView();
+			}
 		}
 	}
 
@@ -285,7 +308,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 				@Override
 				public void onMouseOver(MouseOverEvent event) {
-					getUiHandlers().setSelection(searchSuggestionsContainer.getWidgetIndex(eventCatcherPanel));
+					getUiHandlers().setSelection(searchSuggestions.getWidgetIndex(eventCatcherPanel));
 					refreshSelection();
 				}
 			});
@@ -293,16 +316,16 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			eventCatcherPanel.addMouseOutHandler(suggestionMouseOutHandler);
 			eventCatcherPanel.addClickHandler(suggestionsClickHandler);
 
-			searchSuggestionsContainer.add(eventCatcherPanel);
+			searchSuggestions.add(eventCatcherPanel);
 		}
 
 		modePanel.setVisible(songs.size() > 0 && _currentUser.isLoggedIn());
 
 		if (songs.size() == 0 && !loadMore) {
-			searchSuggestionsContainer.add(_noResultsLabel);
+			searchSuggestions.add(_noResultsLabel);
 		}
 
-		showSuggestions(songs.size());
+		showSuggestions(songs.size(), true);
 	}
 
 	@Override
@@ -315,7 +338,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 				@Override
 				public void onMouseOver(MouseOverEvent event) {
-					getUiHandlers().setSelection(searchSuggestionsContainer.getWidgetIndex(suggestionLabel));
+					getUiHandlers().setSelection(searchSuggestions.getWidgetIndex(suggestionLabel));
 					refreshSelection();
 				}
 			});
@@ -323,31 +346,19 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			suggestionLabel.addMouseOutHandler(suggestionMouseOutHandler);
 			suggestionLabel.addClickHandler(suggestionsClickHandler);
 
-			searchSuggestionsContainer.add(suggestionLabel);
+			searchSuggestions.add(suggestionLabel);
 		}
 
 		if (suggestions.size() == 0 && !loadMore) {
-			searchSuggestionsContainer.add(_noResultsLabel);
+			searchSuggestions.add(_noResultsLabel);
 		}
 
-		showSuggestions(suggestions.size());
-	}
-
-	private void setupSearchContainer(boolean loadMore) {
-		if (loadMore) {
-			if (searchSuggestionsContainer.getWidgetCount() == UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
-				searchSuggestionsContainer.getElement().getStyle().setHeight(searchSuggestionsContainer.getOffsetHeight(), Unit.PX);
-			}
-		}
-		else {
-			searchSuggestionsContainer.clear();
-			searchSuggestionsContainer.getElement().getStyle().setProperty("height", "initial");
-		}
+		showSuggestions(suggestions.size(), true);
 	}
 
 	@Override
 	public void setSongTypeSuggestions(List<SearchType> suggestions) {
-		searchSuggestionsContainer.clear();
+		setupSearchContainer(false);
 
 		for (SearchType suggestion : suggestions) {
 			String prompt = "";
@@ -369,7 +380,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 				@Override
 				public void onMouseOver(MouseOverEvent event) {
-					getUiHandlers().setSelection(searchSuggestionsContainer.getWidgetIndex(suggestionLabel));
+					getUiHandlers().setSelection(searchSuggestions.getWidgetIndex(suggestionLabel));
 					refreshSelection();
 				}
 			});
@@ -377,10 +388,23 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			suggestionLabel.addMouseOutHandler(suggestionMouseOutHandler);
 			suggestionLabel.addClickHandler(suggestionsClickHandler);
 
-			searchSuggestionsContainer.add(suggestionLabel);
+			searchSuggestions.add(suggestionLabel);
 		}
 
-		showSuggestions(suggestions.size());
+		showSuggestions(suggestions.size(), false);
+	}
+
+	private void setupSearchContainer(boolean loadMore) {
+		if (loadMore) {
+			if (searchSuggestions.getWidgetCount() == UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
+				int totalHeight = searchSuggestions.getOffsetHeight() + loadMoreButton.getOffsetHeight() + loadMoreLoadingIndicator.getOffsetHeight();
+				searchSuggestionsContainer.getElement().getStyle().setHeight(totalHeight, Unit.PX);
+			}
+		}
+		else {
+			searchSuggestions.clear();
+			searchSuggestionsContainer.getElement().getStyle().setProperty("height", "initial");
+		}
 	}
 
 	private void getSongTypeSuggestions() {
@@ -390,18 +414,22 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		getUiHandlers().getSearchResults("");
 	}
 
-	private void showSuggestions(int resultsSize) {
-		loadMoreButton.setVisible(resultsSize > 0);
+	private void showSuggestions(int resultsSize, boolean showLoadMore) {
+		loadMoreButton.setVisible(resultsSize > 0 && showLoadMore);
 		if (resultsSize == UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
 			loadMoreButton.setText("Load more results");
+			_loadedAllResults = false;
 		}
 		else {
-			loadMoreButton.setText("Loaded " + getUiHandlers().getTotalResults() + " results");
+			loadMoreButton.setText("Loaded " + getUiHandlers().getTotalResults() + " result" + (getUiHandlers().getTotalResults() > 1 ? "s" : ""));
+			_loadedAllResults = true;
 		}
 
 		searchIndicator.setVisible(true);
 		searchLoadingIndicator.setVisible(false);
 		searchResults.setVisible(true);
+		loadMoreLoadingIndicator.setVisible(false);
 		refreshHelpText();
+		refreshSelection();
 	}
 }

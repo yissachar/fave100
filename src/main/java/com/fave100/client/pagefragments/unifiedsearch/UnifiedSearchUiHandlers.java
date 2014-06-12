@@ -11,6 +11,8 @@ public interface UnifiedSearchUiHandlers extends UiHandlers {
 
 	void setSelection(int position);
 
+	int getMaxSelection();
+
 	void deselect();
 
 	void incrementSelection();
