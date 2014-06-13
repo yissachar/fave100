@@ -35,15 +35,15 @@
 		.rank {
 			border-radius: 99px;
 			color: #444;
-			border: 3px #444 solid !important;
+			border: 2px #444 solid !important;
 			background-color: #fff;
 			display: inline-block;
-			font-family: arial;
-			font-size: 40px;
+			font-size: 30px;
 			width: 62px;
 			height: 60px;
 			text-align: center;
 			padding: 0px !important;
+			line-height: 50px;
 		}
 				
 		.rank > div {
@@ -51,8 +51,7 @@
 		}
 				
 		.rankThreeDigit {
-			font-size: 30px;
-			line-height: 48px;
+			font-size: 28px;
 		}
 				
 		.songDetails {
@@ -68,7 +67,6 @@
 		
 		.song {
 			font-size: 19px;
-			font-weight: bold;
 			cursor: pointer;
 		}
 		
