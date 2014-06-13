@@ -52,7 +52,7 @@
 		}
 		
 		.taglineCTA {
-			font-weight: bold;
+			font-size: 22px;
 		}
 		
 		.taglineLinks {
@@ -94,7 +94,6 @@
 			font-size: 1.4em;
 			vertical-align: top;
 			word-wrap: break-word;
-			font-weight: bold;
 		}
 		
 		.userDetails {

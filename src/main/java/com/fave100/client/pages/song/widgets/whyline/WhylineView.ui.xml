@@ -3,7 +3,6 @@
              
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">    	
     	.tabTitle {
-			font-weight: bold;
 			margin-bottom: 5px;
 		}
     	
