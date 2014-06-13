@@ -67,6 +67,10 @@
 			outline: none;
     	}
     	
+    	.smallDisplay .searchBox {
+			width: 70%;
+    	}
+    	
     	.searchIndicator {
 			float: right;
 			margin-top: 4px;
@@ -77,8 +81,8 @@
 			margin-top: 6px;
     	}
     	
-    	.smallDisplay .searchBox {
-			width: 200px;
+    	.smallDisplay .searchContainer {
+			width: 270px;
     	}
     	
     	.currentSearchTypeContainer, .searchBox {			
