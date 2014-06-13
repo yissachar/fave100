@@ -64,20 +64,20 @@
 
 /* Fave100 */
 button, .button {
-	background-color: #6a6a6a;
+	background-color: #fff;
 	font-size: 0.85em;
-	border-radius: 3px;
-	color: #FFF;
+	border-radius: 15px;
+	color: #444;
 	border: 1px solid #555;
 	padding: 6px;
 	text-transform: uppercase;
 }
 
 button:hover, .button:hover {
-	border: 1px solid #333;	
-	background-color: #504E57;
+	border: 1px solid #E35F6C;	
 	cursor: pointer;
 	text-decoration: none;
+	color: #E35F6C;
 }
 
 .button-warning {	
