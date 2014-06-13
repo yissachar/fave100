@@ -152,8 +152,8 @@
 		}
 		
 		.dropDownElement:hover, .dropDown a:hover {
-			background-color: PRIMARY_COLOR;
-			color: HIGHLIGHT_COLOR;
+			background-color: FADED_LIGHT_BG;
+			color: LIST_HIGHLIGHT_COLOR;
 			text-decoration: none;			
 		}
 		
