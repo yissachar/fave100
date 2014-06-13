@@ -60,7 +60,7 @@ input[type=color],
 input[type=email],
 select {
 	padding: 6px;	
-	border: 1px solid #AAA;
+	border: 1px solid #888;
 }
 
 input[type=text]:hover,
@@ -72,7 +72,7 @@ input[type=number]:hover,
 input[type=color]:hover,
 input[type=email]:hover,
 select:hover {
-	border-color: #666;
+	border-color: #333;
 }
 
 input[type=text]:focus,
