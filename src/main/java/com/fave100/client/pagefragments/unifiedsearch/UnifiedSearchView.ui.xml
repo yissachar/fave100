@@ -17,20 +17,9 @@
 			float: right;
 		}
 		
-		.currentSearchTypeSelector {
-			background-color: #FFEECE;
-			padding: 3px;
-			font-size: 15px;
-			height: 20px;
-			line-height: 12px;
-			margin-left: 2px;
-			margin-top: 2px;
-			border-radius: 1px;			
-		}
-		
 		.searchContainer {
 			width: SEARCH_WIDTH;
-			height: 30px;
+			height: 31px;
 			background-color: #fff;
 			border-radius: 15px;
 			border: 1px solid #000;
@@ -43,16 +32,26 @@
 		
 		.currentSearchType {
 			font-size: 12px;
-			background-color: #f0f0f0;
-			border: 1px solid #cacaca;
-			padding: 3px;
-			border-radius: 3px;
+			background-color: #f8f8f8;
+			border: 1px solid #ccc;
+			padding: 3px 5px;
+			border-radius: 5px;
 			display: inline-block;
+			margin-top: 3px;
+		}
+		
+		.currentSearchType:hover {
+			border-color: #aaa;
 		}
 		
 		.removeSearchTypeButton {
 			cursor: pointer;
-			margin-left: 3px;
+			margin-left: 5px;
+			color: #777;
+		}
+		
+		.removeSearchTypeButton:hover {
+			color: #444;
 		}
 		
     	.searchBox {
@@ -73,7 +72,7 @@
     	
     	.searchIndicator {
 			float: right;
-			margin-top: 4px;
+			margin-top: 6px;
     	}
     	
     	.searchLoadingIndicator {
