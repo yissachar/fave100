@@ -29,6 +29,10 @@
 			margin-bottom: 10px;
 		}
 		
+		.loginStatusMessage {
+			margin-top: 5px;
+		}
+		
 		.loginButton {
 			width: 100%;
 			margin-top: 10px;		
@@ -52,7 +56,7 @@
 				<div class="{style.field}">
 					<g:Label>Password</g:Label>
 					<g:PasswordTextBox ui:field="passwordInput" />
-					<g:Label styleName="error" ui:field="loginStatusMessage" />
+					<g:Label styleName="error {style.loginStatusMessage}" ui:field="loginStatusMessage" />
 				</div>
 				<g:SubmitButton ui:field="loginButton" ui:styleName="{style.loginButton}">Sign In</g:SubmitButton>
 				<g:InlineHyperlink styleName="{style.forgotPasswordLink}"
