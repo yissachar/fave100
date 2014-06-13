@@ -29,7 +29,7 @@
 		
 		.rankPanel {			
 			margin: 3px;
-			height: 73px;
+			height: 67px;
 		}
 		
 		.rank {

@@ -30,7 +30,8 @@
 		}
 		
 		.loginButton {
-			width: 100%;			
+			width: 100%;
+			margin-top: 10px;		
 		}
 						
 		.thirdPartyLinks, .thirdPartyLinks > * {
