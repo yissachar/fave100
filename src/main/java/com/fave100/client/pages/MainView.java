@@ -2,6 +2,7 @@ package com.fave100.client.pages;
 
 import javax.inject.Inject;
 
+import com.fave100.shared.Constants;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -36,7 +37,7 @@ public class MainView extends ViewImpl implements MainPresenter.MyView {
 	}
 
 	private void resize() {
-		main.setHeight((Window.getClientHeight() - 50) + "px");
+		main.setHeight((Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px");
 	}
 
 	@Override

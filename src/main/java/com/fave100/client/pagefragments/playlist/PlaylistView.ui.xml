@@ -7,7 +7,7 @@
     	.container {
 			position: fixed;
 			right: 0px;
-			top: 50px;
+			top: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			height: 100%;
 			width: 30%;			
 			background-color: MAIN_BACKGROUND;

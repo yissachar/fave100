@@ -7,6 +7,7 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.pages.PageView;
 import com.fave100.client.resources.css.GlobalStyle;
+import com.fave100.shared.Constants;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -167,7 +168,7 @@ public class ListView extends PageView<ListUiHandlers>
 	}
 
 	private void resize() {
-		userPageSideBar.setHeight((Window.getClientHeight() - 50) + "px");
+		userPageSideBar.setHeight((Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px");
 	}
 
 	private void showOwnPage() {

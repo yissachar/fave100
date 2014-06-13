@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.Icon;
+import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -147,7 +148,7 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 
 	@Override
 	public void resize() {
-		container.setHeight((Window.getClientHeight() - 50) + "px");
+		container.setHeight((Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px");
 	}
 
 	@Override

@@ -13,13 +13,13 @@
 		}
 		
 		.topNavSticky {			
-			height: 50px;
+			height: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			width: 1px;
 		}
 		
 		.topNav {
 			background-color: PRIMARY_COLOR;			
-			height: 50px;
+			height: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			border-bottom: 1px solid #000;			
 			position: fixed;
 			top: 0;
@@ -45,7 +45,7 @@
 			display: inline-block;
 			text-decoration: none;
 			padding: 0 6px;
-			font-size: 1.2em;
+			font-size: 16px;
 		}
 		
 		.topBarDropShadow {
@@ -71,9 +71,9 @@
 				
 		.faveLogo {		
 			float: left;
-			font-size: 35px;
+			font-size: 30px;
 			font-weight: bold;
-			line-height: 47px;
+			line-height: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			padding-left: 15px;
 		}		
 		
@@ -99,7 +99,7 @@
 			width: 300px;
 			height: 100%;
 			right: -400px;
-			top: 51px;
+			top: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			overflow-y: auto;
 			transition: right RESIZE_TRANSITION_TIME;
 			-webkit-transition: right RESIZE_TRANSITION_TIME;
@@ -123,7 +123,7 @@
 					
 		.userInfo {
 			padding: 0 5px;
-			margin-top: 12px;
+			margin-top: 4px;
 	  	}
 	  	
 	  	.userAvatar {
@@ -133,7 +133,7 @@
 		
 		.usernameLabel {
 			margin-left: 15px;
-			font-size: 1.2em;
+			font-size: 16px;
 			color: #fff;
 		}
 				
@@ -171,10 +171,8 @@
 		
 		.loginButton {
 			display: inline-block;
-			height: 100%;
 			width: 100%;
 			text-align: center;
-			line-height: 50px;
 		}
 				
 	</ui:style>
