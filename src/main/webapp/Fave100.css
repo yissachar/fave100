@@ -81,9 +81,8 @@ button:hover, .button:hover {
 }
 
 .button-warning {	
-	background-color: #DB4040; 	
 	font-size: 0.85em;
-	border-radius: 3px;
+	border-radius: 15px;
 	color: #FFF;
 	border: 1px solid #666;
 	padding: 6px;
@@ -92,9 +91,10 @@ button:hover, .button:hover {
 
 .button-warning:hover{
 	border: 1px solid #555;
-	background-color: #DE4E4E; 
+	background-color: #E35F6C; 
 	cursor: pointer;
 	text-decoration: none;
+	color: #FFF;
 }
 
 button:disabled {
