@@ -4,6 +4,7 @@ import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistUiHandlers;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.resources.img.ImageResources;
+import com.fave100.client.widgets.Icon;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.fave100.shared.Constants;
 import com.google.gwt.core.client.GWT;
@@ -14,7 +15,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -136,7 +136,7 @@ public class FavePickWidget extends Composite {
 			hoverPanel.add(rerankPanel);
 		}
 		else {
-			final Image addButton = new Image(resources.add());
+			final Icon addButton = new Icon("fa-plus fa-2x");
 			addButton.setTitle("Add to your Fave100");
 			addButton.addClickHandler(new ClickHandler() {
 				@Override

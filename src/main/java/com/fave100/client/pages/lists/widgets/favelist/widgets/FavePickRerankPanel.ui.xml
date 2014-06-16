@@ -1,5 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+		xmlns:g="urn:import:com.google.gwt.user.client.ui"
+		xmlns:w="urn:import:com.fave100.client.widgets">
 
 	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickRerankPanel.FavePickRerankStyle">
 		.container > * {
@@ -13,24 +15,22 @@
 		.arrowPanel {
 			width: 25px;
 		}
-				
-		.deleteButton {
-			vertical-align: middle;
+		
+		.arrowPanel > i {
+			line-height: 14px;
+			display: block;
+			text-align: center;
 		}
+				
 	</ui:style>
-	
-	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
-	
+		
 	<g:FlowPanel ui:styleName="{style.container}">
 	
 		<g:FlowPanel ui:styleName="{style.arrowPanel}">
-			<g:Image ui:field="upArrow" resource="{img.upArrow}" ui:styleName="rankUpArrow" />
-			<g:Image ui:field="downArrow" resource="{img.downArrow}" ui:styleName="rankDownArrow" />
+			<w:Icon ui:field="upArrow" ui:styleName="rankUpArrow fa fa-sort-up fa-2x" />
+			<w:Icon ui:field="deleteButton" ui:styleName=" fa fa-times" title="Delete song" />
+			<w:Icon ui:field="downArrow" ui:styleName="rankDownArrow  fa fa-sort-down fa-2x" />
 		</g:FlowPanel>
-		
-		<g:SimplePanel ui:styleName="{style.deleteButton}">
-			<g:Image ui:field="deleteButton" resource="{img.delete}" title="Delete song" />
-		</g:SimplePanel>
 		
 	</g:FlowPanel>
 	

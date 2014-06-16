@@ -14,18 +14,6 @@ public interface ImageResources extends ClientBundle {
 	@Source("logo-large.png")
 	ImageResource logoLarge();
 
-	@Source("add.png")
-	ImageResource add();
-
-	@Source("delete.png")
-	ImageResource delete();
-
-	@Source("down-arrow.png")
-	ImageResource downArrow();
-
-	@Source("up-arrow.png")
-	ImageResource upArrow();
-
 	@Source("help-bubble-arrow.png")
 	ImageResource helpBubbleArrow();
 
@@ -49,12 +37,6 @@ public interface ImageResources extends ClientBundle {
 
 	@Source("/about/about_screen_5.png")
 	ImageResource aboutScreen5();
-
-	@Source("left-arrow.png")
-	ImageResource leftArrow();
-
-	@Source("right-arrow.png")
-	ImageResource rightArrow();
 
 	@Source("corey.jpg")
 	ImageResource corey();
