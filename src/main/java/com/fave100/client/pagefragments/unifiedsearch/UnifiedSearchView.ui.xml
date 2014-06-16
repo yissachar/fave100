@@ -67,7 +67,7 @@
     	}
     	
     	.smallDisplay .searchBox {
-			width: 70%;
+			width: 65%;
     	}
     	
     	.searchIndicator {

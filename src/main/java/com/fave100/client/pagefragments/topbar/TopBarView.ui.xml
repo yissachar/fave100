@@ -204,7 +204,7 @@
 				<g:HTMLPanel ui:field="unifiedSearch" ui:styleName="{style.unifiedSearch}"/>
 			</g:SimplePanel>			
 			
-			<w:Icon ui:field="searchToggle" ui:styleName="fa fa-search fa-2x {style.searchToggle} {style.unselectable}" />
+			<w:Icon ui:field="searchToggle" ui:styleName="fa fa-search fa-lg {style.searchToggle} {style.unselectable}" />
 								
 			<g:FlowPanel ui:styleName="{style.userContainer}">		
 				<g:FlowPanel ui:field="loggedInContainer" ui:styleName="{style.loggedInContainer}">				
