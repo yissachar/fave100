@@ -38,24 +38,28 @@
 		
 		.listContainer > div:hover {
 			background-color: #fff;
-		}
+			cursor: pointer;
+		}		
 		
 		.listContainer > div:hover .deleteButton {
 			display: inline-block;
 		}
+		
+		@def LIST_ITEM_SIZE 35px;
 				
 		.listContainer img {
-			width: 35px;
-			height: 35px;
+			width: LIST_ITEM_SIZE;
+			height: LIST_ITEM_SIZE;
 			margin-right: 10px;
 			float: left;
 		}
 		
 		.listLink {
 			padding: 3px;
-			float: left;
-			font-size: 1.2em;
-			width: 70%;
+			width: 73%;
+			line-height: 28px;
+			height: LIST_ITEM_SIZE;
+			display: inline-block;
 		}		
 		
 		.listLink:hover {
@@ -65,12 +69,12 @@
 		
 		.deleteButton {
 			float: right;
-			font-size: 1.4em;
+			line-height: LIST_ITEM_SIZE;
+			display: none;
 		}
 		
 		.deleteButton:hover {
-			cursor: pointer;
-			color: #000;
+			color: LIST_HIGHLIGHT_COLOR;
 		}
 		
 		.moreFollowingButton {
