@@ -22,10 +22,6 @@
 			background-color: #FFF;	
 		}
 		
-		.faveList > div.even {
-			background-color: #f4f4f4;
-		}
-		
 		.faveList > div:last {
 			border-bottom: 0px;
 		}
@@ -73,7 +69,7 @@
 	</ui:style>
 	
 	<g:FlowPanel>
-		<g:FlowPanel ui:field="faveList" ui:styleName="{style.faveList}"/>
+		<g:FlowPanel ui:field="faveList" ui:styleName="favelistOddHack {style.faveList}"/>
 		<g:Label ui:field="noItemsMessage">There are no entries for this list.</g:Label>
 		<g:Label ui:field="listNotFound">That list doesn't exist.</g:Label>
 	</g:FlowPanel>

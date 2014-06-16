@@ -190,3 +190,7 @@ footer {
 .hoverHidden {
 	display: none;
 }
+
+.favelistOddHack > div:nth-child(odd) {
+	background-color: #f4f4f4;
+}
