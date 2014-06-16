@@ -74,6 +74,10 @@
 			max-height: 300px;
 		}
 		
+		.listContainer > div {
+			word-wrap: break-word;
+		}
+		
 		.listContainer > div:hover {
 			background-color: FADED_LIGHT_BG;
 			color: LIST_HIGHLIGHT_COLOR;
