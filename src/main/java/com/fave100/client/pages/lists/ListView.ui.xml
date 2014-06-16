@@ -101,14 +101,11 @@
 			margin: 0 auto;
 		}
 		
-		.followCTAcontainer {
-			margin-top: 20px;			
-		}
-		
 		.followButton {
 			width: 85%;
 			display: block;
 			margin: 0 auto;
+			margin-top: 20px;		
 			text-align: center;
 		}
 		.fixedSearch {
@@ -140,10 +137,7 @@
 							<g:FlowPanel>
 								<g:Label ui:styleName="{style.username}" ui:field="username"/>
 								<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}"  ui:styleName="{style.username}"  ui:field="profileLink"/>
-								<!--  Follow button -->
-								<g:FocusPanel ui:field="followCTAcontainer" ui:styleName="{style.followCTAcontainer}">									
-									<g:InlineLabel ui:field="followCTA" ui:styleName="button {style.followButton}"/>
-								</g:FocusPanel>							
+								<g:Button ui:field="followButton" ui:styleName="{style.followButton}" />				
 							</g:FlowPanel>				
 						</g:FlowPanel>
 						
