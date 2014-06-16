@@ -1,12 +1,6 @@
 .apt_generated/
 gwt-unitCache/
-src/main/webapp/com/
-src/main/webapp/fave100/
-src/main/webapp/WEB-INF/classes/
-src/main/webapp/WEB-INF/appengine-generated/
-src/main/webapp/WEB-INF/deploy/
-src/main/webapp/WEB-INF/lib/
-src/main/webapp/apidocs/
+src/main/webapp/*/**
 .settings/
 .factorypath
 target/
