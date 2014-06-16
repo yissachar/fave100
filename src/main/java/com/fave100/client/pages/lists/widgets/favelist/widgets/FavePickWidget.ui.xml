@@ -29,7 +29,7 @@
 		
 		.rankPanel {			
 			margin: 3px;
-			height: 67px;
+			height: 60px;
 		}
 		
 		.rank {
@@ -39,8 +39,8 @@
 			background-color: #fff;
 			display: inline-block;
 			font-size: 30px;
-			width: 62px;
-			height: 60px;
+			width: 59px;
+			height: 58px;
 			text-align: center;
 			padding: 0px !important;
 			line-height: 50px;
@@ -97,8 +97,9 @@
 			display: table-cell;
 		}
 		
-		.hoverPanel img, .hoverPanel i {
+		.hoverPanel i:hover {
 			cursor: pointer;
+			color: HIGHLIGHT_COLOR;
 		}			
 		
 	</ui:style>
