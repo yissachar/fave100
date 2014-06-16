@@ -8,7 +8,7 @@
 		.mainPanel {
 			width:100%;
 			display: table;
-			padding: 12px 3px;
+			padding: 12px;
 		}
 		
 		.mainPanel > * {
