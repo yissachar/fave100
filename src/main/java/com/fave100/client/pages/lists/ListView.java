@@ -18,8 +18,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
@@ -51,8 +51,7 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel globalListDetailsContainer;
 	@UiField HTMLPanel listManager;
-	@UiField FocusPanel followCTAcontainer;
-	@UiField Label followCTA;
+	@UiField Button followButton;
 	@UiField HTMLPanel userPageFaveList;
 	@UiField HTMLPanel followingContainer;
 	@UiField FlowPanel userProfile;
@@ -105,27 +104,27 @@ public class ListView extends PageView<ListUiHandlers>
 		return slotMap.get(slot);
 	}
 
-	@UiHandler("followCTAcontainer")
-	void onStarClick(final ClickEvent event) {
+	@UiHandler("followButton")
+	void onFollowButtonClick(final ClickEvent event) {
 		getUiHandlers().followUser();
 		if (!following) {
-			followCTA.removeStyleName("button-warning");
+			followButton.removeStyleName("button-warning");
 		}
 	}
 
-	@UiHandler("followCTA")
-	void onFollowOver(final MouseOverEvent event) {
+	@UiHandler("followButton")
+	void onFollowButtonOver(final MouseOverEvent event) {
 		if (following) {
-			followCTA.addStyleName("button-warning");
-			followCTA.setText("Unfollow");
+			followButton.addStyleName("button-warning");
+			followButton.setText("Unfollow");
 		}
 	}
 
-	@UiHandler("followCTA")
-	void onFollowOut(final MouseOutEvent event) {
-		followCTA.removeStyleName("button-warning");
+	@UiHandler("followButton")
+	void onFollowButtonOut(final MouseOutEvent event) {
+		followButton.removeStyleName("button-warning");
 		if (following) {
-			followCTA.setText("Following");
+			followButton.setText("Following");
 		}
 	}
 
@@ -200,18 +199,13 @@ public class ListView extends PageView<ListUiHandlers>
 	public void setFollowCTA(final boolean show, final boolean following) {
 		this.following = following;
 
-		if (show) {
-			followCTAcontainer.setVisible(true);
-		}
-		else {
-			followCTAcontainer.setVisible(false);
-		}
+		followButton.setVisible(show);
 
 		if (following) {
-			followCTA.setText("Following");
+			followButton.setText("Following");
 		}
 		else {
-			followCTA.setText("Follow");
+			followButton.setText("Follow");
 		}
 	}
 
