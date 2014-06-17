@@ -11,4 +11,6 @@ public interface PlaylistUiHandlers extends UiHandlers {
 	void skipVideo();
 
 	void addSong();
+
+	void stopSong();
 }

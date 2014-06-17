@@ -40,6 +40,11 @@
 		}
 		
 		.largeDisplay .userPageFaveList {
+			width: 81%;
+			margin-left: 19%;
+		}
+		
+		.playlistVisible.largeDisplay .userPageFaveList {
 			width: 73%;
 			margin-left: 27%;
 		}
