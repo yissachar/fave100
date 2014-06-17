@@ -29,13 +29,13 @@
 		
 		.rankPanel {			
 			margin: 3px;
-			height: 60px;
+			height: 55px;
 		}
 		
 		.rank {
 			border-radius: 99px;
-			color: #444;
-			border: 2px #444 solid !important;
+			color: #555;
+			border: 1px #444 solid !important;
 			background-color: #fff;
 			display: inline-block;
 			font-size: 30px;
