@@ -154,10 +154,10 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		menuBar.setVisible((Utils.isMediumDisplay() || Utils.isSmallDisplay()) && currentPlace.equals(NameTokens.lists));
 		searchToggle.setVisible(Utils.isSmallDisplay());
 		if (Utils.isSmallDisplay()) {
-			unifiedSearchContainer.setHeight((Window.getClientHeight() - 50) + "px");
+			unifiedSearchContainer.setHeight((Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px");
 		}
 		else {
-			unifiedSearchContainer.setHeight("100%");
+			unifiedSearchContainer.setHeight("auto");
 		}
 	}
 }

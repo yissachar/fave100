@@ -21,6 +21,20 @@
 	justify-content: VALUE;
 }
 
+@defmixin align-items(VALUE) {
+	-webkit-align-items: VALUE;
+	-moz-align-items: VALUE;
+	-ms-align-items: VALUE;
+	align-items: VALUE;
+}
+
+@defmixin flex-grow(VALUE) {
+	-webkit-flex-grow: VALUE;
+	-moz-flex-grow: VALUE;
+	-ms-flex-grows: VALUE;
+	flex-grow: VALUE;
+}
+
 @external smallDisplay;
 @external mediumDisplay;
 @external largeDisplay;
