@@ -8,6 +8,9 @@
 
 	
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle">
+		
+		@def LIST_ITEM_SIZE 35px;
+		
 		.container {
 			margin-top: 15px;
 			margin-bottom: 15px;
@@ -34,6 +37,8 @@
 			background-color: #eee;
 			overflow: hidden;
 			padding-right: 7px;
+			@mixin flexbox();
+			@mixin justify-content(space-between);
 		}
 		
 		.listContainer > div:hover {
@@ -42,21 +47,17 @@
 		}		
 		
 		.listContainer > div:hover .deleteButton {
-			display: inline-block;
+			visibility: visible;
 		}
-		
-		@def LIST_ITEM_SIZE 35px;
 				
 		.listContainer img {
 			width: LIST_ITEM_SIZE;
 			height: LIST_ITEM_SIZE;
 			margin-right: 10px;
-			float: left;
 		}
 		
 		.listLink {
 			padding: 3px;
-			width: 73%;
 			line-height: 28px;
 			height: LIST_ITEM_SIZE;
 			display: inline-block;
@@ -68,9 +69,8 @@
 		}
 		
 		.deleteButton {
-			float: right;
 			line-height: LIST_ITEM_SIZE;
-			display: none;
+			visibility: hidden;
 		}
 		
 		.deleteButton:hover {
