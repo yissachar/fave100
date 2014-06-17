@@ -41,6 +41,10 @@
 			cursor: pointer;
 		}
 		
+		.fullScreen .hideButton {
+			display: none;
+		}
+		
 		.songDetails {
 			text-align: center;
 			clear: both;
