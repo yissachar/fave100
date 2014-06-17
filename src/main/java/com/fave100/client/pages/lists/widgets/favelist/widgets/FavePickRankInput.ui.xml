@@ -11,7 +11,7 @@
 						
 		.rankEditTextBoxEditing {
 			border-radius: 0px;
-			border: 2px PRIMARY_COLOR solid !important;
+			border: 1px PRIMARY_COLOR solid !important;
 		}
 	</ui:style>
 	
