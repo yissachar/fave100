@@ -12,6 +12,8 @@ public interface GlobalStyle extends GssResource {
 
 	String largeDisplay();
 
+	String playlistVisible();
+
 	String error();
 
 	String disabled();

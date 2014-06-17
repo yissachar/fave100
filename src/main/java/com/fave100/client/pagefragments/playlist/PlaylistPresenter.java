@@ -14,12 +14,14 @@ import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.song.widgets.whyline.WhylinePresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
+import com.fave100.client.resources.css.AppClientBundle;
 import com.fave100.shared.place.NameTokens;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
@@ -208,6 +210,8 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		else {
 			getView().setFullScreen(false);
 		}
+
+		RootPanel.get().addStyleName(AppClientBundle.INSTANCE.getGlobalCss().playlistVisible());
 	}
 
 	@Override
@@ -260,5 +264,10 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 				addToPopupSlot(_addSongPresenter);
 			}
 		}
+	}
+
+	@Override
+	public void stopSong() {
+		youtubePresenter.stopVideo();
 	}
 }

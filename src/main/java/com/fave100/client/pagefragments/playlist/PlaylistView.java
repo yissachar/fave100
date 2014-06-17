@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fave100.client.resources.css.AppClientBundle;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.Icon;
 import com.fave100.shared.Constants;
@@ -20,6 +21,7 @@ import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
@@ -77,6 +79,12 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 			whylineView.clear();
 			whylineView.add(content);
 		}
+	}
+
+	@UiHandler("hideButton")
+	void onHideButtonClick(final ClickEvent event) {
+		getUiHandlers().stopSong();
+		RootPanel.get().removeStyleName(AppClientBundle.INSTANCE.getGlobalCss().playlistVisible());
 	}
 
 	@UiHandler("previousButton")

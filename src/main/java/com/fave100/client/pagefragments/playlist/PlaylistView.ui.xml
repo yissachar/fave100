@@ -6,23 +6,23 @@
     <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.playlist.PlaylistView.PlaylistStyle">
     	.container {
 			position: fixed;
-			right: 0px;
+			right: -40%;
 			top: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			height: 100%;
 			width: 30%;			
 			background-color: MAIN_BACKGROUND;
 			transition: width RESIZE_TRANSITION_TIME, right RESIZE_TRANSITION_TIME;
 			-webkit-transition: width RESIZE_TRANSITION_TIME, right RESIZE_TRANSITION_TIME;
+			overflow-y: hidden;
+		}
+		
+		.playlistVisible .container {
+			right: 0px;
 			overflow-y: auto;
 		}
 		
-		.mediumDisplay .container {
+		.playlistVisible.mediumDisplay .container {
 			width: 40%;
-		}
-		
-		.smallDisplay .container {
-			right: -40%;
-			overflow-y: hidden;
 		}
 		
 		.fullScreen.container {
@@ -36,8 +36,14 @@
 			overflow: hidden;
 		}
 		
+		.hideButton {
+			float: right;
+			cursor: pointer;
+		}
+		
 		.songDetails {
 			text-align: center;
+			clear: both;
 		}
 		
 		.songName {
@@ -101,6 +107,8 @@
     <g:HTMLPanel ui:field="container" ui:styleName="{style.container}">
     
 	    <g:HTMLPanel ui:field="playlist" ui:styleName="{style.playlist}">
+	    
+	    	<w:Icon ui:field="hideButton" ui:styleName="fa fa-times fa-lg {style.hideButton}"/>
 		    			    
     		<g:FlowPanel ui:styleName="{style.songDetails}">
 	    		<g:InlineLabel ui:field="songName" ui:styleName="{style.songName}" />
