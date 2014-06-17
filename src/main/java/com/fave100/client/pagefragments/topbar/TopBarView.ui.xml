@@ -25,19 +25,16 @@
 			top: 0;
 			width: 100%;
 			z-index: 99998;
-			display: table;
-		}
-		
-		.topNav > * {
-			display: table-cell;
-			vertical-align: middle;
+			@mixin flexbox();
+			@mixin justify-content(space-between);
+			@mixin align-items(center);
 		}
 		
 		.userContainer {
-			height: 100%;
 			cursor: pointer;
 			position: relative;
 			color: #fff;
+			height: 100%;
 		}
 		
 		.topNav li > a, .topNav li > span {
@@ -74,6 +71,7 @@
 			font-size: 30px;
 			line-height: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			padding-left: 15px;
+			@mixin flex-grow(2);
 		}		
 		
 		.logoFaveText {
@@ -92,11 +90,14 @@
 			cursor: pointer;
 		}
 		
+		.unifiedSearchContainer {			
+			@mixin flex-grow(2);
+		}
+		
 		.smallDisplay .unifiedSearchContainer {
 			background-color: FADED_LIGHT_BG;
 			position: fixed;
-			width: 300px;
-			height: 100%;
+			width: 300px;			
 			right: -400px;
 			top: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			overflow-y: auto;
@@ -123,6 +124,7 @@
 		.userInfo {
 			padding: 0 5px;
 			margin-top: 4px;
+			height: 100%;
 	  	}
 	  	
 	  	.userAvatar {
@@ -134,11 +136,12 @@
 			margin-left: 15px;
 			font-size: 16px;
 			color: #fff;
+			padding: 10px;
+			line-height: 35px;
 		}
 				
 		.dropDown {
 			display: none;
-			margin-top: 5px;
 			background-color: #fff;
 			position: absolute;
 			width: 100%;
@@ -159,6 +162,7 @@
 		
 		.loggedInContainer {			
 			position: relative;
+			height: 100%;
 		}
 		
 		.loggedInContainer:hover .dropDown, .userContainer:hover .dropDown {
@@ -173,6 +177,8 @@
 			display: inline-block;
 			width: 100%;
 			text-align: center;
+			padding: 10px;
+			line-height: 25px;
 		}
 				
 	</ui:style>
