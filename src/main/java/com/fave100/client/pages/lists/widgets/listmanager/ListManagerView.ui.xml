@@ -76,6 +76,7 @@
 		
 		.listContainer > div {
 			word-wrap: break-word;
+			@mixin flexbox();
 		}
 		
 		.listContainer > div:hover {
