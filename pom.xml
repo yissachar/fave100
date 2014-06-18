@@ -10,7 +10,7 @@
 	<name>gwt-maven-archetype-project</name>
 
 	<properties>
-		<gwt.version>2.6.0</gwt.version>
+		<gwt.version>2.6.1</gwt.version>
 		<appengine.version>1.9.0</appengine.version>
 		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
 		<gwtp.version>1.2.1</gwtp.version>
