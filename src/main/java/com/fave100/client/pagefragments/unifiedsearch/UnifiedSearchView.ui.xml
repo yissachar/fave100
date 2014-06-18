@@ -234,7 +234,7 @@
 		
 		<g:FlowPanel ui:field="searchContainer" ui:styleName="{style.searchContainer}">
 			<g:FlowPanel ui:field="currentSearchTypeContainer" ui:styleName="{style.currentSearchType}">
-				<g:InlineLabel ui:field="currentSearchType">Songs</g:InlineLabel>
+				<g:InlineLabel ui:field="currentSearchType" />
 				<w:Icon ui:field="removeSearchTypeButton" ui:styleName="fa fa-times {style.removeSearchTypeButton}" />
 			</g:FlowPanel>
     		<w:FaveTextBox ui:field="searchBox" ui:styleName="{style.searchBox}" />
