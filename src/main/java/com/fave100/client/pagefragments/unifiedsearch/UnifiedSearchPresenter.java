@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.StorageManager;
 import com.fave100.client.entities.SearchResult;
 import com.fave100.client.entities.SearchResultMapper;
 import com.fave100.client.entities.SongDto;
+import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.CursoredSearchResult;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.services.RestServiceFactory;
@@ -40,6 +42,8 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		void setSongTypeSuggestions(List<SearchType> suggestions);
 
 		void setSelectedSearchType(SearchType searchType);
+
+		void setAddMode(boolean addMode);
 	}
 
 	public final static int SELECTIONS_PER_PAGE = 5;
@@ -53,22 +57,26 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	private SearchType _searchType = SearchType.SONGS;
 	private final List<AsyncCallback<?>> _currentRequests = new ArrayList<>();
 	private List<?> _currentSuggestions;
+	private EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private RestDispatchAsync _dispatcher;
 	private RestServiceFactory _restServiceFactory;
 	private PlaylistPresenter _playlistPresenter;
 	private CurrentUser _currentUser;
+	private StorageManager _storageManager;
 	@Inject AddSongPresenter _addSongPresenter;
 
 	@Inject
 	UnifiedSearchPresenter(EventBus eventBus, MyView view, PlaceManager placeManager, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
-							PlaylistPresenter playlistPresenter, CurrentUser currentUser) {
+							PlaylistPresenter playlistPresenter, CurrentUser currentUser, StorageManager storageManager) {
 		super(eventBus, view);
+		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_dispatcher = dispatcher;
 		_restServiceFactory = restServiceFactory;
 		_playlistPresenter = playlistPresenter;
 		_currentUser = currentUser;
+		_storageManager = storageManager;
 
 		getView().setUiHandlers(this);
 	}
@@ -76,6 +84,17 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	@Override
 	protected void onBind() {
 		super.onBind();
+		setSearchType(_storageManager.getSearchType());
+		setAddMode(_storageManager.isSearchAddMode());
+
+		CurrentUserChangedEvent.register(_eventBus, new CurrentUserChangedEvent.Handler() {
+
+			@Override
+			public void onCurrentUserChanged(CurrentUserChangedEvent event) {
+				setSearchType(_storageManager.getSearchType());
+				setAddMode(_storageManager.isSearchAddMode());
+			}
+		});
 	}
 
 	@Override
@@ -286,6 +305,7 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		_searchType = searchType;
 		clearSearchResults();
 		getView().setSelectedSearchType(searchType);
+		_storageManager.setSearchType(searchType);
 	}
 
 	@Override
@@ -346,6 +366,8 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	@Override
 	public void setAddMode(boolean addMode) {
 		_addMode = addMode;
+		getView().setAddMode(addMode);
+		_storageManager.setSearchAddMode(addMode);
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.Utils;
 import com.fave100.client.entities.SongDto;
 import com.fave100.client.resources.css.GlobalStyle;
+import com.fave100.client.widgets.FaveTextBox;
 import com.fave100.client.widgets.Icon;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
@@ -32,7 +33,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -56,7 +56,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiField Panel currentSearchTypeContainer;
 	@UiField Icon removeSearchTypeButton;
 	@UiField Panel searchContainer;
-	@UiField TextBox searchBox;
+	@UiField FaveTextBox searchBox;
 	@UiField Icon searchIndicator;
 	@UiField Panel searchLoadingIndicator;
 	@UiField Panel searchResults;
@@ -205,17 +205,24 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 	@UiHandler("addModeOption")
 	void onAddModeOptionClick(ClickEvent event) {
-		addModeOption.addStyleName(style.selected());
-		browseModeOption.removeStyleName(style.selected());
 		getUiHandlers().setAddMode(true);
-		refreshHelpText();
 	}
 
 	@UiHandler("browseModeOption")
 	void onBrowseModeOptionClick(ClickEvent event) {
-		browseModeOption.addStyleName(style.selected());
-		addModeOption.removeStyleName(style.selected());
 		getUiHandlers().setAddMode(false);
+	}
+
+	@Override
+	public void setAddMode(boolean addMode) {
+		if (addMode) {
+			addModeOption.addStyleName(style.selected());
+			browseModeOption.removeStyleName(style.selected());
+		}
+		else {
+			browseModeOption.addStyleName(style.selected());
+			addModeOption.removeStyleName(style.selected());
+		}
 		refreshHelpText();
 	}
 
@@ -269,8 +276,13 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 	@Override
 	public void setSelectedSearchType(SearchType searchType) {
-		if (searchType == null)
+		if (searchType == null) {
+			searchBox.setPlaceHolder("Search songs, users, and lists");
+			currentSearchTypeContainer.setVisible(false);
 			return;
+		}
+
+		searchBox.setPlaceHolder("");
 
 		String searchText = "";
 		switch (searchType) {
