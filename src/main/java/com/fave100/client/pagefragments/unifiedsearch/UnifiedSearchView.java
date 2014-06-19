@@ -8,6 +8,8 @@ import com.fave100.client.entities.SongDto;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.FaveTextBox;
 import com.fave100.client.widgets.Icon;
+import com.fave100.client.widgets.helpbubble.HelpBubble;
+import com.fave100.client.widgets.helpbubble.HelpBubble.Direction;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -72,6 +74,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	private Timer searchTimer;
 	private HandlerRegistration rootClickHandler = null;
 	private boolean _loadedAllResults;
+	private HelpBubble searchHelpBubble = new HelpBubble("Add song", "Use the search bar to find songs to add", 300, Direction.LEFT);
 	@Inject CurrentUser _currentUser;
 
 	private MouseOutHandler suggestionMouseOutHandler = new MouseOutHandler() {
@@ -120,6 +123,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 	@UiHandler("searchBox")
 	void onSearchFocus(FocusEvent event) {
+		removeHelpBubble();
 		searchContainer.addStyleName(style.selected());
 		if (!currentSearchTypeContainer.isVisible()) {
 			searchResults.setVisible(true);
@@ -463,5 +467,15 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	private void resetHeight() {
 		searchSuggestions.getElement().setScrollTop(0);
 		searchSuggestionsContainer.getElement().getStyle().setProperty("height", "initial");
+	}
+
+	@Override
+	public void addHelpBubble() {
+		searchContainer.add(searchHelpBubble);
+	}
+
+	@Override
+	public void removeHelpBubble() {
+		searchContainer.remove(searchHelpBubble);
 	}
 }
