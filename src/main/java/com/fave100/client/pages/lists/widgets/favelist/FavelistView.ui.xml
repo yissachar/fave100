@@ -70,11 +70,15 @@
 		.invisible {
 			visibility: hidden;
 		}
+		
+		.noItemsMessage {
+			padding: 20px;
+		}
 	</ui:style>
 	
 	<g:FlowPanel>
 		<g:FlowPanel ui:field="faveList" ui:styleName="{style.faveList}"/>
-		<g:Label ui:field="noItemsMessage">There are no entries for this list.</g:Label>
+		<g:Label ui:field="noItemsMessage" ui:styleName="{style.noItemsMessage}">There are no entries for this list.</g:Label>
 		<g:Label ui:field="listNotFound">That list doesn't exist.</g:Label>
 	</g:FlowPanel>
 </ui:UiBinder>
