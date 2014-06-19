@@ -185,7 +185,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 					_loadedAllResults = false;
 					searchIndicator.setVisible(false);
 					searchLoadingIndicator.setVisible(true);
-					resetHeight();
 					getUiHandlers().getSearchResults(searchTerm);
 				}
 			};
@@ -431,6 +430,10 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	}
 
 	private void showSuggestions(int resultsSize, boolean showLoadMore) {
+		if (!showLoadMore) {
+			resetHeight();
+		}
+
 		loadedAllLabel.setVisible(false);
 		if (resultsSize != UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
 			loadedAllLabel.setVisible(showLoadMore && getUiHandlers().getTotalResults() > 0);
