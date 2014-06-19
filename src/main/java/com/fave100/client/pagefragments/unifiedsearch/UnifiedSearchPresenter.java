@@ -29,6 +29,8 @@ import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.proxy.NavigationEvent;
+import com.gwtplatform.mvp.client.proxy.NavigationHandler;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
@@ -44,6 +46,10 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		void setSelectedSearchType(SearchType searchType);
 
 		void setAddMode(boolean addMode);
+
+		void addHelpBubble();
+
+		void removeHelpBubble();
 	}
 
 	public final static int SELECTIONS_PER_PAGE = 5;
@@ -95,6 +101,25 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 				setAddMode(_storageManager.isSearchAddMode());
 			}
 		});
+
+		addRegisteredHandler(NavigationEvent.getType(), new NavigationHandler() {
+
+			@Override
+			public void onNavigation(NavigationEvent navigationEvent) {
+				PlaceRequest currentPlace = _placeManager.getCurrentPlaceRequest();
+				// On user's page and they only have default hashtag, display bubble help
+				if (currentPlace.getNameToken().equals(NameTokens.lists)
+						&& currentPlace.getParameter(PlaceParams.USER_PARAM, "").equals(_currentUser.getUsername())
+						&& _currentUser.getHashtags().size() == 1) {
+					getView().addHelpBubble();
+				}
+				else {
+					getView().removeHelpBubble();
+				}
+
+			}
+		});
+
 	}
 
 	@Override
