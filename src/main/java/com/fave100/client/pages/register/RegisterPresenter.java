@@ -180,7 +180,7 @@ public class RegisterPresenter extends
 				@Override
 				public void onSuccess(AppUser appUser) {
 					eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
-					registerContainer.appUserCreated();
+					registerContainer.appUserCreated(appUser);
 				}
 			};
 
