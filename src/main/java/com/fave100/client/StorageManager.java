@@ -33,7 +33,7 @@ public class StorageManager {
 		if (_storage == null || !_currentUser.isLoggedIn())
 			return null;
 
-		return _storage.getItem(userSpecificKey(SEARCH_TYPE)) == null ? null : SearchType.valueOf(_storage.getItem(userSpecificKey(SEARCH_TYPE)));
+		return _storage.getItem(userSpecificKey(SEARCH_TYPE)).equals("null") ? null : SearchType.valueOf(_storage.getItem(userSpecificKey(SEARCH_TYPE)));
 	}
 
 	public void setSearchAddMode(boolean addMode) {
