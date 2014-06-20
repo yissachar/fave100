@@ -117,6 +117,11 @@ public class CurrentUser extends AppUser {
 		return appUser != null;
 	}
 
+	public boolean isViewingOwnList() {
+		return isLoggedIn() && _placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.lists)
+				&& _placeManager.getCurrentPlaceRequest().getParameter(PlaceParams.USER_PARAM, "").equals(getUsername());
+	}
+
 	public void setAppUser(final AppUser appUser) {
 		this.appUser = appUser;
 	}
