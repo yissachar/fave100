@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
@@ -13,7 +14,6 @@ import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.generated.entities.FaveItemCollection;
 import com.fave100.client.generated.entities.WhylineEdit;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.playlist.PlaylistPresenter;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchPresenter;
@@ -26,7 +26,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -53,8 +52,7 @@ public class FavelistPresenter extends
 	}
 
 	private EventBus _eventBus;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	// The user whose favelist we are showing
 	private AppUser _user;
 	// The currently logged in user
@@ -67,16 +65,16 @@ public class FavelistPresenter extends
 	private UnifiedSearchPresenter _unifiedSearchPresenter;
 
 	@Inject
-	public FavelistPresenter(final EventBus eventBus, final MyView view, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
-								final PlaceManager placeManager, final CurrentUser currentUser, PlaylistPresenter playlistPresenter, UnifiedSearchPresenter unifiedSearchPresenter) {
+	public FavelistPresenter(final EventBus eventBus, final MyView view, final FaveApi api, final PlaceManager placeManager, final CurrentUser currentUser,
+								PlaylistPresenter playlistPresenter, UnifiedSearchPresenter unifiedSearchPresenter) {
 		super(eventBus, view);
 		_eventBus = eventBus;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
 		_playlistPresenter = playlistPresenter;
 		_unifiedSearchPresenter = unifiedSearchPresenter;
+
 		getView().setUiHandlers(this);
 	}
 
@@ -137,7 +135,7 @@ public class FavelistPresenter extends
 		}
 		// Otherwise get it from the server if we are requesting a user's list
 		else if (_user != null) {
-			_dispatcher.execute(_restServiceFactory.users().getFaveList(_user.getUsername(), _hashtag), new AsyncCallback<FaveItemCollection>() {
+			_api.call(_api.service().users().getFaveList(_user.getUsername(), _hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -160,7 +158,7 @@ public class FavelistPresenter extends
 		// No user, get the global list 
 		else {
 
-			_dispatcher.execute(_restServiceFactory.favelists().getMasterFaveList(_hashtag), new AsyncCallback<FaveItemCollection>() {
+			_api.call(_api.service().favelists().getMasterFaveList(_hashtag), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -229,7 +227,7 @@ public class FavelistPresenter extends
 		_widgets.remove(index);
 		_currentUser.getFaveList().remove(index);
 		// Send request for server to remove it
-		_dispatcher.execute(_restServiceFactory.user().removeFaveItemForCurrentUser(_hashtag, songId), new AsyncCallback<Void>() {
+		_api.call(_api.service().user().removeFaveItemForCurrentUser(_hashtag, songId), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -250,7 +248,7 @@ public class FavelistPresenter extends
 		whylineEdit.setSongId(songId);
 		whylineEdit.setWhyline(whyline);
 
-		_dispatcher.execute(_restServiceFactory.user().editWhylineForCurrentUser(whylineEdit), new RestCallback<Void>() {
+		_api.call(_api.service().user().editWhylineForCurrentUser(whylineEdit), new RestCallback<Void>() {
 
 			@Override
 			public void setResponse(Response response) {
@@ -303,7 +301,7 @@ public class FavelistPresenter extends
 		}
 
 		// Save on server
-		_dispatcher.execute(_restServiceFactory.user().rerankFaveItemForCurrentUser(_hashtag, songId, newIndex), new AsyncCallback<Void>() {
+		_api.call(_api.service().user().rerankFaveItemForCurrentUser(_hashtag, songId, newIndex), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.widgets.alert.AlertCallback;
 import com.fave100.client.widgets.alert.AlertPresenter;
 import com.fave100.shared.Constants;
@@ -18,7 +18,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -57,22 +56,20 @@ public class ListManagerPresenter extends
 	private String _hashtag;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private boolean _globalList = false;
 	@Inject AddListAutocompletePresenter autocomplete;
 	@Inject AlertPresenter alertPresenter;
 
 	@Inject
 	public ListManagerPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
-								final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+								final FaveApi api) {
 		super(eventBus, view);
 		view.setUiHandlers(ListManagerPresenter.this);
 		_eventBus = eventBus;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 	}
 
 	@Override
@@ -115,7 +112,7 @@ public class ListManagerPresenter extends
 			return;
 		}
 
-		_dispatcher.execute(_restServiceFactory.user().addFaveListForCurrentUser(name), new RestCallback<Void>() {
+		_api.call(_api.service().user().addFaveListForCurrentUser(name), new RestCallback<Void>() {
 
 			@Override
 			public void setResponse(Response response) {
@@ -178,7 +175,7 @@ public class ListManagerPresenter extends
 
 			@Override
 			public void onOk() {
-				_dispatcher.execute(_restServiceFactory.user().deleteFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
+				_api.call(_api.service().user().deleteFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

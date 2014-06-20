@@ -1,6 +1,7 @@
 package com.fave100.client.pages.lists;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.Utils;
 import com.fave100.client.entities.SongDto;
 import com.fave100.client.events.favelist.HideSideBarEvent;
@@ -11,7 +12,6 @@ import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.BooleanResult;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.register.RegisterPopupPresenter;
 import com.fave100.client.pages.PagePresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
@@ -25,7 +25,6 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
@@ -69,8 +68,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	private final EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private boolean _ownPage = false;
 	@Inject FavelistPresenter favelist;
 	@Inject UsersFollowingPresenter usersFollowing;
@@ -80,13 +78,13 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 	@Inject
 	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser,
-							final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+							final FaveApi api) {
 		super(eventBus, view, proxy);
 		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_currentUser = currentUser;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
+
 		getView().setUiHandlers(this);
 	}
 
@@ -203,7 +201,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 			}
 
 			// Otherwise, request the info from the server
-			_dispatcher.execute(_restServiceFactory.users().getAppUser(requestedUsername), new AsyncCallback<AppUser>() {
+			_api.call(_api.service().users().getAppUser(requestedUsername), new AsyncCallback<AppUser>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -220,7 +218,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 				}
 			});
 
-			_dispatcher.execute(_restServiceFactory.user().isFollowing(requestedUsername), new AsyncCallback<BooleanResult>() {
+			_api.call(_api.service().user().isFollowing(requestedUsername), new AsyncCallback<BooleanResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

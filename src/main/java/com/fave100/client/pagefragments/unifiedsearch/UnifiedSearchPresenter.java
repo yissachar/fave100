@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.StorageManager;
 import com.fave100.client.entities.SearchResult;
 import com.fave100.client.entities.SearchResultMapper;
@@ -11,7 +12,6 @@ import com.fave100.client.entities.SongDto;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.CursoredSearchResult;
 import com.fave100.client.generated.entities.StringResult;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.playlist.PlaylistPresenter;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.shared.Constants;
@@ -25,7 +25,6 @@ import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
@@ -61,21 +60,19 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	private List<?> _currentSuggestions;
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private PlaylistPresenter _playlistPresenter;
 	private CurrentUser _currentUser;
 	private StorageManager _storageManager;
 	@Inject AddSongPresenter _addSongPresenter;
 
 	@Inject
-	UnifiedSearchPresenter(EventBus eventBus, MyView view, PlaceManager placeManager, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
-							PlaylistPresenter playlistPresenter, CurrentUser currentUser, StorageManager storageManager) {
+	UnifiedSearchPresenter(EventBus eventBus, MyView view, PlaceManager placeManager, FaveApi api, PlaylistPresenter playlistPresenter,
+							CurrentUser currentUser, StorageManager storageManager) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_placeManager = placeManager;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 		_playlistPresenter = playlistPresenter;
 		_currentUser = currentUser;
 		_storageManager = storageManager;
@@ -176,10 +173,10 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 		};
 
 		if (_searchType == SearchType.USERS) {
-			_dispatcher.execute(_restServiceFactory.search().searchUsers(searchTerm, _cursor), searchReq);
+			_api.call(_api.service().search().searchUsers(searchTerm, _cursor), searchReq);
 		}
 		else if (_searchType == SearchType.LISTS) {
-			_dispatcher.execute(_restServiceFactory.search().searchFaveLists(searchTerm, _cursor), searchReq);
+			_api.call(_api.service().search().searchFaveLists(searchTerm, _cursor), searchReq);
 		}
 
 		_currentRequests.add(searchReq);

@@ -7,8 +7,6 @@ import java.util.Map;
 
 import com.fave100.client.generated.entities.FollowingResult;
 import com.fave100.client.generated.entities.StringResult;
-import com.fave100.client.generated.services.RestServiceFactory;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
@@ -27,17 +25,14 @@ public class RequestCache {
 		FOLLOWING_CURRENT_USER
 	}
 
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
-
+	private FaveApi _api;
 	private Map<RequestType, Boolean> _runningRequests = new HashMap<RequestType, Boolean>();
 	private Map<RequestType, Object> _callbacks = new HashMap<RequestType, Object>();
 	private Map<RequestType, Object> _results = new HashMap<RequestType, Object>();
 
 	@Inject
-	public RequestCache(RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory) {
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+	public RequestCache(FaveApi api) {
+		_api = api;
 	}
 
 	/**
@@ -76,7 +71,7 @@ public class RequestCache {
 		// If there is no existing request, create one
 		if (!reqRunning) {
 			_runningRequests.put(request, true);
-			_dispatcher.execute(_restServiceFactory.users().getFollowing(username, 0), new AsyncCallback<FollowingResult>() {
+			_api.call(_api.service().users().getFollowing(username, 0), new AsyncCallback<FollowingResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -120,17 +115,17 @@ public class RequestCache {
 			RestAction<StringResult> loginUrlReq = null;
 			switch (request) {
 				case GOOGLE_LOGIN:
-					loginUrlReq = _restServiceFactory.auth().getGoogleAuthUrl(redirect);
+					loginUrlReq = _api.service().auth().getGoogleAuthUrl(redirect);
 					break;
 				case FACEBOOK_LOGIN:
-					loginUrlReq = _restServiceFactory.auth().getFacebookAuthUrl(redirect);
+					loginUrlReq = _api.service().auth().getFacebookAuthUrl(redirect);
 					break;
 				default:
 					// No request to fire
 					return;
 			}
 
-			_dispatcher.execute(loginUrlReq, new AsyncCallback<StringResult>() {
+			_api.call(loginUrlReq, new AsyncCallback<StringResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

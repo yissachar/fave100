@@ -24,21 +24,21 @@ public class Fave100Bootstrapper implements Bootstrapper {
 
 	private PlaceManager _placeManager;
 	private EventBus _eventBus;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	
+	private FaveApi _api;
 
 	@Inject
-	public Fave100Bootstrapper(final PlaceManager placeManager, final EventBus eventBus, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+	public Fave100Bootstrapper(final PlaceManager placeManager, final EventBus eventBus, final FaveApi api) {
 		_placeManager = placeManager;
 		_eventBus = eventBus;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		
+		_api = api;
 	}
 
 	@Override
 	public void onBootstrap() {
 		// On first page load or page refresh, check for an existing logged in user
-		_dispatcher.execute(_restServiceFactory.user().getLoggedInUser(), new AsyncCallback<AppUser>() {
+		_api.call(_api.service().user().getLoggedInUser(), new AsyncCallback<AppUser>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

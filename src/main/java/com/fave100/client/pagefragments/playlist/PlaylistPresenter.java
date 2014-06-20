@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.Utils;
 import com.fave100.client.events.song.PlaylistSongChangedEvent;
 import com.fave100.client.events.song.YouTubePlayerEndedEvent;
 import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.generated.entities.YouTubeSearchResult;
 import com.fave100.client.generated.entities.YouTubeSearchResultCollection;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.client.pages.song.widgets.whyline.WhylinePresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
@@ -24,7 +24,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
@@ -56,8 +55,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	private int _playingSongIndex = 0;
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private String _listName = "";
 	private String _username = "";
 	private List<FaveItem> _faveItems;
@@ -68,14 +66,12 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	@Inject WhylinePresenter whylinePresenter;
 
 	@Inject
-	PlaylistPresenter(EventBus eventBus, MyView view, final PlaceManager placeManager, final CurrentUser currentUser, final RestDispatchAsync dispatcher,
-						final RestServiceFactory restServiceFactory) {
+	PlaylistPresenter(EventBus eventBus, MyView view, final PlaceManager placeManager, final CurrentUser currentUser, final FaveApi api) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_currentUser = currentUser;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 
 		getView().setUiHandlers(this);
 
@@ -179,7 +175,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 
 		whylinePresenter.showWhylines(playing);
 
-		_dispatcher.execute(_restServiceFactory.search().getYouTubeResults(playing.getSong(), playing.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
+		_api.call(_api.service().search().getYouTubeResults(playing.getSong(), playing.getArtist()), new AsyncCallback<YouTubeSearchResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

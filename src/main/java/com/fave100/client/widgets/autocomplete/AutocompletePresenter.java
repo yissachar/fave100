@@ -5,13 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.generated.entities.CursoredSearchResult;
 import com.fave100.client.generated.entities.StringResult;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -35,8 +34,7 @@ public class AutocompletePresenter extends PresenterWidget<AutocompletePresenter
 
 	protected EventBus _eventBus;
 	protected PlaceManager _placeManager;
-	protected RestDispatchAsync _dispatcher;
-	protected RestServiceFactory _restServiceFactory;
+	protected FaveApi _api;
 	protected CurrentUser _currentUser;
 	protected List<String> _suggestions;
 	protected String _lastSearch;
@@ -46,13 +44,11 @@ public class AutocompletePresenter extends PresenterWidget<AutocompletePresenter
 	private int _maxSelection = -1;
 
 	@Inject
-	public AutocompletePresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RestDispatchAsync dispatcher,
-									final RestServiceFactory restServiceFactory, final CurrentUser currentUser) {
+	public AutocompletePresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final FaveApi api, final CurrentUser currentUser) {
 		super(eventBus, view);
 		_eventBus = eventBus;
-		_dispatcher = dispatcher;
 		_placeManager = placeManager;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 		_currentUser = currentUser;
 		_requests = new LinkedList<AsyncCallback<CursoredSearchResult>>();
 		getAutocompleteResults("");
@@ -99,7 +95,7 @@ public class AutocompletePresenter extends PresenterWidget<AutocompletePresenter
 			}
 		};
 
-		_dispatcher.execute(_action, autocompleteReq);
+		_api.call(_action, autocompleteReq);
 		_requests.add(autocompleteReq);
 	}
 
