@@ -25,7 +25,11 @@
 			width: 40%;
 		}
 		
-		.fullScreen.container {
+		.playlistVisible.smallDisplay .container {
+			right: -40%;
+		}
+		
+		.fullScreen.container, .playlistVisible.smallDisplay .fullScreen.container {
 			width: 100%;
 			right: 0;
 			overflow-y: auto;
