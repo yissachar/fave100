@@ -473,7 +473,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		searchContainer.add(searchHelpBubble);
 	}
 
-	@Override
 	public void removeHelpBubble() {
 		searchContainer.remove(searchHelpBubble);
 	}

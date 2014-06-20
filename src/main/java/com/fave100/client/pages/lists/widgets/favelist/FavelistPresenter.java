@@ -16,6 +16,7 @@ import com.fave100.client.generated.entities.WhylineEdit;
 import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.playlist.PlaylistPresenter;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
+import com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.AddSongAfterLoginAction;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.fave100.shared.Constants;
@@ -63,10 +64,11 @@ public class FavelistPresenter extends
 	private String _hashtag;
 	private List<FavePickWidget> _widgets;
 	@Inject private AddSongPresenter _addSongPresenter;
+	private UnifiedSearchPresenter _unifiedSearchPresenter;
 
 	@Inject
 	public FavelistPresenter(final EventBus eventBus, final MyView view, RestDispatchAsync dispatcher, RestServiceFactory restServiceFactory,
-								final PlaceManager placeManager, final CurrentUser currentUser, PlaylistPresenter playlistPresenter) {
+								final PlaceManager placeManager, final CurrentUser currentUser, PlaylistPresenter playlistPresenter, UnifiedSearchPresenter unifiedSearchPresenter) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_dispatcher = dispatcher;
@@ -74,6 +76,7 @@ public class FavelistPresenter extends
 		_currentUser = currentUser;
 		_placeManager = placeManager;
 		_playlistPresenter = playlistPresenter;
+		_unifiedSearchPresenter = unifiedSearchPresenter;
 		getView().setUiHandlers(this);
 	}
 
@@ -186,6 +189,10 @@ public class FavelistPresenter extends
 		getView().setList(pickWidgets);
 		Window.scrollTo(0, 0);
 		_eventBus.fireEvent(new FaveListSizeChangedEvent(faveList.size()));
+
+		if (_currentUser.isViewingOwnList() && _currentUser.getHashtags().size() == 1 && faveList.size() == 0) {
+			_unifiedSearchPresenter.showAddSongsHelpBubble();
+		}
 	}
 
 	@Override
