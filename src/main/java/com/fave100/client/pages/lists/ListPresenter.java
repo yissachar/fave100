@@ -251,7 +251,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 		favelist.setUser(requestedUser);
 		favelist.setHashtag(_requestedHashtag);
-		favelist.refreshFavelist(_ownPage);
+		favelist.refreshFavelist();
 
 		if (requestedUser != null) {
 			usersFollowing.getView().show();
