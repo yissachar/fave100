@@ -25,9 +25,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 
 	public interface MyView extends View, HasUiHandlers<GlobalListDetailsUiHandlers> {
 
-		void setInfo(String hashtag);
-
-		void setTrendingLists(List<String> lists);
+		void setTrendingLists(String hashtag, List<String> lists);
 
 		void show();
 
@@ -59,7 +57,6 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	}
 
 	private void render() {
-		getView().setInfo(_hashtag);
 		_dispatcher.execute(_restServiceFactory.trending().getTrendingFaveLists(), new AsyncCallback<StringResultCollection>() {
 
 			@Override
@@ -74,7 +71,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 				for (StringResult stringResult : result.getItems()) {
 					trending.add(stringResult.getValue());
 				}
-				getView().setTrendingLists(trending);
+				getView().setTrendingLists(_hashtag, trending);
 			}
 		});
 	}

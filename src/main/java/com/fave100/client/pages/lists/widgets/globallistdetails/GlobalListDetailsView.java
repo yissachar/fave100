@@ -57,7 +57,7 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	}
 
 	@Override
-	public void setInfo(final String hashtag) {
+	public void setTrendingLists(final String hashtag, final List<String> lists) {
 		hashtagLabel.setText(hashtag);
 		// Shrink the list name until it fits into the sidebar
 		int fontSize = LIST_NAME_FONT_SIZE;
@@ -66,10 +66,6 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 			fontSize--;
 		} while (hashtagLabel.getElement().getClientWidth() > widget.getOffsetWidth());
 
-	}
-
-	@Override
-	public void setTrendingLists(final List<String> lists) {
 		trendingLists.clear();
 		for (String list : lists) {
 			InlineHyperlink link = new InlineHyperlink();
