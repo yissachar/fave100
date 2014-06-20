@@ -1,11 +1,11 @@
 package com.fave100.client.pages.profile;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.UserInfo;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.PagePresenter;
 import com.fave100.shared.Validator;
 import com.fave100.shared.place.NameTokens;
@@ -13,7 +13,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -60,17 +59,16 @@ public class ProfilePresenter extends
 	}
 
 	private CurrentUser _currentUser;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private UserInfo oldUserInfo = null;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final CurrentUser currentUser,
-							final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+							final FaveApi api) {
 		super(eventBus, view, proxy);
 		_currentUser = currentUser;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
+
 		getView().setUiHandlers(this);
 	}
 
@@ -98,7 +96,7 @@ public class ProfilePresenter extends
 	}
 
 	private void setEmail() {
-		_dispatcher.execute(_restServiceFactory.user().getCurrentUserSettings(), new AsyncCallback<UserInfo>() {
+		_api.call(_api.service().user().getCurrentUserSettings(), new AsyncCallback<UserInfo>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -121,7 +119,7 @@ public class ProfilePresenter extends
 	private void setUploadAction() {
 		// Create the blobstore URL that the avatar will be uploaded to
 		// Need to recreate each time because session expires after successful upload
-		_dispatcher.execute(_restServiceFactory.user().createBlobstoreUrl(), new AsyncCallback<StringResult>() {
+		_api.call(_api.service().user().createBlobstoreUrl(), new AsyncCallback<StringResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -157,7 +155,7 @@ public class ProfilePresenter extends
 		final String emailError = Validator.validateEmail(userInfo.getEmail());
 		if (emailError == null) {
 
-			_dispatcher.execute(_restServiceFactory.user().setUserInfo(userInfo), new RestCallback<BooleanResult>() {
+			_api.call(_api.service().user().setUserInfo(userInfo), new RestCallback<BooleanResult>() {
 
 				@Override
 				public void setResponse(Response response) {

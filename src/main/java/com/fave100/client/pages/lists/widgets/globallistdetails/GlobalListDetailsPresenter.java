@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.StringResultCollection;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -35,18 +34,15 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private String _hashtag;
 
 	@Inject
-	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager,
-										final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager, final FaveApi api) {
 		super(eventBus, view);
 		_currentUser = currentUser;
 		_placeManager = placeManager;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 		getView().setUiHandlers(this);
 	}
 
@@ -57,7 +53,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	}
 
 	private void render() {
-		_dispatcher.execute(_restServiceFactory.trending().getTrendingFaveLists(), new AsyncCallback<StringResultCollection>() {
+		_api.call(_api.service().trending().getTrendingFaveLists(), new AsyncCallback<StringResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

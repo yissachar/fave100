@@ -1,12 +1,12 @@
 package com.fave100.client.pagefragments.register;
 
+import com.fave100.client.FaveApi;
 import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.UserRegistration;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.shared.Validator;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
@@ -15,7 +15,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -52,19 +51,17 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private RequestCache _requestCache;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _serviceFactory;
+	private FaveApi _api;
 	private String redirect;
 
 	@Inject
 	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RequestCache requestCache,
-									final RestDispatchAsync dispatcher, final RestServiceFactory serviceFactory) {
+									final FaveApi api) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_requestCache = requestCache;
-		_dispatcher = dispatcher;
-		_serviceFactory = serviceFactory;
+		_api = api;
 		getView().setUiHandlers(this);
 	}
 
@@ -128,7 +125,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 			registration.setPassword(password);
 			registration.setEmail(email);
 
-			_dispatcher.execute(_serviceFactory.auth().createAppUser(registration), new RestCallback<AppUser>() {
+			_api.call(_api.service().auth().createAppUser(registration), new RestCallback<AppUser>() {
 
 				@Override
 				public void setResponse(Response response) {
@@ -166,7 +163,7 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 
 	@Override
 	public void goToTwitterAuth() {
-		_dispatcher.execute(_serviceFactory.auth().getTwitterAuthUrl(redirect), new AsyncCallback<StringResult>() {
+		_api.call(_api.service().auth().getTwitterAuthUrl(redirect), new AsyncCallback<StringResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

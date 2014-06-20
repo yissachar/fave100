@@ -1,11 +1,11 @@
 package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.Utils;
 import com.fave100.client.events.favelist.HideSideBarEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
@@ -20,7 +20,6 @@ import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -57,20 +56,18 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	private EventBus _eventBus;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	@Inject private LoginPopupPresenter loginBox;
 	@Inject private UnifiedSearchPresenter unifiedSearch;
 
 	@Inject
-	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser,
-							final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser, final FaveApi api) {
 		super(eventBus, view);
-		this._eventBus = eventBus;
-		this._currentUser = currentUser;
-		this._placeManager = placeManager;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_eventBus = eventBus;
+		_currentUser = currentUser;
+		_placeManager = placeManager;
+		_api = api;
+
 		getView().setUiHandlers(this);
 
 		Window.addWindowScrollHandler(new ScrollHandler() {
@@ -119,7 +116,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 				if (!_currentUser.isLoggedIn())
 					return;
 
-				_dispatcher.execute(_restServiceFactory.user().getLoggedInUser(), new AsyncCallback<AppUser>() {
+				_api.call(_api.service().user().getLoggedInUser(), new AsyncCallback<AppUser>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

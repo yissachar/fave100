@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.FollowingResult;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingView.UsersFollowingStyle;
 import com.fave100.client.widgets.Icon;
 import com.fave100.shared.place.NameTokens;
@@ -23,7 +23,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -56,20 +55,18 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 	CurrentUser _currentUser;
 	RequestCache _requestCache;
 	AppUser _user;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private ParameterTokenFormatter _parameterTokenFormatter;
 	int listSize = 0;
 
 	@Inject
 	public UsersFollowingPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final RequestCache requestCache,
-									final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory, ParameterTokenFormatter parameterTokenFormatter) {
+									final FaveApi api, ParameterTokenFormatter parameterTokenFormatter) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_currentUser = currentUser;
 		_requestCache = requestCache;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 		_parameterTokenFormatter = parameterTokenFormatter;
 		getView().setUiHandlers(this);
 	}
@@ -137,7 +134,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 			}
 		}
 		else {
-			_dispatcher.execute(_restServiceFactory.users().getFollowing(_user.getUsername(), 0), new AsyncCallback<FollowingResult>() {
+			_api.call(_api.service().users().getFollowing(_user.getUsername(), 0), new AsyncCallback<FollowingResult>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -208,7 +205,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 
 	@Override
 	public void getMoreFollowing() {
-		_dispatcher.execute(_restServiceFactory.users().getFollowing(_user.getUsername(), listSize), new AsyncCallback<FollowingResult>() {
+		_api.call(_api.service().users().getFollowing(_user.getUsername(), listSize), new AsyncCallback<FollowingResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

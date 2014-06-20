@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.events.favelist.ListAddedEvent;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.widgets.autocomplete.AutocompletePresenter;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
 public class AddListAutocompletePresenter extends AutocompletePresenter {
@@ -17,15 +16,15 @@ public class AddListAutocompletePresenter extends AutocompletePresenter {
 	public static final String NEW_LIST_PROMPT = "Create new list: ";
 
 	@Inject
-	AddListAutocompletePresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory,
+	AddListAutocompletePresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final FaveApi api,
 									final CurrentUser currentUser) {
-		super(eventBus, view, placeManager, dispatcher, restServiceFactory, currentUser);
+		super(eventBus, view, placeManager, api, currentUser);
 		setPlaceholder("Search lists...");
 	}
 
 	@Override
 	public void getAutocompleteResults(String searchTerm) {
-		_action = _restServiceFactory.search().searchFaveLists(searchTerm, null);
+		_action = _api.service().search().searchFaveLists(searchTerm, null);
 		super.getAutocompleteResults(searchTerm);
 	}
 
