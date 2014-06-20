@@ -95,12 +95,13 @@
 		
 		.hoverPanel > * {
 			display: table-cell;
+			height: 12px;
 		}
 		
 		.hoverPanel i:hover {
 			cursor: pointer;
 			color: HIGHLIGHT_COLOR;
-		}			
+		}
 		
 	</ui:style>
 

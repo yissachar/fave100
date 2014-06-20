@@ -4,6 +4,8 @@
 		xmlns:w="urn:import:com.fave100.client.widgets">
 
 	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickRerankPanel.FavePickRerankStyle">
+		@def ARROW_MARGIN 8px;
+		
 		.container > * {
 			display: table-cell;
 		}
@@ -16,10 +18,36 @@
 			width: 25px;
 		}
 		
-		.arrowPanel > i {
+		.arrowPanel > * {
+			height: 14px;
+			overflow: hidden;
+			position: relative;
+		}
+		
+		.arrowPanel i {
+			position: absolute;
 			line-height: 14px;
-			display: block;
 			text-align: center;
+		}
+		
+		.arrowPanel > *:first-child, .arrowPanel > *:last-child {			
+			height: 20px;
+		}
+		
+		.arrowPanel > *:last-child {
+			padding-top: 7px;
+		}
+		
+		.rankUpArrow {
+			margin-top: ARROW_MARGIN;
+		}
+		
+		.deleteButton {
+			padding-left: 3px;
+		}
+		
+		.rankDownArrow {
+			margin-top: sub(0px, ARROW_MARGIN);			
 		}
 				
 	</ui:style>
@@ -27,9 +55,9 @@
 	<g:FlowPanel ui:styleName="{style.container}">
 	
 		<g:FlowPanel ui:styleName="{style.arrowPanel}">
-			<w:Icon ui:field="upArrow" ui:styleName="rankUpArrow fa fa-sort-up fa-2x" />
-			<w:Icon ui:field="deleteButton" ui:styleName=" fa fa-times" title="Delete song" />
-			<w:Icon ui:field="downArrow" ui:styleName="rankDownArrow  fa fa-sort-down fa-2x" />
+			<g:HTMLPanel><w:Icon ui:field="upArrow" ui:styleName="rankUpArrow {style.rankUpArrow} fa fa-sort-up fa-2x" /></g:HTMLPanel>
+			<g:HTMLPanel><w:Icon ui:field="deleteButton" ui:styleName="{style.deleteButton} fa fa-times" title="Delete song" /></g:HTMLPanel>
+			<g:HTMLPanel><w:Icon ui:field="downArrow" ui:styleName="rankDownArrow {style.rankDownArrow} fa fa-sort-down fa-2x" /></g:HTMLPanel>
 		</g:FlowPanel>
 		
 	</g:FlowPanel>
