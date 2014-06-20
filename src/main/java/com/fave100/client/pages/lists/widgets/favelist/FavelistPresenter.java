@@ -121,7 +121,7 @@ public class FavelistPresenter extends
 		getView().clearState();
 	}
 
-	public void refreshFavelist(final boolean ownList) {
+	public void refreshFavelist() {
 		getView().clearState();
 
 		if (_hashtag == null) {
@@ -131,7 +131,7 @@ public class FavelistPresenter extends
 		final String hashtagPerRequest = _hashtag;
 
 		// Get the FaveList locally if possible 
-		if (ownList && _currentUser.getFaveList() != null) {
+		if (_currentUser.isViewingOwnList() && _currentUser.getFaveList() != null) {
 			buildWidgets(_currentUser.getFaveList());
 			return;
 		}
@@ -148,8 +148,9 @@ public class FavelistPresenter extends
 				public void onSuccess(FaveItemCollection result) {
 					// Make sure user still not null when results fetched, and results for hashtag is same hashtag as latest requested hashtag, otherwise could be stale data
 					if (_user != null && hashtagPerRequest.equals(_hashtag)) {
-						if (ownList)
+						if (_currentUser.isViewingOwnList()) {
 							_currentUser.setFaveList(result.getItems());
+						}
 						buildWidgets(result.getItems());
 					}
 				}
