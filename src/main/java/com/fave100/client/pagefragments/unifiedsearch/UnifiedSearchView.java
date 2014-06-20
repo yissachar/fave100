@@ -9,7 +9,6 @@ import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.FaveTextBox;
 import com.fave100.client.widgets.Icon;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
-import com.fave100.client.widgets.helpbubble.HelpBubble.Direction;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -74,7 +73,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	private Timer searchTimer;
 	private HandlerRegistration rootClickHandler = null;
 	private boolean _loadedAllResults;
-	private HelpBubble searchHelpBubble = new HelpBubble("Add song", "Use the search bar to find songs to add", 300, Direction.LEFT);
+	private HelpBubble searchHelpBubble = new HelpBubble("Add song", "Use the search bar to find songs to add", 300);
 	@Inject CurrentUser _currentUser;
 
 	private MouseOutHandler suggestionMouseOutHandler = new MouseOutHandler() {

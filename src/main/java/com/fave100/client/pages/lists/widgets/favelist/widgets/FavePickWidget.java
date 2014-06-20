@@ -173,8 +173,9 @@ public class FavePickWidget extends Composite {
 
 	public void showWhylineHelpBubble() {
 		final String whylineText = "You can add an 80 character Why-Line here, explaining why this song is in your Fave100";
-		whylineHelpBubble = new HelpBubble("Why-Line", whylineText, 400, HelpBubble.Direction.UP);
+		whylineHelpBubble = new HelpBubble("Why-Line", whylineText, 300);
 		container.add(whylineHelpBubble);
+		whylineHelpBubble.setArrowPos(75);
 	}
 
 	public void hideWhyLineHelpBubble() {
@@ -185,9 +186,9 @@ public class FavePickWidget extends Composite {
 
 	public void showRankWhylineHelpBubble() {
 		final String rankText = "You can change the rank of your songs here";
-		rankHelpBubble = new HelpBubble("Rank", rankText, 300, HelpBubble.Direction.LEFT);
+		rankHelpBubble = new HelpBubble("Rank", rankText, 300);
 		container.add(rankHelpBubble);
-		rankHelpBubble.setArrowPos(30);
+		rankHelpBubble.setArrowPos(15);
 	}
 
 	public void focusWhyline() {
