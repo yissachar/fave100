@@ -22,7 +22,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsUiHandlers> implements GlobalListDetailsPresenter.MyView {
 
-	private final static int LIST_NAME_FONT_SIZE = 56;
+	private final static int LIST_NAME_FONT_SIZE = 40;
 
 	private final Widget widget;
 

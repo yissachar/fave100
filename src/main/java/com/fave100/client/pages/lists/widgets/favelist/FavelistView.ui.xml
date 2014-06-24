@@ -7,7 +7,10 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.FavelistView.FavelistStyle">
+	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.FavelistView.FavelistStyle">		
+		@external rankUpArrow;
+		@external rankDownArrow;
+		
 		.faveList {		
 			font-size: 1.05em;
 		}
@@ -18,26 +21,18 @@
 		
 		.faveList > div {
 			overflow: hidden;
-			border-top: 1px solid #ddd;
-			background-color: #FFF;	
+			border-top: LIGHT_BORDER;
 		}
 		
-		.faveList > div:last {
-			border-bottom: 0px;
+		.faveList > div:first-child {
+			border-top: 0px;
 		}
-		
-		@external rankUpArrow;
-		@external rankDownArrow;
 		
 		.faveList > div:first-child .rankUpArrow, .faveList > div:last-child .rankDownArrow {
 			display: none;
 		}
 		
-		.faveList > div:nth-child(2n+1) {
-			background-color: #f4f4f4;
-		}
-		
-		.faveList > div > *, .detailsContainer > * {
+		.detailsContainer > * {
 			display: inline-block;
 		}
 		
