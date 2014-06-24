@@ -7,7 +7,6 @@
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">		
 		
 		.menuBar {
-			color: #fff;
 			padding-left: 10px;
 			cursor: pointer;
 		}
@@ -17,10 +16,9 @@
 			width: 1px;
 		}
 		
-		.topNav {
-			background-color: PRIMARY_COLOR;			
+		.topNav {		
 			height: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
-			border-bottom: 1px solid #000;			
+			border-bottom: 1px solid #bbb;			
 			position: fixed;
 			top: 0;
 			width: 100%;
@@ -33,12 +31,10 @@
 		.userContainer {
 			cursor: pointer;
 			position: relative;
-			color: #fff;
 			height: 100%;
 		}
 		
 		.topNav li > a, .topNav li > span {
-			color: #FFF;
 			display: inline-block;
 			text-decoration: none;
 			padding: 0 6px;
@@ -74,11 +70,11 @@
 		}		
 		
 		.logoFaveText {
-			color: #FFF;
+			color: HIGHLIGHT_COLOR;
 		}
 		
 		.logo100Text {
-			color: HIGHLIGHT_COLOR;
+			color: #C1D646;
 		}
 		
 		.logoFaveText:hover, .logo100Text:hover {
@@ -94,7 +90,7 @@
 		}
 		
 		.smallDisplay .unifiedSearchContainer {
-			background-color: FADED_LIGHT_BG;
+			background-color: MAIN_BACKGROUND;
 			position: fixed;
 			width: 300px;			
 			right: -400px;
@@ -106,7 +102,7 @@
 				
 		.smallDisplay .floatingSearch.unifiedSearchContainer {
 			right: 0px;
-			box-shadow: -1px -1px 5px 1px #777;
+			box-shadow: -3px 1px 5px -1px #bbb;
 			padding: 12px;
 		}
 		
@@ -115,7 +111,6 @@
 		}
 		
 		.searchToggle {
-			color: #fff;
 			cursor: pointer;
 		}
 					
@@ -133,9 +128,8 @@
 		.usernameLabel {
 			margin-left: 15px;
 			font-size: 16px;
-			color: #fff;
 			padding: 10px;
-			line-height: 35px;
+			line-height: 40px;
 		}
 				
 		.dropDown {
@@ -168,7 +162,8 @@
 		}
 		
 		.userContainer:hover {
-			background-color: #777;
+			background-color: #bbb;
+			color: #fff;
 		}
 		
 		.loginButton {
@@ -176,7 +171,7 @@
 			width: 100%;
 			text-align: center;
 			padding: 10px;
-			line-height: 25px;
+			line-height: 30px;
 		}
 				
 	</ui:style>

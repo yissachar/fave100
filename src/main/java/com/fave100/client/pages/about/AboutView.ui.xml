@@ -13,10 +13,6 @@
 			font-size: 16px;
 			line-height: 30px;
     	}
-    	
-    	.aboutFave100 a {
-			color: HIGHLIGHT_COLOR;
-    	}
     </ui:style>
     
 	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>

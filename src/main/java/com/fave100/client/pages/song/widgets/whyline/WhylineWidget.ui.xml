@@ -24,7 +24,6 @@
 		
 		.userLink {
 			font-size: 16px;
-			color: HIGHLIGHT_COLOR;
 			line-height: 12px;
 			vertical-align: top;
 		}

@@ -21,13 +21,13 @@
 			width: SEARCH_WIDTH;
 			height: 31px;
 			background-color: #fff;
-			border-radius: 15px;
-			border: 1px solid #000;
-			padding: 0 10px;
+			border-radius: 4px;
+			border: LIGHT_BORDER;
+			padding: 0 6px;
 		}
 		
 		.searchContainer.selected {
-			border-color: HIGHLIGHT_COLOR;
+			border-color: PRIMARY_COLOR;
 		}
 		
 		.currentSearchType {
@@ -191,7 +191,7 @@
 		
 		.modeOption.selected {
 			background-color: PRIMARY_COLOR;
-			color: HIGHLIGHT_COLOR;
+			color: #fff;
 		}
 				
 		.addModeOption {

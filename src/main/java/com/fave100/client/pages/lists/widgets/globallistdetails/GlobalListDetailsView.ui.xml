@@ -9,6 +9,7 @@
 		}
 		
 		.hashtagLabel {
+			color: HIGHLIGHT_COLOR;
 			text-overflow: ellipsis;
 			display: inline-block;
 			overflow: hidden;
@@ -21,9 +22,10 @@
 		}
 		
 		.trendingHeader {
-			margin-top: 25px;
+			color: HIGHLIGHT_COLOR;
+			margin-top: 35px;
 			margin-bottom: 5px;
-			font-size: 1.1em;
+			text-transform: uppercase;
 		}
 		
 		.trendingList {
@@ -33,17 +35,10 @@
 				
 		.trendingList a {
 			clear: both;
-			padding: 5px;
+			padding: 3px;
 			float: left;
 			width: 100%;
 			color: LIST_HIGHLIGHT_COLOR;
-			font-size: 18px;
-		}
-		
-		.trendingList a:hover {
-			text-decoration: none;
-			color: HIGHLIGHT_COLOR;
-			background-color: PRIMARY_COLOR;
 		}
 		
 		.smallDisplay .trendingList a {

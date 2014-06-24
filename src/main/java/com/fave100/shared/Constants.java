@@ -16,6 +16,6 @@ public class Constants {
 	public static final int MAX_ITEMS_PER_LIST = 100;
 	public static final int MAX_USERNAME_LENGTH = 15;
 	public static final String API_PATH = "/api";
-	public static final int TOP_BAR_HEIGHT = 44;
+	public static final int TOP_BAR_HEIGHT = 55;
 	public static final String TOP_BAR_HEIGHT_PX = TOP_BAR_HEIGHT + "px";
 }

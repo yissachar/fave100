@@ -67,22 +67,22 @@ button, .button {
 	background-color: #fff;
 	font-size: 0.85em;
 	border-radius: 15px;
-	color: #444;
-	border: 1px solid #555;
+	color: #666;
+	border: 1px solid #666;
 	padding: 6px;
 	text-transform: uppercase;
 }
 
 button:hover, .button:hover {
-	border: 1px solid #E35F6C;	
+	border: 1px solid #80AAE1;	
 	cursor: pointer;
 	text-decoration: none;
-	color: #E35F6C;
+	color: #80AAE1;
 }
 
 button:focus, .button:focus {
 	outline: none;
-	border-color: #D9A927;
+	border-color: #80AAE1;
 }
 
 button::-moz-focus-inner {

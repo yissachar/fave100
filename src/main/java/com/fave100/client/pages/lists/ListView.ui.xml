@@ -11,6 +11,7 @@
 			padding-top: 10px;
 			padding-left: 10px;
 			padding-right: 15px;
+			border-right: LIGHT_BORDER;
 			width: 19%;
 			position: fixed;
 			left: 0;
@@ -27,12 +28,13 @@
 				
 		.smallDisplay .hoverSideBar .userPageSideBar, .mediumDisplay .hoverSideBar .userPageSideBar {
 			left: 0;
-			box-shadow: 1px 1px 5px 1px #777;
+			box-shadow: 3px 1px 5px -1px #bbb;
 		}	
 		
 		.userPageFaveList {
 			transition: margin-left RESIZE_TRANSITION_TIME;
 			-webkit-transition: margin-left RESIZE_TRANSITION_TIME;
+			border-right: LIGHT_BORDER;
 		}
 		
 		.smallDisplay .userPageFaveList, .mediumDisplay .userPageFaveList {
@@ -50,20 +52,18 @@
 		}
 	
 		.tagline {
-			font-size: 18px;
-			padding-top: 15px;
-			padding-bottom: 10px;
-			text-align: center;			
+			padding-top: 10px;
+			padding-bottom: 15px;
+			text-align: center;	
+			border-bottom: LIGHT_BORDER;		
 		}
 		
 		.taglineCTA {
-			font-size: 22px;
+			font-size: 20px;
 		}
 		
 		.taglineLinks {
-			font-size: 16px;
 			margin-top: 10px;
-			margin-bottom: 20px;
 		}
 		
 		.taglineLinks > * {	
