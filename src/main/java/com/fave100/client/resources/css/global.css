@@ -1,5 +1,6 @@
 @def PRIMARY_COLOR #80AAE1;
-@def HIGHLIGHT_COLOR #b2b2b2;
+@def HIGHLIGHT_COLOR #a4a4a4;
+@def TOP_NAV_COLOR #6B849C;
 @def LIST_HIGHLIGHT_COLOR #80AAE1;
 @def SIDE_BAR_WIDTH 239px;
 @def FADED_LIGHT_BG #f1f1f1;
@@ -67,6 +68,7 @@ html {
 body {
 	background-color: MAIN_BACKGROUND;
 	font-family: "Arimo", Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+	font-size: 15px;
 	color: #666;
 	height: 100%;
 }
@@ -81,6 +83,11 @@ a:hover {
 	text-decoration: underline;
 }
 
+h1, h2 {
+	color: #555;
+	font-weight: normal;	
+}
+
 input[type=text],
 input[type=password],
 input[type=search],
@@ -90,7 +97,7 @@ input[type=number],
 input[type=color],
 input[type=email],
 select {
-	padding: 6px;	
+	padding: 4px;	
 	border: 1px solid #888;
 }
 

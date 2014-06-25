@@ -55,13 +55,13 @@
 		}
 		
 		.songName {
-			font-size: 25px;
+			font-size: 22px;
 			display: block;
 			color: LIST_HIGHLIGHT_COLOR;
 		}
 		
 		.artistName {
-			font-size: 18px;
+			font-size: 16px;
 			display: block;
 			margin-top: 5px;
 			margin-bottom: 15px;
