@@ -129,9 +129,9 @@ public class RegisterWidgetView extends ViewWithUiHandlers<RegisterWidgetUiHandl
 			registerWithFacebookButton.setText("Facebook");
 		}
 		else {
-			registerWithGoogleButton.setText("Register in with Google");
-			registerWithTwitterButton.setText("Register in with Twitter");
-			registerWithFacebookButton.setText("Register in with Facebook");
+			registerWithGoogleButton.setText("Register with Google");
+			registerWithTwitterButton.setText("Register with Twitter");
+			registerWithFacebookButton.setText("Register with Facebook");
 		}
 	}
 }
