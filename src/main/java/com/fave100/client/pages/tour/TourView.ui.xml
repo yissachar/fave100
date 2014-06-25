@@ -33,7 +33,7 @@
     	
     	.container p {
 			margin-bottom: 10px;
-			font-size: 17px;
+			font-size: 16px;
 			line-height: 28px;
     	}
     	

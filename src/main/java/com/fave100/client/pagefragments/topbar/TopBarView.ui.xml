@@ -8,6 +8,7 @@
 		
 		.menuBar {
 			padding-left: 10px;
+			color: #fff;
 			cursor: pointer;
 		}
 		
@@ -18,7 +19,8 @@
 		
 		.topNav {		
 			height: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
-			border-bottom: 1px solid #bbb;			
+			background-color: TOP_NAV_COLOR;
+			border-bottom: 1px solid #666;			
 			position: fixed;
 			top: 0;
 			width: 100%;
@@ -47,7 +49,7 @@
 		
 		.notification {
 			position: absolute;
-			top: 55px;
+			top: 65px;
 			width: 100%;
 			margin: 0 auto;
 			text-align: center;
@@ -59,7 +61,7 @@
 			padding: 6px;
 			border-radius: 3px;
 			border: 1px solid #aaa;
-			background-color: #F7E5B2;
+			background-color: #FAEECA;
 		}
 				
 		.faveLogo {		
@@ -70,19 +72,17 @@
 		}		
 		
 		.logoFaveText {
-			color: HIGHLIGHT_COLOR;
+			color: #fff;
+			cursor: pointer;
 		}
 		
 		.logo100Text {
 			color: #C1D646;
+			cursor: pointer;
 		}
 		
 		.logoFaveText:hover, .logo100Text:hover {
 			text-decoration: none;
-		}
-		
-		.faveLogo:hover {
-			cursor: pointer;
 		}
 		
 		.unifiedSearchContainer {			
@@ -112,6 +112,7 @@
 		
 		.searchToggle {
 			cursor: pointer;
+			color: #fff;
 		}
 					
 		.userInfo {
@@ -130,6 +131,7 @@
 			font-size: 16px;
 			padding: 10px;
 			line-height: 40px;
+			color: #fff;
 		}
 				
 		.dropDown {
@@ -172,6 +174,7 @@
 			text-align: center;
 			padding: 10px;
 			line-height: 30px;
+			color: #fff;
 		}
 				
 	</ui:style>

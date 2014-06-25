@@ -7,7 +7,7 @@
 	
 		.header {
 			display: block;
-			background-color: PRIMARY_COLOR;
+			background-color: TOP_NAV_COLOR;
 			padding: 6px 0;
 			border-bottom: 1px solid #555;
 		}
