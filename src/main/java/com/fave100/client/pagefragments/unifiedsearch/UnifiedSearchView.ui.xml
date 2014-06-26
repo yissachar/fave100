@@ -22,12 +22,10 @@
 			height: 31px;
 			background-color: #fff;
 			border-radius: 4px;
-			border: 1px solid #888;
 			padding: 0 6px;
-		}
-		
-		.searchContainer.selected {
-			border-color: PRIMARY_COLOR;
+			@mixin flexbox();
+			@mixin align-items(center);
+			@mixin justify-content(space-between);
 		}
 		
 		.currentSearchType {
@@ -37,7 +35,6 @@
 			padding: 3px 5px;
 			border-radius: 5px;
 			display: inline-block;
-			margin-top: 3px;
 		}
 		
 		.currentSearchType:hover {
@@ -68,16 +65,6 @@
     	
     	.smallDisplay .searchBox {
 			width: 65%;
-    	}
-    	
-    	.searchIndicator {
-			float: right;
-			margin-top: 6px;
-    	}
-    	
-    	.searchLoadingIndicator {
-			float: right;
-			margin-top: 6px;
     	}
     	
     	.smallDisplay .searchContainer {
@@ -239,8 +226,8 @@
 				<w:Icon ui:field="removeSearchTypeButton" ui:styleName="fa fa-times {style.removeSearchTypeButton}" />
 			</g:FlowPanel>
     		<w:FaveTextBox ui:field="searchBox" ui:styleName="{style.searchBox}" />
-			<w:Icon ui:field="searchIndicator" ui:styleName="fa fa-search {style.searchIndicator}" />
-			<g:SimplePanel ui:field="searchLoadingIndicator" ui:styleName="{style.searchLoadingIndicator}">
+			<w:Icon ui:field="searchIndicator" ui:styleName="fa fa-search" />
+			<g:SimplePanel ui:field="searchLoadingIndicator">
 				<g:Image resource="{img.searchLoadingIndicator}"></g:Image>
 			</g:SimplePanel>
     	</g:FlowPanel>

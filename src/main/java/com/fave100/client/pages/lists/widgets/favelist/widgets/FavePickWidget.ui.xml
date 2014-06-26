@@ -84,7 +84,7 @@
 		
 		.hoverPanel i:hover {
 			cursor: pointer;
-			color: HIGHLIGHT_COLOR;
+			color: PRIMARY_COLOR;
 		}
 		
 	</ui:style>
