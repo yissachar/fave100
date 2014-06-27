@@ -38,8 +38,8 @@
 	flex-grow: VALUE;
 }
 
-@defmixin full-width-abs-dark-bg() {	
-	position: absolute;
+@defmixin full-width-dark-bg() {	
+	position: fixed;
 	width: 100%;
 	height: 100%;
 	opacity: .40;

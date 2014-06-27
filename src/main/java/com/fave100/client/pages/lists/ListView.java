@@ -47,6 +47,7 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiField ListStyle style;
 	@UiField HTMLPanel userContainer;
 	@UiField Panel tagline;
+	@UiField Panel slideOutBackground;
 	@UiField HTMLPanel userPageSideBar;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel globalListDetailsContainer;
@@ -167,7 +168,9 @@ public class ListView extends PageView<ListUiHandlers>
 	}
 
 	private void resize() {
-		userPageSideBar.setHeight((Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px");
+		String height = (Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px";
+		userPageSideBar.setHeight(height);
+		slideOutBackground.setHeight(height);
 	}
 
 	private void showOwnPage() {
