@@ -28,6 +28,11 @@
 			@mixin justify-content(space-between);
 		}
 		
+    	
+    	.smallDisplay .searchContainer {
+			border: LIGHT_BORDER;
+		}
+    	
 		.currentSearchType {
 			font-size: 12px;
 			background-color: #f8f8f8;
@@ -58,7 +63,6 @@
 			margin-left: 5px;
 			width: 75%;
     	}
-    	
     	.searchBox:focus {
 			outline: none;
     	}
