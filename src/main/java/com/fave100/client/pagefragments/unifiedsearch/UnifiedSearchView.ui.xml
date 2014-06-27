@@ -4,7 +4,7 @@
              
     <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchView.UnifiedSearchStyle">
     	@def SEARCH_WIDTH 375px;
-    		
+    	    	
 		.currentSearchTypeContainer {
 			float: left;
 			border: 1px solid #444;
@@ -27,8 +27,7 @@
 			@mixin align-items(center);
 			@mixin justify-content(space-between);
 		}
-		
-    	
+		    	
     	.smallDisplay .searchContainer {
 			border: LIGHT_BORDER;
 		}

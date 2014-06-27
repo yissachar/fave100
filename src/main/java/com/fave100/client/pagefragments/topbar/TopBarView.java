@@ -7,7 +7,9 @@ import com.fave100.client.widgets.Icon;
 import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -18,6 +20,8 @@ import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -40,6 +44,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	}
 
 	@UiField TopBarStyle style;
+	@UiField Panel slideOutBackground;
 	@UiField HTMLPanel topBar;
 	@UiField Icon menuBar;
 	@UiField Hyperlink logoFaveText;
@@ -61,6 +66,17 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		_parameterTokenFormatter = parameterTokenFormatter;
 		Notification.init(notification);
 		loggedInContainer.setVisible(false);
+
+		RootPanel.get().addHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Element target = Element.as(event.getNativeEvent().getEventTarget());
+				if (Utils.widgetContainsElement(slideOutBackground, target)) {
+					setFloatingSearch(false);
+				}
+			}
+		}, ClickEvent.getType());
 	}
 
 	@Override
@@ -165,9 +181,11 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	public void setFloatingSearch(boolean floating) {
 		if (floating) {
 			unifiedSearchContainer.addStyleName(style.floatingSearch());
+			slideOutBackground.addStyleName(style.floatingSearch());
 		}
 		else {
 			unifiedSearchContainer.removeStyleName(style.floatingSearch());
+			slideOutBackground.removeStyleName(style.floatingSearch());
 		}
 	}
 }
