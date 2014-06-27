@@ -31,7 +31,7 @@
 		
 		.slideOutBackground {
 			visibility: hidden;
-			@mixin full-width-abs-dark-bg();
+			@mixin full-width-dark-bg();
 			@mixin transition(visibility RESIZE_TRANSITION_TIME);
 		}
 		
@@ -129,7 +129,6 @@
 		}
 		
 		.faveListContainer {
-			min-height: 500px;
 			-webkit-overflow-scrolling: touch;
 		}		
 	</ui:style>
@@ -142,7 +141,7 @@
 			<g:FlowPanel>
 			
 				<g:HTMLPanel ui:field="userContainer">
-					<g:SimplePanel ui:styleName="{style.slideOutBackground}"/>
+					<g:SimplePanel ui:field="slideOutBackground" ui:styleName="{style.slideOutBackground}"/>
 					
 					<g:HTMLPanel ui:field="userPageSideBar" styleName="{style.userPageSideBar}">
 						<g:HTMLPanel ui:field="globalListDetailsContainer"/>								
