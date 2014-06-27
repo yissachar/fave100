@@ -98,6 +98,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	UnifiedSearchView(Binder binder) {
 		initWidget(binder.createAndBindUi(this));
 		clearSearchResultsNoUiHandlers();
+		final Widget thisWidget = this.asWidget();
 
 		ClickHandler clickHandler = new ClickHandler() {
 

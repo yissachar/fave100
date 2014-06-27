@@ -5,7 +5,16 @@
 	xmlns:w='urn:import:com.fave100.client.widgets'>
 
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">		
+		.slideOutBackground {
+			visibility: hidden;
+			z-index: 1;
+			@mixin full-width-dark-bg();
+		}
 		
+		.smallDisplay .floatingSearch.slideOutBackground {
+			visibility: visible;
+		}
+    		    		
 		.menuBar {
 			padding-left: 10px;
 			color: #fff;
@@ -102,7 +111,6 @@
 				
 		.smallDisplay .floatingSearch.unifiedSearchContainer {
 			right: 0px;
-			box-shadow: -3px 1px 5px -1px #bbb;
 			padding: 12px;
 		}
 		
@@ -188,6 +196,8 @@
 			 when the browser is at 0, 0.
 		 -->
 		<div class="{style.topNavSticky}"/>
+    
+		<g:SimplePanel ui:field="slideOutBackground" ui:styleName="{style.slideOutBackground}"/>
 	    			   
 		<g:SimplePanel ui:styleName="{style.notification}">
 			<g:Label ui:field="notification" ui:styleName="{style.notificationText}"/>
