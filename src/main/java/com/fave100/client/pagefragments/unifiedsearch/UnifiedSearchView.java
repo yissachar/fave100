@@ -53,6 +53,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	}
 
 	@UiField UnifiedSearchStyle style;
+	@UiField Panel container;
 	@UiField Label currentSearchType;
 	@UiField Panel currentSearchTypeContainer;
 	@UiField Icon removeSearchTypeButton;
@@ -471,10 +472,10 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 	@Override
 	public void addHelpBubble() {
-		searchContainer.add(searchHelpBubble);
+		container.add(searchHelpBubble);
 	}
 
 	public void removeHelpBubble() {
-		searchContainer.remove(searchHelpBubble);
+		container.remove(searchHelpBubble);
 	}
 }

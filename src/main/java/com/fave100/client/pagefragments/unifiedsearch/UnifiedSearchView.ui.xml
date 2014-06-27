@@ -221,7 +221,7 @@
     
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
     
-    <g:HTMLPanel>
+    <g:HTMLPanel ui:field="container">
 		
 		<g:FlowPanel ui:field="searchContainer" ui:styleName="{style.searchContainer}">
 			<g:FlowPanel ui:field="currentSearchTypeContainer" ui:styleName="{style.currentSearchType}">
