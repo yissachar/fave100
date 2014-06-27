@@ -186,7 +186,7 @@ public class FavePickWidget extends Composite {
 
 	public void showRankWhylineHelpBubble() {
 		final String rankText = "You can change the rank of your songs here";
-		rankHelpBubble = new HelpBubble("Rank", rankText, 300);
+		rankHelpBubble = new HelpBubble("Rank", rankText, 320);
 		container.add(rankHelpBubble);
 		rankHelpBubble.setArrowPos(15);
 	}

@@ -10,11 +10,17 @@
 		.container {
 			position: absolute;
 			width: inherit;
-			font-size: 15px;
-		}
+			font-size: 15px;			
+			border: 1px solid BORDER_COLOR;
+			border-radius: 4px;			
+			background-color: #FFF;
+			padding: 6px;
+			box-shadow: 0 0 6px 1px BORDER_COLOR;
+			overflow: none;
+		}		
 		
 		.arrow {
-			top: 1px;
+			top: 0px;
 			left: 50%;
 			position: absolute;
 		}
@@ -42,15 +48,6 @@
 			border-width: add(ARROW_SIZE, 2px);
 			margin-left: sub(0px, add(ARROW_SIZE, 2px));
 		}
-		
-		.helpContainer {
-			border: 1px solid BORDER_COLOR;
-			border-radius: 4px;			
-			background-color: #FFF;
-			padding: 6px;
-			box-shadow: 0 0 6px 1px BORDER_COLOR;
-			overflow: none;
-		}
 				
 		.closeButton {
 			position: absolute;
@@ -70,14 +67,10 @@
 		}
 	</ui:style>
 	
-	<g:HTMLPanel>
-		<g:FocusPanel ui:field="container" ui:styleName="{style.container}">
-			<g:FlowPanel ui:styleName="{style.helpContainer}">
-				<g:HTMLPanel ui:field="arrow" ui:styleName="{style.arrow}" />			
-				<w:Icon ui:field="closeButton" ui:styleName="fa fa-times {style.closeButton}"/>
-				<g:Label ui:field="helpText" ui:styleName="{style.helpText}"/>
-			</g:FlowPanel>
-		</g:FocusPanel>
+	<g:HTMLPanel ui:styleName="{style.container}">
+		<g:HTMLPanel ui:field="arrow" ui:styleName="{style.arrow}" />			
+		<w:Icon ui:field="closeButton" ui:styleName="fa fa-times {style.closeButton}"/>
+		<g:Label ui:field="helpText" ui:styleName="{style.helpText}"/>
 	</g:HTMLPanel>
 	
 </ui:UiBinder> 
