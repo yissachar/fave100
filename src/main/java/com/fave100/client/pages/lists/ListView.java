@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.Utils;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.pages.PageView;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.shared.Constants;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -26,6 +29,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
@@ -74,6 +78,19 @@ public class ListView extends PageView<ListUiHandlers>
 				resize();
 			}
 		});
+
+		RootPanel.get().addHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Element target = Element.as(event.getNativeEvent().getEventTarget());
+				if (Utils.widgetContainsElement(globalListDetailsContainer, target)
+						|| Utils.widgetContainsElement(slideOutBackground, target)) {
+					toggleSideBar();
+				}
+
+			}
+		}, ClickEvent.getType());
 
 		resize();
 	}

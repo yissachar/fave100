@@ -32,7 +32,6 @@
 		.slideOutBackground {
 			visibility: hidden;
 			@mixin full-width-dark-bg();
-			@mixin transition(visibility RESIZE_TRANSITION_TIME);
 		}
 		
 		.smallDisplay .hoverSideBar .slideOutBackground, .mediumDisplay .hoverSideBar .slideOutBackground {
