@@ -48,6 +48,8 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		void setTopBarDropShadow(boolean show);
 
 		void setMobileView(String currentPlace);
+
+		void setFloatingSearch(boolean floating);
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
@@ -138,6 +140,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 			@Override
 			public void onNavigation(NavigationEvent navigationEvent) {
 				checkMobileView();
+				getView().setFloatingSearch(false);
 			}
 		});
 	}

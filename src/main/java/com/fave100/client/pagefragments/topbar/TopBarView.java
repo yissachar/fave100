@@ -87,10 +87,10 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	@UiHandler("searchToggle")
 	void onSearchToggleclick(final ClickEvent event) {
 		if (unifiedSearchContainer.getStyleName().contains(style.floatingSearch())) {
-			unifiedSearchContainer.removeStyleName(style.floatingSearch());
+			setFloatingSearch(false);
 		}
 		else {
-			unifiedSearchContainer.addStyleName(style.floatingSearch());
+			setFloatingSearch(true);
 		}
 	}
 
@@ -158,6 +158,16 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		}
 		else {
 			unifiedSearchContainer.setHeight("auto");
+		}
+	}
+
+	@Override
+	public void setFloatingSearch(boolean floating) {
+		if (floating) {
+			unifiedSearchContainer.addStyleName(style.floatingSearch());
+		}
+		else {
+			unifiedSearchContainer.removeStyleName(style.floatingSearch());
 		}
 	}
 }
