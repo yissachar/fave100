@@ -31,6 +31,8 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.proxy.NavigationEvent;
+import com.gwtplatform.mvp.client.proxy.NavigationHandler;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
@@ -48,6 +50,10 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		void setFollowCTA(boolean show, boolean starred);
 
 		void toggleSideBar();
+
+		void hideSideBar();
+
+		void showSideBar();
 	}
 
 	@ProxyCodeSplit
@@ -141,6 +147,14 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 			@Override
 			public void onHideSideBar(HideSideBarEvent event) {
 				getView().toggleSideBar();
+			}
+		});
+
+		addRegisteredHandler(NavigationEvent.getType(), new NavigationHandler() {
+
+			@Override
+			public void onNavigation(NavigationEvent navigationEvent) {
+				getView().hideSideBar();
 			}
 		});
 	}

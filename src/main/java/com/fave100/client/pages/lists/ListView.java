@@ -86,7 +86,7 @@ public class ListView extends PageView<ListUiHandlers>
 				Element target = Element.as(event.getNativeEvent().getEventTarget());
 				if (Utils.widgetContainsElement(globalListDetailsContainer, target)
 						|| Utils.widgetContainsElement(slideOutBackground, target)) {
-					toggleSideBar();
+					hideSideBar();
 				}
 
 			}
@@ -232,10 +232,20 @@ public class ListView extends PageView<ListUiHandlers>
 	@Override
 	public void toggleSideBar() {
 		if (userContainer.getStyleName().contains(style.hoverSideBar())) {
-			userContainer.removeStyleName(style.hoverSideBar());
+			hideSideBar();
 		}
 		else {
-			userContainer.addStyleName(style.hoverSideBar());
+			showSideBar();
 		}
+	}
+
+	@Override
+	public void hideSideBar() {
+		userContainer.removeStyleName(style.hoverSideBar());
+	}
+
+	@Override
+	public void showSideBar() {
+		userContainer.addStyleName(style.hoverSideBar());
 	}
 }
