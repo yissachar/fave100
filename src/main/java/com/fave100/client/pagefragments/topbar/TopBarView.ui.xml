@@ -164,16 +164,10 @@
 		
 		.loggedInContainer {			
 			position: relative;
-			height: 100%;
 		}
 		
 		.loggedInContainer:hover .dropDown, .userContainer:hover .dropDown {
 			display: block;
-		}
-		
-		.userContainer:hover {
-			background-color: #bbb;
-			color: #fff;
 		}
 		
 		.loginButton {
@@ -183,6 +177,10 @@
 			padding: 10px;
 			line-height: 30px;
 			color: #fff;
+		}
+		
+		.loginButton:hover {
+			text-decoration: underline;
 		}
 				
 	</ui:style>
