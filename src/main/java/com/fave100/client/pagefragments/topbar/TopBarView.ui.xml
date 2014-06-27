@@ -42,7 +42,6 @@
 		.userContainer {
 			cursor: pointer;
 			position: relative;
-			height: 100%;
 		}
 		
 		.topNav li > a, .topNav li > span {
@@ -75,7 +74,6 @@
 				
 		.faveLogo {		
 			font-size: 30px;
-			line-height: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			padding-left: 15px;
 			@mixin flex-grow(2);
 		}		
@@ -126,7 +124,6 @@
 		.userInfo {
 			padding: 0 5px;
 			margin-top: 4px;
-			height: 100%;
 	  	}
 	  	
 	  	.userAvatar {
@@ -138,7 +135,6 @@
 			margin-left: 15px;
 			font-size: 16px;
 			padding: 10px;
-			line-height: 40px;
 			color: #fff;
 		}
 				
@@ -175,7 +171,6 @@
 			width: 100%;
 			text-align: center;
 			padding: 10px;
-			line-height: 30px;
 			color: #fff;
 		}
 		
