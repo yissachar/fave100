@@ -142,7 +142,6 @@ footer {
 
 .content {
 	position: relative;
-	overflow-y: hidden;
 }
 
 .inputStatusMessage {
