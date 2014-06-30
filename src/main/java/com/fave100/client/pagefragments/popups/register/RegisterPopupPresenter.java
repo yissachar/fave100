@@ -1,4 +1,4 @@
-package com.fave100.client.pagefragments.popups.addsong.register;
+package com.fave100.client.pagefragments.popups.register;
 
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.google.gwt.event.shared.GwtEvent.Type;
