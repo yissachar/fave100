@@ -1,4 +1,4 @@
-package com.fave100.client.pagefragments.popups.addsong.register;
+package com.fave100.client.pagefragments.popups.register;
 
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
