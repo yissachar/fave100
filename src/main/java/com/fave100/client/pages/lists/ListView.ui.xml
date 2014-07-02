@@ -41,7 +41,6 @@
 		.userPageFaveList {
 			transition: margin-left RESIZE_TRANSITION_TIME;
 			-webkit-transition: margin-left RESIZE_TRANSITION_TIME;
-			border-right: LIGHT_BORDER;
 		}
 		
 		.smallDisplay .userPageFaveList, .mediumDisplay .userPageFaveList {
