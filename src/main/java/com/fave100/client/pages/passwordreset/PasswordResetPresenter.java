@@ -181,8 +181,8 @@ public class PasswordResetPresenter
 					getView().showPwdError(errorMsg, false);
 				}
 				else {
-					_placeManager
-							.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+					_currentUser.logout();
+					_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.profile).build());
 				}
 			}
 		});

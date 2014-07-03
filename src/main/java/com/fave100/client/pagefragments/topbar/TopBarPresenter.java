@@ -2,11 +2,10 @@ package com.fave100.client.pagefragments.topbar;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
-import com.fave100.client.Utils;
+import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.events.favelist.HideSideBarEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchPresenter;
 import com.fave100.client.pages.register.RegisterPresenter;
 import com.fave100.shared.place.NameTokens;
@@ -52,14 +51,12 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		void setFloatingSearch(boolean floating);
 	}
 
-	@ContentSlot public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot public static final Type<RevealContentHandler<?>> SEARCH_SLOT = new Type<RevealContentHandler<?>>();
 
 	private EventBus _eventBus;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
 	private FaveApi _api;
-	@Inject private LoginPopupPresenter loginBox;
 	@Inject private UnifiedSearchPresenter unifiedSearch;
 
 	@Inject
@@ -168,16 +165,6 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	}
 
 	@Override
-	public void showLoginBox() {
-		if (Utils.isTouchDevice()) {
-			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
-		}
-		else {
-			addToPopupSlot(loginBox);
-		}
-	}
-
-	@Override
 	public void logout() {
 		_currentUser.logout();
 	}
@@ -227,10 +214,16 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 				.with(RegisterPresenter.CODE_PARAM, code)
 				.build());
 	}
+
+	@Override
+	public void showLoginDialog() {
+		_eventBus.fireEvent(new LoginDialogRequestedEvent());
+	}
 }
 
 interface TopBarUiHandlers extends UiHandlers {
-	void showLoginBox();
+
+	void showLoginDialog();
 
 	void logout();
 

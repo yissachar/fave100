@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fave100.client.RequestCache.RequestType;
+import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.events.favelist.AddSongListsSelectedEvent;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
@@ -149,7 +150,8 @@ public class CurrentUser extends AppUser {
 	public void followUser(final AppUser user) {
 		// Not logged in, redirect to login
 		if (!isLoggedIn()) {
-			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+			setAfterLoginAction(new FollowUserAfterLoginAction(this, user));
+			_eventBus.fireEvent(new LoginDialogRequestedEvent());
 			return;
 		}
 

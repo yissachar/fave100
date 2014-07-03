@@ -100,14 +100,6 @@ public class LoginWidgetPresenter extends
 
 			}
 		});
-		/*final Request<String> facebookLoginUrlReq = requestFactory
-				.appUserRequest().getFacebookAuthUrl(redirect);
-		facebookLoginUrlReq.fire(new Receiver<String>() {
-			@Override
-			public void onSuccess(final String url) {
-				getView().setFacebookLoginUrl(url);
-			}
-		});*/
 
 	}
 
