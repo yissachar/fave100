@@ -6,7 +6,7 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<ui:style>
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
 		.loginForm {
 			display: block;
 			margin: 0 auto;
@@ -16,41 +16,74 @@
 			float: left;
 			margin: 0 auto;
 		}
+						
+		.thirdPartyLinks, .thirdPartyLinks > * {
+			margin: 10px 0;
+			width: 100%;			
+		}
 		
-		.forgotPasswordLink {
-			display: block;
-			font-size: 0.8em;
-			padding: 5px;
-			margin-top: 5px;
+		.orDivider {
+			color: #999;
+			font-size: 20px;
+			text-align: center;
+			margin: 15px;
 		}
 		
 		.field {
 			width: 100%;
 			margin-bottom: 10px;
+			color: #999;
+		}
+		
+		.field > *:first-child {
+			margin-bottom: 5px;
 		}
 		
 		.loginStatusMessage {
 			margin-top: 5px;
 		}
 		
-		.loginButton {
-			width: 100%;
-			margin-top: 10px;		
+		.passwordAndLogin {
+			@mixin flexbox();
+			@mixin justify-content(space-between);
+			@mixin align-items(center);
 		}
-						
-		.thirdPartyLinks, .thirdPartyLinks > * {
-			margin: 5px 0;
-			width: 100%;			
-		}		
+		
+		.forgotPasswordLink {
+			color: HIGH_LEGIBILITY_BLUE;
+			font-size: 12px;
+		}
+		
+		.loginButton {
+			background-color: HIGH_LEGIBILITY_BLUE;
+			color: #fff;
+			border-radius: 3px;
+			border: 0px;
+			width: 80px;
+		}
+		
+		.loginButton:hover {
+			border: 0px;
+			color: #fff;
+		}
+			
 	</ui:style>
 
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens" />
 	
-	<g:HTMLPanel ui:styleName="row">
-		<g:FormPanel ui:field="loginForm" ui:styleName="{style.loginForm} col span_5">
+	<g:HTMLPanel ui:styleName="row">		
+		<div class="thirdPartyLoginBox">
+			<div class="{style.thirdPartyLinks}">
+				<my:SocialButton ui:field="signInWithFacebookButton" text="Sign in with Facebook" style="facebookSocialLogo" iconStyle="fa fa-lg fa-facebook"></my:SocialButton>
+				<my:SocialButton ui:field="signInWithTwitterButton" text="Sign in with Twitter" style="twitterSocialLogo" iconStyle="fa fa-lg fa-twitter"></my:SocialButton>
+				<my:SocialButton ui:field="signInWithGoogleButton" text="Sign in with Google" style="googleSocialLogo" iconStyle="fa fa-lg fa-google-plus"></my:SocialButton>				
+			</div>
+		</div>
+		<div class="{style.orDivider}">- OR -</div>
+		<g:FormPanel ui:field="loginForm" ui:styleName="{style.loginForm}">
 			<g:HTMLPanel styleName="nativeLoginBox">
 				<div class="{style.field}">
-					<g:Label>Username</g:Label>
+					<g:Label>Username or Email</g:Label>
 					<my:FaveTextBox ui:field="usernameInput"/>
 				</div>
 				<div class="{style.field}">
@@ -58,18 +91,13 @@
 					<g:PasswordTextBox ui:field="passwordInput" />
 					<g:Label styleName="error {style.loginStatusMessage}" ui:field="loginStatusMessage" />
 				</div>
-				<g:SubmitButton ui:field="loginButton" ui:styleName="{style.loginButton}">Sign In</g:SubmitButton>
-				<g:InlineHyperlink styleName="{style.forgotPasswordLink}"
-					targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
+				
+				<g:FlowPanel ui:styleName="{style.passwordAndLogin}">
+					<g:InlineHyperlink styleName="{style.forgotPasswordLink}"
+						targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
+					<g:SubmitButton ui:field="loginButton" ui:styleName="{style.loginButton}">Log in</g:SubmitButton>
+				</g:FlowPanel>
 			</g:HTMLPanel>
 		</g:FormPanel>		 
-		<div class="loginDivider col span_2" >or</div>
-		<div class="thirdPartyLoginBox col span_5">
-			<div class="{style.thirdPartyLinks}">
-				<my:SocialButton ui:field="signInWithGoogleButton" text="Sign in with Google" style="googleSocialLogo" iconStyle="fa fa-lg fa-google-plus"></my:SocialButton>
-				<my:SocialButton ui:field="signInWithTwitterButton" text="Sign in with Twitter" style="twitterSocialLogo" iconStyle="fa fa-lg fa-twitter"></my:SocialButton>
-				<my:SocialButton ui:field="signInWithFacebookButton" text="Sign in with Facebook" style="facebookSocialLogo" iconStyle="fa fa-lg fa-facebook"></my:SocialButton>				
-			</div>
-		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

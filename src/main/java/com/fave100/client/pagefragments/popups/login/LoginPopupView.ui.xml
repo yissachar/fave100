@@ -4,18 +4,9 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:w='urn:import:com.fave100.client.widgets.lightbox'>
 
-	<ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
-	
-		.header {
-			display: block;
-			background-color: TOP_NAV_COLOR;
-			padding: 6px 0;
-			border-bottom: 1px solid #555;
-		}
-		
+	<ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">	
 		.title {
-			color: #fff;
-			text-align: center;
+			color: HIGH_LEGIBILITY_BLUE;
 			padding: 5px;
 			font-size: 22px;
 		}
@@ -27,6 +18,13 @@
 		.registerLinkContainer {
 			padding: 10px;
 			text-align: center;
+			background-color: #f8f9fb;
+			border-top: 1px solid #e4ebf0;
+		}
+		
+		.registerLinkContainer a {
+			color: #44789b;
+			text-shadow: 0 1px 0 #ffffff;
 		}
 	</ui:style>
 	
@@ -34,11 +32,9 @@
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
 			
 	<w:LightBox>
-		<w:content width="50%" height="100%">	
+		<w:content width="400px" height="100%">	
 			<g:HTMLPanel>
-				<g:SimplePanel ui:styleName="{style.header}">
-					<g:Label ui:styleName="{style.title}">Log in</g:Label>
-				</g:SimplePanel>
+				<g:Label ui:styleName="{style.title}">Log in</g:Label>
 				<g:HTMLPanel ui:field="loginContainer" ui:styleName="{style.innerLoginBox}"/>
 				<g:SimplePanel ui:styleName="{style.registerLinkContainer}">
 					<g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}">

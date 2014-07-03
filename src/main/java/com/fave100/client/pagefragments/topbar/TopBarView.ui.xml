@@ -4,7 +4,7 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:w='urn:import:com.fave100.client.widgets'>
 
-	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">		
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">
 		.slideOutBackground {
 			visibility: hidden;
 			z-index: 1;
@@ -222,7 +222,7 @@
 						<g:InlineLabel ui:styleName="{style.dropDownElement}" ui:field="logOutButton">Sign out</g:InlineLabel>
 					</g:FlowPanel>
 				</g:FlowPanel>
-				<g:InlineLabel ui:field="loginButton" ui:styleName="{style.loginButton}">Sign in</g:InlineLabel>	
+				<g:InlineLabel ui:field="loginButton" ui:styleName="{style.loginButton}">Log in</g:InlineLabel>	
 			</g:FlowPanel>
 			
 		</g:HTMLPanel>

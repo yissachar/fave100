@@ -7,7 +7,7 @@
 @def MAIN_BACKGROUND #fefefe;
 @def RESIZE_TRANSITION_TIME 0.6s;
 @def LIGHT_BORDER 1px solid #ccc;
-
+@def HIGH_LEGIBILITY_BLUE #4ea0ca;
 
 @defmixin flexbox() {
 	/* @alternate */ display: -webkit-box;
@@ -112,7 +112,8 @@ input[type=color],
 input[type=email],
 select {
 	padding: 4px;	
-	border: 1px solid #888;
+	border: 1px solid #999;
+	border-radius: 4px;
 }
 
 input[type=text]:hover,
