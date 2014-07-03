@@ -5,19 +5,10 @@
 	<ui:style>		
 		.generalButton {	
 			cursor: pointer;
-			font-size: 0.85em;
 			border-radius: 4px;
 			color: #FFF;			
-			padding: 6px;
-			text-transform: uppercase;
-			font-size: 15px;
+			padding: 10px;
 		}		
-		
-		.generalButton:hover {
-			cursor: pointer;
-			text-decoration: none;
-			border: 1px solid #555;
-		}
 		
 		.buttonImageContainer {
 			height: 100%;
@@ -34,7 +25,6 @@
 		
 		@external googleSocialLogo;
 		.googleSocialLogo {
-			border: 1px solid #9E1919;
 			background-color: #f2615c;
 		}		
 		
@@ -43,8 +33,7 @@
 		}
 		
 		@external twitterSocialLogo;
-		.twitterSocialLogo {			
-			border: 1px solid #02A1DB;
+		.twitterSocialLogo {	
 			background-color: #72cff9;
 		}		
 		
@@ -53,8 +42,7 @@
 		}
 		
 		@external facebookSocialLogo;
-		.facebookSocialLogo {	
-			border: 1px solid #1D3C84;
+		.facebookSocialLogo {
 			background-color: #6377aa; 
 		}		
 	
