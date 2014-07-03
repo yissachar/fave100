@@ -8,6 +8,7 @@ import java.util.List;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
 import com.fave100.client.Notification;
+import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.favelist.FaveListSizeChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
@@ -20,7 +21,6 @@ import com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.AddSongAfterLoginAction;
 import com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget;
 import com.fave100.shared.Constants;
-import com.fave100.shared.place.NameTokens;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -31,7 +31,6 @@ import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class FavelistPresenter extends
 		PresenterWidget<FavelistPresenter.MyView>
@@ -198,7 +197,7 @@ public class FavelistPresenter extends
 	public void addSong(final String songId, final String song, final String artist, boolean forceAddToCurrentList) {
 		if (!_currentUser.isLoggedIn()) {
 			_currentUser.setAfterLoginAction(new AddSongAfterLoginAction(this, songId, song, artist));
-			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+			_eventBus.fireEvent(new LoginDialogRequestedEvent());
 		}
 		else {
 			if (_currentUser.getHashtags().size() == 1 || forceAddToCurrentList) {

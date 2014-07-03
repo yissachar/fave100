@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
+import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.shared.Constants;
@@ -32,6 +33,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 
 	}
 
+	private EventBus _eventBus;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
 	private FaveApi _api;
@@ -40,6 +42,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 	@Inject
 	public GlobalListDetailsPresenter(final EventBus eventBus, final MyView view, final CurrentUser currentUser, final PlaceManager placeManager, final FaveApi api) {
 		super(eventBus, view);
+		_eventBus = eventBus;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
 		_api = api;
@@ -90,7 +93,7 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 		}
 		else {
 			_currentUser.setAfterLoginAction(new AddListAfterLoginAction(this, _hashtag));
-			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+			_eventBus.fireEvent(new LoginDialogRequestedEvent());
 		}
 	}
 

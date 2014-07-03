@@ -12,6 +12,7 @@ import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.generated.entities.YouTubeSearchResult;
 import com.fave100.client.generated.entities.YouTubeSearchResultCollection;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
+import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pages.song.widgets.whyline.WhylinePresenter;
 import com.fave100.client.pages.song.widgets.youtube.YouTubePresenter;
 import com.fave100.client.resources.css.AppClientBundle;
@@ -64,6 +65,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	@Inject AddSongPresenter _addSongPresenter;
 	@Inject YouTubePresenter youtubePresenter;
 	@Inject WhylinePresenter whylinePresenter;
+	@Inject LoginPopupPresenter _loginBox;
 
 	@Inject
 	PlaylistPresenter(EventBus eventBus, MyView view, final PlaceManager placeManager, final CurrentUser currentUser, final FaveApi api) {
@@ -246,7 +248,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	@Override
 	public void addSong() {
 		if (!_currentUser.isLoggedIn()) {
-			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+			addToPopupSlot(_loginBox);
 		}
 		else {
 			FaveItem playing = _faveItems.get(_playingSongIndex);

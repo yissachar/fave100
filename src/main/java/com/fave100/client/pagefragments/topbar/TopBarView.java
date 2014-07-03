@@ -112,7 +112,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 
 	@UiHandler("loginButton")
 	void onLoginClick(final ClickEvent event) {
-		getUiHandlers().showLoginBox();
+		getUiHandlers().showLoginDialog();
 	}
 
 	@UiHandler("logOutButton")
