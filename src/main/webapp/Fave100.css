@@ -94,7 +94,6 @@ button::-moz-focus-inner {
 	color: #FFF;
 	border: 1px solid #666;
 	padding: 6px;
-	text-transform: uppercase;
 }
 
 .button-warning:hover{
