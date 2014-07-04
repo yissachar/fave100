@@ -2,8 +2,8 @@ package com.fave100.client.pages.lists;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
-import com.fave100.client.Utils;
 import com.fave100.client.entities.SongDto;
+import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.events.favelist.HideSideBarEvent;
 import com.fave100.client.events.favelist.ListChangedEvent;
 import com.fave100.client.events.song.SongSelectedEvent;
@@ -12,7 +12,6 @@ import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.BooleanResult;
-import com.fave100.client.pagefragments.popups.register.RegisterPopupPresenter;
 import com.fave100.client.pages.PagePresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
@@ -80,7 +79,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	@Inject UsersFollowingPresenter usersFollowing;
 	@Inject ListManagerPresenter listManager;
 	@Inject GlobalListDetailsPresenter globalListDetails;
-	@Inject RegisterPopupPresenter registerPresenter;
 
 	@Inject
 	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser,
@@ -309,12 +307,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 	@Override
 	public void showRegister() {
-		if (Utils.isTouchDevice()) {
-			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.register).build());
-		}
-		else {
-			addToPopupSlot(registerPresenter);
-		}
+		_eventBus.fireEvent(new LoginDialogRequestedEvent(true));
 	}
 
 }

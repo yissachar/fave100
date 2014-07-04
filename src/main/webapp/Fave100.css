@@ -149,28 +149,6 @@ footer {
 	margin-bottom: 5px;
 }
 
-/* Login container */
-
-.loginDivider {
-	display: none;
-}
-
-.fullLoginPage .loginDivider{
-	display: inline-block;
-	padding: 35px;
-	font-size: 1.9em;
-	text-align: center;
-}
-
-.fullLoginPage .nativeLoginBox {
-	width: 100%;
-}
-		
-.fullLoginPage .nativeLoginBox input {
-	width: 100%;
-	height: 33px;
-}
-
 .error {
 	color: #D54545 !important;
 }

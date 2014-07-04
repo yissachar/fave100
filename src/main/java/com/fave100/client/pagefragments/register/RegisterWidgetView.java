@@ -1,9 +1,7 @@
 package com.fave100.client.pagefragments.register;
 
-import com.fave100.client.widgets.SocialButton;
 import com.fave100.shared.Constants;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -32,9 +30,6 @@ public class RegisterWidgetView extends ViewWithUiHandlers<RegisterWidgetUiHandl
 	@UiField SpanElement passwordStatusMessage;
 	@UiField TextBox emailField;
 	@UiField SpanElement emailStatusMessage;
-	@UiField SocialButton registerWithGoogleButton;
-	@UiField SocialButton registerWithTwitterButton;
-	@UiField SocialButton registerWithFacebookButton;
 
 	@Inject
 	public RegisterWidgetView(final Binder binder) {
@@ -53,11 +48,6 @@ public class RegisterWidgetView extends ViewWithUiHandlers<RegisterWidgetUiHandl
 		getUiHandlers().register(usernameField.getValue(),
 				emailField.getValue(), passwordField.getValue(),
 				passwordRepeatField.getValue());
-	}
-
-	@UiHandler("registerWithTwitterButton")
-	void onRegisterWithTwitterButtonClick(final ClickEvent event) {
-		getUiHandlers().goToTwitterAuth();
 	}
 
 	@Override
@@ -107,31 +97,7 @@ public class RegisterWidgetView extends ViewWithUiHandlers<RegisterWidgetUiHandl
 	}
 
 	@Override
-	public void setGoogleUrl(final String url) {
-		registerWithGoogleButton.setHref(url);
-	}
-
-	@Override
-	public void setFacebookUrl(final String url) {
-		registerWithFacebookButton.setHref(url);
-	}
-
-	@Override
 	public void setUsernameFocus() {
 		usernameField.setFocus(true);
-	}
-
-	@Override
-	public void setShortNames(boolean isShort) {
-		if (isShort) {
-			registerWithGoogleButton.setText("Google");
-			registerWithTwitterButton.setText("Twitter");
-			registerWithFacebookButton.setText("Facebook");
-		}
-		else {
-			registerWithGoogleButton.setText("Register with Google");
-			registerWithTwitterButton.setText("Register with Twitter");
-			registerWithFacebookButton.setText("Register with Facebook");
-		}
 	}
 }

@@ -2,17 +2,13 @@ package com.fave100.client.pagefragments.register;
 
 import com.fave100.client.FaveApi;
 import com.fave100.client.Notification;
-import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.UserRegistration;
 import com.fave100.shared.Validator;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
@@ -27,10 +23,6 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		implements RegisterWidgetUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<RegisterWidgetUiHandlers> {
-		void setGoogleUrl(String url);
-
-		void setFacebookUrl(String url);
-
 		void clearFields();
 
 		void setNativeUsernameError(String error);
@@ -44,23 +36,17 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		void clearNativeErrors();
 
 		void setUsernameFocus();
-
-		void setShortNames(boolean isShort);
 	}
 
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
-	private RequestCache _requestCache;
 	private FaveApi _api;
-	private String redirect;
 
 	@Inject
-	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RequestCache requestCache,
-									final FaveApi api) {
+	public RegisterWidgetPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final FaveApi api) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_placeManager = placeManager;
-		_requestCache = requestCache;
 		_api = api;
 		getView().setUiHandlers(this);
 	}
@@ -68,40 +54,11 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 	@Override
 	protected void onBind() {
 		super.onBind();
-
-		redirect = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/oauthcallback.html";
-
-		// Get the login url for Google
-		_requestCache.getGoogleUrl(redirect, new AsyncCallback<String>() {
-			@Override
-			public void onSuccess(final String url) {
-				getView().setGoogleUrl(url);
-			}
-
-			@Override
-			public void onFailure(final Throwable caught) {
-
-			}
-		});
-
-		// And for facebook
-		_requestCache.getFacebookUrl(redirect, new AsyncCallback<String>() {
-			@Override
-			public void onSuccess(final String url) {
-				getView().setFacebookUrl(url);
-			}
-
-			@Override
-			public void onFailure(final Throwable caught) {
-
-			}
-		});
 	}
 
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		getView().setUsernameFocus();
 	}
 
 	@Override
@@ -161,22 +118,6 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		Notification.show("Thanks for registering!");
 	}
 
-	@Override
-	public void goToTwitterAuth() {
-		_api.call(_api.service().auth().getTwitterAuthUrl(redirect), new AsyncCallback<StringResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub				
-			}
-
-			@Override
-			public void onSuccess(StringResult url) {
-				Window.open(url.getValue().replace("http", "https"), "", "");
-			}
-		});
-	}
-
 	private boolean validateFields(final String username, final String email,
 			final String password, final String passwordRepeat) {
 		// Assume all valid
@@ -209,15 +150,16 @@ public class RegisterWidgetPresenter extends PresenterWidget<RegisterWidgetPrese
 		return valid;
 	}
 
-	public void setShortNames(boolean isShort) {
-		getView().setShortNames(isShort);
+	@Override
+	public void focus() {
+		getView().setUsernameFocus();
 	}
 }
 
 interface RegisterWidgetUiHandlers extends UiHandlers {
-	void register(String username, String email, String password,
-			String passwordRepeat);
 
-	void goToTwitterAuth();
+	void register(String username, String email, String password, String passwordRepeat);
+
+	void focus();
 
 }

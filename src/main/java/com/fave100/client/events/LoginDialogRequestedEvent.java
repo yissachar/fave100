@@ -10,6 +10,16 @@ public class LoginDialogRequestedEvent extends GwtEvent<LoginDialogRequestedHand
 		return TYPE;
 	}
 
+	private boolean _register;
+
+	public LoginDialogRequestedEvent() {
+		this(false);
+	}
+
+	public LoginDialogRequestedEvent(boolean register) {
+		_register = register;
+	}
+
 	@Override
 	public Type<LoginDialogRequestedHandler> getAssociatedType() {
 		return TYPE;
@@ -17,7 +27,7 @@ public class LoginDialogRequestedEvent extends GwtEvent<LoginDialogRequestedHand
 
 	@Override
 	protected void dispatch(LoginDialogRequestedHandler handler) {
-		handler.onLoginDialogRequested();
+		handler.onLoginDialogRequested(_register);
 	}
 
 }
