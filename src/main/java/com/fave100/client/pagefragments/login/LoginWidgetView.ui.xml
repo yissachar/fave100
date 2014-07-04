@@ -1,19 +1,23 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	xmlns:my='urn:import:com.fave100.client.widgets'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	ui:generateLocales='default'>
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:my='urn:import:com.fave100.client.widgets'>
 
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+		
+		.title {
+			color: HIGH_LEGIBILITY_BLUE;
+			padding: 5px 0;
+			font-size: 22px;
+		}
+		
 		.loginForm {
 			display: block;
 			margin: 0 auto;
 		}
 		
 		.loginForm > div {
-			float: left;
 			margin: 0 auto;
 		}
 						
@@ -39,8 +43,14 @@
 			margin-bottom: 5px;
 		}
 		
+		.field input {
+			width: 100%;
+			height: 33px;
+		}
+		
 		.loginStatusMessage {
 			margin-top: 5px;
+			font-size: 12px;
 		}
 		
 		.passwordAndLogin {
@@ -66,22 +76,25 @@
 			border: 0px;
 			color: #fff;
 		}
-			
 	</ui:style>
 
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens" />
 	
-	<g:HTMLPanel ui:styleName="row">		
+	<g:HTMLPanel>
+		<g:Label ui:styleName="{style.title}">Log in</g:Label>
+			
 		<div class="thirdPartyLoginBox">
 			<div class="{style.thirdPartyLinks}">
-				<my:SocialButton ui:field="signInWithFacebookButton" text="Sign in with Facebook" style="facebookSocialLogo" iconStyle="fa fa-lg fa-facebook"></my:SocialButton>
-				<my:SocialButton ui:field="signInWithTwitterButton" text="Sign in with Twitter" style="twitterSocialLogo" iconStyle="fa fa-lg fa-twitter"></my:SocialButton>
-				<my:SocialButton ui:field="signInWithGoogleButton" text="Sign in with Google" style="googleSocialLogo" iconStyle="fa fa-lg fa-google-plus"></my:SocialButton>				
+				<my:SocialButton ui:field="signInWithFacebookButton" text="Facebook" style="facebookSocialLogo" iconStyle="fa fa-lg fa-facebook"></my:SocialButton>
+				<my:SocialButton ui:field="signInWithTwitterButton" text="Twitter" style="twitterSocialLogo" iconStyle="fa fa-lg fa-twitter"></my:SocialButton>
+				<my:SocialButton ui:field="signInWithGoogleButton" text="Google" style="googleSocialLogo" iconStyle="fa fa-lg fa-google-plus"></my:SocialButton>				
 			</div>
 		</div>
+		
 		<div class="{style.orDivider}">- OR -</div>
+		
 		<g:FormPanel ui:field="loginForm" ui:styleName="{style.loginForm}">
-			<g:HTMLPanel styleName="nativeLoginBox">
+			<g:HTMLPanel>
 				<div class="{style.field}">
 					<g:Label>Username or Email</g:Label>
 					<my:FaveTextBox ui:field="usernameInput"/>
@@ -98,6 +111,7 @@
 					<g:SubmitButton ui:field="loginButton" ui:styleName="{style.loginButton}">Log in</g:SubmitButton>
 				</g:FlowPanel>
 			</g:HTMLPanel>
-		</g:FormPanel>		 
+		</g:FormPanel>
+				 
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -22,35 +22,8 @@
 			margin: 5px 0;
 		}
 		
-		.registerForm {
-			background-color: #EEE;
-			border: 1px solid #AAA;
-			padding: 20px;
-			border-radius: 5px;
-		}
-		
-		.registerForm input {
-			float: right;
-			min-width: 60%;
-		}
-		
-		.field {
-			width: 100%;
-			margin-bottom: 10px;
-		}
-		
 		.statusMessage {
-			font-size: 0.75em;
-		}
-				
-		.thirdPartyLinks, .thirdPartyLinks a {
-			width: 100%;
-		}
-		
-		.orDivider{
-			padding: 50px;			
-			font-size: 2em;
-			text-align: center;
+			font-size: 12px;
 		}
 		
 		.thirdPartyUsernamePrompt {
@@ -67,11 +40,17 @@
 			margin-top: 15px;
 		}
 
-		#alreadyHaveAccountPrompt {
+		.alreadyHaveAccountPrompt {
 			clear: both;
-			padding-top: 30px;
+			cursor: pointer;
+			margin-top: 30px;
 			text-align: center;
+			color: PRIMARY_COLOR;
 		}			
+		
+		.alreadyHaveAccountPrompt:hover {
+			text-decoration: underline;
+		}
 	</ui:style>
 
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens"/>
@@ -100,9 +79,7 @@
 					</g:FormPanel>
 				</g:HTMLPanel>
 				
-				<p id="alreadyHaveAccountPrompt">					   
-				    <g:InlineHyperlink targetHistoryToken="{nameTokens.getLogin}">Already have an account? Log in</g:InlineHyperlink>
-				</p>
+				<g:Label ui:styleName="{style.alreadyHaveAccountPrompt}">Already have an account? Log in</g:Label>
 				
 			</g:HTMLPanel>
 		</p:content>

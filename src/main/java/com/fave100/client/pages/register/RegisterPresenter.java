@@ -147,7 +147,6 @@ public class RegisterPresenter extends
 	@Override
 	public void onReveal() {
 		super.onReveal();
-		registerContainer.setShortNames(false);
 		setInSlot(REGISTER_SLOT, registerContainer);
 	}
 

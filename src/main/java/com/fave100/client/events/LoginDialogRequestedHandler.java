@@ -4,5 +4,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface LoginDialogRequestedHandler extends EventHandler {
 
-	void onLoginDialogRequested();
+	void onLoginDialogRequested(boolean register);
 }

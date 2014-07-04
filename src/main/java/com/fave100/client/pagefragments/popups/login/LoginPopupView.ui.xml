@@ -4,27 +4,27 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:w='urn:import:com.fave100.client.widgets.lightbox'>
 
-	<ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">	
-		.title {
-			color: HIGH_LEGIBILITY_BLUE;
-			padding: 5px;
-			font-size: 22px;
-		}
-		
-		.innerLoginBox {
+	<ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">		
+		.mainContent {
 			padding: 15px;
 		}
-		
+			
 		.registerLinkContainer {
-			padding: 10px;
+			clear: both;
+			padding: 20px;
 			text-align: center;
 			background-color: #f8f9fb;
 			border-top: 1px solid #e4ebf0;
 		}
 		
-		.registerLinkContainer a {
+		.registerLinkContainer div {
 			color: #44789b;
+			cursor: pointer;
 			text-shadow: 0 1px 0 #ffffff;
+		}
+		
+		.registerLinkContainer div:hover {
+			text-decoration: underline;
 		}
 	</ui:style>
 	
@@ -34,13 +34,16 @@
 	<w:LightBox>
 		<w:content width="400px" height="100%">	
 			<g:HTMLPanel>
-				<g:Label ui:styleName="{style.title}">Log in</g:Label>
-				<g:HTMLPanel ui:field="loginContainer" ui:styleName="{style.innerLoginBox}"/>
+			
+				<g:FlowPanel ui:styleName="{style.mainContent}">				
+					<g:HTMLPanel ui:field="loginContainer"/>
+					<g:HTMLPanel ui:field="registerContainer"/>			
+				</g:FlowPanel>
+		
 				<g:SimplePanel ui:styleName="{style.registerLinkContainer}">
-					<g:InlineHyperlink targetHistoryToken="{nameTokens.getRegister}">
-						Don't have an account? Register
-					</g:InlineHyperlink>
+					<g:Label ui:field="viewToggleLink">Don't have an account? Register</g:Label>
 				</g:SimplePanel>
+				
 			</g:HTMLPanel>
 			</w:content>
 	</w:LightBox>

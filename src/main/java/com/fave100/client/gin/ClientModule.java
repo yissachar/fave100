@@ -17,8 +17,6 @@ import com.fave100.client.pages.MainModule;
 import com.fave100.client.pages.about.AboutModule;
 import com.fave100.client.pages.listbrowser.ListBrowserModule;
 import com.fave100.client.pages.lists.ListModule;
-import com.fave100.client.pages.login.LoginPresenter;
-import com.fave100.client.pages.login.LoginView;
 import com.fave100.client.pages.passwordreset.PasswordResetPresenter;
 import com.fave100.client.pages.passwordreset.PasswordResetView;
 import com.fave100.client.pages.profile.ProfilePresenter;
@@ -78,7 +76,6 @@ public class ClientModule extends AbstractPresenterModule {
 		bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.lists);
 
 		bindPresenter(RegisterPresenter.class, RegisterPresenter.MyView.class, RegisterView.class, RegisterPresenter.MyProxy.class);
-		bindPresenter(LoginPresenter.class, LoginPresenter.MyView.class, LoginView.class, LoginPresenter.MyProxy.class);
 		bindPresenter(ProfilePresenter.class, ProfilePresenter.MyView.class, ProfileView.class, ProfilePresenter.MyProxy.class);
 		bindPresenterWidget(LoginWidgetPresenter.class, LoginWidgetPresenter.MyView.class, LoginWidgetView.class);
 		bindPresenter(PasswordResetPresenter.class, PasswordResetPresenter.MyView.class, PasswordResetView.class, PasswordResetPresenter.MyProxy.class);
