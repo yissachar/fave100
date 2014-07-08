@@ -63,19 +63,6 @@
 			color: HIGH_LEGIBILITY_BLUE;
 			font-size: 12px;
 		}
-		
-		.loginButton {
-			background-color: HIGH_LEGIBILITY_BLUE;
-			color: #fff;
-			border-radius: 3px;
-			border: 0px;
-			width: 80px;
-		}
-		
-		.loginButton:hover {
-			border: 0px;
-			color: #fff;
-		}
 	</ui:style>
 
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens" />
@@ -108,7 +95,7 @@
 				<g:FlowPanel ui:styleName="{style.passwordAndLogin}">
 					<g:InlineHyperlink styleName="{style.forgotPasswordLink}"
 						targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
-					<g:SubmitButton ui:field="loginButton" ui:styleName="{style.loginButton}">Log in</g:SubmitButton>
+					<g:SubmitButton ui:field="loginButton">Log in</g:SubmitButton>
 				</g:FlowPanel>
 			</g:HTMLPanel>
 		</g:FormPanel>

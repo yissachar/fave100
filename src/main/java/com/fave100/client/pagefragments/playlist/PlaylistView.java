@@ -43,6 +43,7 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	@UiField HTMLPanel whylineView;
 	@UiField Panel playlistItemsPanel;
 	@UiField Panel playlistControls;
+	@UiField Label songRank;
 	@UiField Label songName;
 	@UiField Label artistName;
 	@UiField Button addSongButton;
@@ -118,6 +119,9 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 			}
 		}
 
+		int rank = playlistItems.indexOf(_playingItem) + 1;
+		songRank.setText(String.valueOf(rank));
+		songRank.setVisible(rank > 0);
 		songName.setText(song);
 		artistName.setText(artist);
 

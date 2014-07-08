@@ -29,6 +29,7 @@
 			text-align: center;
 			padding: 0px !important;
 			line-height: 40px;
+			font-family: "Trebuchet MS";
 		}
 				
 		.rank > div {

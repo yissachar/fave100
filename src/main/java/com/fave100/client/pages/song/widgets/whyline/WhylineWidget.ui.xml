@@ -4,7 +4,6 @@
 	
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
 		.container {
-			padding: 6px;
 			display: block;
 			overflow: hidden;
 		}
@@ -13,8 +12,8 @@
 			max-width: 35px;
 			max-height: 35px;
 			float: left;
-			margin-right: 6px;
-			border-radius: 4px;
+			margin-right: 10px;
+			border-radius: 50%;
 		}		
 		
 		.whylineDetails {
