@@ -52,12 +52,9 @@
 		}
 		
 		.songDetails {
-			padding: 7px;
-		}
-		
-		.songName, .artistName {
-			font-size: 18px;
-			padding: 3px;
+			padding: 7px;	
+			@mixin flexbox();
+			@mixin align-items(center);
 		}
 		
 		.songRank {
@@ -74,14 +71,25 @@
 			text-align: center;
 		}
 		
+		.songAndArtistNameContainer {
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		
+		.songName, .artistName {
+			font-size: 18px;
+			padding: 3px;
+			margin-left: 7px;
+			white-space: nowrap;
+		}
+		
 		.songName {
-			margin-left: 5px;
 			color: rgb(234, 191, 77);			
 		}
 		
 		.artistName {
-			margin-left: 7px;
 			color: #fff;
+			display: inline-block;
 		}
 		
 		.playlistItems {
@@ -93,7 +101,7 @@
 			font-size: 17px;
 			width: 100%;
 			padding: 4px 0;
-			background-color: FADED_LIGHT_BG;			
+			background-color: FADED_LIGHT_BG;	
 			@mixin flexbox();
 			@mixin justify-content(space-between);
 			@mixin align-items(center);
@@ -157,9 +165,13 @@
 		    <g:FlowPanel>
 		    	<g:FlowPanel ui:styleName="{style.songDetailsContainer}">			    
 		    		<g:FlowPanel ui:styleName="{style.songDetails}">
-			    		<g:InlineLabel ui:field="songRank" ui:styleName="{style.songRank}" />
-			    		<g:InlineLabel ui:field="songName" ui:styleName="{style.songName}" />
-			    		<g:InlineLabel ui:field="artistName" ui:styleName="{style.artistName}"/>
+		    			<g:SimplePanel>
+			    			<g:InlineLabel ui:field="songRank" ui:styleName="{style.songRank}" />
+			    		</g:SimplePanel>
+			    		<g:FlowPanel ui:styleName="{style.songAndArtistNameContainer}">
+				    		<g:InlineLabel ui:field="songName" ui:styleName="{style.songName}" />
+				    		<g:InlineLabel ui:field="artistName" ui:styleName="{style.artistName}"/>
+			    		</g:FlowPanel>
 		    		</g:FlowPanel>
 		    				
 			    	<g:HTMLPanel ui:field="youtubePlayer"/>	
