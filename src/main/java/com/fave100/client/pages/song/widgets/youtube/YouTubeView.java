@@ -130,7 +130,8 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 				playerVars : {
 					wmode : 'transparent',
 					autoplay : 1,
-					playsinline : 1
+					playsinline : 1,
+					showinfo : 0
 				},
 				events : {
 					'onStateChange' : $wnd.onPlayerStateChange,

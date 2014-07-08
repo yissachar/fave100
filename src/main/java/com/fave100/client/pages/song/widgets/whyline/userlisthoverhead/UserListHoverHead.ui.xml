@@ -3,24 +3,25 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+		@def HOVER_BORDER 1px solid #ddd;
+		
 		.container {
 			position: relative;
 			display: inline;
 		}
 		
 		.avatar {
-			border-radius: 4px;
+			border-radius: 50%;
 		}
 		
 		.details {
-		    background-color: #f8f8f8;
-		    border: 1px solid #aaa;
+		    background-color: #fff;
+		    border: HOVER_BORDER;
 		    border-radius: 3px;
 		    width: 160px;
-		    box-shadow: 0 0 4px #999;
+		    box-shadow: 0 0 4px #bbb;
 		    margin: 0 auto;
 		    position: absolute;
-		    text-align: center;
 		    top: -50%;
 		    left: -65px;
 		    display: none;
@@ -34,8 +35,8 @@
 		    bottom: -6px;
 		    width: 10px;
 		    height: 10px;
-		    border-bottom: 1px solid #aaa;
-		    border-right: 1px solid #aaa;
+		    border-bottom: HOVER_BORDER;
+		    border-right: HOVER_BORDER;
 		    background-color: #f8f8f8;
 		    left: 50%;
 		    margin-left: -5px;

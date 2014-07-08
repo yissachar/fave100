@@ -34,18 +34,8 @@
 		
 		.registerButton {
 			margin-bottom: 15px;
-			background-color: HIGH_LEGIBILITY_BLUE;
-			color: #fff;
-			border-radius: 3px;
-			border: 0px;
-			width: 80px;
 			float: right;
 		}	
-		
-		.registerButton:hover {
-			border: 0px;
-			color: #fff;
-		}
 	</ui:style>
 	
 	<g:HTMLPanel>
