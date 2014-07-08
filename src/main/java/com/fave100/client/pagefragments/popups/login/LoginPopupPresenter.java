@@ -1,5 +1,6 @@
 package com.fave100.client.pagefragments.popups.login;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -22,12 +23,14 @@ public class LoginPopupPresenter extends PresenterWidget<LoginPopupPresenter.MyV
 	@ContentSlot public static final Type<RevealContentHandler<?>> LOGIN_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot public static final Type<RevealContentHandler<?>> REGISTER_SLOT = new Type<RevealContentHandler<?>>();
 
+	private CurrentUser _currentUser;
 	@Inject private LoginWidgetPresenter loginContainer;
 	@Inject private RegisterWidgetPresenter registerContainer;
 
 	@Inject
-	public LoginPopupPresenter(final EventBus eventBus, final MyView view) {
+	public LoginPopupPresenter(final EventBus eventBus, final MyView view, CurrentUser currentUser) {
 		super(eventBus, view);
+		_currentUser = currentUser;
 	}
 
 	@Override
@@ -35,6 +38,11 @@ public class LoginPopupPresenter extends PresenterWidget<LoginPopupPresenter.MyV
 		super.onReveal();
 		setInSlot(LOGIN_SLOT, loginContainer);
 		setInSlot(REGISTER_SLOT, registerContainer);
+	}
+
+	@Override
+	protected void onHide() {
+		_currentUser.setAfterLoginAction(null);
 	}
 
 	public void showLogin() {
