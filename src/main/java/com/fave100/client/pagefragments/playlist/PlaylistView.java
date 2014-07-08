@@ -123,7 +123,9 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 		songRank.setText(String.valueOf(rank));
 		songRank.setVisible(rank > 0);
 		songName.setText(song);
+		songName.setTitle(song);
 		artistName.setText(artist);
+		artistName.setTitle(artist);
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(PlaceParams.LIST_PARAM, listName);
