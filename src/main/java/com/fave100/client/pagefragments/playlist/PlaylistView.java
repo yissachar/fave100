@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fave100.client.Utils;
 import com.fave100.client.resources.css.AppClientBundle;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.Icon;
@@ -43,7 +44,6 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	@UiField HTMLPanel whylineView;
 	@UiField Panel playlistItemsPanel;
 	@UiField Panel playlistControls;
-	@UiField Label songRank;
 	@UiField Label songName;
 	@UiField Label artistName;
 	@UiField Button addSongButton;
@@ -120,10 +120,9 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 		}
 
 		int rank = playlistItems.indexOf(_playingItem) + 1;
-		songRank.setText(String.valueOf(rank));
-		songRank.setVisible(rank > 0);
 		songName.setText(song);
 		songName.setTitle(song);
+		songName.getElement().getStyle().setColor(Utils.rankToHsl(rank));
 		artistName.setText(artist);
 		artistName.setTitle(artist);
 

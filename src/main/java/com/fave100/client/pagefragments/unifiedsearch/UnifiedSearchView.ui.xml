@@ -20,9 +20,9 @@
 		.searchContainer {
 			width: SEARCH_WIDTH;
 			height: 31px;
-			background-color: #fff;
-			border-radius: 4px;
+			border-bottom: 2px solid #fff;
 			padding: 0 6px;
+			color: #fff;
 			@mixin flexbox();
 			@mixin align-items(center);
 			@mixin justify-content(space-between);
@@ -61,7 +61,9 @@
 			padding: 0 0 !important;
 			margin-left: 5px;
 			width: 75%;
+			color: #fff;
     	}
+    	
     	.searchBox:focus {
 			outline: none;
     	}

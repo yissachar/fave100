@@ -1,5 +1,6 @@
 package com.fave100.client.pages.lists.widgets.favelist.widgets;
 
+import com.fave100.client.Utils;
 import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistUiHandlers;
 import com.fave100.client.resources.css.GlobalStyle;
@@ -74,6 +75,7 @@ public class FavePickWidget extends Composite {
 		setupRankPanel();
 
 		song.setText(getSong());
+		song.getElement().getStyle().setColor(Utils.rankToHsl(_rank));
 
 		song.addClickHandler(new ClickHandler() {
 
@@ -107,6 +109,7 @@ public class FavePickWidget extends Composite {
 		}
 
 		rankWidget.addStyleName(style.rank());
+		rankWidget.getElement().getStyle().setBackgroundColor(Utils.rankToHsl(_rank));
 
 		if (_rank >= Constants.MAX_ITEMS_PER_LIST) {
 			rankWidget.addStyleName(style.rankThreeDigit());

@@ -29,7 +29,6 @@
 		.topNav {		
 			height: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			background-color: TOP_NAV_COLOR;
-			border-bottom: 1px solid #666;			
 			position: fixed;
 			top: 0;
 			width: 100%;

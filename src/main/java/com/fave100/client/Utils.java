@@ -2,6 +2,7 @@ package com.fave100.client;
 
 import java.util.Iterator;
 
+import com.fave100.shared.Constants;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -37,4 +38,11 @@ public class Utils {
 		return element.equals(widget.getElement());
 	}
 
+	public static String rankToHsl(int rank) {
+		if (rank <= 0 || rank > Constants.MAX_ITEMS_PER_LIST)
+			throw new IllegalArgumentException("Rank cannot be less than 1 or greater than " + Constants.MAX_ITEMS_PER_LIST);
+
+		int hue = (int)(rank * 2.1);
+		return "hsl(" + hue + ", 70%, 60%)";
+	}
 }

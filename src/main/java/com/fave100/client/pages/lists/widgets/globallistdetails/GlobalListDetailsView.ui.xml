@@ -4,26 +4,17 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView.Style">
+		.container {
+			background-color: #fff;
+			padding: 10px;
+		}
+		
 		.smallDisplay .container {
 			padding: 10px;
 		}
 		
-		.hashtagLabel {
-			color: HIGHLIGHT_COLOR;
-			text-overflow: ellipsis;
-			display: inline-block;
-			overflow: hidden;
-		}		
-		
-		.contributeCTA {
-			display: block;
-			cursor: pointer;
-			margin-bottom: 20px;
-		}
-		
 		.trendingHeader {
-			color: HIGHLIGHT_COLOR;
-			margin-top: 35px;
+			color: PROMINENT_TEXT_COLOR;
 			margin-bottom: 5px;
 			text-transform: uppercase;
 		}
@@ -36,30 +27,40 @@
 		.trendingList a {
 			clear: both;
 			padding: 3px;
-			float: left;
+			display: block;
 			width: 100%;
 			color: LIST_HIGHLIGHT_COLOR;
 		}
 		
-		.smallDisplay .trendingList a {
-			display: inline-block;
-			margin-right: 5px;
-		}
-		
 		.viewAllLink {
-			float: left;
 			margin-top: 15px;
 			margin-bottom: 20px;
+		}
+		
+	
+		.tagline {
+			position: absolute;
+			bottom: 15px;
+			text-align: center;
+		}
+				
+		.tagline > * {	
+			cursor: pointer;
+			margin: 0 5px;
 		}
 	</ui:style>
 	
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens"/>
 	
 	<g:FlowPanel ui:field="container" ui:styleName="{style.container}">
-		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
-		<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 		<g:Label ui:styleName="{style.trendingHeader}">Featured Lists</g:Label>
 		<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />
 		<g:Hyperlink targetHistoryToken="{nameTokens.getAlllists}" ui:styleName="{style.viewAllLink}">View all lists</g:Hyperlink>
+		
+		<g:FlowPanel ui:field="tagline" ui:styleName="{style.tagline}">
+			<g:Anchor ui:field="registerLink">Register Now</g:Anchor>
+			<g:InlineLabel>-</g:InlineLabel>
+			<g:InlineHyperlink targetHistoryToken="{nameTokens.getTour}">Take a Tour</g:InlineHyperlink>
+		</g:FlowPanel>
 	</g:FlowPanel>
 </ui:UiBinder>

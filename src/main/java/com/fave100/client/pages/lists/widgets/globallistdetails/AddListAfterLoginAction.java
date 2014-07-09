@@ -1,21 +1,19 @@
 package com.fave100.client.pages.lists.widgets.globallistdetails;
 
 import com.fave100.client.AfterLoginAction;
+import com.fave100.client.pages.lists.ListPresenter;
 
 public class AddListAfterLoginAction implements AfterLoginAction {
 
-	private GlobalListDetailsPresenter _globalListDetailsPresenter;
-	private String _listName;
+	private ListPresenter _listPresenter;
 
-	public AddListAfterLoginAction(GlobalListDetailsPresenter globalListDetailsPresenter, String listName) {
-		_globalListDetailsPresenter = globalListDetailsPresenter;
-		_listName = listName;
+	public AddListAfterLoginAction(ListPresenter listPresenter) {
+		_listPresenter = listPresenter;
 	}
 
 	@Override
 	public void doAction() {
-		_globalListDetailsPresenter.setHashtag(_listName);
-		_globalListDetailsPresenter.contributeToList();
+		_listPresenter.contributeToList();
 	}
 
 }

@@ -50,7 +50,6 @@ public class ListView extends PageView<ListUiHandlers>
 
 	@UiField ListStyle style;
 	@UiField HTMLPanel userContainer;
-	@UiField Panel tagline;
 	@UiField Panel slideOutBackground;
 	@UiField HTMLPanel userPageSideBar;
 	@UiField HTMLPanel faveListContainer;
@@ -58,6 +57,7 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiField HTMLPanel listManager;
 	@UiField Button followButton;
 	@UiField HTMLPanel userPageFaveList;
+	@UiField Label hashtagLabel;
 	@UiField HTMLPanel followingContainer;
 	@UiField FlowPanel userProfile;
 	@UiField Hyperlink profileLink;
@@ -146,9 +146,9 @@ public class ListView extends PageView<ListUiHandlers>
 		}
 	}
 
-	@UiHandler("registerLink")
-	void onRegisterLinkClick(final ClickEvent event) {
-		getUiHandlers().showRegister();
+	@UiHandler("contributeCTA")
+	void onContributeClick(ClickEvent event) {
+		getUiHandlers().contributeToList();
 	}
 
 	public native void nativeRenderShare() /*-{
@@ -158,16 +158,12 @@ public class ListView extends PageView<ListUiHandlers>
 	}-*/;
 
 	@Override
-	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser) {
-		tagline.setVisible(false);
+	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser, String hashtag) {
+		hashtagLabel.setText(hashtag);
 
 		if (requestedUser == null) {
 			userProfile.setVisible(false);
 
-			// Only show call action to users who are not logged in
-			if (!currentUser.isLoggedIn()) {
-				tagline.setVisible(true);
-			}
 		}
 		else {
 			userProfile.setVisible(true);
