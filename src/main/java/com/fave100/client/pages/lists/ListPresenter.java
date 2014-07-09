@@ -14,6 +14,7 @@ import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.pages.PagePresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
+import com.fave100.client.pages.lists.widgets.globallistdetails.AddListAfterLoginAction;
 import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
@@ -40,7 +41,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPresenter.MyProxy> implements ListUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<ListUiHandlers> {
-		void setPageDetails(AppUser requestedUser, CurrentUser currentUser);
+		void setPageDetails(AppUser requestedUser, CurrentUser currentUser, String hashtag);
 
 		String getFixedSearchStyle();
 
@@ -249,7 +250,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	}
 
 	private void showPage() {
-		getView().setPageDetails(requestedUser, _currentUser);
+		getView().setPageDetails(requestedUser, _currentUser, _requestedHashtag);
 
 		_ownPage = _currentUser.isLoggedIn() && _currentUser.equals(requestedUser);
 		if (_ownPage) {
@@ -278,7 +279,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 			listManager.getView().hide();
 			if (_requestedHashtag != null) {
 				globalListDetails.getView().show();
-				globalListDetails.setHashtag(_requestedHashtag);
 			}
 		}
 
@@ -306,8 +306,25 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	}
 
 	@Override
-	public void showRegister() {
-		_eventBus.fireEvent(new LoginDialogRequestedEvent(true));
+	public void contributeToList() {
+		if (_currentUser.isLoggedIn()) {
+			// If user already has that list, switch to it
+			if (_currentUser.getHashtags().contains(_requestedHashtag) || _requestedHashtag.equals(Constants.DEFAULT_HASHTAG)) {
+				_placeManager.revealPlace(new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(PlaceParams.USER_PARAM, _currentUser.getUsername())
+						.with(PlaceParams.LIST_PARAM, _requestedHashtag)
+						.build());
+			}
+			// Otherwise create the list for them
+			else {
+				_currentUser.addFaveList(_requestedHashtag);
+			}
+		}
+		else {
+			_currentUser.setAfterLoginAction(new AddListAfterLoginAction(this));
+			_eventBus.fireEvent(new LoginDialogRequestedEvent());
+		}
 	}
 
 }
@@ -319,5 +336,5 @@ interface ListUiHandlers extends UiHandlers {
 
 	boolean isOwnPage();
 
-	void showRegister();
+	void contributeToList();
 }

@@ -2,18 +2,17 @@ package com.fave100.client.pages.lists.widgets.globallistdetails;
 
 import java.util.List;
 
+import com.fave100.client.CurrentUser;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -34,9 +33,8 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 
 	@UiField Style style;
 	@UiField FlowPanel container;
-	@UiField Label hashtagLabel;
-	@UiField Anchor contributeCTA;
 	@UiField FlowPanel trendingLists;
+	@UiField Panel tagline;
 
 	private ParameterTokenFormatter _parameterTokenFormatter;
 
@@ -51,20 +49,13 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 		return widget;
 	}
 
-	@UiHandler("contributeCTA")
-	void onContributeClick(ClickEvent event) {
-		getUiHandlers().contributeToList();
+	@UiHandler("registerLink")
+	void onRegisterLinkClick(final ClickEvent event) {
+		getUiHandlers().showRegister();
 	}
 
 	@Override
-	public void setTrendingLists(final String hashtag, final List<String> lists) {
-		hashtagLabel.setText(hashtag);
-		// Shrink the list name until it fits into the sidebar
-		int fontSize = LIST_NAME_FONT_SIZE;
-		do {
-			hashtagLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
-			fontSize--;
-		} while (hashtagLabel.getElement().getClientWidth() > widget.getOffsetWidth());
+	public void setTrendingLists(final String hashtag, final List<String> lists, CurrentUser currentUser) {
 
 		trendingLists.clear();
 		for (String list : lists) {
@@ -77,6 +68,9 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 			link.setText(list);
 			trendingLists.add(link);
 		}
+
+		// Only show call action to users who are not logged in
+		tagline.setVisible(!currentUser.isLoggedIn());
 	}
 
 	@Override

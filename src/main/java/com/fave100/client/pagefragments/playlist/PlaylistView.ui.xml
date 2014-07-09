@@ -53,25 +53,6 @@
 		
 		.songDetails {
 			padding: 7px;	
-			@mixin flexbox();
-			@mixin align-items(center);
-		}
-		
-		.songRank {
-			border-radius: 50%;
-			background-color: #fff;
-			font-size: 14px;
-			font-weight: bold;
-			font-family: "Trebuchet MS";
-			width: 24px;
-			height: 24px;
-			line-height: 24px;
-			display: inline-block;
-			color: #222;
-			text-align: center;
-		}
-		
-		.songAndArtistNameContainer {
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
@@ -165,13 +146,8 @@
 		    <g:FlowPanel>
 		    	<g:FlowPanel ui:styleName="{style.songDetailsContainer}">			    
 		    		<g:FlowPanel ui:styleName="{style.songDetails}">
-		    			<g:SimplePanel>
-			    			<g:InlineLabel ui:field="songRank" ui:styleName="{style.songRank}" />
-			    		</g:SimplePanel>
-			    		<g:FlowPanel ui:styleName="{style.songAndArtistNameContainer}">
-				    		<g:InlineLabel ui:field="songName" ui:styleName="{style.songName}" />
-				    		<g:InlineLabel ui:field="artistName" ui:styleName="{style.artistName}"/>
-			    		</g:FlowPanel>
+			    		<g:InlineLabel ui:field="songName" ui:styleName="{style.songName}" />
+			    		<g:InlineLabel ui:field="artistName" ui:styleName="{style.artistName}"/>
 		    		</g:FlowPanel>
 		    				
 			    	<g:HTMLPanel ui:field="youtubePlayer"/>	

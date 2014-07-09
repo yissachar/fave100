@@ -7,11 +7,10 @@
 
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.ListView.ListStyle">
 		.userPageSideBar {
-			background-color: MAIN_BACKGROUND;
+			background-color: #fff;
 			padding-top: 10px;
 			padding-left: 10px;
 			padding-right: 15px;
-			border-right: LIGHT_BORDER;
 			width: 19%;
 			position: fixed;
 			left: 0;
@@ -56,28 +55,22 @@
 			width: 73%;
 			margin-left: 27%;
 		}
-	
-		.tagline {
-			padding-top: 10px;
-			padding-bottom: 15px;
-			text-align: center;	
-			border-bottom: LIGHT_BORDER;		
+		
+		.listHeader {
+			padding: 10px;
+			border-bottom: 1px solid #aaa;
 		}
 		
-		.taglineCTA {
-			font-size: 19px;
-		}
+		.hashtagLabel {
+			color: PROMINENT_TEXT_COLOR;
+			font-size: 25px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}		
 		
-		.taglineLinks {
-			margin-top: 10px;
-		}
-		
-		.taglineLinks > * {	
-			margin: 0 5px;
-		}
-		
-		.taglineLinks a {
+		.contributeCTA {
 			cursor: pointer;
+			margin-bottom: 20px;
 		}
 				
 		.userProfile {
@@ -160,17 +153,12 @@
 					</g:HTMLPanel>
 					
 					<g:HTMLPanel ui:field="userPageFaveList" ui:styleName="{style.userPageFaveList}">
-						<g:FlowPanel ui:field="tagline" ui:styleName="{style.tagline}">
-							<g:Label ui:styleName="{style.taglineCTA}">Share your favorite songs.</g:Label>
-							<g:FlowPanel ui:styleName="{style.taglineLinks}">
-								<g:Anchor ui:field="registerLink">Register Now</g:Anchor>
-								<g:InlineLabel> - </g:InlineLabel>
-								<g:InlineHyperlink targetHistoryToken="{nameTokens.getAbout}">Why Fave100?</g:InlineHyperlink>
-								<g:InlineLabel> - </g:InlineLabel>
-								<g:InlineHyperlink targetHistoryToken="{nameTokens.getTour}">Take a Tour</g:InlineHyperlink>
-							</g:FlowPanel>
+						
+						<g:FlowPanel ui:styleName="{style.listHeader}">
+							<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
+							<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 						</g:FlowPanel>
-							
+						
 						<g:HTMLPanel ui:field="faveListContainer" styleName="{style.faveListContainer}">
 							<g:HTMLPanel ui:field="favelist"/>									
 						</g:HTMLPanel>						

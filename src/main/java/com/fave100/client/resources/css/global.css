@@ -1,12 +1,13 @@
 @def PRIMARY_COLOR #80AAE1;
 @def HIGHLIGHT_COLOR #959595;
-@def TOP_NAV_COLOR #6B849C;
+@def TOP_NAV_COLOR rgb(61, 68, 75);
 @def LIST_HIGHLIGHT_COLOR #80AAE1;
+@def PROMINENT_TEXT_COLOR #666;
 @def SIDE_BAR_WIDTH 239px;
 @def FADED_LIGHT_BG #f1f1f1;
 @def MAIN_BACKGROUND #fefefe;
 @def RESIZE_TRANSITION_TIME 0.6s;
-@def LIGHT_BORDER 1px solid #ccc;
+@def LIGHT_BORDER 1px solid #eee;
 @def HIGH_LEGIBILITY_BLUE #4ea0ca;
 
 @defmixin flexbox() {
