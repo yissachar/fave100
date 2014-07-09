@@ -51,11 +51,6 @@
 			margin-left: 19%;
 		}
 		
-		.playlistVisible.largeDisplay .userPageFaveList {
-			width: 73%;
-			margin-left: 27%;
-		}
-		
 		.listHeader {
 			padding: 10px;
 			border-bottom: 1px solid #aaa;

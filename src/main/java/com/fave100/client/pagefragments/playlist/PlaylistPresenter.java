@@ -44,8 +44,6 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		void scrollPlayingItemToTop();
 
 		void setFullScreen(boolean fullScreen);
-
-		void resize();
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> YOUTUBE_SLOT = new Type<RevealContentHandler<?>>();
@@ -81,7 +79,6 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 
 			@Override
 			public void onResize(ResizeEvent event) {
-				getView().resize();
 				if (Utils.isSmallDisplay()) {
 					youtubePresenter.stopVideo();
 				}

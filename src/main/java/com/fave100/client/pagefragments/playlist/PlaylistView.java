@@ -8,14 +8,12 @@ import com.fave100.client.Utils;
 import com.fave100.client.resources.css.AppClientBundle;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.Icon;
-import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -155,13 +153,6 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 		for (PlaylistItem playlistItem : playlistItems) {
 			playlistItemsPanel.add(playlistItem);
 		}
-
-		resize();
-	}
-
-	@Override
-	public void resize() {
-		container.setHeight((Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px");
 	}
 
 	@Override

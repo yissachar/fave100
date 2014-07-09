@@ -124,8 +124,8 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 
 		$wnd.createPlayer = function createPlayer(videoID) {
 			$wnd.player = new $wnd.YT.Player('ytplayer', {
-				height : '360',
-				width : '640',
+				height : '200',
+				width : '356',
 				videoId : videoID,
 				playerVars : {
 					wmode : 'transparent',

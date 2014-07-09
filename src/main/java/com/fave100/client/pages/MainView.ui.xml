@@ -8,18 +8,6 @@
 			-webkit-transition: width RESIZE_TRANSITION_TIME;
 			overflow-y: auto;
     	}
-    	
-    	.main {
-			width: 100%;
-    	}
-    	
-    	.playlistVisible.largeDisplay .main {
-			width: 70%;
-    	}
-    	
-    	.playlistVisible.mediumDisplay .main {
-			width: 60%;
-    	}
     </ui:style>
       
     <g:FlowPanel>	
