@@ -246,6 +246,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	public void addSong() {
 		if (!_currentUser.isLoggedIn()) {
 			addToPopupSlot(_loginBox);
+			_loginBox.showLogin();
 		}
 		else {
 			FaveItem playing = _faveItems.get(_playingSongIndex);
