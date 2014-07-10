@@ -57,8 +57,6 @@
 		<g:Hyperlink targetHistoryToken="{nameTokens.getAlllists}" ui:styleName="{style.viewAllLink}">View all lists</g:Hyperlink>
 		
 		<g:FlowPanel ui:field="tagline" ui:styleName="{style.tagline}">
-			<g:Anchor ui:field="registerLink">Register Now</g:Anchor>
-			<g:InlineLabel>-</g:InlineLabel>
 			<g:InlineHyperlink targetHistoryToken="{nameTokens.getTour}">Take a Tour</g:InlineHyperlink>
 		</g:FlowPanel>
 	</g:FlowPanel>

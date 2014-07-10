@@ -4,7 +4,7 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.song.widgets.youtube.YouTubeView.YouTubeStyle">
-		@def THUMB_WIDTH 119px;
+		@def THUMB_WIDTH 115px;
 		@def THUMB_RIGHT_PADDING 10px;
 		
 		.ytcontainer {
@@ -32,18 +32,28 @@
 			top: 0;
 			/* TODO: July 10 2014: Gah, figure out how to calc this from 
 			   THUMB_WIDTH and THUMB_RIGHT_PADDING with GSS */
-			left: -129px;
+			left: -125px;
 		}
 		
 		.mediumDisplay .thumbnailPanel, .largeDisplay .thumbnailPanel {
+			height: 100%;
 			width: add(THUMB_WIDTH, THUMB_RIGHT_PADDING);
 			overflow: hidden;
+			@mixin flexbox();
+			@mixin justify-content(space-between);
+			@mixin flex-direction(column);
 		}
 		
 		.thumbnailPanel img {
-			margin-top: 5px;
 			cursor: pointer;
-			opacity: 0.6;
+			opacity: 0.8;
+			/* The following rule is a fix for a Firefox bug where hovering 
+			   over the image to change opacity causes the image to resize
+			   slightly. 
+			   
+			   See https://bugzilla.mozilla.org/show_bug.cgi?id=745549
+			*/
+			box-shadow: #000 0em 0em 0em;
 		}
 				
 		.thumbnailPanel img:hover {
@@ -51,6 +61,7 @@
 		}
 		
 		.smallDisplay .thumbnailPanel img {
+			margin-top: 5px;
 			margin-right: 2%;
 			width: 22%;
 			opacity: 1;
@@ -67,8 +78,9 @@
 		.mediumDisplay .thumbnailPanel img, .largeDisplay .thumbnailPanel img {
 			width: THUMB_WIDTH;
 			display: block;
+			border-radius: 3px;
 			margin-left: add(THUMB_WIDTH, 50px);
-			@mixin transition(all 0.8s);
+			@mixin transition(all 0.2s);
 		}
 		
 		.mediumDisplay .thumbnailPanel.thumbsVisible img, .largeDisplay .thumbnailPanel.thumbsVisible img {
