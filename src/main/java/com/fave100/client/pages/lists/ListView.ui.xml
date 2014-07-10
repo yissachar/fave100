@@ -52,13 +52,13 @@
 		}
 		
 		.listHeader {
-			padding: 10px;
+			padding: 20px;
 			border-bottom: 1px solid #aaa;
 		}
 		
 		.hashtagLabel {
 			color: PROMINENT_TEXT_COLOR;
-			font-size: 25px;
+			font-size: 32px;
 			text-overflow: ellipsis;
 			overflow: hidden;
 		}		
@@ -116,6 +116,7 @@
 		
 		.faveListContainer {
 			-webkit-overflow-scrolling: touch;
+			overflow-y: auto;
 		}		
 	</ui:style>
 	
@@ -149,7 +150,7 @@
 					
 					<g:HTMLPanel ui:field="userPageFaveList" ui:styleName="{style.userPageFaveList}">
 						
-						<g:FlowPanel ui:styleName="{style.listHeader}">
+						<g:FlowPanel ui:field="listHeader" ui:styleName="{style.listHeader}">
 							<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
 							<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 						</g:FlowPanel>

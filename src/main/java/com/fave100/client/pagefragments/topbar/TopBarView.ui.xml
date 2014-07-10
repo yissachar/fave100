@@ -80,6 +80,7 @@
 		.logoFaveText {
 			color: #fff;
 			cursor: pointer;
+			font-family: "Merriweather";
 		}
 		
 		.logo100Text {
