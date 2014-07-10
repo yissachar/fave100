@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.generated.entities.YouTubeSearchResult;
+import com.fave100.client.resources.css.GlobalStyle;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -23,6 +24,11 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 	public interface Binder extends UiBinder<Widget, YouTubeView> {
 	}
 
+	interface YouTubeStyle extends GlobalStyle {
+		String thumbsVisible();
+	}
+
+	@UiField YouTubeStyle style;
 	@UiField Label errorMessage;
 	@UiField SimplePanel framePanel;
 	@UiField HTMLPanel thumbnailPanel;
@@ -162,6 +168,16 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 		}
 
 	}-*/;
+
+	@Override
+	public void toggleThumbs() {
+		if (thumbnailPanel.getStyleName().contains(style.thumbsVisible())) {
+			thumbnailPanel.removeStyleName(style.thumbsVisible());
+		}
+		else {
+			thumbnailPanel.addStyleName(style.thumbsVisible());
+		}
+	}
 
 	private void dispatchEndedEvent() {
 		_timesSkipped = 0;

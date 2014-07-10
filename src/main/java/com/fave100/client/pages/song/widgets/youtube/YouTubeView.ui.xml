@@ -3,7 +3,10 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.song.widgets.youtube.YouTubeView.YouTubeStyle">
+		@def THUMB_WIDTH 119px;
+		@def THUMB_RIGHT_PADDING 10px;
+		
 		.ytcontainer {
 			position: relative;     
 			padding-bottom: 56.25%;
@@ -20,28 +23,56 @@
 			height: 100%;
 		}
 		
-		.thumbnailPanel {
+		.smallDisplay.thumbnailPanel {
 			padding: 10px;
+		}
+		
+		.mediumDisplay .thumbnailPanel, .largeDisplay .thumbnailPanel {
+			position: absolute;
+			top: 0;
+			/* TODO: July 10 2014: Gah, figure out how to calc this from 
+			   THUMB_WIDTH and THUMB_RIGHT_PADDING with GSS */
+			left: -129px;
+		}
+		
+		.mediumDisplay .thumbnailPanel, .largeDisplay .thumbnailPanel {
+			width: add(THUMB_WIDTH, THUMB_RIGHT_PADDING);
+			overflow: hidden;
 		}
 		
 		.thumbnailPanel img {
 			margin-top: 5px;
-			margin-right: 2%;
 			cursor: pointer;
-			border: 1px solid #555;
-			width: 22%;
+			opacity: 0.6;
+		}
+				
+		.thumbnailPanel img:hover {
+			opacity: 1;
 		}
 		
-		.thumbnailPanel img:first-child {
+		.smallDisplay .thumbnailPanel img {
+			margin-right: 2%;
+			width: 22%;
+			opacity: 1;
+		}
+		
+		.smallDisplay .thumbnailPanel img:first-child {
 			margin-left: 3%;
 		}
 		
-		.thumbnailPanel img:last-child {
+		.smallDisplay .thumbnailPanel img:last-child {
 			margin-right: 0;
 		}
 		
-		.thumbnailPanel img:hover{
-			border: 1px solid #999;
+		.mediumDisplay .thumbnailPanel img, .largeDisplay .thumbnailPanel img {
+			width: THUMB_WIDTH;
+			display: block;
+			margin-left: add(THUMB_WIDTH, 50px);
+			@mixin transition(all 0.8s);
+		}
+		
+		.mediumDisplay .thumbnailPanel.thumbsVisible img, .largeDisplay .thumbnailPanel.thumbsVisible img {
+			margin-left: 0;
 		}
 	</ui:style>
 	

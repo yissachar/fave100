@@ -265,4 +265,9 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	public void stopSong() {
 		youtubePresenter.stopVideo();
 	}
+
+	@Override
+	public void toggleThumbs() {
+		youtubePresenter.toggleThumbs();
+	}
 }
