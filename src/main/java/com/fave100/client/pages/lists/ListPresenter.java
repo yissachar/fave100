@@ -54,6 +54,8 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		void hideSideBar();
 
 		void showSideBar();
+
+		void resize();
 	}
 
 	@ProxyCodeSplit
@@ -165,6 +167,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		setInSlot(STARRED_LISTS_SLOT, usersFollowing);
 		setInSlot(LIST_MANAGER_SLOT, listManager);
 		setInSlot(GLOBAL_LIST_DETAILS_SLOT, globalListDetails);
+		getView().resize();
 	}
 
 	@Override
