@@ -45,14 +45,9 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		addRegisteredHandler(LoginDialogRequestedEvent.getType(), new LoginDialogRequestedHandler() {
 
 			@Override
-			public void onLoginDialogRequested(boolean register) {
+			public void onLoginDialogRequested() {
 				addToPopupSlot(loginBox);
-				if (register) {
-					loginBox.showRegister();
-				}
-				else {
-					loginBox.showLogin();
-				}
+				loginBox.showLogin();
 			}
 		});
 	}

@@ -54,6 +54,7 @@
 		}
 		
 		.passwordAndLogin {
+			margin-top: 20px;
 			@mixin flexbox();
 			@mixin justify-content(space-between);
 			@mixin align-items(center);

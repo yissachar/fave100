@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
-import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.StringResultCollection;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -65,15 +64,8 @@ public class GlobalListDetailsPresenter extends PresenterWidget<GlobalListDetail
 		});
 	}
 
-	@Override
-	public void showRegister() {
-		_eventBus.fireEvent(new LoginDialogRequestedEvent(true));
-	}
-
 }
 
 interface GlobalListDetailsUiHandlers extends UiHandlers {
-
-	void showRegister();
 
 }

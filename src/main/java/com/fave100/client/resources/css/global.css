@@ -39,6 +39,11 @@
 	flex-grow: VALUE;
 }
 
+@defmixin flex-direction(VALUE) {
+	flex-direction: VALUE;
+	-webkit-flex-direction: VALUE;
+}
+
 @defmixin full-width-dark-bg() {	
 	position: fixed;
 	width: 100%;

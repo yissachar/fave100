@@ -70,6 +70,7 @@ button, .button {
 	color: #fff;
 	border-radius: 3px;
 	border: 0px;
+	height: 30px;
 }
 
 button:hover, .button:hover {
