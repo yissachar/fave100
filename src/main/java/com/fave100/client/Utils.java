@@ -38,11 +38,12 @@ public class Utils {
 		return element.equals(widget.getElement());
 	}
 
-	public static String rankToHsl(int rank) {
+	public static String rankToColor(int rank, int numItems) {
 		if (rank <= 0 || rank > Constants.MAX_ITEMS_PER_LIST)
 			throw new IllegalArgumentException("Rank cannot be less than 1 or greater than " + Constants.MAX_ITEMS_PER_LIST);
 
-		int hue = (int)(rank * 2.1);
+		double increment = 210.0 / numItems;
+		int hue = (int)(rank * increment);
 		return "hsl(" + hue + ", 70%, 60%)";
 	}
 }
