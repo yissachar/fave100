@@ -3,7 +3,8 @@
              xmlns:w='urn:import:com.fave100.client.widgets'>
              
     <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchView.UnifiedSearchStyle">
-    	@def SEARCH_WIDTH 375px;
+    	@def SEARCH_WIDTH 400px;
+    	@def ARROW_SIZE 5px;
     	    	
 		.currentSearchTypeContainer {
 			float: left;
@@ -34,10 +35,7 @@
     	
 		.currentSearchType {
 			font-size: 12px;
-			background-color: #f8f8f8;
-			border: 1px solid #ccc;
-			padding: 3px 5px;
-			border-radius: 5px;
+			cursor: pointer;
 			display: inline-block;
 		}
 		
@@ -45,22 +43,16 @@
 			border-color: #aaa;
 		}
 		
-		.removeSearchTypeButton {
-			cursor: pointer;
-			margin-left: 5px;
-			color: #777;
+		.currentSearchType > *:last-child {
+			margin-left: 7px;
 		}
-		
-		.removeSearchTypeButton:hover {
-			color: #444;
-		}
-		
+				
     	.searchBox {
 			background: none !important;			
 			border: 0px solid #000 !important;
 			padding: 0 0 !important;
 			margin-left: 5px;
-			width: 75%;
+			width: 70%;
 			color: #fff;
     	}
     	
@@ -85,6 +77,49 @@
 			clear: both;
     	}
     	
+    	.searchTypeSelector {
+			position: absolute;
+			top: 28px;
+			background-color: #fff;
+			border-radius: 3px;
+			border: 1px solid #ccc;
+			cursor: pointer;
+		}
+		
+		.searchTypeSelector:after, .searchTypeSelector:before {
+			position: absolute;
+			bottom: 100%;
+			border: solid transparent;
+			content: " ";
+			height: 0;
+			width: 0;
+			left: 50%;
+			pointer-events: none;
+		}
+		
+		.searchTypeSelector:after {
+			border-color: transparent;
+			border-bottom-color: #fff;
+			border-width: ARROW_SIZE;
+			margin-left: sub(0px, ARROW_SIZE);
+		}
+		
+		.searchTypeSelector:before {
+			border-color: transparent;
+			border-width: add(ARROW_SIZE, 2px);
+			margin-left: sub(0px, add(ARROW_SIZE, 2px));
+		}
+		
+		.searchTypeSelector > div {
+			padding: 5px;
+			font-size: 14px;
+		}
+		
+		.searchTypeSelector > div:hover {			
+			background-color: FADED_LIGHT_BG;
+			color: LIST_HIGHLIGHT_COLOR;
+		}
+    	
 		.listDropdown {
 			position: absolute;
 			border: 1px solid #444;
@@ -108,13 +143,13 @@
 		
 		.searchResults {
 			position: absolute;
-			border: 1px solid #999;
+			border: 1px solid #ccc;
 			background-color: #fff;
 			cursor: pointer;
 			width: SEARCH_WIDTH;
 			margin-top: 5px;
 			border-radius: 5px;
-			box-shadow: 0 0 7px 0 #999;
+			box-shadow: 0 0 7px 0 #aaa;
 		}
 		
 		.smallDisplay .searchResults {
@@ -226,15 +261,21 @@
     <g:HTMLPanel ui:field="container">
 		
 		<g:FlowPanel ui:field="searchContainer" ui:styleName="{style.searchContainer}">
-			<g:FlowPanel ui:field="currentSearchTypeContainer" ui:styleName="{style.currentSearchType}">
-				<g:InlineLabel ui:field="currentSearchType" />
-				<w:Icon ui:field="removeSearchTypeButton" ui:styleName="fa fa-times {style.removeSearchTypeButton}" />
-			</g:FlowPanel>
+			<g:FocusPanel ui:field="currentSearchTypeContainer">
+				<g:FlowPanel ui:styleName="{style.currentSearchType}">
+					<g:InlineLabel ui:field="currentSearchType" />
+					<w:Icon ui:styleName="fa fa-caret-down" />
+				</g:FlowPanel>
+			</g:FocusPanel>
     		<w:FaveTextBox ui:field="searchBox" ui:styleName="{style.searchBox}" />
 			<w:Icon ui:field="searchIndicator" ui:styleName="fa fa-search" />
-			<g:SimplePanel ui:field="searchLoadingIndicator">
-				<g:Image resource="{img.searchLoadingIndicator}"></g:Image>
-			</g:SimplePanel>
+			<g:Image  ui:field="searchLoadingIndicator" resource="{img.searchLoadingIndicatorWhite}"></g:Image>
+    	</g:FlowPanel>
+    	
+    	<g:FlowPanel ui:field="searchTypeSelector" ui:styleName="{style.searchTypeSelector}">
+    		<g:Label ui:field="searchSongsOption">Search songs</g:Label>
+    		<g:Label ui:field="searchUsersOption">Search users</g:Label>
+    		<g:Label ui:field="searchListsOption">Search lists</g:Label>
     	</g:FlowPanel>
     	
     	<g:FlowPanel ui:styleName="{style.dropDownContainer}">
@@ -245,7 +286,7 @@
 						<g:FlowPanel ui:field="searchSuggestions"  ui:styleName="{style.searchSuggestions}"/>
 						<g:Label ui:field="loadedAllLabel" ui:styleName="{style.loadMoreButton}" />
 						<g:SimplePanel ui:field="loadMoreLoadingIndicator" ui:styleName="{style.loadMoreIndicator}">
-							<g:Image resource="{img.searchLoadingIndicator}"></g:Image>
+							<g:Image resource="{img.searchLoadingIndicatorBlack}"></g:Image>
 						</g:SimplePanel>
 					</g:FlowPanel>
 				</g:ScrollPanel>
