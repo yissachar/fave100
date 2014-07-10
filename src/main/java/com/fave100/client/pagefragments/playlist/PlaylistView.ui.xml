@@ -40,7 +40,6 @@
 		
 		.songDetailsContainer {
 			background-color: rgba(0, 0, 0, 0.89);
-			padding-bottom: 10px;
 			border-radius: 4px;
 		}
 		
@@ -118,7 +117,7 @@
 		}
 		
 		.addSongButtonContainer button {			
-			height: 33px;
+			height: 28px;
 			background-color: #555;
 		}
 		
@@ -166,7 +165,7 @@
 			    	<g:HTMLPanel ui:field="youtubePlayer"/>	
 		    		    	        		
 		    		<g:FlowPanel ui:styleName="{style.addSongButtonContainer}">
-		    			<g:Button ui:field="thumbToggle" ui:styleName="fa fa-youtube-play {style.thumbToggle}"/>
+		    			<g:Button ui:field="thumbToggle" ui:styleName="fa fa-lg fa-youtube-play {style.thumbToggle}"/>
 	    				<g:Button ui:field="addSongButton" ui:styleName="{style.addSongButton}">Add To List</g:Button>
 	    			</g:FlowPanel>
 		    	</g:FlowPanel>
