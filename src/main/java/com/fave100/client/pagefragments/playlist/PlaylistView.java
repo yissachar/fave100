@@ -127,7 +127,7 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 		int rank = playlistItems.indexOf(_playingItem) + 1;
 		songName.setText(song);
 		songName.setTitle(song);
-		songName.getElement().getStyle().setColor(Utils.rankToHsl(rank));
+		songName.getElement().getStyle().setColor(Utils.rankToColor(rank, playlistItems.size()));
 		artistName.setText(artist);
 		artistName.setTitle(artist);
 

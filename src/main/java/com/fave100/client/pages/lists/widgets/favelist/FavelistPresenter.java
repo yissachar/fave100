@@ -89,7 +89,7 @@ public class FavelistPresenter extends
 					return;
 
 				final FaveItem item = event.getFaveItemDto();
-				final FavePickWidget widget = new FavePickWidget(_eventBus, item, _widgets.size() + 1, isEditable(), FavelistPresenter.this);
+				final FavePickWidget widget = new FavePickWidget(_eventBus, item, _widgets.size() + 1, isEditable(), _widgets.size() + 1, FavelistPresenter.this);
 				getView().addPick(widget);
 				_widgets.add(widget);
 
@@ -178,7 +178,7 @@ public class FavelistPresenter extends
 		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 		int i = 1;
 		for (final FaveItem item : faveList) {
-			final FavePickWidget widget = new FavePickWidget(_eventBus, item, i, isEditable(), this);
+			final FavePickWidget widget = new FavePickWidget(_eventBus, item, i, isEditable(), faveList.size(), this);
 			pickWidgets.add(widget);
 			i++;
 		}

@@ -51,6 +51,7 @@ public class FavePickWidget extends Composite {
 	private String _whyLine;
 	private int _rank;
 	private final boolean _editable;
+	private final int _numItems;
 	private FavelistUiHandlers _uiHandlers;
 	private FavePickRankInput _favePickRankInput;
 	private FavePickWhyLineInput _favePickWhyLineInput;
@@ -58,12 +59,14 @@ public class FavePickWidget extends Composite {
 	private HelpBubble rankHelpBubble;
 	private ImageResources resources = GWT.create(ImageResources.class);
 
-	public FavePickWidget(final EventBus eventBus, final FaveItem item, final int rank, final boolean editable, final FavelistUiHandlers uiHandlers) {
+	public FavePickWidget(final EventBus eventBus, final FaveItem item, final int rank, final boolean editable, int numItems,
+							final FavelistUiHandlers uiHandlers) {
 		_eventBus = eventBus;
 		_faveItem = item;
 		_whyLine = _faveItem.getWhyline();
 		_rank = rank;
 		_editable = editable;
+		_numItems = numItems;
 		_uiHandlers = uiHandlers;
 
 		initWidget(uiBinder.createAndBindUi(this));
@@ -75,7 +78,7 @@ public class FavePickWidget extends Composite {
 		setupRankPanel();
 
 		song.setText(getSong());
-		song.getElement().getStyle().setColor(Utils.rankToHsl(_rank));
+		song.getElement().getStyle().setColor(Utils.rankToColor(_rank, _numItems));
 
 		song.addClickHandler(new ClickHandler() {
 
@@ -109,7 +112,7 @@ public class FavePickWidget extends Composite {
 		}
 
 		rankWidget.addStyleName(style.rank());
-		rankWidget.getElement().getStyle().setBackgroundColor(Utils.rankToHsl(_rank));
+		rankWidget.getElement().getStyle().setBackgroundColor(Utils.rankToColor(_rank, _numItems));
 
 		if (_rank >= Constants.MAX_ITEMS_PER_LIST) {
 			rankWidget.addStyleName(style.rankThreeDigit());
