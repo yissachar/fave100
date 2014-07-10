@@ -32,6 +32,7 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	}
 
 	interface PlaylistStyle extends GlobalStyle {
+
 		String fullScreen();
 	}
 
@@ -44,6 +45,7 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	@UiField Panel playlistControls;
 	@UiField Label songName;
 	@UiField Label artistName;
+	@UiField Button thumbToggle;
 	@UiField Button addSongButton;
 	@UiField Hyperlink listName;
 	@UiField Label byUserText;
@@ -103,6 +105,11 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	@UiHandler("addSongButton")
 	void onAddClick(final ClickEvent event) {
 		getUiHandlers().addSong();
+	}
+
+	@UiHandler("thumbToggle")
+	void onThumbToggleClick(ClickEvent event) {
+		getUiHandlers().toggleThumbs();
 	}
 
 	@Override

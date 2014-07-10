@@ -13,4 +13,6 @@ public interface PlaylistUiHandlers extends UiHandlers {
 	void addSong();
 
 	void stopSong();
+
+	void toggleThumbs();
 }
