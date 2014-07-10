@@ -25,8 +25,7 @@
 		}
 				
 		.trendingList a {
-			clear: both;
-			padding: 3px;
+			padding: 2px 10px;
 			display: block;
 			width: 100%;
 			color: LIST_HIGHLIGHT_COLOR;

@@ -57,6 +57,7 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiField HTMLPanel listManager;
 	@UiField Button followButton;
 	@UiField HTMLPanel userPageFaveList;
+	@UiField Panel listHeader;
 	@UiField Label hashtagLabel;
 	@UiField HTMLPanel followingContainer;
 	@UiField FlowPanel userProfile;
@@ -178,12 +179,16 @@ public class ListView extends PageView<ListUiHandlers>
 		else {
 			showOtherPage();
 		}
+
+		resize();
 	}
 
 	private void resize() {
 		String height = (Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px";
 		userPageSideBar.setHeight(height);
 		slideOutBackground.setHeight(height);
+		String listHeight = (Window.getClientHeight() - Constants.TOP_BAR_HEIGHT - listHeader.getOffsetHeight()) + "px";
+		faveListContainer.getElement().getStyle().setProperty("maxHeight", listHeight);
 	}
 
 	private void showOwnPage() {

@@ -6,7 +6,7 @@
     <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.playlist.PlaylistView.PlaylistStyle">
     	.container {
 			position: absolute;
-			right: -400px;
+			display: none;
 			bottom: 15px;
 			width: 356px;	
 			background-color: MAIN_BACKGROUND;
@@ -17,11 +17,12 @@
 		
 		.playlistVisible .container {
 			right: 25px;
+			display: inline;
 			overflow-y: auto;
 		}
 		
 		.playlistVisible.smallDisplay .container {
-			right: -400px;
+			display: none;
 		}
 		
 		.fullScreen.container, .playlistVisible.smallDisplay .fullScreen.container {
@@ -29,6 +30,7 @@
 			right: 0;
 			top: 75px;
 			bottom: auto;
+			display: inline;
 			overflow-y: auto;
 		}
 		
@@ -112,12 +114,15 @@
 		.hyphen {
 			margin: 0px 5px;
 		}
+		
+		.addSongButtonContainer {
+			width: 100%;
+			padding: 10px;
+		}
 				
 		.addSongButton {
 			display: block;
-			width: 90%;
 			height: 33px;
-			margin: 0 auto 5px;
 			background-color: #555;
 		}
 		
@@ -134,7 +139,7 @@
 		    <g:FlowPanel>
 		    	<g:FlowPanel ui:styleName="{style.songDetailsContainer}">
 		    		<g:FlowPanel ui:field="playlistControls" ui:styleName="{style.playlistControls}">
-			    		<w:Icon ui:field="previousButton" ui:styleName="fa fa-lg  fa-backward {style.previousButton}"/>
+			    		<w:Icon ui:field="previousButton" ui:styleName="fa fa-backward {style.previousButton}"/>
 			    		<g:FlowPanel>
 				    		<g:FlowPanel>
 					    		<g:InlineHyperlink ui:field="listName"/>
@@ -143,8 +148,8 @@
 					    	</g:FlowPanel>
 				    	</g:FlowPanel>
 				    	<g:FlowPanel>
-				    		<w:Icon ui:field="nextButton" ui:styleName="fa fa-lg fa-forward"/>    	
-			    			<w:Icon ui:field="hideButton" ui:styleName="fa fa-lg fa-times {style.hideButton}"/>
+				    		<w:Icon ui:field="nextButton" ui:styleName="fa fa-forward"/>    	
+			    			<w:Icon ui:field="hideButton" ui:styleName="fa fa-times {style.hideButton}"/>
 		    			</g:FlowPanel>
 			    	</g:FlowPanel>
 	    				    
@@ -155,7 +160,9 @@
 		    				
 			    	<g:HTMLPanel ui:field="youtubePlayer"/>	
 		    		    	        		
-	    			<g:Button ui:field="addSongButton" ui:styleName="{style.addSongButton}">Add To List</g:Button>
+		    		<g:SimplePanel ui:styleName="{style.addSongButtonContainer}">
+	    				<g:Button ui:field="addSongButton" ui:styleName="{style.addSongButton}">Add To List</g:Button>
+	    			</g:SimplePanel>
 		    	</g:FlowPanel>
 				    	
 		    	<g:FlowPanel ui:field="playlistItemsPanel" ui:styleName="{style.playlistItems}"/>
