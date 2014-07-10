@@ -181,6 +181,7 @@ public class ListView extends PageView<ListUiHandlers>
 		}
 
 		resize();
+		faveListContainer.getElement().setScrollTop(0);
 	}
 
 	private void resize() {
