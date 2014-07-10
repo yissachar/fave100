@@ -306,6 +306,10 @@ public class UnifiedSearchPresenter extends PresenterWidget<UnifiedSearchPresent
 	}
 
 	public void setSearchType(SearchType searchType) {
+		if (searchType == null) {
+			searchType = SearchType.SONGS;
+		}
+
 		_searchType = searchType;
 		clearSearchResults();
 		getView().setSelectedSearchType(searchType);

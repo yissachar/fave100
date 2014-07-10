@@ -14,8 +14,11 @@ public interface ImageResources extends ClientBundle {
 	@Source("logo-large.png")
 	ImageResource logoLarge();
 
-	@Source("search-loading-indicator.gif")
-	ImageResource searchLoadingIndicator();
+	@Source("search-loading-indicator-white.gif")
+	ImageResource searchLoadingIndicatorWhite();
+
+	@Source("search-loading-indicator-black.gif")
+	ImageResource searchLoadingIndicatorBlack();
 
 	@Source("triangle.png")
 	ImageResource triangle();
