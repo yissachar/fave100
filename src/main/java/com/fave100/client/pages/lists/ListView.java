@@ -184,7 +184,8 @@ public class ListView extends PageView<ListUiHandlers>
 		faveListContainer.getElement().setScrollTop(0);
 	}
 
-	private void resize() {
+	@Override
+	public void resize() {
 		String height = (Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px";
 		userPageSideBar.setHeight(height);
 		slideOutBackground.setHeight(height);
