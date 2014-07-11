@@ -42,8 +42,19 @@ public class Utils {
 		if (rank <= 0 || rank > Constants.MAX_ITEMS_PER_LIST)
 			throw new IllegalArgumentException("Rank cannot be less than 1 or greater than " + Constants.MAX_ITEMS_PER_LIST);
 
-		double increment = 210.0 / numItems;
-		int hue = (int)(rank * increment);
-		return "hsl(" + hue + ", 70%, 60%)";
+		int rightRed = 82;
+		int rightGreen = 153;
+		int rightBlue = 224;
+
+		int leftRed = 224;
+		int leftGreen = 86;
+		int leftBlue = 82;
+
+		double p = (double)rank / numItems;
+		int red2 = (int)((1.0 - p) * leftRed + p * rightRed + 0.5);
+		int green2 = (int)((1.0 - p) * leftGreen + p * rightGreen + 0.5);
+		int blue2 = (int)((1.0 - p) * leftBlue + p * rightBlue + 0.5);
+
+		return "rgb(" + red2 + "," + green2 + "," + blue2 + ")";
 	}
 }
