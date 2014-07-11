@@ -112,6 +112,10 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 						&& !Utils.widgetContainsElement(loadedAllLabel, target)) {
 					clearSearchResults();
 				}
+
+				if (!Utils.widgetContainsElement(currentSearchTypeContainer, target)) {
+					searchTypeSelector.setVisible(false);
+				}
 			}
 		};
 		rootClickHandler = RootPanel.get().addDomHandler(clickHandler, ClickEvent.getType());
@@ -148,7 +152,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiHandler("searchBox")
 	void onSearchFocus(FocusEvent event) {
 		removeHelpBubble();
-		searchTypeSelector.setVisible(false);
 	}
 
 	@UiHandler("searchBox")
