@@ -57,7 +57,7 @@
 		}
 		
 		.songName {
-			color: rgb(234, 191, 77);			
+			color: PRIMARY_COLOR;			
 		}
 		
 		.artistName {

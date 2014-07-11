@@ -5,9 +5,8 @@
 
 	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickRankInput.FavePickRankInputStyle">
 		.rankEditTextBox:hover, .rankEditTextBoxEditing {
-			background-color: #fff;
-			color: #666;
 			cursor: pointer;
+			border: 0px !important;
 		}					
 	</ui:style>
 	
