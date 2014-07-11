@@ -113,7 +113,7 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	}
 
 	@Override
-	public void playSong(String listName, String username, String song, String artist, String videoId, List<PlaylistItem> playlistItems) {
+	public void playSong(String listName, String username, String song, String artist, String videoId, boolean globalList, List<PlaylistItem> playlistItems) {
 		playlist.setVisible(true);
 
 		_playlistItems = playlistItems;
@@ -127,7 +127,12 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 		int rank = playlistItems.indexOf(_playingItem) + 1;
 		songName.setText(song);
 		songName.setTitle(song);
-		songName.getElement().getStyle().setColor(Utils.rankToColor(rank, playlistItems.size()));
+		if (globalList) {
+			songName.getElement().getStyle().setColor(Utils.rankToColor(rank, playlistItems.size()));
+		}
+		else {
+			songName.getElement().getStyle().setColor("auto");
+		}
 		artistName.setText(artist);
 		artistName.setTitle(artist);
 

@@ -89,7 +89,7 @@ public class FavelistPresenter extends
 					return;
 
 				final FaveItem item = event.getFaveItemDto();
-				final FavePickWidget widget = new FavePickWidget(_eventBus, item, _widgets.size() + 1, isEditable(), _widgets.size() + 1, FavelistPresenter.this);
+				final FavePickWidget widget = new FavePickWidget(_eventBus, item, _widgets.size() + 1, isEditable(), false, _widgets.size() + 1, FavelistPresenter.this);
 				getView().addPick(widget);
 				_widgets.add(widget);
 
@@ -178,7 +178,7 @@ public class FavelistPresenter extends
 		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 		int i = 1;
 		for (final FaveItem item : faveList) {
-			final FavePickWidget widget = new FavePickWidget(_eventBus, item, i, isEditable(), faveList.size(), this);
+			final FavePickWidget widget = new FavePickWidget(_eventBus, item, i, isEditable(), isGlobalList(), faveList.size(), this);
 			pickWidgets.add(widget);
 			i++;
 		}
@@ -339,11 +339,15 @@ public class FavelistPresenter extends
 			faveItems.add(widget.getFaveItem());
 		}
 
-		_playlistPresenter.playSong(songId, _hashtag, _user != null ? _user.getUsername() : "", faveItems);
+		_playlistPresenter.playSong(songId, _hashtag, _user != null ? _user.getUsername() : "", isGlobalList(), faveItems);
 	}
 
 	private boolean isEditable() {
 		return _currentUser.isLoggedIn() && _currentUser.equals(_user);
+	}
+
+	private boolean isGlobalList() {
+		return _user == null;
 	}
 
 	/* Getters and Setters */

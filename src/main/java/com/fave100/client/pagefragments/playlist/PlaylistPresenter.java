@@ -39,7 +39,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 
 	public interface MyView extends View, HasUiHandlers<PlaylistUiHandlers> {
 
-		void playSong(String listName, String username, String song, String artist, String videoId, List<PlaylistItem> playlistItems);
+		void playSong(String listName, String username, String song, String artist, String videoId, boolean globalList, List<PlaylistItem> playlistItems);
 
 		void scrollPlayingItemToTop();
 
@@ -57,6 +57,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	private FaveApi _api;
 	private String _listName = "";
 	private String _username = "";
+	private boolean _globalList;
 	private List<FaveItem> _faveItems;
 	private List<YouTubeSearchResult> _youTubeSearchResults;
 	private boolean _skippedVideo;
@@ -96,7 +97,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		PlaylistSongChangedEvent.register(_eventBus, new PlaylistSongChangedEvent.Handler() {
 			@Override
 			public void onPlaylistSongChanged(final PlaylistSongChangedEvent event) {
-				playSong(event.getSongId(), _listName, _username, _faveItems);
+				playSong(event.getSongId(), _listName, _username, _globalList, _faveItems);
 			}
 		});
 
@@ -136,12 +137,13 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		faveItem.setSong(song);
 		faveItem.setArtist(artist);
 		_faveItems.add(faveItem);
-		playSong(songId, "", "", _faveItems);
+		playSong(songId, "", "", false, _faveItems);
 	}
 
-	public void playSong(String songId, final String listName, final String username, final List<FaveItem> faveItems) {
+	public void playSong(String songId, final String listName, final String username, boolean globalList, final List<FaveItem> faveItems) {
 		_listName = listName;
 		_username = username;
+		_globalList = globalList;
 		_faveItems = faveItems;
 
 		FaveItem tempPlaying = null;
@@ -189,7 +191,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 					nextSong();
 				}
 				else {
-					getView().playSong(_listName, _username, playing.getSong(), playing.getArtist(), _youTubeSearchResults.get(0).getVideoId(), _playlistItems);
+					getView().playSong(_listName, _username, playing.getSong(), playing.getArtist(), _youTubeSearchResults.get(0).getVideoId(), _globalList, _playlistItems);
 					youtubePresenter.setYouTubeVideos(_youTubeSearchResults);
 				}
 			}
@@ -214,7 +216,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		int previousSongIndex = _playingSongIndex - 1;
 		if (previousSongIndex >= 0) {
 			String songId = _faveItems.get(previousSongIndex).getId();
-			playSong(songId, _listName, _username, _faveItems);
+			playSong(songId, _listName, _username, _globalList, _faveItems);
 			getView().scrollPlayingItemToTop();
 		}
 	}
@@ -234,7 +236,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	public void skipVideo() {
 		if (_youTubeSearchResults.size() > 1 && !_skippedVideo) {
 			FaveItem playing = _faveItems.get(_playingSongIndex);
-			getView().playSong(_listName, _username, playing.getSong(), playing.getArtist(), _youTubeSearchResults.get(1).getVideoId(), _playlistItems);
+			getView().playSong(_listName, _username, playing.getSong(), playing.getArtist(), _youTubeSearchResults.get(1).getVideoId(), _globalList, _playlistItems);
 			_skippedVideo = true;
 		}
 		else {
