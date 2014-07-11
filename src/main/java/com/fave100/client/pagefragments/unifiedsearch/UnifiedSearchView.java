@@ -11,7 +11,6 @@ import com.fave100.client.widgets.Icon;
 import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -54,9 +53,8 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 	@UiField UnifiedSearchStyle style;
 	@UiField Panel container;
-	@UiField Label currentSearchType;
 	@UiField Panel currentSearchTypeContainer;
-	@UiField Panel searchContainer;
+	@UiField Label currentSearchType;
 	@UiField FaveTextBox searchBox;
 	@UiField Icon searchIndicator;
 	@UiField Image searchLoadingIndicator;
@@ -110,7 +108,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			public void onClick(ClickEvent event) {
 				Element target = Element.as(event.getNativeEvent().getEventTarget());
 				if (!Utils.widgetContainsElement(searchBox, target)
-						&& !Utils.widgetContainsElement(currentSearchTypeContainer, target)
 						&& !Utils.widgetContainsElement(modePanel, target)
 						&& !Utils.widgetContainsElement(loadedAllLabel, target)) {
 					clearSearchResults();
@@ -118,29 +115,26 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			}
 		};
 		rootClickHandler = RootPanel.get().addDomHandler(clickHandler, ClickEvent.getType());
-		searchSongsOption.setVisible(false);
+		searchTypeSelector.setVisible(false);
 	}
 
 	@UiHandler("currentSearchTypeContainer")
 	void onCurrentSearchTypeClick(ClickEvent event) {
-		searchTypeSelector.setVisible(true);
+		searchTypeSelector.setVisible(!searchTypeSelector.isVisible());
 	}
 
 	@UiHandler("searchSongsOption")
 	void onSearchSongsOptionClick(ClickEvent event) {
-		showSearchTypeOptions(searchSongsOption);
 		getUiHandlers().setSearchType(SearchType.SONGS);
 	}
 
 	@UiHandler("searchUsersOption")
 	void onSearchUsersOptionClick(ClickEvent event) {
-		showSearchTypeOptions(searchUsersOption);
 		getUiHandlers().setSearchType(SearchType.USERS);
 	}
 
 	@UiHandler("searchListsOption")
 	void onSearchListsOptionClick(ClickEvent event) {
-		showSearchTypeOptions(searchListsOption);
 		getUiHandlers().setSearchType(SearchType.LISTS);
 	}
 
@@ -154,12 +148,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiHandler("searchBox")
 	void onSearchFocus(FocusEvent event) {
 		removeHelpBubble();
-		searchContainer.addStyleName(style.selected());
-	}
-
-	@UiHandler("searchBox")
-	void onSearchBlur(BlurEvent event) {
-		searchContainer.removeStyleName(style.selected());
+		searchTypeSelector.setVisible(false);
 	}
 
 	@UiHandler("searchBox")
@@ -181,7 +170,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		else if (KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()) {
 			clearSearchResults();
 		}
-		else if (currentSearchTypeContainer.isVisible()) {
+		else {
 			// Otherwise search for song
 			final String searchTerm = searchBox.getText().trim();
 
@@ -266,7 +255,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		searchLoadingIndicator.setVisible(false);
 		loadedAllLabel.setVisible(false);
 		loadMoreLoadingIndicator.setVisible(false);
-		searchTypeSelector.setVisible(false);
 		resetHeight();
 	}
 
@@ -295,23 +283,20 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 	@Override
 	public void setSelectedSearchType(SearchType searchType) {
-		if (searchType == null) {
-			searchBox.setPlaceHolder("Search songs, users, and lists");
-			currentSearchTypeContainer.setVisible(false);
-			return;
-		}
-
-		searchBox.setPlaceHolder("");
+		searchTypeSelector.setVisible(false);
 
 		String searchText = "";
 		switch (searchType) {
 			case SONGS:
+				showSearchTypeOptions(searchSongsOption);
 				searchText = "Search songs";
 				break;
 			case USERS:
+				showSearchTypeOptions(searchUsersOption);
 				searchText = "Search users";
 				break;
 			case LISTS:
+				showSearchTypeOptions(searchListsOption);
 				searchText = "Search lists";
 
 			default:
@@ -319,7 +304,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		}
 
 		currentSearchType.setText(searchText);
-		currentSearchTypeContainer.setVisible(true);
 	}
 
 	@Override

@@ -4,19 +4,7 @@
              
     <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchView.UnifiedSearchStyle">
     	@def SEARCH_WIDTH 400px;
-    	@def ARROW_SIZE 5px;
-    	    	
-		.currentSearchTypeContainer {
-			float: left;
-			border: 1px solid #444;
-			border-right: 0;
-			background-color: #fff;
-			cursor: pointer;
-		}
-		
-		.currentSearchTypeContainer i {
-			float: right;
-		}
+    	@def ARROW_SIZE 7px;    	 
 		
 		.searchContainer {
 			width: SEARCH_WIDTH;
@@ -31,16 +19,18 @@
 		    	
     	.smallDisplay .searchContainer {
 			border: LIGHT_BORDER;
+			width: 270px;
+		}
+    	
+		.currentSearchTypeContainer:focus {
+			outline: none;
 		}
     	
 		.currentSearchType {
 			font-size: 12px;
 			cursor: pointer;
 			display: inline-block;
-		}
-		
-		.currentSearchType:hover {
-			border-color: #aaa;
+			@mixin unselectable();
 		}
 		
 		.currentSearchType > *:last-child {
@@ -52,7 +42,7 @@
 			border: 0px solid #000 !important;
 			padding: 0 0 !important;
 			margin-left: 5px;
-			width: 70%;
+			width: 73%;
 			color: #fff;
     	}
     	
@@ -63,20 +53,7 @@
     	.smallDisplay .searchBox {
 			width: 65%;
     	}
-    	
-    	.smallDisplay .searchContainer {
-			width: 270px;
-    	}
-    	
-    	.currentSearchTypeContainer, .searchBox {			
-			height: 26px;
-    	}
-    	
-    	.dropDownContainer {
-			position: relative;
-			clear: both;
-    	}
-    	
+    	    	    	
     	.searchTypeSelector {
 			position: absolute;
 			top: 28px;
@@ -118,28 +95,7 @@
 		.searchTypeSelector > div:hover {			
 			background-color: FADED_LIGHT_BG;
 			color: LIST_HIGHLIGHT_COLOR;
-		}
-    	
-		.listDropdown {
-			position: absolute;
-			border: 1px solid #444;
-			border-top: 0;
-			background-color: #fff;
-		}
-		
-		.listDropdown > * {
-			padding: 6px;
-			cursor: default;
-		}
-		
-		.listDropdown > *:hover {
-			background-color: PRIMARY_COLOR;
-			color: HIGHLIGHT_COLOR;
-		}
-		
-		.currentSearchTypeContainer, .listDropdown {
-			width: 115px;
-		}
+		}		
 		
 		.searchResults {
 			position: absolute;
@@ -230,38 +186,14 @@
 			font-size: 12px;
 			margin-top: 15px;
 		}
-		
-		.buttonContainer {
-			width: 100%;
-		}
-		
-		.buttonContainer > * {
-			color: #fff;
-			background-color: PRIMARY_COLOR;
-			width: 50px;
-			text-align: center;
-		}
-		
-		.buttonContainer .disabled {
-			color: #eee;
-			background-color: #888;
-		}
-		
-		.previousButton {
-			float: left;
-		}
-		
-		.nextButton {
-			float: right;
-		}
     </ui:style>
     
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
     
     <g:HTMLPanel ui:field="container">
 		
-		<g:FlowPanel ui:field="searchContainer" ui:styleName="{style.searchContainer}">
-			<g:FocusPanel ui:field="currentSearchTypeContainer">
+		<g:FlowPanel ui:styleName="{style.searchContainer}">
+			<g:FocusPanel ui:field="currentSearchTypeContainer" ui:styleName="{style.currentSearchTypeContainer}">
 				<g:FlowPanel ui:styleName="{style.currentSearchType}">
 					<g:InlineLabel ui:field="currentSearchType" />
 					<w:Icon ui:styleName="fa fa-caret-down" />
@@ -269,7 +201,7 @@
 			</g:FocusPanel>
     		<w:FaveTextBox ui:field="searchBox" ui:styleName="{style.searchBox}" />
 			<w:Icon ui:field="searchIndicator" ui:styleName="fa fa-search" />
-			<g:Image  ui:field="searchLoadingIndicator" resource="{img.searchLoadingIndicatorWhite}"></g:Image>
+			<g:Image  ui:field="searchLoadingIndicator" resource="{img.searchLoadingIndicatorWhite}" />
     	</g:FlowPanel>
     	
     	<g:FlowPanel ui:field="searchTypeSelector" ui:styleName="{style.searchTypeSelector}">
@@ -278,28 +210,24 @@
     		<g:Label ui:field="searchListsOption">Search lists</g:Label>
     	</g:FlowPanel>
     	
-    	<g:FlowPanel ui:styleName="{style.dropDownContainer}">
-			
-			<g:FlowPanel ui:field="searchResults" ui:styleName="{style.searchResults}">
-				<g:ScrollPanel ui:field="searchSuggestionsContainer" ui:styleName="{style.searchSuggestionsContainer}">
-					<g:FlowPanel>
-						<g:FlowPanel ui:field="searchSuggestions"  ui:styleName="{style.searchSuggestions}"/>
-						<g:Label ui:field="loadedAllLabel" ui:styleName="{style.loadMoreButton}" />
-						<g:SimplePanel ui:field="loadMoreLoadingIndicator" ui:styleName="{style.loadMoreIndicator}">
-							<g:Image resource="{img.searchLoadingIndicatorBlack}"></g:Image>
-						</g:SimplePanel>
-					</g:FlowPanel>
-				</g:ScrollPanel>
-				
-				<g:FlowPanel ui:field="modePanel" ui:styleName="{style.modePanel}">
-					<g:InlineLabel>Mode:</g:InlineLabel>
-					<g:InlineLabel ui:field="addModeOption" ui:styleName="{style.modeOption} {style.addModeOption}">Add</g:InlineLabel>
-					<g:InlineLabel ui:field="browseModeOption" ui:styleName="{style.modeOption} {style.selected}">Browse</g:InlineLabel>
-					<g:Label ui:field="helpText" ui:styleName="{style.helpText}" />
+		<g:FlowPanel ui:field="searchResults" ui:styleName="{style.searchResults}">
+			<g:ScrollPanel ui:field="searchSuggestionsContainer" ui:styleName="{style.searchSuggestionsContainer}">
+				<g:FlowPanel>
+					<g:FlowPanel ui:field="searchSuggestions"  ui:styleName="{style.searchSuggestions}"/>
+					<g:Label ui:field="loadedAllLabel" ui:styleName="{style.loadMoreButton}" />
+					<g:SimplePanel ui:field="loadMoreLoadingIndicator" ui:styleName="{style.loadMoreIndicator}">
+						<g:Image resource="{img.searchLoadingIndicatorBlack}"></g:Image>
+					</g:SimplePanel>
 				</g:FlowPanel>
-			</g:FlowPanel>
+			</g:ScrollPanel>
 			
-		</g:FlowPanel>		
+			<g:FlowPanel ui:field="modePanel" ui:styleName="{style.modePanel}">
+				<g:InlineLabel>Mode:</g:InlineLabel>
+				<g:InlineLabel ui:field="addModeOption" ui:styleName="{style.modeOption} {style.addModeOption}">Add</g:InlineLabel>
+				<g:InlineLabel ui:field="browseModeOption" ui:styleName="{style.modeOption} {style.selected}">Browse</g:InlineLabel>
+				<g:Label ui:field="helpText" ui:styleName="{style.helpText}" />
+			</g:FlowPanel>
+		</g:FlowPanel>				
     	
     </g:HTMLPanel>
 </ui:UiBinder>
