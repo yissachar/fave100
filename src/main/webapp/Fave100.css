@@ -62,6 +62,15 @@
   src: local('Arimo'), url(http://themes.googleusercontent.com/static/fonts/arimo/v6/wZLYhRRxZWGToTRP78bqJQ.woff) format('woff');
 }
 
+@font-face {
+  font-family: 'Merriweather';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Merriweather Bold Italic'), local('Merriweather-BoldItalic'), 
+  	url(http://themes.googleusercontent.com/static/fonts/merriweather/v6/EYh7Vl4ywhowqULgRdYwIL0qgHI2SEqiJszC-CVc3gY.woff) format('woff');
+}
+
+
 /* Fave100 */
 button, .button {
 	font-size: 13px;
