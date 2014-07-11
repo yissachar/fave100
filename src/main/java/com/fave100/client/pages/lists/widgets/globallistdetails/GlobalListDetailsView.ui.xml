@@ -4,9 +4,28 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView.Style">
+		@def TOUR_LINK_HEIGHT 12px;
+		
 		.container {
 			background-color: #fff;
 			padding: 10px;
+			@mixin flexbox();
+			@mixin flex-direction(column);
+			@mixin justify-content(space-between);
+		}
+		
+		.listContainer {
+			min-height: 100%;
+			margin-bottom: TOUR_LINK_HEIGHT;
+		}
+		
+		.listContainer:after {
+			content: "";
+			display: block;
+		}
+		
+		.listContainer:after, .tagline {
+			height: TOUR_LINK_HEIGHT;
 		}
 		
 		.smallDisplay .container {
@@ -21,7 +40,6 @@
 		
 		.trendingList {
 			line-height: 20px;
-			margin-bottom: 30px;
 		}
 				
 		.trendingList a {
@@ -34,12 +52,9 @@
 		.viewAllLink {
 			margin-top: 15px;
 			margin-bottom: 20px;
-		}
-		
+		}		
 	
 		.tagline {
-			position: absolute;
-			bottom: 15px;
 			text-align: center;
 		}
 				
@@ -52,9 +67,11 @@
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens"/>
 	
 	<g:FlowPanel ui:field="container" ui:styleName="{style.container}">
-		<g:Label ui:styleName="{style.trendingHeader}">Featured Lists</g:Label>
-		<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />
-		<g:Hyperlink targetHistoryToken="{nameTokens.getAlllists}" ui:styleName="{style.viewAllLink}">View all lists</g:Hyperlink>
+		<g:FlowPanel ui:styleName="{style.listContainer}">
+			<g:Label ui:styleName="{style.trendingHeader}">Featured Lists</g:Label>
+			<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />
+			<g:Hyperlink targetHistoryToken="{nameTokens.getAlllists}" ui:styleName="{style.viewAllLink}">View all lists</g:Hyperlink>
+		</g:FlowPanel>
 		
 		<g:FlowPanel ui:field="tagline" ui:styleName="{style.tagline}">
 			<g:InlineHyperlink targetHistoryToken="{nameTokens.getTour}">Take a Tour</g:InlineHyperlink>

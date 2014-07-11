@@ -4,8 +4,8 @@
              
     <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchView.UnifiedSearchStyle">
     	@def SEARCH_WIDTH 400px;
-    	@def ARROW_SIZE 7px;    	 
-		
+    	@def ARROW_SIZE 7px;
+    	
 		.searchContainer {
 			width: SEARCH_WIDTH;
 			height: 31px;
