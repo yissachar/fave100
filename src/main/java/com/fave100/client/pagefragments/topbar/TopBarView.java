@@ -38,8 +38,6 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	}
 
 	public interface TopBarStyle extends GlobalStyle {
-		String topBarDropShadow();
-
 		String floatingSearch();
 	}
 
@@ -153,16 +151,6 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 						.build());
 		logoFaveText.setTargetHistoryToken(listPlace);
 		logo100Text.setTargetHistoryToken(listPlace);
-	}
-
-	@Override
-	public void setTopBarDropShadow(final boolean show) {
-		if (show) {
-			topBar.addStyleName(style.topBarDropShadow());
-		}
-		else {
-			topBar.removeStyleName(style.topBarDropShadow());
-		}
 	}
 
 	@Override
