@@ -1,4 +1,4 @@
-package com.fave100.client.pagefragments.unifiedsearch;
+package com.fave100.client.widgets.search;
 
 import java.util.List;
 
@@ -8,12 +8,10 @@ import com.fave100.client.entities.SongDto;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.FaveTextBox;
 import com.fave100.client.widgets.Icon;
-import com.fave100.client.widgets.helpbubble.HelpBubble;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -38,26 +36,29 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 
-public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandlers> implements UnifiedSearchPresenter.MyView {
+public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements SearchPresenter.MyView {
 
-	public interface Binder extends UiBinder<HTMLPanel, UnifiedSearchView> {
+	public interface Binder extends UiBinder<HTMLPanel, SearchView> {
 	}
 
-	interface UnifiedSearchStyle extends GlobalStyle {
+	interface SearchStyle extends GlobalStyle {
 		String song();
 
 		String artist();
 
 		String selected();
+
+		String darkText();
 	}
 
-	@UiField UnifiedSearchStyle style;
+	@UiField SearchStyle style;
 	@UiField Panel container;
 	@UiField Panel currentSearchTypeContainer;
 	@UiField Label currentSearchType;
 	@UiField FaveTextBox searchBox;
 	@UiField Icon searchIndicator;
-	@UiField Image searchLoadingIndicator;
+	@UiField Image searchLoadingIndicatorWhite;
+	@UiField Image searchLoadingIndicatorBlack;
 	@UiField Panel searchTypeSelector;
 	@UiField Label searchSongsOption;
 	@UiField Label searchUsersOption;
@@ -67,15 +68,11 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	@UiField FlowPanel searchSuggestions;
 	@UiField Label loadedAllLabel;
 	@UiField Panel loadMoreLoadingIndicator;
-	@UiField Panel modePanel;
-	@UiField Label addModeOption;
-	@UiField Label browseModeOption;
-	@UiField Label helpText;
 	private Label _noResultsLabel = new Label("No results found");
 	private Timer searchTimer;
 	private HandlerRegistration rootClickHandler = null;
 	private boolean _loadedAllResults;
-	private HelpBubble searchHelpBubble = new HelpBubble("Add song", "Use the search bar to find songs to add", 300);
+	private boolean _darkText;
 	@Inject CurrentUser _currentUser;
 
 	private MouseOutHandler suggestionMouseOutHandler = new MouseOutHandler() {
@@ -97,7 +94,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	};
 
 	@Inject
-	UnifiedSearchView(Binder binder) {
+	SearchView(Binder binder) {
 		initWidget(binder.createAndBindUi(this));
 		clearSearchResultsNoUiHandlers();
 		final Widget thisWidget = this.asWidget();
@@ -108,7 +105,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 			public void onClick(ClickEvent event) {
 				Element target = Element.as(event.getNativeEvent().getEventTarget());
 				if (!Utils.widgetContainsElement(searchBox, target)
-						&& !Utils.widgetContainsElement(modePanel, target)
 						&& !Utils.widgetContainsElement(loadedAllLabel, target)) {
 					clearSearchResults();
 				}
@@ -147,11 +143,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		searchUsersOption.setVisible(true);
 		searchListsOption.setVisible(true);
 		label.setVisible(false);
-	}
-
-	@UiHandler("searchBox")
-	void onSearchFocus(FocusEvent event) {
-		removeHelpBubble();
 	}
 
 	@UiHandler("searchBox")
@@ -195,7 +186,12 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 					_loadedAllResults = false;
 					searchIndicator.setVisible(false);
-					searchLoadingIndicator.setVisible(true);
+					if (_darkText) {
+						searchLoadingIndicatorBlack.setVisible(true);
+					}
+					else {
+						searchLoadingIndicatorWhite.setVisible(true);
+					}
 					getUiHandlers().getSearchResults(searchTerm);
 				}
 			};
@@ -213,29 +209,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		}
 	}
 
-	@UiHandler("addModeOption")
-	void onAddModeOptionClick(ClickEvent event) {
-		getUiHandlers().setAddMode(true);
-	}
-
-	@UiHandler("browseModeOption")
-	void onBrowseModeOptionClick(ClickEvent event) {
-		getUiHandlers().setAddMode(false);
-	}
-
-	@Override
-	public void setAddMode(boolean addMode) {
-		if (addMode) {
-			addModeOption.addStyleName(style.selected());
-			browseModeOption.removeStyleName(style.selected());
-		}
-		else {
-			browseModeOption.addStyleName(style.selected());
-			addModeOption.removeStyleName(style.selected());
-		}
-		refreshHelpText();
-	}
-
 	private void loadMore() {
 		if (_loadedAllResults)
 			return;
@@ -244,18 +217,14 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		loadMoreLoadingIndicator.setVisible(true);
 	}
 
-	private void refreshHelpText() {
-		helpText.setText(getUiHandlers().getHelpText());
-	}
-
 	// UI handlers are not available in constructor so call without
 	private void clearSearchResultsNoUiHandlers() {
-		modePanel.setVisible(false);
 		searchBox.setText("");
 		searchSuggestions.clear();
 		searchResults.setVisible(false);
 		searchIndicator.setVisible(true);
-		searchLoadingIndicator.setVisible(false);
+		searchLoadingIndicatorWhite.setVisible(false);
+		searchLoadingIndicatorBlack.setVisible(false);
 		loadedAllLabel.setVisible(false);
 		loadMoreLoadingIndicator.setVisible(false);
 		resetHeight();
@@ -338,8 +307,6 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 
 			searchSuggestions.add(eventCatcherPanel);
 		}
-
-		modePanel.setVisible(getUiHandlers().getTotalResults() > 0 && _currentUser.isLoggedIn());
 
 		if (songs.size() == 0 && !loadMore) {
 			searchSuggestions.add(_noResultsLabel);
@@ -435,7 +402,7 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		}
 
 		loadedAllLabel.setVisible(false);
-		if (resultsSize != UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
+		if (resultsSize != SearchPresenter.SELECTIONS_PER_PAGE) {
 			loadedAllLabel.setVisible(showLoadMore && getUiHandlers().getTotalResults() > 0);
 			loadedAllLabel.setText("Loaded " + getUiHandlers().getTotalResults() + " result" + (getUiHandlers().getTotalResults() > 1 ? "s" : ""));
 			_loadedAllResults = true;
@@ -445,15 +412,15 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 		}
 
 		searchIndicator.setVisible(true);
-		searchLoadingIndicator.setVisible(false);
+		searchLoadingIndicatorWhite.setVisible(false);
+		searchLoadingIndicatorBlack.setVisible(false);
 		searchResults.setVisible(true);
 		loadMoreLoadingIndicator.setVisible(false);
-		refreshHelpText();
 		refreshSelection();
 
-		if (searchSuggestions.getWidgetCount() == UnifiedSearchPresenter.SELECTIONS_PER_PAGE) {
+		if (searchSuggestions.getWidgetCount() == SearchPresenter.SELECTIONS_PER_PAGE) {
 			int totalHeight = 0;
-			for (int i = 0; i < UnifiedSearchPresenter.SELECTIONS_PER_PAGE; i++) {
+			for (int i = 0; i < SearchPresenter.SELECTIONS_PER_PAGE; i++) {
 				totalHeight += searchSuggestions.getWidget(i).getOffsetHeight();
 			}
 			searchSuggestionsContainer.getElement().getStyle().setHeight(totalHeight, Unit.PX);
@@ -466,11 +433,23 @@ public class UnifiedSearchView extends ViewWithUiHandlers<UnifiedSearchUiHandler
 	}
 
 	@Override
-	public void addHelpBubble() {
-		container.add(searchHelpBubble);
+	public void setSingleSearch(boolean singleSearch) {
+		currentSearchTypeContainer.setVisible(!singleSearch);
 	}
 
-	public void removeHelpBubble() {
-		container.remove(searchHelpBubble);
+	@Override
+	public void focus() {
+		searchBox.setFocus(true);
+	}
+
+	@Override
+	public void setDarkText(boolean darkText) {
+		_darkText = darkText;
+		if (darkText) {
+			container.addStyleName(style.darkText());
+		}
+		else {
+			container.removeStyleName(style.darkText());
+		}
 	}
 }

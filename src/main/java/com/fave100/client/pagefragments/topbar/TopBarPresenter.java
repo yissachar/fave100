@@ -6,8 +6,10 @@ import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.events.favelist.HideSideBarEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchPresenter;
+import com.fave100.client.pagefragments.playlist.PlaylistPresenter;
+import com.fave100.client.pages.lists.UnifiedSearchSuggestionSelectedAction;
 import com.fave100.client.pages.register.RegisterPresenter;
+import com.fave100.client.widgets.search.SearchPresenter;
 import com.fave100.shared.place.NameTokens;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -56,15 +58,18 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	private EventBus _eventBus;
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
+	private PlaylistPresenter _playlistPresenter;
 	private FaveApi _api;
-	@Inject private UnifiedSearchPresenter unifiedSearch;
+	@Inject private SearchPresenter unifiedSearch;
 
 	@Inject
-	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser, final FaveApi api) {
+	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser, final FaveApi api,
+							PlaylistPresenter playlistPresenter) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_currentUser = currentUser;
 		_placeManager = placeManager;
+		_playlistPresenter = playlistPresenter;
 		_api = api;
 
 		getView().setUiHandlers(this);
@@ -97,6 +102,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	@Override
 	protected void onBind() {
 		super.onBind();
+		unifiedSearch.setSuggestionSelectedAction(new UnifiedSearchSuggestionSelectedAction(_placeManager, _playlistPresenter));
 		registerCallbacks();
 
 		CurrentUserChangedEvent.register(_eventBus,

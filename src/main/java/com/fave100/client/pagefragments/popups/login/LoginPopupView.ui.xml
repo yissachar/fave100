@@ -4,7 +4,7 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:w='urn:import:com.fave100.client.widgets.lightbox'>
 
-	<ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">		
+	<ui:style src="../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
 		.mainContent {
 			padding: 15px;
 		}
@@ -45,7 +45,7 @@
 				</g:SimplePanel>
 				
 			</g:HTMLPanel>
-			</w:content>
+		</w:content>
 	</w:LightBox>
 	
 </ui:UiBinder>
