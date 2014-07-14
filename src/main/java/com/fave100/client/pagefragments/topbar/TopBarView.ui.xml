@@ -145,6 +145,7 @@
 			position: absolute;
 			width: 100%;
 			box-shadow: 0 0 6px 1px #888;
+			text-transform: capitalize;
 		}
 		
 		.dropDownElement, .dropDown a {			
@@ -173,6 +174,7 @@
 			text-align: center;
 			padding: 10px 20px;
 			color: #fff;
+			text-transform: capitalize;
 		}
 		
 		.loginButton:hover {
@@ -218,7 +220,7 @@
 						<g:InlineLabel ui:field="usernameLabel" ui:styleName="{style.usernameLabel}"/>
 					</g:FlowPanel>
 					<g:FlowPanel ui:styleName="{style.dropDown}">
-						<g:Hyperlink ui:field="listLink">My List</g:Hyperlink>
+						<g:Hyperlink ui:field="listLink">My list</g:Hyperlink>
 						<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}">Settings</g:Hyperlink>
 						<g:InlineLabel ui:styleName="{style.dropDownElement}" ui:field="logOutButton">Sign out</g:InlineLabel>
 					</g:FlowPanel>
