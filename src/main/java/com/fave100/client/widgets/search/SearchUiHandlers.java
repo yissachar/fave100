@@ -1,8 +1,8 @@
-package com.fave100.client.pagefragments.unifiedsearch;
+package com.fave100.client.widgets.search;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
-public interface UnifiedSearchUiHandlers extends UiHandlers {
+interface SearchUiHandlers extends UiHandlers {
 	void getSearchResults(String searchTerm);
 
 	void clearSearchResults();
@@ -24,10 +24,6 @@ public interface UnifiedSearchUiHandlers extends UiHandlers {
 	void setSearchType(SearchType searchType);
 
 	void selectSuggestion();
-
-	void setAddMode(boolean addMode);
-
-	String getHelpText();
 
 	int getTotalResults();
 }

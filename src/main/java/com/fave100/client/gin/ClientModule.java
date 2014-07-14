@@ -3,7 +3,6 @@ package com.fave100.client.gin;
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
 import com.fave100.client.RequestCache;
-import com.fave100.client.StorageManager;
 import com.fave100.client.gatekeepers.LoggedInGatekeeper;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
@@ -29,6 +28,7 @@ import com.fave100.client.place.ClientPlaceManager;
 import com.fave100.client.place.DefaultPlace;
 import com.fave100.client.widgets.alert.AlertModule;
 import com.fave100.client.widgets.autocomplete.AutocompleteModule;
+import com.fave100.client.widgets.search.SearchModule;
 import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.gwtplatform.dispatch.rest.client.RestApplicationPath;
@@ -54,6 +54,7 @@ public class ClientModule extends AbstractPresenterModule {
 		install(new AlertModule());
 		install(new ListBrowserModule());
 		install(new AutocompleteModule());
+		install(new SearchModule());
 
 		install(new DefaultModule(ClientPlaceManager.class));
 		install(new RestDispatchAsyncModule.Builder().build());
@@ -68,7 +69,6 @@ public class ClientModule extends AbstractPresenterModule {
 		bind(CurrentUser.class).asEagerSingleton();
 		bind(LoggedInGatekeeper.class).asEagerSingleton();
 		bind(NotLoggedInGatekeeper.class).asEagerSingleton();
-		bind(StorageManager.class).asEagerSingleton();
 		bind(FaveApi.class).asEagerSingleton();
 
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.lists);

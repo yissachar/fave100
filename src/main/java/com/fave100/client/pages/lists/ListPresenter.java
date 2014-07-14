@@ -13,6 +13,7 @@ import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.pages.PagePresenter;
+import com.fave100.client.pages.lists.widgets.addsongsearch.AddSongSearchPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.lists.widgets.globallistdetails.AddListAfterLoginAction;
 import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
@@ -82,6 +83,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	@Inject UsersFollowingPresenter usersFollowing;
 	@Inject ListManagerPresenter listManager;
 	@Inject GlobalListDetailsPresenter globalListDetails;
+	@Inject AddSongSearchPresenter search;
 
 	@Inject
 	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser,
@@ -330,6 +332,11 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		}
 	}
 
+	@Override
+	public void showSongSearch() {
+		addToPopupSlot(search);
+	}
+
 }
 
 interface ListUiHandlers extends UiHandlers {
@@ -340,4 +347,6 @@ interface ListUiHandlers extends UiHandlers {
 	boolean isOwnPage();
 
 	void contributeToList();
+
+	void showSongSearch();
 }

@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:w='urn:import:com.fave100.client.widgets'>
              
-    <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.unifiedsearch.UnifiedSearchView.UnifiedSearchStyle">
+    <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.widgets.search.SearchView.SearchStyle">
     	@def SEARCH_WIDTH 400px;
     	@def ARROW_SIZE 7px;
     	
@@ -15,6 +15,11 @@
 			@mixin flexbox();
 			@mixin align-items(center);
 			@mixin justify-content(space-between);
+		}
+		
+		.darkText .searchContainer {
+			color: #555;
+			border-bottom: 0px;
 		}
 		    	
     	.smallDisplay .searchContainer {
@@ -42,8 +47,12 @@
 			border: 0px solid #000 !important;
 			padding: 0 0 !important;
 			margin-left: 5px;
-			width: 70%;
+			@mixin flex-grow(2);
 			color: #fff;
+    	}
+    	
+    	.darkText .searchBox {
+			color: #555;
     	}
     	
     	.searchBox:focus {
@@ -156,36 +165,6 @@
 			display: block;
 			margin: 0 auto;
 		}
-		
-		.modePanel {
-			padding: 12px 5px;
-			background-color: FADED_LIGHT_BG;
-		}
-		
-		.modeOption {
-			padding: 5px;		
-			border: 1px solid #aaa;
-		}
-		
-		.modeOption:hover {
-			background-color: FADED_LIGHT_BG;
-			color: LIST_HIGHLIGHT_COLOR;
-		}
-		
-		.modeOption.selected {
-			background-color: PRIMARY_COLOR;
-			color: #fff;
-		}
-				
-		.addModeOption {
-			border-right: 0px solid #aaa;
-			margin-left: 10px;
-		}
-		
-		.helpText {
-			font-size: 12px;
-			margin-top: 15px;
-		}
     </ui:style>
     
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
@@ -201,7 +180,8 @@
 			</g:FocusPanel>
     		<w:FaveTextBox ui:field="searchBox" ui:styleName="{style.searchBox}" />
 			<w:Icon ui:field="searchIndicator" ui:styleName="fa fa-search" />
-			<g:Image  ui:field="searchLoadingIndicator" resource="{img.searchLoadingIndicatorWhite}" />
+			<g:Image  ui:field="searchLoadingIndicatorWhite" resource="{img.searchLoadingIndicatorWhite}" />
+			<g:Image  ui:field="searchLoadingIndicatorBlack" resource="{img.searchLoadingIndicatorBlack}" />
     	</g:FlowPanel>
     	
     	<g:FlowPanel ui:field="searchTypeSelector" ui:styleName="{style.searchTypeSelector}">
@@ -220,13 +200,6 @@
 					</g:SimplePanel>
 				</g:FlowPanel>
 			</g:ScrollPanel>
-			
-			<g:FlowPanel ui:field="modePanel" ui:styleName="{style.modePanel}">
-				<g:InlineLabel>Mode:</g:InlineLabel>
-				<g:InlineLabel ui:field="addModeOption" ui:styleName="{style.modeOption} {style.addModeOption}">Add</g:InlineLabel>
-				<g:InlineLabel ui:field="browseModeOption" ui:styleName="{style.modeOption} {style.selected}">Browse</g:InlineLabel>
-				<g:Label ui:field="helpText" ui:styleName="{style.helpText}" />
-			</g:FlowPanel>
 		</g:FlowPanel>				
     	
     </g:HTMLPanel>
