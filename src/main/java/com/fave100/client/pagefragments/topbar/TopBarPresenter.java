@@ -16,8 +16,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ScrollEvent;
-import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -46,8 +44,6 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 
 		void setLoggedOut();
 
-		void setTopBarDropShadow(boolean show);
-
 		void setMobileView(String currentPlace);
 
 		void setFloatingSearch(boolean floating);
@@ -73,21 +69,6 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		_api = api;
 
 		getView().setUiHandlers(this);
-
-		Window.addWindowScrollHandler(new ScrollHandler() {
-			@Override
-			public void onWindowScroll(final ScrollEvent event) {
-				// Window as at top of screen or on users page, no need for drop shadow
-				if (event.getScrollTop() == 0
-						|| placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.lists)) {
-					getView().setTopBarDropShadow(false);
-				}
-				else {
-					// Top bar is scrolling, show drop shadow to indicate perspective
-					getView().setTopBarDropShadow(true);
-				}
-			}
-		});
 
 		Window.addResizeHandler(new ResizeHandler() {
 

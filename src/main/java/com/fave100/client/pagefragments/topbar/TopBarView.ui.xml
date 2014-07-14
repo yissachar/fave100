@@ -40,18 +40,6 @@
 		
 		.userContainer {
 			cursor: pointer;
-			position: relative;
-		}
-		
-		.topNav li > a, .topNav li > span {
-			display: inline-block;
-			text-decoration: none;
-			padding: 0 6px;
-			font-size: 16px;
-		}
-		
-		.topBarDropShadow {
-			box-shadow: 0px 1px 2px #444;
 		}
 		
 		.notification {
@@ -121,21 +109,11 @@
 			cursor: pointer;
 			color: #fff;
 		}
-					
-		.userInfo {
-			padding: 0 5px;
-			margin-top: 4px;
-	  	}
-	  	
-	  	.userAvatar {
-			width: 40px;
-			margin-top: 5px;
-		}
 		
 		.usernameLabel {
 			margin-left: 15px;
 			font-size: 16px;
-			padding: 10px;
+			padding: 15px;
 			color: #fff;
 		}
 				
@@ -215,10 +193,8 @@
 			<w:Icon ui:field="searchToggle" ui:styleName="fa fa-search fa-lg {style.searchToggle} {style.unselectable}" />
 								
 			<g:FlowPanel ui:styleName="{style.userContainer}">		
-				<g:FlowPanel ui:field="loggedInContainer" ui:styleName="{style.loggedInContainer}">				
-					<g:FlowPanel ui:field="userInfo" ui:styleName="{style.userInfo}">
-						<g:InlineLabel ui:field="usernameLabel" ui:styleName="{style.usernameLabel}"/>
-					</g:FlowPanel>
+				<g:FlowPanel ui:field="loggedInContainer" ui:styleName="{style.loggedInContainer}">			
+					<g:InlineLabel ui:field="usernameLabel" ui:styleName="{style.usernameLabel}"/>
 					<g:FlowPanel ui:styleName="{style.dropDown}">
 						<g:Hyperlink ui:field="listLink">My list</g:Hyperlink>
 						<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}">Settings</g:Hyperlink>
