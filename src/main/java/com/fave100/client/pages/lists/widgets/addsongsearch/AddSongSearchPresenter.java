@@ -30,6 +30,7 @@ public class AddSongSearchPresenter extends PresenterWidget<AddSongSearchPresent
 		_search.setSingleSearch(SearchType.SONGS);
 		_search.setSuggestionSelectedAction(new AddSongSuggestionSelectedAction(placeManager, currentUser, getView()));
 		_search.setDarkText(true);
+		_search.setFullPageSearch(true);
 
 		getView().setUiHandlers(this);
 	}

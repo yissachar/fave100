@@ -45,6 +45,8 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	}
 
 	interface SearchStyle extends GlobalStyle {
+		String fullPage();
+
 		String suggestionPanel();
 
 		String song();
@@ -426,7 +428,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 		loadedAllLabel.setVisible(false);
 		if (resultsSize != SearchPresenter.SELECTIONS_PER_PAGE) {
 			loadedAllLabel.setVisible(showLoadMore && getUiHandlers().getTotalResults() > 0);
-			loadedAllLabel.setText("Loaded " + getUiHandlers().getTotalResults() + " result" + (getUiHandlers().getTotalResults() > 1 ? "s" : ""));
+			loadedAllLabel.setText("Found " + getUiHandlers().getTotalResults() + " result" + (getUiHandlers().getTotalResults() > 1 ? "s" : ""));
 			_loadedAllResults = true;
 		}
 		else {
@@ -476,6 +478,20 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	}
 
 	@Override
+	public void setFullPageSearch(boolean fullPage) {
+		String fontAwesomeLarge = "fa-lg";
+
+		if (fullPage) {
+			container.addStyleName(style.fullPage());
+			searchIndicator.addStyleName(fontAwesomeLarge);
+		}
+		else {
+			container.removeStyleName(style.fullPage());
+			searchIndicator.removeStyleName(fontAwesomeLarge);
+		}
+	}
+
+	@Override
 	public void updateAlbumArt(List<ItunesSearchResult> itunesSearchResults) {
 
 		if (itunesSearchResults == null)
@@ -483,8 +499,8 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 
 		for (Map.Entry<SongDto, Image> entry : _albumImages.entrySet()) {
 			for (ItunesSearchResult itunesSearchResult : itunesSearchResults) {
-				if (itunesSearchResult.getTrackName().equals(entry.getKey().getSong())
-						&& itunesSearchResult.getArtistName().equals(entry.getKey().getArtist())) {
+				if (itunesSearchResult.getTrackName().toLowerCase().equals(entry.getKey().getSong().toLowerCase())
+						&& itunesSearchResult.getArtistName().toLowerCase().equals(entry.getKey().getArtist().toLowerCase())) {
 					entry.getValue().setUrl(itunesSearchResult.getArtworkUrl60());
 				}
 			}
