@@ -43,7 +43,7 @@
 				
 		.songDetails {
 			padding-right: 15px;
-			@mixin flex-grow(2);
+			@mixin flex(2, 1, 0);
 		}
 		
 		.songDetails > * {

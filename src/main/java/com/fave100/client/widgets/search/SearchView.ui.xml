@@ -162,6 +162,10 @@
 			@mixin align-items(center);
 		}
 		
+		.searchSuggestions .suggestionPanel > div {	
+			@mixin flex(2, 1, 0);
+		}
+		
 		.searchSuggestions .song, .searchSuggestions .artist {
 			margin-left: 7px;
 		}
