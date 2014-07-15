@@ -269,15 +269,15 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 		switch (searchType) {
 			case SONGS:
 				showSearchTypeOptions(searchSongsOption);
-				searchText = "Search songs";
+				searchText = "Search Songs";
 				break;
 			case USERS:
 				showSearchTypeOptions(searchUsersOption);
-				searchText = "Search users";
+				searchText = "Search Users";
 				break;
 			case LISTS:
 				showSearchTypeOptions(searchListsOption);
-				searchText = "Search lists";
+				searchText = "Search Lists";
 
 			default:
 				break;
@@ -298,6 +298,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 			FlowPanel panel = new FlowPanel();
 			panel.addStyleName(style.suggestionPanel());
 
+			// TODO: July 15, 2014: Change to real placeholder image
 			Image albumArt = new Image("http://a1.mzstatic.com/us/r30/Music6/v4/9c/16/f4/9c16f4b6-2b52-3fda-3017-b647200d1a32/859706808522_cover.60x60-50.jpg");
 			panel.add(albumArt);
 			_albumImages.put(song, albumArt);
@@ -484,10 +485,12 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 		if (fullPage) {
 			container.addStyleName(style.fullPage());
 			searchIndicator.addStyleName(fontAwesomeLarge);
+			searchBox.setPlaceHolder("Search songs");
 		}
 		else {
 			container.removeStyleName(style.fullPage());
 			searchIndicator.removeStyleName(fontAwesomeLarge);
+			searchBox.setPlaceHolder("");
 		}
 	}
 
