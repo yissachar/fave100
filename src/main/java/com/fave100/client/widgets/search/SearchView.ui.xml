@@ -210,9 +210,9 @@
     	</g:FlowPanel>
     	
     	<g:FlowPanel ui:field="searchTypeSelector" ui:styleName="{style.searchTypeSelector}">
-    		<g:Label ui:field="searchSongsOption">Search songs</g:Label>
-    		<g:Label ui:field="searchUsersOption">Search users</g:Label>
-    		<g:Label ui:field="searchListsOption">Search lists</g:Label>
+    		<g:Label ui:field="searchSongsOption">Search Songs</g:Label>
+    		<g:Label ui:field="searchUsersOption">Search Users</g:Label>
+    		<g:Label ui:field="searchListsOption">Search Lists</g:Label>
     	</g:FlowPanel>
     	
 		<g:FlowPanel ui:field="searchResults" ui:styleName="{style.searchResults}">

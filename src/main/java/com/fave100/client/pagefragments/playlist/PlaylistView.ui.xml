@@ -82,6 +82,7 @@
 		
 		.playlistControls a {
 			color: #fff;
+			font-size: 16px;
 		}
 		
 		.playlistControls > * {
@@ -98,6 +99,10 @@
 		
 		.previousButton {
 			text-align: left;
+		}
+		
+		.playlistDetails a {
+			font-family: 'Merriweather';
 		}
 		
 		.hideButton {
@@ -145,7 +150,7 @@
 		    		<g:FlowPanel ui:field="playlistControls" ui:styleName="{style.playlistControls}">
 			    		<w:Icon ui:field="previousButton" ui:styleName="fa fa-backward {style.previousButton}"/>
 			    		<g:FlowPanel>
-				    		<g:FlowPanel>
+				    		<g:FlowPanel ui:styleName="{style.playlistDetails}">
 					    		<g:InlineHyperlink ui:field="listName"/>
 						    	<g:InlineLabel ui:field="byUserText" ui:styleName="{style.hyphen}">by</g:InlineLabel>
 						    	<g:InlineHyperlink ui:field="username"/>
