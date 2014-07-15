@@ -9,6 +9,7 @@ import com.fave100.client.Utils;
 import com.fave100.client.entities.ItunesSearchResult;
 import com.fave100.client.entities.SongDto;
 import com.fave100.client.resources.css.GlobalStyle;
+import com.fave100.client.resources.img.ImageResources;
 import com.fave100.client.widgets.FaveTextBox;
 import com.fave100.client.widgets.Icon;
 import com.google.gwt.dom.client.Element;
@@ -299,7 +300,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 			panel.addStyleName(style.suggestionPanel());
 
 			// TODO: July 15, 2014: Change to real placeholder image
-			Image albumArt = new Image("http://a1.mzstatic.com/us/r30/Music6/v4/9c/16/f4/9c16f4b6-2b52-3fda-3017-b647200d1a32/859706808522_cover.60x60-50.jpg");
+			Image albumArt = new Image(ImageResources.INSTANCE.album());
 			panel.add(albumArt);
 			_albumImages.put(song, albumArt);
 

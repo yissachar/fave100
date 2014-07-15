@@ -41,4 +41,7 @@ public interface ImageResources extends ClientBundle {
 	@Source("corey.jpg")
 	ImageResource corey();
 
+	@Source("album.png")
+	ImageResource album();
+
 }
