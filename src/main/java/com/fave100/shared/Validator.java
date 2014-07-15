@@ -48,7 +48,7 @@ public abstract class Validator {
 	}
 
 	public static String validateHashtag(final String hashtag) {
-		final String hashtagPattern = "^[a-zA-Z0-9]+$";
+		final String hashtagPattern = "^[a-zA-Z 0-9]+$";
 		if (hashtag == null || hashtag.equals("")) {
 			return "List name cannot be left empty";
 		}
@@ -56,8 +56,6 @@ public abstract class Validator {
 			return "List name must be " + Constants.MAX_HASHTAG_LENGTH + " characters or less";
 		}
 		else if (!hashtag.matches(hashtagPattern)) {
-			if (hashtag.contains(" "))
-				return "List name must not contain spaces";
 			return "List name must only consist of letters and numbers";
 		}
 		return null;

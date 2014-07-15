@@ -63,6 +63,7 @@
 			font-size: 30px;
 			padding-left: 15px;
 			@mixin flex-grow(2);
+			@mixin unselectable();
 		}		
 		
 		.logoFaveText {
