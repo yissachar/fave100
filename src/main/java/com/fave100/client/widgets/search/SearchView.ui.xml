@@ -142,6 +142,15 @@
 			color: LIST_HIGHLIGHT_COLOR;
 		}
 		
+		.searchSuggestions .suggestionPanel {			
+			@mixin flexbox();
+			@mixin align-items(center);
+		}
+		
+		.searchSuggestions .song, .searchSuggestions .artist {
+			margin-left: 7px;
+		}
+		
 		.searchSuggestions .song {
 			font-size: 16px;
 		}

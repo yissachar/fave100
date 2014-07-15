@@ -1,9 +1,12 @@
 package com.fave100.client.widgets.search;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.Utils;
+import com.fave100.client.entities.ItunesSearchResult;
 import com.fave100.client.entities.SongDto;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.client.widgets.FaveTextBox;
@@ -42,6 +45,8 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	}
 
 	interface SearchStyle extends GlobalStyle {
+		String suggestionPanel();
+
 		String song();
 
 		String artist();
@@ -73,6 +78,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	private HandlerRegistration rootClickHandler = null;
 	private boolean _loadedAllResults;
 	private boolean _darkText;
+	private Map<SongDto, Image> _albumImages = new HashMap<>();
 	@Inject CurrentUser _currentUser;
 
 	private MouseOutHandler suggestionMouseOutHandler = new MouseOutHandler() {
@@ -279,18 +285,32 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	}
 
 	@Override
-	public void setSongSuggestions(List<SongDto> songs, boolean loadMore) {
+	public void setSongSuggestions(List<SongDto> songs, List<ItunesSearchResult> itunesSearchResults, boolean loadMore) {
 		setupSearchContainer(loadMore);
+		_albumImages.clear();
 
 		for (SongDto song : songs) {
+			String albumArtUrl = "";
+
 			final FocusPanel eventCatcherPanel = new FocusPanel();
 			FlowPanel panel = new FlowPanel();
+			panel.addStyleName(style.suggestionPanel());
+
+			Image albumArt = new Image("http://a1.mzstatic.com/us/r30/Music6/v4/9c/16/f4/9c16f4b6-2b52-3fda-3017-b647200d1a32/859706808522_cover.60x60-50.jpg");
+			panel.add(albumArt);
+			_albumImages.put(song, albumArt);
+
+			FlowPanel detailsPanel = new FlowPanel();
+
 			Label songTitle = new Label(song.getSong());
 			songTitle.addStyleName(style.song());
+			detailsPanel.add(songTitle);
+
 			Label artist = new Label(song.getArtist());
 			artist.addStyleName(style.artist());
-			panel.add(songTitle);
-			panel.add(artist);
+			detailsPanel.add(artist);
+
+			panel.add(detailsPanel);
 			eventCatcherPanel.add(panel);
 
 			eventCatcherPanel.addMouseOverHandler(new MouseOverHandler() {
@@ -307,6 +327,8 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 
 			searchSuggestions.add(eventCatcherPanel);
 		}
+
+		updateAlbumArt(itunesSearchResults);
 
 		if (songs.size() == 0 && !loadMore) {
 			searchSuggestions.add(_noResultsLabel);
@@ -450,6 +472,22 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 		}
 		else {
 			container.removeStyleName(style.darkText());
+		}
+	}
+
+	@Override
+	public void updateAlbumArt(List<ItunesSearchResult> itunesSearchResults) {
+
+		if (itunesSearchResults == null)
+			return;
+
+		for (Map.Entry<SongDto, Image> entry : _albumImages.entrySet()) {
+			for (ItunesSearchResult itunesSearchResult : itunesSearchResults) {
+				if (itunesSearchResult.getTrackName().equals(entry.getKey().getSong())
+						&& itunesSearchResult.getArtistName().equals(entry.getKey().getArtist())) {
+					entry.getValue().setUrl(itunesSearchResult.getArtworkUrl60());
+				}
+			}
 		}
 	}
 }
