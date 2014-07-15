@@ -7,7 +7,7 @@
     </ui:style>
     
     <w:LightBox>
-		<w:content width="400px" height="100%">
+		<w:content width="50%" height="100%">
 			<g:HTMLPanel ui:field="search" />
 		</w:content>
 	</w:LightBox>	

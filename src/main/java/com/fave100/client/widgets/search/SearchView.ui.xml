@@ -17,6 +17,11 @@
 			@mixin justify-content(space-between);
 		}
 		
+		.fullPage .searchContainer {
+			height: 45px;
+			width: 100%;
+		}
+		
 		.darkText .searchContainer {
 			color: #555;
 			border-bottom: 0px;
@@ -55,8 +60,8 @@
 			color: #555;
     	}
     	
-    	.searchBox:focus {
-			outline: none;
+    	.fullPage .searchBox {
+			font-size: 18px;
     	}
     	
     	.smallDisplay .searchBox {
@@ -117,6 +122,16 @@
 			box-shadow: 0 0 7px 0 #aaa;
 		}
 		
+		.fullPage .searchResults {
+			position: relative;
+			border: 0px;
+			border-top: 1px solid #bbb;
+			width: 100%;
+			margin-top: 0px;
+			border-radius: 0;
+			box-shadow: 0 0 0 0 #000;
+		}
+		
 		.smallDisplay .searchResults {
 			width: 275px;
 		}
@@ -161,9 +176,10 @@
 		}
 		
 		.loadMoreButton {
-			padding: 5px;
+			padding: 10px;
 			text-align: center;
-			border-top: 1px solid #ddd;
+			background-color: #f8f9fb;
+			border-top: 1px solid #e4ebf0;
 		}
 		
 		.loadMoreIndicator {
@@ -205,7 +221,7 @@
 					<g:FlowPanel ui:field="searchSuggestions"  ui:styleName="{style.searchSuggestions}"/>
 					<g:Label ui:field="loadedAllLabel" ui:styleName="{style.loadMoreButton}" />
 					<g:SimplePanel ui:field="loadMoreLoadingIndicator" ui:styleName="{style.loadMoreIndicator}">
-						<g:Image resource="{img.searchLoadingIndicatorBlack}"></g:Image>
+						<g:Image resource="{img.searchLoadingIndicatorBlack}" />
 					</g:SimplePanel>
 				</g:FlowPanel>
 			</g:ScrollPanel>

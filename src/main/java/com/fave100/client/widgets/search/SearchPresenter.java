@@ -45,6 +45,8 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 		void setDarkText(boolean darkText);
 
 		void updateAlbumArt(List<ItunesSearchResult> itunesSearchResults);
+
+		void setFullPageSearch(boolean fullPage);
 	}
 
 	public final static int SELECTIONS_PER_PAGE = 5;
@@ -335,6 +337,10 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 		_searchType = searchType;
 		clearSearchResults();
 		getView().setSelectedSearchType(searchType);
+	}
+
+	public void setFullPageSearch(boolean fullPage) {
+		getView().setFullPageSearch(fullPage);
 	}
 
 	public void focus() {
