@@ -59,6 +59,7 @@
 		.artist {
 			font-size: 16px;
 			color: HIGHLIGHT_COLOR;
+			display: inline-block;
 		}
 		
 		.whyLine {
