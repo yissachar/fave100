@@ -1,5 +1,6 @@
 package com.fave100.client.pagefragments.popups.login;
 
+import com.fave100.client.widgets.Icon;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -21,6 +22,7 @@ public class LoginPopupView extends PopupViewImpl implements LoginPopupPresenter
 
 	@UiField HTMLPanel loginContainer;
 	@UiField HTMLPanel registerContainer;
+	@UiField Icon closeButton;
 	@UiField Label viewToggleLink;
 	private boolean loginView = true;
 
@@ -46,6 +48,11 @@ public class LoginPopupView extends PopupViewImpl implements LoginPopupPresenter
 		else {
 			showLogin();
 		}
+	}
+
+	@UiHandler("closeButton")
+	void onCloseButtonClick(ClickEvent event) {
+		hide();
 	}
 
 	@Override
