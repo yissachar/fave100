@@ -57,6 +57,11 @@
 	-webkit-transition: ARGS;
 }
 
+@defmixin transform(ARGS) {
+	transform: ARGS;
+	-webkit-transform: ARGS;
+}
+
 @defmixin unselectable() {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
