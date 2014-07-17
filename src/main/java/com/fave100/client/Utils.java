@@ -42,16 +42,17 @@ public class Utils {
 		if (rank <= 0 || rank > Constants.MAX_ITEMS_PER_LIST)
 			throw new IllegalArgumentException("Rank cannot be less than 1 or greater than " + Constants.MAX_ITEMS_PER_LIST);
 
-		int[][] gradients = { {224, 86, 82}, {82, 153, 224}};
+		int[][] gradients = { {224, 86, 82}, {229, 84, 145}, {82, 153, 224}};
 
-		double percent = (double)rank / numItems;
-		int gradientPicker = (int)Math.floor(((rank - 1) / ((numItems) / (gradients.length - 1))));
+		int itemsPerGradientStep = (numItems / (gradients.length - 1));
+		int gradientPicker = (int)Math.floor(((rank - 1) / itemsPerGradientStep));
 		int[] leftGradient = gradients[gradientPicker];
 		int[] rightGradient = gradients[gradientPicker + 1];
 
-		int red = (int)((1.0 - percent) * leftGradient[0] + percent * rightGradient[0] + 0.5);
-		int green = (int)((1.0 - percent) * leftGradient[1] + percent * rightGradient[1] + 0.5);
-		int blue = (int)((1.0 - percent) * leftGradient[2] + percent * rightGradient[2] + 0.5);
+		double percent = (double)((rank - 1) % itemsPerGradientStep) / itemsPerGradientStep;
+		int red = (int)((1.0 - percent) * leftGradient[0] + percent * rightGradient[0]);
+		int green = (int)((1.0 - percent) * leftGradient[1] + percent * rightGradient[1]);
+		int blue = (int)((1.0 - percent) * leftGradient[2] + percent * rightGradient[2]);
 
 		return "rgb(" + red + "," + green + "," + blue + ")";
 	}
