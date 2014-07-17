@@ -196,6 +196,15 @@
 			display: block;
 			margin: 0 auto;
 		}
+		
+		.noResultsFound {
+			padding: 12px;
+			text-align: center;
+		}
+		
+		.fullPage .noResultsFound {
+			padding: 16px;
+		}
     </ui:style>
     
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
