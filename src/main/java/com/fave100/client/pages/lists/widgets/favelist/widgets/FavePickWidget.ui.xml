@@ -30,8 +30,8 @@
 			text-align: center;
 			padding: 0px !important;
 			line-height: 40px;
-			font-family: "Trebuchet MS";
-		}
+			font-family: "Trebuchet MS" !important;
+		}		
 				
 		.rank > div {
 			margin-top: 2px;

@@ -123,7 +123,7 @@
 			background-color: #fff;
 			position: absolute;
 			width: 100%;
-			box-shadow: 0 0 6px 1px #888;
+			box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.4);
 			text-transform: capitalize;
 		}
 		
