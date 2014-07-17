@@ -57,6 +57,8 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 		String selected();
 
 		String darkText();
+
+		String noResultsFound();
 	}
 
 	@UiField SearchStyle style;
@@ -125,6 +127,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 		};
 		rootClickHandler = RootPanel.get().addDomHandler(clickHandler, ClickEvent.getType());
 		searchTypeSelector.setVisible(false);
+		_noResultsLabel.addStyleName(style.noResultsFound());
 	}
 
 	@UiHandler("currentSearchTypeContainer")
