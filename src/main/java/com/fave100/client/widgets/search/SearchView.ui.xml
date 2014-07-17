@@ -75,6 +75,7 @@
 			border-radius: 3px;
 			border: 1px solid #ccc;
 			cursor: pointer;
+			box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.3); 
 		}
 		
 		.searchTypeSelector:after, .searchTypeSelector:before {
@@ -120,7 +121,7 @@
 			width: SEARCH_WIDTH;
 			margin-top: 5px;
 			border-radius: 5px;
-			box-shadow: 0 0 7px 0 #aaa;
+			box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.4);
 		}
 		
 		.fullPage .searchResults {

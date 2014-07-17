@@ -1,4 +1,4 @@
-/* 
+\/* 
 	12 COLUMN - RESPONSIVE GRID SYSTEM
 	DEVELOPED BY DENIS LEBLANC
 	URL - http://responsive.gs
@@ -80,7 +80,6 @@ button, .button {
 	border-radius: 3px;
 	border: 0px;
 	height: 30px;
-	text-transform: capitalize;
 }
 
 button:hover, .button:hover {
