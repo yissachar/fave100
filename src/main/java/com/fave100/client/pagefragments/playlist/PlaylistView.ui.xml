@@ -108,6 +108,7 @@
 		
 		.playlistDetails a {
 			font-family: 'Merriweather';
+			font-style: italic;
 		}
 		
 		.hideButton {
