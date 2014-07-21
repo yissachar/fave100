@@ -22,6 +22,8 @@ public class YouTubePresenter extends PresenterWidget<YouTubePresenter.MyView>
 		void stopVideo();
 
 		void toggleThumbs();
+
+		void hideThumbs();
 	}
 
 	private EventBus _eventBus;
@@ -49,6 +51,10 @@ public class YouTubePresenter extends PresenterWidget<YouTubePresenter.MyView>
 
 	public void toggleThumbs() {
 		getView().toggleThumbs();
+	}
+
+	public void hideThumbs() {
+		getView().hideThumbs();
 	}
 
 	@Override

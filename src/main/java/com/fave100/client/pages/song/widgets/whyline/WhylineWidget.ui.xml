@@ -4,21 +4,19 @@
 	
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
 		.container {
-			display: block;
 			overflow: hidden;
+			@mixin flexbox();
 		}
 		
 		.avatar {
 			max-width: 35px;
 			max-height: 35px;
-			float: left;
 			margin-right: 10px;
 			border-radius: 50%;
 		}		
 		
 		.whylineDetails {
-			float: left;
-			width: 80%;
+			@mixin flex(2, 1, 0);
 		}
 		
 		.userLink {

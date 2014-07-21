@@ -273,4 +273,9 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	public void toggleThumbs() {
 		youtubePresenter.toggleThumbs();
 	}
+
+	@Override
+	public void hideThumbs() {
+		youtubePresenter.hideThumbs();
+	}
 }

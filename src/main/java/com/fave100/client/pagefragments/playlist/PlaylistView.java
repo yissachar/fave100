@@ -34,6 +34,8 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	interface PlaylistStyle extends GlobalStyle {
 
 		String fullScreen();
+
+		String whyLinesVisible();
 	}
 
 	@UiField PlaylistStyle style;
@@ -110,11 +112,24 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	@UiHandler("thumbToggle")
 	void onThumbToggleClick(ClickEvent event) {
 		getUiHandlers().toggleThumbs();
+		whylineView.removeStyleName(style.whyLinesVisible());
+	}
+
+	@UiHandler("whylineToggle")
+	void onWhyLineToggleClick(ClickEvent event) {
+		getUiHandlers().hideThumbs();
+		if (whylineView.getStyleName().contains(style.whyLinesVisible())) {
+			whylineView.removeStyleName(style.whyLinesVisible());
+		}
+		else {
+			whylineView.addStyleName(style.whyLinesVisible());
+		}
 	}
 
 	@Override
 	public void playSong(String listName, String username, String song, String artist, String videoId, boolean globalList, List<PlaylistItem> playlistItems) {
 		playlist.setVisible(true);
+		playlistControls.setVisible(listName != null && !listName.isEmpty());
 
 		_playlistItems = playlistItems;
 

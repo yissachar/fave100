@@ -3,6 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+		@def BACKGROUND_COLOR #fff;
 		@def HOVER_BORDER 1px solid #ddd;
 		
 		.container {
@@ -15,7 +16,7 @@
 		}
 		
 		.details {
-		    background-color: #fff;
+		    background-color: BACKGROUND_COLOR;
 		    border: HOVER_BORDER;
 		    border-radius: 3px;
 		    width: 160px;
@@ -37,7 +38,7 @@
 		    height: 10px;
 		    border-bottom: HOVER_BORDER;
 		    border-right: HOVER_BORDER;
-		    background-color: #f8f8f8;
+		    background-color: BACKGROUND_COLOR;
 		    left: 50%;
 		    margin-left: -5px;
 		    -moz-transform: rotate(45deg);
