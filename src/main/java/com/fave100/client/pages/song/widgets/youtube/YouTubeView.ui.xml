@@ -33,6 +33,7 @@
 			/* TODO: July 10 2014: Gah, figure out how to calc this from 
 			   THUMB_WIDTH and THUMB_RIGHT_PADDING with GSS */
 			left: -125px;
+			pointer-events: none;
 		}
 		
 		.mediumDisplay .thumbnailPanel, .largeDisplay .thumbnailPanel {
@@ -47,13 +48,14 @@
 		.thumbnailPanel img {
 			cursor: pointer;
 			opacity: 0.8;
+			pointer-events: auto;
 			/* The following rule is a fix for a Firefox bug where hovering 
 			   over the image to change opacity causes the image to resize
 			   slightly. 
 			   
 			   See https://bugzilla.mozilla.org/show_bug.cgi?id=745549
 			*/
-			box-shadow: #000 0em 0em 0em;
+			box-shadow: #000 0em 0em 0em;			
 		}
 				
 		.thumbnailPanel img:hover {

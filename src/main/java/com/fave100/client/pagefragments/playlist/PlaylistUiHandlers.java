@@ -15,4 +15,6 @@ public interface PlaylistUiHandlers extends UiHandlers {
 	void stopSong();
 
 	void toggleThumbs();
+
+	void hideThumbs();
 }

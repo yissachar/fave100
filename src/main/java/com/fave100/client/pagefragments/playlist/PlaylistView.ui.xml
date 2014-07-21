@@ -4,6 +4,9 @@
 			 xmlns:pf="urn:import:com.fave100.client.pagefragments.footer">
              
     <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.playlist.PlaylistView.PlaylistStyle">
+    	@def PLAYER_BACKGROUND rgba(0, 0, 0, 0.89);
+    	@def WHYLINE_WIDTH 270px;
+    	
     	.container {
 			position: absolute;
 			display: none;
@@ -39,7 +42,7 @@
 		}
 		
 		.songDetailsContainer {
-			background-color: rgba(0, 0, 0, 0.89);
+			background-color: PLAYER_BACKGROUND;
 			border-radius: 4px;
 		}
 		
@@ -73,8 +76,10 @@
 			text-align: center;
 			font-size: 17px;
 			width: 100%;
-			padding: 4px 0;
 			color: #fff;
+			background-color: PLAYER_BACKGROUND;
+			border-radius: 4px;
+			margin-bottom: 6px;
 			@mixin flexbox();
 			@mixin justify-content(space-between);
 			@mixin align-items(center);
@@ -119,11 +124,14 @@
 			width: 100%;
 			padding: 10px;
 			@mixin flexbox();
+			@mixin justify-content(space-between);
 		}
 		
 		.addSongButtonContainer button {			
 			height: 28px;
 			background-color: #555;
+			padding: 3px;
+			margin: 2px;
 		}
 		
 		.smallDisplay .thumbToggle {
@@ -131,13 +139,35 @@
 		}
 				
 		.addSongButton {
-			margin-left: 7px;
 			@mixin flex-grow(2);
 		}
 		
-		/* July 7 2014, middle of redesign, taking out for now */
-		.hideWhylinesTemp {
-			display: none;
+		.whyLineContainer {
+			position: absolute;
+			top: 0;
+			left: sub(-10px, WHYLINE_WIDTH);
+			width: WHYLINE_WIDTH;
+			height: 100%;
+			overflow-y: auto;
+			overflow-x: hidden;
+			border-radius: 4px;
+			pointer-events: none;
+		}
+		
+		.whyLines {
+			margin-left: add(10px, WHYLINE_WIDTH);
+			width: WHYLINE_WIDTH;
+			background-color: PLAYER_BACKGROUND;
+			color: #fff;
+			pointer-events: auto;
+			height: 100%;
+			overflow-y: hidden;
+			@mixin transition(margin-left 0.3s);
+		}
+		
+		.whyLines.whyLinesVisible {
+			margin-left: 0;
+			overflow-y: auto;
 		}
     </ui:style>
     
@@ -146,22 +176,23 @@
 	    <g:HTMLPanel ui:field="playlist" ui:styleName="{style.playlist}">
     		
 		    <g:FlowPanel>
-		    	<g:FlowPanel ui:styleName="{style.songDetailsContainer}">
-		    		<g:FlowPanel ui:field="playlistControls" ui:styleName="{style.playlistControls}">
-			    		<w:Icon ui:field="previousButton" ui:styleName="fa fa-backward {style.previousButton}"/>
-			    		<g:FlowPanel>
-				    		<g:FlowPanel ui:styleName="{style.playlistDetails}">
-					    		<g:InlineHyperlink ui:field="listName"/>
-						    	<g:InlineLabel ui:field="byUserText" ui:styleName="{style.hyphen}">by</g:InlineLabel>
-						    	<g:InlineHyperlink ui:field="username"/>
-					    	</g:FlowPanel>
+		    	<g:FlowPanel ui:field="playlistControls" ui:styleName="{style.playlistControls}">
+		    		<w:Icon ui:field="previousButton" ui:styleName="fa fa-backward {style.previousButton}"/>
+		    		<g:FlowPanel>
+			    		<g:FlowPanel ui:styleName="{style.playlistDetails}">
+				    		<g:InlineHyperlink ui:field="listName"/>
+					    	<g:InlineLabel ui:field="byUserText" ui:styleName="{style.hyphen}">by</g:InlineLabel>
+					    	<g:InlineHyperlink ui:field="username"/>
 				    	</g:FlowPanel>
-				    	<g:FlowPanel>
-				    		<w:Icon ui:field="nextButton" ui:styleName="fa fa-forward"/>    	
-			    			<w:Icon ui:field="hideButton" ui:styleName="fa fa-times {style.hideButton}"/>
-		    			</g:FlowPanel>
 			    	</g:FlowPanel>
-	    				    
+			    	<g:FlowPanel>
+			    		<w:Icon ui:field="nextButton" ui:styleName="fa fa-forward"/>    	
+		    			<w:Icon ui:field="hideButton" ui:styleName="fa fa-times {style.hideButton}"/>
+	    			</g:FlowPanel>
+		    	</g:FlowPanel>
+			    	
+		    	<g:FlowPanel ui:styleName="{style.songDetailsContainer}">
+		    		    
 		    		<g:FlowPanel ui:styleName="{style.songDetails}">
 			    		<g:InlineLabel ui:field="songName" ui:styleName="{style.songName}" />
 			    		<g:InlineLabel ui:field="artistName" ui:styleName="{style.artistName}"/>
@@ -171,13 +202,16 @@
 		    		    	        		
 		    		<g:FlowPanel ui:styleName="{style.addSongButtonContainer}">
 		    			<g:Button ui:field="thumbToggle" ui:styleName="fa fa-lg fa-youtube-play {style.thumbToggle}"/>
+		    			<g:Button ui:field="whylineToggle" ui:styleName="fa fa-lg fa-users {style.thumbToggle}"/>
 	    				<g:Button ui:field="addSongButton" ui:styleName="{style.addSongButton}">Add To List</g:Button>
 	    			</g:FlowPanel>
 		    	</g:FlowPanel>
 				    	
 		    	<g:FlowPanel ui:field="playlistItemsPanel" ui:styleName="{style.playlistItems}"/>
 		    	
-		    	<g:HTMLPanel ui:field="whylineView" ui:styleName="{style.hideWhylinesTemp}"/>
+		    	<g:SimplePanel ui:styleName="{style.whyLineContainer}">
+		    		<g:HTMLPanel ui:field="whylineView" ui:styleName="{style.whyLines}"/>
+		    	</g:SimplePanel>
 		    </g:FlowPanel>
 		
 		</g:HTMLPanel>

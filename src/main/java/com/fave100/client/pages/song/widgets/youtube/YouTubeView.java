@@ -179,6 +179,11 @@ public class YouTubeView extends ViewWithUiHandlers<YouTubeUiHandlers> implement
 		}
 	}
 
+	@Override
+	public void hideThumbs() {
+		thumbnailPanel.removeStyleName(style.thumbsVisible());
+	}
+
 	private void dispatchEndedEvent() {
 		_timesSkipped = 0;
 		getUiHandlers().dispatchEndedEvent();
