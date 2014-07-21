@@ -42,7 +42,7 @@ public class Utils {
 		if (rank <= 0 || rank > Constants.MAX_ITEMS_PER_LIST)
 			throw new IllegalArgumentException("Rank cannot be less than 1 or greater than " + Constants.MAX_ITEMS_PER_LIST);
 
-		int[][] gradients = { {224, 86, 82}, {229, 84, 145}, {82, 153, 224}};
+		int[][] gradients = { {224, 86, 82}, {219, 213, 41}, {82, 153, 224}};
 
 		int itemsPerGradientStep = (numItems / (gradients.length - 1));
 		int gradientPicker = (int)Math.floor(((rank - 1) / itemsPerGradientStep));

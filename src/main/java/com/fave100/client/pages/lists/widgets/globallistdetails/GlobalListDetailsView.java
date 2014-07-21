@@ -4,14 +4,10 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.resources.css.GlobalStyle;
-import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Panel;
@@ -42,20 +38,6 @@ public class GlobalListDetailsView extends ViewWithUiHandlers<GlobalListDetailsU
 	public GlobalListDetailsView(final Binder binder, ParameterTokenFormatter parameterTokenFormatter) {
 		widget = binder.createAndBindUi(this);
 		_parameterTokenFormatter = parameterTokenFormatter;
-		resize();
-
-		Window.addResizeHandler(new ResizeHandler() {
-
-			@Override
-			public void onResize(ResizeEvent event) {
-				resize();
-			}
-		});
-		resize();
-	}
-
-	private void resize() {
-		container.getElement().getStyle().setProperty("minHeight", ((Window.getClientHeight() - Constants.TOP_BAR_HEIGHT - 10) + "px"));
 	}
 
 	@Override
