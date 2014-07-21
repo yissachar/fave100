@@ -16,6 +16,7 @@
 			left: 0;
 			margin-left: 0;
 			overflow-y: auto;
+			box-sizing: border-box;
 			@mixin transition(left RESIZE_TRANSITION_TIME);
 		}
 		
@@ -49,6 +50,7 @@
 		.largeDisplay .userPageFaveList {
 			width: 81%;
 			margin-left: 19%;
+			box-sizing: border-box;
 		}
 		
 		.listHeader {
@@ -153,7 +155,7 @@
 						<g:FlowPanel ui:field="listHeader" ui:styleName="{style.listHeader}">
 							<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
 							<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
-							<g:Anchor ui:field="addSongLink" ui:styleName="{style.contributeCTA}">Add song</g:Anchor>
+							<g:Anchor ui:field="addSongLink" ui:styleName="{style.contributeCTA}">Add Song</g:Anchor>
 							<g:HTMLPanel ui:field="addSongSearch"/>
 						</g:FlowPanel>
 						

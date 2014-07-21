@@ -149,7 +149,6 @@
 		
 		.loginButton {
 			display: inline-block;
-			width: 100%;
 			text-align: center;
 			padding: 10px 20px;
 			color: #fff;

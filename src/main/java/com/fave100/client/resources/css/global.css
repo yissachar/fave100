@@ -138,11 +138,12 @@ input[type=number],
 input[type=color],
 input[type=email],
 select {
-	padding: 4px;
-	height: 30px;
+	padding: 4px 10px;
+	height: 36px;
 	border: 1px solid #999;
 	border-radius: 4px;
 	font-family: 'Arimo';
+	box-sizing: border-box;
 }
 
 input[type=text]:hover,

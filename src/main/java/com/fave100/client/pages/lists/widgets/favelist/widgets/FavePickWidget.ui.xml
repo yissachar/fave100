@@ -8,7 +8,6 @@
 		@external hoverHidden;
 		
 		.mainPanel {
-			width:100%;
 			@mixin flexbox();
 			@mixin align-items(center);
 			padding: 12px;
