@@ -12,13 +12,13 @@
 		@def LIST_ITEM_SIZE 35px;
 		
 		.container {
-			margin-top: 15px;
-			margin-bottom: 15px;
-			width: 100%;
+			padding: 10px;
+			background-color: rgba(0, 0, 0, 0.04);
 		}
 		
 		.title {
 			margin-bottom: 5px;
+			text-transform: uppercase;
 		}
 		
 		.listContainer {
@@ -29,21 +29,14 @@
 		}
 		
 		.nonMobileListContainer {
-			max-height: 200px;
+			max-height: 230px;
 		}
 		
 		.listContainer > div {
-			clear: both;
-			background-color: #eee;
-			overflow: hidden;
-			padding-right: 7px;
-			@mixin flexbox();
+			margin-top: 7px;
+			@mixin flexbox();			
+			@mixin align-items(center);
 			@mixin justify-content(space-between);
-		}
-		
-		.listContainer > div:hover {
-			background-color: #fff;
-			cursor: pointer;
 		}		
 		
 		.listContainer > div:hover .deleteButton {
@@ -54,27 +47,21 @@
 			width: LIST_ITEM_SIZE;
 			height: LIST_ITEM_SIZE;
 			margin-right: 10px;
+			border-radius: 50%;
 		}
 		
 		.listLink {
-			padding: 3px;
-			line-height: 28px;
-			height: LIST_ITEM_SIZE;
-			display: inline-block;
-		}		
-		
-		.listLink:hover {
-			color: PRIMARY_COLOR;
-			text-decoration: none;
+			color: PROMINENT_TEXT_COLOR;
+			@mixin flex(2, 1, 0);
 		}
 		
 		.deleteButton {
-			line-height: LIST_ITEM_SIZE;
+			cursor: pointer;
 			visibility: hidden;
 		}
 		
 		.deleteButton:hover {
-			color: LIST_HIGHLIGHT_COLOR;
+			color: WARNING_COLOR;
 		}
 		
 		.moreFollowingButton {
@@ -84,7 +71,7 @@
 	</ui:style>
 	
 	<g:FlowPanel ui:styleName="{style.container}">
-		<g:Label ui:field="followingTitle" ui:styleName="{style.title}">Following:</g:Label>
+		<g:Label ui:field="followingTitle" ui:styleName="{style.title}">Following</g:Label>
 		<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
 		<g:Button ui:field="moreFollowingButton" ui:styleName="{style.moreFollowingButton}">More</g:Button>
 	</g:FlowPanel>
