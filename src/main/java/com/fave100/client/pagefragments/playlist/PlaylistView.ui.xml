@@ -75,10 +75,6 @@
 		.playlistControls {			
 			text-align: center;
 			font-size: 17px;
-			width: 100%;
-			color: #fff;
-			background-color: PLAYER_BACKGROUND;
-			border-radius: 4px;
 			margin-bottom: 6px;
 			@mixin flexbox();
 			@mixin justify-content(space-between);
@@ -86,20 +82,35 @@
 		}
 		
 		.playlistControls a {
-			color: #fff;
+			color: #444;
 			font-size: 16px;
-		}
-		
-		.playlistControls > * {
-			padding: 7px;
-		}
-		
-		.playlistControls > *:hover {
-			cursor: pointer;
 		}
 		
 		.playlistControls > .disabled {
 			color: #999;
+		}
+		
+		.playlistControls i {			
+			color: #fff;
+			cursor: pointer;
+		}
+		
+		.playlistNav {
+			background-color: rgba(0, 0, 0, 0.15);
+			border-radius: 4px;
+			overflow: hidden;
+			@mixin flexbox();
+			@mixin justify-content(space-between);
+			@mixin align-items(center);
+			@mixin flex(2, 1, 0);
+		}
+		
+		.playlistControls i {
+			padding: 7px;
+		}
+		
+		.playlistNav i {			
+			background-color: PLAYER_BACKGROUND;
 		}
 		
 		.previousButton {
@@ -112,9 +123,9 @@
 		}
 		
 		.hideButton {
-			cursor: pointer;
 			margin-left: 10px;
-			color: hsl(2, 70%, 60%);
+			background-color: hsl(2, 70%, 60%);
+			border-radius: 4px;
 		}
 		
 		.hyphen {
@@ -177,18 +188,16 @@
     		
 		    <g:FlowPanel>
 		    	<g:FlowPanel ui:field="playlistControls" ui:styleName="{style.playlistControls}">
-		    		<w:Icon ui:field="previousButton" ui:styleName="fa fa-backward {style.previousButton}"/>
-		    		<g:FlowPanel>
+		    		<g:FlowPanel ui:styleName="{style.playlistNav}">
+		    			<w:Icon ui:field="previousButton" ui:styleName="fa fa-backward {style.previousButton}"/>
 			    		<g:FlowPanel ui:styleName="{style.playlistDetails}">
 				    		<g:InlineHyperlink ui:field="listName"/>
 					    	<g:InlineLabel ui:field="byUserText" ui:styleName="{style.hyphen}">by</g:InlineLabel>
 					    	<g:InlineHyperlink ui:field="username"/>
 				    	</g:FlowPanel>
+		    		<w:Icon ui:field="nextButton" ui:styleName="fa fa-forward"/>
 			    	</g:FlowPanel>
-			    	<g:FlowPanel>
-			    		<w:Icon ui:field="nextButton" ui:styleName="fa fa-forward"/>    	
-		    			<w:Icon ui:field="hideButton" ui:styleName="fa fa-times {style.hideButton}"/>
-	    			</g:FlowPanel>
+	    			<w:Icon ui:field="hideButton" ui:styleName="fa fa-times {style.hideButton}"/>
 		    	</g:FlowPanel>
 			    	
 		    	<g:FlowPanel ui:styleName="{style.songDetailsContainer}">
