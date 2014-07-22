@@ -122,7 +122,6 @@
 		}
 		
 		.addSongButtonContainer {
-			width: 100%;
 			padding: 10px;
 			@mixin flexbox();
 			@mixin justify-content(space-between);

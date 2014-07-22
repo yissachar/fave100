@@ -12,6 +12,7 @@
 			border-bottom: 2px solid #fff;
 			padding: 0 6px;
 			color: #fff;
+			box-sizing: border-box;
 			@mixin flexbox();
 			@mixin align-items(center);
 			@mixin justify-content(space-between);
