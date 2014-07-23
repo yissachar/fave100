@@ -293,7 +293,10 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 	@Override
 	public void setSongSuggestions(List<SongDto> songs, List<ItunesSearchResult> itunesSearchResults, boolean loadMore) {
 		setupSearchContainer(loadMore);
-		_albumImages.clear();
+
+		if (!loadMore) {
+			_albumImages.clear();
+		}
 
 		for (SongDto song : songs) {
 			String albumArtUrl = "";
