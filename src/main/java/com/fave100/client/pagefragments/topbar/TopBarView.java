@@ -13,14 +13,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -38,11 +36,10 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	}
 
 	public interface TopBarStyle extends GlobalStyle {
-		String floatingSearch();
+		String fullSearch();
 	}
 
 	@UiField TopBarStyle style;
-	@UiField Panel slideOutBackground;
 	@UiField HTMLPanel topBar;
 	@UiField Icon menuBar;
 	@UiField Hyperlink logoFaveText;
@@ -70,8 +67,9 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 			@Override
 			public void onClick(ClickEvent event) {
 				Element target = Element.as(event.getNativeEvent().getEventTarget());
-				if (Utils.widgetContainsElement(slideOutBackground, target)) {
-					setFloatingSearch(false);
+				if (!Utils.widgetContainsElement(unifiedSearch, target)
+						&& !Utils.widgetContainsElement(searchToggle, target)) {
+					setFullSearch(false);
 				}
 			}
 		}, ClickEvent.getType());
@@ -100,11 +98,11 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 
 	@UiHandler("searchToggle")
 	void onSearchToggleclick(final ClickEvent event) {
-		if (unifiedSearchContainer.getStyleName().contains(style.floatingSearch())) {
-			setFloatingSearch(false);
+		if (topBar.getStyleName().contains(style.fullSearch())) {
+			setFullSearch(false);
 		}
 		else {
-			setFloatingSearch(true);
+			setFullSearch(true);
 		}
 	}
 
@@ -157,23 +155,19 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 	public void setMobileView(String currentPlace) {
 		menuBar.setVisible((Utils.isMediumDisplay() || Utils.isSmallDisplay()) && currentPlace.equals(NameTokens.lists));
 		searchToggle.setVisible(Utils.isSmallDisplay());
-		if (Utils.isSmallDisplay()) {
-			unifiedSearchContainer.setHeight((Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px");
-		}
-		else {
-			unifiedSearchContainer.setHeight("auto");
-		}
+		unifiedSearchContainer.setVisible(!Utils.isSmallDisplay());
+		setFullSearch(topBar.getStyleName().contains(style.fullSearch()) && !Utils.isSmallDisplay());
 	}
 
 	@Override
-	public void setFloatingSearch(boolean floating) {
-		if (floating) {
-			unifiedSearchContainer.addStyleName(style.floatingSearch());
-			slideOutBackground.addStyleName(style.floatingSearch());
+	public void setFullSearch(boolean full) {
+		unifiedSearchContainer.setVisible(full || !Utils.isSmallDisplay());
+		if (full) {
+			topBar.addStyleName(style.fullSearch());
+			getUiHandlers().focusSearch();
 		}
 		else {
-			unifiedSearchContainer.removeStyleName(style.floatingSearch());
-			slideOutBackground.removeStyleName(style.floatingSearch());
+			topBar.removeStyleName(style.fullSearch());
 		}
 	}
 }

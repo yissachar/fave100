@@ -4,10 +4,12 @@
              
     <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.widgets.search.SearchView.SearchStyle">
     	@def SEARCH_WIDTH 400px;
+    	@def MAX_SEARCH_WIDTH 95%;
     	@def ARROW_SIZE 7px;
     	
 		.searchContainer {
 			width: SEARCH_WIDTH;
+			max-width: MAX_SEARCH_WIDTH;
 			height: 31px;
 			border-bottom: 2px solid #fff;
 			padding: 0 6px;
@@ -16,6 +18,10 @@
 			@mixin flexbox();
 			@mixin align-items(center);
 			@mixin justify-content(space-between);
+		}
+		
+		.smallDisplay .searchContainer {
+			margin: 0 auto;
 		}
 		
 		.fullPage .searchContainer {
@@ -27,12 +33,7 @@
 			color: #555;
 			border-bottom: 0px;
 		}
-		    	
-    	.smallDisplay .searchContainer {
-			border: LIGHT_BORDER;
-			width: 270px;
-		}
-    	
+		
 		.currentSearchTypeContainer:focus {
 			outline: none;
 		}
@@ -64,11 +65,7 @@
     	.fullPage .searchBox {
 			font-size: 18px;
     	}
-    	
-    	.smallDisplay .searchBox {
-			width: 65%;
-    	}
-    	    	    	
+    	    	    	    	
     	.searchTypeSelector {
 			position: absolute;
 			top: 28px;
@@ -120,9 +117,15 @@
 			background-color: #fff;
 			cursor: pointer;
 			width: SEARCH_WIDTH;
+			max-width: MAX_SEARCH_WIDTH;
 			margin-top: 5px;
 			border-radius: 5px;
 			box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.4);
+		}
+		
+		.smallDisplay .searchResults {
+			left: 50%;
+			@mixin transform(translateX(-50%));
 		}
 		
 		.fullPage .searchResults {
@@ -134,11 +137,7 @@
 			border-radius: 0;
 			box-shadow: 0 0 0 0 #000;
 		}
-		
-		.smallDisplay .searchResults {
-			width: 275px;
-		}
-		
+				
 		.searchSuggestionsContainer {
 			overflow-y: auto;
 		}
