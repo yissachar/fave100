@@ -5,20 +5,15 @@
 	xmlns:w='urn:import:com.fave100.client.widgets'>
 
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">
-		.slideOutBackground {
-			visibility: hidden;
-			z-index: 1;
-			@mixin full-width-dark-bg();
-		}
-		
-		.smallDisplay .floatingSearch.slideOutBackground {
-			visibility: visible;
-		}
     		    		
 		.menuBar {
 			padding-left: 10px;
 			color: #fff;
 			cursor: pointer;
+		}
+		
+		.fullSearch .menuBar {
+			display: none;
 		}
 		
 		.topNavSticky {			
@@ -40,6 +35,10 @@
 		
 		.userContainer {
 			cursor: pointer;
+		}
+		
+		.fullSearch .userContainer {
+			display: none;
 		}
 		
 		.notification {
@@ -64,7 +63,11 @@
 			padding-left: 15px;
 			@mixin flex-grow(2);
 			@mixin unselectable();
-		}		
+		}
+		
+		.fullSearch .faveLogo {
+			display: none;
+		}
 		
 		.logoFaveText {
 			color: #fff;
@@ -85,23 +88,7 @@
 		.unifiedSearchContainer {			
 			@mixin flex-grow(2);
 		}
-		
-		.smallDisplay .unifiedSearchContainer {
-			background-color: MAIN_BACKGROUND;
-			position: fixed;
-			width: 300px;			
-			right: -400px;
-			top: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
-			overflow-y: auto;
-			transition: right RESIZE_TRANSITION_TIME;
-			-webkit-transition: right RESIZE_TRANSITION_TIME;
-		}
 				
-		.smallDisplay .floatingSearch.unifiedSearchContainer {
-			right: 0px;
-			padding: 12px;
-		}
-		
 		.unifiedSearch {	
 			position: relative;
 		}
@@ -109,6 +96,10 @@
 		.searchToggle {
 			cursor: pointer;
 			color: #fff;
+		}
+		
+		.fullSearch .searchToggle {
+			display: none;
 		}
 		
 		.usernameLabel {
@@ -170,8 +161,6 @@
 			 when the browser is at 0, 0.
 		 -->
 		<div class="{style.topNavSticky}"/>
-    
-		<g:SimplePanel ui:field="slideOutBackground" ui:styleName="{style.slideOutBackground}"/>
 	    			   
 		<g:SimplePanel ui:styleName="{style.notification}">
 			<g:Label ui:field="notification" ui:styleName="{style.notificationText}"/>

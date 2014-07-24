@@ -46,7 +46,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 
 		void setMobileView(String currentPlace);
 
-		void setFloatingSearch(boolean floating);
+		void setFullSearch(boolean full);
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> SEARCH_SLOT = new Type<RevealContentHandler<?>>();
@@ -56,7 +56,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	private PlaceManager _placeManager;
 	private PlaylistPresenter _playlistPresenter;
 	private FaveApi _api;
-	@Inject private SearchPresenter unifiedSearch;
+	@Inject private SearchPresenter _unifiedSearch;
 
 	@Inject
 	public TopBarPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final CurrentUser currentUser, final FaveApi api,
@@ -83,7 +83,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	@Override
 	protected void onBind() {
 		super.onBind();
-		unifiedSearch.setSuggestionSelectedAction(new UnifiedSearchSuggestionSelectedAction(_placeManager, _playlistPresenter));
+		_unifiedSearch.setSuggestionSelectedAction(new UnifiedSearchSuggestionSelectedAction(_placeManager, _playlistPresenter));
 		registerCallbacks();
 
 		CurrentUserChangedEvent.register(_eventBus,
@@ -124,7 +124,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 			@Override
 			public void onNavigation(NavigationEvent navigationEvent) {
 				checkMobileView();
-				getView().setFloatingSearch(false);
+				getView().setFullSearch(false);
 			}
 		});
 	}
@@ -134,7 +134,7 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 		super.onReveal();
 		setTopBar();
 		checkMobileView();
-		setInSlot(SEARCH_SLOT, unifiedSearch);
+		setInSlot(SEARCH_SLOT, _unifiedSearch);
 	}
 
 	private void checkMobileView() {
@@ -206,6 +206,11 @@ public class TopBarPresenter extends PresenterWidget<TopBarPresenter.MyView>
 	public void showLoginDialog() {
 		_eventBus.fireEvent(new LoginDialogRequestedEvent());
 	}
+
+	@Override
+	public void focusSearch() {
+		_unifiedSearch.focus();
+	}
 }
 
 interface TopBarUiHandlers extends UiHandlers {
@@ -215,4 +220,6 @@ interface TopBarUiHandlers extends UiHandlers {
 	void logout();
 
 	void fireHideSideBarEvent();
+
+	void focusSearch();
 }
