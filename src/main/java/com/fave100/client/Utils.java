@@ -44,7 +44,7 @@ public class Utils {
 
 		int[][] gradients = { {224, 86, 82}, {214, 188, 40}, {82, 153, 224}};
 
-		int itemsPerGradientStep = (numItems / (gradients.length - 1));
+		double itemsPerGradientStep = ((double)numItems / (gradients.length - 1));
 		int gradientPicker = (int)Math.floor(((rank - 1) / itemsPerGradientStep));
 		int[] leftGradient = gradients[gradientPicker];
 		int[] rightGradient = gradients[gradientPicker + 1];
