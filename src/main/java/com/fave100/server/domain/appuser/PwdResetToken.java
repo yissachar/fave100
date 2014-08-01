@@ -21,6 +21,9 @@ import com.googlecode.objectify.annotation.Load;
 
 @Entity
 public class PwdResetToken {
+
+	public final static int EXPIRY_TIME = 1 * 24 * 60 * 60 * 1000;
+
 	@Id private String token;
 	@Index private Date expiry;
 	@Load private Ref<AppUser> appUser;
@@ -33,7 +36,7 @@ public class PwdResetToken {
 		token = UUID.randomUUID().toString();
 		// Expires one day from generation
 		final Date today = new Date();
-		expiry = new Date(today.getTime() + 1 * 24 * 60 * 60 * 1000);
+		expiry = new Date(today.getTime() + EXPIRY_TIME);
 		setAppUser(Ref.create(Key.create(AppUser.class, username.toLowerCase())));
 	}
 
