@@ -513,13 +513,13 @@ public class UserApi {
 	public static void followUser(@LoggedInUser AppUser currentUser, @PathParam("user") final String username) {
 
 		// Check if user trying to follow themselves
-		if (currentUser.getUsername().equals(username))
+		if (currentUser.getUsername().equalsIgnoreCase(username))
 			throw new CannotFollowYourselfException();
 
 		final Ref<AppUser> userRef = Ref.create(Key.create(AppUser.class, username.toLowerCase()));
-		Following following = ofy().load().type(Following.class).id(currentUser.getId()).now();
+		Following following = ofy().load().type(Following.class).id(currentUser.getUsername().toLowerCase()).now();
 		if (following == null) {
-			following = new Following(currentUser.getId());
+			following = new Following(currentUser.getUsername().toLowerCase());
 			ofy().save().entity(following).now();
 		}
 
@@ -537,8 +537,7 @@ public class UserApi {
 	@Path(ApiPaths.USER_FOLLOWING)
 	@ApiOperation(value = "Unfollow user")
 	public static void unfollowUser(@LoggedInUser AppUser currentUser, @PathParam("user") final String username) {
-
-		final Following following = ofy().load().type(Following.class).id(currentUser.getId()).now();
+		final Following following = ofy().load().type(Following.class).id(currentUser.getUsername().toLowerCase()).now();
 		if (following == null)
 			return;
 
