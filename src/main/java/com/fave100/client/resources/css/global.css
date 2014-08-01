@@ -1,9 +1,100 @@
-@def PRIMARY_COLOR #5eaae5;
+@def PRIMARY_COLOR #80AAE1;
+@def HIGHLIGHT_COLOR #959595;
+@def TOP_NAV_COLOR #3D444B;
+@def LIST_HIGHLIGHT_COLOR #80AAE1;
+@def PROMINENT_TEXT_COLOR #666;
 @def SIDE_BAR_WIDTH 239px;
-@def FADED_LIGHT_BG #eee;
+@def FADED_LIGHT_BG #f1f1f1;
+@def MAIN_BACKGROUND #fefefe;
+@def RESIZE_TRANSITION_TIME 0.3s;
+@def LIGHT_BORDER 1px solid #eee;
+@def HIGH_LEGIBILITY_BLUE #4ea0ca;
+@def WARNING_COLOR #e05651;
 
-@external mobile;
-@external nonMobile;
+@defmixin flexbox() {
+	/* @alternate */ display: -webkit-box;
+	/* @alternate */ display: -moz-box;
+  	/* @alternate */ display: -ms-flexbox;
+  	/* @alternate */ display: -webkit-flex;
+  	display: flex;
+}
+
+@defmixin justify-content(VALUE) {
+	-webkit-justify-content: VALUE;
+	-moz-justify-content: VALUE;
+	-ms-justify-content: VALUE;
+	justify-content: VALUE;
+}
+
+@defmixin align-items(VALUE) {
+	-webkit-align-items: VALUE;
+	-moz-align-items: VALUE;
+	-ms-align-items: VALUE;
+	align-items: VALUE;
+}
+
+@defmixin flex-grow(VALUE) {
+	-webkit-flex-grow: VALUE;
+	-moz-flex-grow: VALUE;
+	-ms-flex-grows: VALUE;
+	flex-grow: VALUE;
+}
+
+@defmixin flex-direction(VALUE) {
+	flex-direction: VALUE;
+	-webkit-flex-direction: VALUE;
+}
+
+@defmixin full-width-dark-bg() {	
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	opacity: .40;
+	background-color: #000;
+}
+
+@defmixin transition(ARGS) {
+	transition: ARGS;
+	-webkit-transition: ARGS;
+}
+
+@defmixin transform(ARGS) {
+	transform: ARGS;
+	-webkit-transform: ARGS;
+}
+
+@defmixin unselectable() {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+@defmixin flex(GROW, SHRINK, BASIS) {	
+	-webkit-flex: GROW SHRINK BASIS;
+	-moz-flex: GROW SHRINK BASIS;
+	-ms-flex: GROW SHRINK BASIS;
+	flex: GROW SHRINK BASIS;
+}
+
+@external smallDisplay;
+@external mediumDisplay;
+@external largeDisplay;
+@external playlistVisible;
+@external fa;
+@external disabled;
+
+::selection {
+  	background: PRIMARY_COLOR;
+  	color: #fff;
+}
+
+::-moz-selection {
+  	background: PRIMARY_COLOR;
+  	color: #fff;
+}
 
 * {
 	margin: 0px;
@@ -17,9 +108,10 @@ html {
 }
 
 body {
-	background-color: #F9F9F9;
-	font-family: "Source Sans Pro", Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
-	color: #454;
+	background-color: MAIN_BACKGROUND;
+	font-family: "Arimo", Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+	font-size: 15px;
+	color: #666;
 	height: 100%;
 }
 
@@ -33,6 +125,11 @@ a:hover {
 	text-decoration: underline;
 }
 
+h1, h2 {
+	color: #555;
+	font-weight: normal;	
+}
+
 input[type=text],
 input[type=password],
 input[type=search],
@@ -42,8 +139,12 @@ input[type=number],
 input[type=color],
 input[type=email],
 select {
-	padding: 4px;	
-	border: 1px solid #AAA;
+	padding: 4px 10px;
+	height: 36px;
+	border: 1px solid #999;
+	border-radius: 4px;
+	font-family: 'Arimo';
+	box-sizing: border-box;
 }
 
 input[type=text]:hover,
@@ -55,7 +156,7 @@ input[type=number]:hover,
 input[type=color]:hover,
 input[type=email]:hover,
 select:hover {
-	border-color: #666;
+	border-color: #555;
 }
 
 input[type=text]:focus,
@@ -67,9 +168,25 @@ input[type=number]:focus,
 input[type=color]:focus,
 input[type=email]:focus,
 select:focus {
-	border-color: #5A9DE8;
+	border-color: PRIMARY_COLOR;
+	outline: none;
+}
+
+.paddedMainPage {
+	padding: 15px;	
 }
 
 .error {
 	color: #D54545 !important;
+}
+
+.unselectable {
+	-webkit-user-select: none;        
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.disabled {
 }

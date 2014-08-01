@@ -2,10 +2,8 @@ package com.fave100.client;
 
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.resources.css.AppClientBundle;
 import com.fave100.shared.Constants;
-import com.fave100.shared.Utils;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
@@ -13,7 +11,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.Bootstrapper;
 import com.gwtplatform.mvp.client.proxy.AsyncCallFailEvent;
 import com.gwtplatform.mvp.client.proxy.AsyncCallFailHandler;
@@ -21,27 +18,27 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 
 public class Fave100Bootstrapper implements Bootstrapper, AsyncCallFailHandler {
 
-	private static final String MOBILE_STYLE = AppClientBundle.INSTANCE.getGlobalCss().mobile();
-	private static final String NON_MOBILE_STYLE = AppClientBundle.INSTANCE.getGlobalCss().nonMobile();
+	public static final String SMALL_DISPLAY_STYLE = AppClientBundle.INSTANCE.getGlobalCss().smallDisplay();
+	public static final String MEDIUM_DISPLAY_STYLE = AppClientBundle.INSTANCE.getGlobalCss().mediumDisplay();
+	public static final String LARGE_DISPLAY_STYLE = AppClientBundle.INSTANCE.getGlobalCss().largeDisplay();
 
 	private PlaceManager _placeManager;
 	private EventBus _eventBus;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+
+	private FaveApi _api;
 
 	@Inject
-	public Fave100Bootstrapper(final PlaceManager placeManager, final EventBus eventBus, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+	public Fave100Bootstrapper(final PlaceManager placeManager, final EventBus eventBus, final FaveApi api) {
 		_placeManager = placeManager;
 		_eventBus = eventBus;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
 		_eventBus.addHandler(AsyncCallFailEvent.getType(), this);
+		_api = api;
 	}
 
 	@Override
 	public void onBootstrap() {
 		// On first page load or page refresh, check for an existing logged in user
-		_dispatcher.execute(_restServiceFactory.user().getLoggedInUser(), new AsyncCallback<AppUser>() {
+		_api.call(_api.service().user().getLoggedInUser(), new AsyncCallback<AppUser>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -72,13 +69,20 @@ public class Fave100Bootstrapper implements Bootstrapper, AsyncCallFailHandler {
 	}
 
 	private void determineMobileStyle() {
-		if (Window.getClientWidth() > Constants.MOBILE_WIDTH_PX) {
-			RootPanel.get().removeStyleName(MOBILE_STYLE);
-			RootPanel.get().addStyleName(NON_MOBILE_STYLE);
+		RootPanel.get().removeStyleName(SMALL_DISPLAY_STYLE);
+		RootPanel.get().removeStyleName(MEDIUM_DISPLAY_STYLE);
+		RootPanel.get().removeStyleName(LARGE_DISPLAY_STYLE);
+
+		if (Window.getClientWidth() <= Constants.MOBILE_WIDTH_PX) {
+			RootPanel.get().addStyleName(SMALL_DISPLAY_STYLE);
 		}
-		else {
-			RootPanel.get().addStyleName(MOBILE_STYLE);
-			RootPanel.get().removeStyleName(NON_MOBILE_STYLE);
+
+		if (Window.getClientWidth() > Constants.MOBILE_WIDTH_PX && Window.getClientWidth() <= Constants.MEDIUM_DISPLAY_WIDTH_PX) {
+			RootPanel.get().addStyleName(MEDIUM_DISPLAY_STYLE);
+		}
+
+		if (Window.getClientWidth() > Constants.MEDIUM_DISPLAY_WIDTH_PX) {
+			RootPanel.get().addStyleName(LARGE_DISPLAY_STYLE);
 		}
 	}
 

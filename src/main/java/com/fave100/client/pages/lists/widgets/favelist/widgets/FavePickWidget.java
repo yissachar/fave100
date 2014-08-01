@@ -1,5 +1,6 @@
 package com.fave100.client.pages.lists.widgets.favelist.widgets;
 
+import com.fave100.client.Utils;
 import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistUiHandlers;
 import com.fave100.client.resources.css.GlobalStyle;
@@ -14,7 +15,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -49,8 +49,9 @@ public class FavePickWidget extends Composite {
 	private FaveItem _faveItem;
 	private String _whyLine;
 	private int _rank;
-	private String _url;
 	private final boolean _editable;
+	private final boolean _globalList;
+	private final int _numItems;
 	private FavelistUiHandlers _uiHandlers;
 	private FavePickRankInput _favePickRankInput;
 	private FavePickWhyLineInput _favePickWhyLineInput;
@@ -58,14 +59,16 @@ public class FavePickWidget extends Composite {
 	private HelpBubble rankHelpBubble;
 	private ImageResources resources = GWT.create(ImageResources.class);
 
-	public FavePickWidget(final EventBus eventBus, final FaveItem item, final int rank, final boolean editable, final String url, final FavelistUiHandlers uiHandlers) {
+	public FavePickWidget(final EventBus eventBus, final FaveItem item, final int rank, final boolean editable, final boolean globalList, int numItems,
+							final FavelistUiHandlers uiHandlers) {
 		_eventBus = eventBus;
 		_faveItem = item;
 		_whyLine = _faveItem.getWhyline();
 		_rank = rank;
 		_editable = editable;
+		_globalList = globalList;
+		_numItems = numItems;
 		_uiHandlers = uiHandlers;
-		_url = url;
 
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -76,7 +79,17 @@ public class FavePickWidget extends Composite {
 		setupRankPanel();
 
 		song.setText(getSong());
-		song.setHref(_url);
+		if (_globalList) {
+			song.getElement().getStyle().setColor(Utils.rankToColor(_rank, _numItems));
+		}
+
+		song.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				_uiHandlers.playSong(getSongID());
+			}
+		});
 
 		artist.setText(getArtist());
 
@@ -103,6 +116,10 @@ public class FavePickWidget extends Composite {
 
 		rankWidget.addStyleName(style.rank());
 
+		if (_globalList) {
+			rankWidget.getElement().getStyle().setBackgroundColor(Utils.rankToColor(_rank, _numItems));
+		}
+
 		if (_rank >= Constants.MAX_ITEMS_PER_LIST) {
 			rankWidget.addStyleName(style.rankThreeDigit());
 		}
@@ -125,16 +142,17 @@ public class FavePickWidget extends Composite {
 
 	private void setupHoverPanel() {
 		hoverPanel.clear();
+
 		if (_editable) {
 			FavePickRerankPanel rerankPanel = new FavePickRerankPanel(this, _uiHandlers);
 			hoverPanel.add(rerankPanel);
 		}
 		else {
-			final Image addButton = new Image(resources.add());
-			addButton.setTitle("Add to your Fave100");
+			final Anchor addButton = new Anchor("Add to list");
 			addButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(final ClickEvent event) {
+					event.preventDefault();
 					_uiHandlers.addSong(getSongID(), getSong(), getArtist(), false);
 				}
 			});
@@ -167,8 +185,9 @@ public class FavePickWidget extends Composite {
 
 	public void showWhylineHelpBubble() {
 		final String whylineText = "You can add an 80 character Why-Line here, explaining why this song is in your Fave100";
-		whylineHelpBubble = new HelpBubble("Why-Line", whylineText, 400, HelpBubble.Direction.UP);
+		whylineHelpBubble = new HelpBubble("Why-Line", whylineText, 300);
 		container.add(whylineHelpBubble);
+		whylineHelpBubble.setArrowPos(75);
 	}
 
 	public void hideWhyLineHelpBubble() {
@@ -179,9 +198,9 @@ public class FavePickWidget extends Composite {
 
 	public void showRankWhylineHelpBubble() {
 		final String rankText = "You can change the rank of your songs here";
-		rankHelpBubble = new HelpBubble("Rank", rankText, 300, HelpBubble.Direction.LEFT);
+		rankHelpBubble = new HelpBubble("Rank", rankText, 320);
 		container.add(rankHelpBubble);
-		rankHelpBubble.setArrowPos(30);
+		rankHelpBubble.setArrowPos(15);
 	}
 
 	public void focusWhyline() {
@@ -217,5 +236,9 @@ public class FavePickWidget extends Composite {
 
 	public String getWhyLine() {
 		return _whyLine;
+	}
+
+	public FaveItem getFaveItem() {
+		return _faveItem;
 	}
 }

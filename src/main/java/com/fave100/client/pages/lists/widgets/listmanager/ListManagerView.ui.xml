@@ -7,22 +7,24 @@
 	ui:generateLocales='default'>
 
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.listmanager.ListManagerView.ListManagerStyle">
+		@def LIST_MANAGER_BORDER_COLOR 1px solid #ccc;
 		.container {
+			position: relative;
 			margin-top: 15px;
 			-webkit-touch-callout: none;
 			-webkit-user-select: none;
 			-khtml-user-select: none;
 			-moz-user-select: -moz-none;
 			-ms-user-select: none;
-			user-select: none; 
+			user-select: none;			
 		}
 		
 		.currentListContainer {
-			border: 1px solid #bbb;
+			border: LIST_MANAGER_BORDER_COLOR;
 			padding: 5px;
-			background-color: #f3f3f3;
 			cursor: pointer;
 			outline: 0;
+			color: PRIMARY_COLOR;
 	 	}
 	 	
 	 	.currentListContainer img {
@@ -45,9 +47,12 @@
 		.listDropdown {
 			position: absolute;
 			width: 100%;
-			background-color: #fdfdfd;
-			border: 1px solid #bbb;
-			border-top: 0px;		
+			-moz-box-sizing: border-box;
+    		-webkit-box-sizing: border-box;
+    		box-sizing: border-box;
+			background-color: #fff;
+			border: LIST_MANAGER_BORDER_COLOR;
+			border-top: 0px;
 			max-height: 250px;
 			overflow-y: auto;			
 			-webkit-overflow-scrolling: touch;
@@ -57,7 +62,7 @@
 		
 		.addListContainer {
 			padding: 5px;
-			border-bottom: 1px solid #bbb;	
+			border-bottom: LIST_MANAGER_BORDER_COLOR;	
 		}
 		
 		.addListContainer > * {
@@ -70,9 +75,14 @@
 			max-height: 300px;
 		}
 		
+		.listContainer > div {
+			word-wrap: break-word;
+			@mixin flexbox();
+		}
+		
 		.listContainer > div:hover {
-			background-color: PRIMARY_COLOR;
-			color: #fff;
+			background-color: FADED_LIGHT_BG;
+			color: LIST_HIGHLIGHT_COLOR;
 		}
 		
 		.listContainer .listName {
@@ -105,12 +115,14 @@
 	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>
 	
 	<g:HTMLPanel ui:styleName="{style.container}">
+	
 		<g:FocusPanel ui:field="currentListContainer" ui:styleName="{style.currentListContainer}">
 			<g:FlowPanel>
 				<g:InlineLabel ui:field="currentList" />
 				<g:Image resource="{img.triangle}"/>
 			</g:FlowPanel>
 		</g:FocusPanel>
+		
 		<g:FlowPanel ui:field="listDropdown" ui:styleName="{style.listDropdown}">
 			<g:FlowPanel ui:field="addListContainer" ui:styleName="{style.addListContainer}">
 				<g:Button ui:field="addHashtagButton">Add a list</g:Button>
@@ -118,7 +130,8 @@
 			</g:FlowPanel>
 			<g:Label ui:field="errorMsg" ui:styleName="error {style.errorMsg}" />
 			<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
-		</g:FlowPanel>		
+		</g:FlowPanel>
+				
 		<g:Hyperlink ui:field="globalListLink" ui:styleName="{style.globalListLink}"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

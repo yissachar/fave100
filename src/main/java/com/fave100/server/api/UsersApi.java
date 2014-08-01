@@ -5,14 +5,12 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -23,7 +21,6 @@ import com.fave100.server.domain.appuser.FollowingResult;
 import com.fave100.server.domain.favelist.FaveItemCollection;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
-import com.fave100.server.exceptions.NotLoggedInException;
 import com.fave100.shared.Constants;
 import com.googlecode.objectify.Ref;
 import com.wordnik.swagger.annotations.Api;
@@ -52,13 +49,7 @@ public class UsersApi {
 	@GET
 	@Path(ApiPaths.GET_USERS_FOLLOWING)
 	@ApiOperation(value = "Get following", response = FollowingResult.class)
-	public static FollowingResult getFollowing(@Context HttpServletRequest request, @PathParam("user") final String username, @QueryParam("index") final int index) {
-
-		// Only logged in users can see following		
-		final AppUser currentUser = UserApi.getLoggedInUser(request);
-		if (currentUser == null)
-			throw new NotLoggedInException();
-
+	public static FollowingResult getFollowing(@LoggedInUser AppUser currentUser, @PathParam("user") final String username, @QueryParam("index") final int index) {
 		final AppUser user = getAppUser(username);
 		if (user == null)
 			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("User does not exist").build());

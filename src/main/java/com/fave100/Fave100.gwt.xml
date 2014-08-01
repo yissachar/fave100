@@ -1,22 +1,22 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <module rename-to='fave100'>
-	<!-- Inherit the core Web Toolkit stuff.                        -->
-	<inherits name='com.google.gwt.user.User'/>
-	<inherits name='com.google.gwt.inject.Inject'/>
-	<inherits name='com.google.gwt.resources.Resources'/>
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name='com.google.gwt.inject.Inject' />
+	<inherits name='com.google.gwt.resources.Resources' />
 
-	<!-- Other module inherits                                      -->
-  	<inherits name="com.gwtplatform.dispatch.rest.DispatchRest"/>
-	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
-  	<inherits name='com.google.gwt.logging.LoggingDisabled'/>
-	<inherits name='com.google.gwt.query.Query'/>
+	<!-- Other module inherits -->
+	<inherits name="com.gwtplatform.dispatch.rest.DispatchRest" />
+	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint' />
+	<inherits name='com.google.gwt.logging.LoggingDisabled' />
+	<inherits name='com.google.gwt.query.Query' />
 
-	<!-- Specify the paths for translatable code                    -->
-	<source path='client'/>
-	<source path='shared'/>
+	<!-- Specify the paths for translatable code -->
+	<source path='client' />
+	<source path='shared' />
 
 	<!-- GWTP Bootstrap and Inject -->
 	<extend-configuration-property name='gin.ginjector.modules' value='com.fave100.client.gin.ClientModule' />
-	<set-configuration-property name="gwtp.bootstrapper" value="com.fave100.client.Fave100Bootstrapper"/> 
+	<set-configuration-property name="gwtp.bootstrapper" value="com.fave100.client.Fave100Bootstrapper" />
 
 </module>

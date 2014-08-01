@@ -67,10 +67,10 @@ public class FaveListDeletionTest {
 	public void should_delete_favelist() {
 		// Create a favelist
 		String faveListName = "favelisttodelete";
-		UserApi.addFaveListForCurrentUser(req, faveListName);
+		UserApi.addFaveListForCurrentUser(UserApi.getLoggedInUser(req), faveListName);
 
 		// Delete it
-		UserApi.deleteFaveListForCurrentUser(req, faveListName);
+		UserApi.deleteFaveListForCurrentUser(UserApi.getLoggedInUser(req), faveListName);
 
 		// Favelist no longer exists in datastore
 		assertNull("Deleted FaveList must no longer exist in datastore", FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName));

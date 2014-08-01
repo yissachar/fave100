@@ -1,7 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+		xmlns:g="urn:import:com.google.gwt.user.client.ui"
+		xmlns:w="urn:import:com.fave100.client.widgets">
 
 	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickRerankPanel.FavePickRerankStyle">
+		@def ARROW_MARGIN 8px;
+		
 		.container > * {
 			display: table-cell;
 		}
@@ -13,24 +17,48 @@
 		.arrowPanel {
 			width: 25px;
 		}
-				
-		.deleteButton {
-			vertical-align: middle;
+		
+		.arrowPanel > * {
+			height: 14px;
+			overflow: hidden;
+			position: relative;
 		}
+		
+		.arrowPanel i {
+			position: absolute;
+			line-height: 14px;
+			text-align: center;
+		}
+		
+		.arrowPanel > *:first-child, .arrowPanel > *:last-child {			
+			height: 20px;
+		}
+		
+		.arrowPanel > *:last-child {
+			padding-top: 7px;
+		}
+		
+		.rankUpArrow {
+			margin-top: ARROW_MARGIN;
+		}
+		
+		.deleteButton {
+			padding-left: 3px;
+		}
+		
+		.rankDownArrow {
+			margin-top: sub(0px, ARROW_MARGIN);			
+		}
+				
 	</ui:style>
-	
-	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
-	
+		
 	<g:FlowPanel ui:styleName="{style.container}">
 	
 		<g:FlowPanel ui:styleName="{style.arrowPanel}">
-			<g:Image ui:field="upArrow" resource="{img.upArrow}" ui:styleName="rankUpArrow" />
-			<g:Image ui:field="downArrow" resource="{img.downArrow}" ui:styleName="rankDownArrow" />
+			<g:HTMLPanel><w:Icon ui:field="upArrow" ui:styleName="rankUpArrow {style.rankUpArrow} fa fa-sort-up fa-2x" /></g:HTMLPanel>
+			<g:HTMLPanel><w:Icon ui:field="deleteButton" ui:styleName="{style.deleteButton} fa fa-times" title="Delete song" /></g:HTMLPanel>
+			<g:HTMLPanel><w:Icon ui:field="downArrow" ui:styleName="rankDownArrow {style.rankDownArrow} fa fa-sort-down fa-2x" /></g:HTMLPanel>
 		</g:FlowPanel>
-		
-		<g:SimplePanel ui:styleName="{style.deleteButton}">
-			<g:Image ui:field="deleteButton" resource="{img.delete}" title="Delete song" />
-		</g:SimplePanel>
 		
 	</g:FlowPanel>
 	

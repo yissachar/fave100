@@ -1,13 +1,12 @@
 package com.fave100.client.pagefragments.login;
 
-import com.fave100.client.LoadingIndicator;
+import com.fave100.client.FaveApi;
 import com.fave100.client.Notification;
 import com.fave100.client.RequestCache;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.LoginCredentials;
 import com.fave100.client.generated.entities.StringResult;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.http.client.Response;
@@ -15,7 +14,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -50,26 +48,22 @@ public class LoginWidgetPresenter extends
 		void setFacebookLoginUrl(String url);
 
 		void setUsernameFocus();
-
-		void setShortNames(boolean yes);
 	}
 
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
 	private RequestCache _requestCache;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private String redirect;
 
 	@Inject
 	public LoginWidgetPresenter(final EventBus eventBus, final MyView view, final PlaceManager placeManager, final RequestCache requestCache,
-								final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+								final FaveApi api) {
 		super(eventBus, view);
 		_eventBus = eventBus;
 		_placeManager = placeManager;
 		_requestCache = requestCache;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 		getView().setUiHandlers(this);
 	}
 
@@ -104,21 +98,12 @@ public class LoginWidgetPresenter extends
 
 			}
 		});
-		/*final Request<String> facebookLoginUrlReq = requestFactory
-				.appUserRequest().getFacebookAuthUrl(redirect);
-		facebookLoginUrlReq.fire(new Receiver<String>() {
-			@Override
-			public void onSuccess(final String url) {
-				getView().setFacebookLoginUrl(url);
-			}
-		});*/
 
 	}
 
 	@Override
 	public void onReveal() {
 		super.onReveal();
-		getView().setUsernameFocus();
 	}
 
 	@Override
@@ -132,10 +117,6 @@ public class LoginWidgetPresenter extends
 		getView().clearPassword();
 	}
 
-	public void setShortNames(boolean yes) {
-		getView().setShortNames(yes);
-	}
-
 	// Native login
 	@Override
 	public void login() {
@@ -144,20 +125,17 @@ public class LoginWidgetPresenter extends
 			return;
 		}
 
-		LoadingIndicator.show();
-
 		LoginCredentials loginCredentials = new LoginCredentials();
 		loginCredentials.setUsername(getView().getUsername().trim());
 		loginCredentials.setPassword(getView().getPassword());
 
-		_dispatcher.execute(_restServiceFactory.auth().login(loginCredentials), new RestCallback<AppUser>() {
+		_api.call(_api.service().auth().login(loginCredentials), new RestCallback<AppUser>() {
 
 			@Override
 			public void setResponse(Response response) {
-				LoadingIndicator.hide();
-
-				if (response.getStatusCode() >= 400)
+				if (response.getStatusCode() >= 400) {
 					getView().setError(response.getText());
+				}
 			}
 
 			@Override
@@ -179,7 +157,7 @@ public class LoginWidgetPresenter extends
 	@Override
 	public void goToTwitterAuth() {
 		// Authenticate the user with Twitter
-		_dispatcher.execute(_restServiceFactory.auth().getTwitterAuthUrl(redirect), new AsyncCallback<StringResult>() {
+		_api.call(_api.service().auth().getTwitterAuthUrl(redirect), new AsyncCallback<StringResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -192,10 +170,17 @@ public class LoginWidgetPresenter extends
 			}
 		});
 	}
+
+	@Override
+	public void focus() {
+		getView().setUsernameFocus();
+	}
 }
 
 interface LoginUiHandlers extends UiHandlers {
 	void login();
 
 	void goToTwitterAuth();
+
+	void focus();
 }

@@ -4,102 +4,98 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' 
 	ui:generateLocales='default'>
 
-	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget.FavePickWidgetStyle">
-		.mainPanel {
-			width:100%;
-			display: table;
-		}
-		
-		.mainPanel > * {
-			display: table-cell;
-		}
-		
+	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickWidget.FavePickWidgetStyle">		
 		@external hoverHidden;
 		
-		.mainPanel:hover .hoverHidden {
-			display: table;
-		}
-		
-		.rankContainer {
-			width: 7%;
-			display: table-cell;
-			vertical-align: middle;
+		.mainPanel {
+			@mixin flexbox();
+			@mixin align-items(center);
+			padding: 12px;
 		}
 		
 		.rankPanel {			
 			margin: 3px;
 		}
 		
-		.rank {
-			border-radius: 99px;
-			color: #444;
-			border: 3px #444 solid !important;
-			background-color: #fff;
+		.rank  {
+			border-radius: 50% !important;
+			border: 0px !important;
+			color: #fff;			
+			background-color: #777;
 			display: inline-block;
-			font-family: arial;
-			font-size: 40px;
-			width: 62px;
-			height: 60px;
+			font-size: 18px;
+			width: 40px;
+			height: 40px !important;
 			text-align: center;
 			padding: 0px !important;
-		}
+			line-height: 40px;
+			font-family: "Trebuchet MS" !important;
+		}		
 				
 		.rank > div {
 			margin-top: 2px;
 		}
 				
 		.rankThreeDigit {
-			font-size: 30px;
-			line-height: 48px;
+			font-size: 18px;
 		}
 				
 		.songDetails {
-			width: 81%;
-			display: table-cell;
-			padding: 0 15px;
+			padding-right: 15px;
+			@mixin flex(2, 1, 0);
 		}
 		
 		.songDetails > * {
-			float: left;
-			clear: both;
+			margin-left: 7px;
 		}
 		
 		.song {
-			font-size: 25px;
-			font-weight: bold;
+			font-size: 16px;
+			cursor: pointer;
+			display: inline-block;
 		}
-		
+				
 		.artist {
-			font-size: 20px;
+			font-size: 16px;
+			color: HIGHLIGHT_COLOR;
+			display: inline-block;
 		}
 		
 		.whyLine {
 			font-weight: 11px;
 			font-style: italic;
 			font-color: #eee;
+			font-size: 15px;
 			width: 100%;
 		}
 		
-		.hoverPanelContainer {
-			width: 10%;
-			vertical-align: middle;
+		.hoverPanel {
+			display: table;			
+			visibility: hidden;
+			text-transform: capitalize;
 		}
 		
 		.hoverPanel > * {
 			display: table-cell;
+			height: 12px;
+		}			
+		
+		.mainPanel:hover .hoverHidden {
+			visibility: visible;
 		}
 		
-		.hoverPanel img {
-			cursor: pointer;
-		}	
 		
+		.hoverPanel i:hover {
+			cursor: pointer;
+			color: PRIMARY_COLOR;
+		}
 		
 	</ui:style>
 
 	<g:HTMLPanel ui:field="container">	
 		<g:FlowPanel ui:styleName="{style.mainPanel}">
 		
-			<g:SimplePanel ui:styleName="{style.rankContainer}">
+			<g:SimplePanel>
 				<g:SimplePanel ui:field="rankPanel" ui:styleName="{style.rankPanel}"/>
 			</g:SimplePanel>
 
@@ -109,7 +105,7 @@
 				<g:SimplePanel ui:field="whyLinePanel" ui:styleName="{style.whyLine}"></g:SimplePanel>
 			</g:FlowPanel>
 			
-			<g:SimplePanel ui:styleName="{style.hoverPanelContainer}">
+			<g:SimplePanel>
 				<g:FlowPanel ui:field="hoverPanel" ui:styleName="hoverHidden {style.hoverPanel}" />
 			</g:SimplePanel>
 			

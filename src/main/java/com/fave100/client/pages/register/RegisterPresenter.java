@@ -1,13 +1,12 @@
 package com.fave100.client.pages.register;
 
-import com.fave100.client.LoadingIndicator;
+import com.fave100.client.FaveApi;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.gatekeepers.NotLoggedInGatekeeper;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.FacebookRegistration;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.TwitterRegistration;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.fave100.client.pages.PagePresenter;
 import com.fave100.shared.Validator;
@@ -18,7 +17,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -75,8 +73,7 @@ public class RegisterPresenter extends
 
 	private EventBus eventBus;
 	private PlaceManager placeManager;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private String _provider;
 	private String _oauthVerifier;
 	private String _state;
@@ -84,12 +81,12 @@ public class RegisterPresenter extends
 
 	@Inject
 	public RegisterPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager,
-								final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+								final FaveApi api) {
 		super(eventBus, view, proxy);
 		this.eventBus = eventBus;
 		this.placeManager = placeManager;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
+
 		getView().setUiHandlers(this);
 	}
 
@@ -112,14 +109,12 @@ public class RegisterPresenter extends
 
 			@Override
 			public void onFailure(Throwable caught) {
-				LoadingIndicator.hide();
 				getView().showThirdPartyUsernamePrompt();
 				getProxy().manualReveal(RegisterPresenter.this);
 			}
 
 			@Override
 			public void onSuccess(AppUser user) {
-				LoadingIndicator.hide();
 				eventBus.fireEvent(new CurrentUserChangedEvent(user));
 				goToUserPage(user.getUsername());
 			}
@@ -128,30 +123,20 @@ public class RegisterPresenter extends
 		// The user is being redirected back to the register page after signing in to their 3rd party account 
 		// prompt them for a username and create their account
 		if (_provider.equals(RegisterPresenter.PROVIDER_GOOGLE)) {
-
-			LoadingIndicator.show();
-
-			_dispatcher.execute(_restServiceFactory.auth().loginWithGoogle(), loginCallback);
-
+			_api.call(_api.service().auth().loginWithGoogle(), loginCallback);
 		}
 		else if (_provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
-
-			LoadingIndicator.show();
-
 			// First see if they are already logged in
 			StringResult _oauthVerifierWrapper = new StringResult();
 			_oauthVerifierWrapper.setValue(_oauthVerifier);
 
-			_dispatcher.execute(_restServiceFactory.auth().loginWithTwitter(_oauthVerifierWrapper), loginCallback);
-
+			_api.call(_api.service().auth().loginWithTwitter(_oauthVerifierWrapper), loginCallback);
 		}
 		else if (_provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
-			LoadingIndicator.show();
-
 			StringResult codeWrapper = new StringResult();
 			codeWrapper.setValue(_code);
 
-			_dispatcher.execute(_restServiceFactory.auth().loginWithFacebook(codeWrapper), loginCallback);
+			_api.call(_api.service().auth().loginWithFacebook(codeWrapper), loginCallback);
 		}
 		else {
 			getView().hideThirdPartyUsernamePrompt();
@@ -162,7 +147,6 @@ public class RegisterPresenter extends
 	@Override
 	public void onReveal() {
 		super.onReveal();
-		registerContainer.setShortNames(false);
 		setInSlot(REGISTER_SLOT, registerContainer);
 	}
 
@@ -193,7 +177,7 @@ public class RegisterPresenter extends
 				@Override
 				public void onSuccess(AppUser appUser) {
 					eventBus.fireEvent(new CurrentUserChangedEvent(appUser));
-					registerContainer.appUserCreated();
+					registerContainer.appUserCreated(appUser);
 				}
 			};
 
@@ -202,7 +186,7 @@ public class RegisterPresenter extends
 				StringResult usernameWrapper = new StringResult();
 				usernameWrapper.setValue(username);
 
-				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromGoogleAccount(usernameWrapper), registerCallback);
+				_api.call(_api.service().auth().createAppUserFromGoogleAccount(usernameWrapper), registerCallback);
 			}
 			else if (_provider.equals(RegisterPresenter.PROVIDER_TWITTER)) {
 
@@ -210,7 +194,7 @@ public class RegisterPresenter extends
 				registration.setUsername(username);
 				registration.setOauthVerifier(_oauthVerifier);
 
-				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromTwitterAccount(registration), registerCallback);
+				_api.call(_api.service().auth().createAppUserFromTwitterAccount(registration), registerCallback);
 			}
 			else if (_provider.equals(RegisterPresenter.PROVIDER_FACEBOOK)) {
 
@@ -218,7 +202,7 @@ public class RegisterPresenter extends
 				registration.setUsername(username);
 				registration.setCode(_state);
 
-				_dispatcher.execute(_restServiceFactory.auth().createAppUserFromFacebookAccount(registration), registerCallback);
+				_api.call(_api.service().auth().createAppUserFromFacebookAccount(registration), registerCallback);
 			}
 		}
 	}

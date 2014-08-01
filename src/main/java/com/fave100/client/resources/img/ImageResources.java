@@ -14,38 +14,14 @@ public interface ImageResources extends ClientBundle {
 	@Source("logo-large.png")
 	ImageResource logoLarge();
 
-	@Source("loading-indicator.gif")
-	ImageResource loadingIndicator();
+	@Source("search-loading-indicator-white.gif")
+	ImageResource searchLoadingIndicatorWhite();
 
-	@Source("add.png")
-	ImageResource add();
-
-	@Source("delete.png")
-	ImageResource delete();
-
-	@Source("down-arrow.png")
-	ImageResource downArrow();
-
-	@Source("up-arrow.png")
-	ImageResource upArrow();
-
-	@Source("help-bubble-arrow.png")
-	ImageResource helpBubbleArrow();
-
-	@Source("search-loading-indicator.gif")
-	ImageResource searchLoadingIndicator();
+	@Source("search-loading-indicator-black.gif")
+	ImageResource searchLoadingIndicatorBlack();
 
 	@Source("triangle.png")
 	ImageResource triangle();
-
-	@Source("g-plus-icon.png")
-	ImageResource gPlusIcon();
-
-	@Source("twitter_logo_white.png")
-	ImageResource twitterLogo();
-
-	@Source("fb_logo.png")
-	ImageResource fbLogo();
 
 	@Source("/about/about_screen_1.png")
 	ImageResource aboutScreen1();
@@ -62,13 +38,10 @@ public interface ImageResources extends ClientBundle {
 	@Source("/about/about_screen_5.png")
 	ImageResource aboutScreen5();
 
-	@Source("left-arrow.png")
-	ImageResource leftArrow();
-
-	@Source("right-arrow.png")
-	ImageResource rightArrow();
-
 	@Source("corey.jpg")
 	ImageResource corey();
+
+	@Source("album.png")
+	ImageResource album();
 
 }

@@ -40,7 +40,7 @@
           
     <p:Page ui:field="page">
 		<p:content>	   
-		    <g:HTMLPanel>
+		    <g:HTMLPanel ui:styleName="{style.paddedMainPage}">
 		    
 		    	<h1 class="{style.heading}">Lists</h1>
 		    	<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>

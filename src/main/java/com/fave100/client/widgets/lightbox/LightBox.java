@@ -13,9 +13,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class LightBox extends PopupPanel {
 
-	private static LighBoxUiBinder uiBinder = GWT.create(LighBoxUiBinder.class);
+	private static LightBoxUiBinder uiBinder = GWT.create(LightBoxUiBinder.class);
 
-	interface LighBoxUiBinder extends UiBinder<Widget, LightBox> {
+	interface LightBoxUiBinder extends UiBinder<Widget, LightBox> {
 	}
 
 	@UiField FocusPanel lightBoxBackground;

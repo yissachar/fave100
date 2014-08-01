@@ -4,27 +4,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.Utils;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.pages.PageView;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.fave100.shared.Constants;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
@@ -40,34 +46,58 @@ public class ListView extends PageView<ListUiHandlers>
 	interface ListStyle extends GlobalStyle {
 		String fixedSearch();
 
-		String selected();
+		String hoverSideBar();
 	}
 
 	@UiField ListStyle style;
 	@UiField HTMLPanel userContainer;
-	@UiField Panel tagline;
+	@UiField Panel slideOutBackground;
 	@UiField HTMLPanel userPageSideBar;
 	@UiField HTMLPanel faveListContainer;
 	@UiField HTMLPanel globalListDetailsContainer;
 	@UiField HTMLPanel listManager;
-	@UiField FocusPanel followCTAcontainer;
-	@UiField Label followCTA;
+	@UiField Button followButton;
 	@UiField HTMLPanel userPageFaveList;
+	@UiField Panel listHeader;
+	@UiField Label hashtagLabel;
+	@UiField Anchor contributeCTA;
+	@UiField Anchor addSongLink;
+	@UiField HTMLPanel addSongSearch;
 	@UiField HTMLPanel followingContainer;
 	@UiField FlowPanel userProfile;
-	@UiField InlineHyperlink profileLink;
+	@UiField Hyperlink profileLink;
 	@UiField Image avatar;
-	@UiField InlineLabel username;
-	@UiField HTMLPanel songAutocomplete;
+	@UiField Label username;
 	@UiField HTMLPanel favelist;
 	@UiField Label userNotFound;
-	@UiField Label mobileShowList;
-	@UiField Label mobileShowFollowing;
 	private boolean following;
 
 	@Inject
 	public ListView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+
+		Window.addResizeHandler(new ResizeHandler() {
+
+			@Override
+			public void onResize(ResizeEvent event) {
+				resize();
+			}
+		});
+
+		RootPanel.get().addHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Element target = Element.as(event.getNativeEvent().getEventTarget());
+				if (Utils.widgetContainsElement(globalListDetailsContainer, target)
+						|| Utils.widgetContainsElement(slideOutBackground, target)) {
+					hideSideBar();
+				}
+
+			}
+		}, ClickEvent.getType());
+
+		resize();
 	}
 
 	@Override
@@ -89,7 +119,6 @@ public class ListView extends PageView<ListUiHandlers>
 
 	private HTMLPanel getPanelForSlot(Object slot) {
 		Map<Type<RevealContentHandler<?>>, HTMLPanel> slotMap = new HashMap<Type<RevealContentHandler<?>>, HTMLPanel>();
-		slotMap.put(ListPresenter.AUTOCOMPLETE_SLOT, songAutocomplete);
 		slotMap.put(ListPresenter.FAVELIST_SLOT, favelist);
 		slotMap.put(ListPresenter.STARRED_LISTS_SLOT, followingContainer);
 		slotMap.put(ListPresenter.LIST_MANAGER_SLOT, listManager);
@@ -98,56 +127,38 @@ public class ListView extends PageView<ListUiHandlers>
 		return slotMap.get(slot);
 	}
 
-	@UiHandler("followCTAcontainer")
-	void onStarClick(final ClickEvent event) {
+	@UiHandler("followButton")
+	void onFollowButtonClick(final ClickEvent event) {
 		getUiHandlers().followUser();
 		if (!following) {
-			followCTA.removeStyleName("button-warning");
+			followButton.removeStyleName("button-warning");
 		}
 	}
 
-	@UiHandler("followCTA")
-	void onFollowOver(final MouseOverEvent event) {
+	@UiHandler("followButton")
+	void onFollowButtonOver(final MouseOverEvent event) {
 		if (following) {
-			followCTA.addStyleName("button-warning");
-			followCTA.setText("Unfollow");
+			followButton.addStyleName("button-warning");
+			followButton.setText("Unfollow");
 		}
 	}
 
-	@UiHandler("followCTA")
-	void onFollowOut(final MouseOutEvent event) {
-		followCTA.removeStyleName("button-warning");
+	@UiHandler("followButton")
+	void onFollowButtonOut(final MouseOutEvent event) {
+		followButton.removeStyleName("button-warning");
 		if (following) {
-			followCTA.setText("Following");
+			followButton.setText("Following");
 		}
 	}
 
-	@UiHandler("mobileShowList")
-	void onMobileShowListClick(final ClickEvent event) {
-		setSelected(mobileShowList);
-		userPageFaveList.setVisible(true);
-		followingContainer.setVisible(false);
-		listManager.setVisible(true);
+	@UiHandler("contributeCTA")
+	void onContributeClick(ClickEvent event) {
+		getUiHandlers().contributeToList();
 	}
 
-	@UiHandler("mobileShowFollowing")
-	void onMobileShowFollowingClick(final ClickEvent event) {
-		setSelected(mobileShowFollowing);
-		userPageFaveList.setVisible(false);
-		followingContainer.setVisible(true);
-		listManager.setVisible(false);
-	}
-
-	@UiHandler("registerLink")
-	void onRegisterLinkClick(final ClickEvent event) {
-		getUiHandlers().showRegister();
-	}
-
-	private void setSelected(final Label label) {
-		mobileShowList.removeStyleName(style.selected());
-		mobileShowFollowing.removeStyleName(style.selected());
-
-		label.addStyleName(style.selected());
+	@UiHandler("addSongLink")
+	void onAddSongClick(ClickEvent event) {
+		getUiHandlers().showSongSearch();
 	}
 
 	public native void nativeRenderShare() /*-{
@@ -157,16 +168,12 @@ public class ListView extends PageView<ListUiHandlers>
 	}-*/;
 
 	@Override
-	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser) {
-		tagline.setVisible(false);
+	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser, String hashtag) {
+		hashtagLabel.setText(hashtag);
 
 		if (requestedUser == null) {
 			userProfile.setVisible(false);
 
-			// Only show call action to users who are not logged in
-			if (!currentUser.isLoggedIn()) {
-				tagline.setVisible(true);
-			}
 		}
 		else {
 			userProfile.setVisible(true);
@@ -181,6 +188,18 @@ public class ListView extends PageView<ListUiHandlers>
 		else {
 			showOtherPage();
 		}
+
+		resize();
+		faveListContainer.getElement().setScrollTop(0);
+	}
+
+	@Override
+	public void resize() {
+		String height = (Window.getClientHeight() - Constants.TOP_BAR_HEIGHT) + "px";
+		userPageSideBar.setHeight(height);
+		slideOutBackground.setHeight(height);
+		String listHeight = (Window.getClientHeight() - Constants.TOP_BAR_HEIGHT - listHeader.getOffsetHeight()) + "px";
+		faveListContainer.getElement().getStyle().setProperty("maxHeight", listHeight);
 	}
 
 	private void showOwnPage() {
@@ -188,7 +207,8 @@ public class ListView extends PageView<ListUiHandlers>
 		userNotFound.setVisible(false);
 		username.setVisible(false);
 		profileLink.setVisible(true);
-		songAutocomplete.setVisible(true);
+		contributeCTA.setVisible(false);
+		addSongLink.setVisible(true);
 	}
 
 	private void showOtherPage() {
@@ -196,7 +216,8 @@ public class ListView extends PageView<ListUiHandlers>
 		userNotFound.setVisible(false);
 		username.setVisible(true);
 		profileLink.setVisible(false);
-		songAutocomplete.setVisible(false);
+		contributeCTA.setVisible(true);
+		addSongLink.setVisible(false);
 	}
 
 	@Override
@@ -214,56 +235,33 @@ public class ListView extends PageView<ListUiHandlers>
 	public void setFollowCTA(final boolean show, final boolean following) {
 		this.following = following;
 
-		if (show) {
-			followCTAcontainer.setVisible(true);
-		}
-		else {
-			followCTAcontainer.setVisible(false);
-		}
+		followButton.setVisible(show);
 
 		if (following) {
-			followCTA.setText("Following");
+			followButton.setText("Following");
 		}
 		else {
-			followCTA.setText("Follow");
+			followButton.setText("Follow");
 		}
 	}
 
 	@Override
-	public void setMobileView(final boolean reset) {
-		if (Window.getClientWidth() <= Constants.MOBILE_WIDTH_PX) {
-			if (reset) {
-				mobileShowList.removeStyleName(style.selected());
-				mobileShowFollowing.removeStyleName(style.selected());
-			}
-
-			if (mobileShowList.getStyleName().contains(style.selected())) {
-				userPageFaveList.setVisible(true);
-				followingContainer.setVisible(false);
-			}
-			else if (mobileShowFollowing.getStyleName().contains(style.selected())) {
-				userPageFaveList.setVisible(false);
-				followingContainer.setVisible(true);
-			}
-
-			else {
-				setSelected(mobileShowList);
-				userPageFaveList.setVisible(true);
-				followingContainer.setVisible(false);
-			}
-
-			if (getUiHandlers().isOwnPage()) {
-				mobileShowFollowing.setVisible(true);
-				mobileShowList.setVisible(true);
-			}
-			else {
-				mobileShowFollowing.setVisible(false);
-				mobileShowList.setVisible(false);
-			}
+	public void toggleSideBar() {
+		if (userContainer.getStyleName().contains(style.hoverSideBar())) {
+			hideSideBar();
 		}
 		else {
-			userPageFaveList.setVisible(true);
-			followingContainer.setVisible(true);
+			showSideBar();
 		}
+	}
+
+	@Override
+	public void hideSideBar() {
+		userContainer.removeStyleName(style.hoverSideBar());
+	}
+
+	@Override
+	public void showSideBar() {
+		userContainer.addStyleName(style.hoverSideBar());
 	}
 }

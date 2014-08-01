@@ -4,31 +4,29 @@
 	
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
 		.container {
-			padding: 6px;
-			display: block;
 			overflow: hidden;
-		}
-		
-		.whyline {
-			font-style: italic;
-			font-size: 1.1em;
+			@mixin flexbox();
 		}
 		
 		.avatar {
 			max-width: 35px;
 			max-height: 35px;
-			float: left;
-			margin-right: 6px;
+			margin-right: 10px;
+			border-radius: 50%;
+		}		
+		
+		.whylineDetails {
+			@mixin flex(2, 1, 0);
 		}
 		
 		.userLink {
-			font-size: 1.2em;
-			color: PRIMARY_COLOR;
+			font-size: 16px;
+			line-height: 12px;
+			vertical-align: top;
 		}
 		
-		.whylineDetails {
-			float: left;
-			width: 80%;
+		.whyline {
+			font-size: 14px;
 		}
 			
 	</ui:style>

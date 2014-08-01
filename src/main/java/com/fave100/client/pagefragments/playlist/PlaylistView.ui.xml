@@ -1,0 +1,230 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:w='urn:import:com.fave100.client.widgets'
+			 xmlns:pf="urn:import:com.fave100.client.pagefragments.footer">
+             
+    <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.playlist.PlaylistView.PlaylistStyle">
+    	@def PLAYER_BACKGROUND rgba(0, 0, 0, 0.89);
+    	@def WHYLINE_WIDTH 270px;
+    	
+    	.container {
+			position: absolute;
+			display: none;
+			bottom: 15px;
+			width: 356px;
+			transition: width RESIZE_TRANSITION_TIME, right RESIZE_TRANSITION_TIME;
+			-webkit-transition: width RESIZE_TRANSITION_TIME, right RESIZE_TRANSITION_TIME;
+		}
+		
+		.playlistVisible .container {
+			right: 25px;
+			display: inline;
+		}
+		
+		.playlistVisible.smallDisplay .container {
+			display: none;
+		}
+		
+		.fullScreen.container, .playlistVisible.smallDisplay .fullScreen.container {
+			width: 100%;
+			right: 0;
+			top: 75px;
+			bottom: auto;
+			display: inline;
+		}
+		
+		.playlist {
+			overflow: hidden;
+		}
+		
+		.fullScreen .hideButton {
+			display: none;
+		}
+		
+		.songDetailsContainer {
+			background-color: PLAYER_BACKGROUND;
+			border-radius: 4px;
+		}
+		
+		.songDetails {
+			padding: 7px;	
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		
+		.songName, .artistName {
+			font-size: 18px;
+			padding: 3px;
+			margin-left: 7px;
+			white-space: nowrap;
+		}
+		
+		.songName {
+			color: PRIMARY_COLOR;			
+		}
+		
+		.artistName {
+			color: #fff;
+			display: inline-block;
+		}
+		
+		.playlistItems {
+			overflow-y: auto;
+		}
+		
+		.playlistControls {			
+			text-align: center;
+			font-size: 17px;
+			margin-bottom: 6px;
+			@mixin flexbox();
+			@mixin justify-content(space-between);
+			@mixin align-items(center);
+		}
+		
+		.playlistControls a {
+			color: #666;
+			font-size: 16px;
+		}
+		
+		.playlistControls > .disabled {
+			color: #999;
+		}
+		
+		.playlistControls i {			
+			color: #fff;
+			cursor: pointer;
+		}
+		
+		.playlistNav {
+			background-color: rgba(0, 0, 0, 0.1);
+			border-radius: 4px;
+			overflow: hidden;
+			@mixin flexbox();
+			@mixin justify-content(space-between);
+			@mixin align-items(center);
+			@mixin flex(2, 1, 0);
+		}
+		
+		.playlistControls i {
+			padding: 7px;
+		}
+		
+		.playlistNav i {			
+			background-color: rgba(0, 0, 0, 0.75);
+		}
+		
+		.previousButton {
+			text-align: left;
+		}
+		
+		.playlistDetails a {
+			font-family: 'Merriweather';
+			font-style: italic;
+		}
+		
+		.hideButton {
+			margin-left: 10px;
+			background-color: hsl(2, 70%, 60%);
+			border-radius: 4px;
+		}
+		
+		.hyphen {
+			margin: 0px 5px;
+		}
+		
+		.addSongButtonContainer {
+			padding: 10px;
+			@mixin flexbox();
+			@mixin justify-content(space-between);
+		}
+		
+		.addSongButtonContainer button {			
+			height: 28px;
+			background-color: #555;
+			padding: 3px;
+			margin: 2px;
+		}
+		
+		.smallDisplay .thumbToggle {
+			display: none;
+		}
+				
+		.addSongButton {
+			@mixin flex-grow(2);
+		}
+		
+		.whyLineContainer {
+			position: absolute;
+			top: 0;
+			left: sub(-10px, WHYLINE_WIDTH);
+			width: WHYLINE_WIDTH;
+			height: 100%;
+			overflow-y: auto;
+			overflow-x: hidden;
+			border-radius: 4px;
+			pointer-events: none;
+		}
+		
+		.whyLines {
+			margin-left: add(10px, WHYLINE_WIDTH);
+			width: WHYLINE_WIDTH;
+			background-color: PLAYER_BACKGROUND;
+			color: #fff;
+			pointer-events: auto;
+			height: 100%;
+			overflow-y: hidden;
+			@mixin transition(margin-left 0.3s);
+		}
+		
+		.whyLines.whyLinesVisible {
+			margin-left: 0;
+			overflow-y: auto;
+		}
+    </ui:style>
+    
+    <g:HTMLPanel ui:field="container" ui:styleName="{style.container}">
+    
+	    <g:HTMLPanel ui:field="playlist" ui:styleName="{style.playlist}">
+    		
+		    <g:FlowPanel>
+		    	<g:FlowPanel ui:field="playlistControls" ui:styleName="{style.playlistControls}">
+		    		<g:FlowPanel ui:styleName="{style.playlistNav}">
+		    			<w:Icon ui:field="previousButton" ui:styleName="fa fa-backward {style.previousButton}"/>
+			    		<g:FlowPanel ui:styleName="{style.playlistDetails}">
+				    		<g:InlineHyperlink ui:field="listName"/>
+					    	<g:InlineLabel ui:field="byUserText" ui:styleName="{style.hyphen}">by</g:InlineLabel>
+					    	<g:InlineHyperlink ui:field="username"/>
+				    	</g:FlowPanel>
+		    		<w:Icon ui:field="nextButton" ui:styleName="fa fa-forward"/>
+			    	</g:FlowPanel>
+	    			<w:Icon ui:field="hideButton" ui:styleName="fa fa-times {style.hideButton}"/>
+		    	</g:FlowPanel>
+			    	
+		    	<g:FlowPanel ui:styleName="{style.songDetailsContainer}">
+		    		    
+		    		<g:FlowPanel ui:styleName="{style.songDetails}">
+			    		<g:InlineLabel ui:field="songName" ui:styleName="{style.songName}" />
+			    		<g:InlineLabel ui:field="artistName" ui:styleName="{style.artistName}"/>
+		    		</g:FlowPanel>
+		    				
+			    	<g:HTMLPanel ui:field="youtubePlayer"/>	
+		    		    	        		
+		    		<g:FlowPanel ui:styleName="{style.addSongButtonContainer}">
+		    			<g:Button ui:field="thumbToggle" ui:styleName="fa fa-lg fa-youtube-play {style.thumbToggle}"/>
+		    			<g:Button ui:field="whylineToggle" ui:styleName="fa fa-lg fa-users {style.thumbToggle}"/>
+	    				<g:Button ui:field="addSongButton" ui:styleName="{style.addSongButton}">Add To List</g:Button>
+	    			</g:FlowPanel>
+		    	</g:FlowPanel>
+				    	
+		    	<g:FlowPanel ui:field="playlistItemsPanel" ui:styleName="{style.playlistItems}"/>
+		    	
+		    	<g:SimplePanel ui:styleName="{style.whyLineContainer}">
+		    		<g:HTMLPanel ui:field="whylineView" ui:styleName="{style.whyLines}"/>
+		    	</g:SimplePanel>
+		    </g:FlowPanel>
+		
+		</g:HTMLPanel>
+		
+	</g:HTMLPanel>
+    
+</ui:UiBinder>

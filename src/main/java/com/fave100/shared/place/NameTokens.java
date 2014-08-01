@@ -8,7 +8,6 @@ public class NameTokens {
 	public static final String about = "about";
 	public static final String register = "register";
 	public static final String lists = "lists";
-	public static final String login = "login";
 	public static final String profile = "profile";
 	public static final String song = "song";
 	public static final String passwordreset = "passwordreset";
@@ -19,10 +18,6 @@ public class NameTokens {
 
 	public static String getLists() {
 		return lists;
-	}
-
-	public static String getLogin() {
-		return login;
 	}
 
 	public static String getProfile() {

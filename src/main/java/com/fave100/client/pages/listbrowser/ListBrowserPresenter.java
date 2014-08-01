@@ -2,15 +2,14 @@ package com.fave100.client.pages.listbrowser;
 
 import java.util.List;
 
+import com.fave100.client.FaveApi;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.generated.entities.StringResultCollection;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.PagePresenter;
 import com.fave100.shared.place.NameTokens;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -33,15 +32,12 @@ public class ListBrowserPresenter extends PagePresenter<ListBrowserPresenter.MyV
 	public interface MyProxy extends ProxyPlace<ListBrowserPresenter> {
 	}
 
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 
 	@Inject
-	public ListBrowserPresenter(EventBus eventBus, MyView view, MyProxy proxy, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+	public ListBrowserPresenter(EventBus eventBus, MyView view, MyProxy proxy, final FaveApi api) {
 		super(eventBus, view, proxy);
-
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 
 		getView().setUiHandlers(this);
 	}
@@ -50,7 +46,7 @@ public class ListBrowserPresenter extends PagePresenter<ListBrowserPresenter.MyV
 	protected void onReveal() {
 		super.onReveal();
 
-		_dispatcher.execute(_restServiceFactory.favelists().getListNames(), new AsyncCallback<StringResultCollection>() {
+		_api.call(_api.service().favelists().getListNames(), new AsyncCallback<StringResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

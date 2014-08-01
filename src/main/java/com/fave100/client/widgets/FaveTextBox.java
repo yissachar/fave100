@@ -5,8 +5,12 @@ import com.google.gwt.user.client.ui.TextBox;
 public class FaveTextBox extends TextBox {
 
 	public FaveTextBox() {
-		this.getElement().setAttribute("autocorrect", "off");
-		this.getElement().setAttribute("autocapitalize", "off");
+		getElement().setAttribute("autocorrect", "off");
+		getElement().setAttribute("autocapitalize", "off");
+	}
+
+	public void setPlaceHolder(String placeholder) {
+		getElement().setPropertyString("placeholder", placeholder);
 	}
 
 }

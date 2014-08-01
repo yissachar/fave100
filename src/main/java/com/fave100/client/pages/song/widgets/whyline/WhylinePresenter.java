@@ -3,13 +3,12 @@ package com.fave100.client.pages.song.widgets.whyline;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fave100.client.FaveApi;
 import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.generated.entities.UserListResult;
 import com.fave100.client.generated.entities.UserListResultCollection;
 import com.fave100.client.generated.entities.Whyline;
 import com.fave100.client.generated.entities.WhylineCollection;
-import com.fave100.client.generated.services.RestServiceFactory;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -24,14 +23,12 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 		void setUserLists(List<UserListResult> userLists);
 	}
 
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 
 	@Inject
-	WhylinePresenter(final EventBus eventBus, final MyView view, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+	WhylinePresenter(final EventBus eventBus, final MyView view, final FaveApi api) {
 		super(eventBus, view);
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 
 		getView().setUiHandlers(this);
 	}
@@ -44,7 +41,7 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 	}
 
 	public void showWhylines(FaveItem song) {
-		_dispatcher.execute(_restServiceFactory.songs().getWhylines(song.getId()), new AsyncCallback<WhylineCollection>() {
+		_api.call(_api.service().songs().getWhylines(song.getId()), new AsyncCallback<WhylineCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -62,7 +59,7 @@ public class WhylinePresenter extends PresenterWidget<WhylinePresenter.MyView> i
 			}
 		});
 
-		_dispatcher.execute(_restServiceFactory.songs().getFaveLists(song.getId()), new AsyncCallback<UserListResultCollection>() {
+		_api.call(_api.service().songs().getFaveLists(song.getId()), new AsyncCallback<UserListResultCollection>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

@@ -3,89 +3,14 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:p='urn:import:com.fave100.client.pages'
-	xmlns:wp='urn:import:com.fave100.client.pages.song.widgets.playlist'
-	xmlns:wyt='urn:import:com.fave100.client.pages.song.widgets.youtube'
-	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	ui:generateLocales='default'>
+	xmlns:wyt='urn:import:com.fave100.client.pages.song.widgets.youtube'>
 
-	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">	
-		.songContainer {	
-			height: 577px;
-		}
-		
-		.songHeader {
-			overflow: hidden;
-			border: 1px solid #AAA;
-			border-bottom: 0px;
-			background-color: #f0f0f0;
-			padding: 10px;
-		}
-		
-		.songDetails {
-			float: left;
-			max-width: 85%;
-		}
-		
-		.songTitle {
-			font-size: 1.3em;
-		}
-		
-		.songBody {
-			background-color: #FFF;
-			border: 1px solid #AAA;
-			padding: 20px;
-		}
-		
-		.addToFave100Button {
-			float: right;
-		}
-		
-		.youtubeWidget {
-			margin: 0 auto;
-		}
-		
-		.whylineWidget {
-			border-top: 1px solid #aaa;
-			margin-top: 10px;
-			padding-top: 10px;
-		}
-				
-		.sideBar {	
-			border: 1px solid #AAA;
-			border-left: 0px;
-			margin-left: 0%;
-			overflow-y: auto;
-			-webkit-overflow-scrolling: touch;		
-			overflow-x: hidden;	
-		}
-		
-		.nonMobile .sideBar {
-			width: 42.5%;
-		}				
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">			
 	</ui:style>
 	
 	<p:Page ui:field="page">
 		<p:content>	
-			<g:HTMLPanel ui:styleName="{style.songContainer}">
-			
-				<div class="{style.songHeader}">
-					<div class="{style.songDetails}">
-						<g:Label ui:field="songTitle" styleName="{style.songTitle}"/>
-						<g:Label ui:field="artistName"/>
-					</div>
-					<g:Button ui:field="addToFave100Button" styleName="{style.addToFave100Button}">+Fave100</g:Button>
-				</div>
-				
-				<div class="row">
-					<g:HTMLPanel ui:field="songContainer" styleName="{style.songBody} col span_7">
-						<g:HTMLPanel ui:field="youTubeWidget" styleName="{style.youtubeWidget}"/>			
-						<g:HTMLPanel ui:field="whylineWidget" styleName="{style.whylineWidget}"></g:HTMLPanel>			
-					</g:HTMLPanel>
-					<g:HTMLPanel ui:field="playlistPanel" ui:styleName="{style.sideBar}"/>
-				</div>		
-											
-			</g:HTMLPanel>
+			<g:HTMLPanel/>
 		</p:content>
 	</p:Page>
 	

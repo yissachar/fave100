@@ -1,0 +1,63 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.playlist.PlaylistItem.PlaylistStyle">
+		.container {
+			border-top: 1px solid #AAA;
+			padding: 5px;
+			overflow: hidden;
+			background-color:  MAIN_BACKGROUND;
+		}
+				
+		.container:hover {
+			cursor: pointer;
+			background-color: #FFF;
+			color: PRIMARY_COLOR;
+		}
+		
+		.playing, .playing:hover {
+			background-color: PRIMARY_COLOR;
+			color: #FFF;
+		}
+		
+		.rank {
+			float: left;
+			font-size: 2em;
+			padding: 4px;
+			width: 50px;
+		}
+		
+		.oneHundredth {
+			font-size: 1.7em;
+		}
+		
+		.detailContainer {
+			float: left;			
+			width: 77%;
+		}
+		
+		.song {
+			font-size: 1.1em;
+		}
+		
+		.artist {
+			font-size: 1em;
+		}
+		
+		.whyline {
+			font-style: italic;
+		}
+	</ui:style>
+	
+	<g:FocusPanel ui:field="focusPanel">
+		<g:HTMLPanel ui:field="container" ui:styleName="{style.container}">
+			<g:Label ui:field="rankText" ui:styleName="{style.rank}"/>
+			<g:HTMLPanel ui:styleName="{style.detailContainer}">
+				<g:Label ui:field="songText" ui:styleName="{style.song}"/>
+				<g:Label ui:field="artistText" ui:styleName="{style.artist}"/>
+				<g:Label ui:field="whylineText" ui:styleName="{style.whyline}"/>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+	</g:FocusPanel>
+</ui:UiBinder> 

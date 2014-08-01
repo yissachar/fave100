@@ -5,15 +5,15 @@
 	xmlns:w='urn:import:com.fave100.client.widgets'
 	xmlns:p='urn:import:com.fave100.client.pages'>
 
-	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">					
+		.profilePage button {
+			width: 130px;
+		}
+		
 		.pageTitle {
 			margin-top: 10px;
 			margin-bottom: 35px;			
 			text-align: center;
-		}
-				
-		button {
-			width: 130px;
 		}
 		
 		.formStatusMessage {
@@ -41,7 +41,6 @@
 		}
 		
 		.fieldLabel {
-			font-weight: bold;
 			margin-right: 20px;
 			display: inline-block;
 			width: 100px;
@@ -59,7 +58,7 @@
 			min-width: 380px;
 		}
 		
-		.mobile .avatarUpload {
+		.smallDisplay .avatarUpload {
 			float: left;
 			margin-top: 30px;
 		}
@@ -88,7 +87,7 @@
 		
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens"/>
 	
-	<p:Page ui:field="page">
+	<p:Page ui:field="page" ui:styleName="{style.profilePage} {style.paddedMainPage}">
 		<p:content>			
 			<g:HTMLPanel>
 			

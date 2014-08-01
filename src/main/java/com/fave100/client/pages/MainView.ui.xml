@@ -1,0 +1,19 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    
+    <ui:style src="../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+    	.main {
+			transition: width RESIZE_TRANSITION_TIME;
+			-webkit-transition: width RESIZE_TRANSITION_TIME;
+			overflow-y: auto;
+    	}
+    </ui:style>
+      
+    <g:FlowPanel>	
+		<g:SimplePanel ui:field="topBar"/>	  
+    	<g:SimplePanel ui:field="main" ui:styleName="{style.main}"/>    	
+		<g:HTMLPanel ui:field="playlist"/>
+    </g:FlowPanel>
+    
+</ui:UiBinder>

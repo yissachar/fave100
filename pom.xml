@@ -10,7 +10,7 @@
 	<name>gwt-maven-archetype-project</name>
 
 	<properties>
-		<gwt.version>2.6.0</gwt.version>
+		<gwt.version>2.6.1</gwt.version>
 		<appengine.version>1.9.0</appengine.version>
 		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
 		<gwtp.version>1.2.1</gwtp.version>
@@ -26,9 +26,13 @@
 	<repositories>
 		<!-- temporary repo for gss.gwt snapshot -->
 		<repository>
-			<id>site</id>
-			<url>http://gwtquery-plugins.googlecode.com/svn/mavenrepo</url>
-		</repository>
+	        <id>sonatype.snapshots</id>
+	        <name>Sonatype snapshot repository</name>
+	        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+	        <snapshots>
+	           <enabled>true</enabled>
+	        </snapshots>
+	    </repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -160,6 +164,27 @@
 			<version>2.1.2</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>${gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-codeserver</artifactId>
+			<version>${gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
 		<!-- End GWT -->
 
 		<!-- GWTP -->
@@ -195,11 +220,11 @@
 
 		<!-- GSS Resource -->
 		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gssresource</artifactId>
-			<version>1.0-20131219.102520-2</version>
-			<scope>provided</scope>
-		</dependency>
+	        <groupId>com.github.jdramaix</groupId>
+	        <artifactId>gssresource</artifactId>
+	        <version>1.0-SNAPSHOT</version>
+	        <scope>provided</scope>
+	    </dependency>
 
 		<!-- End Client -->
 		<!-- Begin Test -->

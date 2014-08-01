@@ -4,6 +4,11 @@
 			 xmlns:p='urn:import:com.fave100.client.pages'>
              
     <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+    	.container {
+			max-width: 1200px;
+			margin: 0 auto;
+    	}
+    	
     	.container h1 {
 			margin-top: 30px;
 			margin-bottom: 60px;
@@ -15,9 +20,10 @@
     	}
     	
     	.container img {
-			padding: 15px;
+			margin: 10px;
 			max-width: 100%;
 			height: auto;
+			box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.2);
     	}
     	    	
     	.container > div {
@@ -33,7 +39,7 @@
     	
     	.container p {
 			margin-bottom: 10px;
-			font-size: 17px;
+			font-size: 16px;
 			line-height: 28px;
     	}
     	
@@ -50,60 +56,60 @@
     
     <p:Page ui:field="page">
 		<p:content>
-			<g:HTMLPanel ui:styleName="{style.container}">
+			<g:HTMLPanel ui:styleName="{style.container} {style.paddedMainPage}">
 						
-						<h1>Ranking your music has never been easier</h1>
+				<h1>Ranking your music has never been easier</h1>
+	
+				<g:FlowPanel>
+					<g:Image ui:styleName="{style.imageLeft}" ui:resource="{img.aboutScreen1}"></g:Image>
+					<g:HTMLPanel>
+						<h2>List-based music discovery</h2>
+						<p>Fave100 is a music discovery site that asks the simple question: if you could only recommend 5, 10, 50 or even 100 songs, what would they be? And, in what order?</p>
+						<p>Our Home Page displays the all-time Fave100 based on everyone’s lists so far. You can also create other lists based on genre (e.g. classicrock), 
+							year (e.g 2013), event (e.g. micksparty) or whatever else comes to mind.
+						</p>							
+					</g:HTMLPanel>
+				</g:FlowPanel>
+				
+				<g:FlowPanel>
+					<g:Image ui:styleName="{style.imageRight}" ui:resource="{img.aboutScreen2}"></g:Image>
+					<g:HTMLPanel>
+						<h2>Personalized, shareable lists</h2>
+						<p>Your personal Fave100 page is your own customized countdown, fully ranked and ready to share with the world. </p>
+						<p>And each pick asks for an optional Why-Line, a 90 character or less answer to the question: “Why is this one of your favourites?”</p>
+						<p>Follow friends, journalists, celebrities or anyone else whose musical taste piques your interest.</p>
+					</g:HTMLPanel>
+				</g:FlowPanel>
 			
-						<g:FlowPanel>
-							<g:Image ui:styleName="{style.imageLeft}" ui:resource="{img.aboutScreen1}"></g:Image>
-							<g:HTMLPanel>
-								<h2>List-based music discovery</h2>
-								<p>Fave100 is a music discovery site that asks the simple question: if you could only recommend 5, 10, 50 or even 100 songs, what would they be? And, in what order?</p>
-								<p>Our Home Page displays the all-time Fave100 based on everyone’s lists so far. You can also create other lists based on genre (e.g. classicrock), 
-									year (e.g 2013), event (e.g. micksparty) or whatever else comes to mind.
-								</p>							
-							</g:HTMLPanel>
-						</g:FlowPanel>
-						
-						<g:FlowPanel>
-							<g:Image ui:styleName="{style.imageRight}" ui:resource="{img.aboutScreen2}"></g:Image>
-							<g:HTMLPanel>
-								<h2>Personalized, shareable lists</h2>
-								<p>Your personal Fave100 page is your own customized countdown, fully ranked and ready to share with the world. </p>
-								<p>And each pick asks for an optional Why-Line, a 90 character or less answer to the question: “Why is this one of your favourites?”</p>
-								<p>Follow friends, journalists, celebrities or anyone else whose musical taste piques your interest.</p>
-							</g:HTMLPanel>
-						</g:FlowPanel>
-					
-						<g:FlowPanel>
-							<g:Image ui:styleName="{style.imageLeft}" ui:resource="{img.aboutScreen3}"></g:Image>
-							<g:HTMLPanel>
-								<h2>Over 9 million songs</h2>
-								<p>Building your list is a breeze, thanks to our robust database of over 9 million songs. You can search by artist or song title or both. </p>
-								<p>Also, you can add songs from other lists to your list with the click of a button.</p>
-							</g:HTMLPanel>
-						</g:FlowPanel>
-					
-						<g:FlowPanel>
-							<g:Image ui:styleName="{style.imageRight}" ui:resource="{img.aboutScreen4}"></g:Image>
-							<g:HTMLPanel>
-								<h2>Rank with ease</h2>
-								<p>Editing your list is easy and intuitive. Use arrows to move a pick up or down the list or simply click on a ranking number to quickly change its position.</p>
-								<p>To edit a Why-Line, simply click on it and enter your changes. Creating a ranked music list has never been easier.</p>
-							</g:HTMLPanel>
-						</g:FlowPanel>
-					
-						<g:FlowPanel>
-							<g:Image ui:styleName="{style.imageLeft}" ui:resource="{img.aboutScreen5}"></g:Image>
-							<g:HTMLPanel>
-								<h2>Sit back and enjoy</h2>
-								<p>Click on any song, sit back and enjoy the sights and sounds. What’s more, the entire list where that song appears will play continuously.</p>
-								<p>You can also see featured Why-Lines as well as others who have that song in their list. There is simply no end to the amount of music discovery you can enjoy at Fave100!</p>
-								<p>So, what are you waiting for? Get your list on today!</p>
-							</g:HTMLPanel>
-						</g:FlowPanel>
-					
-				</g:HTMLPanel>
+				<g:FlowPanel>
+					<g:Image ui:styleName="{style.imageLeft}" ui:resource="{img.aboutScreen3}"></g:Image>
+					<g:HTMLPanel>
+						<h2>Over 9 million songs</h2>
+						<p>Building your list is a breeze, thanks to our robust database of over 9 million songs. You can search by artist or song title or both. </p>
+						<p>Also, you can add songs from other lists to your list with the click of a button.</p>
+					</g:HTMLPanel>
+				</g:FlowPanel>
+			
+				<g:FlowPanel>
+					<g:Image ui:styleName="{style.imageRight}" ui:resource="{img.aboutScreen4}"></g:Image>
+					<g:HTMLPanel>
+						<h2>Rank with ease</h2>
+						<p>Editing your list is easy and intuitive. Use arrows to move a pick up or down the list or simply click on a ranking number to quickly change its position.</p>
+						<p>To edit a Why-Line, simply click on it and enter your changes. Creating a ranked music list has never been easier.</p>
+					</g:HTMLPanel>
+				</g:FlowPanel>
+			
+				<g:FlowPanel>
+					<g:Image ui:styleName="{style.imageLeft}" ui:resource="{img.aboutScreen5}"></g:Image>
+					<g:HTMLPanel>
+						<h2>Sit back and enjoy</h2>
+						<p>Click on any song, sit back and enjoy the sights and sounds. What’s more, the entire list where that song appears will play continuously.</p>
+						<p>You can also see featured Why-Lines as well as others who have that song in their list. There is simply no end to the amount of music discovery you can enjoy at Fave100!</p>
+						<p>So, what are you waiting for? Get your list on today!</p>
+					</g:HTMLPanel>
+				</g:FlowPanel>
+				
+			</g:HTMLPanel>
 		</p:content>
 	</p:Page>
     

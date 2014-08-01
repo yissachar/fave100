@@ -10,4 +10,6 @@ public interface FavelistUiHandlers extends UiHandlers {
 	void editWhyline(String songID, String whyline);
 
 	void changeSongPosition(String songID, int currentIndex, int newIndex);
+
+	void playSong(String songId);
 }
