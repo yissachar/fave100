@@ -18,8 +18,8 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
  * 
  */
 public class SongPresenter extends
-		PagePresenter<SongPresenter.MyView, SongPresenter.MyProxy> implements
-		SongUiHandlers {
+		PagePresenter<SongPresenter.MyView, SongPresenter.MyProxy>
+		implements SongUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<SongUiHandlers> {
 	}
