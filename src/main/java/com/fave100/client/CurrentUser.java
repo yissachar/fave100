@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fave100.client.RequestCache.RequestType;
+import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.events.favelist.AddSongListsSelectedEvent;
 import com.fave100.client.events.favelist.FaveItemAddedEvent;
 import com.fave100.client.events.user.CurrentUserChangedEvent;
@@ -14,7 +15,6 @@ import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.FaveItem;
 import com.fave100.client.generated.entities.FollowingResult;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
@@ -22,7 +22,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
@@ -31,8 +30,7 @@ public class CurrentUser extends AppUser {
 
 	private EventBus _eventBus;
 	private PlaceManager _placeManager;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private AppUser appUser;
 	private String avatar = "";
 	private Map<String, List<FaveItem>> faveLists = new HashMap<String, List<FaveItem>>();
@@ -43,12 +41,10 @@ public class CurrentUser extends AppUser {
 	private AfterLoginAction _afterLoginAction;
 
 	@Inject
-	public CurrentUser(final EventBus eventBus, final PlaceManager placeManager, final RequestCache requestCache,
-						final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+	public CurrentUser(final EventBus eventBus, final PlaceManager placeManager, final RequestCache requestCache, final FaveApi api) {
 		_eventBus = eventBus;
 		_placeManager = placeManager;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
+		_api = api;
 
 		CurrentUserChangedEvent.register(eventBus,
 				new CurrentUserChangedEvent.Handler() {
@@ -117,6 +113,11 @@ public class CurrentUser extends AppUser {
 		return appUser != null;
 	}
 
+	public boolean isViewingOwnList() {
+		return isLoggedIn() && _placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.lists)
+				&& _placeManager.getCurrentPlaceRequest().getParameter(PlaceParams.USER_PARAM, "").equals(getUsername());
+	}
+
 	public void setAppUser(final AppUser appUser) {
 		this.appUser = appUser;
 	}
@@ -126,7 +127,7 @@ public class CurrentUser extends AppUser {
 	}
 
 	public void logout() {
-		_dispatcher.execute(_restServiceFactory.auth().logout(), new AsyncCallback<Void>() {
+		_api.call(_api.service().auth().logout(), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -149,7 +150,8 @@ public class CurrentUser extends AppUser {
 	public void followUser(final AppUser user) {
 		// Not logged in, redirect to login
 		if (!isLoggedIn()) {
-			_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+			setAfterLoginAction(new FollowUserAfterLoginAction(this, user));
+			_eventBus.fireEvent(new LoginDialogRequestedEvent());
 			return;
 		}
 
@@ -158,7 +160,7 @@ public class CurrentUser extends AppUser {
 			getFollowing().add(user);
 
 		// Add to server
-		_dispatcher.execute(_restServiceFactory.user().followUser(user.getUsername()), new RestCallback<Void>() {
+		_api.call(_api.service().user().followUser(user.getUsername()), new RestCallback<Void>() {
 
 			@Override
 			public void setResponse(Response response) {
@@ -187,7 +189,7 @@ public class CurrentUser extends AppUser {
 		getFollowing().remove(user);
 
 		// Remove from server
-		_dispatcher.execute(_restServiceFactory.user().unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
+		_api.call(_api.service().user().unfollowUser(user.getUsername()), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -212,7 +214,7 @@ public class CurrentUser extends AppUser {
 
 	public void addSong(final String songId, final String hashtag, final String song, final String artist) {
 
-		_dispatcher.execute(_restServiceFactory.user().addFaveItemForCurrentUser(hashtag, songId), new RestCallback<Void>() {
+		_api.call(_api.service().user().addFaveItemForCurrentUser(hashtag, songId), new RestCallback<Void>() {
 
 			@Override
 			public void setResponse(Response response) {
@@ -251,7 +253,7 @@ public class CurrentUser extends AppUser {
 
 		final String listName = name;
 
-		_dispatcher.execute(_restServiceFactory.user().addFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
+		_api.call(_api.service().user().addFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

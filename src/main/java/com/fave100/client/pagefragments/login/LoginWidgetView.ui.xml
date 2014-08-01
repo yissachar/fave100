@@ -1,71 +1,105 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	xmlns:my='urn:import:com.fave100.client.widgets'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	ui:generateLocales='default'>
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	xmlns:my='urn:import:com.fave100.client.widgets'>
 
-	<ui:style>
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+		
+		.title {
+			color: HIGH_LEGIBILITY_BLUE;
+			padding: 5px 0;
+			font-size: 22px;
+		}
+		
 		.loginForm {
 			display: block;
 			margin: 0 auto;
 		}
 		
 		.loginForm > div {
-			float: left;
 			margin: 0 auto;
 		}
+						
+		.thirdPartyLinks, .thirdPartyLinks > * {
+			margin: 10px 0;
+			width: 100%;			
+		}
 		
-		.forgotPasswordLink {
-			display: block;
-			font-size: 0.8em;
-			padding: 5px;
-			margin-top: 5px;
+		.orDivider {
+			color: #999;
+			font-size: 20px;
+			text-align: center;
+			margin: 15px;
 		}
 		
 		.field {
 			width: 100%;
 			margin-bottom: 10px;
+			color: #999;
 		}
 		
-		.loginButton {
-			width: 100%;			
+		.field > *:first-child {
+			margin-bottom: 5px;
 		}
-						
-		.thirdPartyLinks, .thirdPartyLinks > * {
-			margin: 5px 0;
-			width: 100%;			
-		}		
+		
+		.field input {
+			width: 100%;
+			height: 33px;
+		}
+		
+		.loginStatusMessage {
+			margin-top: 5px;
+			font-size: 12px;
+		}
+		
+		.passwordAndLogin {
+			margin-top: 20px;
+			@mixin flexbox();
+			@mixin justify-content(space-between);
+			@mixin align-items(center);
+		}
+		
+		.forgotPasswordLink {
+			color: HIGH_LEGIBILITY_BLUE;
+			font-size: 12px;
+		}
 	</ui:style>
 
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens" />
-	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>
 	
-	<g:HTMLPanel ui:styleName="row">
-		<g:FormPanel ui:field="loginForm" ui:styleName="{style.loginForm} col span_5">
-			<g:HTMLPanel styleName="nativeLoginBox">
+	<g:HTMLPanel>
+		<g:Label ui:styleName="{style.title}">Log in</g:Label>
+			
+		<div class="thirdPartyLoginBox">
+			<div class="{style.thirdPartyLinks}">
+				<my:SocialButton ui:field="signInWithFacebookButton" text="Facebook" style="facebookSocialLogo" iconStyle="fa fa-lg fa-facebook"></my:SocialButton>
+				<my:SocialButton ui:field="signInWithTwitterButton" text="Twitter" style="twitterSocialLogo" iconStyle="fa fa-lg fa-twitter"></my:SocialButton>
+				<my:SocialButton ui:field="signInWithGoogleButton" text="Google" style="googleSocialLogo" iconStyle="fa fa-lg fa-google-plus"></my:SocialButton>				
+			</div>
+		</div>
+		
+		<div class="{style.orDivider}">- OR -</div>
+		
+		<g:FormPanel ui:field="loginForm" ui:styleName="{style.loginForm}">
+			<g:HTMLPanel>
 				<div class="{style.field}">
-					<g:Label>Username</g:Label>
+					<g:Label>Username or Email</g:Label>
 					<my:FaveTextBox ui:field="usernameInput"/>
 				</div>
 				<div class="{style.field}">
 					<g:Label>Password</g:Label>
 					<g:PasswordTextBox ui:field="passwordInput" />
-					<g:Label styleName="error" ui:field="loginStatusMessage" />
+					<g:Label styleName="error {style.loginStatusMessage}" ui:field="loginStatusMessage" />
 				</div>
-				<g:SubmitButton ui:field="loginButton" ui:styleName="{style.loginButton}">Sign In</g:SubmitButton>
-				<g:InlineHyperlink styleName="{style.forgotPasswordLink}"
-					targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
+				
+				<g:FlowPanel ui:styleName="{style.passwordAndLogin}">
+					<g:InlineHyperlink styleName="{style.forgotPasswordLink}"
+						targetHistoryToken="{nameTokens.getPasswordreset}">Forgot your password?</g:InlineHyperlink>
+					<g:SubmitButton ui:field="loginButton">Log in</g:SubmitButton>
+				</g:FlowPanel>
 			</g:HTMLPanel>
-		</g:FormPanel>		 
-		<div class="loginDivider col span_2" >or</div>
-		<div class="thirdPartyLoginBox col span_5">
-			<div class="{style.thirdPartyLinks}">
-				<my:SocialButton ui:field="signInWithGoogleButton" img="{img.gPlusIcon}" text="Sign in with Google" style="googleSocialLogo"></my:SocialButton>
-				<my:SocialButton ui:field="signInWithTwitterButton" img="{img.twitterLogo}" text="Sign in with Twitter" style="twitterSocialLogo"></my:SocialButton>
-				<my:SocialButton ui:field="signInWithFacebookButton" img="{img.fbLogo}" text="Sign in with Facebook" style="facebookSocialLogo"></my:SocialButton>				
-			</div>
-		</div>
+		</g:FormPanel>
+				 
 	</g:HTMLPanel>
 </ui:UiBinder>

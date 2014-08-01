@@ -12,7 +12,6 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -20,16 +19,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fave100.server.domain.ApiPaths;
+import com.fave100.server.domain.CursoredSearchResult;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.StringResultCollection;
 import com.fave100.server.domain.YouTubeSearchResult;
 import com.fave100.server.domain.YouTubeSearchResultCollection;
+import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.Hashtag;
+import com.google.appengine.api.datastore.Cursor;
+import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.googlecode.objectify.cmd.Query;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -88,21 +92,53 @@ public class SearchApi {
 
 	@GET
 	@Path(ApiPaths.SEARCH_FAVELISTS)
-	@ApiOperation(value = "Search for FaveLists", response = StringResultCollection.class)
-	public static StringResultCollection searchFaveLists(@ApiParam(value = "The search term", required = true) @PathParam("search_term") final String searchTerm) {
+	@ApiOperation(value = "Search for FaveLists", response = CursoredSearchResult.class)
+	public static CursoredSearchResult searchFaveLists(@ApiParam(value = "The search term", required = true) @QueryParam("search_term") final String searchTerm,
+			@QueryParam("cursor") final String cursor) {
 
 		final List<StringResult> names = new ArrayList<>();
 
 		if (searchTerm.isEmpty())
-			return new StringResultCollection(names);
+			new CursoredSearchResult(null, new StringResultCollection(names));
 
 		// TODO: Need to sort by popularity
-		final List<Hashtag> hashtags = ofy().load().type(Hashtag.class).filter("id >=", searchTerm.toLowerCase()).filter("id <", searchTerm.toLowerCase() + "\uFFFD").limit(5).list();
-		for (final Hashtag hashtag : hashtags) {
+		Query<Hashtag> query = ofy().load().type(Hashtag.class).filter("id >=", searchTerm.toLowerCase()).filter("id <", searchTerm.toLowerCase() + "\uFFFD").limit(5);
+		if (cursor != null) {
+			query = query.startAt(Cursor.fromWebSafeString(cursor));
+		}
+
+		final QueryResultIterator<Hashtag> iterator = query.iterator();
+		while (iterator.hasNext()) {
+			Hashtag hashtag = iterator.next();
 			names.add(new StringResult(hashtag.getName()));
 		}
 
-		return new StringResultCollection(names);
+		return new CursoredSearchResult(iterator.getCursor().toWebSafeString(), new StringResultCollection(names));
+	}
+
+	@GET
+	@Path(ApiPaths.SEARCH_USERS)
+	@ApiOperation(value = "Search for Users", response = CursoredSearchResult.class)
+	public static CursoredSearchResult searchUsers(@ApiParam(value = "The search term", required = true) @QueryParam("search_term") final String searchTerm,
+			@QueryParam("cursor") final String cursor) {
+
+		final List<StringResult> names = new ArrayList<>();
+
+		if (searchTerm.isEmpty())
+			new CursoredSearchResult(null, new StringResultCollection(names));
+
+		Query<AppUser> query = ofy().load().type(AppUser.class).filter("usernameID >=", searchTerm.toLowerCase()).filter("usernameID <", searchTerm.toLowerCase() + "\uFFFD").limit(5);
+		if (cursor != null) {
+			query = query.startAt(Cursor.fromWebSafeString(cursor));
+		}
+
+		final QueryResultIterator<AppUser> iterator = query.iterator();
+		while (iterator.hasNext()) {
+			AppUser user = iterator.next();
+			names.add(new StringResult(user.getUsername()));
+		}
+
+		return new CursoredSearchResult(iterator.getCursor().toWebSafeString(), new StringResultCollection(names));
 	}
 
 }

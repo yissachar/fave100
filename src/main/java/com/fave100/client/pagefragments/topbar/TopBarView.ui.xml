@@ -2,123 +2,120 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	xmlns:w='urn:import:com.fave100.client.widgets'
-	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	ui:generateLocales='default'>
+	xmlns:w='urn:import:com.fave100.client.widgets'>
 
-	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">		
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pagefragments.topbar.TopBarView.TopBarStyle">
+    		    		
+		.menuBar {
+			padding-left: 10px;
+			color: #fff;
+			cursor: pointer;
+		}
 		
-		.topNavSticky {
-			background-color: PRIMARY_COLOR;			
-			height: 50px;
-			margin-bottom: 25px;
+		.fullSearch .menuBar {
+			display: none;
+		}
+		
+		.topNavSticky {			
+			height: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
 			width: 1px;
 		}
 		
-		.topNav {
-			background-color: PRIMARY_COLOR;			
-			height: 50px;
-			border-bottom: 1px solid #555;			
+		.topNav {		
+			height: eval("com.fave100.shared.Constants.TOP_BAR_HEIGHT_PX");
+			background-color: TOP_NAV_COLOR;
 			position: fixed;
 			top: 0;
 			width: 100%;
 			z-index: 99998;
+			@mixin flexbox();
+			@mixin justify-content(space-between);
+			@mixin align-items(center);
 		}
 		
-		.topNav > ul{
-			list-style-type: none;	
-			float: right;		
-			height: 100%;
-			position: relative;
-		}
-		
-		.topNav li{
-			display: inline-block;			
-			height: 100%;
-			vertical-align: top;
+		.userContainer {
 			cursor: pointer;
-			float: right;
-		}	
-		
-		.topNav li:hover {
-			background-color: #FFFFFF; 
-		}				
-		
-		.topNav li > a, .topNav li > span {
-			color: #FFF;
-			display: inline-block;
-			text-decoration: none;
-			padding: 0 6px;
-			font-size: 1.2em;
-			line-height: 2.56em;
 		}
 		
-		.topNav li:hover > a, .topNav li:hover > span {
-			color: PRIMARY_COLOR;
-		}
-		
-		.topBarDropShadow {
-			box-shadow: 0px 1px 2px #444;
-		}
-		
-		.loadingIndicator {
-			position: absolute;
-			margin-left: 486px;
-			display: block;
-
-		}
-		
-		.subTopContainer{
-			display: block;
-			width: 960px;
-			margin: 0 auto;
+		.fullSearch .userContainer {
+			display: none;
 		}
 		
 		.notification {
 			position: absolute;
-			margin-left: 510px;
-			margin-top: 10px;
+			top: 65px;
+			width: 100%;
+			margin: 0 auto;
 			text-align: center;
-			color: #FFF;
+			z-index: 99997;
 		}
 		
+		.notificationText {
+			display: inline-block;			
+			padding: 6px;
+			border-radius: 3px;
+			border: 1px solid #aaa;
+			background-color: #FAEECA;
+		}
+				
 		.faveLogo {		
-			float: left;
-			border: none;
-			padding-left: 3px;
-		}		
+			font-size: 30px;
+			padding-left: 15px;
+			@mixin flex-grow(2);
+			@mixin unselectable();
+		}
 		
-		.faveLogo:hover {
+		.fullSearch .faveLogo {
+			display: none;
+		}
+		
+		.logoFaveText {
+			color: #fff;
+			cursor: pointer;
+			font-family: 'Merriweather';
+  			font-style: italic;
+		}
+		
+		.logo100Text {
+			color: #C1D646;
 			cursor: pointer;
 		}
-						
-		.userInfo {
-			float: left;
-			padding: 0 5px;
-			margin-top: 12px;
-	  	}
-	  	
-	  	.userInfo:hover {
-			background-color: #FFFFFF;
-		} 
-	  	
-	  	.userAvatar {
-			width: 40px;
-			margin-top: 5px;
+		
+		.logoFaveText:hover, .logo100Text:hover {
+			text-decoration: none;
+		}
+		
+		.unifiedSearchContainer {			
+			@mixin flex-grow(2);
+		}
+				
+		.unifiedSearch {	
+			position: relative;
+		}
+		
+		.searchToggle {
+			cursor: pointer;
+			color: #fff;
+		}
+		
+		.fullSearch .searchToggle {
+			display: none;
 		}
 		
 		.usernameLabel {
 			margin-left: 15px;
-			font-size: 1.2em;
+			font-size: 16px;
+			padding: 15px;
 			color: #fff;
 		}
 				
 		.dropDown {
 			display: none;
-			clear: both;
-			margin-top: 5px;
 			background-color: #fff;
+			position: absolute;
+			width: 100%;
+			box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.4);
+			text-transform: capitalize;
 		}
 		
 		.dropDownElement, .dropDown a {			
@@ -128,31 +125,34 @@
 		}
 		
 		.dropDownElement:hover, .dropDown a:hover {
-			background-color: PRIMARY_COLOR;
-			color: #fff;
+			background-color: FADED_LIGHT_BG;
+			color: LIST_HIGHLIGHT_COLOR;
 			text-decoration: none;			
 		}
 		
-		.loggedInContainer:hover .dropDown {
+		.loggedInContainer {			
+			position: relative;
+		}
+		
+		.loggedInContainer:hover .dropDown, .userContainer:hover .dropDown {
 			display: block;
 		}
 		
-		.loggedInContainer:hover {
-			border: 1px solid #bbb;
+		.loginButton {
+			display: inline-block;
+			text-align: center;
+			padding: 10px 20px;
+			color: #fff;
+			text-transform: capitalize;
 		}
 		
-		.loggedInContainer:hover .userInfo {						
-			border-bottom: 1px solid #bbb;
-		}
-		
-		.loggedInContainer:hover .usernameLabel {
-			color: PRIMARY_COLOR;
+		.loginButton:hover {
+			text-decoration: underline;
 		}
 				
 	</ui:style>
 
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens"/>
-	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
 	
 	<g:HTMLPanel>		
 		<!-- We will hide the topNavSticky element behind the real top nav in order to get a sticky header effect
@@ -161,27 +161,39 @@
 			 when the browser is at 0, 0.
 		 -->
 		<div class="{style.topNavSticky}"/>
-		<g:HTMLPanel ui:styleName="{style.topNav}" ui:field="topBar">
-			<div class="container">
-				<w:ImageHyperlink ui:field="logoLink" targetHistoryToken="{nameTokens.getLists}" styleName="{style.faveLogo}" resource="{img.logo}"/>		
-				<g:Image ui:field="loadingIndicator" ui:styleName="{style.loadingIndicator}" resource="{img.loadingIndicator}"/>			
-				<g:Label ui:field="notification" ui:styleName="{style.notification}"/>
-				<ul>						
-					<li>		
-						<g:FlowPanel ui:field="loggedInContainer" ui:styleName="{style.loggedInContainer}">				
-							<g:FlowPanel ui:field="userInfo" ui:styleName="{style.userInfo}">
-								<g:InlineLabel ui:field="usernameLabel" ui:styleName="{style.usernameLabel}"/>
-							</g:FlowPanel>
-							<g:FlowPanel ui:styleName="{style.dropDown}">
-								<g:Hyperlink ui:field="listLink">My List</g:Hyperlink>
-								<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}">Settings</g:Hyperlink>
-								<g:InlineLabel ui:styleName="{style.dropDownElement}" ui:field="logOutButton">Sign out</g:InlineLabel>
-							</g:FlowPanel>
-						</g:FlowPanel>
-						<g:InlineLabel ui:field="loginButton">Sign in</g:InlineLabel>						
-					</li>			
-				</ul>
-			</div>
-		</g:HTMLPanel>			
+	    			   
+		<g:SimplePanel ui:styleName="{style.notification}">
+			<g:Label ui:field="notification" ui:styleName="{style.notificationText}"/>
+		</g:SimplePanel>	
+		
+		<g:HTMLPanel ui:field="topBar" ui:styleName="{style.topNav}">
+		
+			<w:Icon ui:field="menuBar" ui:styleName="fa fa-bars fa-2x {style.menuBar} {style.unselectable}" />
+			
+			<g:FlowPanel ui:styleName="{style.faveLogo}">
+				<g:InlineHyperlink ui:field="logoFaveText" ui:styleName="{style.logoFaveText}">Fave</g:InlineHyperlink>
+				<g:InlineHyperlink ui:field="logo100Text" ui:styleName="{style.logo100Text}">100</g:InlineHyperlink>
+			</g:FlowPanel>	
+				
+			<g:SimplePanel ui:field="unifiedSearchContainer" ui:styleName="{style.unifiedSearchContainer}">
+				<g:HTMLPanel ui:field="unifiedSearch" ui:styleName="{style.unifiedSearch}"/>
+			</g:SimplePanel>			
+			
+			<w:Icon ui:field="searchToggle" ui:styleName="fa fa-search fa-lg {style.searchToggle} {style.unselectable}" />
+								
+			<g:FlowPanel ui:styleName="{style.userContainer}">		
+				<g:FlowPanel ui:field="loggedInContainer" ui:styleName="{style.loggedInContainer}">			
+					<g:InlineLabel ui:field="usernameLabel" ui:styleName="{style.usernameLabel}"/>
+					<g:FlowPanel ui:styleName="{style.dropDown}">
+						<g:Hyperlink ui:field="listLink">My list</g:Hyperlink>
+						<g:Hyperlink targetHistoryToken="{nameTokens.getProfile}">Settings</g:Hyperlink>
+						<g:InlineLabel ui:styleName="{style.dropDownElement}" ui:field="logOutButton">Sign out</g:InlineLabel>
+					</g:FlowPanel>
+				</g:FlowPanel>
+				<g:InlineLabel ui:field="loginButton" ui:styleName="{style.loginButton}">Log in</g:InlineLabel>	
+			</g:FlowPanel>
+			
+		</g:HTMLPanel>
+				
 	</g:HTMLPanel>
 </ui:UiBinder>

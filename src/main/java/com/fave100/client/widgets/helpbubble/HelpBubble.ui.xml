@@ -1,62 +1,76 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:w="urn:import:com.fave100.client.widgets">
 	
-	<ui:style>
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+		@def BORDER_COLOR #aaa;
+		@def ARROW_SIZE 9px;
+				
 		.container {
 			position: absolute;
 			width: inherit;
-		}
-		
-		.arrow {
-			display: block;
-			margin: 0 auto;
-			width: 10px;
-			margin-top: -21px;
-		}
-		
-		.helpContainer {
-			border: 1px solid #AAA;
+			font-size: 15px;			
+			border: 1px solid BORDER_COLOR;
 			border-radius: 4px;			
 			background-color: #FFF;
 			padding: 6px;
-			box-shadow: 0px 0px 3px #AAA;
+			box-shadow: 0 0 6px 1px BORDER_COLOR;
 			overflow: none;
+		}		
+		
+		.arrow {
+			top: 0px;
+			left: 50%;
+			position: absolute;
 		}
 		
-		.helpTitle {
-			float: left;
-			font-weight: bold;
+		.arrow:after, .arrow:before {
+			position: absolute;
+			bottom: 100%;
+			border: solid transparent;
+			content: " ";
+			height: 0;
+			width: 0;
+			pointer-events: none;
 		}
 		
+		.arrow:after {
+			border-color: transparent;
+			border-bottom-color: #fff;
+			border-width: ARROW_SIZE;
+			margin-left: sub(0px, ARROW_SIZE);
+		}
+		
+		.arrow:before {
+			border-color: transparent;
+			border-bottom-color: BORDER_COLOR;
+			border-width: add(ARROW_SIZE, 2px);
+			margin-left: sub(0px, add(ARROW_SIZE, 2px));
+		}
+				
 		.closeButton {
-			float: right;
-			padding: 2px;
-			font-size: 1.4em;
-			line-height: 0.7;
+			position: absolute;
+			right: 0;
+			top: 0;
+			padding: 6px;
+			cursor: pointer;
+			color: #777;
 		}
 		
 		.closeButton:hover {
-			cursor: pointer;
+			color: PRIMARY_COLOR;
 		}
 		
 		.helpText {		
-			margin-top: 3px;
-			clear: both;
+			padding: 5px 0;
 		}
 	</ui:style>
 	
-	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
-	
-	<g:HTMLPanel>
-		<g:FocusPanel ui:field="container" ui:styleName="{style.container}">
-			<g:FlowPanel ui:styleName="{style.helpContainer}">
-				<g:Image ui:field="arrow" ui:styleName="{style.arrow}" resource="{img.helpBubbleArrow}"/>						
-				<g:InlineLabel ui:field="helpTitle" ui:styleName="{style.helpTitle}"/>
-				<g:InlineLabel ui:field="closeButton" ui:styleName="{style.closeButton}">x</g:InlineLabel>
-				<g:Label ui:field="helpText" ui:styleName="{style.helpText}"/>
-			</g:FlowPanel>
-		</g:FocusPanel>
+	<g:HTMLPanel ui:styleName="{style.container}">
+		<g:HTMLPanel ui:field="arrow" ui:styleName="{style.arrow}" />			
+		<w:Icon ui:field="closeButton" ui:styleName="fa fa-times {style.closeButton}"/>
+		<g:Label ui:field="helpText" ui:styleName="{style.helpText}"/>
 	</g:HTMLPanel>
 	
 </ui:UiBinder> 

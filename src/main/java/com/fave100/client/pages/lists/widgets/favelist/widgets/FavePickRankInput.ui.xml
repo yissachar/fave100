@@ -4,15 +4,10 @@
 			 xmlns:w="urn:import:com.fave100.client.pages.lists.widgets.favelist.widgets">
 
 	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.favelist.widgets.FavePickRankInput.FavePickRankInputStyle">
-		.rankEditTextBox:hover {
-			border-radius: 0px;
+		.rankEditTextBox:hover, .rankEditTextBoxEditing {
 			cursor: pointer;
-		}
-						
-		.rankEditTextBoxEditing {
-			border-radius: 0px;
-			border: 3px PRIMARY_COLOR solid !important;
-		}
+			border: 0px !important;
+		}					
 	</ui:style>
 	
 	<g:TextBox ui:field="rankEditTextBox" ui:styleName="{style.rankEditTextBox}" />

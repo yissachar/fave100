@@ -6,7 +6,6 @@ import com.google.gwt.uibinder.client.UiChild;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Page extends Composite {
@@ -17,7 +16,6 @@ public class Page extends Composite {
 	}
 
 	@UiField HTMLPanel content;
-	@UiField HTMLPanel topBar;
 
 	public Page() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -28,10 +26,4 @@ public class Page extends Composite {
 		this.content.clear();
 		this.content.add(content);
 	}
-
-	public void setTopBar(IsWidget content) {
-		topBar.clear();
-		topBar.add(content);
-	}
-
 }

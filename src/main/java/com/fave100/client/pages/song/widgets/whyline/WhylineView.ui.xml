@@ -2,39 +2,43 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
              
 	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
-    	.tab {
-			float: left;
-    	}
-    	
-    	.tabTitle {
-			font-weight: bold;
-			margin-bottom: 5px;
-		}
-    	
-    	.whylines {
-			width: 60%;
-    	}
-    	
-    	.userLists {
-			margin-left: 4%;
-			width: 36%;
+		.userListsContainer, .whylines {
+			background-color: rgba(0, 0, 0, 0.05);
+			border: rgba(0, 0, 0, 0.05);
+			padding: 10px;
+			margin: 10px;
+			border-radius: 2px;
 		}
 		
+    	.tabTitle {
+			margin-bottom: 10px;
+			text-transform: uppercase;
+		}
+    			
 		.userListsPanel > div {
 			display: inline;
+		}
+		
+		.whylinePanel > * {
+			border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+			padding: 14px 10px;
+		}
+		
+		.whylinePanel > *:last-child {
+			border-bottom: 0px;
 		}
     </ui:style>
     
     <g:FlowPanel>
-    
-    	<g:FlowPanel ui:styleName="{style.whylines} {style.tab}">
-    		<g:Label ui:styleName="{style.tabTitle}">Why-Lines</g:Label>
-    		<g:FlowPanel ui:field="whylinePanel"></g:FlowPanel>
-    	</g:FlowPanel>
-    
-    	<g:FlowPanel ui:styleName="{style.userLists} {style.tab}">
+        
+    	<g:FlowPanel ui:field="userListsContainer" ui:styleName="{style.userListsContainer}">
     		<g:Label ui:styleName="{style.tabTitle}">In these lists</g:Label>    	
-    		<g:FlowPanel ui:styleName="{style.userListsPanel}" ui:field="userListsPanel"></g:FlowPanel>	
+    		<g:FlowPanel ui:styleName="{style.userListsPanel}" ui:field="userListsPanel" />	
+    	</g:FlowPanel>
+    	
+    	<g:FlowPanel ui:field="whylineContainer" ui:styleName="{style.whylines}">
+    		<g:Label ui:styleName="{style.tabTitle}">Why-Lines</g:Label>
+    		<g:FlowPanel ui:field="whylinePanel" ui:styleName="{style.whylinePanel}"/>
     	</g:FlowPanel>
     		
     </g:FlowPanel>

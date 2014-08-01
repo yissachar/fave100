@@ -1,5 +1,8 @@
 package com.fave100.client.events.song;
 
+import java.util.List;
+
+import com.fave100.client.pagefragments.playlist.PlaylistItem;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -22,10 +25,20 @@ public class PlaylistSongChangedEvent extends Event<PlaylistSongChangedEvent.Han
 		return eventBus.addHandler(TYPE, handler);
 	}
 
-	private final String songID;
+	private final String _songId;
+	private final String _song;
+	private final String _artist;
+	private final String _list;
+	private final String _username;
+	private final List<PlaylistItem> _playlist;
 
-	public PlaylistSongChangedEvent(final String songID) {
-		this.songID = songID;
+	public PlaylistSongChangedEvent(final String songID, String song, String artist, String list, String username, List<PlaylistItem> playlist) {
+		this._songId = songID;
+		_song = song;
+		_artist = artist;
+		_list = list;
+		_username = username;
+		_playlist = playlist;
 	}
 
 	@Override
@@ -33,8 +46,28 @@ public class PlaylistSongChangedEvent extends Event<PlaylistSongChangedEvent.Han
 		return TYPE;
 	}
 
-	public String songID() {
-		return songID;
+	public String getSongId() {
+		return _songId;
+	}
+
+	public String getSong() {
+		return _song;
+	}
+
+	public String getArtist() {
+		return _artist;
+	}
+
+	public String getList() {
+		return _list;
+	}
+
+	public String getUsername() {
+		return _username;
+	}
+
+	public List<PlaylistItem> getPlaylist() {
+		return _playlist;
 	}
 
 	@Override

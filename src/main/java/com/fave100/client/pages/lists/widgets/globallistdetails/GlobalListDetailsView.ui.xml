@@ -1,59 +1,62 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	ui:generateLocales='default'>
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView.Style">
-		.mobile .container {
+	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsView.Style">		
+		.container {
+			background-color: #fff;
 			padding: 10px;
 		}
 		
-		.hashtagLabel {
-			float: right;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			display: inline-block;
-		}		
-		
-		.contributeCTA {
-			float: right;
-			cursor: pointer;
-			margin-bottom: 10px;
-			clear: both;
+		.smallDisplay .container {
+			padding: 10px;
 		}
 		
 		.trendingHeader {
-			margin: 15px 0;
-			font-size: 1.1em;
+			color: PROMINENT_TEXT_COLOR;
+			margin-bottom: 5px;
+			text-transform: uppercase;
 		}
 		
 		.trendingList {
 			line-height: 20px;
-			margin-bottom: 30px;
 		}
 				
 		.trendingList a {
+			padding: 2px 10px;
 			display: block;
-			clear: both;
+			width: 100%;
+			color: LIST_HIGHLIGHT_COLOR;
 		}
 		
-		.mobile .trendingList a {
-			display: inline-block;
-			margin-right: 5px;
+		.viewAllLink {
+			margin-top: 15px;
+			margin-bottom: 20px;
+		}		
+	
+		.tagline {
+			position: absolute;
+			bottom: 20px;
+			text-align: center;
+		}
+				
+		.tagline > * {	
+			cursor: pointer;
 		}
 	</ui:style>
 	
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens"/>
 	
 	<g:FlowPanel ui:field="container" ui:styleName="{style.container}">
-		<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
-		<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
-		<g:HTMLPanel ui:field="listAutocomplete"/>
-		<g:Label ui:styleName="{style.trendingHeader}">Featured Lists</g:Label>
-		<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />
-		<g:Hyperlink targetHistoryToken="{nameTokens.getAlllists}">View all lists</g:Hyperlink>
+		<g:FlowPanel>
+			<g:Label ui:styleName="{style.trendingHeader}">Featured Lists</g:Label>
+			<g:FlowPanel ui:field="trendingLists" ui:styleName="{style.trendingList}" />
+			<g:Hyperlink targetHistoryToken="{nameTokens.getAlllists}" ui:styleName="{style.viewAllLink}">View all lists</g:Hyperlink>
+		</g:FlowPanel>
+		
+		<g:FlowPanel ui:field="tagline" ui:styleName="{style.tagline}">
+			<g:InlineHyperlink targetHistoryToken="{nameTokens.getTour}">Take a Tour</g:InlineHyperlink>
+		</g:FlowPanel>
 	</g:FlowPanel>
 </ui:UiBinder>

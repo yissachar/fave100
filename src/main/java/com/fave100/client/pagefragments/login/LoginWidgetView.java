@@ -95,18 +95,4 @@ public class LoginWidgetView extends ViewWithUiHandlers<LoginUiHandlers>
 	public void setUsernameFocus() {
 		usernameInput.setFocus(true);
 	}
-
-	@Override
-	public void setShortNames(boolean yes) {
-		if (yes) {
-			signInWithGoogleButton.setText("Google");
-			signInWithTwitterButton.setText("Twitter");
-			signInWithFacebookButton.setText("Facebook");
-		}
-		else {
-			signInWithGoogleButton.setText("Sign in with Google");
-			signInWithTwitterButton.setText("Sign in with Twitter");
-			signInWithFacebookButton.setText("Sign in with Facebook");
-		}
-	}
 }

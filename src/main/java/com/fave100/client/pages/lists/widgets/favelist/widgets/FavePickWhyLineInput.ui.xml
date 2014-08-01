@@ -15,6 +15,8 @@
 		.whyLineTextBox {
 			margin: -3px;
 			width: 100%;
+			padding: 3px !important;
+			height: 24px !important;
 		}
 	</ui:style>
 	

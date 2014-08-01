@@ -23,7 +23,6 @@ import com.google.apphosting.utils.remoteapi.RemoteApiServlet;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFilter;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.ResourceFilters;
 
 public class DispatchServletModule extends ServletModule {
@@ -31,6 +30,7 @@ public class DispatchServletModule extends ServletModule {
 	@Override
 	public void configureServlets() {
 		bind(JacksonJsonProvider.class).in(Singleton.class);
+		bind(Fave100Container.class).in(Singleton.class);
 
 		bind(UsersApi.class);
 		bind(AuthApi.class);
@@ -42,16 +42,16 @@ public class DispatchServletModule extends ServletModule {
 
 		Map<String, String> params = new HashMap<>();
 		params.put(ResourceFilters.class.getName(), CacheFilterFactory.class.getName());
-		serve(Constants.API_PATH + "/*").with(GuiceContainer.class, params);
+		serve(Constants.API_PATH + "/*").with(Fave100Container.class, params);
 
 		bind(ListRedirectServlet.class).in(Singleton.class);
-		serveRegex("^/[^/]+$").with(ListRedirectServlet.class);
+		serveRegex("^/l/[^/]+$").with(ListRedirectServlet.class);
 
 		bind(UserRedirectServlet.class).in(Singleton.class);
 		serveRegex("^/u/[^/]+$").with(UserRedirectServlet.class);
 
 		bind(RemoteApiServlet.class).in(Singleton.class);
-		serve("/remote_api/").with(RemoteApiServlet.class);
+		serve("/remote_api").with(RemoteApiServlet.class);
 
 		bind(PasswordCleanupServlet.class).in(Singleton.class);
 		serve("/cron/pwdcleanup").with(PasswordCleanupServlet.class);

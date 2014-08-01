@@ -1,10 +1,10 @@
 package com.fave100.client.pages.passwordreset;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.FaveApi;
 import com.fave100.client.generated.entities.BooleanResult;
 import com.fave100.client.generated.entities.EmailPasswordResetDetails;
 import com.fave100.client.generated.entities.PasswordChangeDetails;
-import com.fave100.client.generated.services.RestServiceFactory;
 import com.fave100.client.pages.PagePresenter;
 import com.fave100.shared.Validator;
 import com.fave100.shared.place.NameTokens;
@@ -12,7 +12,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.client.RestDispatchAsync;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -21,7 +20,6 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 /**
@@ -52,8 +50,7 @@ public class PasswordResetPresenter
 
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
-	private RestDispatchAsync _dispatcher;
-	private RestServiceFactory _restServiceFactory;
+	private FaveApi _api;
 	private String token;
 
 	@ProxyCodeSplit
@@ -63,18 +60,13 @@ public class PasswordResetPresenter
 
 	@Inject
 	public PasswordResetPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager,
-									final CurrentUser currentUser, final RestDispatchAsync dispatcher, final RestServiceFactory restServiceFactory) {
+									final CurrentUser currentUser, final FaveApi api) {
 		super(eventBus, view, proxy);
 		_placeManager = placeManager;
 		_currentUser = currentUser;
-		_dispatcher = dispatcher;
-		_restServiceFactory = restServiceFactory;
-		getView().setUiHandlers(this);
-	}
+		_api = api;
 
-	@Override
-	protected void revealInParent() {
-		RevealRootContentEvent.fire(this, this);
+		getView().setUiHandlers(this);
 	}
 
 	@Override
@@ -113,7 +105,7 @@ public class PasswordResetPresenter
 		emailPasswordResetDetails.setUsername(username);
 		emailPasswordResetDetails.setEmailAddress(emailAddress);
 
-		_dispatcher.execute(_restServiceFactory.user().emailPasswordResetToken(emailPasswordResetDetails), new AsyncCallback<BooleanResult>() {
+		_api.call(_api.service().user().emailPasswordResetToken(emailPasswordResetDetails), new AsyncCallback<BooleanResult>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -159,7 +151,7 @@ public class PasswordResetPresenter
 		passwordChangeDetails.setNewPassword(newPassword);
 		passwordChangeDetails.setTokenOrPassword(passwordOrToken);
 
-		_dispatcher.execute(_restServiceFactory.user().changePassword(passwordChangeDetails), new RestCallback<BooleanResult>() {
+		_api.call(_api.service().user().changePassword(passwordChangeDetails), new RestCallback<BooleanResult>() {
 
 			@Override
 			public void setResponse(Response response) {
@@ -183,8 +175,8 @@ public class PasswordResetPresenter
 					getView().showPwdError(errorMsg, false);
 				}
 				else {
-					_placeManager
-							.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+					_currentUser.logout();
+					_placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.profile).build());
 				}
 			}
 		});

@@ -3,37 +3,42 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:style src="../../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+		@def BACKGROUND_COLOR #fff;
+		@def HOVER_BORDER 1px solid #ddd;
+		
 		.container {
 			position: relative;
 			display: inline;
 		}
 		
-		.details{
-		    background-color: #f8f8f8;
-		    border: 1px solid #aaa;
+		.avatar {
+			border-radius: 50%;
+		}
+		
+		.details {
+		    background-color: BACKGROUND_COLOR;
+		    border: HOVER_BORDER;
 		    border-radius: 3px;
-		    height: 50px;
 		    width: 160px;
-		    box-shadow: 0 0 4px #999;
+		    box-shadow: 0 0 4px #bbb;
 		    margin: 0 auto;
 		    position: absolute;
-		    text-align: center;
-		    top: -62px;
+		    top: -50%;
 		    left: -65px;
 		    display: none;
-		    padding: 0 20px;
+		    padding: 10px;
 			z-index: 10000;		
 		}
 		
-		.details:after{
+		.details:after {
 		    content: '';
 		    position: absolute;
 		    bottom: -6px;
 		    width: 10px;
 		    height: 10px;
-		    border-bottom: 1px solid #aaa;
-		    border-right: 1px solid #aaa;
-		    background-color: #f8f8f8;
+		    border-bottom: HOVER_BORDER;
+		    border-right: HOVER_BORDER;
+		    background-color: BACKGROUND_COLOR;
 		    left: 50%;
 		    margin-left: -5px;
 		    -moz-transform: rotate(45deg);
@@ -41,17 +46,17 @@
 		    transform: rotate(45deg);
 		}
 		
-		.container:hover .details{
+		.container:hover .details {
 		    display: block;
 		}
 	</ui:style>
 	
 	<g:HTMLPanel >
 		<g:HTMLPanel ui:styleName="{style.container}">
-			<g:Image ui:field="avatarImage"/>		
+			<g:Image ui:field="avatarImage" ui:styleName="{style.avatar}"/>		
 			<g:FlowPanel ui:field="details" ui:styleName="{style.details}">		
 				<g:Label ui:field="userNameLabel"/>
-				<g:Hyperlink ui:field="listNameLink"/>
+				<g:FlowPanel ui:field="listContainer"/>
 			</g:FlowPanel>
 		</g:HTMLPanel>
 	</g:HTMLPanel>
