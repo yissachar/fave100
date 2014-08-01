@@ -77,9 +77,9 @@ public class FollowingTest {
 		AppUser userToFollow = AuthApi.createAppUser(TestHelper.newReq(), registration);
 		PowerMockito.stub(PowerMockito.method(UserApi.class, TestHelper.GET_LOGGED_IN_USER_METHOD_NAME)).toReturn(loggedInUser);
 
-		UserApi.followUser(req, userToFollow.getUsername());
+		UserApi.followUser(UserApi.getLoggedInUser(req), userToFollow.getUsername());
 
-		FollowingResult followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		FollowingResult followingResult = UsersApi.getFollowing(UserApi.getLoggedInUser(req), loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 		assertTrue(followingResult.getFollowing().contains(userToFollow));
@@ -95,10 +95,10 @@ public class FollowingTest {
 		AppUser userToFollow1 = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("bob", "passpass31", "followuser@example.com"));
 		AppUser userToFollow2 = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("derek", "xcvb1sdf1", "anotheruser@example.com"));
 
-		UserApi.followUser(req, userToFollow1.getUsername());
-		UserApi.followUser(req, userToFollow2.getUsername());
+		UserApi.followUser(UserApi.getLoggedInUser(req), userToFollow1.getUsername());
+		UserApi.followUser(UserApi.getLoggedInUser(req), userToFollow2.getUsername());
 
-		FollowingResult followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		FollowingResult followingResult = UsersApi.getFollowing(UserApi.getLoggedInUser(req), loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 2);
 		assertTrue(followingResult.getFollowing().contains(userToFollow1));
@@ -113,8 +113,8 @@ public class FollowingTest {
 		PowerMockito.stub(PowerMockito.method(UserApi.class, TestHelper.GET_LOGGED_IN_USER_METHOD_NAME)).toReturn(loggedInUser);
 
 		AppUser userToFollow = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("MIKE", "bcv13zxcg", "foobar@example.com"));
-		UserApi.followUser(req, userToFollow.getUsername());
-		FollowingResult followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		UserApi.followUser(UserApi.getLoggedInUser(req), userToFollow.getUsername());
+		FollowingResult followingResult = UsersApi.getFollowing(UserApi.getLoggedInUser(req), loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 		assertTrue(followingResult.getFollowing().contains(userToFollow));
@@ -129,14 +129,14 @@ public class FollowingTest {
 
 		// Follow
 		AppUser userToFollow = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("liam", "bv1xcvaw46", "booj@example.com"));
-		UserApi.followUser(req, userToFollow.getUsername());
-		FollowingResult followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		UserApi.followUser(UserApi.getLoggedInUser(req), userToFollow.getUsername());
+		FollowingResult followingResult = UsersApi.getFollowing(UserApi.getLoggedInUser(req), loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 
 		// Unfollow
-		UserApi.unfollowUser(req, userToFollow.getUsername());
-		followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		UserApi.unfollowUser(UserApi.getLoggedInUser(req), userToFollow.getUsername());
+		followingResult = UsersApi.getFollowing(UserApi.getLoggedInUser(req), loggedInUser.getUsername(), 0);
 		assertTrue(followingResult.getFollowing().size() == 0);
 	}
 
@@ -149,14 +149,14 @@ public class FollowingTest {
 
 		// Follow
 		AppUser userToFollow = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("KRING", "awetzx14sva", "kiasd@example.com"));
-		UserApi.followUser(req, userToFollow.getUsername());
-		FollowingResult followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		UserApi.followUser(UserApi.getLoggedInUser(req), userToFollow.getUsername());
+		FollowingResult followingResult = UsersApi.getFollowing(UserApi.getLoggedInUser(req), loggedInUser.getUsername(), 0);
 
 		assertTrue(followingResult.getFollowing().size() == 1);
 
 		// Unfollow
-		UserApi.unfollowUser(req, userToFollow.getUsername());
-		followingResult = UsersApi.getFollowing(req, loggedInUser.getUsername(), 0);
+		UserApi.unfollowUser(UserApi.getLoggedInUser(req), userToFollow.getUsername());
+		followingResult = UsersApi.getFollowing(UserApi.getLoggedInUser(req), loggedInUser.getUsername(), 0);
 		assertTrue(followingResult.getFollowing().size() == 0);
 	}
 }
