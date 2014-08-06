@@ -5,6 +5,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import com.fave100.shared.Constants;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.wordnik.swagger.annotations.Api;
@@ -62,7 +64,9 @@ public class SongApi {
 			in.close();
 
 			final JsonParser parser = new JsonParser();
-			final JsonElement jsonElement = parser.parse(content);
+			JsonReader reader = new JsonReader(new StringReader(content));
+			reader.setLenient(true);
+			final JsonElement jsonElement = parser.parse(reader);
 			try {
 				final JsonObject jsonSong = jsonElement.getAsJsonObject();
 				final FaveItem song = new FaveItem(jsonSong.get("song").getAsString(), jsonSong.get("artist").getAsString(), id);
