@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fave100.client.FaveApi;
-import com.fave100.client.entities.ItunesSearchResult;
-import com.fave100.client.entities.ItunesSearchResultMapper;
-import com.fave100.client.entities.ItunesSearchResultWrapper;
 import com.fave100.client.entities.SearchResult;
 import com.fave100.client.entities.SearchResultMapper;
 import com.fave100.client.entities.SongDto;
@@ -14,7 +11,6 @@ import com.fave100.client.generated.entities.CursoredSearchResult;
 import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.pagefragments.popups.addsong.AddSongPresenter;
 import com.fave100.shared.Constants;
-import com.github.nmorel.gwtjackson.client.JsonDeserializationContext;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.URL;
@@ -30,7 +26,7 @@ import com.gwtplatform.mvp.client.View;
 public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> implements SearchUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<SearchUiHandlers> {
-		void setSongSuggestions(List<SongDto> songs, List<ItunesSearchResult> itunesSearchResults, boolean loadMore);
+		void setSongSuggestions(List<SongDto> songs, boolean loadMore);
 
 		void setStringSuggestions(List<String> suggestions, boolean loadMore);
 
@@ -43,8 +39,6 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 		void focus();
 
 		void setDarkText(boolean darkText);
-
-		void updateAlbumArt(List<ItunesSearchResult> itunesSearchResults);
 
 		void setFullPageSearch(boolean fullPage);
 	}
@@ -61,7 +55,6 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 	private SearchType _searchType = SearchType.SONGS;
 	private final List<AsyncCallback<?>> _currentRequests = new ArrayList<>();
 	private List<?> _currentSuggestions;
-	private List<ItunesSearchResult> _itunesSearchResults = new ArrayList<>();
 	private FaveApi _api;
 	@Inject AddSongPresenter _addSongPresenter;
 
@@ -138,30 +131,6 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 		_currentRequests.add(autocompleteReq);
 		final JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
 		jsonp.requestObject(url, autocompleteReq);
-
-		// Load iTune covers only once
-		if (!loadMore) {
-			final String itunesUrl = "https://itunes.apple.com/search?media=music&entity=song&term=" + URL.encodeQueryString(searchTerm) + "&limit=" + ITUNES_SEARCH_LIMIT;
-			final AsyncCallback<JavaScriptObject> itunesSearchReq = new AsyncCallback<JavaScriptObject>() {
-				@Override
-				public void onFailure(final Throwable caught) {
-					// Failure just means there will be no album art
-					_itunesSearchResults = null;
-				}
-
-				@Override
-				public void onSuccess(final JavaScriptObject jsObject) {
-					final JSONObject obj = new JSONObject(jsObject);
-					ItunesSearchResultMapper mapper = GWT.create(ItunesSearchResultMapper.class);
-					ItunesSearchResultWrapper searchResult = mapper.read(obj.toString(), new JsonDeserializationContext.Builder().failOnUnknownProperties(false).build());
-					_itunesSearchResults = searchResult.getResults();
-					getView().updateAlbumArt(_itunesSearchResults);
-				}
-			};
-
-			final JsonpRequestBuilder itunesJsonp = new JsonpRequestBuilder();
-			itunesJsonp.requestObject(itunesUrl, itunesSearchReq);
-		}
 	}
 
 	private void getStringSearchResults(final String searchTerm, final boolean loadMore) {
@@ -232,7 +201,7 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 			else {
 				_currentSuggestions = searchResult.getResults();
 			}
-			getView().setSongSuggestions((List<SongDto>)results, _itunesSearchResults, loadMore);
+			getView().setSongSuggestions((List<SongDto>)results, loadMore);
 		}
 		else if (result instanceof CursoredSearchResult) {
 
