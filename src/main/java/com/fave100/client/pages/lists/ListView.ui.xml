@@ -17,6 +17,7 @@
 			margin-left: 0;
 			overflow-y: auto;
 			box-sizing: border-box;
+			z-index: 2;
 			@mixin transition(left RESIZE_TRANSITION_TIME);
 		}
 		
