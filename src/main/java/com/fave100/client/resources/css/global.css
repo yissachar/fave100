@@ -85,6 +85,8 @@
 @external playlistVisible;
 @external fa;
 @external disabled;
+@external paddedMainPage;
+@external unselectable;
 
 ::selection {
   	background: PRIMARY_COLOR;
