@@ -42,7 +42,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPresenter.MyProxy> implements ListUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<ListUiHandlers> {
-		void setPageDetails(AppUser requestedUser, CurrentUser currentUser, String hashtag);
+		void setPageDetails(AppUser requestedUser, CurrentUser currentUser);
 
 		String getFixedSearchStyle();
 
@@ -255,7 +255,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	}
 
 	private void showPage() {
-		getView().setPageDetails(requestedUser, _currentUser, _requestedHashtag);
+		getView().setPageDetails(requestedUser, _currentUser);
 
 		_ownPage = _currentUser.isLoggedIn() && _currentUser.equals(requestedUser);
 		if (_ownPage) {

@@ -146,13 +146,7 @@ public class ListManagerPresenter extends
 		final boolean ownList = _currentUser != null && _currentUser.equals(_user);
 		getView().setOwnList(ownList);
 		getView().refreshList(hashtags, _hashtag, ownList);
-		// Hide the whole list if only default list in there and other user page
-		if (hashtags.size() <= 0 && !ownList) {
-			getView().hide();
-		}
-		else {
-			getView().show();
-		}
+		getView().show();
 	}
 
 	@Override

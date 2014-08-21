@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -34,6 +35,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField FocusPanel currentListContainer;
 	@UiField Label currentList;
 	@UiField FlowPanel listDropdown;
+	@UiField Image dropdownToggle;
 	@UiField HTMLPanel autocomplete;
 	@UiField Button addHashtagButton;
 	@UiField FlowPanel addListContainer;
@@ -78,6 +80,9 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 	@UiHandler("currentListContainer")
 	void onCurrentListClick(final ClickEvent event) {
+		if(!dropdownToggle.isVisible())
+			return;
+		
 		hideError();
 		if (listDropdown.isVisible()) {
 			hideDropdown();
@@ -151,7 +156,8 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 			i++;
 		}
-
+		
+		dropdownToggle.setVisible(lists.size() > 1);
 		currentList.setText(selected);
 	}
 

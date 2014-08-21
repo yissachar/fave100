@@ -59,7 +59,6 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiField Button followButton;
 	@UiField HTMLPanel userPageFaveList;
 	@UiField Panel listHeader;
-	@UiField Label hashtagLabel;
 	@UiField Anchor contributeCTA;
 	@UiField Anchor addSongLink;
 	@UiField HTMLPanel addSongSearch;
@@ -168,8 +167,7 @@ public class ListView extends PageView<ListUiHandlers>
 	}-*/;
 
 	@Override
-	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser, String hashtag) {
-		hashtagLabel.setText(hashtag);
+	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser) {
 
 		if (requestedUser == null) {
 			userProfile.setVisible(false);

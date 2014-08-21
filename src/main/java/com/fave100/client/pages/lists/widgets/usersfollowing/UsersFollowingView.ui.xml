@@ -12,6 +12,7 @@
 		@def LIST_ITEM_SIZE 35px;
 		
 		.container {
+			margin-top: 15px;
 			padding: 10px;
 			background-color: rgba(0, 0, 0, 0.04);
 		}

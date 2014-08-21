@@ -59,13 +59,6 @@
 			border-bottom: 1px solid #aaa;
 		}
 		
-		.hashtagLabel {
-			color: PROMINENT_TEXT_COLOR;
-			font-size: 32px;
-			text-overflow: ellipsis;
-			overflow: hidden;
-		}		
-		
 		.contributeCTA {
 			cursor: pointer;
 			margin-bottom: 20px;
@@ -145,7 +138,6 @@
 						</g:FlowPanel>
 						
 						<g:FlowPanel ui:styleName="{style.userDetails}">
-							<g:HTMLPanel ui:field="listManager"/>
 							<g:HTMLPanel ui:field="followingContainer"/>
 						</g:FlowPanel>
 						
@@ -154,7 +146,7 @@
 					<g:HTMLPanel ui:field="userPageFaveList" ui:styleName="{style.userPageFaveList}">
 						
 						<g:FlowPanel ui:field="listHeader" ui:styleName="{style.listHeader}">
-							<g:Label ui:field="hashtagLabel" ui:styleName="{style.hashtagLabel}"/>
+							<g:HTMLPanel ui:field="listManager"/>
 							<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 							<g:Anchor ui:field="addSongLink" ui:styleName="{style.contributeCTA}">Add Song</g:Anchor>
 							<g:HTMLPanel ui:field="addSongSearch"/>
