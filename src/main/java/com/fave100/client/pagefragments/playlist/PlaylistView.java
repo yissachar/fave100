@@ -47,6 +47,7 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	@UiField Panel playlistControls;
 	@UiField Label songName;
 	@UiField Label artistName;
+	@UiField Icon hideIcon;
 	@UiField Button thumbToggle;
 	@UiField Button addSongButton;
 	@UiField Hyperlink listName;
@@ -86,8 +87,12 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 
 	@UiHandler("hideButton")
 	void onHideButtonClick(final ClickEvent event) {
-		getUiHandlers().stopSong();
-		RootPanel.get().removeStyleName(AppClientBundle.INSTANCE.getGlobalCss().playlistVisible());
+		hidePlaylist();
+	}
+	
+	@UiHandler("hideIcon")
+	void onHideIconClick(final ClickEvent event) {
+		hidePlaylist();
 	}
 
 	@UiHandler("previousButton")
@@ -130,6 +135,7 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	public void playSong(String listName, String username, String song, String artist, String videoId, boolean globalList, List<PlaylistItem> playlistItems) {
 		playlist.setVisible(true);
 		playlistControls.setVisible(listName != null && !listName.isEmpty());
+		hideIcon.setVisible(!playlistControls.isVisible());
 
 		_playlistItems = playlistItems;
 
@@ -213,5 +219,10 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 			// At this point our item may be too high up and out of view, so scroll it back into view
 			_playingItem.getElement().scrollIntoView();
 		}
+	}
+	
+	private	void hidePlaylist() {
+		getUiHandlers().stopSong();
+		RootPanel.get().removeStyleName(AppClientBundle.INSTANCE.getGlobalCss().playlistVisible());
 	}
 }

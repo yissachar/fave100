@@ -68,6 +68,14 @@
 			display: inline-block;
 		}
 		
+		.hideIcon {
+			cursor: pointer;
+			font-size: 20px;
+			color: hsl(2, 70%, 60%);
+			float: right;
+			padding: 2px;
+		}
+		
 		.playlistItems {
 			overflow-y: auto;
 		}
@@ -205,6 +213,7 @@
 		    		<g:FlowPanel ui:styleName="{style.songDetails}">
 			    		<g:InlineLabel ui:field="songName" ui:styleName="{style.songName}" />
 			    		<g:InlineLabel ui:field="artistName" ui:styleName="{style.artistName}"/>
+	    				<w:Icon ui:field="hideIcon" ui:styleName="fa fa-times {style.hideIcon}"/>
 		    		</g:FlowPanel>
 		    				
 			    	<g:HTMLPanel ui:field="youtubePlayer"/>	
