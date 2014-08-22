@@ -80,7 +80,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 
 			@Override
 			public void onResize(ResizeEvent event) {
-				if (Utils.isSmallDisplay()) {
+				if (Utils.isSmallDisplay() && !placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.song)) {
 					youtubePresenter.stopVideo();
 				}
 			}
