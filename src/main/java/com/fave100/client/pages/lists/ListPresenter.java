@@ -269,19 +269,18 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		favelist.setHashtag(_requestedHashtag);
 		favelist.refreshFavelist();
 
+		listManager.setUser(requestedUser);
+		listManager.setHashtag(_requestedHashtag);
+		listManager.refreshUsersLists();
+
 		if (requestedUser != null) {
 			usersFollowing.getView().show();
 			usersFollowing.setUser(requestedUser);
 			usersFollowing.refreshLists();
-			listManager.getView().show();
-			listManager.setUser(requestedUser);
-			listManager.setHashtag(_requestedHashtag);
-			listManager.refreshUsersLists();
 			globalListDetails.getView().hide();
 		}
 		else {
 			usersFollowing.getView().hide();
-			listManager.getView().hide();
 			if (_requestedHashtag != null) {
 				globalListDetails.getView().show();
 			}
