@@ -113,7 +113,7 @@
 		.faveListContainer {
 			-webkit-overflow-scrolling: touch;
 			overflow-y: auto;
-		}		
+		}
 	</ui:style>
 	
 	<ui:with type="com.fave100.client.resources.img.ImageResources" field="img"/>
@@ -149,7 +149,6 @@
 							<g:HTMLPanel ui:field="listManager"/>
 							<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 							<g:Anchor ui:field="addSongLink" ui:styleName="{style.contributeCTA}">Add Song</g:Anchor>
-							<g:HTMLPanel ui:field="addSongSearch"/>
 						</g:FlowPanel>
 						
 						<g:HTMLPanel ui:field="faveListContainer" styleName="{style.faveListContainer}">

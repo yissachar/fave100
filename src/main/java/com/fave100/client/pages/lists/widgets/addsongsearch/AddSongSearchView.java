@@ -18,7 +18,6 @@ public class AddSongSearchView extends PopupViewWithUiHandlers<AddSongSearchUiHa
 	@Inject
 	AddSongSearchView(Binder uiBinder, EventBus eventBus) {
 		super(eventBus);
-
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
@@ -32,4 +31,10 @@ public class AddSongSearchView extends PopupViewWithUiHandlers<AddSongSearchUiHa
 			search.add(content);
 		}
 	}
+
+	@Override
+	public void reposition() {
+		center();
+	}
+
 }

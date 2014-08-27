@@ -51,7 +51,8 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 	private int _maxSelection = 0;
 	private String _lastSearchTerm = "";
 	private String _cursor;
-	private SuggestionSelectedAction _action;
+	private SuggestionSelectedAction _selectedAction;
+	private SearchCompletedAction _completedAction;
 	private SearchType _searchType = SearchType.SONGS;
 	private final List<AsyncCallback<?>> _currentRequests = new ArrayList<>();
 	private List<?> _currentSuggestions;
@@ -223,6 +224,10 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 		}
 
 		_maxSelection = _currentSuggestions.size() - 1;
+
+		if (_completedAction != null) {
+			_completedAction.execute();
+		}
 	}
 
 	/**
@@ -240,7 +245,11 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 	}
 
 	public void setSuggestionSelectedAction(SuggestionSelectedAction action) {
-		_action = action;
+		_selectedAction = action;
+	}
+
+	public void setSearchCompletedAction(SearchCompletedAction action) {
+		_completedAction = action;
 	}
 
 	public void setDarkText(boolean darkText) {
@@ -323,8 +332,8 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 			return;
 		}
 
-		if (_action != null) {
-			_action.execute(_searchType, _currentSuggestions.get(getSelection()));
+		if (_selectedAction != null) {
+			_selectedAction.execute(_searchType, _currentSuggestions.get(getSelection()));
 		}
 	}
 

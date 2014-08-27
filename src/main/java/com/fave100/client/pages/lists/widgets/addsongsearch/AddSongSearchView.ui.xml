@@ -1,14 +1,22 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
-			 xmlns:w='urn:import:com.fave100.client.widgets.lightbox'>
-			 
-    <ui:style>
+             xmlns:w="urn:import:com.fave100.client.widgets.lightbox">
+		
+	<ui:style src="../../../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">    	
+    	.search {
+			background-color: #fff;
+			border: 1px solid #bbb;
+			border-radius: 5px;
+			width: 600px;
+			max-width: 100%;
+		}
     </ui:style>
     
     <w:LightBox>
-		<w:content width="50%" height="100%">
-			<g:HTMLPanel ui:field="search" />
-		</w:content>
-	</w:LightBox>	
+    	<w:content width="auto" height="auto">
+			<g:HTMLPanel ui:field="search" ui:styleName="{style.search}"/>
+    	</w:content>
+	</w:LightBox>
+		
 </ui:UiBinder>

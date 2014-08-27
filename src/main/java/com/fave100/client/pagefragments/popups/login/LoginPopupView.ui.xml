@@ -39,15 +39,15 @@
 	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens" />
 	<ui:with field="img" type="com.fave100.client.resources.img.ImageResources" />
 			
-	<lb:LightBox>
-		<lb:content width="400px" height="100%">	
-			<g:HTMLPanel>
+	<lb:LightBox ui:field="lightBox">
+		<lb:content width="400px" height="100%">
+			<g:HTMLPanel ui:field="content">
 				
 				<w:Icon ui:field="closeButton" ui:styleName="fa fa-lg fa-times {style.closeButton}" />
 				
-				<g:FlowPanel ui:styleName="{style.mainContent}">				
+				<g:FlowPanel ui:styleName="{style.mainContent}">
 					<g:HTMLPanel ui:field="loginContainer"/>
-					<g:HTMLPanel ui:field="registerContainer"/>			
+					<g:HTMLPanel ui:field="registerContainer"/>
 				</g:FlowPanel>
 		
 				<g:SimplePanel ui:styleName="{style.registerLinkContainer}">

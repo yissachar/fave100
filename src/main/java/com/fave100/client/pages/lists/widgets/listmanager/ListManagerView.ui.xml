@@ -15,12 +15,17 @@
 			-khtml-user-select: none;
 			-moz-user-select: -moz-none;
 			-ms-user-select: none;
-			user-select: none;			
+			user-select: none;	
 		}
 		
 		.currentListContainer {
+			display: inline;
 			cursor: pointer;
 			outline: 0;
+	 	}
+	 	
+	 	.currentListContainer > div {
+			display: inline;
 	 	}
 	 	
 	 	.currentListContainer img {

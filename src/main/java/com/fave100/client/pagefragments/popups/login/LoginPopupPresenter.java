@@ -1,6 +1,7 @@
 package com.fave100.client.pagefragments.popups.login;
 
 import com.fave100.client.CurrentUser;
+import com.fave100.client.Utils;
 import com.fave100.client.pagefragments.login.LoginWidgetPresenter;
 import com.fave100.client.pagefragments.register.RegisterWidgetPresenter;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -47,12 +48,16 @@ public class LoginPopupPresenter extends PresenterWidget<LoginPopupPresenter.MyV
 
 	public void showLogin() {
 		getView().showLogin();
-		loginContainer.focus();
+		if (!Utils.isTouchDevice()) {
+			loginContainer.focus();
+		}
 	}
 
 	public void showRegister() {
 		getView().showRegister();
-		registerContainer.focus();
+		if (!Utils.isTouchDevice()) {
+			registerContainer.focus();
+		}
 	}
 
 }

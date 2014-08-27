@@ -222,7 +222,7 @@
 		<dependency>
 	        <groupId>com.github.jdramaix</groupId>
 	        <artifactId>gssresource</artifactId>
-	        <version>1.0-SNAPSHOT</version>
+	        <version>1.0-20140825.095751-42</version>
 	        <scope>provided</scope>
 	    </dependency>
 

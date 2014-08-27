@@ -332,10 +332,9 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	}
 
 	@Override
-	public void showSongSearch() {
+	public void showAddSongPrompt() {
 		addToPopupSlot(search);
 	}
-
 }
 
 interface ListUiHandlers extends UiHandlers {
@@ -347,5 +346,5 @@ interface ListUiHandlers extends UiHandlers {
 
 	void contributeToList();
 
-	void showSongSearch();
+	void showAddSongPrompt();
 }

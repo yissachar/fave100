@@ -1,10 +1,14 @@
 package com.fave100.client.pagefragments.popups.login;
 
 import com.fave100.client.widgets.Icon;
+import com.fave100.client.widgets.lightbox.LightBox;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -20,6 +24,8 @@ public class LoginPopupView extends PopupViewImpl implements LoginPopupPresenter
 	public interface Binder extends UiBinder<Widget, LoginPopupView> {
 	}
 
+	@UiField LightBox lightBox;
+	@UiField HTMLPanel content;
 	@UiField HTMLPanel loginContainer;
 	@UiField HTMLPanel registerContainer;
 	@UiField Icon closeButton;
@@ -81,6 +87,7 @@ public class LoginPopupView extends PopupViewImpl implements LoginPopupPresenter
 		registerContainer.setVisible(true);
 		viewToggleLink.setText("Already have an account? Log in");
 		loginView = false;
+		resize();
 	}
 
 	@Override
@@ -89,5 +96,17 @@ public class LoginPopupView extends PopupViewImpl implements LoginPopupPresenter
 		registerContainer.setVisible(false);
 		viewToggleLink.setText("Don't have an account? Register");
 		loginView = true;
+		resize();
+	}
+
+	private void resize() {
+		// If the window is too small, make the inner content scrollable
+		int bufferHeight = 30;
+		content.getElement().getStyle().setProperty("height", "auto");
+		if (content.getOffsetHeight() > Window.getClientHeight() - bufferHeight) {
+			content.getElement().getStyle().setHeight(Window.getClientHeight() - bufferHeight, Unit.PX);
+			content.getElement().getStyle().setOverflowY(Overflow.AUTO);
+		}
+		lightBox.center();
 	}
 }

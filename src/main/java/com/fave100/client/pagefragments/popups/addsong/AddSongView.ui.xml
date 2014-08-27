@@ -64,7 +64,7 @@
     </ui:style>
     
     <w:LightBox>		
-    	<w:content width="38%" height="100%">
+    	<w:content width="450px" height="100%">
 			<g:FlowPanel>
 				<g:SimplePanel ui:styleName="{style.header}">
 					<g:Label ui:field="headerLabel"></g:Label>

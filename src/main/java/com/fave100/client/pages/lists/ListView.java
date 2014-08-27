@@ -61,7 +61,6 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiField Panel listHeader;
 	@UiField Anchor contributeCTA;
 	@UiField Anchor addSongLink;
-	@UiField HTMLPanel addSongSearch;
 	@UiField HTMLPanel followingContainer;
 	@UiField FlowPanel userProfile;
 	@UiField Hyperlink profileLink;
@@ -157,7 +156,7 @@ public class ListView extends PageView<ListUiHandlers>
 
 	@UiHandler("addSongLink")
 	void onAddSongClick(ClickEvent event) {
-		getUiHandlers().showSongSearch();
+		getUiHandlers().showAddSongPrompt();
 	}
 
 	public native void nativeRenderShare() /*-{
@@ -171,7 +170,6 @@ public class ListView extends PageView<ListUiHandlers>
 
 		if (requestedUser == null) {
 			userProfile.setVisible(false);
-
 		}
 		else {
 			userProfile.setVisible(true);
