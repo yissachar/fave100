@@ -89,7 +89,7 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	void onHideButtonClick(final ClickEvent event) {
 		hidePlaylist();
 	}
-	
+
 	@UiHandler("hideIcon")
 	void onHideIconClick(final ClickEvent event) {
 		hidePlaylist();
@@ -135,7 +135,7 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	public void playSong(String listName, String username, String song, String artist, String videoId, boolean globalList, List<PlaylistItem> playlistItems) {
 		playlist.setVisible(true);
 		playlistControls.setVisible(listName != null && !listName.isEmpty());
-		hideIcon.setVisible(!playlistControls.isVisible());
+		hideIcon.setVisible(!playlistControls.isVisible() && !Utils.isSmallDisplay());
 
 		_playlistItems = playlistItems;
 
@@ -220,8 +220,8 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 			_playingItem.getElement().scrollIntoView();
 		}
 	}
-	
-	private	void hidePlaylist() {
+
+	private void hidePlaylist() {
 		getUiHandlers().stopSong();
 		RootPanel.get().removeStyleName(AppClientBundle.INSTANCE.getGlobalCss().playlistVisible());
 	}
