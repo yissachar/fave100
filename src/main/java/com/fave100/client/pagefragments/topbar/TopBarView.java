@@ -156,7 +156,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		menuBar.setVisible((Utils.isMediumDisplay() || Utils.isSmallDisplay()) && currentPlace.equals(NameTokens.lists));
 		searchToggle.setVisible(Utils.isSmallDisplay());
 		unifiedSearchContainer.setVisible(!Utils.isSmallDisplay());
-		setFullSearch(topBar.getStyleName().contains(style.fullSearch()) && !Utils.isSmallDisplay());
+		setFullSearch(topBar.getStyleName().contains(style.fullSearch()));
 	}
 
 	@Override
