@@ -58,15 +58,13 @@ public class UsersFollowingView extends ViewWithUiHandlers<UsersFollowingUiHandl
 	public void setFollowing(final List<FlowPanel> flowPanels) {
 		listContainer.clear();
 		if (flowPanels == null || flowPanels.size() == 0) {
-			followingTitle.setVisible(false);
-			moreFollowingButton.setVisible(false);
+			widget.setVisible(false);
 		}
 		else {
-			followingTitle.setVisible(true);
-			moreFollowingButton.setVisible(true);
 			for (final FlowPanel flowPanel : flowPanels) {
 				listContainer.add(flowPanel);
 			}
+			widget.setVisible(true);
 		}
 	}
 
