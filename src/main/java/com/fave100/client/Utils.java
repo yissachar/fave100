@@ -11,7 +11,14 @@ import com.google.gwt.user.client.ui.Widget;
 public class Utils {
 
 	public static native boolean isTouchDevice() /*-{
-		return !!('ontouchstart' in $wnd) || !!('onmsgesturechange' in $wnd);
+		var msTouchEnabled = window.navigator.msMaxTouchPoints;
+		var generalTouchEnabled = "ontouchstart" in document
+				.createElement("div");
+
+		if (msTouchEnabled || generalTouchEnabled) {
+			return true;
+		}
+		return false;
 	}-*/;
 
 	public static boolean isSmallDisplay() {
