@@ -23,6 +23,7 @@ import com.fave100.shared.Constants;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -100,6 +101,14 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	@Override
 	protected void onBind() {
 		super.onBind();
+
+		search.setSuggestionSelectedCommand(new Command() {
+
+			@Override
+			public void execute() {
+				hideAddSongPrompt();
+			}
+		});
 
 		SongSelectedEvent.register(_eventBus, new SongSelectedEvent.Handler() {
 			@Override
@@ -335,6 +344,11 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	public void showAddSongPrompt() {
 		addToPopupSlot(search);
 	}
+
+	@Override
+	public void hideAddSongPrompt() {
+		removeFromPopupSlot(search);
+	}
 }
 
 interface ListUiHandlers extends UiHandlers {
@@ -347,4 +361,6 @@ interface ListUiHandlers extends UiHandlers {
 	void contributeToList();
 
 	void showAddSongPrompt();
+
+	void hideAddSongPrompt();
 }

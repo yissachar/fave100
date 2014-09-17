@@ -13,10 +13,12 @@ public class AddSongSuggestionSelectedAction implements SuggestionSelectedAction
 
 	private PlaceManager _placeManager;
 	private CurrentUser _currentUser;
+	private AddSongSearchPresenter _presenter;
 
-	public AddSongSuggestionSelectedAction(PlaceManager placeManager, CurrentUser currentUser) {
+	public AddSongSuggestionSelectedAction(PlaceManager placeManager, CurrentUser currentUser, AddSongSearchPresenter presenter) {
 		_placeManager = placeManager;
 		_currentUser = currentUser;
+		_presenter = presenter;
 	}
 
 	@Override
@@ -26,6 +28,8 @@ public class AddSongSuggestionSelectedAction implements SuggestionSelectedAction
 		PlaceRequest currentPlace = _placeManager.getCurrentPlaceRequest();
 		String listName = currentPlace.getParameter(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG);
 		_currentUser.addSong(song.getId(), listName, song.getSong(), song.getArtist());
+
+		_presenter.onSuggestionSelected();
 	}
 
 }

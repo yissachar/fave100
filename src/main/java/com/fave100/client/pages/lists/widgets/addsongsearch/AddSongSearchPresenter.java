@@ -4,6 +4,7 @@ import com.fave100.client.CurrentUser;
 import com.fave100.client.widgets.search.SearchPresenter;
 import com.fave100.client.widgets.search.SearchType;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -22,6 +23,7 @@ public class AddSongSearchPresenter extends PresenterWidget<AddSongSearchPresent
 	@ContentSlot public static final Type<RevealContentHandler<?>> SEARCH_SLOT = new Type<RevealContentHandler<?>>();
 
 	private SearchPresenter _search;
+	private Command _suggestionSelectedCommand;
 
 	@Inject
 	AddSongSearchPresenter(final EventBus eventBus, final MyView view, SearchPresenter searchPresenter, PlaceManager placeManager,
@@ -29,7 +31,7 @@ public class AddSongSearchPresenter extends PresenterWidget<AddSongSearchPresent
 		super(eventBus, view);
 		_search = searchPresenter;
 		_search.setSingleSearch(SearchType.SONGS);
-		_search.setSuggestionSelectedAction(new AddSongSuggestionSelectedAction(placeManager, currentUser));
+		_search.setSuggestionSelectedAction(new AddSongSuggestionSelectedAction(placeManager, currentUser, this));
 		_search.setSearchCompletedAction(new AddSongSearchCompletedAction(getView()));
 		_search.setDarkText(true);
 		_search.setFullPageSearch(true);
@@ -42,6 +44,14 @@ public class AddSongSearchPresenter extends PresenterWidget<AddSongSearchPresent
 		super.onReveal();
 		setInSlot(SEARCH_SLOT, _search);
 		_search.focus();
+	}
+
+	public void onSuggestionSelected() {
+		_suggestionSelectedCommand.execute();
+	}
+
+	public void setSuggestionSelectedCommand(Command command) {
+		_suggestionSelectedCommand = command;
 	}
 
 }
