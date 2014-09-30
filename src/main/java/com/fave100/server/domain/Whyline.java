@@ -26,15 +26,17 @@ public class Whyline {
 	private String whyline;
 	private String username;
 	@Index(WhylineCheck.class) private Ref<Song> song;
+	private String list;
 	@Ignore String avatar;
 
 	public Whyline() {
 	}
 
-	public Whyline(final String whyline, final String songID, final String username) {
+	public Whyline(final String whyline, final String songID, final String username, final String list) {
 		this.whyline = whyline;
 		this.song = Ref.create(Key.create(Song.class, songID));
 		this.username = username;
+		this.list = list;
 	}
 
 	/* Getters and Setters */
@@ -81,6 +83,14 @@ public class Whyline {
 
 	public void setAvatar(final String avatar) {
 		this.avatar = avatar;
+	}
+
+	public String getList() {
+		return list;
+	}
+
+	public void setList(String list) {
+		this.list = list;
 	}
 
 }

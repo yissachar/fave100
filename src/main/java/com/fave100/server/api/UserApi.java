@@ -40,6 +40,7 @@ import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.WhylineEdit;
 import com.fave100.server.domain.appuser.AppUser;
+import com.fave100.server.domain.appuser.AppUserCollection;
 import com.fave100.server.domain.appuser.AppUserDao;
 import com.fave100.server.domain.appuser.EmailID;
 import com.fave100.server.domain.appuser.Following;
@@ -476,7 +477,7 @@ public class UserApi {
 		final Ref<Whyline> currentWhyline = faveItemToEdit.getWhylineRef();
 		if (currentWhyline == null) {
 			// Create a new Whyline entity
-			final Whyline whylineEntity = new Whyline(whyline, faveItemToEdit.getSongID(), currentUser.getUsername());
+			final Whyline whylineEntity = new Whyline(whyline, faveItemToEdit.getSongID(), currentUser.getUsername(), listName);
 			ofy().save().entity(whylineEntity).now();
 			faveItemToEdit.setWhylineRef(Ref.create(whylineEntity));
 		}
@@ -545,6 +546,76 @@ public class UserApi {
 		ofy().save().entity(following).now();
 
 		return;
+	}
+
+	@GET
+	@Path(ApiPaths.ADMINS)
+	@ApiOperation(value = "Get all admins", response = AppUserCollection.class)
+	public static AppUserCollection getAdmins(@LoggedInUser AppUser currentUser) {
+		if (!currentUser.isAdmin())
+			throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
+
+		return new AppUserCollection(ofy().load().type(AppUser.class).filter("admin", true).list());
+
+	}
+
+	@POST
+	@Path(ApiPaths.ALTER_ADMIN)
+	@ApiOperation(value = "Add a new admin")
+	public static void createAdmin(@LoggedInUser AppUser currentUser, @PathParam("user") String username) {
+		if (!currentUser.isAdmin())
+			throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
+
+		AppUser user = UsersApi.getAppUser(username);
+		user.setAdmin(true);
+		ofy().save().entity(user).now();
+	}
+
+	@DELETE
+	@Path(ApiPaths.ALTER_ADMIN)
+	@ApiOperation(value = "Remove an admin")
+	public static void removeAdmin(@LoggedInUser AppUser currentUser, @PathParam("user") String username) {
+		if (!currentUser.isAdmin())
+			throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
+
+		AppUser user = UsersApi.getAppUser(username);
+		user.setAdmin(false);
+		ofy().save().entity(user).now();
+	}
+
+	@GET
+	@Path(ApiPaths.CRITICS)
+	@ApiOperation(value = "Get all critics", response = AppUserCollection.class)
+	public static AppUserCollection getCritics(@LoggedInUser AppUser currentUser) {
+		if (!currentUser.isAdmin())
+			throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
+
+		return new AppUserCollection(ofy().load().type(AppUser.class).filter("critic", true).list());
+
+	}
+
+	@POST
+	@Path(ApiPaths.ALTER_CRITIC)
+	@ApiOperation(value = "Add a new critic")
+	public static void createCritic(@LoggedInUser AppUser currentUser, @PathParam("user") String username) {
+		if (!currentUser.isAdmin())
+			throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
+
+		AppUser user = UsersApi.getAppUser(username);
+		user.setCritic(true);
+		ofy().save().entity(user).now();
+	}
+
+	@DELETE
+	@Path(ApiPaths.ALTER_CRITIC)
+	@ApiOperation(value = "Remove a critic")
+	public static void removeCritic(@LoggedInUser AppUser currentUser, @PathParam("user") String username) {
+		if (!currentUser.isAdmin())
+			throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
+
+		AppUser user = UsersApi.getAppUser(username);
+		user.setCritic(false);
+		ofy().save().entity(user).now();
 	}
 
 }

@@ -10,6 +10,7 @@ import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.widgets.alert.AlertCallback;
 import com.fave100.client.widgets.alert.AlertPresenter;
 import com.fave100.shared.Constants;
+import com.fave100.shared.ListMode;
 import com.fave100.shared.Validator;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
@@ -47,6 +48,8 @@ public class ListManagerPresenter extends
 
 		void hide();
 
+		void showUserCriticToggle(boolean show);
+
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
@@ -57,7 +60,7 @@ public class ListManagerPresenter extends
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
 	private FaveApi _api;
-	private boolean _globalList = false;
+	private boolean _globalList;
 	@Inject AddListAutocompletePresenter autocomplete;
 	@Inject AlertPresenter alertPresenter;
 
@@ -198,11 +201,6 @@ public class ListManagerPresenter extends
 	}
 
 	@Override
-	public void setGlobalList(final boolean global) {
-		_globalList = global;
-	}
-
-	@Override
 	public boolean isGlobalList() {
 		return _globalList;
 	}
@@ -217,22 +215,50 @@ public class ListManagerPresenter extends
 		autocomplete.getView().clearSearch();
 	}
 
-	/* Getters and Setters */
-
 	public AppUser getUser() {
 		return _user;
 	}
 
 	public void setUser(final AppUser user) {
-		this._user = user;
+		_user = user;
+		_globalList = user == null;
 	}
 
 	public String getHashtag() {
 		return _hashtag;
 	}
 
-	public void setHashtag(final String _hashtag) {
-		this._hashtag = _hashtag;
+	public void setHashtag(final String hashtag) {
+		_hashtag = hashtag;
+
+		if (isGlobalList()) {
+			_api.call(_api.service().favelists().checkMasterFaveListExistence(_hashtag, ListMode.CRITICS), new RestCallback<Void>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					// Handled in setResponse
+				}
+
+				@Override
+				public void onSuccess(Void result) {
+					// Handled in setResponse
+				}
+
+				@Override
+				public void setResponse(Response response) {
+					if (response.getStatusCode() >= 400) {
+						getView().showUserCriticToggle(false);
+					}
+					else {
+						getView().showUserCriticToggle(true);
+					}
+
+				}
+			});
+		}
+		else {
+			getView().showUserCriticToggle(false);
+		}
 	}
 }
 
@@ -241,8 +267,6 @@ interface ListManagerUiHandlers extends UiHandlers {
 	void addHashtag(String name);
 
 	void listChanged(String list);
-
-	void setGlobalList(boolean global);
 
 	boolean isGlobalList();
 

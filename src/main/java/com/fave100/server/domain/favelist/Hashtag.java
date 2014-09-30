@@ -27,6 +27,7 @@ public class Hashtag {
 	private List<FaveItem> list = new ArrayList<FaveItem>();
 	@Index private double zscore = 0;
 	List<Integer> slidingListCount = new ArrayList<>();
+	@Index private boolean criticList;
 
 	@SuppressWarnings("unused")
 	private Hashtag() {
@@ -35,7 +36,7 @@ public class Hashtag {
 	public Hashtag(final String name, final String createdBy) {
 		this.id = name.toLowerCase();
 		this.name = name;
-		this.setCreatedBy(Ref.create(Key.create(AppUser.class, createdBy)));
+		this.setCreatedBy(Ref.create(Key.create(AppUser.class, createdBy.toLowerCase())));
 		setDateCreated(new Date());
 	}
 
@@ -102,6 +103,14 @@ public class Hashtag {
 
 	public void setSlidingListCount(List<Integer> slidingListCount) {
 		this.slidingListCount = slidingListCount;
+	}
+
+	public boolean isCriticList() {
+		return criticList;
+	}
+
+	public void setCriticList(boolean criticList) {
+		this.criticList = criticList;
 	}
 
 }

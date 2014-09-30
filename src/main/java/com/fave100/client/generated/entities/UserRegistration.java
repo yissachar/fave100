@@ -13,16 +13,16 @@ import java.util.List;
 
 public class UserRegistration {
 
-    private String username;
-    private String email;
     private String password;
+    private String email;
+    private String username;
 
-    public String getUsername() {
-        return this.username;
+    public String getPassword() {
+        return this.password;
     }
 
-    public void setUsername(String username){
-        this.username = username;
+    public void setPassword(String password){
+        this.password = password;
     }
 
     public String getEmail() {
@@ -33,12 +33,12 @@ public class UserRegistration {
         this.email = email;
     }
 
-    public String getPassword() {
-        return this.password;
+    public String getUsername() {
+        return this.username;
     }
 
-    public void setPassword(String password){
-        this.password = password;
+    public void setUsername(String username){
+        this.username = username;
     }
 
 }

@@ -41,6 +41,8 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 		void setDarkText(boolean darkText);
 
 		void setFullPageSearch(boolean fullPage);
+
+		void setPlaceHolder(String placeHolder);
 	}
 
 	public final static int SELECTIONS_PER_PAGE = 5;
@@ -237,7 +239,9 @@ public class SearchPresenter extends PresenterWidget<SearchPresenter.MyView> imp
 	 */
 	public void setSingleSearch(SearchType searchType) {
 		setSearchType(searchType);
+
 		getView().setSingleSearch(true);
+		getView().setPlaceHolder("Search " + searchType.toString().toLowerCase());
 	}
 
 	public void setMultiSearch() {

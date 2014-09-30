@@ -13,9 +13,27 @@ import java.util.List;
 
 public class AppUser {
 
-    private String avatarImage;
-    private String username;
+    private boolean critic;
     private List<String> hashtags;
+    private String avatarImage;
+    private boolean admin;
+    private String username;
+
+    public boolean isCritic() {
+        return this.critic;
+    }
+
+    public void setCritic(boolean critic){
+        this.critic = critic;
+    }
+
+    public List<String> getHashtags() {
+        return this.hashtags;
+    }
+
+    public void setHashtags(List<String> hashtags){
+        this.hashtags = hashtags;
+    }
 
     public String getAvatarImage() {
         return this.avatarImage;
@@ -25,20 +43,20 @@ public class AppUser {
         this.avatarImage = avatarImage;
     }
 
+    public boolean isAdmin() {
+        return this.admin;
+    }
+
+    public void setAdmin(boolean admin){
+        this.admin = admin;
+    }
+
     public String getUsername() {
         return this.username;
     }
 
     public void setUsername(String username){
         this.username = username;
-    }
-
-    public List<String> getHashtags() {
-        return this.hashtags;
-    }
-
-    public void setHashtags(List<String> hashtags){
-        this.hashtags = hashtags;
     }
 
 }

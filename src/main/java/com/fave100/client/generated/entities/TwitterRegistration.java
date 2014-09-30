@@ -13,16 +13,8 @@ import java.util.List;
 
 public class TwitterRegistration {
 
-    private String username;
     private String oauthVerifier;
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username){
-        this.username = username;
-    }
+    private String username;
 
     public String getOauthVerifier() {
         return this.oauthVerifier;
@@ -30,6 +22,14 @@ public class TwitterRegistration {
 
     public void setOauthVerifier(String oauthVerifier){
         this.oauthVerifier = oauthVerifier;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
     }
 
 }

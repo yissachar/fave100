@@ -13,27 +13,11 @@ import java.util.List;
 
 public class FaveItem {
 
-    private String id;
-    private String songID;
     private String song;
     private String artist;
     private String whyline;
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id){
-        this.id = id;
-    }
-
-    public String getSongID() {
-        return this.songID;
-    }
-
-    public void setSongID(String songID){
-        this.songID = songID;
-    }
+    private String id;
+    private String songID;
 
     public String getSong() {
         return this.song;
@@ -57,6 +41,22 @@ public class FaveItem {
 
     public void setWhyline(String whyline){
         this.whyline = whyline;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id){
+        this.id = id;
+    }
+
+    public String getSongID() {
+        return this.songID;
+    }
+
+    public void setSongID(String songID){
+        this.songID = songID;
     }
 
 }

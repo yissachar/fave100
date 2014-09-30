@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,13 +45,23 @@ public class HashtagBuilderServlet extends HttpServlet
 
 		final String hashtag = req.getParameter(HASHTAG_PARAM);
 
-		final HashMap<FaveRankerWrapper, Double> all = new HashMap<FaveRankerWrapper, Double>();
+		final HashMap<FaveRankerWrapper, Double> all = new HashMap<>();
+		final HashMap<FaveRankerWrapper, Double> critics = new HashMap<>();
 
-		// Build the list
-		final int listCount = addAllLists(null, hashtag, all);
+		// Build the lists
+		final int listCount = addAllLists(null, hashtag, all, critics);
 
-		// Sort the list
-		final List<Map.Entry<FaveRankerWrapper, Double>> sorted = sort(all);
+		if (!all.isEmpty()) {
+			saveTopItems(hashtag, all, listCount, false);
+		}
+
+		if (!critics.isEmpty()) {
+			saveTopItems(hashtag, critics, listCount, true);
+		}
+	}
+
+	private void saveTopItems(String hashtag, HashMap<FaveRankerWrapper, Double> items, int listCount, boolean critic) {
+		final List<Map.Entry<FaveRankerWrapper, Double>> sorted = sort(items);
 
 		int i = 0;
 		final List<FaveItem> master = new ArrayList<FaveItem>();
@@ -66,9 +77,22 @@ public class HashtagBuilderServlet extends HttpServlet
 		}
 
 		// Calculate the zcore to determine top trending lists
-		final Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).now();
-		hashtagEntity.setZscore(calculateZscore(hashtagEntity.getSlidingListCount(), listCount));
-		hashtagEntity.addListCount(listCount);
+		Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).now();
+		if (critic) {
+			String createdBy = hashtagEntity.getCreatedBy().get().getId();
+			Date dateCreated = hashtagEntity.getDateCreated();
+			String criticHashtag = hashtag + FaveListDao.SEPERATOR_TOKEN + FaveListDao.CRITIC_INDICATOR;
+			hashtagEntity = ofy().load().type(Hashtag.class).id(criticHashtag).now();
+			if (hashtagEntity == null) {
+				hashtagEntity = new Hashtag(criticHashtag, createdBy);
+				hashtagEntity.setDateCreated(dateCreated);
+				hashtagEntity.setCriticList(true);
+			}
+		}
+		else {
+			hashtagEntity.setZscore(calculateZscore(hashtagEntity.getSlidingListCount(), listCount));
+			hashtagEntity.addListCount(listCount);
+		}
 		hashtagEntity.setList(master);
 
 		// Save the master list to the datastore
@@ -111,7 +135,7 @@ public class HashtagBuilderServlet extends HttpServlet
 	}
 
 	// Get favelists 1000 at a time, and store their rank, returns number of lists
-	private int addAllLists(final String cursor, final String hashtag, final HashMap<FaveRankerWrapper, Double> all) {
+	private int addAllLists(final String cursor, final String hashtag, final HashMap<FaveRankerWrapper, Double> all, final HashMap<FaveRankerWrapper, Double> critics) {
 		Query<FaveList> query = ofy().load().type(FaveList.class).filter("hashtagId", hashtag).limit(1000);
 
 		if (cursor != null) {
@@ -131,7 +155,15 @@ public class HashtagBuilderServlet extends HttpServlet
 				final FaveRankerWrapper faveHolder = new FaveRankerWrapper(faveItem);
 				final double score = FaveListDao.calculateItemScore(i);
 				final double newVal = (all.get(faveHolder) != null) ? all.get(faveHolder) + score : score;
-				all.put(faveHolder, newVal);
+
+				// Build a critics only master list if needed
+				if (faveList.getCriticUrl() != null && !faveList.getCriticUrl().isEmpty()) {
+					critics.put(faveHolder, newVal);
+				}
+				// Otherwise just build the user master list
+				else {
+					all.put(faveHolder, newVal);
+				}
 				i++;
 			}
 
@@ -142,7 +174,7 @@ public class HashtagBuilderServlet extends HttpServlet
 
 		// While we still have favelists to process, keep adding their ranks
 		if (shouldContinue) {
-			return addAllLists(iterator.getCursor().toWebSafeString(), hashtag, all) + count;
+			return addAllLists(iterator.getCursor().toWebSafeString(), hashtag, all, critics) + count;
 		}
 		return count;
 	}

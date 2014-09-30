@@ -2,6 +2,8 @@ package com.fave100.shared.place;
 
 public class NameTokens {
 
+	public static final String admin = "admin";
+
 	public static final String alllists = "alllists";
 
 	public static final String tour = "tour";
@@ -42,6 +44,10 @@ public class NameTokens {
 
 	public static String getAlllists() {
 		return alllists;
+	}
+
+	public static String getAdmin() {
+		return admin;
 	}
 
 }

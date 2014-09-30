@@ -47,7 +47,7 @@ public class SongApiTest extends ApiTest {
 	public void song_api_should_find_existing_whylines() {
 		String whylineText = "Because I like cows";
 		String songID = "BbK4Ex";
-		Whyline whyline = new Whyline(whylineText, songID, "arad");
+		Whyline whyline = new Whyline(whylineText, songID, "arad", "meh");
 		ofy().save().entity(whyline).now();
 
 		WhylineCollection whylineCollection = SongApi.getWhylines(songID);

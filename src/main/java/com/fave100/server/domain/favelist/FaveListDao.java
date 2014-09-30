@@ -7,6 +7,7 @@ import javax.inject.Named;
 public class FaveListDao {
 
 	public static final String SEPERATOR_TOKEN = ":";
+	public static final String CRITIC_INDICATOR = "critic";
 	public static final int MAX_FAVES = 100;
 
 	public static FaveList findFaveList(final String id) {

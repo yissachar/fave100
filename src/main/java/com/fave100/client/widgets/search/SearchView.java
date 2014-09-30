@@ -299,7 +299,7 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 			if (!song.getCoverArt().isEmpty()) {
 				String mbid = song.getCoverArt().substring(0, song.getCoverArt().indexOf("/"));
 				String id = song.getCoverArt().replace(mbid + "/", "");
-				
+
 				StringBuffer sb = new StringBuffer();
 				sb.append("http://archive.org/download/mbid-");
 				sb.append(mbid);
@@ -492,12 +492,15 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 		if (fullPage) {
 			container.addStyleName(style.fullPage());
 			searchIndicator.addStyleName(fontAwesomeLarge);
-			searchBox.setPlaceHolder("Search songs");
 		}
 		else {
 			container.removeStyleName(style.fullPage());
 			searchIndicator.removeStyleName(fontAwesomeLarge);
-			searchBox.setPlaceHolder("");
 		}
+	}
+
+	@Override
+	public void setPlaceHolder(String placeHolder) {
+		searchBox.setPlaceHolder(placeHolder);
 	}
 }

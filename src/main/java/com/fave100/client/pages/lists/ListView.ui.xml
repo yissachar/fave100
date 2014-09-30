@@ -63,6 +63,10 @@
 			cursor: pointer;
 			margin-bottom: 20px;
 		}
+		
+		.criticUrlPanel > * {
+			margin-right: 7px;
+		}
 				
 		.userProfile {
 			display: block;
@@ -148,6 +152,12 @@
 						<g:FlowPanel ui:field="listHeader" ui:styleName="{style.listHeader}">
 							<g:HTMLPanel ui:field="listManager"/>
 							<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
+							<g:FlowPanel ui:field="criticUrlPanel" ui:styleName="{style.criticUrlPanel}">
+								<g:InlineLabel>Critic URL:</g:InlineLabel>
+								<g:InlineLabel ui:field="criticUrlLabel"/>
+								<g:TextBox ui:field="criticUrlInput" />
+								<g:Button ui:field="criticUrlButton">Edit</g:Button>
+							</g:FlowPanel>
 							<g:Anchor ui:field="addSongLink" ui:styleName="{style.contributeCTA}">Add Song</g:Anchor>
 						</g:FlowPanel>
 						

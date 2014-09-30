@@ -1,4 +1,4 @@
-package com.fave100.client.pages.lists.widgets.addsongsearch;
+package com.fave100.client.widgets.searchpopup;
 
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -9,14 +9,14 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 
-public class AddSongSearchView extends PopupViewWithUiHandlers<AddSongSearchUiHandlers> implements AddSongSearchPresenter.MyView {
-	public interface Binder extends UiBinder<PopupPanel, AddSongSearchView> {
+public class PopupSearchView extends PopupViewWithUiHandlers<PopupSearchUiHandlers> implements PopupSearchPresenter.MyView {
+	public interface Binder extends UiBinder<PopupPanel, PopupSearchView> {
 	}
 
 	@UiField HTMLPanel search;
 
 	@Inject
-	AddSongSearchView(Binder uiBinder, EventBus eventBus) {
+	PopupSearchView(Binder uiBinder, EventBus eventBus) {
 		super(eventBus);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
@@ -26,7 +26,7 @@ public class AddSongSearchView extends PopupViewWithUiHandlers<AddSongSearchUiHa
 		if (content == null)
 			return;
 
-		if (slot == AddSongSearchPresenter.SEARCH_SLOT) {
+		if (slot == PopupSearchPresenter.SEARCH_SLOT) {
 			search.clear();
 			search.add(content);
 		}

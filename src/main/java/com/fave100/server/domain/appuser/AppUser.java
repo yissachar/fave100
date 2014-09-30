@@ -15,6 +15,8 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfTrue;
 
 /**
  * A Fave100 user.
@@ -41,6 +43,8 @@ public class AppUser {
 	private List<String> hashtags = new ArrayList<String>();
 	private boolean followingPrivate = false;
 	private boolean followersPrivate = false;
+	@Index(IfTrue.class) private boolean admin;
+	@Index(IfTrue.class) private boolean critic;
 
 	@SuppressWarnings("unused")
 	private AppUser() {
@@ -57,6 +61,9 @@ public class AppUser {
 	}
 
 	public String getAvatarImage(final int size) {
+		if (isCritic())
+			return "/critic.png";
+
 		if (avatar == null) {
 			// If there is no avatar, serve a Gravatar
 			final String params = "?d=mm&s=" + size;
@@ -202,6 +209,22 @@ public class AppUser {
 
 	public void setHashtags(final List<String> hashtags) {
 		this.hashtags = hashtags;
+	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+
+	public boolean isCritic() {
+		return critic;
+	}
+
+	public void setCritic(boolean critic) {
+		this.critic = critic;
 	}
 
 }

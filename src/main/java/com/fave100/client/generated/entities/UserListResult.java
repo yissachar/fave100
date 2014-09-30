@@ -14,8 +14,8 @@ import java.util.List;
 public class UserListResult {
 
     private String listName;
-    private String userName;
     private String avatar;
+    private String userName;
 
     public String getListName() {
         return this.listName;
@@ -25,20 +25,20 @@ public class UserListResult {
         this.listName = listName;
     }
 
-    public String getUserName() {
-        return this.userName;
-    }
-
-    public void setUserName(String userName){
-        this.userName = userName;
-    }
-
     public String getAvatar() {
         return this.avatar;
     }
 
     public void setAvatar(String avatar){
         this.avatar = avatar;
+    }
+
+    public String getUserName() {
+        return this.userName;
+    }
+
+    public void setUserName(String userName){
+        this.userName = userName;
     }
 
 }

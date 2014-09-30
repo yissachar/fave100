@@ -2,6 +2,7 @@ package com.fave100.client.pages.lists;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
+import com.fave100.client.Notification;
 import com.fave100.client.entities.SongDto;
 import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.events.favelist.HideSideBarEvent;
@@ -12,21 +13,27 @@ import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.BooleanResult;
+import com.fave100.client.generated.entities.StringResult;
 import com.fave100.client.pages.PagePresenter;
-import com.fave100.client.pages.lists.widgets.addsongsearch.AddSongSearchPresenter;
 import com.fave100.client.pages.lists.widgets.favelist.FavelistPresenter;
 import com.fave100.client.pages.lists.widgets.globallistdetails.AddListAfterLoginAction;
 import com.fave100.client.pages.lists.widgets.globallistdetails.GlobalListDetailsPresenter;
 import com.fave100.client.pages.lists.widgets.listmanager.ListManagerPresenter;
 import com.fave100.client.pages.lists.widgets.usersfollowing.UsersFollowingPresenter;
+import com.fave100.client.widgets.search.SearchType;
+import com.fave100.client.widgets.search.SuggestionSelectedAction;
+import com.fave100.client.widgets.searchpopup.PopupSearchPresenter;
 import com.fave100.shared.Constants;
+import com.fave100.shared.ListMode;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.Command;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.shared.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.View;
@@ -58,6 +65,8 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		void showSideBar();
 
 		void resize();
+
+		void setCriticUrl(String url);
 	}
 
 	@ProxyCodeSplit
@@ -73,6 +82,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 	private String requestedUsername;
 	private String _requestedHashtag;
+	private String _requestedListMode;
 	private boolean isFollowing;
 	private AppUser requestedUser;
 	private final EventBus _eventBus;
@@ -84,7 +94,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	@Inject UsersFollowingPresenter usersFollowing;
 	@Inject ListManagerPresenter listManager;
 	@Inject GlobalListDetailsPresenter globalListDetails;
-	@Inject AddSongSearchPresenter search;
+	@Inject PopupSearchPresenter _search;
 
 	@Inject
 	public ListPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, final PlaceManager placeManager, final CurrentUser currentUser,
@@ -102,10 +112,16 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	protected void onBind() {
 		super.onBind();
 
-		search.setSuggestionSelectedCommand(new Command() {
+		_search.setSearchType(SearchType.SONGS);
+		_search.setSuggestionSelectedAction(new SuggestionSelectedAction() {
 
 			@Override
-			public void execute() {
+			public void execute(SearchType searchType, Object selectedItem) {
+				SongDto song = (SongDto)selectedItem;
+
+				PlaceRequest currentPlace = _placeManager.getCurrentPlaceRequest();
+				String listName = currentPlace.getParameter(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG);
+				_currentUser.addSong(song.getId(), listName, song.getSong(), song.getArtist());
 				hideAddSongPrompt();
 			}
 		});
@@ -204,11 +220,14 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		// Use parameters to determine what to reveal on page
 		requestedUsername = placeRequest.getParameter(PlaceParams.USER_PARAM, "");
 		_requestedHashtag = placeRequest.getParameter(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG);
+		_requestedListMode = placeRequest.getParameter(PlaceParams.MODE_PARAM, ListMode.ALL);
+
 		// Possible combinations:
 		// Blank user, blank list => global fave100 list
-		// List only => global list for that hashtag
+		// List only => global list for that hashtag, all list mode
 		// User only => user's fave100 list
 		// List + user => user's list for that hashtag
+		// List + list mode => global list for that hashtag, specified list mode
 
 		if (requestedUsername.isEmpty()) {
 			// No user, just show global list for hashtag
@@ -239,9 +258,11 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 				@Override
 				public void onSuccess(AppUser user) {
 					requestedUser = user;
-					if (!requestedUser.getHashtags().contains(_requestedHashtag))
+					if (!requestedUser.getHashtags().contains(_requestedHashtag)) {
 						_requestedHashtag = Constants.DEFAULT_HASHTAG;
+					}
 					showPage();
+
 				}
 			});
 
@@ -264,38 +285,73 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 	}
 
 	private void showPage() {
-		getView().setPageDetails(requestedUser, _currentUser);
-
 		_ownPage = _currentUser.isLoggedIn() && _currentUser.equals(requestedUser);
-		if (_ownPage) {
-			getView().setFollowCTA(false, isFollowing);
-		}
-		else {
-			getView().setFollowCTA(true, isFollowing);
+
+		if (requestedUser != null && requestedUser.isCritic()) {
+			_api.call(_api.service().users().getCriticUrl(requestedUsername, _requestedHashtag), new RestCallback<StringResult>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					getProxy().manualReveal(ListPresenter.this);
+				}
+
+				@Override
+				public void onSuccess(StringResult result) {
+					if (_ownPage) {
+						getView().setCriticUrl(result.getValue());
+						getProxy().manualReveal(ListPresenter.this);
+					}
+					else {
+						Window.Location.replace(result.getValue());
+					}
+				}
+
+				@Override
+				public void setResponse(Response response) {
+					if (response.getStatusCode() >= 400) {
+						Notification.show("Couldn't get the critic URL", true);
+					}
+				}
+			});
 		}
 
-		favelist.setUser(requestedUser);
-		favelist.setHashtag(_requestedHashtag);
-		favelist.refreshFavelist();
+		// Ensure we don't show critic's lists directly to other users
+		if (requestedUser == null || !requestedUser.isCritic() || _ownPage) {
 
-		listManager.setUser(requestedUser);
-		listManager.setHashtag(_requestedHashtag);
-		listManager.refreshUsersLists();
+			getView().setPageDetails(requestedUser, _currentUser);
 
-		if (requestedUser != null) {
-			usersFollowing.getView().show();
-			usersFollowing.setUser(requestedUser);
-			usersFollowing.refreshLists();
-			globalListDetails.getView().hide();
-		}
-		else {
-			usersFollowing.getView().hide();
-			if (_requestedHashtag != null) {
-				globalListDetails.getView().show();
+			if (_ownPage) {
+				getView().setFollowCTA(false, isFollowing);
 			}
+			else {
+				getView().setFollowCTA(true, isFollowing);
+			}
+
+			favelist.setUser(requestedUser);
+			favelist.setHashtag(_requestedHashtag);
+			favelist.setListMode(_requestedListMode);
+			favelist.refreshFavelist();
+
+			listManager.setUser(requestedUser);
+			listManager.setHashtag(_requestedHashtag);
+			listManager.refreshUsersLists();
+
+			if (requestedUser != null) {
+				usersFollowing.getView().show();
+				usersFollowing.setUser(requestedUser);
+				usersFollowing.refreshLists();
+				globalListDetails.getView().hide();
+			}
+			else {
+				usersFollowing.getView().hide();
+				if (_requestedHashtag != null) {
+					globalListDetails.getView().show();
+				}
+			}
+
+			getProxy().manualReveal(ListPresenter.this);
 		}
 
-		getProxy().manualReveal(ListPresenter.this);
 	}
 
 	@Override
@@ -342,12 +398,36 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 	@Override
 	public void showAddSongPrompt() {
-		addToPopupSlot(search);
+		addToPopupSlot(_search);
 	}
 
 	@Override
 	public void hideAddSongPrompt() {
-		removeFromPopupSlot(search);
+		removeFromPopupSlot(_search);
+	}
+
+	@Override
+	public void saveCriticUrl(String url) {
+		_api.call(_api.service().users().setCriticUrl(requestedUsername, _requestedHashtag, url), new RestCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// Handled in setResponse
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				Notification.show("Saved");
+			}
+
+			@Override
+			public void setResponse(Response response) {
+				if (response.getStatusCode() >= 400) {
+					Notification.show("Something went wrong", true);
+				}
+
+			}
+		});
 	}
 }
 
@@ -363,4 +443,6 @@ interface ListUiHandlers extends UiHandlers {
 	void showAddSongPrompt();
 
 	void hideAddSongPrompt();
+
+	void saveCriticUrl(String url);
 }

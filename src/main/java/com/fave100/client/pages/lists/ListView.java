@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
@@ -60,6 +61,10 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiField HTMLPanel userPageFaveList;
 	@UiField Panel listHeader;
 	@UiField Anchor contributeCTA;
+	@UiField Panel criticUrlPanel;
+	@UiField Label criticUrlLabel;
+	@UiField TextBox criticUrlInput;
+	@UiField Button criticUrlButton;
 	@UiField Anchor addSongLink;
 	@UiField HTMLPanel followingContainer;
 	@UiField FlowPanel userProfile;
@@ -154,6 +159,23 @@ public class ListView extends PageView<ListUiHandlers>
 		getUiHandlers().contributeToList();
 	}
 
+	@UiHandler("criticUrlButton")
+	void onCriticUrlButtonClicked(ClickEvent event) {
+		if (criticUrlLabel.isVisible()) {
+			criticUrlLabel.setVisible(false);
+			criticUrlInput.setVisible(true);
+			criticUrlInput.setText(criticUrlLabel.getText());
+			criticUrlButton.setText("Save");
+		}
+		else {
+			criticUrlInput.setVisible(false);
+			criticUrlLabel.setVisible(true);
+			criticUrlLabel.setText(criticUrlInput.getText());
+			criticUrlButton.setText("Edit");
+			getUiHandlers().saveCriticUrl(criticUrlInput.getText());
+		}
+	}
+
 	@UiHandler("addSongLink")
 	void onAddSongClick(ClickEvent event) {
 		getUiHandlers().showAddSongPrompt();
@@ -178,8 +200,15 @@ public class ListView extends PageView<ListUiHandlers>
 			profileLink.setText(requestedUser.getUsername());
 		}
 
+		criticUrlPanel.setVisible(false);
 		if (currentUser.isLoggedIn() && currentUser.equals(requestedUser)) {
 			showOwnPage();
+			if (currentUser.isCritic()) {
+				criticUrlPanel.setVisible(true);
+				criticUrlLabel.setVisible(true);
+				criticUrlInput.setVisible(false);
+				criticUrlButton.setText("Edit");
+			}
 		}
 		else {
 			showOtherPage();
@@ -259,5 +288,11 @@ public class ListView extends PageView<ListUiHandlers>
 	@Override
 	public void showSideBar() {
 		userContainer.addStyleName(style.hoverSideBar());
+	}
+
+	@Override
+	public void setCriticUrl(String url) {
+		criticUrlLabel.setText(url);
+		criticUrlInput.setText(url);
 	}
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+			 xmlns:p='urn:import:com.fave100.client.pages'
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+             
+     <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pages.admin.AdminView.AdminStyle">
+     	.content {
+			margin: 0 auto;
+			max-width: 900px;
+		}
+		
+		.content h4 {
+			margin: 10px 0;
+		}
+		
+		.content button {
+			margin: 10px 0;
+		}
+		
+		.adminWidget {
+			margin: 6px 0;
+			@mixin flexbox();
+			@mixin align-items(center);
+		}
+		
+		.adminWidget > * {
+			margin-right: 7px;
+		}
+		
+		.adminWidget img {
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+		}
+		
+		.adminWidget i {
+			cursor: pointer;
+		}
+    </ui:style>
+    
+    <p:Page ui:field="page">
+		<p:content>
+			<g:HTMLPanel ui:styleName="{style.content} {style.paddedMainPage}">
+				<g:HTMLPanel>
+					<h2>Admin Panel</h2>
+					<h4>Admins</h4>
+					<g:FlowPanel ui:field="adminPanel" />
+					<g:Button ui:field="addAdminButton">Add Admin</g:Button>
+					<h4>Critics</h4>
+					<g:FlowPanel ui:field="criticPanel" />
+					<g:Button ui:field="addCriticButton">Add Critic</g:Button>
+					<h4>Featured Lists</h4>
+					<p>alltime and 2014 list will be displayed along with 8 randomly picked lists from the following:</p>
+					<g:FlowPanel ui:field="listPanel" />
+					<g:Button ui:field="addListButton">Add List</g:Button>
+			    </g:HTMLPanel>
+		    </g:HTMLPanel>
+		</p:content>
+	</p:Page>
+    
+</ui:UiBinder>

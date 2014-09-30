@@ -305,6 +305,16 @@ public class CurrentUser extends AppUser {
 	}
 
 	@Override
+	public boolean isAdmin() {
+		return (appUser == null) ? false : appUser.isAdmin();
+	}
+
+	@Override
+	public boolean isCritic() {
+		return (appUser == null) ? false : appUser.isCritic();
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (appUser == null || obj == null) {
 			return false;
