@@ -1,6 +1,7 @@
 package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -50,8 +51,8 @@ public class FaveListsApiTest extends ApiTest {
 		servlet.doPost(req, mock(HttpServletResponse.class));
 
 		List<FaveItem> faveItems = FaveListsApi.getMasterFaveList(listName, ListMode.ALL).getItems();
-		assertEquals("Master list must contain only one entity", 1, faveItems.size());
-		assertEquals("Master list must contain only the proper fave item", songId, faveItems.get(0).getId());
+		assertThat(faveItems.size()).isEqualTo(1);
+		assertThat(faveItems).extracting("id").contains(songId);
 	}
 
 	@Test
@@ -66,8 +67,8 @@ public class FaveListsApiTest extends ApiTest {
 		ofy().save().entity(hashtag).now();
 
 		List<FaveItem> masterList = FaveListsApi.getMasterFaveList(listName, ListMode.ALL).getItems();
-		assertEquals("Master list must contain only one entity", 1, masterList.size());
-		assertEquals("Master list must contain only the proper fave item", songId, masterList.get(0).getId());
+		assertThat(masterList.size()).isEqualTo(1);
+		assertThat(masterList).extracting("id").contains(songId);
 	}
 
 	@Test
@@ -86,9 +87,8 @@ public class FaveListsApiTest extends ApiTest {
 		ofy().save().entities(hashtag1, hashtag2).now();
 
 		List<StringResult> listNames = FaveListsApi.getListNames().getItems();
-		assertEquals("List names must include 2 list names", 2, listNames.size());
-		assertEquals("List names must include list1", list1, listNames.get(0).getValue());
-		assertEquals("List names must include list2", list2, listNames.get(1).getValue());
+		assertThat(listNames.size()).isEqualTo(2);
+		assertThat(listNames).extracting("value").contains(list1, list2);
 
 	}
 
@@ -106,6 +106,7 @@ public class FaveListsApiTest extends ApiTest {
 
 		List<StringResult> listNames = FaveListsApi.getListNames().getItems();
 		assertEquals(0, listNames.size());
+		assertThat(listNames.size()).isEqualTo(0);
 	}
 
 }

@@ -1,7 +1,7 @@
 package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class SearchApiTest extends ApiTest {
 		Hashtag hashtag = new Hashtag("bah", "someuser");
 		ofy().save().entity(hashtag).now();
 
-		assertEquals(1, SearchApi.searchFaveLists("b", null).getSearchResults().getItems().size());
+		assertThat(SearchApi.searchFaveLists("b", null).getSearchResults().getItems().size()).isEqualTo(1);
 	}
 
 	@Test
@@ -31,7 +31,7 @@ public class SearchApiTest extends ApiTest {
 		Hashtag hashtag = new Hashtag("70sSongs", "bah");
 		ofy().save().entity(hashtag).now();
 
-		assertEquals(1, SearchApi.searchFaveLists("7", null).getSearchResults().getItems().size());
+		assertThat(SearchApi.searchFaveLists("7", null).getSearchResults().getItems().size()).isEqualTo(1);
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class SearchApiTest extends ApiTest {
 		Hashtag hashtag = new Hashtag("awe7ome", "humbug");
 		ofy().save().entity(hashtag).now();
 
-		assertEquals(1, SearchApi.searchFaveLists("awe7", null).getSearchResults().getItems().size());
+		assertThat(SearchApi.searchFaveLists("awe7", null).getSearchResults().getItems().size()).isEqualTo(1);
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class SearchApiTest extends ApiTest {
 		Hashtag match3 = new Hashtag("togreHandz", "chomp");
 		ofy().save().entities(match1, match2, match3).now();
 
-		assertEquals("Must find three results", 3, SearchApi.searchFaveLists("t", null).getSearchResults().getItems().size());
+		assertThat(SearchApi.searchFaveLists("t", null).getSearchResults().getItems().size()).isEqualTo(3);
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class SearchApiTest extends ApiTest {
 		Hashtag ignore3 = new Hashtag("me", "strawberries");
 		ofy().save().entities(match1, ignore1, ignore2, ignore3).now();
 
-		assertEquals(1, SearchApi.searchFaveLists("s", null).getSearchResults().getItems().size());
+		assertThat(SearchApi.searchFaveLists("s", null).getSearchResults().getItems().size()).isEqualTo(1);
 	}
 
 }

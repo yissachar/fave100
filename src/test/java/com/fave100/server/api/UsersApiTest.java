@@ -1,7 +1,7 @@
 package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 import javax.ws.rs.WebApplicationException;
@@ -40,7 +40,7 @@ public class UsersApiTest extends ApiTest {
 		String username = "MarkOfHearth";
 		AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration(username, "gammayrays", "lasers@fave100.com"));
 
-		assertEquals("Must find the user", username, UsersApi.getAppUser(username).getUsername());
+		assertThat(UsersApi.getAppUser(username).getUsername()).isEqualTo(username);
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class UsersApiTest extends ApiTest {
 		String username = "LauraOfAsgard";
 		AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration(username, "thorhammer", "thenorth@fave100.com"));
 
-		assertEquals("Must find the user", username, UsersApi.getAppUser(username.toLowerCase()).getUsername());
+		assertThat(UsersApi.getAppUser(username.toLowerCase()).getUsername()).isEqualTo(username);
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class UsersApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
 		}
 	}
 
@@ -72,7 +72,7 @@ public class UsersApiTest extends ApiTest {
 		loggedInUser = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("newone", "dumpasdf", "great@fave100.com"));
 
 		FollowingResult followingResult = UsersApi.getFollowing(loggedInUser, username, 0);
-		assertEquals(1, followingResult.getFollowing().size());
+		assertThat(followingResult.getFollowing().size()).isEqualTo(1);
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class UsersApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
 		}
 	}
 
@@ -103,13 +103,13 @@ public class UsersApiTest extends ApiTest {
 		UserApi.followUser(loggedInUser, userToFollow.getUsername());
 
 		FollowingResult followingResult = UsersApi.getFollowing(loggedInUser, loggedInUser.getUsername(), 0);
-		assertEquals(1, followingResult.getFollowing().size());
+		assertThat(followingResult.getFollowing().size()).isEqualTo(1);
 	}
 
 	@Test
 	public void users_api_should_return_empty_following_list_if_not_following() {
 		FollowingResult followingResult = UsersApi.getFollowing(loggedInUser, loggedInUser.getUsername(), 0);
-		assertEquals(0, followingResult.getFollowing().size());
+		assertThat(followingResult.getFollowing()).isEmpty();
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class UsersApiTest extends ApiTest {
 		faveList.getList().add(new FaveItem("the", "sheeps", "wool"));
 		ofy().save().entity(faveList).now();
 
-		assertEquals(1, UsersApi.getFaveList(username, list).getItems().size());
+		assertThat(UsersApi.getFaveList(username, list).getItems().size()).isEqualTo(1);
 	}
 
 	@Test
@@ -131,7 +131,7 @@ public class UsersApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
 		}
 	}
 }

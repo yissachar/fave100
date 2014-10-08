@@ -1,10 +1,7 @@
 package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
@@ -63,24 +60,24 @@ public class UserApiTest extends ApiTest {
 		String username = "one";
 		AppUser loggedInUser = AuthApi.createAppUser(req, new UserRegistration(username, "dayday", "butterfly@fave100.com"));
 		when(req.getSession().getAttribute(SessionAttributes.AUTH_USER)).thenReturn(username);
-		assertEquals(loggedInUser, UserApi.getLoggedInUser(req));
+		assertThat(UserApi.getLoggedInUser(req)).isEqualTo(loggedInUser);
 	}
 
 	@Test
 	public void user_api_should_not_get_non_existing_logged_in_user() {
-		assertNull(UserApi.getLoggedInUser(TestHelper.newReq()));
+		assertThat(UserApi.getLoggedInUser(TestHelper.newReq())).isNull();
 	}
 
 	@Test
 	public void user_api_should_create_a_blobstore_url() {
-		assertNotNull(UserApi.createBlobstoreUrl());
+		assertThat(UserApi.createBlobstoreUrl()).isNotNull();
 	}
 
 	@Test
 	public void user_api_should_get_user_settings() {
 		String email = "basd@example.com";
 		AppUser user = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("foo", "barbaz", email));
-		assertEquals(email, UserApi.getCurrentUserSettings(user).getEmail());
+		assertThat(UserApi.getCurrentUserSettings(user).getEmail()).isEqualTo(email);
 	}
 
 	@Test
@@ -91,7 +88,7 @@ public class UserApiTest extends ApiTest {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setEmail(newEmail);
 		UserApi.setUserInfo(user, userInfo);
-		assertEquals(newEmail, UserApi.getCurrentUserSettings(user).getEmail());
+		assertThat(UserApi.getCurrentUserSettings(user).getEmail()).isEqualTo(newEmail);
 	}
 
 	// TODO: test emailPasswordResetToken
@@ -111,7 +108,7 @@ public class UserApiTest extends ApiTest {
 		changeDetails.setTokenOrPassword(pw);
 		UserApi.changePassword(req, changeDetails);
 
-		assertTrue(BCrypt.checkpw(newPassword, AppUserDao.findAppUser(username).getPassword()));
+		assertThat(BCrypt.checkpw(newPassword, AppUserDao.findAppUser(username).getPassword())).isTrue();
 	}
 
 	@Test
@@ -128,7 +125,7 @@ public class UserApiTest extends ApiTest {
 		PasswordChangeDetails changeDetails = new PasswordChangeDetails(newPassword, resetToken.getToken());
 		UserApi.changePassword(req, changeDetails);
 
-		assertTrue(BCrypt.checkpw(newPassword, AppUserDao.findAppUser(username).getPassword()));
+		assertThat(BCrypt.checkpw(newPassword, AppUserDao.findAppUser(username).getPassword())).isTrue();
 	}
 
 	@Test
@@ -147,7 +144,7 @@ public class UserApiTest extends ApiTest {
 		PasswordChangeDetails changeDetails = new PasswordChangeDetails(newPassword, resetToken.getToken());
 		UserApi.changePassword(req, changeDetails);
 
-		assertTrue(BCrypt.checkpw(oldPassword, AppUserDao.findAppUser(username).getPassword()));
+		assertThat(BCrypt.checkpw(oldPassword, AppUserDao.findAppUser(username).getPassword())).isTrue();
 	}
 
 	@Test
@@ -155,7 +152,7 @@ public class UserApiTest extends ApiTest {
 		String faveListName = "anewfavelist";
 		UserApi.addFaveListForCurrentUser(loggedInUser, faveListName);
 
-		assertNotNull(FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
+		assertThat(FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName)).isNotNull();
 	}
 
 	@Test
@@ -169,7 +166,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
 		}
 	}
 
@@ -180,7 +177,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
 		}
 	}
 
@@ -191,7 +188,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
 		}
 	}
 
@@ -210,7 +207,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
 		}
 	}
 
@@ -229,7 +226,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
 		}
 	}
 
@@ -252,10 +249,10 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
 		}
 
-		assertNull("Cannot create more than " + Constants.MAX_LISTS_PER_USER + " lists per user", FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
+		assertThat(FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName)).isNull();
 	}
 
 	@Test
@@ -264,7 +261,7 @@ public class UserApiTest extends ApiTest {
 		UserApi.addFaveListForCurrentUser(loggedInUser, faveListName);
 
 		FaveList faveList = FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName);
-		assertEquals(0, faveList.getList().size());
+		assertThat(faveList.getList()).isEmpty();
 	}
 
 	/**
@@ -277,7 +274,7 @@ public class UserApiTest extends ApiTest {
 		String listName = "gretza";
 		UserApi.addFaveListForCurrentUser(loggedInUser, listName);
 
-		assertEquals(listName, loggedInUser.getHashtags().get(0));
+		assertThat(loggedInUser.getHashtags()).contains(listName);
 	}
 
 	@Test
@@ -287,7 +284,7 @@ public class UserApiTest extends ApiTest {
 
 		UserApi.deleteFaveListForCurrentUser(loggedInUser, faveListName);
 
-		assertNull(FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName));
+		assertThat(FaveListDao.findFaveList(loggedInUser.getUsername(), faveListName)).isNull();
 	}
 
 	@Test
@@ -301,13 +298,13 @@ public class UserApiTest extends ApiTest {
 		UserApi.editWhylineForCurrentUser(loggedInUser, whylineEdit);
 		UserApi.deleteFaveListForCurrentUser(loggedInUser, faveListName);
 
-		assertEquals(true, SongApi.getWhylines(songId).getItems().isEmpty());
+		assertThat(SongApi.getWhylines(songId).getItems()).isEmpty();
 	}
 
 	@Test
 	public void user_api_should_add_fave_item_with_proper_id() {
 		UserApi.addFaveItemForCurrentUser(loggedInUser, Constants.DEFAULT_HASHTAG, "kEMkxg");
-		assertEquals(1, UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems().size());
+		assertThat(UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems().size()).isEqualTo(1);
 	}
 
 	@Test
@@ -317,7 +314,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
 		}
 	}
 
@@ -336,7 +333,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
 		}
 	}
 
@@ -350,7 +347,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
 		}
 	}
 
@@ -360,7 +357,7 @@ public class UserApiTest extends ApiTest {
 		TestHelper.addSingleFaveItemToDefaultList(loggedInUser, songId);
 
 		UserApi.removeFaveItemForCurrentUser(loggedInUser, Constants.DEFAULT_HASHTAG, songId);
-		assertEquals(0, UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems().size());
+		assertThat(UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems()).isEmpty();
 	}
 
 	@Test
@@ -379,7 +376,7 @@ public class UserApiTest extends ApiTest {
 
 		UserApi.removeFaveItemForCurrentUser(loggedInUser, Constants.DEFAULT_HASHTAG, songId);
 
-		assertNull(ofy().load().type(Whyline.class).id(whyline.getId()).now());
+		assertThat(ofy().load().type(Whyline.class).id(whyline.getId()).now()).isNull();
 	}
 
 	@Test
@@ -391,7 +388,8 @@ public class UserApiTest extends ApiTest {
 		TestHelper.addSingleFaveItemToDefaultList(loggedInUser, songId2);
 
 		UserApi.rerankFaveItemForCurrentUser(loggedInUser, Constants.DEFAULT_HASHTAG, songId1, 1);
-		assertEquals(songId1, UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems().get(1).getId());
+		FaveItem firstFaveItem = UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems().get(1);
+		assertThat(firstFaveItem.getId()).isEqualTo(songId1);
 	}
 
 	@Test
@@ -404,7 +402,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
 		}
 	}
 
@@ -417,8 +415,8 @@ public class UserApiTest extends ApiTest {
 		WhylineEdit whylineEdit = new WhylineEdit(Constants.DEFAULT_HASHTAG, songId, whyline);
 		UserApi.editWhylineForCurrentUser(loggedInUser, whylineEdit);
 
-		assertEquals(whyline, UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems().get(0).getWhyline());
-		assertEquals(whyline, ofy().load().type(Whyline.class).id(1).now().getWhyline());
+		assertThat(UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems()).extracting("whyline").contains(whyline);
+		assertThat(ofy().load().type(Whyline.class).id(1).now().getWhyline()).isEqualTo(whyline);
 	}
 
 	@Test
@@ -434,8 +432,8 @@ public class UserApiTest extends ApiTest {
 		WhylineEdit whylineEdit2 = new WhylineEdit(Constants.DEFAULT_HASHTAG, songId, newWhyline);
 		UserApi.editWhylineForCurrentUser(loggedInUser, whylineEdit2);
 
-		assertEquals(newWhyline, UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems().get(0).getWhyline());
-		assertEquals(newWhyline, ofy().load().type(Whyline.class).id(1).now().getWhyline());
+		assertThat(UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems()).extracting("whyline").contains(newWhyline);
+		assertThat(ofy().load().type(Whyline.class).id(1).now().getWhyline()).isEqualTo(newWhyline);
 	}
 
 	@Test
@@ -447,8 +445,8 @@ public class UserApiTest extends ApiTest {
 
 		FollowingResult followingResult = UsersApi.getFollowing(loggedInUser, loggedInUser.getUsername(), 0);
 
-		assertEquals(1, followingResult.getFollowing().size());
-		assertTrue(followingResult.getFollowing().contains(userToFollow));
+		assertThat(followingResult.getFollowing().size()).isEqualTo(1);
+		assertThat(followingResult.getFollowing()).contains(userToFollow);
 	}
 
 	@Test
@@ -462,9 +460,9 @@ public class UserApiTest extends ApiTest {
 
 		FollowingResult followingResult = UsersApi.getFollowing(loggedInUser, loggedInUser.getUsername(), 0);
 
-		assertEquals(2, followingResult.getFollowing().size());
-		assertTrue(followingResult.getFollowing().contains(userToFollow1));
-		assertTrue(followingResult.getFollowing().contains(userToFollow2));
+		assertThat(followingResult.getFollowing().size()).isEqualTo(2);
+		assertThat(followingResult.getFollowing()).contains(userToFollow1);
+		assertThat(followingResult.getFollowing()).contains(userToFollow2);
 	}
 
 	@Test
@@ -475,8 +473,8 @@ public class UserApiTest extends ApiTest {
 		UserApi.followUser(loggedInUser, userToFollow.getUsername());
 		FollowingResult followingResult = UsersApi.getFollowing(loggedInUser, loggedInUser.getUsername(), 0);
 
-		assertEquals(1, followingResult.getFollowing().size());
-		assertTrue(followingResult.getFollowing().contains(userToFollow));
+		assertThat(followingResult.getFollowing().size()).isEqualTo(1);
+		assertThat(followingResult.getFollowing()).contains(userToFollow);
 	}
 
 	@Test
@@ -489,7 +487,7 @@ public class UserApiTest extends ApiTest {
 
 		FollowingResult followingResult = UsersApi.getFollowing(loggedInUser, loggedInUser.getUsername(), 0);
 
-		assertEquals(0, followingResult.getFollowing().size());
+		assertThat(followingResult.getFollowing()).isEmpty();
 	}
 
 	@Test
@@ -501,7 +499,7 @@ public class UserApiTest extends ApiTest {
 		UserApi.unfollowUser(loggedInUser, userToFollow.getUsername());
 
 		FollowingResult followingResult = UsersApi.getFollowing(loggedInUser, loggedInUser.getUsername(), 0);
-		assertEquals(0, followingResult.getFollowing().size());
+		assertThat(followingResult.getFollowing()).isEmpty();
 	}
 
 	@Test
@@ -511,7 +509,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
 		}
 	}
 
@@ -527,7 +525,7 @@ public class UserApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
 		}
 	}
 }

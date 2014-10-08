@@ -1,10 +1,8 @@
 package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +28,8 @@ public class AuthApiTest extends ApiTest {
 		String username = "test";
 		AppUser user = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration(username, "123456", "blah@foobar.com"));
 
-		assertNotNull("Created user cannot be null", user);
-		assertEquals("Created user must exist in datastore", user, AppUserDao.findAppUser(username));
+		assertThat(user).isNotNull();
+		assertThat(user).isEqualTo(AppUserDao.findAppUser(username));
 	}
 
 	// TODO: Test third party users here
@@ -43,7 +41,7 @@ public class AuthApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
 		}
 	}
 
@@ -59,7 +57,7 @@ public class AuthApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
 		}
 	}
 
@@ -73,7 +71,7 @@ public class AuthApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
 		}
 	}
 
@@ -87,7 +85,7 @@ public class AuthApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
 		}
 	}
 
@@ -98,7 +96,7 @@ public class AuthApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
 		}
 	}
 
@@ -110,7 +108,7 @@ public class AuthApiTest extends ApiTest {
 		AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration(username, pw, "testuser@example.com"));
 
 		String storedPw = AppUserDao.findAppUser(username).getPassword();
-		assertFalse("The stored password should not be equal to the plaintext submitted password", pw.equals(storedPw));
+		assertThat(pw).isNotEqualTo(storedPw);
 	}
 
 	@Test
@@ -122,7 +120,7 @@ public class AuthApiTest extends ApiTest {
 		AppUser secondAppUser = null;
 		secondAppUser = AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration("alex", pw, "test2@example.com"));
 
-		assertNotNull(secondAppUser);
+		assertThat(secondAppUser).isNotNull();
 	}
 
 	@Test
@@ -135,7 +133,7 @@ public class AuthApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.FORBIDDEN.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.FORBIDDEN.getStatusCode());
 		}
 	}
 
@@ -143,8 +141,7 @@ public class AuthApiTest extends ApiTest {
 	public void auth_api_should_create_empty_favelist_for_created_user() {
 		String username = "Alfred";
 		AuthApi.createAppUser(TestHelper.newReq(), new UserRegistration(username, "butterworthy", "asdf@example.com"));
-		assertNotNull(FaveListDao.findFaveList(username, Constants.DEFAULT_HASHTAG));
-
+		assertThat(FaveListDao.findFaveList(username, Constants.DEFAULT_HASHTAG)).isNotNull();
 	}
 
 	@Test
@@ -155,7 +152,7 @@ public class AuthApiTest extends ApiTest {
 		AppUser createdAppUser = TestHelper.createLoggedOutUser(username, pw, "tankman@example.com");
 		AppUser loggedInAppUser = AuthApi.login(TestHelper.newReq(), new LoginCredentials(username, pw));
 
-		assertEquals(createdAppUser, loggedInAppUser);
+		assertThat(createdAppUser).isEqualTo(loggedInAppUser);
 	}
 
 	@Test
@@ -166,7 +163,7 @@ public class AuthApiTest extends ApiTest {
 		AppUser createdAppUser = TestHelper.createLoggedOutUser("Thrain", pw, email);
 		AppUser loggedInAppUser = AuthApi.login(TestHelper.newReq(), new LoginCredentials(email, pw));
 
-		assertEquals(createdAppUser, loggedInAppUser);
+		assertThat(createdAppUser).isEqualTo(loggedInAppUser);
 	}
 
 	@Test
@@ -179,7 +176,7 @@ public class AuthApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
 		}
 	}
 
@@ -193,7 +190,7 @@ public class AuthApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
 		}
 	}
 
@@ -207,7 +204,7 @@ public class AuthApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
 		}
 	}
 
@@ -221,7 +218,7 @@ public class AuthApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
 		}
 	}
 
@@ -234,7 +231,7 @@ public class AuthApiTest extends ApiTest {
 
 		AuthApi.logout(req);
 
-		assertNull("User must be logged out", UserApi.getLoggedInUser(req));
+		assertThat(UserApi.getLoggedInUser(req)).isNull();
 	}
 
 }

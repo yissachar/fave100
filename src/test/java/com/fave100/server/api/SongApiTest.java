@@ -1,7 +1,7 @@
 package com.fave100.server.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 import javax.ws.rs.WebApplicationException;
@@ -28,8 +28,8 @@ public class SongApiTest extends ApiTest {
 	@Test
 	public void song_api_should_find_existing_song() {
 		FaveItem faveItem = SongApi.getSong("BbK4Ex");
-		assertEquals(faveItem.getSong(), "Pangea");
-		assertEquals(faveItem.getArtist(), "Professor Kliq");
+		assertThat(faveItem.getSong()).isEqualTo("Pangea");
+		assertThat(faveItem.getArtist()).isEqualTo("Professor Kliq");
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class SongApiTest extends ApiTest {
 			fail(TestHelper.SHOULD_THROW_EXCEPTION_MSG);
 		}
 		catch (WebApplicationException e) {
-			assertEquals(e.getResponse().getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+			assertThat(e.getResponse().getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
 		}
 	}
 
@@ -51,13 +51,13 @@ public class SongApiTest extends ApiTest {
 		ofy().save().entity(whyline).now();
 
 		WhylineCollection whylineCollection = SongApi.getWhylines(songID);
-		assertEquals(whylineText, whylineCollection.getItems().get(0).getWhyline());
+		assertThat(whylineCollection.getItems()).extracting("whyline").contains(whylineText);
 	}
 
 	@Test
 	public void song_api_should_not_find_non_existing_whylines() {
 		WhylineCollection whylineCollection = SongApi.getWhylines("BbK4Ex");
-		assertEquals(0, whylineCollection.getItems().size());
+		assertThat(whylineCollection.getItems().size()).isEqualTo(0);
 	}
 
 	// TODO: Currently cannot test this api, since it expects a YouTube key to be loaded from the datastore (which does not exist in test container)
