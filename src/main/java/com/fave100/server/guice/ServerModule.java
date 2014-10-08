@@ -3,6 +3,7 @@ package com.fave100.server.guice;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import com.fave100.server.domain.APIKey;
+import com.fave100.server.domain.FeaturedLists;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
@@ -33,6 +34,7 @@ public class ServerModule extends ServletModule {
 		ObjectifyService.register(APIKey.class);
 		ObjectifyService.register(PwdResetToken.class);
 		ObjectifyService.register(Hashtag.class);
+		ObjectifyService.register(FeaturedLists.class);
 
 		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").now();
 		AppUser.setFacebookApiKey(facebookApiKey.getKey().trim());

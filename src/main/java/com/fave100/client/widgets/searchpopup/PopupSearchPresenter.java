@@ -1,8 +1,9 @@
-package com.fave100.client.pages.lists.widgets.addsongsearch;
+package com.fave100.client.widgets.searchpopup;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.widgets.search.SearchPresenter;
 import com.fave100.client.widgets.search.SearchType;
+import com.fave100.client.widgets.search.SuggestionSelectedAction;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
@@ -14,9 +15,9 @@ import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class AddSongSearchPresenter extends PresenterWidget<AddSongSearchPresenter.MyView> implements AddSongSearchUiHandlers {
+public class PopupSearchPresenter extends PresenterWidget<PopupSearchPresenter.MyView> implements PopupSearchUiHandlers {
 
-	public interface MyView extends PopupView, HasUiHandlers<AddSongSearchUiHandlers> {
+	public interface MyView extends PopupView, HasUiHandlers<PopupSearchUiHandlers> {
 		void reposition();
 	}
 
@@ -26,13 +27,11 @@ public class AddSongSearchPresenter extends PresenterWidget<AddSongSearchPresent
 	private Command _suggestionSelectedCommand;
 
 	@Inject
-	AddSongSearchPresenter(final EventBus eventBus, final MyView view, SearchPresenter searchPresenter, PlaceManager placeManager,
+	PopupSearchPresenter(final EventBus eventBus, final MyView view, SearchPresenter searchPresenter, PlaceManager placeManager,
 							CurrentUser currentUser) {
 		super(eventBus, view);
 		_search = searchPresenter;
-		_search.setSingleSearch(SearchType.SONGS);
-		_search.setSuggestionSelectedAction(new AddSongSuggestionSelectedAction(placeManager, currentUser, this));
-		_search.setSearchCompletedAction(new AddSongSearchCompletedAction(getView()));
+		_search.setSearchCompletedAction(new PopupSearchCompletedAction(getView()));
 		_search.setDarkText(true);
 		_search.setFullPageSearch(true);
 
@@ -50,8 +49,12 @@ public class AddSongSearchPresenter extends PresenterWidget<AddSongSearchPresent
 		_suggestionSelectedCommand.execute();
 	}
 
-	public void setSuggestionSelectedCommand(Command command) {
-		_suggestionSelectedCommand = command;
+	public void setSearchType(SearchType searchType) {
+		_search.setSingleSearch(searchType);
+	}
+
+	public void setSuggestionSelectedAction(SuggestionSelectedAction action) {
+		_search.setSuggestionSelectedAction(action);
 	}
 
 }

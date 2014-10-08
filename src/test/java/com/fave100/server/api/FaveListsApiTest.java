@@ -23,6 +23,7 @@ import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.fave100.server.servlets.HashtagBuilderServlet;
+import com.fave100.shared.ListMode;
 
 public class FaveListsApiTest extends ApiTest {
 
@@ -48,7 +49,7 @@ public class FaveListsApiTest extends ApiTest {
 		when(req.getParameter(HashtagBuilderServlet.HASHTAG_PARAM)).thenReturn(listName);
 		servlet.doPost(req, mock(HttpServletResponse.class));
 
-		List<FaveItem> faveItems = FaveListsApi.getMasterFaveList(listName).getItems();
+		List<FaveItem> faveItems = FaveListsApi.getMasterFaveList(listName, ListMode.ALL).getItems();
 		assertEquals("Master list must contain only one entity", 1, faveItems.size());
 		assertEquals("Master list must contain only the proper fave item", songId, faveItems.get(0).getId());
 	}
@@ -64,7 +65,7 @@ public class FaveListsApiTest extends ApiTest {
 		hashtag.setList(faveItems);
 		ofy().save().entity(hashtag).now();
 
-		List<FaveItem> masterList = FaveListsApi.getMasterFaveList(listName).getItems();
+		List<FaveItem> masterList = FaveListsApi.getMasterFaveList(listName, ListMode.ALL).getItems();
 		assertEquals("Master list must contain only one entity", 1, masterList.size());
 		assertEquals("Master list must contain only the proper fave item", songId, masterList.get(0).getId());
 	}

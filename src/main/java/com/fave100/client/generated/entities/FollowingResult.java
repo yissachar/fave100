@@ -13,16 +13,8 @@ import java.util.List;
 
 public class FollowingResult {
 
-    private List<AppUser> following;
     private boolean more;
-
-    public List<AppUser> getFollowing() {
-        return this.following;
-    }
-
-    public void setFollowing(List<AppUser> following){
-        this.following = following;
-    }
+    private List<AppUser> following;
 
     public boolean isMore() {
         return this.more;
@@ -30,6 +22,14 @@ public class FollowingResult {
 
     public void setMore(boolean more){
         this.more = more;
+    }
+
+    public List<AppUser> getFollowing() {
+        return this.following;
+    }
+
+    public void setFollowing(List<AppUser> following){
+        this.following = following;
     }
 
 }

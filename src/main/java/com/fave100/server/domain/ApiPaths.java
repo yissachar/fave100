@@ -9,7 +9,9 @@ public final class ApiPaths {
 	// FaveList
 	public static final String FAVELIST_ROOT = "favelists";
 	public static final String GET_LIST_NAMES = "/names";
-	public static final String GET_MASTER_FAVELIST = "/{list}";
+	public static final String GET_MASTER_FAVELIST = "/list/{list}";
+	public static final String FEATURED_FAVELISTS = "/featured";
+	public static final String EDIT_FEATURED_FAVELISTS = "/featured/{list}";
 
 	// Auth
 	public static final String AUTH_ROOT = "auth";
@@ -29,7 +31,12 @@ public final class ApiPaths {
 	// Users
 	public static final String USERS_ROOT = "users";
 	public static final String GET_USER = "/{user}";
+	public static final String ADMINS = "/admins";
+	public static final String CRITICS = "/critics";
+	public static final String ALTER_ADMIN = "/admins/{user}";
+	public static final String ALTER_CRITIC = "/critics/{user}";
 	public static final String GET_USERS_FAVELIST = "/{user}/favelists/{list}";
+	public static final String LIST_CRITIC_URL = "/{user}/favelists/{list}/critic_url";
 	public static final String GET_USERS_FOLLOWING = "/{user}/following";
 	public static final String IS_APPUSER_LOGGED_IN = "/isLoggedIn";
 
@@ -53,8 +60,8 @@ public final class ApiPaths {
 
 	// Search
 	public static final String SEARCH_ROOT = "search";
-	public static final String SEARCH_FAVELISTS = "/favelists/{search_term}";
-	public static final String SEARCH_USERS = "/users/{search_term}";
+	public static final String SEARCH_FAVELISTS = "/favelists";
+	public static final String SEARCH_USERS = "/users";
 	public static final String GET_YOUTUBE_SEARCH_RESULTS = "/youtube";
 	public static final String YOUTUBE_SEARCH_SONG_PARAM = "song";
 	public static final String YOUTUBE_SEARCH_ARTIST_PARAM = "artist";

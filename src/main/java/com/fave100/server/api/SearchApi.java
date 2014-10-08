@@ -102,7 +102,7 @@ public class SearchApi {
 			new CursoredSearchResult(null, new StringResultCollection(names));
 
 		// TODO: Need to sort by popularity
-		Query<Hashtag> query = ofy().load().type(Hashtag.class).filter("id >=", searchTerm.toLowerCase()).filter("id <", searchTerm.toLowerCase() + "\uFFFD").limit(5);
+		Query<Hashtag> query = ofy().load().type(Hashtag.class).filter("id >=", searchTerm.toLowerCase()).filter("id <", searchTerm.toLowerCase() + "\uFFFD").filter("criticList", false).limit(5);
 		if (cursor != null) {
 			query = query.startAt(Cursor.fromWebSafeString(cursor));
 		}

@@ -1,6 +1,9 @@
 package com.fave100.server.api;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -9,8 +12,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.fave100.server.domain.ApiPaths;
+import com.fave100.server.domain.FeaturedLists;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.StringResultCollection;
+import com.fave100.shared.Constants;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -30,18 +35,27 @@ public class TrendingApi {
 		//			trending.add(hashtag.getName());
 		//		}
 		//		return trending;
+
+		// Return alltime, 2014 and up to 8 more randomly picked from the featured list
 		List<StringResult> trending = new ArrayList<>();
 		trending.add(new StringResult("alltime"));
 		trending.add(new StringResult("2014"));
-		trending.add(new StringResult("2013"));
-		trending.add(new StringResult("driving"));
-		trending.add(new StringResult("running"));
-		trending.add(new StringResult("wedding"));
-		trending.add(new StringResult("dance"));
-		trending.add(new StringResult("tvsongs"));
-		trending.add(new StringResult("classicrock"));
-		trending.add(new StringResult("moviesongs"));
-		trending.add(new StringResult("onehitwonders"));
+
+		FeaturedLists featuredLists = ofy().load().type(FeaturedLists.class).id(Constants.FEATURED_LISTS_ID).now();
+		List<String> listNames = new ArrayList<>();
+		if (featuredLists != null) {
+			for (String list : featuredLists.getLists()) {
+				listNames.add(list);
+			}
+
+			Collections.shuffle(listNames);
+			while (trending.size() < 10 && listNames.size() > 0) {
+				String randomList = listNames.get(0);
+				listNames.remove(randomList);
+				trending.add(new StringResult(randomList));
+			}
+		}
+
 		return new StringResultCollection(trending);
 	}
 

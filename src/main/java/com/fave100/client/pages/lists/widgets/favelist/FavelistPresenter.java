@@ -56,6 +56,7 @@ public class FavelistPresenter extends
 	// The currently logged in user
 	private CurrentUser _currentUser;
 	private PlaceManager _placeManager;
+	private String _listMode;
 	private PlaylistPresenter _playlistPresenter;
 	private String _hashtag;
 	private List<FavePickWidget> _widgets;
@@ -154,7 +155,7 @@ public class FavelistPresenter extends
 		// No user, get the global list 
 		else {
 
-			_api.call(_api.service().favelists().getMasterFaveList(_hashtag), new AsyncCallback<FaveItemCollection>() {
+			_api.call(_api.service().favelists().getMasterFaveList(_hashtag, _listMode), new AsyncCallback<FaveItemCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -350,7 +351,7 @@ public class FavelistPresenter extends
 	}
 
 	public void setUser(final AppUser user) {
-		this._user = user;
+		_user = user;
 	}
 
 	public String getHashtag() {
@@ -358,7 +359,11 @@ public class FavelistPresenter extends
 	}
 
 	public void setHashtag(final String hashtag) {
-		this._hashtag = hashtag;
+		_hashtag = hashtag;
+	}
+
+	public void setListMode(String listMode) {
+		_listMode = listMode;
 	}
 
 }

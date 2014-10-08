@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.fave100.client.Utils;
 import com.fave100.client.resources.css.GlobalStyle;
+import com.fave100.shared.ListMode;
+import com.fave100.shared.place.NameTokens;
+import com.fave100.shared.place.PlaceParams;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -19,11 +22,14 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> implements ListManagerPresenter.MyView {
 
@@ -36,6 +42,9 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField Label currentList;
 	@UiField FlowPanel listDropdown;
 	@UiField Image dropdownToggle;
+	@UiField Panel userCriticToggle;
+	@UiField Hyperlink usersLink;
+	@UiField Hyperlink criticsLink;
 	@UiField HTMLPanel autocomplete;
 	@UiField Button addHashtagButton;
 	@UiField FlowPanel addListContainer;
@@ -45,6 +54,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField ListManagerStyle style;
 	int selectedIndex = 0;
 	private HandlerRegistration rootClickHandler;
+	private ParameterTokenFormatter _tokenFormatter;
 
 	interface ListManagerStyle extends GlobalStyle {
 		String dropdownVisible();
@@ -55,10 +65,12 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	}
 
 	@Inject
-	public ListManagerView(final Binder binder) {
+	public ListManagerView(final Binder binder, ParameterTokenFormatter tokenFormatter) {
 		widget = binder.createAndBindUi(this);
+		_tokenFormatter = tokenFormatter;
 		autocomplete.setVisible(false);
 		listDropdown.setVisible(false);
+		userCriticToggle.setVisible(false);
 	}
 
 	@Override
@@ -80,9 +92,9 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 	@UiHandler("currentListContainer")
 	void onCurrentListClick(final ClickEvent event) {
-		if(!dropdownToggle.isVisible())
+		if (!dropdownToggle.isVisible())
 			return;
-		
+
 		hideError();
 		if (listDropdown.isVisible()) {
 			hideDropdown();
@@ -151,14 +163,28 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 			if (list.equals(selected)) {
 				label.addStyleName("selected");
+
 				selectedIndex = i;
 			}
 
 			i++;
 		}
-		
-		dropdownToggle.setVisible(lists.size() > 1);
+
+		dropdownToggle.setVisible(lists.size() > 1 || ownList);
+
 		currentList.setText(selected);
+		usersLink.setTargetHistoryToken(_tokenFormatter.toPlaceToken(
+				new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(PlaceParams.LIST_PARAM, selected)
+						.build()));
+
+		criticsLink.setTargetHistoryToken(_tokenFormatter.toPlaceToken(
+				new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(PlaceParams.LIST_PARAM, selected)
+						.with(PlaceParams.MODE_PARAM, ListMode.CRITICS)
+						.build()));
 	}
 
 	@Override
@@ -202,5 +228,10 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@Override
 	public void hide() {
 		widget.setVisible(false);
+	}
+
+	@Override
+	public void showUserCriticToggle(boolean show) {
+		userCriticToggle.setVisible(show);
 	}
 }

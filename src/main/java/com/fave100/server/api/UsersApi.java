@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -15,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fave100.server.domain.ApiPaths;
+import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.appuser.Following;
 import com.fave100.server.domain.appuser.FollowingResult;
@@ -23,6 +25,7 @@ import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.shared.Constants;
 import com.googlecode.objectify.Ref;
+import com.sun.jersey.api.NotFoundException;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -81,5 +84,35 @@ public class UsersApi {
 			throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(ApiExceptions.FAVELIST_NOT_FOUND).build());
 
 		return new FaveItemCollection(faveList.getList());
+	}
+
+	@GET
+	@Path(ApiPaths.LIST_CRITIC_URL)
+	@ApiOperation(value = "Get the critic url for a list", response = StringResult.class)
+	public static StringResult getCriticUrl(@PathParam("user") String username, @PathParam("list") String list) {
+		FaveList faveList = FaveListDao.findFaveList(username, list);
+		if (faveList == null)
+			throw new NotFoundException();
+
+		return new StringResult(faveList.getCriticUrl() != null ? faveList.getCriticUrl() : "");
+	}
+
+	@POST
+	@Path(ApiPaths.LIST_CRITIC_URL)
+	@ApiOperation(value = "Set the critic url for a list")
+	public static void setCriticUrl(@LoggedInUser AppUser currentUser, @PathParam("user") String username, @PathParam("list") String list, String criticUrl) {
+		FaveList faveList = FaveListDao.findFaveList(username, list);
+		if (faveList == null)
+			throw new NotFoundException();
+
+		if (!currentUser.isCritic() || !currentUser.getUsername().equals(username))
+			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).build());
+
+		// TODO: Oct 1 2014 Validate the submitted URL
+		// GWTP sends the request with extra quotes attached
+		criticUrl = criticUrl.replace("\"", "");
+		faveList.setCriticUrl(criticUrl);
+		ofy().save().entity(faveList).now();
+
 	}
 }

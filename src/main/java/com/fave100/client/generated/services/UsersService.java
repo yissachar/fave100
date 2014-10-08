@@ -9,29 +9,39 @@
 
 package com.fave100.client.generated.services;
 
-import com.fave100.client.generated.entities.FaveItemCollection;
+import com.fave100.client.generated.entities.AppUser;
 import com.gwtplatform.dispatch.rest.shared.RestService;
 import javax.ws.rs.PathParam;
-import com.fave100.client.generated.entities.FollowingResult;
-import com.gwtplatform.dispatch.rest.shared.RestAction;
-import javax.ws.rs.Path;
-import javax.ws.rs.GET;
-import com.fave100.client.generated.entities.AppUser;
+import javax.ws.rs.POST;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import com.fave100.client.generated.entities.StringResult;
+import com.fave100.client.generated.entities.FollowingResult;
+import com.fave100.client.generated.entities.FaveItemCollection;
+import com.gwtplatform.dispatch.rest.shared.RestAction;
 
 @Path("/")
 public interface UsersService extends RestService {
 
     @GET
-    @Path("/users/{user}")
-    public RestAction<AppUser> getAppUser (@PathParam("user") String user);
+    @Path("/users/{user}/favelists/{list}")
+    public RestAction<FaveItemCollection> getFaveList (@PathParam("user") String user, @PathParam("list") String list);
+
+    @GET
+    @Path("/users/{user}/favelists/{list}/critic_url")
+    public RestAction<StringResult> getCriticUrl (@PathParam("user") String user, @PathParam("list") String list);
+
+    @POST
+    @Path("/users/{user}/favelists/{list}/critic_url")
+    public RestAction<Void> setCriticUrl (@PathParam("user") String user, @PathParam("list") String list, String body);
 
     @GET
     @Path("/users/{user}/following")
     public RestAction<FollowingResult> getFollowing (@PathParam("user") String user, @QueryParam("index") int index);
 
     @GET
-    @Path("/users/{user}/favelists/{list}")
-    public RestAction<FaveItemCollection> getFaveList (@PathParam("user") String user, @PathParam("list") String list);
+    @Path("/users/{user}")
+    public RestAction<AppUser> getAppUser (@PathParam("user") String user);
 
 }

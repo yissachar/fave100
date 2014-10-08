@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.fave100.server.domain.APIKey;
+import com.fave100.server.domain.FeaturedLists;
 import com.fave100.server.domain.Song;
 import com.fave100.server.domain.Whyline;
 import com.fave100.server.domain.appuser.AppUser;
@@ -35,6 +36,7 @@ public abstract class ApiTest {
 		ObjectifyService.register(APIKey.class);
 		ObjectifyService.register(PwdResetToken.class);
 		ObjectifyService.register(Hashtag.class);
+		ObjectifyService.register(FeaturedLists.class);
 	}
 
 	private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100);

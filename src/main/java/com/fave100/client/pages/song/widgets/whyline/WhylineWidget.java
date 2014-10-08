@@ -37,6 +37,7 @@ public class WhylineWidget extends Composite {
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
 						.with(PlaceParams.USER_PARAM, whylineProxy.getUsername())
+						.with(PlaceParams.LIST_PARAM, whylineProxy.getList())
 						.build());
 		userLink.setTargetHistoryToken(userPlace);
 		userLink.setText(whylineProxy.getUsername());

@@ -367,7 +367,7 @@ public class UserApiTest extends ApiTest {
 	public void user_api_should_remove_existing_fave_item_associated_whyline() {
 		String songId = "kEMkxg";
 
-		Whyline whyline = new Whyline("Blah goo", songId, loggedInUser.getUsername());
+		Whyline whyline = new Whyline("Blah goo", songId, loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG);
 		ofy().save().entity(whyline).now();
 
 		FaveList faveList = FaveListDao.findFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG);

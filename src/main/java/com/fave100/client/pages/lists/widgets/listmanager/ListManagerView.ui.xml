@@ -48,6 +48,14 @@
 			font-size: 32px;
 			margin-right: 5px;
 	 	}
+	 	
+	 	.userCriticToggle {
+			display: inline;
+	 	}
+	 	
+	 	.userCriticToggle > * {
+			margin: 0 2px;
+	 	}
 		
 		.listDropdown {
 			position: absolute;
@@ -125,6 +133,11 @@
 			<g:FlowPanel>
 				<g:InlineLabel ui:field="currentList" ui:styleName="{style.currentListName}" />
 				<g:Image ui:field="dropdownToggle" resource="{img.triangle}"/>
+				<g:FlowPanel ui:field="userCriticToggle" ui:styleName="{style.userCriticToggle}">
+					<g:InlineHyperlink ui:field="usersLink">Users</g:InlineHyperlink>
+					<g:InlineLabel>|</g:InlineLabel>
+					<g:InlineHyperlink ui:field="criticsLink">Critics</g:InlineHyperlink>
+				</g:FlowPanel>
 			</g:FlowPanel>
 		</g:FocusPanel>
 		

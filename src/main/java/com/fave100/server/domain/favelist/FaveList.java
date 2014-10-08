@@ -18,6 +18,7 @@ public class FaveList {
 	private String hashtag;
 	@Index private String hashtagId;
 	private List<FaveItem> list = new ArrayList<FaveItem>();
+	private String criticUrl;
 
 	@SuppressWarnings("unused")
 	private FaveList() {
@@ -66,6 +67,14 @@ public class FaveList {
 
 	public void setHashtagId(String hashtagId) {
 		this.hashtagId = hashtagId;
+	}
+
+	public String getCriticUrl() {
+		return criticUrl;
+	}
+
+	public void setCriticUrl(String criticUrl) {
+		this.criticUrl = criticUrl;
 	}
 
 }
