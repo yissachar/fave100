@@ -154,14 +154,15 @@ public class HashtagBuilderServlet extends HttpServlet
 			for (final FaveItem faveItem : faveList.getList()) {
 				final FaveRankerWrapper faveHolder = new FaveRankerWrapper(faveItem);
 				final double score = FaveListDao.calculateItemScore(i);
-				final double newVal = (all.get(faveHolder) != null) ? all.get(faveHolder) + score : score;
 
 				// Build a critics only master list if needed
 				if (faveList.getCriticUrl() != null && !faveList.getCriticUrl().isEmpty()) {
+					final double newVal = (critics.get(faveHolder) != null) ? critics.get(faveHolder) + score : score;
 					critics.put(faveHolder, newVal);
 				}
 				// Otherwise just build the user master list
 				else {
+					final double newVal = (all.get(faveHolder) != null) ? all.get(faveHolder) + score : score;
 					all.put(faveHolder, newVal);
 				}
 				i++;
