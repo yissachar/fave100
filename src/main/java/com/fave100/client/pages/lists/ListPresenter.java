@@ -334,6 +334,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 			listManager.setUser(requestedUser);
 			listManager.setHashtag(_requestedHashtag);
+			listManager.setListMode(_requestedListMode);
 			listManager.refreshUsersLists();
 
 			if (requestedUser != null) {

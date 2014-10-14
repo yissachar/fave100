@@ -50,6 +50,8 @@ public class ListManagerPresenter extends
 
 		void showUserCriticToggle(boolean show);
 
+		void setListMode(String listMode);
+
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
@@ -259,6 +261,10 @@ public class ListManagerPresenter extends
 		else {
 			getView().showUserCriticToggle(false);
 		}
+	}
+
+	public void setListMode(String listMode) {
+		getView().setListMode(listMode);
 	}
 }
 

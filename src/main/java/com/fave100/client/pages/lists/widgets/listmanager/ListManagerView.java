@@ -62,6 +62,8 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 		String listName();
 
 		String deleteButton();
+
+		String selected();
 	}
 
 	@Inject
@@ -233,5 +235,18 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@Override
 	public void showUserCriticToggle(boolean show) {
 		userCriticToggle.setVisible(show);
+	}
+
+	@Override
+	public void setListMode(String listMode) {
+		criticsLink.removeStyleName(style.selected());
+		usersLink.removeStyleName(style.selected());
+
+		if (ListMode.CRITICS.equals(listMode)) {
+			criticsLink.addStyleName(style.selected());
+		}
+		else if (ListMode.ALL.equals(listMode)) {
+			usersLink.addStyleName(style.selected());
+		}
 	}
 }

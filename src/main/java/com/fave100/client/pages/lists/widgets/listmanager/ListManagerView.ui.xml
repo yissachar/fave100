@@ -56,6 +56,11 @@
 	 	.userCriticToggle > * {
 			margin: 0 2px;
 	 	}
+	 	
+	 	.userCriticToggle > .selected {
+			text-decoration: none;
+			color: PROMINENT_TEXT_COLOR;
+	 	}
 		
 		.listDropdown {
 			position: absolute;
