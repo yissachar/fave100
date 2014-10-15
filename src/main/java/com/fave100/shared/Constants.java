@@ -20,4 +20,5 @@ public class Constants {
 	public static final int TOP_BAR_HEIGHT = 55;
 	public static final String TOP_BAR_HEIGHT_PX = TOP_BAR_HEIGHT + "px";
 	public static final String FEATURED_LISTS_ID = "featured";
+	public static final String SAW_WELCOME_INFO_STORAGE_KEY = "saw_welcome_info";
 }

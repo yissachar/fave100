@@ -1,0 +1,83 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:w="urn:import:com.fave100.client.widgets">
+	
+    <ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.widgets.welcomeinfo.WelcomeInfo.WelcomeInfoStyle">
+    	@def WIDTH 400px;
+    	@def HEIGHT 280px;
+    	@def LEFT -30px;
+    	
+		.container {
+			float: right;
+			max-width: add(WIDTH, 80px);
+			max-height: HEIGHT;
+			line-height: 23px;
+			position: relative;
+		}
+		
+		.infoFlyout {
+			padding: 15px 10px;
+			border-radius: 4px;
+			background-color: FADED_LIGHT_BG;
+			width: WIDTH;
+			height: HEIGHT;
+			transition: all RESIZE_TRANSITION_TIME;
+			-webkit-transition: all RESIZE_TRANSITION_TIME;
+			left: sub(LEFT, WIDTH);
+			position: absolute;
+			overflow: hidden;
+			-webkit-user-select: initial;
+			-ms-user-select: initial;
+			user-select: initial;	
+		}
+		
+		.infoFlyout h2 {
+			margin-top: 6px;
+			margin-bottom: 12px;
+		}
+		
+		.infoFlyout p {
+			margin-top: 8px;
+		}
+		
+		.infoFlyout.flyoutHidden {
+			width: 0px;
+			height: 0px;
+			padding: 0px;
+			left: 0;
+			opacity: 0;
+		}
+		
+		.registerLink {
+			cursor: pointer;
+			display: block;
+			margin-top: 10px;
+		}
+		
+		.infoIcon {
+			left: LEFT;
+			padding: 4px;
+			cursor: pointer;
+			position: absolute;
+		}
+	</ui:style>
+	
+	<ui:with type="com.fave100.shared.place.NameTokens" field="nameTokens"/>
+	
+	<g:HTMLPanel ui:styleName="{style.container}">	
+		
+		<g:HTMLPanel ui:field="infoFlyout" ui:styleName="{style.infoFlyout}">
+			<h2>Welcome, music lover!</h2>
+			<p>Fave100 is a crowdsourcing web app that lets you view and contribute to ranked "Top 100" song lists.</p>
+			<p>Add picks to your personal list and the aggregate list will update in minutes!</p>
+			<p>Not only can you share and discover great music, you can play any Fave100 list for free.</p>
+			<p>So, what are you waiting for? Get your list on today!</p>
+			<g:Anchor ui:field="registerLink" ui:styleName="{style.registerLink}">Register</g:Anchor>
+			<g:Hyperlink targetHistoryToken="{nameTokens.getTour}">Take a tour</g:Hyperlink>
+		</g:HTMLPanel>		
+			
+		<w:Icon ui:field="infoIcon" ui:styleName="fa fa-info-circle {style.infoIcon}"/>
+		
+	</g:HTMLPanel>
+</ui:UiBinder> 

@@ -52,6 +52,8 @@ public class ListManagerPresenter extends
 
 		void setListMode(String listMode);
 
+		void showWelcomeInfo(boolean show);
+
 	}
 
 	@ContentSlot public static final Type<RevealContentHandler<?>> AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
@@ -261,6 +263,8 @@ public class ListManagerPresenter extends
 		else {
 			getView().showUserCriticToggle(false);
 		}
+
+		getView().showWelcomeInfo(!_currentUser.isLoggedIn());
 	}
 
 	public void setListMode(String listMode) {

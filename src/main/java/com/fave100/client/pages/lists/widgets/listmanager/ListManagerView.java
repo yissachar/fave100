@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fave100.client.Utils;
 import com.fave100.client.resources.css.GlobalStyle;
+import com.fave100.client.widgets.welcomeinfo.WelcomeInfo;
 import com.fave100.shared.ListMode;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
@@ -26,6 +27,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
@@ -51,6 +53,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField FlowPanel listContainer;
 	@UiField Label errorMsg;
 	@UiField Hyperlink globalListLink;
+	@UiField WelcomeInfo welcomeInfo;
 	@UiField ListManagerStyle style;
 	int selectedIndex = 0;
 	private HandlerRegistration rootClickHandler;
@@ -67,12 +70,13 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	}
 
 	@Inject
-	public ListManagerView(final Binder binder, ParameterTokenFormatter tokenFormatter) {
+	public ListManagerView(final Binder binder, ParameterTokenFormatter tokenFormatter, EventBus eventBus) {
 		widget = binder.createAndBindUi(this);
 		_tokenFormatter = tokenFormatter;
 		autocomplete.setVisible(false);
 		listDropdown.setVisible(false);
 		userCriticToggle.setVisible(false);
+		welcomeInfo.setEventBus(eventBus);
 	}
 
 	@Override
@@ -248,5 +252,10 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 		else if (ListMode.ALL.equals(listMode)) {
 			usersLink.addStyleName(style.selected());
 		}
+	}
+
+	@Override
+	public void showWelcomeInfo(boolean show) {
+		welcomeInfo.setVisible(show);
 	}
 }

@@ -2,6 +2,8 @@ package com.fave100.client.pages;
 
 import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.events.LoginDialogRequestedHandler;
+import com.fave100.client.events.RegisterDialogRequestedEvent;
+import com.fave100.client.events.RegisterDialogRequestedHandler;
 import com.fave100.client.pagefragments.playlist.PlaylistPresenter;
 import com.fave100.client.pagefragments.popups.login.LoginPopupPresenter;
 import com.fave100.client.pagefragments.topbar.TopBarPresenter;
@@ -48,6 +50,15 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 			public void onLoginDialogRequested() {
 				addToPopupSlot(loginBox);
 				loginBox.showLogin();
+			}
+		});
+
+		addRegisteredHandler(RegisterDialogRequestedEvent.getType(), new RegisterDialogRequestedHandler() {
+
+			@Override
+			public void onRegisterDialogRequested() {
+				addToPopupSlot(loginBox);
+				loginBox.showRegister();
 			}
 		});
 	}
