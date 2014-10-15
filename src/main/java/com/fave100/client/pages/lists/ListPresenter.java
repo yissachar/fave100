@@ -8,7 +8,6 @@ import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.events.favelist.HideSideBarEvent;
 import com.fave100.client.events.favelist.ListChangedEvent;
 import com.fave100.client.events.song.SongSelectedEvent;
-import com.fave100.client.events.user.CurrentUserChangedEvent;
 import com.fave100.client.events.user.UserFollowedEvent;
 import com.fave100.client.events.user.UserUnfollowedEvent;
 import com.fave100.client.generated.entities.AppUser;
@@ -150,16 +149,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 			}
 		});
 
-		CurrentUserChangedEvent.register(_eventBus,
-				new CurrentUserChangedEvent.Handler() {
-					@Override
-					public void onCurrentUserChanged(
-							final CurrentUserChangedEvent event) {
-						if (event.getUser() != null)
-							showPage();
-					}
-				});
-
 		ListChangedEvent.register(_eventBus, new ListChangedEvent.Handler() {
 			@Override
 			public void onListChanged(final ListChangedEvent event) {
@@ -271,14 +260,13 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 				@Override
 				public void onFailure(Throwable caught) {
 					isFollowing = false;
-					getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
+					refreshFollowCTA();
 				}
 
 				@Override
 				public void onSuccess(BooleanResult result) {
 					isFollowing = result.getValue();
-					getView().setFollowCTA(!_currentUser.isLoggedIn(), isFollowing);
-					showPage();
+					refreshFollowCTA();
 				}
 			});
 		}
@@ -286,6 +274,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 	private void showPage() {
 		_ownPage = _currentUser.isLoggedIn() && _currentUser.equals(requestedUser);
+		refreshFollowCTA();
 
 		if (requestedUser != null && requestedUser.isCritic()) {
 			_api.call(_api.service().users().getCriticUrl(requestedUsername, _requestedHashtag), new RestCallback<StringResult>() {
@@ -320,13 +309,6 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 			getView().setPageDetails(requestedUser, _currentUser);
 
-			if (_ownPage) {
-				getView().setFollowCTA(false, isFollowing);
-			}
-			else {
-				getView().setFollowCTA(true, isFollowing);
-			}
-
 			favelist.setUser(requestedUser);
 			favelist.setHashtag(_requestedHashtag);
 			favelist.setListMode(_requestedListMode);
@@ -353,6 +335,15 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 			getProxy().manualReveal(ListPresenter.this);
 		}
 
+	}
+
+	private void refreshFollowCTA() {
+		if (_ownPage) {
+			getView().setFollowCTA(false, isFollowing);
+		}
+		else {
+			getView().setFollowCTA(true, isFollowing);
+		}
 	}
 
 	@Override
