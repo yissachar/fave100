@@ -30,6 +30,8 @@
 		
 		.smallDisplay .infoFlyout {
 			right: 0;
+			max-height: 310px;
+			overflow-y: scroll;
 		}
 		
 		.infoFlyout h2 {
