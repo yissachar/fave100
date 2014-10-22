@@ -59,6 +59,10 @@
 			border-bottom: 1px solid #aaa;
 		}
 		
+		.smallDisplay .listHeader {
+			padding: 10px;
+		}
+		
 		.contributeCTA {
 			cursor: pointer;
 			margin-bottom: 20px;
