@@ -61,6 +61,7 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiField HTMLPanel userPageFaveList;
 	@UiField Panel listHeader;
 	@UiField Anchor contributeCTA;
+	@UiField Button directionSwitchButton;
 	@UiField Panel criticUrlPanel;
 	@UiField Label criticUrlLabel;
 	@UiField TextBox criticUrlInput;
@@ -157,6 +158,11 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiHandler("contributeCTA")
 	void onContributeClick(ClickEvent event) {
 		getUiHandlers().contributeToList();
+	}
+
+	@UiHandler("directionSwitchButton")
+	void onDirectionSwitchButtonClick(ClickEvent event) {
+		getUiHandlers().switchListDirection();
 	}
 
 	@UiHandler("criticUrlButton")

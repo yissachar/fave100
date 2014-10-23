@@ -390,6 +390,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 	@Override
 	public void showAddSongPrompt() {
+		favelist.resetDirection();
 		addToPopupSlot(_search);
 	}
 
@@ -421,6 +422,12 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 			}
 		});
 	}
+
+	@Override
+	public void switchListDirection() {
+		favelist.switchDirection();
+	}
+
 }
 
 interface ListUiHandlers extends UiHandlers {
@@ -437,4 +444,6 @@ interface ListUiHandlers extends UiHandlers {
 	void hideAddSongPrompt();
 
 	void saveCriticUrl(String url);
+
+	void switchListDirection();
 }

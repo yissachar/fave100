@@ -60,6 +60,7 @@ public class FavelistPresenter extends
 	private PlaylistPresenter _playlistPresenter;
 	private String _hashtag;
 	private List<FavePickWidget> _widgets;
+	private boolean _descending;
 	@Inject private AddSongPresenter _addSongPresenter;
 
 	@Inject
@@ -173,12 +174,26 @@ public class FavelistPresenter extends
 	}
 
 	private void buildWidgets(final List<FaveItem> faveList) {
+		_descending = false;
+		buildWidgets(faveList, false);
+	}
+
+	private void buildWidgets(final List<FaveItem> faveList, boolean descending) {
 		final List<FavePickWidget> pickWidgets = new ArrayList<FavePickWidget>();
 		int i = 1;
+		if (descending) {
+			i = faveList.size();
+		}
+
 		for (final FaveItem item : faveList) {
 			final FavePickWidget widget = new FavePickWidget(_eventBus, item, i, isEditable(), isGlobalList(), faveList.size(), this);
 			pickWidgets.add(widget);
-			i++;
+			if (descending) {
+				i--;
+			}
+			else {
+				i++;
+			}
 		}
 		_widgets = pickWidgets;
 
@@ -334,6 +349,22 @@ public class FavelistPresenter extends
 		}
 
 		_playlistPresenter.playSong(songId, _hashtag, _user != null ? _user.getUsername() : "", isGlobalList(), faveItems);
+	}
+
+	public void switchDirection() {
+		List<FaveItem> faveItems = new ArrayList<FaveItem>();
+		for (int i = _widgets.size() - 1; i >= 0; i--) {
+			FavePickWidget widget = _widgets.get(i);
+			faveItems.add(widget.getFaveItem());
+		}
+		_descending = !_descending;
+		buildWidgets(faveItems, _descending);
+	}
+
+	public void resetDirection() {
+		if (_descending) {
+			switchDirection();
+		}
 	}
 
 	private boolean isEditable() {
