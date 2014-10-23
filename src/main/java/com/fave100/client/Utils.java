@@ -63,4 +63,12 @@ public class Utils {
 
 		return "rgb(" + red + "," + green + "," + blue + ")";
 	}
+
+	public static boolean isNumberKey(int keyCode) {
+		return (keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105);
+	}
+
+	public static boolean isAlphabetKey(int keyCode) {
+		return keyCode >= 65 && keyCode <= 90;
+	}
 }

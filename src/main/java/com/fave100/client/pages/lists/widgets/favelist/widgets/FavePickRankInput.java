@@ -2,6 +2,7 @@ package com.fave100.client.pages.lists.widgets.favelist.widgets;
 
 import java.util.HashSet;
 
+import com.fave100.client.Utils;
 import com.fave100.client.events.favelist.RankInputUnfocusEvent;
 import com.fave100.client.resources.css.GlobalStyle;
 import com.google.gwt.core.client.GWT;
@@ -68,7 +69,7 @@ public class FavePickRankInput extends Composite {
 		final int keyCode = event.getNativeKeyCode();
 
 		// Only allow numbers and special keys
-		if (event.getNativeEvent().getShiftKey() || (!isNumberKey(keyCode) && !_permittedKeys.contains(keyCode))) {
+		if (event.getNativeEvent().getShiftKey() || (!Utils.isNumberKey(keyCode) && !_permittedKeys.contains(keyCode))) {
 			event.preventDefault();
 			event.stopPropagation();
 		}
@@ -80,10 +81,6 @@ public class FavePickRankInput extends Composite {
 		else if (keyCode == KeyCodes.KEY_ESCAPE) {
 			_eventBus.fireEvent(new RankInputUnfocusEvent());
 		}
-	}
-
-	private boolean isNumberKey(int keyCode) {
-		return (keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105);
 	}
 
 	@UiHandler("rankEditTextBox")

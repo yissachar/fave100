@@ -155,8 +155,9 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 
 	@UiHandler("searchBox")
 	void onKeyUp(final KeyUpEvent event) {
+		final int keyCode = event.getNativeKeyCode();
 
-		if (KeyUpEvent.isArrow(event.getNativeKeyCode())) {
+		if (KeyUpEvent.isArrow(keyCode)) {
 
 			if (event.isDownArrow()) {
 				getUiHandlers().incrementSelection();
@@ -165,11 +166,11 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 				getUiHandlers().decrementSelection();
 			}
 		}
-		else if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()) {
+		else if (KeyCodes.KEY_ENTER == keyCode) {
 			getUiHandlers().selectSuggestion();
 			clearSearchResults();
 		}
-		else if (KeyCodes.KEY_ESCAPE == event.getNativeKeyCode()) {
+		else if (KeyCodes.KEY_ESCAPE == keyCode) {
 			clearSearchResults();
 		}
 		else {
@@ -188,19 +189,23 @@ public class SearchView extends ViewWithUiHandlers<SearchUiHandlers> implements 
 			searchTimer = new Timer() {
 				@Override
 				public void run() {
-					if (searchTerm.trim().length() <= 2 && currentSearchType.getText().equals("Songs")) {
+					if (searchTerm.trim().length() <= 2 && currentSearchType.getText().equals("Search Songs")) {
 						return;
 					}
 
-					_loadedAllResults = false;
-					searchIndicator.setVisible(false);
-					if (_darkText) {
-						searchLoadingIndicatorBlack.setVisible(true);
+					if (Utils.isAlphabetKey(keyCode) || Utils.isNumberKey(keyCode)
+							|| KeyCodes.KEY_ENTER == keyCode || KeyCodes.KEY_BACKSPACE == keyCode) {
+
+						_loadedAllResults = false;
+						searchIndicator.setVisible(false);
+						if (_darkText) {
+							searchLoadingIndicatorBlack.setVisible(true);
+						}
+						else {
+							searchLoadingIndicatorWhite.setVisible(true);
+						}
+						getUiHandlers().getSearchResults(searchTerm);
 					}
-					else {
-						searchLoadingIndicatorWhite.setVisible(true);
-					}
-					getUiHandlers().getSearchResults(searchTerm);
 				}
 			};
 			searchTimer.schedule(50);
