@@ -158,7 +158,5 @@
 				
 		<g:Hyperlink ui:field="globalListLink" ui:styleName="{style.globalListLink}"/>
 		
-		<w:WelcomeInfo ui:field="welcomeInfo" />
-		
 	</g:HTMLPanel>
 </ui:UiBinder>

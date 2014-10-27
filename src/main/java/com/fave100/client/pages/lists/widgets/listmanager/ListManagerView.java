@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fave100.client.Utils;
 import com.fave100.client.resources.css.GlobalStyle;
-import com.fave100.client.widgets.welcomeinfo.WelcomeInfo;
 import com.fave100.shared.ListMode;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
@@ -53,7 +52,6 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField FlowPanel listContainer;
 	@UiField Label errorMsg;
 	@UiField Hyperlink globalListLink;
-	@UiField WelcomeInfo welcomeInfo;
 	@UiField ListManagerStyle style;
 	int selectedIndex = 0;
 	private HandlerRegistration rootClickHandler;
@@ -76,7 +74,6 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 		autocomplete.setVisible(false);
 		listDropdown.setVisible(false);
 		userCriticToggle.setVisible(false);
-		welcomeInfo.setEventBus(eventBus);
 	}
 
 	@Override
@@ -256,6 +253,6 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 	@Override
 	public void showWelcomeInfo(boolean show) {
-		welcomeInfo.setVisible(show);
+		// TODO: Ot 27, 2014 Either completely remove, or reinstate after redesign
 	}
 }
