@@ -110,7 +110,7 @@
 			@mixin flexbox();
 			@mixin justify-content(space-between);
 			@mixin align-items(center);
-			@mixin flex(2, 1, 0);
+			@mixin flex(1, 1, auto);
 		}
 		
 		.playlistControls i {
