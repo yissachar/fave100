@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import com.fave100.server.TestHelper;
 import com.fave100.server.domain.FeaturedLists;
-import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.shared.Constants;
 
@@ -214,8 +213,8 @@ public class AdminTest extends ApiTest {
 
 		FaveListsApi.getFeaturedLists(existingAdmin);
 
-		List<StringResult> featuredLists = FaveListsApi.getFeaturedLists(existingAdmin).getItems();
-		assertThat(featuredLists).extracting("value").containsAll(listNames);
+		List<String> featuredLists = FaveListsApi.getFeaturedLists(existingAdmin).getLists();
+		assertThat(featuredLists).containsAll(listNames);
 	}
 
 	@Test
