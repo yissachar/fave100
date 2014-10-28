@@ -292,6 +292,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<webXml>${war.path}\WEB-INF\web.xml</webXml>
+					<packagingExcludes>WEB-INF/deploy/**</packagingExcludes>
 				</configuration>
 			</plugin>
 
