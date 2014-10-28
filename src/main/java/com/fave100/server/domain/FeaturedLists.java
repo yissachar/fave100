@@ -3,6 +3,7 @@ package com.fave100.server.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
@@ -18,6 +19,7 @@ public class FeaturedLists {
 
 	@Id private String id;
 	private List<String> lists = new ArrayList<String>();
+	private boolean randomized;
 
 	@SuppressWarnings("unused")
 	private FeaturedLists() {
@@ -27,6 +29,7 @@ public class FeaturedLists {
 		this.id = id;
 	}
 
+	@JsonIgnore
 	public String getId() {
 		return id;
 	}
@@ -37,6 +40,14 @@ public class FeaturedLists {
 
 	public void setLists(List<String> lists) {
 		this.lists = lists;
+	}
+
+	public boolean isRandomized() {
+		return randomized;
+	}
+
+	public void setRandomized(boolean randomized) {
+		this.randomized = randomized;
 	}
 
 }

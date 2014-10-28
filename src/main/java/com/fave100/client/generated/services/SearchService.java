@@ -26,11 +26,11 @@ public interface SearchService extends RestService {
     public RestAction<YouTubeSearchResultCollection> getYouTubeResults (@QueryParam("song") String song, @QueryParam("artist") String artist);
 
     @GET
-    @Path("/search/users")
-    public RestAction<CursoredSearchResult> searchUsers (@QueryParam("search_term") String search_term, @QueryParam("cursor") String cursor);
-
-    @GET
     @Path("/search/favelists")
     public RestAction<CursoredSearchResult> searchFaveLists (@QueryParam("search_term") String search_term, @QueryParam("cursor") String cursor);
+
+    @GET
+    @Path("/search/users")
+    public RestAction<CursoredSearchResult> searchUsers (@QueryParam("search_term") String search_term, @QueryParam("cursor") String cursor);
 
 }

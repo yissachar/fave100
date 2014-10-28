@@ -11,6 +11,9 @@ public class BooleanResult {
 
 	private boolean value;
 
+	public BooleanResult() {
+	}
+
 	public BooleanResult(boolean value) {
 		setValue(value);
 	}

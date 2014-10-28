@@ -43,16 +43,24 @@ public class TrendingApi {
 
 		FeaturedLists featuredLists = ofy().load().type(FeaturedLists.class).id(Constants.FEATURED_LISTS_ID).now();
 		List<String> listNames = new ArrayList<>();
+
 		if (featuredLists != null) {
 			for (String list : featuredLists.getLists()) {
 				listNames.add(list);
 			}
 
-			Collections.shuffle(listNames);
-			while (trending.size() < 10 && listNames.size() > 0) {
-				String randomList = listNames.get(0);
-				listNames.remove(randomList);
-				trending.add(new StringResult(randomList));
+			if (featuredLists.isRandomized()) {
+				Collections.shuffle(listNames);
+				while (trending.size() < 10 && listNames.size() > 0) {
+					String randomList = listNames.get(0);
+					listNames.remove(randomList);
+					trending.add(new StringResult(randomList));
+				}
+			}
+			else {
+				for (String listName : listNames) {
+					trending.add(new StringResult(listName));
+				}
 			}
 		}
 

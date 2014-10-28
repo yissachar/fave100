@@ -8,8 +8,8 @@ import com.fave100.client.Notification;
 import com.fave100.client.gatekeepers.AdminGatekeeper;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.generated.entities.AppUserCollection;
-import com.fave100.client.generated.entities.StringResult;
-import com.fave100.client.generated.entities.StringResultCollection;
+import com.fave100.client.generated.entities.BooleanResult;
+import com.fave100.client.generated.entities.FeaturedLists;
 import com.fave100.client.pages.PagePresenter;
 import com.fave100.client.widgets.search.SearchType;
 import com.fave100.client.widgets.search.SuggestionSelectedAction;
@@ -17,6 +17,7 @@ import com.fave100.client.widgets.searchpopup.PopupSearchPresenter;
 import com.fave100.shared.place.NameTokens;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.shared.RestCallback;
@@ -38,6 +39,8 @@ public class AdminPresenter extends PagePresenter<AdminPresenter.MyView, AdminPr
 		void setCritics(List<AppUser> critics);
 
 		void setFeaturedLists(List<String> lists);
+
+		void setFeaturedListsRandomized(boolean randomized);
 	}
 
 	@NameToken(NameTokens.admin)
@@ -155,7 +158,7 @@ public class AdminPresenter extends PagePresenter<AdminPresenter.MyView, AdminPr
 			}
 		});
 
-		_api.call(_api.service().favelists().getFeaturedLists(), new RestCallback<StringResultCollection>() {
+		_api.call(_api.service().favelists().getFeaturedLists(), new RestCallback<FeaturedLists>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -163,13 +166,9 @@ public class AdminPresenter extends PagePresenter<AdminPresenter.MyView, AdminPr
 			}
 
 			@Override
-			public void onSuccess(StringResultCollection result) {
-				List<String> lists = new ArrayList<String>();
-				for (StringResult stringResult : result.getItems()) {
-					lists.add(stringResult.getValue());
-				}
-
-				getView().setFeaturedLists(lists);
+			public void onSuccess(FeaturedLists result) {
+				getView().setFeaturedLists(result.getLists());
+				getView().setFeaturedListsRandomized(result.isRandomized());
 			}
 
 			@Override
@@ -248,5 +247,24 @@ public class AdminPresenter extends PagePresenter<AdminPresenter.MyView, AdminPr
 	public void removeFeaturedList(String list) {
 		_api.call(_api.service().favelists().removeFeaturedList(list), removeItemCallback);
 
+	}
+
+	@Override
+	public void setFeatureListsRandom(boolean random) {
+		BooleanResult randomized = new BooleanResult();
+		randomized.setValue(random);
+
+		_api.call(_api.service().favelists().setFeaturedFavelistsRandomized(randomized), new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub				
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				// TODO Auto-generated method stub				
+			}
+		});
 	}
 }

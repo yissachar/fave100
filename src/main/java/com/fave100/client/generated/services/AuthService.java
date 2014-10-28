@@ -26,25 +26,9 @@ import javax.ws.rs.QueryParam;
 @Path("/")
 public interface AuthService extends RestService {
 
-    @GET
-    @Path("/auth/facebook/url")
-    public RestAction<StringResult> getFacebookAuthUrl (@QueryParam("redirectUrl") String redirectUrl);
-
     @POST
-    @Path("/auth/facebook/register")
-    public RestAction<AppUser> createAppUserFromFacebookAccount (FacebookRegistration body);
-
-    @POST
-    @Path("/auth/google/register")
-    public RestAction<AppUser> createAppUserFromGoogleAccount (StringResult body);
-
-    @POST
-    @Path("/auth/facebook/login")
-    public RestAction<AppUser> loginWithFacebook (StringResult body);
-
-    @POST
-    @Path("/auth/twitter/register")
-    public RestAction<AppUser> createAppUserFromTwitterAccount (TwitterRegistration body);
+    @Path("/auth/google/login")
+    public RestAction<AppUser> loginWithGoogle ();
 
     @GET
     @Path("/auth/twitter/url")
@@ -55,23 +39,39 @@ public interface AuthService extends RestService {
     public RestAction<AppUser> loginWithTwitter (StringResult body);
 
     @POST
-    @Path("/auth/google/login")
-    public RestAction<AppUser> loginWithGoogle ();
-
-    @POST
-    @Path("/auth/login")
-    public RestAction<AppUser> login (LoginCredentials body);
-
-    @POST
-    @Path("/auth/register")
-    public RestAction<AppUser> createAppUser (UserRegistration body);
+    @Path("/auth/facebook/login")
+    public RestAction<AppUser> loginWithFacebook (StringResult body);
 
     @GET
     @Path("/auth/google/url")
     public RestAction<StringResult> getGoogleAuthUrl (@QueryParam("destinationURL") String destinationURL);
 
+    @GET
+    @Path("/auth/facebook/url")
+    public RestAction<StringResult> getFacebookAuthUrl (@QueryParam("redirectUrl") String redirectUrl);
+
+    @POST
+    @Path("/auth/twitter/register")
+    public RestAction<AppUser> createAppUserFromTwitterAccount (TwitterRegistration body);
+
+    @POST
+    @Path("/auth/facebook/register")
+    public RestAction<AppUser> createAppUserFromFacebookAccount (FacebookRegistration body);
+
+    @POST
+    @Path("/auth/google/register")
+    public RestAction<AppUser> createAppUserFromGoogleAccount (StringResult body);
+
     @POST
     @Path("/auth/logout")
     public RestAction<Void> logout ();
+
+    @POST
+    @Path("/auth/register")
+    public RestAction<AppUser> createAppUser (UserRegistration body);
+
+    @POST
+    @Path("/auth/login")
+    public RestAction<AppUser> login (LoginCredentials body);
 
 }

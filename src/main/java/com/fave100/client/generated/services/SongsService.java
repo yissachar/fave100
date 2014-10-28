@@ -23,15 +23,15 @@ import com.gwtplatform.dispatch.rest.shared.RestAction;
 public interface SongsService extends RestService {
 
     @GET
+    @Path("/songs/{id}/whylines")
+    public RestAction<WhylineCollection> getWhylines (@PathParam("id") String id);
+
+    @GET
     @Path("/songs/{id}")
     public RestAction<FaveItem> getSong (@PathParam("id") String id);
 
     @GET
     @Path("/songs/{id}/favelists")
     public RestAction<UserListResultCollection> getFaveLists (@PathParam("id") String id);
-
-    @GET
-    @Path("/songs/{id}/whylines")
-    public RestAction<WhylineCollection> getWhylines (@PathParam("id") String id);
 
 }

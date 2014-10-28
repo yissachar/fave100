@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fave100.server.domain.ApiPaths;
+import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.FeaturedLists;
 import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.StringResultCollection;
@@ -84,8 +85,8 @@ public class FaveListsApi {
 
 	@GET
 	@Path(ApiPaths.FEATURED_FAVELISTS)
-	@ApiOperation(value = "Get the featured FaveLists", response = StringResultCollection.class)
-	public static StringResultCollection getFeaturedLists(@LoggedInUser AppUser currentUser) {
+	@ApiOperation(value = "Get the featured FaveLists", response = FeaturedLists.class)
+	public static FeaturedLists getFeaturedLists(@LoggedInUser AppUser currentUser) {
 		if (!currentUser.isAdmin())
 			throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
 
@@ -93,12 +94,7 @@ public class FaveListsApi {
 		if (featuredLists == null)
 			throw new NotFoundException();
 
-		List<StringResult> items = new ArrayList<>();
-		for (String list : featuredLists.getLists()) {
-			items.add(new StringResult(list));
-		}
-
-		return new StringResultCollection(items);
+		return featuredLists;
 	}
 
 	@POST
@@ -131,4 +127,20 @@ public class FaveListsApi {
 		featuredLists.getLists().remove(list);
 		ofy().save().entity(featuredLists).now();
 	}
+
+	@POST
+	@Path(ApiPaths.FEATURED_FAVELISTS)
+	@ApiOperation(value = "Sets featured FaveLists to be random or not")
+	public static void setFeaturedFavelistsRandomized(@LoggedInUser AppUser currentUser, BooleanResult randomized) {
+		if (!currentUser.isAdmin())
+			throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).build());
+
+		FeaturedLists featuredLists = ofy().load().type(FeaturedLists.class).id(Constants.FEATURED_LISTS_ID).now();
+		if (featuredLists == null)
+			throw new NotFoundException();
+
+		featuredLists.setRandomized(randomized.getValue());
+		ofy().save().entity(featuredLists).now();
+	}
+
 }

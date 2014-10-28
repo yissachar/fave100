@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -33,6 +34,8 @@ class AdminView extends ViewWithUiHandlers<AdminUiHandlers> implements AdminPres
 	@UiField Panel adminPanel;
 	@UiField Panel criticPanel;
 	@UiField Panel listPanel;
+	@UiField Label listDescription;
+	@UiField CheckBox randomizeCheckBox;
 	@UiField Button addAdminButton;
 	@UiField Button addCriticButton;
 	@UiField Button addListButton;
@@ -40,6 +43,7 @@ class AdminView extends ViewWithUiHandlers<AdminUiHandlers> implements AdminPres
 	@Inject
 	AdminView(Binder uiBinder) {
 		initWidget(uiBinder.createAndBindUi(this));
+		refreshListDescription();
 	}
 
 	@UiHandler("addAdminButton")
@@ -55,6 +59,21 @@ class AdminView extends ViewWithUiHandlers<AdminUiHandlers> implements AdminPres
 	@UiHandler("addListButton")
 	void onAddListButtonClicked(ClickEvent event) {
 		getUiHandlers().showAddListPrompt();
+	}
+
+	@UiHandler("randomizeCheckBox")
+	void onRandomizeCheckBox(ClickEvent event) {
+		refreshListDescription();
+		getUiHandlers().setFeatureListsRandom(randomizeCheckBox.getValue());
+	}
+
+	private void refreshListDescription() {
+		if (randomizeCheckBox.getValue() == true) {
+			listDescription.setText("alltime and 2014 list will be displayed along with 8 randomly picked lists from the following:");
+		}
+		else {
+			listDescription.setText("alltime and 2014 list will be displayed along with the following lists:");
+		}
 	}
 
 	@Override
@@ -139,5 +158,11 @@ class AdminView extends ViewWithUiHandlers<AdminUiHandlers> implements AdminPres
 			listWidget.addStyleName(style.adminWidget());
 			listPanel.add(listWidget);
 		}
+	}
+
+	@Override
+	public void setFeaturedListsRandomized(boolean randomized) {
+		randomizeCheckBox.setValue(randomized);
+		refreshListDescription();
 	}
 }

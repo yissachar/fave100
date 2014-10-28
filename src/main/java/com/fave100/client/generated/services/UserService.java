@@ -31,6 +31,30 @@ import javax.ws.rs.DELETE;
 public interface UserService extends RestService {
 
     @DELETE
+    @Path("/user/favelists/{list}/items/{id}")
+    public RestAction<Void> removeFaveItemForCurrentUser (@PathParam("list") String list, @PathParam("id") String id);
+
+    @PUT
+    @Path("/user/favelists/{list}/items/{id}")
+    public RestAction<Void> addFaveItemForCurrentUser (@PathParam("list") String list, @PathParam("id") String id);
+
+    @POST
+    @Path("/user/blobstore_url")
+    public RestAction<StringResult> createBlobstoreUrl ();
+
+    @POST
+    @Path("/user/favelists/{list}/items/{id}/rank")
+    public RestAction<Void> rerankFaveItemForCurrentUser (@PathParam("list") String list, @PathParam("id") String id, Integer body);
+
+    @POST
+    @Path("/user/password/reset")
+    public RestAction<BooleanResult> emailPasswordResetToken (EmailPasswordResetDetails body);
+
+    @POST
+    @Path("/user/password/change")
+    public RestAction<BooleanResult> changePassword (PasswordChangeDetails body);
+
+    @DELETE
     @Path("/user/favelists/{list}")
     public RestAction<Void> deleteFaveListForCurrentUser (@PathParam("list") String list);
 
@@ -38,9 +62,9 @@ public interface UserService extends RestService {
     @Path("/user/favelists/{list}")
     public RestAction<Void> addFaveListForCurrentUser (@PathParam("list") String list);
 
-    @POST
-    @Path("/user/password/reset")
-    public RestAction<BooleanResult> emailPasswordResetToken (EmailPasswordResetDetails body);
+    @GET
+    @Path("/user")
+    public RestAction<AppUser> getLoggedInUser ();
 
     @GET
     @Path("/user/settings")
@@ -51,40 +75,12 @@ public interface UserService extends RestService {
     public RestAction<BooleanResult> setUserInfo (UserInfo body);
 
     @POST
-    @Path("/user/blobstore_url")
-    public RestAction<StringResult> createBlobstoreUrl ();
-
-    @POST
-    @Path("/user/favelists/{list}/items/{id}/rank")
-    public RestAction<Void> rerankFaveItemForCurrentUser (@PathParam("list") String list, @PathParam("id") String id, Integer body);
-
-    @DELETE
-    @Path("/user/favelists/{list}/items/{id}")
-    public RestAction<Void> removeFaveItemForCurrentUser (@PathParam("list") String list, @PathParam("id") String id);
-
-    @PUT
-    @Path("/user/favelists/{list}/items/{id}")
-    public RestAction<Void> addFaveItemForCurrentUser (@PathParam("list") String list, @PathParam("id") String id);
-
-    @POST
     @Path("/user/favelists/{list}/items/{id}/whyline")
     public RestAction<Void> editWhylineForCurrentUser (WhylineEdit body);
 
-    @POST
-    @Path("/user/password/change")
-    public RestAction<BooleanResult> changePassword (PasswordChangeDetails body);
-
-    @GET
-    @Path("/user")
-    public RestAction<AppUser> getLoggedInUser ();
-
     @DELETE
-    @Path("/user/admins/{user}")
-    public RestAction<Void> removeAdmin (@PathParam("user") String user);
-
-    @POST
-    @Path("/user/admins/{user}")
-    public RestAction<Void> createAdmin (@PathParam("user") String user);
+    @Path("/user/following/{user}")
+    public RestAction<Void> unfollowUser (@PathParam("user") String user);
 
     @GET
     @Path("/user/following/{user}")
@@ -95,16 +91,20 @@ public interface UserService extends RestService {
     public RestAction<Void> followUser (@PathParam("user") String user);
 
     @DELETE
-    @Path("/user/following/{user}")
-    public RestAction<Void> unfollowUser (@PathParam("user") String user);
+    @Path("/user/admins/{user}")
+    public RestAction<Void> removeAdmin (@PathParam("user") String user);
 
-    @GET
-    @Path("/user/admins")
-    public RestAction<AppUserCollection> getAdmins ();
+    @POST
+    @Path("/user/admins/{user}")
+    public RestAction<Void> createAdmin (@PathParam("user") String user);
 
     @GET
     @Path("/user/critics")
     public RestAction<AppUserCollection> getCritics ();
+
+    @GET
+    @Path("/user/admins")
+    public RestAction<AppUserCollection> getAdmins ();
 
     @DELETE
     @Path("/user/critics/{user}")

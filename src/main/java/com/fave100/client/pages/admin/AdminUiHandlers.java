@@ -16,4 +16,6 @@ interface AdminUiHandlers extends UiHandlers {
 	void removeCritic(AppUser critic);
 
 	void removeFeaturedList(String list);
+
+	void setFeatureListsRandom(boolean random);
 }

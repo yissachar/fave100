@@ -50,7 +50,8 @@
 					<g:FlowPanel ui:field="criticPanel" />
 					<g:Button ui:field="addCriticButton">Add Critic</g:Button>
 					<h4>Featured Lists</h4>
-					<p>alltime and 2014 list will be displayed along with 8 randomly picked lists from the following:</p>
+					<g:CheckBox ui:field="randomizeCheckBox">Randomize</g:CheckBox>
+					<g:Label ui:field="listDescription" />
 					<g:FlowPanel ui:field="listPanel" />
 					<g:Button ui:field="addListButton">Add List</g:Button>
 			    </g:HTMLPanel>
