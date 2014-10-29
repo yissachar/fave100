@@ -282,6 +282,18 @@
 			<version>${appengine.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!--  End Test -->
+		<!--  Begin Scripts -->
+		<!--  Dependencies here are only intended for use within scripts during development
+			  and should not be bundled with the application
+		 -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
 
 	</dependencies>
 
