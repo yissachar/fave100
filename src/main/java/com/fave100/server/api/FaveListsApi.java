@@ -25,7 +25,6 @@ import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.StringResultCollection;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.FaveItemCollection;
-import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.fave100.shared.Constants;
 import com.fave100.shared.ListMode;
@@ -62,24 +61,35 @@ public class FaveListsApi {
 	@ApiOperation(value = "Get a master FaveList", response = FaveItemCollection.class)
 	public static FaveItemCollection getMasterFaveList(@PathParam("list") final String list, @QueryParam("mode") @DefaultValue("all") String mode) {
 		String listName = list.toLowerCase();
-		if (ListMode.CRITICS.equals(mode)) {
-			listName += FaveListDao.SEPERATOR_TOKEN + FaveListDao.CRITIC_INDICATOR;
+
+		Hashtag masterList = ofy().load().type(Hashtag.class).id(listName).now();
+		if (masterList == null)
+			throw new NotFoundException();
+
+		if (ListMode.ALL.equals(mode)) {
+			return new FaveItemCollection(masterList.getList());
+		}
+		else if (ListMode.CRITICS.equals(mode)) {
+			return new FaveItemCollection(masterList.getCriticsList());
 		}
 
-		return new FaveItemCollection(ofy().load().type(Hashtag.class).id(listName).now().getList());
+		throw new NotFoundException();
 	}
 
 	@HEAD
 	@Path(ApiPaths.GET_MASTER_FAVELIST)
-	@ApiOperation(value = "Determins if a critic master FaveList exists")
+	@ApiOperation(value = "Determines if a master FaveList exists for the given mode")
 	public static void checkMasterFaveListExistence(@PathParam("list") final String list, @QueryParam("mode") @DefaultValue("all") String mode) {
 		String listName = list.toLowerCase();
-		if (ListMode.CRITICS.equals(mode)) {
-			listName += FaveListDao.SEPERATOR_TOKEN + FaveListDao.CRITIC_INDICATOR;
-		}
 
-		Hashtag hashtag = ofy().load().type(Hashtag.class).id(listName).now();
-		if (hashtag == null)
+		Hashtag masterList = ofy().load().type(Hashtag.class).id(listName).now();
+		if (masterList == null)
+			throw new NotFoundException();
+
+		if (ListMode.ALL.equals(mode) && masterList.getList().isEmpty())
+			throw new NotFoundException();
+
+		if (ListMode.CRITICS.equals(mode) && masterList.getCriticsList().isEmpty())
 			throw new NotFoundException();
 	}
 

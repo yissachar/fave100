@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,21 +78,13 @@ public class HashtagBuilderServlet extends HttpServlet
 		// Calculate the zcore to determine top trending lists
 		Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).now();
 		if (critic) {
-			String createdBy = hashtagEntity.getCreatedBy().get().getId();
-			Date dateCreated = hashtagEntity.getDateCreated();
-			String criticHashtag = hashtag + FaveListDao.SEPERATOR_TOKEN + FaveListDao.CRITIC_INDICATOR;
-			hashtagEntity = ofy().load().type(Hashtag.class).id(criticHashtag).now();
-			if (hashtagEntity == null) {
-				hashtagEntity = new Hashtag(criticHashtag, createdBy);
-				hashtagEntity.setDateCreated(dateCreated);
-				hashtagEntity.setCriticList(true);
-			}
+			hashtagEntity.setCriticsList(master);
 		}
 		else {
 			hashtagEntity.setZscore(calculateZscore(hashtagEntity.getSlidingListCount(), listCount));
 			hashtagEntity.addListCount(listCount);
+			hashtagEntity.setList(master);
 		}
-		hashtagEntity.setList(master);
 
 		// Save the master list to the datastore
 		ofy().save().entity(hashtagEntity).now();

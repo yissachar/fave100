@@ -36,7 +36,6 @@ import com.google.gson.JsonParser;
 import com.googlecode.objectify.cmd.Query;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
 
 @Path("/" + ApiPaths.SEARCH_ROOT)
 @Produces(MediaType.APPLICATION_JSON)
@@ -46,9 +45,8 @@ public class SearchApi {
 	@GET
 	@Path(ApiPaths.GET_YOUTUBE_SEARCH_RESULTS)
 	@ApiOperation(value = "Find YouTube videos for a song", response = YouTubeSearchResultCollection.class)
-	public static YouTubeSearchResultCollection getYouTubeResults(
-			@ApiParam(value = "The song title", required = true) @QueryParam(ApiPaths.YOUTUBE_SEARCH_SONG_PARAM) final String song,
-			@ApiParam(value = "The song artist", required = true) @QueryParam(ApiPaths.YOUTUBE_SEARCH_ARTIST_PARAM) final String artist) {
+	public static YouTubeSearchResultCollection getYouTubeResults(@QueryParam(ApiPaths.YOUTUBE_SEARCH_SONG_PARAM) final String song,
+			@QueryParam(ApiPaths.YOUTUBE_SEARCH_ARTIST_PARAM) final String artist) {
 
 		try {
 			String searchUrl = "https://www.googleapis.com/youtube/v3/search?part=id%2C+snippet&maxResults=5&type=video&videoEmbeddable=true";
@@ -93,8 +91,7 @@ public class SearchApi {
 	@GET
 	@Path(ApiPaths.SEARCH_FAVELISTS)
 	@ApiOperation(value = "Search for FaveLists", response = CursoredSearchResult.class)
-	public static CursoredSearchResult searchFaveLists(@ApiParam(value = "The search term", required = true) @QueryParam("search_term") final String searchTerm,
-			@QueryParam("cursor") final String cursor) {
+	public static CursoredSearchResult searchFaveLists(@QueryParam("search_term") final String searchTerm, @QueryParam("cursor") final String cursor) {
 
 		final List<StringResult> names = new ArrayList<>();
 
@@ -102,7 +99,7 @@ public class SearchApi {
 			new CursoredSearchResult(null, new StringResultCollection(names));
 
 		// TODO: Need to sort by popularity
-		Query<Hashtag> query = ofy().load().type(Hashtag.class).filter("id >=", searchTerm.toLowerCase()).filter("id <", searchTerm.toLowerCase() + "\uFFFD").filter("criticList", false).limit(5);
+		Query<Hashtag> query = ofy().load().type(Hashtag.class).filter("id >=", searchTerm.toLowerCase()).filter("id <", searchTerm.toLowerCase() + "\uFFFD").limit(5);
 		if (cursor != null) {
 			query = query.startAt(Cursor.fromWebSafeString(cursor));
 		}
@@ -119,8 +116,7 @@ public class SearchApi {
 	@GET
 	@Path(ApiPaths.SEARCH_USERS)
 	@ApiOperation(value = "Search for Users", response = CursoredSearchResult.class)
-	public static CursoredSearchResult searchUsers(@ApiParam(value = "The search term", required = true) @QueryParam("search_term") final String searchTerm,
-			@QueryParam("cursor") final String cursor) {
+	public static CursoredSearchResult searchUsers(@QueryParam("search_term") final String searchTerm, @QueryParam("cursor") final String cursor) {
 
 		final List<StringResult> names = new ArrayList<>();
 
