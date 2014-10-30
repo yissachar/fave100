@@ -18,6 +18,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fave100.server.MemcacheManager;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.FeaturedLists;
@@ -61,6 +62,11 @@ public class FaveListsApi {
 	@ApiOperation(value = "Get a master FaveList", response = FaveItemCollection.class)
 	public static FaveItemCollection getMasterFaveList(@PathParam("list") final String list, @QueryParam("mode") @DefaultValue("all") String mode) {
 		String listName = list.toLowerCase();
+
+		// Attempt to get the list from memcache first, if possible
+		if (ListMode.NEWEST.equals(mode)) {
+			return new FaveItemCollection(MemcacheManager.getNewestSongs(listName));
+		}
 
 		Hashtag masterList = ofy().load().type(Hashtag.class).id(listName).now();
 		if (masterList == null)

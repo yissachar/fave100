@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fave100.server.MemcacheManager;
 import com.fave100.server.domain.favelist.FaveItem;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.FaveListDao;
@@ -119,6 +120,9 @@ public class HashtagBuilderServlet extends HttpServlet
 		Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).now();
 		hashtagEntity.setNewestList(newest);
 		ofy().save().entity(hashtagEntity).now();
+
+		// Initialize memcache with the list
+		MemcacheManager.setNewestSongs(hashtag, newest);
 
 	}
 

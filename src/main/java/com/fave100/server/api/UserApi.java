@@ -30,6 +30,7 @@ import javax.ws.rs.core.Response;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import com.fave100.server.MemcacheManager;
 import com.fave100.server.SessionAttributes;
 import com.fave100.server.UrlBuilder;
 import com.fave100.server.domain.ApiPaths;
@@ -339,7 +340,8 @@ public class UserApi {
 	@ApiOperation(value = "Add a FaveItem")
 	@ApiResponses(value = {@ApiResponse(code = 401, message = ApiExceptions.NOT_LOGGED_IN), @ApiResponse(code = 403, message = ApiExceptions.FAVELIST_SIZE_REACHED),
 							@ApiResponse(code = 403, message = ApiExceptions.FAVEITEM_ALREADY_IN_LIST)})
-	public static void addFaveItemForCurrentUser(@LoggedInUser AppUser currentUser, @PathParam("list") final String listName, @PathParam("id") final String songID) {
+	public static void addFaveItemForCurrentUser(@LoggedInUser AppUser currentUser, @PathParam("list") final String list, @PathParam("id") final String songID) {
+		String listName = list.toLowerCase();
 		final FaveList faveList = FaveListDao.findFaveList(currentUser.getUsername(), listName);
 
 		// Check FaveList size limit reached
@@ -366,6 +368,9 @@ public class UserApi {
 		// Create the new FaveItem
 		faveList.getList().add(newFaveItem);
 		ofy().save().entities(faveList).now();
+
+		// Add it to memcache newest
+		MemcacheManager.addNewSong(listName, newFaveItem);
 
 		return;
 	}
