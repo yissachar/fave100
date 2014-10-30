@@ -43,9 +43,10 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField Label currentList;
 	@UiField FlowPanel listDropdown;
 	@UiField Image dropdownToggle;
-	@UiField Panel userCriticToggle;
+	@UiField Panel listModeToggle;
 	@UiField Hyperlink usersLink;
 	@UiField Hyperlink criticsLink;
+	@UiField Hyperlink newestLink;
 	@UiField HTMLPanel autocomplete;
 	@UiField Button addHashtagButton;
 	@UiField FlowPanel addListContainer;
@@ -73,7 +74,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 		_tokenFormatter = tokenFormatter;
 		autocomplete.setVisible(false);
 		listDropdown.setVisible(false);
-		userCriticToggle.setVisible(false);
+		listModeToggle.setVisible(false);
 	}
 
 	@Override
@@ -188,6 +189,13 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 						.with(PlaceParams.LIST_PARAM, selected)
 						.with(PlaceParams.MODE_PARAM, ListMode.CRITICS)
 						.build()));
+
+		newestLink.setTargetHistoryToken(_tokenFormatter.toPlaceToken(
+				new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(PlaceParams.LIST_PARAM, selected)
+						.with(PlaceParams.MODE_PARAM, ListMode.NEWEST)
+						.build()));
 	}
 
 	@Override
@@ -235,7 +243,7 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 	@Override
 	public void showUserCriticToggle(boolean show) {
-		userCriticToggle.setVisible(show);
+		listModeToggle.setVisible(show);
 	}
 
 	@Override
@@ -253,6 +261,6 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 
 	@Override
 	public void showWelcomeInfo(boolean show) {
-		// TODO: Ot 27, 2014 Either completely remove, or reinstate after redesign
+		// TODO: Oct 27, 2014 Either completely remove, or reinstate after redesign
 	}
 }

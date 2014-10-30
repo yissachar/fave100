@@ -72,6 +72,9 @@ public class FaveListsApi {
 		else if (ListMode.CRITICS.equals(mode)) {
 			return new FaveItemCollection(masterList.getCriticsList());
 		}
+		else if (ListMode.NEWEST.equals(mode)) {
+			return new FaveItemCollection(masterList.getNewestList());
+		}
 
 		throw new NotFoundException();
 	}
@@ -90,6 +93,9 @@ public class FaveListsApi {
 			throw new NotFoundException();
 
 		if (ListMode.CRITICS.equals(mode) && masterList.getCriticsList().isEmpty())
+			throw new NotFoundException();
+
+		if (ListMode.NEWEST.equals(mode) && masterList.getNewestList().isEmpty())
 			throw new NotFoundException();
 	}
 

@@ -26,6 +26,7 @@ public class Hashtag {
 	private Date dateCreated;
 	private List<FaveItem> list = new ArrayList<FaveItem>();
 	private List<FaveItem> criticsList = new ArrayList<FaveItem>();
+	private List<FaveItem> newestList = new ArrayList<FaveItem>();
 	@Index private double zscore = 0;
 	List<Integer> slidingListCount = new ArrayList<>();
 
@@ -111,6 +112,14 @@ public class Hashtag {
 
 	public void setCriticsList(List<FaveItem> criticsList) {
 		this.criticsList = criticsList;
+	}
+
+	public List<FaveItem> getNewestList() {
+		return newestList;
+	}
+
+	public void setNewestList(List<FaveItem> newestList) {
+		this.newestList = newestList;
 	}
 
 }

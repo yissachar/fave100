@@ -57,6 +57,8 @@ public class HashtagBuilderServlet extends HttpServlet
 		if (!critics.isEmpty()) {
 			saveTopItems(hashtag, critics, listCount, true);
 		}
+
+		saveNewestItems(hashtag, all, critics);
 	}
 
 	private void saveTopItems(String hashtag, HashMap<FaveRankerWrapper, Double> items, int listCount, boolean critic) {
@@ -75,12 +77,12 @@ public class HashtagBuilderServlet extends HttpServlet
 			}
 		}
 
-		// Calculate the zcore to determine top trending lists
 		Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).now();
 		if (critic) {
 			hashtagEntity.setCriticsList(master);
 		}
 		else {
+			// Calculate the zcore to determine top trending lists
 			hashtagEntity.setZscore(calculateZscore(hashtagEntity.getSlidingListCount(), listCount));
 			hashtagEntity.addListCount(listCount);
 			hashtagEntity.setList(master);
@@ -90,13 +92,41 @@ public class HashtagBuilderServlet extends HttpServlet
 		ofy().save().entity(hashtagEntity).now();
 	}
 
+	private void saveNewestItems(String hashtag, HashMap<FaveRankerWrapper, Double> all, HashMap<FaveRankerWrapper, Double> critics) {
+		List<FaveRankerWrapper> sorted = new ArrayList<FaveRankerWrapper>();
+		sorted.addAll(all.keySet());
+		sorted.addAll(critics.keySet());
+
+		Collections.sort(sorted, Collections.reverseOrder(new Comparator<FaveRankerWrapper>() {
+
+			@Override
+			public int compare(FaveRankerWrapper o1, FaveRankerWrapper o2) {
+				return o1.getFaveItem().getDatePicked().compareTo(o2.getFaveItem().getDatePicked());
+			}
+
+		}));
+
+		// Add the 100 newest songs to the list
+		final List<FaveItem> newest = new ArrayList<FaveItem>();
+		for (int i = 0; i < 100 && i < sorted.size(); i++) {
+			FaveItem faveItem = sorted.get(i).getFaveItem();
+			faveItem.setWhyline("");
+			faveItem.setWhylineRef(null);
+			newest.add(faveItem);
+		}
+
+		// Save the newest list
+		Hashtag hashtagEntity = ofy().load().type(Hashtag.class).id(hashtag).now();
+		hashtagEntity.setNewestList(newest);
+		ofy().save().entity(hashtagEntity).now();
+
+	}
+
 	private List<Map.Entry<FaveRankerWrapper, Double>> sort(Map<FaveRankerWrapper, Double> items) {
 		List<Map.Entry<FaveRankerWrapper, Double>> sorted = new LinkedList<>(items.entrySet());
-		Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Double>>()
-		{
+		Collections.sort(sorted, new Comparator<Map.Entry<FaveRankerWrapper, Double>>() {
 			@Override
-			public int compare(final Map.Entry<FaveRankerWrapper, Double> o1, final Map.Entry<FaveRankerWrapper, Double> o2)
-			{
+			public int compare(final Map.Entry<FaveRankerWrapper, Double> o1, final Map.Entry<FaveRankerWrapper, Double> o2) {
 				return (o2.getValue()).compareTo(o1.getValue());
 			}
 		});
