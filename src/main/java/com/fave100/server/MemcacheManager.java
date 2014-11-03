@@ -64,7 +64,7 @@ public class MemcacheManager {
 		}
 
 		cache.putAll(map);
-		cache.put(list + ID_SEPARATOR + NEWEST_COUNT_ID, i - 1);
+		cache.put(list + ID_SEPARATOR + NEWEST_COUNT_ID, i > 0 ? i - 1 : 0);
 	}
 
 	public static long incrementTrendingMin(long increment, long defaultMin) {
