@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
+import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.widgets.alert.AlertCallback;
@@ -116,6 +117,11 @@ public class ListManagerPresenter extends
 
 		if (_currentUser.getHashtags().size() >= Constants.MAX_LISTS_PER_USER) {
 			getView().showError("You can't have  more than " + Constants.MAX_LISTS_PER_USER + " lists");
+			return;
+		}
+
+		if (Constants.TRENDING_LIST_NAME.equalsIgnoreCase(name)) {
+			Notification.show(Constants.TRENDING_LIST_NAME + " is a reserved list", true);
 			return;
 		}
 

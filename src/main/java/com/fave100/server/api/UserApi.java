@@ -273,9 +273,11 @@ public class UserApi {
 	public static void addFaveListForCurrentUser(@LoggedInUser final AppUser currentUser, @ApiParam(value = "The list name", required = true) @PathParam("list") final String listName) {
 
 		final String error = Validator.validateHashtag(listName);
-		if (error != null) {
+		if (error != null)
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
-		}
+
+		if (Constants.TRENDING_LIST_NAME.equalsIgnoreCase(listName))
+			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).build());
 
 		// -1 because #alltime is a default list not stored in the hashtags list
 		if (currentUser.getHashtags().size() >= Constants.MAX_LISTS_PER_USER - 1)
