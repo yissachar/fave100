@@ -44,7 +44,7 @@ public class FaveListsApi {
 	@Path(ApiPaths.GET_LIST_NAMES)
 	@ApiOperation(value = "Get FaveList names", response = StringResultCollection.class)
 	public static StringResultCollection getListNames() {
-		List<Hashtag> masterLists = ofy().load().type(Hashtag.class).filter("criticList", false).limit(1000).list();
+		List<Hashtag> masterLists = ofy().load().type(Hashtag.class).limit(1000).list();
 
 		List<StringResult> listNames = new ArrayList<>();
 		for (Hashtag masterList : masterLists) {
