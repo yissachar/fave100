@@ -108,7 +108,7 @@ public class HashtagBuilderServlet extends HttpServlet
 
 		// Add the 100 newest songs to the list
 		final List<FaveItem> newest = new ArrayList<FaveItem>();
-		for (int i = 0; i < 100 && i < all.size(); i++) {
+		for (int i = Math.min(99, all.size() - 1); i >= 0; i--) {
 			FaveItem faveItem = all.get(i).getFaveItem();
 			faveItem.setWhyline("");
 			faveItem.setWhylineRef(null);
@@ -125,7 +125,7 @@ public class HashtagBuilderServlet extends HttpServlet
 
 		// Calculate Trending
 		if (!all.isEmpty()) {
-			long defaultMin = MemcacheManager.getTrendingScore(newest.get(newest.size() - 1), false);
+			long defaultMin = MemcacheManager.getTrendingScore(newest.get(0), false);
 
 			List<FaveItem> pseudoTrending = new ArrayList<FaveItem>();
 			List<Long> trendingScores = new ArrayList<Long>();
