@@ -208,7 +208,8 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		isFollowing = false;
 		// Use parameters to determine what to reveal on page
 		requestedUsername = placeRequest.getParameter(PlaceParams.USER_PARAM, "");
-		_requestedHashtag = placeRequest.getParameter(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG);
+		String defaultHashtag = requestedUsername.isEmpty() ? Constants.TRENDING_LIST_NAME : Constants.DEFAULT_HASHTAG;
+		_requestedHashtag = placeRequest.getParameter(PlaceParams.LIST_PARAM, defaultHashtag);
 		_requestedListMode = placeRequest.getParameter(PlaceParams.MODE_PARAM, ListMode.USERS);
 
 		// Possible combinations:

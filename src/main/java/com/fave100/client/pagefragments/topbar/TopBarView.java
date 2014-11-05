@@ -130,7 +130,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		final String listPlace = _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG)
+						.with(PlaceParams.LIST_PARAM, Constants.TRENDING_LIST_NAME)
 						.build());
 		logoFaveText.setTargetHistoryToken(listPlace);
 		logo100Text.setTargetHistoryToken(listPlace);
@@ -145,7 +145,7 @@ public class TopBarView extends ViewWithUiHandlers<TopBarUiHandlers> implements
 		final String listPlace = _parameterTokenFormatter
 				.toPlaceToken(new PlaceRequest.Builder()
 						.nameToken(NameTokens.lists)
-						.with(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG)
+						.with(PlaceParams.LIST_PARAM, Constants.TRENDING_LIST_NAME)
 						.build());
 		logoFaveText.setTargetHistoryToken(listPlace);
 		logo100Text.setTargetHistoryToken(listPlace);
