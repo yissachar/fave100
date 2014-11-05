@@ -255,9 +255,15 @@ public class ListManagerPresenter extends
 				@Override
 				public void onSuccess(StringResultCollection result) {
 
-					for (StringResult item : result.getItems()) {
-						getView().showModeLink(item.getValue());
+					if (result.getItems().size() > 1) {
+						for (StringResult item : result.getItems()) {
+							getView().showModeLink(item.getValue());
+						}
 					}
+					else {
+						getView().hideAllModeLinks();
+					}
+
 				}
 
 				@Override
