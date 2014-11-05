@@ -139,11 +139,11 @@
 			<g:FlowPanel>
 				<g:InlineLabel ui:field="currentList" ui:styleName="{style.currentListName}" />
 				<g:Image ui:field="dropdownToggle" resource="{img.triangle}"/>
-				<g:FlowPanel ui:field="listModeToggle" ui:styleName="{style.listModeToggle}">
+				<g:FlowPanel ui:styleName="{style.listModeToggle}">
 					<g:InlineHyperlink ui:field="usersLink">Users</g:InlineHyperlink>
-					<g:InlineLabel>|</g:InlineLabel>
+					<g:InlineLabel ui:field="usersPipe">|</g:InlineLabel>
 					<g:InlineHyperlink ui:field="criticsLink">Critics</g:InlineHyperlink>
-					<g:InlineLabel>|</g:InlineLabel>
+					<g:InlineLabel ui:field="criticsPipe">|</g:InlineLabel>
 					<g:InlineHyperlink ui:field="newestLink">Newest</g:InlineHyperlink>
 				</g:FlowPanel>
 			</g:FlowPanel>

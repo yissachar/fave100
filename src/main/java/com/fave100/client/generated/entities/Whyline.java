@@ -13,25 +13,17 @@ import java.util.List;
 
 public class Whyline {
 
-    private String whyline;
-    private String avatar;
-    private String list;
     private String username;
+    private String list;
+    private String avatar;
+    private String whyline;
 
-    public String getWhyline() {
-        return this.whyline;
+    public String getUsername() {
+        return this.username;
     }
 
-    public void setWhyline(String whyline){
-        this.whyline = whyline;
-    }
-
-    public String getAvatar() {
-        return this.avatar;
-    }
-
-    public void setAvatar(String avatar){
-        this.avatar = avatar;
+    public void setUsername(String username){
+        this.username = username;
     }
 
     public String getList() {
@@ -42,12 +34,20 @@ public class Whyline {
         this.list = list;
     }
 
-    public String getUsername() {
-        return this.username;
+    public String getAvatar() {
+        return this.avatar;
     }
 
-    public void setUsername(String username){
-        this.username = username;
+    public void setAvatar(String avatar){
+        this.avatar = avatar;
+    }
+
+    public String getWhyline() {
+        return this.whyline;
+    }
+
+    public void setWhyline(String whyline){
+        this.whyline = whyline;
     }
 
 }

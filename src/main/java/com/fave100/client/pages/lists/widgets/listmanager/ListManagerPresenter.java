@@ -8,10 +8,11 @@ import com.fave100.client.FaveApi;
 import com.fave100.client.Notification;
 import com.fave100.client.events.favelist.ListAddedEvent;
 import com.fave100.client.generated.entities.AppUser;
+import com.fave100.client.generated.entities.StringResult;
+import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.widgets.alert.AlertCallback;
 import com.fave100.client.widgets.alert.AlertPresenter;
 import com.fave100.shared.Constants;
-import com.fave100.shared.ListMode;
 import com.fave100.shared.Validator;
 import com.fave100.shared.place.NameTokens;
 import com.fave100.shared.place.PlaceParams;
@@ -49,7 +50,9 @@ public class ListManagerPresenter extends
 
 		void hide();
 
-		void showUserCriticToggle(boolean show);
+		void hideAllModeLinks();
+
+		void showModeLink(String mode);
 
 		void setListMode(String listMode);
 
@@ -242,7 +245,7 @@ public class ListManagerPresenter extends
 		_hashtag = hashtag;
 
 		if (isGlobalList()) {
-			_api.call(_api.service().favelists().checkMasterFaveListExistence(_hashtag, ListMode.CRITICS), new RestCallback<Void>() {
+			_api.call(_api.service().favelists().getMasterFaveListModes(_hashtag), new RestCallback<StringResultCollection>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -250,24 +253,22 @@ public class ListManagerPresenter extends
 				}
 
 				@Override
-				public void onSuccess(Void result) {
-					// Handled in setResponse
+				public void onSuccess(StringResultCollection result) {
+
+					for (StringResult item : result.getItems()) {
+						getView().showModeLink(item.getValue());
+					}
 				}
 
 				@Override
 				public void setResponse(Response response) {
-					if (response.getStatusCode() >= 400) {
-						getView().showUserCriticToggle(false);
-					}
-					else {
-						getView().showUserCriticToggle(true);
-					}
+					getView().hideAllModeLinks();
 
 				}
 			});
 		}
 		else {
-			getView().showUserCriticToggle(false);
+			getView().hideAllModeLinks();
 		}
 
 		getView().showWelcomeInfo(!_currentUser.isLoggedIn());

@@ -209,7 +209,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		// Use parameters to determine what to reveal on page
 		requestedUsername = placeRequest.getParameter(PlaceParams.USER_PARAM, "");
 		_requestedHashtag = placeRequest.getParameter(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG);
-		_requestedListMode = placeRequest.getParameter(PlaceParams.MODE_PARAM, ListMode.ALL);
+		_requestedListMode = placeRequest.getParameter(PlaceParams.MODE_PARAM, ListMode.USERS);
 
 		// Possible combinations:
 		// Blank user, blank list => global fave100 list

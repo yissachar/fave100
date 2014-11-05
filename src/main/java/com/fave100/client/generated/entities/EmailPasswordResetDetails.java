@@ -13,16 +13,8 @@ import java.util.List;
 
 public class EmailPasswordResetDetails {
 
-    private String emailAddress;
     private String username;
-
-    public String getEmailAddress() {
-        return this.emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress){
-        this.emailAddress = emailAddress;
-    }
+    private String emailAddress;
 
     public String getUsername() {
         return this.username;
@@ -30,6 +22,14 @@ public class EmailPasswordResetDetails {
 
     public void setUsername(String username){
         this.username = username;
+    }
+
+    public String getEmailAddress() {
+        return this.emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress){
+        this.emailAddress = emailAddress;
     }
 
 }
