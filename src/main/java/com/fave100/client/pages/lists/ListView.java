@@ -194,7 +194,7 @@ public class ListView extends PageView<ListUiHandlers>
 	}-*/;
 
 	@Override
-	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser) {
+	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser, boolean isTrendingList) {
 
 		if (requestedUser == null) {
 			userProfile.setVisible(false);
@@ -218,6 +218,11 @@ public class ListView extends PageView<ListUiHandlers>
 		}
 		else {
 			showOtherPage();
+		}
+
+		if (isTrendingList) {
+			contributeCTA.setVisible(false);
+			directionSwitchButton.setVisible(false);
 		}
 
 		resize();

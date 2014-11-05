@@ -49,7 +49,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPresenter.MyProxy> implements ListUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<ListUiHandlers> {
-		void setPageDetails(AppUser requestedUser, CurrentUser currentUser);
+		void setPageDetails(AppUser requestedUser, CurrentUser currentUser, boolean isTrendingList);
 
 		String getFixedSearchStyle();
 
@@ -308,7 +308,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		// Ensure we don't show critic's lists directly to other users
 		if (requestedUser == null || !requestedUser.isCritic() || _ownPage) {
 
-			getView().setPageDetails(requestedUser, _currentUser);
+			getView().setPageDetails(requestedUser, _currentUser, Constants.TRENDING_LIST_NAME.equals(_requestedHashtag));
 
 			favelist.setUser(requestedUser);
 			favelist.setHashtag(_requestedHashtag);
