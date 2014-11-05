@@ -220,6 +220,7 @@ public class ListView extends PageView<ListUiHandlers>
 			showOtherPage();
 		}
 
+		directionSwitchButton.setVisible(true);
 		if (isTrendingList) {
 			contributeCTA.setVisible(false);
 			directionSwitchButton.setVisible(false);
