@@ -3,6 +3,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:p='urn:import:com.fave100.client.pages'
+	xmlns:w='urn:import:com.fave100.client.widgets'
 	xmlns:pf='urn:import:com.fave100.client.pagefragments.footer'>
 
 	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.pages.lists.ListView.ListStyle">
@@ -55,8 +56,13 @@
 		}
 		
 		.listHeader {
-			padding: 20px;
+			padding: 15px;
+			padding-bottom: 5px;
 			border-bottom: 1px solid #aaa;
+			flex-wrap: wrap;
+			align-items: center;
+			@mixin flexbox();
+			@mixin justify-content(SPACE-BETWEEN);
 		}
 		
 		.smallDisplay .listHeader {
@@ -65,10 +71,11 @@
 		
 		.contributeCTA {
 			cursor: pointer;
-			margin-bottom: 20px;
+			margin-top: 10px;
 		}
 		
 		.directionSwitchButton {
+			cursor: pointer;
 			margin-left: 10px;
 		}
 		
@@ -159,15 +166,20 @@
 						
 						<g:FlowPanel ui:field="listHeader" ui:styleName="{style.listHeader}">
 							<g:HTMLPanel ui:field="listManager"/>
-							<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>
 							<g:FlowPanel ui:field="criticUrlPanel" ui:styleName="{style.criticUrlPanel}">
 								<g:InlineLabel>Critic URL:</g:InlineLabel>
 								<g:InlineLabel ui:field="criticUrlLabel"/>
 								<g:TextBox ui:field="criticUrlInput" />
 								<g:Button ui:field="criticUrlButton">Edit</g:Button>
 							</g:FlowPanel>
-							<g:Anchor ui:field="addSongLink" ui:styleName="{style.contributeCTA}">Add Song</g:Anchor>
-							<g:Button ui:field="directionSwitchButton" ui:styleName="{style.directionSwitchButton}">Switch list direction</g:Button>
+							<g:FlowPanel>
+								<w:Icon ui:field="contributeCTA" ui:styleName="fa fa-edit fa-lg {style.contributeCTA}" title="Contribute to this list"/>
+								<w:Icon ui:field="addSongLink" ui:styleName="fa fa-plus fa-lg {style.contributeCTA}" title="Add new song to list" />
+								<w:Icon ui:field="directionSwitchButton" ui:styleName="fa fa-exchange fa-rotate-90 fa-lg {style.directionSwitchButton}" title="Switch list direction"/>
+								<!--<g:Anchor ui:field="contributeCTA" ui:styleName="{style.contributeCTA}">Contribute to this list</g:Anchor>-->
+								<!--<g:Anchor ui:field="addSongLink" ui:styleName="{style.contributeCTA}">Add Song</g:Anchor>-->
+								<!-- <g:Button ui:field="directionSwitchButton" ui:styleName="{style.directionSwitchButton}">Switch list direction</g:Button> -->
+							</g:FlowPanel>
 						</g:FlowPanel>
 						
 						<g:HTMLPanel ui:field="faveListContainer" styleName="{style.faveListContainer}">

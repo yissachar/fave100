@@ -11,6 +11,7 @@
 		@def LIST_MANAGER_BORDER_COLOR 1px solid #ccc;
 		.container {
 			position: relative;
+			display: inline;
 			-webkit-touch-callout: none;
 			-webkit-user-select: none;
 			-khtml-user-select: none;
@@ -26,7 +27,8 @@
 	 	}
 	 	
 	 	.currentListContainer > div {
-			display: inline;
+			align-items: center;
+			@mixin flexbox();			
 	 	}
 	 	
 	 	.currentListContainer img {
@@ -46,12 +48,14 @@
 	 	}
 	 	
 	 	.currentListName {
-			font-size: 32px;
+			font-size: 30px;
 			margin-right: 5px;
 	 	}
 	 	
 	 	.listModeToggle {
 			display: inline;
+			margin-top: 3px;
+			margin-left: 10px;
 	 	}
 	 	
 	 	.listModeToggle > * {
@@ -157,8 +161,6 @@
 			<g:Label ui:field="errorMsg" ui:styleName="error {style.errorMsg}" />
 			<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
 		</g:FlowPanel>
-				
-		<g:Hyperlink ui:field="globalListLink" ui:styleName="{style.globalListLink}"/>
 		
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -52,7 +52,6 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField FlowPanel addListContainer;
 	@UiField FlowPanel listContainer;
 	@UiField Label errorMsg;
-	@UiField Hyperlink globalListLink;
 	@UiField ListManagerStyle style;
 	int selectedIndex = 0;
 	private HandlerRegistration rootClickHandler;
