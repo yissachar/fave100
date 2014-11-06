@@ -350,18 +350,18 @@ public class AuthApi {
 		}
 
 		if (loggingInUser != null) {
-			if (password == null || password.isEmpty()
-					|| !BCrypt.checkpw(password, loggingInUser.getPassword())) {
-				// Bad password
+			// Check for bad password
+			if (password == null || password.isEmpty() || !BCrypt.checkpw(password, loggingInUser.getPassword()))
 				throw new InvalidLoginException();
-			}
+
 			// Successful login - store session
-			request.getSession().setAttribute(SessionAttributes.AUTH_USER, username);
+			request.getSession().setAttribute(SessionAttributes.AUTH_USER, loggingInUser.getUsername());
 		}
 		else {
 			// Bad username
 			throw new InvalidLoginException();
 		}
+
 		return loggingInUser;
 	}
 
