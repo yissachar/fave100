@@ -3,14 +3,29 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui'
 	xmlns:p='urn:import:com.fave100.client.pages'
+	xmlns:w='urn:import:com.fave100.client.widgets'
 	xmlns:wyt='urn:import:com.fave100.client.pages.song.widgets.youtube'>
 
-	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">			
+	<ui:style src="../../../client/resources/css/global.css" type="com.fave100.client.resources.css.GlobalStyle">
+		.backButton {
+			cursor: pointer;
+			margin-top: 5px;
+			margin-left: 5px;
+		}
+		
+		.backText {
+			cursor: pointer;
+			vertical-align: 5px;
+			margin-left: 2px;
+		}
 	</ui:style>
 	
 	<p:Page ui:field="page">
 		<p:content>	
-			<g:HTMLPanel/>
+			<g:HTMLPanel>
+				<w:Icon ui:field="backButton" ui:styleName="fa fa-2x fa-long-arrow-left {style.backButton}"/>
+				<g:InlineLabel ui:field="backText" ui:styleName="{style.backText}">Back to list</g:InlineLabel>
+			</g:HTMLPanel>
 		</p:content>
 	</p:Page>
 	

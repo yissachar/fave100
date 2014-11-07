@@ -28,7 +28,7 @@
 		.fullScreen.container, .playlistVisible.smallDisplay .fullScreen.container {
 			width: 100%;
 			right: 0;
-			top: 75px;
+			top: 100px;
 			bottom: auto;
 			display: inline;
 		}
