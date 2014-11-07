@@ -43,6 +43,8 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 
 		void scrollPlayingItemToTop();
 
+		boolean isFullScreen();
+
 		void setFullScreen(boolean fullScreen);
 	}
 
@@ -80,7 +82,11 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 
 			@Override
 			public void onResize(ResizeEvent event) {
-				if (Utils.isSmallDisplay() && !placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.song)) {
+				if (!Utils.isSmallDisplay() && getView().isFullScreen() && placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.song)) {
+					getView().setFullScreen(false);
+					placeManager.navigateBack();
+				}
+				else if (Utils.isSmallDisplay() && !getView().isFullScreen() && !placeManager.getCurrentPlaceRequest().getNameToken().equals(NameTokens.song)) {
 					youtubePresenter.stopVideo();
 				}
 			}

@@ -189,6 +189,11 @@ public class PlaylistView extends ViewWithUiHandlers<PlaylistUiHandlers> impleme
 	}
 
 	@Override
+	public boolean isFullScreen() {
+		return container.getStyleName().contains(style.fullScreen());
+	}
+
+	@Override
 	public void setFullScreen(boolean fullScreen) {
 		if (fullScreen) {
 			container.addStyleName(style.fullScreen());
