@@ -152,8 +152,8 @@ public class HashtagBuilderServlet extends HttpServlet
 		}
 
 		// If all hashtags built, aggregrate the trending as a last step
-		Map<FaveRankerWrapper, Long> trending = new HashMap<FaveRankerWrapper, Long>();
 		if (MemcacheManager.incrementRemainingHashtagCount(-1) == 0) {
+			Map<FaveRankerWrapper, Long> trending = new HashMap<FaveRankerWrapper, Long>();
 			// TODO: Nov 3, 2014 Handle more than 1000 lists
 			List<TrendingList> lists = ofy().load().type(TrendingList.class).list();
 			for (TrendingList list : lists) {
@@ -161,24 +161,24 @@ public class HashtagBuilderServlet extends HttpServlet
 					trending.put(new FaveRankerWrapper(faveItem), MemcacheManager.getTrendingScore(faveItem, false));
 				}
 			}
-		}
 
-		List<Map.Entry<FaveRankerWrapper, Long>> sortedTrending = new LinkedList<>(trending.entrySet());
-		Collections.sort(sortedTrending, Collections.reverseOrder(new Comparator<Map.Entry<FaveRankerWrapper, Long>>() {
-			@Override
-			public int compare(final Map.Entry<FaveRankerWrapper, Long> o1, final Map.Entry<FaveRankerWrapper, Long> o2) {
-				return (o1.getValue()).compareTo(o2.getValue());
+			List<Map.Entry<FaveRankerWrapper, Long>> sortedTrending = new LinkedList<>(trending.entrySet());
+			Collections.sort(sortedTrending, Collections.reverseOrder(new Comparator<Map.Entry<FaveRankerWrapper, Long>>() {
+				@Override
+				public int compare(final Map.Entry<FaveRankerWrapper, Long> o1, final Map.Entry<FaveRankerWrapper, Long> o2) {
+					return (o1.getValue()).compareTo(o2.getValue());
+				}
+			}));
+
+			List<FaveItem> finalTrending = new ArrayList<FaveItem>();
+			for (int i = 0; i < 100 && i < sortedTrending.size(); i++) {
+				finalTrending.add(sortedTrending.get(i).getKey().getFaveItem());
 			}
-		}));
 
-		List<FaveItem> finalTrending = new ArrayList<FaveItem>();
-		for (int i = 0; i < 100 && i < sortedTrending.size(); i++) {
-			finalTrending.add(sortedTrending.get(i).getKey().getFaveItem());
+			Hashtag trendingHashtag = new Hashtag(Constants.TRENDING_LIST_NAME, "Fave100");
+			trendingHashtag.setList(finalTrending);
+			ofy().save().entity(trendingHashtag).now();
 		}
-
-		Hashtag trendingHashtag = new Hashtag(Constants.TRENDING_LIST_NAME, "Fave100");
-		trendingHashtag.setList(finalTrending);
-		ofy().save().entity(trendingHashtag).now();
 	}
 
 	private List<Map.Entry<FaveRankerWrapper, Double>> sort(Map<FaveRankerWrapper, Double> items) {
