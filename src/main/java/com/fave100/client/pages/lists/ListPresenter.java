@@ -49,7 +49,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPresenter.MyProxy> implements ListUiHandlers {
 
 	public interface MyView extends View, HasUiHandlers<ListUiHandlers> {
-		void setPageDetails(AppUser requestedUser, CurrentUser currentUser);
+		void setPageDetails(AppUser requestedUser, CurrentUser currentUser, boolean isTrendingList);
 
 		String getFixedSearchStyle();
 
@@ -208,8 +208,9 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		isFollowing = false;
 		// Use parameters to determine what to reveal on page
 		requestedUsername = placeRequest.getParameter(PlaceParams.USER_PARAM, "");
-		_requestedHashtag = placeRequest.getParameter(PlaceParams.LIST_PARAM, Constants.DEFAULT_HASHTAG);
-		_requestedListMode = placeRequest.getParameter(PlaceParams.MODE_PARAM, ListMode.ALL);
+		String defaultHashtag = requestedUsername.isEmpty() ? Constants.TRENDING_LIST_NAME : Constants.DEFAULT_HASHTAG;
+		_requestedHashtag = placeRequest.getParameter(PlaceParams.LIST_PARAM, defaultHashtag);
+		_requestedListMode = placeRequest.getParameter(PlaceParams.MODE_PARAM, ListMode.USERS);
 
 		// Possible combinations:
 		// Blank user, blank list => global fave100 list
@@ -307,7 +308,7 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 		// Ensure we don't show critic's lists directly to other users
 		if (requestedUser == null || !requestedUser.isCritic() || _ownPage) {
 
-			getView().setPageDetails(requestedUser, _currentUser);
+			getView().setPageDetails(requestedUser, _currentUser, Constants.TRENDING_LIST_NAME.equals(_requestedHashtag));
 
 			favelist.setUser(requestedUser);
 			favelist.setHashtag(_requestedHashtag);

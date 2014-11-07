@@ -1,6 +1,7 @@
 package com.fave100.server.domain.favelist;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,7 +10,6 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Index;
 import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
  * A song that a Fave100 user has added to their Fave100.
@@ -25,11 +25,12 @@ public class FaveItem implements Serializable {
 	// This field MUST be updated if this class is changed in a way that affects serialization: http://docs.oracle.com/javase/6/docs/platform/serialization/spec/version.html#6678
 	private static final long serialVersionUID = -8899544665404145248L;
 
-	@ApiModelProperty(required = true, value = "The song name") private String song;
+	private String song;
 	private String artist;
 	@Index private String songID;
 	private String whyline = "";
 	private Ref<Whyline> whylineRef;
+	private Date datePicked;
 
 	@SuppressWarnings("unused")
 	private FaveItem() {
@@ -39,6 +40,7 @@ public class FaveItem implements Serializable {
 		this.setSong(song);
 		this.setArtist(artist);
 		this.setSongID(songID);
+		datePicked = new Date();
 	}
 
 	/* Getters and Setters */
@@ -87,6 +89,16 @@ public class FaveItem implements Serializable {
 
 	public String getId() {
 		return songID;
+	}
+
+	@JsonIgnore
+	public Date getDatePicked() {
+		return datePicked;
+	}
+
+	@JsonIgnore
+	public void setDatePicked(Date datePicked) {
+		this.datePicked = datePicked;
 	}
 
 }

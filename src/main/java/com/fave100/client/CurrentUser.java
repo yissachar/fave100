@@ -253,6 +253,11 @@ public class CurrentUser extends AppUser {
 
 		final String listName = name;
 
+		if (Constants.TRENDING_LIST_NAME.equalsIgnoreCase(listName)) {
+			Notification.show(Constants.TRENDING_LIST_NAME + " is a reserved list", true);
+			return;
+		}
+
 		_api.call(_api.service().user().addFaveListForCurrentUser(listName), new AsyncCallback<Void>() {
 
 			@Override

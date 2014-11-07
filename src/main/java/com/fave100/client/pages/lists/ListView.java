@@ -8,6 +8,7 @@ import com.fave100.client.Utils;
 import com.fave100.client.generated.entities.AppUser;
 import com.fave100.client.pages.PageView;
 import com.fave100.client.resources.css.GlobalStyle;
+import com.fave100.client.widgets.Icon;
 import com.fave100.shared.Constants;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -21,7 +22,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -60,13 +60,13 @@ public class ListView extends PageView<ListUiHandlers>
 	@UiField Button followButton;
 	@UiField HTMLPanel userPageFaveList;
 	@UiField Panel listHeader;
-	@UiField Anchor contributeCTA;
-	@UiField Button directionSwitchButton;
+	@UiField Icon contributeCTA;
+	@UiField Icon directionSwitchButton;
 	@UiField Panel criticUrlPanel;
 	@UiField Label criticUrlLabel;
 	@UiField TextBox criticUrlInput;
 	@UiField Button criticUrlButton;
-	@UiField Anchor addSongLink;
+	@UiField Icon addSongLink;
 	@UiField HTMLPanel followingContainer;
 	@UiField FlowPanel userProfile;
 	@UiField Hyperlink profileLink;
@@ -194,7 +194,7 @@ public class ListView extends PageView<ListUiHandlers>
 	}-*/;
 
 	@Override
-	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser) {
+	public void setPageDetails(final AppUser requestedUser, final CurrentUser currentUser, boolean isTrendingList) {
 
 		if (requestedUser == null) {
 			userProfile.setVisible(false);
@@ -218,6 +218,12 @@ public class ListView extends PageView<ListUiHandlers>
 		}
 		else {
 			showOtherPage();
+		}
+
+		directionSwitchButton.setVisible(true);
+		if (isTrendingList) {
+			contributeCTA.setVisible(false);
+			directionSwitchButton.setVisible(false);
 		}
 
 		resize();

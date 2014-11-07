@@ -50,7 +50,7 @@ public class FaveListsApiTest extends ApiTest {
 		when(req.getParameter(HashtagBuilderServlet.HASHTAG_PARAM)).thenReturn(listName);
 		servlet.doPost(req, mock(HttpServletResponse.class));
 
-		List<FaveItem> faveItems = FaveListsApi.getMasterFaveList(listName, ListMode.ALL).getItems();
+		List<FaveItem> faveItems = FaveListsApi.getMasterFaveList(listName, ListMode.USERS).getItems();
 		assertThat(faveItems.size()).isEqualTo(1);
 		assertThat(faveItems).extracting("id").contains(songId);
 	}
@@ -66,7 +66,7 @@ public class FaveListsApiTest extends ApiTest {
 		hashtag.setList(faveItems);
 		ofy().save().entity(hashtag).now();
 
-		List<FaveItem> masterList = FaveListsApi.getMasterFaveList(listName, ListMode.ALL).getItems();
+		List<FaveItem> masterList = FaveListsApi.getMasterFaveList(listName, ListMode.USERS).getItems();
 		assertThat(masterList.size()).isEqualTo(1);
 		assertThat(masterList).extracting("id").contains(songId);
 	}

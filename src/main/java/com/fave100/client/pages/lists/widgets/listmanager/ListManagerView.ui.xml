@@ -11,6 +11,7 @@
 		@def LIST_MANAGER_BORDER_COLOR 1px solid #ccc;
 		.container {
 			position: relative;
+			display: inline;
 			-webkit-touch-callout: none;
 			-webkit-user-select: none;
 			-khtml-user-select: none;
@@ -26,7 +27,8 @@
 	 	}
 	 	
 	 	.currentListContainer > div {
-			display: inline;
+			align-items: center;
+			@mixin flexbox();			
 	 	}
 	 	
 	 	.currentListContainer img {
@@ -46,19 +48,21 @@
 	 	}
 	 	
 	 	.currentListName {
-			font-size: 32px;
+			font-size: 30px;
 			margin-right: 5px;
 	 	}
 	 	
-	 	.userCriticToggle {
+	 	.listModeToggle {
 			display: inline;
+			margin-top: 3px;
+			margin-left: 10px;
 	 	}
 	 	
-	 	.userCriticToggle > * {
+	 	.listModeToggle > * {
 			margin: 0 2px;
 	 	}
 	 	
-	 	.userCriticToggle > .selected {
+	 	.listModeToggle > .selected {
 			text-decoration: none;
 			color: PROMINENT_TEXT_COLOR;
 	 	}
@@ -139,10 +143,12 @@
 			<g:FlowPanel>
 				<g:InlineLabel ui:field="currentList" ui:styleName="{style.currentListName}" />
 				<g:Image ui:field="dropdownToggle" resource="{img.triangle}"/>
-				<g:FlowPanel ui:field="userCriticToggle" ui:styleName="{style.userCriticToggle}">
+				<g:FlowPanel ui:styleName="{style.listModeToggle}">
 					<g:InlineHyperlink ui:field="usersLink">Users</g:InlineHyperlink>
-					<g:InlineLabel>|</g:InlineLabel>
+					<g:InlineLabel ui:field="usersPipe">|</g:InlineLabel>
 					<g:InlineHyperlink ui:field="criticsLink">Critics</g:InlineHyperlink>
+					<g:InlineLabel ui:field="criticsPipe">|</g:InlineLabel>
+					<g:InlineHyperlink ui:field="newestLink">Newest</g:InlineHyperlink>
 				</g:FlowPanel>
 			</g:FlowPanel>
 		</g:FocusPanel>
@@ -155,8 +161,6 @@
 			<g:Label ui:field="errorMsg" ui:styleName="error {style.errorMsg}" />
 			<g:FlowPanel ui:field="listContainer" ui:styleName="{style.listContainer}"/>
 		</g:FlowPanel>
-				
-		<g:Hyperlink ui:field="globalListLink" ui:styleName="{style.globalListLink}"/>
 		
 	</g:HTMLPanel>
 </ui:UiBinder>

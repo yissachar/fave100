@@ -13,17 +13,9 @@ import java.util.List;
 
 public class WhylineEdit {
 
-    private String whyline;
     private String listName;
+    private String whyline;
     private String songId;
-
-    public String getWhyline() {
-        return this.whyline;
-    }
-
-    public void setWhyline(String whyline){
-        this.whyline = whyline;
-    }
 
     public String getListName() {
         return this.listName;
@@ -31,6 +23,14 @@ public class WhylineEdit {
 
     public void setListName(String listName){
         this.listName = listName;
+    }
+
+    public String getWhyline() {
+        return this.whyline;
+    }
+
+    public void setWhyline(String whyline){
+        this.whyline = whyline;
     }
 
     public String getSongId() {

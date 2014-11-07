@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -43,15 +42,16 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	@UiField Label currentList;
 	@UiField FlowPanel listDropdown;
 	@UiField Image dropdownToggle;
-	@UiField Panel userCriticToggle;
 	@UiField Hyperlink usersLink;
 	@UiField Hyperlink criticsLink;
+	@UiField Hyperlink newestLink;
+	@UiField Label usersPipe;
+	@UiField Label criticsPipe;
 	@UiField HTMLPanel autocomplete;
 	@UiField Button addHashtagButton;
 	@UiField FlowPanel addListContainer;
 	@UiField FlowPanel listContainer;
 	@UiField Label errorMsg;
-	@UiField Hyperlink globalListLink;
 	@UiField ListManagerStyle style;
 	int selectedIndex = 0;
 	private HandlerRegistration rootClickHandler;
@@ -73,7 +73,6 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 		_tokenFormatter = tokenFormatter;
 		autocomplete.setVisible(false);
 		listDropdown.setVisible(false);
-		userCriticToggle.setVisible(false);
 	}
 
 	@Override
@@ -188,6 +187,13 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 						.with(PlaceParams.LIST_PARAM, selected)
 						.with(PlaceParams.MODE_PARAM, ListMode.CRITICS)
 						.build()));
+
+		newestLink.setTargetHistoryToken(_tokenFormatter.toPlaceToken(
+				new PlaceRequest.Builder()
+						.nameToken(NameTokens.lists)
+						.with(PlaceParams.LIST_PARAM, selected)
+						.with(PlaceParams.MODE_PARAM, ListMode.NEWEST)
+						.build()));
 	}
 
 	@Override
@@ -234,25 +240,55 @@ public class ListManagerView extends ViewWithUiHandlers<ListManagerUiHandlers> i
 	}
 
 	@Override
-	public void showUserCriticToggle(boolean show) {
-		userCriticToggle.setVisible(show);
-	}
-
-	@Override
 	public void setListMode(String listMode) {
 		criticsLink.removeStyleName(style.selected());
 		usersLink.removeStyleName(style.selected());
+		newestLink.removeStyleName(style.selected());
 
 		if (ListMode.CRITICS.equals(listMode)) {
 			criticsLink.addStyleName(style.selected());
 		}
-		else if (ListMode.ALL.equals(listMode)) {
+		else if (ListMode.USERS.equals(listMode)) {
 			usersLink.addStyleName(style.selected());
+		}
+		else if (ListMode.NEWEST.equals(listMode)) {
+			newestLink.addStyleName(style.selected());
 		}
 	}
 
 	@Override
 	public void showWelcomeInfo(boolean show) {
-		// TODO: Ot 27, 2014 Either completely remove, or reinstate after redesign
+		// TODO: Oct 27, 2014 Either completely remove, or reinstate after redesign
+	}
+
+	@Override
+	public void hideAllModeLinks() {
+		usersLink.setVisible(false);
+		criticsLink.setVisible(false);
+		newestLink.setVisible(false);
+		usersPipe.setVisible(false);
+		criticsPipe.setVisible(false);
+	}
+
+	@Override
+	public void showModeLink(String mode) {
+		if (ListMode.CRITICS.equals(mode)) {
+			criticsLink.setVisible(true);
+		}
+		else if (ListMode.USERS.equals(mode)) {
+			usersLink.setVisible(true);
+		}
+		else if (ListMode.NEWEST.equals(mode)) {
+			newestLink.setVisible(true);
+		}
+
+		if (usersLink.isVisible() && (criticsLink.isVisible() || newestLink.isVisible())) {
+			usersPipe.setVisible(true);
+		}
+
+		if (criticsLink.isVisible() && newestLink.isVisible()) {
+			criticsPipe.setVisible(true);
+		}
+
 	}
 }

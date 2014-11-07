@@ -16,6 +16,7 @@ import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.Hashtag;
+import com.fave100.server.domain.favelist.TrendingList;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyFilter;
@@ -37,6 +38,7 @@ public abstract class ApiTest {
 		ObjectifyService.register(PwdResetToken.class);
 		ObjectifyService.register(Hashtag.class);
 		ObjectifyService.register(FeaturedLists.class);
+		ObjectifyService.register(TrendingList.class);
 	}
 
 	private final LocalDatastoreServiceTestConfig config = new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(100);

@@ -15,6 +15,7 @@ import com.fave100.server.domain.appuser.PwdResetToken;
 import com.fave100.server.domain.appuser.TwitterID;
 import com.fave100.server.domain.favelist.FaveList;
 import com.fave100.server.domain.favelist.Hashtag;
+import com.fave100.server.domain.favelist.TrendingList;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -35,6 +36,7 @@ public class ServerModule extends ServletModule {
 		ObjectifyService.register(PwdResetToken.class);
 		ObjectifyService.register(Hashtag.class);
 		ObjectifyService.register(FeaturedLists.class);
+		ObjectifyService.register(TrendingList.class);
 
 		final APIKey facebookApiKey = ofy().load().type(APIKey.class).id("facebook").now();
 		AppUser.setFacebookApiKey(facebookApiKey.getKey().trim());

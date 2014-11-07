@@ -8,7 +8,6 @@ import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -18,6 +17,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fave100.server.MemcacheManager;
 import com.fave100.server.domain.ApiPaths;
 import com.fave100.server.domain.BooleanResult;
 import com.fave100.server.domain.FeaturedLists;
@@ -25,7 +25,6 @@ import com.fave100.server.domain.StringResult;
 import com.fave100.server.domain.StringResultCollection;
 import com.fave100.server.domain.appuser.AppUser;
 import com.fave100.server.domain.favelist.FaveItemCollection;
-import com.fave100.server.domain.favelist.FaveListDao;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.fave100.shared.Constants;
 import com.fave100.shared.ListMode;
@@ -44,7 +43,7 @@ public class FaveListsApi {
 	@Path(ApiPaths.GET_LIST_NAMES)
 	@ApiOperation(value = "Get FaveList names", response = StringResultCollection.class)
 	public static StringResultCollection getListNames() {
-		List<Hashtag> masterLists = ofy().load().type(Hashtag.class).filter("criticList", false).limit(1000).list();
+		List<Hashtag> masterLists = ofy().load().type(Hashtag.class).limit(1000).list();
 
 		List<StringResult> listNames = new ArrayList<>();
 		for (Hashtag masterList : masterLists) {
@@ -62,25 +61,58 @@ public class FaveListsApi {
 	@ApiOperation(value = "Get a master FaveList", response = FaveItemCollection.class)
 	public static FaveItemCollection getMasterFaveList(@PathParam("list") final String list, @QueryParam("mode") @DefaultValue("all") String mode) {
 		String listName = list.toLowerCase();
-		if (ListMode.CRITICS.equals(mode)) {
-			listName += FaveListDao.SEPERATOR_TOKEN + FaveListDao.CRITIC_INDICATOR;
+
+		// Attempt to get the list from memcache first, if possible
+		if (ListMode.NEWEST.equals(mode)) {
+			return new FaveItemCollection(MemcacheManager.getNewestSongs(listName));
 		}
 
-		return new FaveItemCollection(ofy().load().type(Hashtag.class).id(listName).now().getList());
+		Hashtag masterList = ofy().load().type(Hashtag.class).id(listName).now();
+		if (masterList == null)
+			throw new NotFoundException();
+
+		if (ListMode.USERS.equals(mode)) {
+			return new FaveItemCollection(masterList.getList());
+		}
+		else if (ListMode.CRITICS.equals(mode)) {
+			return new FaveItemCollection(masterList.getCriticsList());
+		}
+		else if (ListMode.NEWEST.equals(mode)) {
+			return new FaveItemCollection(masterList.getNewestList());
+		}
+
+		throw new NotFoundException();
 	}
 
-	@HEAD
-	@Path(ApiPaths.GET_MASTER_FAVELIST)
-	@ApiOperation(value = "Determins if a critic master FaveList exists")
-	public static void checkMasterFaveListExistence(@PathParam("list") final String list, @QueryParam("mode") @DefaultValue("all") String mode) {
+	@GET
+	@Path(ApiPaths.MASTER_FAVELIST_MODES)
+	@ApiOperation(value = "Returns the modes that exist for the list", response = StringResultCollection.class)
+	public static StringResultCollection getMasterFaveListModes(@PathParam("list") final String list) {
 		String listName = list.toLowerCase();
-		if (ListMode.CRITICS.equals(mode)) {
-			listName += FaveListDao.SEPERATOR_TOKEN + FaveListDao.CRITIC_INDICATOR;
+
+		Hashtag masterList = ofy().load().type(Hashtag.class).id(listName).now();
+		if (masterList == null)
+			throw new NotFoundException();
+
+		List<String> modes = new ArrayList<String>();
+		if (!masterList.getList().isEmpty()) {
+			modes.add(ListMode.USERS);
 		}
 
-		Hashtag hashtag = ofy().load().type(Hashtag.class).id(listName).now();
-		if (hashtag == null)
-			throw new NotFoundException();
+		if (!masterList.getCriticsList().isEmpty()) {
+			modes.add(ListMode.CRITICS);
+		}
+
+		if (!masterList.getNewestList().isEmpty()) {
+			modes.add(ListMode.NEWEST);
+		}
+
+		List<StringResult> items = new ArrayList<StringResult>();
+		for (String mode : modes) {
+			items.add(new StringResult(mode));
+		}
+
+		return new StringResultCollection(items);
 	}
 
 	@GET

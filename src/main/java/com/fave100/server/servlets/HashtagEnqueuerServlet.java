@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fave100.server.MemcacheManager;
 import com.fave100.server.domain.favelist.Hashtag;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterator;
@@ -43,11 +44,13 @@ public class HashtagEnqueuerServlet extends HttpServlet
 		boolean shouldContinue = false;
 
 		int count = 0;
+		MemcacheManager.resetTrendingMin();
 		final QueryResultIterator<Hashtag> iterator = query.iterator();
 		while (iterator.hasNext()) {
 			count++;
 			final Queue queue = QueueFactory.getQueue("hashtag-queue");
 			queue.add(withUrl(HashtagBuilderServlet.HASHTAG_BUILDER_URL).param(HashtagBuilderServlet.HASHTAG_PARAM, iterator.next().getId()));
+			MemcacheManager.incrementRemainingHashtagCount(1);
 
 			// If we processed the full 1000 limit, grab the next batch of hashtags to process
 			if (count == 1000)

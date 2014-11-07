@@ -10,6 +10,7 @@ public final class ApiPaths {
 	public static final String FAVELIST_ROOT = "favelists";
 	public static final String GET_LIST_NAMES = "/names";
 	public static final String GET_MASTER_FAVELIST = "/list/{list}";
+	public static final String MASTER_FAVELIST_MODES = GET_MASTER_FAVELIST + "/modes";
 	public static final String FEATURED_FAVELISTS = "/featured";
 	public static final String EDIT_FEATURED_FAVELISTS = "/featured/{list}";
 
