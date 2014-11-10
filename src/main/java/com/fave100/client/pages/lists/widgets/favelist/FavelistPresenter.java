@@ -278,7 +278,6 @@ public class FavelistPresenter extends
 					if (faveItem.getSongID().equals(songId)) {
 						FaveItem newfaveItem = new FaveItem();
 						newfaveItem.setSongID(songId);
-						newfaveItem.setId(songId);
 						newfaveItem.setWhyline(whyline);
 						newfaveItem.setArtist(faveItem.getArtist());
 						newfaveItem.setSong(faveItem.getSong());

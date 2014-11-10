@@ -25,16 +25,16 @@ import javax.ws.rs.QueryParam;
 public interface UsersService extends RestService {
 
     @GET
-    @Path("/users/{user}")
-    public RestAction<AppUser> getAppUser (@PathParam("user") String user);
+    @Path("/users/{user}/favelists/{list}")
+    public RestAction<FaveItemCollection> getFaveList (@PathParam("user") String user, @PathParam("list") String list);
 
     @GET
     @Path("/users/{user}/following")
     public RestAction<FollowingResult> getFollowing (@PathParam("user") String user, @QueryParam("index") int index);
 
     @GET
-    @Path("/users/{user}/favelists/{list}")
-    public RestAction<FaveItemCollection> getFaveList (@PathParam("user") String user, @PathParam("list") String list);
+    @Path("/users/{user}")
+    public RestAction<AppUser> getAppUser (@PathParam("user") String user);
 
     @POST
     @Path("/users/{user}/favelists/{list}/critic_url")

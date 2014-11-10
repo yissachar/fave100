@@ -235,7 +235,7 @@ public class RemoteApi {
 
 		for (FaveList faveList : faveLists) {
 			for (FaveItem faveItem : faveList.getList()) {
-				if (faveItem.getId().equals(id)) {
+				if (faveItem.getSongID().equals(id)) {
 					return faveItem;
 				}
 			}
@@ -249,8 +249,8 @@ public class RemoteApi {
 
 		for (FaveList faveList : faveLists) {
 			for (FaveItem faveItem : faveList.getList()) {
-				if (faveItem.getId().equals(id)) {
-					System.out.println("Found " + faveItem.getId() + ": \"" + faveItem.getSong() + " - " + faveItem.getArtist() + "\" in " + faveList.getId());
+				if (faveItem.getSongID().equals(id)) {
+					System.out.println("Found " + faveItem.getSongID() + ": \"" + faveItem.getSong() + " - " + faveItem.getArtist() + "\" in " + faveList.getId());
 				}
 			}
 		}
@@ -268,7 +268,7 @@ public class RemoteApi {
 
 		for (FaveList faveList : faveLists) {
 			for (FaveItem faveItem : faveList.getList()) {
-				if (faveItem.getId().equals(id)) {
+				if (faveItem.getSongID().equals(id)) {
 					faveItem.setSong(song);
 					faveItem.setArtist(artist);
 					faveItem.setSongID(newId);
@@ -294,7 +294,7 @@ public class RemoteApi {
 		List<FaveList> faveLists = ofy().load().type(FaveList.class).list();
 		for (FaveList faveList : faveLists) {
 			for (FaveItem faveItem : faveList.getList()) {
-				songIds.add(faveItem.getId());
+				songIds.add(faveItem.getSongID());
 			}
 			System.out.println("Processed list - " + faveList.getId());
 		}

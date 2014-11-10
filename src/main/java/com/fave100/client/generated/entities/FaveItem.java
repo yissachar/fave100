@@ -13,19 +13,10 @@ import java.util.List;
 
 public class FaveItem {
 
-    private String id;
     private String songID;
     private String song;
     private String artist;
     private String whyline;
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id){
-        this.id = id;
-    }
 
     public String getSongID() {
         return this.songID;

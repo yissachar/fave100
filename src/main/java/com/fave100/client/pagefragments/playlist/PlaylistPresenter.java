@@ -139,7 +139,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	public void playSong(String songId, String song, String artist) {
 		_faveItems = new ArrayList<>();
 		FaveItem faveItem = new FaveItem();
-		faveItem.setId(songId);
+		faveItem.setSongID(songId);
 		faveItem.setSong(song);
 		faveItem.setArtist(artist);
 		_faveItems.add(faveItem);
@@ -155,7 +155,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		FaveItem tempPlaying = null;
 		int i = 0;
 		for (FaveItem faveItem : _faveItems) {
-			if (faveItem.getId().equals(songId)) {
+			if (faveItem.getSongID().equals(songId)) {
 				tempPlaying = faveItem;
 				_playingSongIndex = i;
 			}
@@ -168,9 +168,9 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		int rank = 1;
 		for (FaveItem faveItem : _faveItems) {
 			PlaylistItem playlistItem = new PlaylistItem(_eventBus);
-			playlistItem.setCurrentlyPlaying(faveItem.getId().equals(songId));
+			playlistItem.setCurrentlyPlaying(faveItem.getSongID().equals(songId));
 			playlistItem.setRank(rank);
-			playlistItem.setSongID(faveItem.getId());
+			playlistItem.setSongID(faveItem.getSongID());
 			playlistItem.setSong(faveItem.getSong());
 			playlistItem.setArtist(faveItem.getArtist());
 			playlistItem.setWhyline(faveItem.getWhyline());
@@ -221,7 +221,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 	public void previousSong() {
 		int previousSongIndex = _playingSongIndex - 1;
 		if (previousSongIndex >= 0) {
-			String songId = _faveItems.get(previousSongIndex).getId();
+			String songId = _faveItems.get(previousSongIndex).getSongID();
 			playSong(songId, _listName, _username, _globalList, _faveItems);
 			getView().scrollPlayingItemToTop();
 		}
@@ -232,7 +232,7 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		int nextSongIndex = _playingSongIndex + 1;
 		if (_faveItems.size() > nextSongIndex) {
 			FaveItem playing = _faveItems.get(nextSongIndex);
-			_eventBus.fireEvent(new PlaylistSongChangedEvent(playing.getId(), playing.getSong(), playing.getArtist(), _listName, _username, _playlistItems));
+			_eventBus.fireEvent(new PlaylistSongChangedEvent(playing.getSongID(), playing.getSong(), playing.getArtist(), _listName, _username, _playlistItems));
 			getView().scrollPlayingItemToTop();
 		}
 	}
@@ -259,10 +259,10 @@ public class PlaylistPresenter extends PresenterWidget<PlaylistPresenter.MyView>
 		else {
 			FaveItem playing = _faveItems.get(_playingSongIndex);
 			if (_currentUser.getHashtags().size() == 1) {
-				_currentUser.addSong(playing.getId(), playing.getSong(), playing.getArtist());
+				_currentUser.addSong(playing.getSongID(), playing.getSong(), playing.getArtist());
 			}
 			else {
-				_addSongPresenter.setSongToAddId(playing.getId());
+				_addSongPresenter.setSongToAddId(playing.getSongID());
 				_addSongPresenter.setSongToAddName(playing.getSong());
 				_addSongPresenter.setSongToAddArtist(playing.getArtist());
 				addToPopupSlot(_addSongPresenter);

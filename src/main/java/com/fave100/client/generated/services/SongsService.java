@@ -27,11 +27,11 @@ public interface SongsService extends RestService {
     public RestAction<FaveItem> getSong (@PathParam("id") String id);
 
     @GET
-    @Path("/songs/{id}/favelists")
-    public RestAction<UserListResultCollection> getFaveLists (@PathParam("id") String id);
-
-    @GET
     @Path("/songs/{id}/whylines")
     public RestAction<WhylineCollection> getWhylines (@PathParam("id") String id);
+
+    @GET
+    @Path("/songs/{id}/favelists")
+    public RestAction<UserListResultCollection> getFaveLists (@PathParam("id") String id);
 
 }

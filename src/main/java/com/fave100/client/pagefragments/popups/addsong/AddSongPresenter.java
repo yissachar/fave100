@@ -41,7 +41,7 @@ public class AddSongPresenter extends PresenterWidget<AddSongPresenter.MyView> i
 		for (Map.Entry<String, List<FaveItem>> entry : _currentUser.getFaveLists().entrySet()) {
 			boolean inList = false;
 			for (FaveItem faveItem : entry.getValue()) {
-				if (faveItem.getId().equals(getSongToAddId())) {
+				if (faveItem.getSongID().equals(getSongToAddId())) {
 					inList = true;
 				}
 			}

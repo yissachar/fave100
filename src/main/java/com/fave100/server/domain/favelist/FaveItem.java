@@ -87,10 +87,6 @@ public class FaveItem implements Serializable {
 		this.songID = songID;
 	}
 
-	public String getId() {
-		return songID;
-	}
-
 	@JsonIgnore
 	public Date getDatePicked() {
 		return datePicked;

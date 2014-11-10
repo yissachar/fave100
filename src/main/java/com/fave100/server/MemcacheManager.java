@@ -68,7 +68,7 @@ public class MemcacheManager {
 	public static long getTrendingScore(FaveItem faveItem, boolean alter) {
 		MemcacheService cache = MemcacheServiceFactory.getMemcacheService(NAMESPACE_TRENDING);
 		long score = Math.max(800_000_000 - (new Date().getTime() - faveItem.getDatePicked().getTime()), 0);
-		String id = TRENDING_SCORE_ID + ID_SEPARATOR + faveItem.getId();
+		String id = TRENDING_SCORE_ID + ID_SEPARATOR + faveItem.getSongID();
 		if (alter)
 			return cache.increment(id, score, score);
 

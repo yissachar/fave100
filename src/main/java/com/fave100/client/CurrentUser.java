@@ -236,7 +236,6 @@ public class CurrentUser extends AppUser {
 				item.setSong(song);
 				item.setArtist(artist);
 				item.setSongID(songId);
-				item.setId(songId);
 
 				// Ensure local list in sync	
 				if (getFaveLists().get(hashtag) != null) {

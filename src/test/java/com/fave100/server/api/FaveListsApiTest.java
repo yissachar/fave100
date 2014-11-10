@@ -52,7 +52,7 @@ public class FaveListsApiTest extends ApiTest {
 
 		List<FaveItem> faveItems = FaveListsApi.getMasterFaveList(listName, ListMode.USERS).getItems();
 		assertThat(faveItems.size()).isEqualTo(1);
-		assertThat(faveItems).extracting("id").contains(songId);
+		assertThat(faveItems).extracting("songID").contains(songId);
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class FaveListsApiTest extends ApiTest {
 
 		List<FaveItem> masterList = FaveListsApi.getMasterFaveList(listName, ListMode.USERS).getItems();
 		assertThat(masterList.size()).isEqualTo(1);
-		assertThat(masterList).extracting("id").contains(songId);
+		assertThat(masterList).extracting("songID").contains(songId);
 	}
 
 	@Test

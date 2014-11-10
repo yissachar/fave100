@@ -389,7 +389,7 @@ public class UserApiTest extends ApiTest {
 
 		UserApi.rerankFaveItemForCurrentUser(loggedInUser, Constants.DEFAULT_HASHTAG, songId1, 1);
 		FaveItem firstFaveItem = UsersApi.getFaveList(loggedInUser.getUsername(), Constants.DEFAULT_HASHTAG).getItems().get(1);
-		assertThat(firstFaveItem.getId()).isEqualTo(songId1);
+		assertThat(firstFaveItem.getSongID()).isEqualTo(songId1);
 	}
 
 	@Test
