@@ -172,7 +172,10 @@ public class HashtagBuilderServlet extends HttpServlet
 
 			List<FaveItem> finalTrending = new ArrayList<FaveItem>();
 			for (int i = 0; i < 100 && i < sortedTrending.size(); i++) {
-				finalTrending.add(sortedTrending.get(i).getKey().getFaveItem());
+				FaveItem faveItem = sortedTrending.get(i).getKey().getFaveItem();
+				faveItem.setWhyline("");
+				faveItem.setWhylineRef(null);
+				finalTrending.add(faveItem);
 			}
 
 			Hashtag trendingHashtag = new Hashtag(Constants.TRENDING_LIST_NAME, "Fave100");
