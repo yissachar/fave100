@@ -34,6 +34,7 @@
 	<a href="#upgradeAE-GWT">Upgrading AppEngine and GWT version</a><br>
 	<a href="#testingAvatarUpload">Testing Avatar Upload Locally</a><br>
 	<a href="#refactoringGwtSwagger">Refactoring Generated GWT Swagger Client</a><br>
+	<a href="#remoteServerAdmin">Remote Server Admin</a>
 
 	<a name="devEnvironment"/>
 	<h2>Setting Up Development Environment</h2>
@@ -217,9 +218,13 @@
 		<li>In dev mode, you cannot change an avatar locally once it has been uploaded, due to a bug with the dev server, which locks images. Instead use hosted mode to perform this operation.</li>
 	</ol>
 
-	<a name="refactoringGwtSwagger"></a>
+	<a name="refactoringGwtSwagger"/>
 	<h2>Refactoring Generated GWT Swagger Client</h2>
 	<p>Any changed you make to the generated GWT Swagger client will be lost the next time the client is generated. To get around this, you must first refactor the client to the state you want, and then change the client generator so that it produces the equivalent output.</p>
+
+	<a name="remoteServerAdmin"/>
+	<h2>Remote Server Admin</h2>
+	<p>Remote Server Administration can be accomplished through the use of the RemoteApi program (src/main/RemoteApi.java). Once valid credentials are provided, you will be able to execute code remotely on the connected server. Some helpful methods are provided for performing common tasks, but you are not restricted to using only those methods.</p>
 
 	</div>
 </body>
