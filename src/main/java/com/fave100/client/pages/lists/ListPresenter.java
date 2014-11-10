@@ -391,8 +391,13 @@ public class ListPresenter extends PagePresenter<ListPresenter.MyView, ListPrese
 
 	@Override
 	public void showAddSongPrompt() {
-		favelist.resetDirection();
-		addToPopupSlot(_search);
+		if (_currentUser.getFaveList().size() >= Constants.MAX_ITEMS_PER_LIST) {
+			Notification.show("You can't have more than " + Constants.MAX_ITEMS_PER_LIST + " items in your list", true);
+		}
+		else {
+			favelist.resetDirection();
+			addToPopupSlot(_search);
+		}
 	}
 
 	@Override
