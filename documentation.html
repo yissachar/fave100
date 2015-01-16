@@ -79,14 +79,24 @@
 	<h4>autocomplete_search_dupes</h4>
 	<p>autocomplete_search_dupes contains manually added dupes and their links to the master song. When a song is flagged as a dupe it is inserted into this table. The AppEngine deduper uses this table to determine what songs to dedupe. When autocomplete_search is updated, autocomplete_search_dupes is consulted to determine that we do not add any songs that are flagged as dupes.</p>
 
-	<h3>Setting up MuiscBrainz VM</h3>
+	<h3>Setting up MusicBrainz VM</h3>
 	<ol>
 		<li>Download and install VirtualBox</li>
-		<li>Download Musicbrainz VM torrent: <a href="http://musicbrainz.org/doc/MusicBrainz_Server/Setup">http://musicbrainz.org/doc/MusicBrainz_Server/Setup</a></li>
-		<li>VirtualBox menu: File -> Import appliance, select downloaded OVA, and give 4096MB RAM (or as close to that as your machine can afford)</li>
+		<li>Setup a Ubuntu VM with 8 GB of RAM, and 250GB of disk space</li>
 		<li>Right-click VM: Settings->Network: Set bridged adapter connection</li>
-		<li>Start VM and login with usename "vm" and password "musicbrainz"</li>
-		<li>Run command "sudo su - postgres"</li>
+		<li>
+			<div>Start VM and follow <a href="https://github.com/metabrainz/musicbrainz-server/blob/master/INSTALL.md">MusicBrainz instructions</a> for the following:</div>
+			<ol>
+				<li>Install PostgreSQL</li>
+				<li>Install git</li>
+				<li>Install Standard development tools</li>
+				<li>Download MusicBrainz source</li>
+				<li>Modify server configuration to RT_STANDALONE</li>
+				<li>Install Perl dependencies</li>
+				<li>Create PostgreQSL database using clean database</li>
+			</ol>
+		</li>
+		<li>Run command "sudo su - postgres"</li>		
 		<li>Open "/etc/postgresql/9.1/main/pg_hba.conf" in a text editor</li>
 		<li>Add line: "host all all {IP of client you want to add}/32 trust" and save file</li>
 		<li>Open "/etc/postgresql/9.1/main/postgresql.conf.in" in a text editor</li>
@@ -112,13 +122,6 @@
 		<li>Run CreateTables.sql from fave100-autocomplete repo</li>
 		<li>Follow instructions in <a href="#updatingSongs">Updating Song Database</a> from step 6 (Install MODE command) and on</li>
 	</ol>	
-
-	<h3>Setting up MusicBrainz VM from existing snapshots</h3>	
-	<ol>
-		<li>Backups are stored in \\broadview\WebDev\MusicBrainz VM</li>
-		<li>Run VirtualBox and create VM from existing VDI file</li>
-		<li>Restore to specified snapshots</li>
-	</ol>
 
 	<a name="updatingSongs"/>
 	<h2>Updating Song Database</h2>
