@@ -64,10 +64,9 @@
 					<g:Image ui:styleName="{style.imageLeft}" ui:resource="{img.aboutScreen1}"></g:Image>
 					<g:HTMLPanel>
 						<h2>List-based music discovery</h2>
-						<p>Fave100 is a music discovery site that asks the simple question: if you could only recommend 5, 10, 50 or even 100 songs, what would they be? And, in what order?</p>
-						<p>Our Home Page displays the all-time Fave100 based on everyone’s lists so far. You can also create other lists based on genre (e.g. classicrock), 
-							year (e.g 2013), event (e.g. micksparty) or whatever else comes to mind.
-						</p>							
+						<p>Fave100 is a crowdsourcing web app that lets you view and contribute to ranked "Top 100" song lists.</p>
+						<p>Add picks to your personal list and the aggregate list will update in minutes!</p>
+						<p>Not only can you share and discover great music, you can play any Fave100 list for free.</p>
 					</g:HTMLPanel>
 				</g:FlowPanel>
 				
