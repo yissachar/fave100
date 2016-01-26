@@ -11,7 +11,7 @@
 
 	<properties>
 		<gwt.version>2.6.1</gwt.version>
-		<appengine.version>1.9.14</appengine.version>
+		<appengine.version>1.9.21</appengine.version>
 		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
 		<gwtp.version>1.3.1</gwtp.version>
 		<jersey.version>1.18</jersey.version>
@@ -335,7 +335,6 @@
 				<configuration>
 					<appId>${appengine-app-id}</appId>
 					<version>${appengine-app-version}</version>
-					<oauth2>false</oauth2>
 					<noCookies>true</noCookies>
 					<passin>true</passin>
 				</configuration>
