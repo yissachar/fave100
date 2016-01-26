@@ -39,7 +39,6 @@ public class TrendingApi {
 		// Return alltime, 2014 and up to 8 more randomly picked from the featured list
 		List<StringResult> trending = new ArrayList<>();
 		trending.add(new StringResult("alltime"));
-		trending.add(new StringResult("2014"));
 
 		FeaturedLists featuredLists = ofy().load().type(FeaturedLists.class).id(Constants.FEATURED_LISTS_ID).now();
 		List<String> listNames = new ArrayList<>();

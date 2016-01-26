@@ -12,8 +12,8 @@ public class TrendingApiTest extends ApiTest {
 	}
 
 	@Test
-	public void trending_api_should_always_contain_alltime_and_2014_lists() {
+	public void trending_api_should_always_contain_alltime_and_lists() {
 		assertThat(TrendingApi.getTrendingFaveLists().getItems()).extracting("value")
-				.contains("alltime", "2014");
+				.contains("alltime");
 	}
 }
