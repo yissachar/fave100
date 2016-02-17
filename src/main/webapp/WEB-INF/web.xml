@@ -12,6 +12,10 @@
           	<param-value>true</param-value>
      	</init-param>
         
+        <init-param>
+      		<param-name>maxLinesOfStackTrace</param-name>
+      		<param-value>16</param-value>
+    	</init-param>
     </filter>
 
 	<!--  AppEngine Stats -->
