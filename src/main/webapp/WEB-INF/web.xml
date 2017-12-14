@@ -2,38 +2,7 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<display-name>Fave100</display-name>
-	
-	<!-- Servlets -->
-	<filter>
-        <filter-name>appstats</filter-name>
-        <filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>
-        <init-param>
-        	<param-name>calculateRpcCosts</param-name>
-          	<param-value>true</param-value>
-     	</init-param>
-        
-        <init-param>
-      		<param-name>maxLinesOfStackTrace</param-name>
-      		<param-value>16</param-value>
-    	</init-param>
-    </filter>
 
-	<!--  AppEngine Stats -->
-    <filter-mapping>
-        <filter-name>appstats</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    
-    <servlet>
-        <servlet-name>appstats</servlet-name>
-        <servlet-class>com.google.appengine.tools.appstats.AppstatsServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>appstats</servlet-name>
-        <url-pattern>/appstats/*</url-pattern>
-    </servlet-mapping>
-    
     <!--  Clean up expired sessions -->
     <servlet>
 	  	<servlet-name>cron_sessioncleanup</servlet-name>
@@ -55,19 +24,7 @@
 	  	<servlet-name>avatarUpload</servlet-name>
 	 	<url-pattern>/avatarUpload</url-pattern>
 	</servlet-mapping>
-	
-	<!-- Stop unauthorized access to stats -->
 
-    <security-constraint>
-        <web-resource-collection>
-        	<web-resource-name>appstats</web-resource-name>
-            <url-pattern>/appstats/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>admin</role-name>
-        </auth-constraint>
-    </security-constraint>
-    
     <!-- Stop unauthorized access to cron jobs -->
     <security-constraint>
         <web-resource-collection>

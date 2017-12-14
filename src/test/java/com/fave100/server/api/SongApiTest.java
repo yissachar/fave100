@@ -28,8 +28,8 @@ public class SongApiTest extends ApiTest {
 	@Test
 	public void song_api_should_find_existing_song() {
 		FaveItem faveItem = SongApi.getSong("BbK4Ex");
-		assertThat(faveItem.getSong()).isEqualTo("Pangea");
-		assertThat(faveItem.getArtist()).isEqualTo("Professor Kliq");
+		assertThat(faveItem.getSong()).isEqualTo("Let Me Be Your Father X-Mas");
+		assertThat(faveItem.getArtist()).isEqualTo("Boyzvoice");
 	}
 
 	@Test
