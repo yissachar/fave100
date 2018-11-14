@@ -82,55 +82,33 @@
 	<h3>Setting up MusicBrainz VM</h3>
 	<ol>
 		<li>Download and install VirtualBox</li>
-		<li>Setup a Ubuntu VM with 8 GB of RAM, and 250GB of disk space</li>
-		<li>Right-click VM: Settings->Network: Set bridged adapter connection</li>
-		<li>
-			<div>Start VM and follow <a href="https://github.com/metabrainz/musicbrainz-server/blob/master/INSTALL.md">MusicBrainz instructions</a> for the following:</div>
-			<ol>
-				<li>Install PostgreSQL</li>
-				<li>Install git</li>
-				<li>Install Standard development tools</li>
-				<li>Download MusicBrainz source</li>
-				<li>Modify server configuration to RT_STANDALONE</li>
-				<li>Install Perl dependencies</li>
-				<li>Create PostgreQSL database using clean database</li>
-			</ol>
-		</li>
-		<li>Run command "sudo su - postgres"</li>		
-		<li>Open "/etc/postgresql/9.1/main/pg_hba.conf" in a text editor</li>
-		<li>Add line: "host all all {IP of client you want to add}/32 trust" and save file</li>
-		<li>Open "/etc/postgresql/9.1/main/postgresql.conf.in" in a text editor</li>
-		<li>Add line "listen_addresses = '*' ", remove performance tuning lines and save file</li>
-		<li>Run command "/etc/init.d/postgresql restart"</li>
-		<li>Run command "logout"</li>
-		<li>Run command "cd /home/musicbrainz/"</li>
-		<li>Run command "sudo mkdir dumps"</li>
-		<li>Run command "sudo mkdir sql-backups"</li>
-		<li>Run command "sudo git clone https://yissachar@bitbucket.org/yissachar/fave100-autocomplete.git"</li>
-		<li>Run command "cd fave100-autocomplete"</li>
-		<li>Run command "sudo vi MUSICBRAINZ_LATEST" and save file (blank file)</li>
-		<li>Run command "sudo crontab -e"</li>
-		<li>Add line "0 0 * * * python /home/musicbrainz/fave100-autocomplete/updateMusicbrainz.py > /tmp/musicbrainz_update.log 2>&1"  and save</li>
-		<li>Change datetime settings so crontab will run when it should: "sudo dpkg-reconfigure tzdata" select location</li>
-		<li>Ensure time synced: "sudo ntpdate ntp.ubuntu.com"</li>
-		<li>Run command "sudo python updateMusicbrainz.py" This will take a long time to complete!</li>
-		<li>If you are setting up the VM from scratch with no existing data, continue below. Otherwise skip the rest of the instructions and instead continue from <a href="#updatingSongs">Updating Song Database</a></li>
-		<li>Run command "sudo su - postgres"</li>
-		<li>Run command "dropdb musicbrainz"</li>
-		<li>Run command "cd /home/musicbrainz/musicbrainz_server/"</li>
-		<li>Run command "./admin/InitDb.pl --createdb --import /home/musicbrainz/dumps/DATE/mbdump --echo"</li>
-		<li>Run CreateTables.sql from fave100-autocomplete repo</li>
-		<li>Follow instructions in <a href="#updatingSongs">Updating Song Database</a> from step 6 (Install MODE command) and on</li>
+		<li>Download MusicBrainz Server VM from https://musicbrainz.org/doc/MusicBrainz_Server/Setup</li>
+		<li>Import the VM into VirtualBox with at least 8GB RAM</li>
+		<li>Start the VM</li>
+		<li>At the terminal run: <code>bin/turn-port db on</code></li>
+		<li>Run: <code>docker-compose -f ~/musicbrainz/musicbrainz-docker/docker-compose.yml up -d db</code></li>
+		<li>Run: <code>cd /home/vagrant/muzicbrainz</code></li>
+		<li>Run: <code>mkdir dumps</code></li>
+		<li>Run: <code>mkdir sql-backups</code></li>
+		<li>Run: <code>git clone https://yissachar@bitbucket.org/yissachar/fave100-autocomplete.git</code></li>
+		<li>Run: <code>cd fave100-autocomplete</code></li>
+		<li>Run: <code>vi MUSICBRAINZ_LATEST</code> and then save the blank file</li>
+		<li>Run: <code>sudo crontab -e</code></li>
+		<li>Add line <code>0 0 * * * python /home/vagrant/musicbrainz/fave100-autocomplete/updateMusicbrainz.py > /tmp/musicbrainz_update.log 2>&1</code> and save</li>
+		<li>Run: <code>psql -h localhost -U musicbrainz -d musicbrainz -f CreateTables.sql</code></li>
+		<li>The server is now setup and will update the song database nightly. See <a href="#updatingSongs">Updating Song Database</a>. You can also kick off an immediate update by running <code>python updateMusicbrainz.py</code></li>
 	</ol>	
 
 	<a name="updatingSongs"/>
 	<h2>Updating Song Database</h2>
 	<ol>
-		<li>Verify that the latest Musicbrainz dump exists in /home/musicbrainz/dumps/. The <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">Musicbrainz server</a> is scanned daily with the <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/5749173c03b6be3c8c15300c03086e315385385e/updateMusicbrainz.py?at=master">updateMusicbrainz.py script</a> and new dumps are downloaded when found. Once a new dump is downloaded, it is loaded into the SQL database automatically.</li>
-		<li>Backup up autocomplete_search.* tables to shared storage (e.g. \\broadview\web-dev\) through PGAdmin 3 GUI</li>
+		<li>Verify that the latest Musicbrainz dump exists in /home/vagrant/musicbrainz/dumps/. The <a href="http://ftp.musicbrainz.org/pub/musicbrainz/data/fullexport">Musicbrainz server</a> is scanned daily with the <a href="https://bitbucket.org/yissachar/fave100-autocomplete/src/5749173c03b6be3c8c15300c03086e315385385e/updateMusicbrainz.py?at=master">updateMusicbrainz.py script</a> and new dumps are downloaded when found. Once a new dump is downloaded, it is loaded into the SQL database automatically.</li>
+		<li>Backup up autocomplete_search.* tables to shared storage (e.g. \\broadview\web-dev\) through DBeaver GUI</li>
 		<li>Run the <a href="https://github.com/hellofornow/fave100-tomcat/blob/master/src/main/java/com/caseware/fave100/Index.java">Lucene Indexer</a> to build a Lucene index from the PostgreSQL autocomplete_search song database.</li>
 		<li>From <a href="https://github.com/hellofornow/fave100-tomcat">Fave100 Tomcat</a> build the search WAR: "clean install" and then deploy it locally and run the unit tests "clean tomcat:deploy".</li>
-		<li>If it passes the test, deploy the resulting WAR to Jelastic</li>
+		<li>Make sure it passes the test before continuing</li>		
+		<li>Delete the existing index from the S3 bucket and upload the new index</li>
+		<li>Restart the search server</li>
 	</ol>
 
 	<a name="dedupeSongs"/>
