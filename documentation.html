@@ -93,10 +93,10 @@
 		<li>Run: <code>git clone https://yissachar@bitbucket.org/yissachar/fave100-autocomplete.git</code></li>
 		<li>Run: <code>cd fave100-autocomplete</code></li>
 		<li>Run: <code>vi MUSICBRAINZ_LATEST</code> and then save the blank file</li>
-		<li>Run: <code>sudo crontab -e</code></li>
-		<li>Add line <code>0 0 * * * python /home/vagrant/musicbrainz/fave100-autocomplete/updateMusicbrainz.py > /tmp/musicbrainz_update.log 2>&1</code> and save</li>
+		<li>Run: <code>sudo apt-get update</code></li>
+		<li>Run: <code>sudo apt-get intall -y postgresql-client</code></li>
 		<li>Run: <code>psql -h localhost -U musicbrainz -d musicbrainz -f CreateTables.sql</code></li>
-		<li>The server is now setup and will update the song database nightly. See <a href="#updatingSongs">Updating Song Database</a>. You can also kick off an immediate update by running <code>python updateMusicbrainz.py</code></li>
+		<li>See <a href="#updatingSongs">Updating Song Database</a>. You can kick off an immediate update by running <code>python updateMusicbrainz.py</code></li>
 	</ol>	
 
 	<a name="updatingSongs"/>
