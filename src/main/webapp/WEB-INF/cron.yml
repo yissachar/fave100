@@ -1,0 +1,10 @@
+cron:
+  - description: "Clean up sessions"
+    url: /cron/sessioncleanup/?clear
+    schedule: every 15 minutes
+  - description: "Clean up expired password tokens"
+    url: /cron/pwdcleanup
+    schedule: every day 00:00
+#  - description: "Build hashtag master lists
+#    url: /cron/hashtags
+#    schedule: every 20 minutes

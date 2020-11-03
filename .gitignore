@@ -1,6 +1,5 @@
 .apt_generated/
 gwt-unitCache/
-src/main/webapp/*/**
 .settings/
 .factorypath
 target/
