@@ -1,7 +1,7 @@
 cron:
   - description: "Clean up sessions"
     url: /cron/sessioncleanup/?clear
-    schedule: every 15 minutes
+    schedule: every 30 minutes
   - description: "Clean up expired password tokens"
     url: /cron/pwdcleanup
     schedule: every day 00:00
