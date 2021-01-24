@@ -82,12 +82,11 @@
 	<h3>Setting up MusicBrainz VM</h3>
 	<ol>
 		<li>Download and install VirtualBox</li>
-		<li>Download MusicBrainz Server VM from https://musicbrainz.org/doc/MusicBrainz_Server/Setup</li>
-		<li>Import the VM into VirtualBox with at least 8GB RAM</li>
+		<li>Setup a Ubunutu VM with ideally 8GB RAM with user musicbrainz</li>
 		<li>Start the VM</li>
-		<li>At the terminal run: <code>bin/turn-port db on</code></li>
-		<li>Run: <code>docker-compose -f ~/musicbrainz/musicbrainz-docker/docker-compose.yml up -d db</code></li>
-		<li>Run: <code>cd /home/vagrant/muzicbrainz</code></li>
+		<li>Follow instructions from https://github.com/metabrainz/musicbrainz-docker to setup musicbrainz</li>
+		<li>Make sure to publish service ports: https://github.com/metabrainz/musicbrainz-docker#publish-ports-of-all-services</li>
+		<li>Run: <code>cd /home/muzicbrainz</code></li>
 		<li>Run: <code>mkdir dumps</code></li>
 		<li>Run: <code>mkdir sql-backups</code></li>
 		<li>Run: <code>git clone https://yissachar@bitbucket.org/yissachar/fave100-autocomplete.git</code></li>
@@ -95,7 +94,7 @@
 		<li>Run: <code>touch MUSICBRAINZ_LATEST</code></li>
 		<li>Run: <code>sudo apt-get update</code></li>
 		<li>Run: <code>sudo apt-get intall -y postgresql-client</code></li>
-		<li>Run: <code>psql -h localhost -U musicbrainz -d musicbrainz -f CreateTables.sql</code>. The password is "musicbrainz".</li>
+		<li>Run: <code>psql -h localhost -U musicbrainz -d musicbrainz_db -f CreateTables.sql</code>. The password is "musicbrainz".</li>
 		<li>See <a href="#updatingSongs">Updating Song Database</a>. You can kick off an immediate update by running <code>python updateMusicbrainz.py</code></li>
 	</ol>	
 
