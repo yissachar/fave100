@@ -1,10 +1,5 @@
 package com.fave100.client.pages.lists.widgets.favelist;
 
-import static com.google.gwt.query.client.GQuery.$;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
 import com.fave100.client.Notification;
@@ -25,11 +20,16 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.shared.RestCallback;
+import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.google.gwt.query.client.GQuery.$;
 
 public class FavelistPresenter extends
 		PresenterWidget<FavelistPresenter.MyView>

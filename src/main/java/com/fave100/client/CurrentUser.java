@@ -1,10 +1,5 @@
 package com.fave100.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.fave100.client.RequestCache.RequestType;
 import com.fave100.client.events.LoginDialogRequestedEvent;
 import com.fave100.client.events.favelist.AddSongListsSelectedEvent;
@@ -22,9 +17,14 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.shared.RestCallback;
+import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CurrentUser extends AppUser {
 
@@ -101,11 +101,11 @@ public class CurrentUser extends AppUser {
 	private void resetState() {
 		appUser = null;
 		avatar = "";
-		faveLists = new HashMap<String, List<FaveItem>>();
+		faveLists = new HashMap<>();
 		followingResult = null;
 		fullListRetrieved = false;
 		_currentHashtag = Constants.DEFAULT_HASHTAG;
-		_hashtags = new ArrayList<String>();
+		_hashtags = new ArrayList<>();
 		setAfterLoginAction(null);
 	}
 

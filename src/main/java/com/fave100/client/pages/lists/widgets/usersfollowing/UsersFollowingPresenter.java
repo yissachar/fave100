@@ -1,8 +1,5 @@
 package com.fave100.client.pages.lists.widgets.usersfollowing;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
 import com.fave100.client.RequestCache;
@@ -32,6 +29,9 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPresenter.MyView>
 		implements UsersFollowingUiHandlers {
 
@@ -49,7 +49,7 @@ public class UsersFollowingPresenter extends PresenterWidget<UsersFollowingPrese
 		void hide();
 	}
 
-	@ContentSlot public static final Type<RevealContentHandler<?>> USER_AUTOCOMPLETE_SLOT = new Type<RevealContentHandler<?>>();
+	@ContentSlot public static final Type<RevealContentHandler<?>> USER_AUTOCOMPLETE_SLOT = new Type<>();
 
 	EventBus _eventBus;
 	CurrentUser _currentUser;

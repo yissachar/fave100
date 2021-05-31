@@ -1,8 +1,5 @@
 package com.fave100.client.pages.lists.widgets.listmanager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fave100.client.CurrentUser;
 import com.fave100.client.FaveApi;
 import com.fave100.client.Notification;
@@ -21,7 +18,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.shared.RestCallback;
+import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.UiHandlers;
@@ -30,6 +27,9 @@ import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListManagerPresenter extends
 		PresenterWidget<ListManagerPresenter.MyView>
