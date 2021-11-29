@@ -5,9 +5,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.fave100</groupId>
 	<artifactId>fave100</artifactId>
-	<packaging>gwt-app</packaging>
+	<packaging>war</packaging>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>gwt-maven-archetype-project</name>
+	<name>fave-100</name>
 
 
 	<properties>
@@ -19,12 +19,20 @@
 		<powermock.version>1.5.4</powermock.version>
 		<war.path>src/main/webapp/</war.path>
 		<!-- tell the compiler we can use 1.7 -->
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>Maven Repository Switchboard</name>
+			<url>https://repo1.maven.org/maven2</url>
+		</repository>
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
@@ -32,6 +40,17 @@
 	</repositories>
 
 	<pluginRepositories>
+		<pluginRepository>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>Maven Plugin Repository</name>
+			<url>https://repo1.maven.org/maven2</url>
+		</pluginRepository>
 		<pluginRepository>
 			<id>sonatype-snapshot</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -185,7 +204,6 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwt.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -347,6 +365,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
 				<configuration>
 					<webXml>${war.path}\WEB-INF\web.xml</webXml>
 					<packagingExcludes>WEB-INF/deploy/**</packagingExcludes>
@@ -358,8 +377,8 @@
 				<artifactId>appengine-maven-plugin</artifactId>
 				<version>${appengine.version}</version>
 				<configuration>
-					<appId>${appengine-app-id}</appId>
-					<version>${appengine-app-version}</version>
+					<appId>fave-100</appId>
+					<version>${appengine.version}</version>
 					<noCookies>true</noCookies>
 					<passin>true</passin>
 				</configuration>
@@ -432,6 +451,7 @@
 			<plugin>
 				<groupId>com.github.kongchen</groupId>
 				<artifactId>swagger-maven-plugin</artifactId>
+				<version>2.3.4</version>
 				
 				<configuration>
 					<apiSources>
