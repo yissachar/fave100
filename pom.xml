@@ -5,15 +5,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.fave100</groupId>
 	<artifactId>fave100</artifactId>
-	<packaging>war</packaging>
+	<packaging>gwt-app</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>gwt-maven-archetype-project</name>
 
+
 	<properties>
-		<gwt.version>2.6.1</gwt.version>
+		<gwt.version>2.7.0</gwt.version>
 		<appengine.version>1.9.59</appengine.version>
 		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
-		<gwtp.version>1.3.1</gwtp.version>
+		<gwtp.version>1.4</gwtp.version>
 		<jersey.version>1.18</jersey.version>
 		<powermock.version>1.5.4</powermock.version>
 		<war.path>src/main/webapp/</war.path>
@@ -24,15 +25,10 @@
 	</properties>
 
 	<repositories>
-		<!-- temporary repo for gss.gwt snapshot -->
 		<repository>
-	        <id>sonatype.snapshots</id>
-	        <name>Sonatype snapshot repository</name>
-	        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-	        <snapshots>
-	           <enabled>true</enabled>
-	        </snapshots>
-	    </repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -83,6 +79,12 @@
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
 			<version>${jersey.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>asm</artifactId>
+					<groupId>asm</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -171,7 +173,14 @@
 			<version>2.1.2</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>com.gwtplatform.extensions</groupId>
+			<artifactId>ginuibinder</artifactId>
+			<version>2.8.0</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
@@ -211,6 +220,13 @@
 
 		<dependency>
 			<groupId>com.gwtplatform</groupId>
+			<artifactId>gwtp-dispatch-rest-shared</artifactId>
+			<version>${gwtp.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.gwtplatform</groupId>
 			<artifactId>gwtp-processors</artifactId>
 			<version>${gwtp.version}</version>
 			<scope>provided</scope>
@@ -226,12 +242,21 @@
 		</dependency>
 
 		<!-- GSS Resource -->
-		<dependency>
-	        <groupId>com.github.jdramaix</groupId>
-	        <artifactId>gssresource</artifactId>
-	        <version>1.0-20140825.095751-42</version>
-	        <scope>provided</scope>
-	    </dependency>
+<!--		<dependency>-->
+<!--	        <groupId>com.github.jdramaix</groupId>-->
+<!--	        <artifactId>gssresource</artifactId>-->
+<!--	        <version>1.0-20140825.095751-42</version>-->
+<!--	        <scope>provided</scope>-->
+<!--	    </dependency>-->
+
+
+<!--		<dependency>-->
+<!--			<groupId>com.github.jDramaix</groupId>-->
+<!--			<artifactId>gss.gwt</artifactId>-->
+<!--			<version>58c1a888</version>-->
+<!--		</dependency>-->
+
+
 
 		<!-- End Client -->
 		<!-- Begin Test -->
@@ -337,6 +362,17 @@
 					<version>${appengine-app-version}</version>
 					<noCookies>true</noCookies>
 					<passin>true</passin>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>net.ltgt.gwt.maven</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<extensions>true</extensions>
+
+				<configuration>
+					<moduleName>com.fave100.Fave100</moduleName>
 				</configuration>
 			</plugin>
 

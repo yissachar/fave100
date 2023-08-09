@@ -9,22 +9,16 @@
 
 package com.fave100.client.generated.services;
 
-import com.fave100.client.generated.entities.FacebookRegistration;
-import com.fave100.client.generated.entities.UserRegistration;
-import com.fave100.client.generated.entities.LoginCredentials;
-import javax.ws.rs.Path;
+import com.fave100.client.generated.entities.*;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
+
 import javax.ws.rs.GET;
-import com.fave100.client.generated.entities.AppUser;
-import com.gwtplatform.dispatch.rest.shared.RestService;
-import com.fave100.client.generated.entities.StringResult;
 import javax.ws.rs.POST;
-import com.fave100.client.generated.entities.TwitterRegistration;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 
 @Path("/")
-public interface AuthService extends RestService {
+public interface AuthService {
 
     @POST
     @Path("/auth/logout")

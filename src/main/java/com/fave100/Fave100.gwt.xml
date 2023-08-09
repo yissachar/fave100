@@ -10,7 +10,7 @@
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint' />
 	<inherits name='com.google.gwt.logging.LoggingDisabled' />
 	<inherits name='com.google.gwt.query.Query' />
-	<inherits name="com.google.gwt.resources.GssResource" />
+<!--	<inherits name="com.google.gwt.resources.CssResource" />-->
 
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
@@ -19,5 +19,7 @@
 	<!-- GWTP Bootstrap and Inject -->
 	<extend-configuration-property name='gin.ginjector.modules' value='com.fave100.client.gin.ClientModule' />
 	<set-configuration-property name="gwtp.bootstrapper" value="com.fave100.client.Fave100Bootstrapper" />
+
+	<set-configuration-property name="CssResource.enableGss" value="true"/>
 
 </module>

@@ -3,7 +3,7 @@ package com.fave100.shared;
 public class Constants {
 
 	public static final String DEFAULT_HASHTAG = "alltime";
-	public static final String SEARCH_SERVICE_URL = "http://default-environment-9n6mmewqkp.elasticbeanstalk.com";
+	public static final String SEARCH_SERVICE_URL = "http://fave100search-env.eba-2npcyhjc.us-east-2.elasticbeanstalk.com";
 	public static final String SEARCH_URL = SEARCH_SERVICE_URL + "/search?";
 	public static final String LOOKUP_URL = SEARCH_SERVICE_URL + "/lookup?";
 	public static final long MAX_AVATAR_SIZE = 1024 * 300; //300kb

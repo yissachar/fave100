@@ -9,22 +9,16 @@
 
 package com.fave100.client.generated.services;
 
-import com.fave100.client.generated.entities.FeaturedLists;
-import com.fave100.client.generated.entities.FaveItemCollection;
-import com.gwtplatform.dispatch.rest.shared.RestService;
-import javax.ws.rs.POST;
-import javax.ws.rs.PathParam;
-import com.fave100.client.generated.entities.StringResultCollection;
 import com.fave100.client.generated.entities.BooleanResult;
+import com.fave100.client.generated.entities.FaveItemCollection;
+import com.fave100.client.generated.entities.FeaturedLists;
+import com.fave100.client.generated.entities.StringResultCollection;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
-import javax.ws.rs.Path;
-import javax.ws.rs.GET;
-import com.fave100.client.generated.entities.AppUser;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.DELETE;
+
+import javax.ws.rs.*;
 
 @Path("/")
-public interface FavelistsService extends RestService {
+public interface FavelistsService {
 
     @GET
     @Path("/favelists/names")

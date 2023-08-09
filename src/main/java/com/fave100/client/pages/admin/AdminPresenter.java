@@ -1,8 +1,5 @@
 package com.fave100.client.pages.admin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fave100.client.FaveApi;
 import com.fave100.client.Notification;
 import com.fave100.client.gatekeepers.AdminGatekeeper;
@@ -20,7 +17,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rest.shared.RestCallback;
+import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -29,6 +26,9 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminPresenter extends PagePresenter<AdminPresenter.MyView, AdminPresenter.MyProxy> implements AdminUiHandlers {
 

@@ -1,8 +1,8 @@
 package com.fave100.client.resources.css;
 
-import com.google.gwt.resources.client.GssResource;
+import com.google.gwt.resources.client.CssResource;
 
-public interface GlobalStyle extends GssResource {
+public interface GlobalStyle extends CssResource {
 
 	int SIDE_BAR_WIDTH();
 
